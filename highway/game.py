@@ -1,8 +1,7 @@
 from __future__ import division, print_function
 import pygame
-from problem import Road, Vehicle
+from problem import Road, ControlledVehicle
 import numpy as np
-import random
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 200
 FPS = 30
@@ -10,6 +9,10 @@ dt = 1/FPS
 
 def main():
     r = Road(4, 4.0, [])
+    for _ in range(10):
+        r.vehicles.append(r.random_controller())
+    v = r.random_controller()
+    r.vehicles.append(v)
 
     pygame.init()
     done = False
@@ -17,35 +20,14 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Highway")
     clock = pygame.time.Clock()
-    v = Vehicle(np.array([0, 0]), 0, 0)
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    v.action['acceleration'] = 3
-                if event.key == pygame.K_LEFT:
-                    v.action['acceleration'] = -3
-                if event.key == pygame.K_DOWN:
-                    v.action['steering'] = 4*np.pi/180
-                if event.key == pygame.K_UP:
-                    v.action['steering'] = -4*np.pi/180
-                if event.key == pygame.K_SPACE:
-                    v = Vehicle(np.array([0, 2.0+random.randint(0,r.lanes-1)*r.lane_width]), 0, 20)
-                    r.vehicles.append(v)
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_RIGHT:
-                    v.action['acceleration'] = 0
-                if event.key == pygame.K_LEFT:
-                    v.action['acceleration'] = 0
-                if event.key == pygame.K_DOWN:
-                    v.action['steering'] = 0
-                if event.key == pygame.K_UP:
-                    v.action['steering'] = 0
+            v.handle_event(event)
 
         r.step(dt)
-        print(r)
+        print(v)
         r.display(screen)
         clock.tick(FPS)
 
