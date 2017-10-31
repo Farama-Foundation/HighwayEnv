@@ -6,6 +6,7 @@ import pygame
 BLACK = (0, 0, 0)
 GREY = (100, 100, 100)
 GREEN = (50, 200, 0)
+YELLOW = (200, 200, 0)
 WHITE = (255, 255, 255)
 SCALING = 10.0
 
@@ -25,11 +26,11 @@ class Vehicle(object):
     LENGTH = 5.0
     WIDTH = 2.0
 
-    def __init__(self, position, heading, velocity):
+    def __init__(self, position, heading, velocity, ego=False):
         self.position = np.array(position)
         self.heading = heading
         self.velocity = velocity
-        self.color = GREEN
+        self.color = GREEN if ego else YELLOW
         self.action = {'steering':0, 'acceleration':0}
 
     def step(self, dt, action=None):
@@ -64,7 +65,7 @@ class Vehicle(object):
 
     def display(self, screen):
         s = pygame.Surface((pix(self.LENGTH), pix(self.WIDTH)), pygame.SRCALPHA)   # per-pixel alpha
-        s.fill(GREEN)
+        s.fill(self.color)
         pygame.draw.rect(s, BLACK, (0,0,pix(self.LENGTH),pix(self.WIDTH)), 1)
         s = s.convert_alpha()
         sr = pygame.transform.rotate(s, -self.heading*180/np.pi)
@@ -81,8 +82,8 @@ class ControlledVehicle(Vehicle):
         A vehicle piloted by a low-level controller, allowing high-level actions
         such as lane changes.
     """
-    def __init__(self, position, heading, velocity, road, target_lane, target_velocity):
-        super(ControlledVehicle, self).__init__(position, heading, velocity)
+    def __init__(self, position, heading, velocity, road, target_lane, target_velocity, ego=False):
+        super(ControlledVehicle, self).__init__(position, heading, velocity, ego)
         self.road = road
         self.target_lane = target_lane
         self.target_velocity = target_velocity
@@ -104,14 +105,23 @@ class ControlledVehicle(Vehicle):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                self.target_velocity += 5
+                self.perform_action("FASTER")
             if event.key == pygame.K_LEFT:
-                self.target_velocity -= 5
+                self.perform_action("SLOWER")
             if event.key == pygame.K_DOWN:
-                self.target_lane += 1
+                self.perform_action("LANE_RIGHT")
             if event.key == pygame.K_UP:
-                self.target_lane -= 1
+                self.perform_action("LANE_LEFT")
 
+    def perform_action(self, action):
+        if action == "FASTER":
+            self.target_velocity += 5
+        elif action == "SLOWER":
+            self.target_velocity -= 5
+        elif action == "LANE_RIGHT":
+            self.target_lane += 1
+        elif action == "LANE_LEFT":
+            self.target_lane -= 1
 
     def display(self, screen):
         super(ControlledVehicle, self).display(screen)
@@ -119,6 +129,9 @@ class ControlledVehicle(Vehicle):
 
 
 class Road(object):
+    """
+        The set of vehicles on the road, and its characteristics
+    """
     STRIPE_SPACING = 5
     STRIPE_LENGTH = 3
     def __init__(self, lanes, lane_width, vehicles=None):
@@ -133,13 +146,15 @@ class Road(object):
     def get_lane(self, position):
         return int(np.floor(position[1]/self.lane_width))
 
-    def random_vehicle(self):
+    def random_vehicle(self, velocity=None, ego=False):
         l = random.randint(0,self.lanes-1)
-        return Vehicle([-2*self.STRIPE_SPACING*len(self.vehicles), (l+0.5)*self.lane_width], 0, 20)
+        velocity = velocity or 20
+        v = Vehicle([-2*self.STRIPE_SPACING*len(self.vehicles), (l+0.5)*self.lane_width], 0, velocity, ego)
+        return v
 
-    def random_controller(self):
-        v = self.random_vehicle()
-        return ControlledVehicle(v.position, v.heading, v.velocity, self, self.get_lane(v.position), v.velocity)
+    def random_controller(self, velocity=None, ego=False):
+        v = self.random_vehicle(velocity)
+        return ControlledVehicle(v.position, v.heading, v.velocity, self, self.get_lane(v.position), v.velocity, ego)
 
     def display(self, screen):
         screen.fill(GREY)
@@ -169,3 +184,61 @@ class Road(object):
 
     def __repr__(self):
         return self.vehicles.__repr__()
+
+class RoadMDP(object):
+    """
+        A MDP representing the times to collision between the ego-vehicle and
+        other vehicles on the road.
+    """
+    TIME_QUANTIFICATION = 1.0
+    ACTION_TIMESTEP = 0.1
+    MAX_ACTION_DURATION = 1.0
+
+    def __init__(self, road, ego_vehicle):
+        self.road = road
+        self.ego_vehicle = ego_vehicle
+        self.state = (self.generate_grid(), self.road.get_lane(self.ego_vehicle.position))
+
+    def generate_grid(self):
+        grid = np.zeros((self.road.lanes, 10))
+        for v in self.road.vehicles:
+            if v is not self.ego_vehicle:
+                distance = v.position[0] - self.ego_vehicle.position[0] - v.LENGTH/2 - self.ego_vehicle.LENGTH/2
+                if distance < 0 or self.ego_vehicle.velocity == v.velocity:
+                    continue
+                time_of_impact = distance/(self.ego_vehicle.velocity - v.velocity)
+                l, t = self.road.get_lane(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
+                if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
+                    grid[l,t] = 1
+        return grid
+
+    def step(self, action):
+        # Send order to low-level agent
+        self.ego_vehicle.perform_action(action)
+
+        # Inner high-frequency loop
+        for k in range(int(self.MAX_ACTION_DURATION/self.ACTION_TIMESTEP)):
+            self.road.step(self.ACTION_TIMESTEP)
+            new_state = (self.generate_grid(), self.road.get_lane(self.ego_vehicle.position))
+            # Stop whenever macro-state changes
+            # if (self.state[0] != new_state[0]).any() or self.state[1] != new_state[1]:
+            #     break
+        self.state = new_state
+        return self.state
+
+
+def test():
+    r = Road(4, 4.0, [])
+    for _ in range(10):
+        r.vehicles.append(r.random_controller())
+    v = r.random_controller(25, ego=True)
+    r.vehicles.append(v)
+
+    mdp = RoadMDP(r, v)
+    print(mdp.step('IDLE'))
+    print(mdp.step('IDLE'))
+    print(mdp.step('LANE_LEFT'))
+    print(mdp.step('IDLE'))
+
+if __name__ == '__main__':
+    test()

@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 import pygame
-from problem import Road, ControlledVehicle
+from problem import Road, RoadMDP
 import numpy as np
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 200
@@ -11,8 +11,10 @@ def main():
     r = Road(4, 4.0, [])
     for _ in range(10):
         r.vehicles.append(r.random_controller())
-    v = r.random_controller()
+    v = r.random_controller(25, ego=True)
     r.vehicles.append(v)
+
+    mdp = RoadMDP(r, v)
 
     pygame.init()
     done = False
@@ -27,11 +29,11 @@ def main():
             v.handle_event(event)
 
         r.step(dt)
-        print(v)
         r.display(screen)
         clock.tick(FPS)
-
         pygame.display.flip()
+
+        # print(mdp.generate_grid())
 
     # Close everything down
     pygame.quit()
