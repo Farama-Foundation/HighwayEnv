@@ -2,6 +2,7 @@ from __future__ import division, print_function
 import numpy as np
 import random
 import pygame
+import copy
 
 BLACK = (0, 0, 0)
 GREY = (100, 100, 100)
@@ -119,9 +120,13 @@ class ControlledVehicle(Vehicle):
         elif action == "SLOWER":
             self.target_velocity -= 5
         elif action == "LANE_RIGHT":
-            self.target_lane += 1
+            # self.target_lane += 1
+            self.target_lane = self.road.get_lane(self.position)+1
         elif action == "LANE_LEFT":
-            self.target_lane -= 1
+            # self.target_lane -= 1
+            self.target_lane = self.road.get_lane(self.position)-1
+
+        self.target_lane = min(max(self.target_lane, 0), self.road.lanes-1)
 
     def display(self, screen):
         super(ControlledVehicle, self).display(screen)
@@ -146,15 +151,25 @@ class Road(object):
     def get_lane(self, position):
         return int(np.floor(position[1]/self.lane_width))
 
+    def get_lateral_position(self, lane):
+        return (lane+0.5)*self.lane_width
+
     def random_vehicle(self, velocity=None, ego=False):
         l = random.randint(0,self.lanes-1)
         velocity = velocity or 20
-        v = Vehicle([-2*self.STRIPE_SPACING*len(self.vehicles), (l+0.5)*self.lane_width], 0, velocity, ego)
+        v = Vehicle([-2*self.STRIPE_SPACING*len(self.vehicles), self.get_lateral_position(l)], 0, velocity, ego)
         return v
 
     def random_controller(self, velocity=None, ego=False):
         v = self.random_vehicle(velocity)
         return ControlledVehicle(v.position, v.heading, v.velocity, self, self.get_lane(v.position), v.velocity, ego)
+
+    def generate_controller_rows(self, velocity=20):
+        for d in range(4):
+            for l in range(self.lanes-1):
+                v = Vehicle([4*d*self.STRIPE_SPACING, self.get_lateral_position(l + d%2)], 0, velocity)
+                self.vehicles.append(ControlledVehicle(v.position, v.heading, v.velocity, self, self.get_lane(v.position), v.velocity))
+
 
     def display(self, screen):
         screen.fill(GREY)
@@ -190,7 +205,8 @@ class RoadMDP(object):
         A MDP representing the times to collision between the ego-vehicle and
         other vehicles on the road.
     """
-    TIME_QUANTIFICATION = 1.0
+    HORIZON = 10.0
+    TIME_QUANTIFICATION = 0.5
     ACTION_TIMESTEP = 0.1
     MAX_ACTION_DURATION = 1.0
 
@@ -200,14 +216,23 @@ class RoadMDP(object):
         self.state = (self.generate_grid(), self.road.get_lane(self.ego_vehicle.position))
 
     def generate_grid(self):
-        grid = np.zeros((self.road.lanes, 10))
+        grid = np.zeros((self.road.lanes, int(self.HORIZON/self.TIME_QUANTIFICATION)))
         for v in self.road.vehicles:
             if v is not self.ego_vehicle:
-                distance = v.position[0] - self.ego_vehicle.position[0] - v.LENGTH/2 - self.ego_vehicle.LENGTH/2
+                distance = v.position[0] - self.ego_vehicle.position[0] # - v.LENGTH/2 - self.ego_vehicle.LENGTH/2
+                margin = v.LENGTH/2 + self.ego_vehicle.LENGTH/2
+                if distance > margin:
+                    distance -= margin
+                elif distance < -margin:
+                    distance += margin
+                else:
+                    distance = 0
+
                 if distance < 0 or self.ego_vehicle.velocity == v.velocity:
                     continue
                 time_of_impact = distance/(self.ego_vehicle.velocity - v.velocity)
                 l, t = self.road.get_lane(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
+                t = max(t,1)
                 if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
                     grid[l,t] = 1
         return grid
@@ -226,19 +251,81 @@ class RoadMDP(object):
         self.state = new_state
         return self.state
 
+class SimplifiedMDP(object):
+    GAMMA = 0.99
+    actions = {0:'LANE_LEFT', 1:'IDLE', 2:'LANE_RIGHT'}
+    cost = {0:0, 1:0.01, 2:0}
+    
+    def __init__(self, road_state):
+        self.grid, self.lane = road_state
+        self.value = np.zeros(np.shape(self.grid))
+        self.state_reward = -self.grid
+
+    def value_iteration(self, steps=20):
+        for _ in range(steps):
+            self.update()
+
+    def update(self):
+        new_value = np.zeros(np.shape(self.value))
+        for i in range(np.shape(self.value)[0]):
+            for j in range(np.shape(self.value)[1]):
+                q_values = self.get_q_values(i,j)
+                if len(q_values):
+                    new_value[i,j] = self.GAMMA*np.max(q_values)
+                else:
+                    new_value[i,j] = self.state_reward[i,j]
+        self.value = new_value
+
+    def clamp_position(self, i, j):
+        return min(max(i, 0), np.shape(self.value)[0]-1),  min(max(j, 0), np.shape(self.value)[1]-1)
+
+    def reward(self, i, j, action):
+        return self.state_reward[i,j]+self.cost[action]
+
+    def get_q_values(self, i, j):
+        q_values = []
+        for k in range(0,3):
+            p, q = self.clamp_position(i+k-1,j+1)
+            q_values.append(self.reward(i,j,k)+self.value[p,q])
+        return q_values
+
+    def pick_action(self):
+        i, j = self.lane, 0
+        q_values = self.get_q_values(i, j)
+        a = np.argmax(q_values)
+        return self.actions[a]
+
+
+# class Qlearning(object):
+#     def __init__(self, mdp):
+#         self.mdp = mdp
+#         self.Q = {}
+
+#     def update(self):
+#         for a in ['IDLE', 'LANE_LEFT', 'LANE_RIGHT']:
+#             state_action_hash = mdp.state[0].tostring()+mdp.state[1]+a
+#             print(state_action_hash)
+
 
 def test():
     r = Road(4, 4.0, [])
-    for _ in range(10):
-        r.vehicles.append(r.random_controller())
-    v = r.random_controller(25, ego=True)
+    # for _ in range(10):
+    #     r.vehicles.append(r.random_controller())
+    # v = r.random_controller(25, ego=True)
+    r.generate_controller_rows()
+    v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
+    v = ControlledVehicle(v.position, v.heading, v.velocity, r, r.get_lane(v.position), v.velocity)
     r.vehicles.append(v)
 
-    mdp = RoadMDP(r, v)
-    print(mdp.step('IDLE'))
-    print(mdp.step('IDLE'))
-    print(mdp.step('LANE_LEFT'))
-    print(mdp.step('IDLE'))
+    for _ in range(5):
+        mdp = RoadMDP(r, v)
+        smdp = SimplifiedMDP(mdp.state)
+        smdp.value_iteration()
+        action = smdp.pick_action()
+        print(mdp.state)
+        print(smdp.value)
+        print(action)
+        mdp.step(action)
 
 if __name__ == '__main__':
     test()
