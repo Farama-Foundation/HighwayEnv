@@ -3,7 +3,7 @@ import pygame
 from problem import Road, Vehicle, ControlledVehicle, RoadMDP, SimplifiedMDP
 import numpy as np
 SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 200
+SCREEN_HEIGHT = 600
 FPS = 30
 POLICY_FREQUENCY = 10
 dt = 1/FPS
@@ -17,13 +17,17 @@ def main():
     r.vehicles.append(v)
 
     t = 0
-    pygame.init()
     done = False
     pause = False
-    size = [SCREEN_WIDTH, SCREEN_HEIGHT]
-    screen = pygame.display.set_mode(size)
+    pygame.init()
     pygame.display.set_caption("Highway")
     clock = pygame.time.Clock()
+
+    size = [SCREEN_WIDTH, SCREEN_HEIGHT]
+    screen = pygame.display.set_mode(size)
+    sim_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT/2))
+    value_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT/2))
+
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -46,7 +50,10 @@ def main():
                 # pause = True
             r.step(dt)
 
-        r.display(screen)
+        r.display(sim_surface)
+        smdp.display(value_surface)
+        screen.blit(sim_surface, (0,0))
+        screen.blit(value_surface, (0,SCREEN_HEIGHT/2))
         clock.tick(FPS)
         pygame.display.flip()
         t = t+1

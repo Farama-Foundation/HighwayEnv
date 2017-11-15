@@ -1,5 +1,8 @@
 from __future__ import division, print_function
 import numpy as np
+import matplotlib as mpl
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
 import random
 import pygame
 import copy
@@ -313,6 +316,15 @@ class SimplifiedMDP(object):
         q_values = self.get_q_values(i, j)
         a = np.argmax(q_values)
         return self.actions[a]
+
+    def display(self, surface):
+        norm = mpl.colors.Normalize(vmin=-3, vmax=1)
+        cmap = cm.jet_r
+        cell_size = (surface.get_width()//np.shape(self.value)[1], surface.get_height()//np.shape(self.value)[0])
+        for i in range(np.shape(self.value)[0]):
+            for j in range(np.shape(self.value)[1]):
+                color = cmap(norm(self.value[i,j]), bytes=True)
+                pygame.draw.rect(surface, color, (j*cell_size[0],i*cell_size[1],cell_size[0],cell_size[1]), 0)
 
 
 # class Qlearning(object):
