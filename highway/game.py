@@ -33,19 +33,19 @@ def main():
                     pause = not pause
             v.handle_event(event)
 
-        if t % (FPS//POLICY_FREQUENCY) == 0:
-            mdp = RoadMDP(r, v)
-            smdp = SimplifiedMDP(mdp.state)
-            smdp.value_iteration()
-            print(mdp.state)
-            print(smdp.value)
-            action = smdp.pick_action()
-            print(action)
-            v.perform_action(action)
-            # pause = True
-
         if not pause:
+            if t % (FPS//POLICY_FREQUENCY) == 0:
+                mdp = RoadMDP(r, v)
+                smdp = SimplifiedMDP(mdp.state)
+                smdp.value_iteration()
+                print(mdp.state)
+                print(smdp.value)
+                action = smdp.pick_action()
+                print(action)
+                v.perform_action(action)
+                # pause = True
             r.step(dt)
+
         r.display(screen)
         clock.tick(FPS)
         pygame.display.flip()
