@@ -73,7 +73,8 @@ class Vehicle(object):
         s.fill(self.color)
         pygame.draw.rect(s, BLACK, (0,0,pix(self.LENGTH),pix(self.WIDTH)), 1)
         s = s.convert_alpha()
-        sr = pygame.transform.rotate(s, -self.heading*180/np.pi)
+        h = self.heading if abs(self.heading) > 2*np.pi/180 else 0
+        sr = pygame.transform.rotate(s, -h*180/np.pi)
         screen.blit(sr, (pos2pix(self.position[0]-self.LENGTH/2, self.position[1]-self.WIDTH/2)))
 
     def __str__(self):
