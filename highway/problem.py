@@ -244,16 +244,12 @@ class RoadMDP(object):
 
                     if self.ego_vehicle.velocity == v.velocity:
                         continue
-                    time_of_impact = distance/(self.ego_vehicle.velocity - v.velocity)
+                    time_of_impact = 1+distance/(self.ego_vehicle.velocity - v.velocity)
                     if time_of_impact < 0:
                         continue
                     l, t = self.road.get_lane(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
                     if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
                         grid[l,t] = max(grid[l,t], cost)
-                        # If time of impact is <1 on another lane, a collision will still happen
-                        # in a 1s lane chage
-                        if t==0:
-                            grid[l,1] = max(grid[l,1], 0.5)
         return grid
 
     def step(self, action):
