@@ -2,11 +2,15 @@ from __future__ import division, print_function
 import pygame
 from problem import Road, Vehicle, ControlledVehicle, RoadMDP, SimplifiedMDP
 import numpy as np
+import os
+
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 FPS = 30
 POLICY_FREQUENCY = 10
 dt = 1/FPS
+
+RECORD_VIDEO = False
 
 def main():
     r = Road.create_random_road(4, 4.0, 100)
@@ -47,7 +51,6 @@ def main():
                 action = smdp.pick_action()
                 print(action)
                 v.perform_action(action)
-                # pause = True
             r.step(dt)
 
         r.display(sim_surface)
@@ -58,7 +61,12 @@ def main():
         pygame.display.flip()
         t = t+1
 
-        # print(mdp.generate_grid())
+        if RECORD_VIDEO:
+            pygame.image.save(screen, "out/highway_{}.bmp".format(t))
+            if v.position[0] > np.max([o.position[0] for o in r.vehicles if o is not v])+25:
+                os.system("ffmpeg -r 60 -i out/highway_%d.bmp -vcodec libx264 -crf 25 out/highway.avi")
+                os.system("rm out/*.bmp")
+                done = True
 
     # Close everything down
     pygame.quit()
