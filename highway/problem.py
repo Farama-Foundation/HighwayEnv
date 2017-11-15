@@ -27,11 +27,12 @@ class Vehicle(object):
     LENGTH = 5.0
     WIDTH = 2.0
 
-    def __init__(self, position, heading, velocity, ego=False):
+    def __init__(self, position, heading=0, velocity=None, ego=False):
         self.position = np.array(position)
         self.heading = heading
-        self.velocity = velocity
-        self.color = GREEN if ego else YELLOW
+        self.velocity = velocity or 20
+        self.ego = ego
+        self.color = GREEN if self.ego else YELLOW
         self.action = {'steering':0, 'acceleration':0}
 
     def step(self, dt, action=None):
@@ -83,11 +84,15 @@ class ControlledVehicle(Vehicle):
         A vehicle piloted by a low-level controller, allowing high-level actions
         such as lane changes.
     """
-    def __init__(self, position, heading, velocity, road, target_lane, target_velocity, ego=False):
+    def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
         super(ControlledVehicle, self).__init__(position, heading, velocity, ego)
         self.road = road
         self.target_lane = target_lane
         self.target_velocity = target_velocity
+
+    @classmethod
+    def create_from(cls, vehicle, road):
+        return ControlledVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane(vehicle.position), vehicle.velocity)
 
     def step(self, dt):
         tau_a = 1.0
@@ -97,7 +102,7 @@ class ControlledVehicle(Vehicle):
         Kds = 1/(tau_ds*20)
         Kps = 1/tau_s*Kds
         action = {}
-        action['steering'] = Kps*((self.target_lane+0.5)*self.road.lane_width - self.position[1]) - Kds*self.velocity*np.sin(self.heading)
+        action['steering'] = Kps*(self.road.get_lateral_position(self.target_lane) - self.position[1]) - Kds*self.velocity*np.sin(self.heading)
         action['acceleration'] = Kpa*(self.target_velocity - self.velocity)
         # action = None
 
@@ -139,10 +144,27 @@ class Road(object):
     """
     STRIPE_SPACING = 5
     STRIPE_LENGTH = 3
-    def __init__(self, lanes, lane_width, vehicles=None):
+    def __init__(self, lanes, lane_width, vehicles=[]):
         self.lanes = lanes
         self.lane_width = lane_width
         self.vehicles = vehicles
+
+    @classmethod
+    def create_random_road(cls, lanes, lane_width, vehicles_count=100):
+        r = Road(lanes, lane_width)
+        for _ in range(vehicles_count):
+            r.vehicles.append(r.random_controlled_vehicle())
+        return r
+
+    @classmethod
+    def create_obstacles_road(cls, lanes, lane_width, rows=4):
+        r = Road(lanes, lane_width)
+        for d in range(rows):
+            for l in range(r.lanes-1):
+                v = Vehicle([6*d*r.STRIPE_SPACING, r.get_lateral_position(l + d%2)])
+                r.vehicles.append(ControlledVehicle.create_from(v, r))
+        return r
+
 
     def step(self, dt):
         for vehicle in self.vehicles:
@@ -156,20 +178,12 @@ class Road(object):
 
     def random_vehicle(self, velocity=None, ego=False):
         l = random.randint(0,self.lanes-1)
-        velocity = velocity or 20
-        v = Vehicle([-2*self.STRIPE_SPACING*len(self.vehicles), self.get_lateral_position(l)], 0, velocity, ego)
+        xmin = np.min([v.position[0] for v in self.vehicles]) if len(self.vehicles) else 0
+        v = Vehicle([xmin-2*self.STRIPE_SPACING, self.get_lateral_position(l)], 0, velocity, ego)
         return v
 
-    def random_controller(self, velocity=None, ego=False):
-        v = self.random_vehicle(velocity)
-        return ControlledVehicle(v.position, v.heading, v.velocity, self, self.get_lane(v.position), v.velocity, ego)
-
-    def generate_controller_rows(self, velocity=20):
-        for d in range(4):
-            for l in range(self.lanes-1):
-                v = Vehicle([4*d*self.STRIPE_SPACING, self.get_lateral_position(l + d%2)], 0, velocity)
-                self.vehicles.append(ControlledVehicle(v.position, v.heading, v.velocity, self, self.get_lane(v.position), v.velocity))
-
+    def random_controlled_vehicle(self, velocity=None, ego=False):
+        return ControlledVehicle.create_from(self.random_vehicle(velocity, ego), self)
 
     def display(self, screen):
         screen.fill(GREY)
@@ -206,7 +220,7 @@ class RoadMDP(object):
         other vehicles on the road.
     """
     HORIZON = 10.0
-    TIME_QUANTIFICATION = 0.5
+    TIME_QUANTIFICATION = 1.0
     ACTION_TIMESTEP = 0.1
     MAX_ACTION_DURATION = 1.0
 
@@ -223,18 +237,21 @@ class RoadMDP(object):
                 margin = v.LENGTH/2 + self.ego_vehicle.LENGTH/2
                 if distance > margin:
                     distance -= margin
-                elif distance < -margin:
-                    distance += margin
-                else:
+                elif distance > -margin/2:
                     distance = 0
 
-                if distance < 0 or self.ego_vehicle.velocity == v.velocity:
+                if self.ego_vehicle.velocity == v.velocity:
                     continue
                 time_of_impact = distance/(self.ego_vehicle.velocity - v.velocity)
+                if time_of_impact < 0:
+                    continue
                 l, t = self.road.get_lane(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
-                t = max(t,1)
                 if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
                     grid[l,t] = 1
+                    # If time of impact is <1 on another lane, a collision will still happen
+                    # in a 1s lane chage
+                    if t==0:
+                        grid[l,1] = 1
         return grid
 
     def step(self, action):
@@ -253,13 +270,17 @@ class RoadMDP(object):
 
 class SimplifiedMDP(object):
     GAMMA = 0.99
+    COLLISION_COST = 1
+    LANE_CHANGE_COST = 0.01
+    LEFT_LANE_COST = 0.001
     actions = {0:'LANE_LEFT', 1:'IDLE', 2:'LANE_RIGHT'}
-    cost = {0:0, 1:0.01, 2:0}
-    
+    cost = {0:-LANE_CHANGE_COST, 1:0, 2:-LANE_CHANGE_COST}
+
     def __init__(self, road_state):
         self.grid, self.lane = road_state
         self.value = np.zeros(np.shape(self.grid))
-        self.state_reward = -self.grid
+        self.state_reward = -self.COLLISION_COST*self.grid \
+                            -self.LEFT_LANE_COST*np.tile(np.arange(np.shape(self.grid)[0])[:, np.newaxis], (1, np.shape(self.grid)[1]))
 
     def value_iteration(self, steps=20):
         for _ in range(steps):
@@ -308,13 +329,9 @@ class SimplifiedMDP(object):
 
 
 def test():
-    r = Road(4, 4.0, [])
-    # for _ in range(10):
-    #     r.vehicles.append(r.random_controller())
-    # v = r.random_controller(25, ego=True)
-    r.generate_controller_rows()
+    r = Road.create_obstacles_road(4, 4.0)
     v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
-    v = ControlledVehicle(v.position, v.heading, v.velocity, r, r.get_lane(v.position), v.velocity)
+    v = ControlledVehicle.create_from(v, r)
     r.vehicles.append(v)
 
     for _ in range(5):

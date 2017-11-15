@@ -5,16 +5,15 @@ import numpy as np
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 200
 FPS = 30
+POLICY_FREQUENCY = 10
 dt = 1/FPS
 
 def main():
-    r = Road(4, 4.0, [])
-    for _ in range(100):
-        r.vehicles.append(r.random_controller())
-    v = r.random_controller(25, ego=True)
-    # r.generate_controller_rows()
-    # v = Vehicle([-30, r.get_lateral_position(0)], 0, 25)
-    v = ControlledVehicle(v.position, v.heading, v.velocity, r, r.get_lane(v.position), v.velocity, ego=True)
+    r = Road.create_random_road(4, 4.0, 100)
+    # r = Road.create_obstacles_road(4, 4.0)
+    v = r.random_controlled_vehicle(25, ego=True)
+    # v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
+    # v = ControlledVehicle.create_from(v, r)
     r.vehicles.append(v)
 
     t = 0
@@ -34,7 +33,7 @@ def main():
                     pause = not pause
             v.handle_event(event)
 
-        if t % 3 == 0:
+        if t % (FPS//POLICY_FREQUENCY) == 0:
             mdp = RoadMDP(r, v)
             smdp = SimplifiedMDP(mdp.state)
             smdp.value_iteration()
