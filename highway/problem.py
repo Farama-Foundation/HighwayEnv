@@ -43,7 +43,7 @@ class Vehicle(object):
             action = self.action
         v = self.velocity*np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v*dt
-        self.heading += self.velocity*action['steering']*dt
+        self.heading += self.velocity*np.tan(action['steering'])/self.LENGTH*dt
         self.velocity += action['acceleration']*dt
 
     def handle_event(self, event):
@@ -55,9 +55,9 @@ class Vehicle(object):
             if event.key == pygame.K_LEFT:
                 self.action['acceleration'] = -3
             if event.key == pygame.K_DOWN:
-                self.action['steering'] = 4*np.pi/180
+                self.action['steering'] = 20*np.pi/180
             if event.key == pygame.K_UP:
-                self.action['steering'] = -4*np.pi/180
+                self.action['steering'] = -20*np.pi/180
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT:
                 self.action['acceleration'] = 0
@@ -102,7 +102,7 @@ class ControlledVehicle(Vehicle):
         tau_ds = 5.0
         tau_s = 0.7
         Kpa = 1/tau_a
-        Kds = 1/(tau_ds*20)
+        Kds = 1/(tau_ds*5)
         Kps = 1/tau_s*Kds
         action = {}
         action['steering'] = Kps*(self.road.get_lateral_position(self.target_lane) - self.position[1]) - Kds*self.velocity*np.sin(self.heading)
