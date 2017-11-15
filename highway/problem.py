@@ -233,25 +233,23 @@ class RoadMDP(object):
         grid = np.zeros((self.road.lanes, int(self.HORIZON/self.TIME_QUANTIFICATION)))
         for v in self.road.vehicles:
             if v is not self.ego_vehicle:
-                distance = v.position[0] - self.ego_vehicle.position[0] # - v.LENGTH/2 - self.ego_vehicle.LENGTH/2
                 margin = v.LENGTH/2 + self.ego_vehicle.LENGTH/2
-                if distance > margin:
-                    distance -= margin
-                elif distance > -margin/2:
-                    distance = 0
+                collision_points = [(0, 2), (-margin, 1), (margin, 1)]
+                for m, cost in collision_points:
+                    distance = v.position[0] - self.ego_vehicle.position[0] + m
 
-                if self.ego_vehicle.velocity == v.velocity:
-                    continue
-                time_of_impact = distance/(self.ego_vehicle.velocity - v.velocity)
-                if time_of_impact < 0:
-                    continue
-                l, t = self.road.get_lane(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
-                if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
-                    grid[l,t] = 1
-                    # If time of impact is <1 on another lane, a collision will still happen
-                    # in a 1s lane chage
-                    if t==0:
-                        grid[l,1] = 1
+                    if self.ego_vehicle.velocity == v.velocity:
+                        continue
+                    time_of_impact = distance/(self.ego_vehicle.velocity - v.velocity)
+                    if time_of_impact < 0:
+                        continue
+                    l, t = self.road.get_lane(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
+                    if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
+                        grid[l,t] = max(grid[l,t], cost)
+                        # If time of impact is <1 on another lane, a collision will still happen
+                        # in a 1s lane chage
+                        if t==0:
+                            grid[l,1] = max(grid[l,1], 0.5)
         return grid
 
     def step(self, action):
@@ -329,7 +327,7 @@ class SimplifiedMDP(object):
 
 
 def test():
-    r = Road.create_obstacles_road(4, 4.0)
+    r = Road.create_random_road(4, 4.0, vehicles_count=1)
     v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
     v = ControlledVehicle.create_from(v, r)
     r.vehicles.append(v)
