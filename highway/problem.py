@@ -364,6 +364,8 @@ class SimplifiedMDP(object):
 
     def get_q_values(self, h, i, j):
         q_values = []
+        if j == self.T - 1:
+            return q_values # Terminal state
         for k in range(0,5):
             o, p, q = self.transition_model(k,h,i,j)
             q_values.append(self.reward(h,i,j,k)+self.value[o,p,q])
