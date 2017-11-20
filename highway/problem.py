@@ -89,9 +89,9 @@ class ControlledVehicle(Vehicle):
         such as lane changes.
     """
 
-    SPEED_MIN = 22
-    SPEED_COUNT = 4
-    SPEED_MAX = 30
+    SPEED_MIN = 20
+    SPEED_COUNT = 3
+    SPEED_MAX = 35
 
     def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
         super(ControlledVehicle, self).__init__(position, heading, velocity, ego)
@@ -299,11 +299,11 @@ class RoadMDP(object):
         return self.state
 
 class SimplifiedMDP(object):
-    GAMMA = 0.99
+    GAMMA = 1.0
     COLLISION_COST = 10
-    LANE_CHANGE_COST = 0.01
-    LEFT_LANE_COST = 0.001
-    HIGH_VELOCITY_REWARD = 0.05
+    LANE_CHANGE_COST = 0.00
+    LEFT_LANE_COST = 0.00
+    HIGH_VELOCITY_REWARD = 0.5
     actions = {0:'IDLE', 1:'LANE_LEFT', 2:'LANE_RIGHT', 3:'FASTER', 4:'SLOWER'}
     cost = {0:0, 1:-LANE_CHANGE_COST, 2:-LANE_CHANGE_COST, 3:0, 4:0}
 
@@ -316,7 +316,7 @@ class SimplifiedMDP(object):
                             -self.LEFT_LANE_COST*np.tile(np.arange(self.L)[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \
                             +self.HIGH_VELOCITY_REWARD*np.tile(np.arange(self.V)[:, np.newaxis, np.newaxis], (1, self.L, self.T))
 
-    def value_iteration(self, steps=100):
+    def value_iteration(self, steps=50):
         for _ in range(steps):
             self.update()
 

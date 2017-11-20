@@ -10,14 +10,14 @@ FPS = 30
 POLICY_FREQUENCY = 1
 dt = 1/FPS
 
-RECORD_VIDEO = False
+RECORD_VIDEO = True
 
 def main():
-    # r = Road.create_random_road(4, 4.0, 50)
-    # v = r.random_controlled_vehicle(25, ego=True)
-    r = Road.create_obstacles_road(4, 4.0)
-    v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
-    v = ControlledVehicle.create_from(v, r)
+    r = Road.create_random_road(4, 4.0, 50)
+    v = r.random_controlled_vehicle(25, ego=True)
+    # r = Road.create_obstacles_road(4, 4.0)
+    # v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
+    # v = ControlledVehicle.create_from(v, r)
     r.vehicles.append(v)
 
     t = 0
@@ -51,7 +51,7 @@ def main():
                 action = smdp.pick_action()
                 print(action)
                 v.perform_action(action)
-                pause = True
+                # pause = True
             r.step(dt)
 
         r.display(sim_surface)
