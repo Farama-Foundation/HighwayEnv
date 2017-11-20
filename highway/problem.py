@@ -387,6 +387,7 @@ class SimplifiedMDP(object):
                     for j in range(self.T):
                         color = cmap(norm(self.value[h,i,j]), bytes=True)
                         pygame.draw.rect(surface, color, (j*cell_size[0],i*cell_size[1]+h*velocity_size,cell_size[0],cell_size[1]), 0)
+                pygame.draw.line(surface, BLACK, (0,h*velocity_size), (self.T*cell_size[0],h*velocity_size), 1)
         pygame.draw.rect(surface, (255,0,0), (0*cell_size[0],self.lane*cell_size[1]+self.speed*velocity_size,cell_size[0],cell_size[1]), 1)
 
 def test():
