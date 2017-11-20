@@ -1,6 +1,8 @@
 from __future__ import division, print_function
 import pygame
-from problem import Road, Vehicle, ControlledVehicle, RoadMDP, SimplifiedMDP
+from vehicle import Vehicle, ControlledVehicle
+from road import Road, RoadSurface
+from mdp import RoadMDP, SimplifiedMDP
 import numpy as np
 import os
 
@@ -30,6 +32,7 @@ def main():
     size = [SCREEN_WIDTH, SCREEN_HEIGHT]
     screen = pygame.display.set_mode(size)
     sim_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT/2))
+    sim_surface = RoadSurface(sim_surface. get_size(), 0, sim_surface)
     value_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT/2))
 
     while not done:
