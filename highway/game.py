@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 import pygame
-from vehicle import Vehicle, ControlledVehicle
+from vehicle import Vehicle, ControlledVehicle, MDPVehicle
 from road import Road, RoadSurface
 from mdp import RoadMDP, SimplifiedMDP
 import numpy as np
@@ -16,7 +16,7 @@ RECORD_VIDEO = True
 
 def main():
     r = Road.create_random_road(4, 4.0, 50)
-    v = r.random_controlled_vehicle(25, ego=True)
+    v = r.random_mdp_vehicle(25, ego=True)
     # r = Road.create_obstacles_road(4, 4.0)
     # v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
     # v = ControlledVehicle.create_from(v, r)

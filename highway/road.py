@@ -3,7 +3,7 @@ import numpy as np
 import random
 import pygame
 
-from vehicle import Vehicle, ControlledVehicle
+from vehicle import Vehicle, ControlledVehicle, MDPVehicle
 
 class Road(object):
     """
@@ -51,6 +51,9 @@ class Road(object):
 
     def random_controlled_vehicle(self, velocity=None, ego=False):
         return ControlledVehicle.create_from(self.random_vehicle(velocity, ego), self)
+
+    def random_mdp_vehicle(self, velocity=None, ego=False):
+        return MDPVehicle.create_from(self.random_vehicle(velocity, ego), self)
 
     def display(self, screen):
         screen.fill(screen.GREY)

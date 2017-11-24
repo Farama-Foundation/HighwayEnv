@@ -71,15 +71,11 @@ class ControlledVehicle(Vehicle):
         such as lane changes.
     """
 
-    SPEED_MIN = 20
-    SPEED_COUNT = 3
-    SPEED_MAX = 35
-
     def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
         super(ControlledVehicle, self).__init__(position, heading, velocity, ego)
         self.road = road
         self.target_lane = target_lane
-        self.target_velocity = self.speed_to_index(target_velocity)
+        self.target_velocity = target_velocity
 
     @classmethod
     def create_from(cls, vehicle, road):
@@ -94,24 +90,15 @@ class ControlledVehicle(Vehicle):
         Kps = 1/tau_s*Kds
         action = {}
         action['steering'] = Kps*(self.road.get_lateral_position(self.target_lane) - self.position[1]) - Kds*self.velocity*np.sin(self.heading)
-        action['acceleration'] = Kpa*(self.index_to_speed(self.target_velocity) - self.velocity)
+        action['acceleration'] = Kpa*(self.target_velocity - self.velocity)
 
         super(ControlledVehicle, self).step(dt, action)
 
-    @classmethod
-    def index_to_speed(cls, index):
-        return cls.SPEED_MIN+index*(cls.SPEED_MAX-cls.SPEED_MIN)/(cls.SPEED_COUNT-1)
-
-    @classmethod
-    def speed_to_index(cls, speed):
-        x = (speed - cls.SPEED_MIN)/(cls.SPEED_MAX - cls.SPEED_MIN)
-        return np.int(np.round(x*(cls.SPEED_COUNT-1)))
-
-    def speed_index(self):
-        return self.speed_to_index(self.velocity)
-
     def get_lane(self):
         return self.road.get_lane(self.position)
+
+    def display(self, screen):
+        super(ControlledVehicle, self).display(screen)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -126,21 +113,78 @@ class ControlledVehicle(Vehicle):
 
     def perform_action(self, action):
         if action == "FASTER":
-            self.target_velocity = self.speed_to_index(self.velocity) + 1
+            self.target_velocity += 5
         elif action == "SLOWER":
-            self.target_velocity = self.speed_to_index(self.velocity) - 1
+            self.target_velocity -= 5
+        elif action == "LANE_RIGHT":
+            self.target_lane += 1
+        elif action == "LANE_LEFT":
+            self.target_lane -= 1
+
+
+class MDPVehicle(ControlledVehicle):
+    """
+        A vehicle piloted by a low-level controller, allowing high-level actions
+        such as lane changes.
+    """
+
+    SPEED_MIN = 21
+    SPEED_COUNT = 3
+    SPEED_MAX = 35
+
+    def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
+        super(MDPVehicle, self).__init__(position, heading, velocity, ego, road, target_lane, target_velocity)
+        self.velocity_index = self.speed_to_index(target_velocity)
+        self.target_velocity = self.index_to_speed(self.velocity_index)
+
+    @classmethod
+    def create_from(cls, vehicle, road):
+        return MDPVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane(vehicle.position), vehicle.velocity)
+
+    def step(self, dt):
+        self.target_velocity = self.index_to_speed(self.velocity_index)
+        super(MDPVehicle, self).step(dt)
+
+
+    @classmethod
+    def index_to_speed(cls, index):
+        return cls.SPEED_MIN+index*(cls.SPEED_MAX-cls.SPEED_MIN)/(cls.SPEED_COUNT-1)
+
+    @classmethod
+    def speed_to_index(cls, speed):
+        x = (speed - cls.SPEED_MIN)/(cls.SPEED_MAX - cls.SPEED_MIN)
+        return np.int(np.round(x*(cls.SPEED_COUNT-1)))
+
+    def speed_index(self):
+        return self.speed_to_index(self.velocity)
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                self.perform_action("FASTER")
+            if event.key == pygame.K_LEFT:
+                self.perform_action("SLOWER")
+            if event.key == pygame.K_DOWN:
+                self.perform_action("LANE_RIGHT")
+            if event.key == pygame.K_UP:
+                self.perform_action("LANE_LEFT")
+
+    def perform_action(self, action):
+        if action == "FASTER":
+            self.velocity_index = self.speed_to_index(self.velocity) + 1
+        elif action == "SLOWER":
+            self.velocity_index = self.speed_to_index(self.velocity) - 1
         elif action == "LANE_RIGHT":
             self.target_lane = self.get_lane()+1
         elif action == "LANE_LEFT":
             self.target_lane = self.get_lane()-1
 
-        self.target_velocity = min(max(self.target_velocity, 0), self.SPEED_COUNT-1)
+        self.velocity_index = min(max(self.velocity_index, 0), self.SPEED_COUNT-1)
         self.target_lane = min(max(self.target_lane, 0), self.road.lanes-1)
 
 
     def display(self, screen):
         super(ControlledVehicle, self).display(screen)
-
 
 def test():
     v = Vehicle([-20., 1.], 0, 20, ego=True)

@@ -4,7 +4,7 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 import pygame
 
-from vehicle import Vehicle, ControlledVehicle
+from vehicle import Vehicle, ControlledVehicle, MDPVehicle
 from road import Road
 
 class RoadMDP(object):
@@ -111,23 +111,23 @@ class SimplifiedMDP(object):
     def reward(self, h, i, j, action):
         return self.state_reward[h,i,j] + self.cost[action]
 
-    def transition_model(self, k, h, i, j):
+    def transition_model(self, a, h, i, j):
         """
             Deterministric transition from a position in the grid to the next.
-            k: action index
+            a: action index
             h: velocity index
             i: lane index
             j: time index
         """
-        if k == 0:
+        if a == 0:
             return self.clamp_position(h,i,j+1) # IDLE
-        elif k == 1:
+        elif a == 1:
             return self.clamp_position(h,i-1,j+1) # LEFT
-        elif k == 2:
+        elif a == 2:
             return self.clamp_position(h,i+1,j+1) # RIGHT
-        elif k == 3:
+        elif a == 3:
             return self.clamp_position(h+1,i,j+1) # FASTER
-        elif k == 4:
+        elif a == 4:
             return self.clamp_position(h-1,i,j+1) # SLOWER
         else:
             return None
@@ -164,7 +164,7 @@ class SimplifiedMDP(object):
 def test():
     r = Road.create_random_road(4, 4.0, vehicles_count=1)
     v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
-    v = ControlledVehicle.create_from(v, r)
+    v = MDPVehicle.create_from(v, r)
     r.vehicles.append(v)
 
 
