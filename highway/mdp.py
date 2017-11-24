@@ -142,10 +142,28 @@ class SimplifiedMDP(object):
         return q_values
 
     def pick_action(self):
+        """
+            Pick an optimal action according to the current estimated value function.
+        """
         h, i, j = self.speed, self.lane, 0
         q_values = self.get_q_values(h, i, j)
         a = np.argmax(q_values)
         return self.actions[a]
+
+    def get_path(self):
+        """
+            Get a list of successive states following the optimal policy
+            extracted from the current estimated value function.
+        """
+        h, i, j = self.speed, self.lane, 0
+        path = [(h,i,j)]
+        q_values = self.get_q_values(h, i, j)
+        while len(q_values):
+            a = np.argmax(q_values)
+            h, i, j = self.transition_model(a, h, i, j)
+            path.append((h,i,j))
+            q_values = self.get_q_values(h, i, j)
+        return path
 
     def display(self, surface):
         norm = mpl.colors.Normalize(vmin=-30, vmax=20)
@@ -153,13 +171,15 @@ class SimplifiedMDP(object):
         cell_size = (surface.get_width()//self.T, surface.get_height()//(self.L*self.V))
         velocity_size = surface.get_height()//self.V
         BLACK = (0, 0, 0)
+        RED = (255,0,0)
         for h in range(self.V):
                 for i in range(self.L):
                     for j in range(self.T):
                         color = cmap(norm(self.value[h,i,j]), bytes=True)
                         pygame.draw.rect(surface, color, (j*cell_size[0],i*cell_size[1]+h*velocity_size,cell_size[0],cell_size[1]), 0)
                 pygame.draw.line(surface, BLACK, (0,h*velocity_size), (self.T*cell_size[0],h*velocity_size), 1)
-        pygame.draw.rect(surface, (255,0,0), (0*cell_size[0],self.lane*cell_size[1]+self.speed*velocity_size,cell_size[0],cell_size[1]), 1)
+        for (h,i,j) in self.get_path():
+           pygame.draw.rect(surface, RED, (j*cell_size[0],i*cell_size[1]+h*velocity_size,cell_size[0],cell_size[1]), 1)
 
 def test():
     r = Road.create_random_road(4, 4.0, vehicles_count=1)
