@@ -1,6 +1,8 @@
 from __future__ import division, print_function
 import numpy as np
 import pygame
+import random
+import copy
 
 class Vehicle(object):
     """
@@ -15,7 +17,7 @@ class Vehicle(object):
     def __init__(self, position, heading=0, velocity=None, ego=False):
         self.position = np.array(position)
         self.heading = heading
-        self.velocity = velocity or 20
+        self.velocity = velocity or 20 - random.randint(0,3)
         self.ego = ego
         self.color = self.GREEN if self.ego else self.YELLOW
         self.action = {'steering':0, 'acceleration':0}
@@ -58,6 +60,12 @@ class Vehicle(object):
         h = self.heading if abs(self.heading) > 2*np.pi/180 else 0
         sr = pygame.transform.rotate(s, -h*180/np.pi)
         screen.blit(sr, (screen.pos2pix(self.position[0]-self.LENGTH/2, self.position[1]-self.WIDTH/2)))
+
+    def display_trajectory(self, screen, states):
+        for i in range(len(states)):
+            s = states[i]
+            s.color = (s.color[0], s.color[1], s.color[2], 50)
+            s.display(screen)
 
     def __str__(self):
         return "{}, {}, {}".format(self.position, self.heading, self.velocity)
@@ -128,8 +136,8 @@ class MDPVehicle(ControlledVehicle):
         such as lane changes.
     """
 
-    SPEED_MIN = 21
-    SPEED_COUNT = 3
+    SPEED_MIN = 25
+    SPEED_COUNT = 1
     SPEED_MAX = 35
 
     def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
@@ -148,7 +156,10 @@ class MDPVehicle(ControlledVehicle):
 
     @classmethod
     def index_to_speed(cls, index):
-        return cls.SPEED_MIN+index*(cls.SPEED_MAX-cls.SPEED_MIN)/(cls.SPEED_COUNT-1)
+        if cls.SPEED_COUNT > 1:
+            return cls.SPEED_MIN+index*(cls.SPEED_MAX-cls.SPEED_MIN)/(cls.SPEED_COUNT-1)
+        else:
+            return cls.SPEED_MIN
 
     @classmethod
     def speed_to_index(cls, speed):
@@ -181,6 +192,19 @@ class MDPVehicle(ControlledVehicle):
 
         self.velocity_index = min(max(self.velocity_index, 0), self.SPEED_COUNT-1)
         self.target_lane = min(max(self.target_lane, 0), self.road.lanes-1)
+
+    def predict_trajectory(self, actions, action_duration, log_duration, dt):
+        states = []
+        v = copy.deepcopy(self)
+        t = 0
+        for action in actions:
+            v.perform_action(action)
+            for _ in range(int(action_duration/dt)):
+                t+=1
+                v.step(dt)
+                if (t % int(log_duration/dt)) == 0:
+                    states.append(copy.deepcopy(v))
+        return states
 
 
     def display(self, screen):

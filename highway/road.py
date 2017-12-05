@@ -55,7 +55,7 @@ class Road(object):
     def random_mdp_vehicle(self, velocity=None, ego=False):
         return MDPVehicle.create_from(self.random_vehicle(velocity, ego), self)
 
-    def display(self, screen):
+    def display_road(self, screen):
         screen.fill(screen.GREY)
         if len(self.vehicles):
             screen.origin = self.vehicles[-1].position-np.array([3*self.STRIPE_SPACING, screen.get_height()/(2*screen.SCALING)])
@@ -77,8 +77,10 @@ class Road(object):
                     (screen.pos2pix(x0 + k*self.STRIPE_SPACING, l*self.lane_width)),
                     (screen.pos2pix(x0 + k*self.STRIPE_SPACING + self.STRIPE_LENGTH, l*self.lane_width)), 2)
 
+    def display_traffic(self, screen):
         for v in self.vehicles:
             v.display(screen)
+
 
     def __repr__(self):
         return self.vehicles.__repr__()

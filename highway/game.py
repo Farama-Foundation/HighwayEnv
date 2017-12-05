@@ -12,15 +12,15 @@ FPS = 30
 POLICY_FREQUENCY = 1
 dt = 1/FPS
 
-RECORD_VIDEO = True
+RECORD_VIDEO = False
 
 def main():
-    r = Road.create_random_road(4, 4.0, 50)
-    v = r.random_mdp_vehicle(25, ego=True)
-    # r = Road.create_obstacles_road(4, 4.0)
-    # v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
-    # v = ControlledVehicle.create_from(v, r)
-    r.vehicles.append(v)
+    road = Road.create_random_road(4, 4.0, 50)
+    vehicle = road.random_mdp_vehicle(25, ego=True)
+    # road = Road.create_obstacles_road(4, 4.0)
+    # vehicle = Vehicle([-20, road.get_lateral_position(0)], 0, 25, ego=True)
+    # vehicle = ControlledVehicle.create_from(vehicle, road)
+    road.vehicles.append(vehicle)
 
     t = 0
     done = False
@@ -42,22 +42,31 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     pause = not pause
-            v.handle_event(event)
+            vehicle.handle_event(event)
 
         if not pause:
             if t % (FPS//POLICY_FREQUENCY) == 0:
-                mdp = RoadMDP(r, v)
+                mdp = RoadMDP(road, vehicle)
                 smdp = SimplifiedMDP(mdp.state)
                 smdp.value_iteration()
                 print(mdp.state)
                 print(smdp.value)
+
+                _, actions = smdp.plan()
+                trajectory = vehicle.predict_trajectory(actions, mdp.TIME_QUANTIFICATION, 8*dt, dt)
+                print(actions)
+
                 action = smdp.pick_action()
                 print(action)
-                v.perform_action(action)
-                # pause = True
-            r.step(dt)
 
-        r.display(sim_surface)
+                vehicle.perform_action(action)
+                # pause = True
+            road.step(dt)
+
+
+        road.display_road(sim_surface)
+        vehicle.display_trajectory(sim_surface, trajectory)
+        road.display_traffic(sim_surface)
         smdp.display(value_surface)
         screen.blit(sim_surface, (0,0))
         screen.blit(value_surface, (0,SCREEN_HEIGHT/2))
@@ -67,8 +76,8 @@ def main():
 
         if RECORD_VIDEO:
             pygame.image.save(screen, "out/highway_{}.bmp".format(t))
-            if v.position[0] > np.max([o.position[0] for o in r.vehicles if o is not v])+25:
-                os.system("ffmpeg -r 60 -i out/highway_%d.bmp -vcodec libx264 -crf 25 out/highway.avi")
+            if vehicle.position[0] > np.max([o.position[0] for o in road.vehicles if o is not vehicle])+25:
+                os.system("ffmpeg -road 60 -i out/highway_%d.bmp -vcodec libx264 -crf 25 out/highway.avi")
                 os.system("rm out/*.bmp")
                 done = True
 

@@ -52,6 +52,9 @@ class RoadMDP(object):
                     l, t = self.road.get_lane(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
                     if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
                         grid[l,t] = max(grid[l,t], cost)
+                    l, t = self.road.get_lane(v.position), int(np.ceil(time_of_impact/self.TIME_QUANTIFICATION))
+                    if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
+                        grid[l,t] = max(grid[l,t], cost)
         return grid
 
     def step(self, action):
@@ -150,20 +153,22 @@ class SimplifiedMDP(object):
         a = np.argmax(q_values)
         return self.actions[a]
 
-    def get_path(self):
+    def plan(self):
         """
             Get a list of successive states following the optimal policy
             extracted from the current estimated value function.
         """
         h, i, j = self.speed, self.lane, 0
         path = [(h,i,j)]
+        actions = []
         q_values = self.get_q_values(h, i, j)
         while len(q_values):
             a = np.argmax(q_values)
+            actions.append(self.actions[a])
             h, i, j = self.transition_model(a, h, i, j)
             path.append((h,i,j))
             q_values = self.get_q_values(h, i, j)
-        return path
+        return path, actions
 
     def display(self, surface):
         norm = mpl.colors.Normalize(vmin=-30, vmax=20)
@@ -178,7 +183,8 @@ class SimplifiedMDP(object):
                         color = cmap(norm(self.value[h,i,j]), bytes=True)
                         pygame.draw.rect(surface, color, (j*cell_size[0],i*cell_size[1]+h*velocity_size,cell_size[0],cell_size[1]), 0)
                 pygame.draw.line(surface, BLACK, (0,h*velocity_size), (self.T*cell_size[0],h*velocity_size), 1)
-        for (h,i,j) in self.get_path():
+        path, actions = self.plan()
+        for (h,i,j) in path:
            pygame.draw.rect(surface, RED, (j*cell_size[0],i*cell_size[1]+h*velocity_size,cell_size[0],cell_size[1]), 1)
 
 def test():
