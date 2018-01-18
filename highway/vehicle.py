@@ -97,7 +97,7 @@ class ControlledVehicle(Vehicle):
         Kds = 1/(tau_ds*5)
         Kps = 1/tau_s*Kds
         action = {}
-        action['steering'] = Kps*(self.road.get_lateral_position(self.target_lane) - self.position[1]) - Kds*self.velocity*np.sin(self.heading)
+        action['steering'] = Kps*(-self.road.get_lane_coordinates(self.target_lane, self.position)[1]) - Kds*self.velocity*np.sin(self.heading)
         action['acceleration'] = Kpa*(self.target_velocity - self.velocity)
 
         super(ControlledVehicle, self).step(dt, action)
@@ -191,7 +191,7 @@ class MDPVehicle(ControlledVehicle):
             self.target_lane = self.get_lane()-1
 
         self.velocity_index = min(max(self.velocity_index, 0), self.SPEED_COUNT-1)
-        self.target_lane = min(max(self.target_lane, 0), self.road.lanes-1)
+        self.target_lane = min(max(self.target_lane, 0), len(self.road.lanes)-1)
 
     def predict_trajectory(self, actions, action_duration, log_duration, dt):
         states = []
