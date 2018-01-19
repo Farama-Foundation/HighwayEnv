@@ -148,24 +148,6 @@ class Road(object):
 
     def display_road(self, screen):
         screen.fill(screen.GREY)
-
-        # # Draw tracks
-        # x0 = (int(screen.origin[0])//self.STRIPE_SPACING)*self.STRIPE_SPACING
-        # ticks = int(screen.get_width()/(self.STRIPE_SPACING*screen.SCALING))+1
-        # # Outer
-        # pygame.draw.line(screen, screen.WHITE,
-        #     (screen.pos2pix(x0 + 0*self.STRIPE_SPACING, 0*self.lane_width)),
-        #     (screen.pos2pix(x0 + ticks*self.STRIPE_SPACING + self.STRIPE_LENGTH, 0*self.lane_width)), 2)
-        # pygame.draw.line(screen, screen.WHITE,
-        #     (screen.pos2pix(x0 + 0*self.STRIPE_SPACING, self.lanes*self.lane_width)),
-        #     (screen.pos2pix(x0 + ticks*self.STRIPE_SPACING + self.STRIPE_LENGTH, self.lanes*self.lane_width)), 2)
-        # # Inner
-        # for l in range(1,self.lanes):
-        #     for k in range(ticks):
-        #         pygame.draw.line(screen, screen.WHITE,
-        #             (screen.pos2pix(x0 + k*self.STRIPE_SPACING, l*self.lane_width)),
-        #             (screen.pos2pix(x0 + k*self.STRIPE_SPACING + self.STRIPE_LENGTH, l*self.lane_width)), 2)
-
         for l in self.lanes:
             l.display(screen)
 
@@ -199,55 +181,16 @@ class RoadSurface(pygame.Surface):
     def vec2pix(self, vec):
         return self.pos2pix(vec[0], vec[1])
 
-
-
-
 def test():
-    r = Road.create_random_road(4, 4.0, vehicles_count=3)
-    print(r)
-    for _ in range(10):
-        r.step(0.1)
-    print(r)
-
-def test_graphics():
-    road = Road.create_random_road(4, 4.0, vehicles_count=3)
+    from simulation import Simulation
+    sim = Simulation(vehicles_count=30)
     l = SineLane([0,20],0,4.0, 3, 6.28/60, [False,False])
-    road.lanes.append(l)
-    v = road.random_controlled_vehicle(ego=True)
-    v.target_lane = len(road.lanes)-1
-    road.vehicles.append(v)
+    sim.road.lanes.append(l)
+    sim.vehicle.target_lane = len(sim.road.lanes)-1
 
-    FPS = 30
-    dt = 1/FPS
-    SCREEN_WIDTH = 600
-    SCREEN_HEIGHT = 600
-    import pygame
-    pygame.init()
-    pygame.display.set_caption("Highway")
-    clock = pygame.time.Clock()
-    size = [SCREEN_WIDTH, SCREEN_HEIGHT]
-    screen = pygame.display.set_mode(size)
-    sim_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT/2))
-    sim_surface = RoadSurface(sim_surface. get_size(), 0, sim_surface)
-    done = False
-
-    while not done:
-        road.step(dt)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    pause = not pause
-            v.handle_event(event)
-
-        road.move_display_window(sim_surface)
-        road.display_road(sim_surface)
-        road.display_traffic(sim_surface)
-        screen.blit(sim_surface, (0,0))
-        clock.tick(FPS)
-        pygame.display.flip()
+    while not sim.done:
+        sim.process()
+    sim.quit()
 
 if __name__ == '__main__':
-    test_graphics()
+    test()

@@ -216,6 +216,68 @@ class MDPVehicle(ControlledVehicle):
     def display(self, screen):
         super(ControlledVehicle, self).display(screen)
 
+class OptionsVehicle(ControlledVehicle):
+    """
+        A vehicle piloted by a low-level controller, allowing high-level actions
+        such as lane changes.
+    """
+
+    SPEED_MIN = 25
+    SPEED_COUNT = 1
+    SPEED_MAX = 35
+
+    def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
+        super(OptionsVehicle, self).__init__(position, heading, velocity, ego, road, target_lane, target_velocity)
+        self.options = []
+
+    @classmethod
+    def create_from(cls, vehicle, road):
+        return OptionsVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), vehicle.velocity)
+
+    def step(self, dt):
+        super(OptionsVehicle, self).step(dt)
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                self.perform_action("FASTER")
+            if event.key == pygame.K_LEFT:
+                self.perform_action("SLOWER")
+            if event.key == pygame.K_DOWN:
+                self.perform_action("LANE_RIGHT")
+            if event.key == pygame.K_UP:
+                self.perform_action("LANE_LEFT")
+
+    def perform_action(self, action):
+        if action == "FASTER":
+            self.velocity_index = self.speed_to_index(self.velocity) + 1
+        elif action == "SLOWER":
+            self.velocity_index = self.speed_to_index(self.velocity) - 1
+        elif action == "LANE_RIGHT":
+            self.target_lane = self.get_lane_index()+1
+        elif action == "LANE_LEFT":
+            self.target_lane = self.get_lane_index()-1
+
+        self.velocity_index = min(max(self.velocity_index, 0), self.SPEED_COUNT-1)
+        self.target_lane = min(max(self.target_lane, 0), len(self.road.lanes)-1)
+
+    def predict_trajectory(self, actions, action_duration, log_duration, dt):
+        states = []
+        v = copy.deepcopy(self)
+        t = 0
+        for action in actions:
+            v.perform_action(action)
+            for _ in range(int(action_duration/dt)):
+                t+=1
+                v.step(dt)
+                if (t % int(log_duration/dt)) == 0:
+                    states.append(copy.deepcopy(v))
+        return states
+
+
+    def display(self, screen):
+        super(ControlledVehicle, self).display(screen)
+
 def test():
     v = Vehicle([-20., 1.], 0, 20, ego=True)
 
