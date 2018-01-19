@@ -100,7 +100,8 @@ class ControlledVehicle(Vehicle):
         Kds = 1/(tau_ds)
         Kps = 0.1
         action = {}
-        heading_ref = -np.arctan(Kps*(self.road.get_lane_coordinates(self.target_lane, self.position)[1]))+self.road.lanes[self.target_lane].heading
+        lane_coords = self.road.get_lane_coordinates(self.target_lane, self.position)
+        heading_ref = -np.arctan(Kps*lane_coords[1])+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*tau_ds)
         action['steering'] = Kds*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/max(self.velocity,1)
         action['steering'] = min(max(action['steering'], -self.MAX_STEERING_ANGLE), self.MAX_STEERING_ANGLE)
         action['acceleration'] = Kpa*(self.target_velocity - self.velocity)

@@ -32,7 +32,7 @@ class StraightLane(Lane):
     def position(self, s, lateral):
         return self.origin + s*self.direction + lateral*self.direction_lat
 
-    def heading(self, s):
+    def heading_at(self, s):
         return self.heading
 
     def local_coordinates(self, position):
@@ -67,6 +67,29 @@ class StraightLane(Lane):
                 (screen.vec2pix(stripe_start)),
                 (screen.vec2pix(stripe_end)), 2)
 
+class SineLane(StraightLane):
+    STRIPE_SPACING = 5
+    STRIPE_LENGTH = 3
+    def __init__(self, origin, heading, width, amplitude, pulsation, is_road_side=None):
+        super(SineLane, self).__init__(origin, heading, width, is_road_side)
+        self.amplitude = amplitude
+        self.pulsation = pulsation
+
+    def position(self, s, lateral):
+        return super(SineLane, self).position(s, lateral+self.amplitude*np.sin(self.pulsation*s))
+
+    def heading_at(self, s):
+        return super(SineLane, self).heading_at(s)+np.arctan(self.amplitude*self.pulsation*np.cos(self.pulsation*s))
+
+    def local_coordinates(self, position):
+        longi, lat = super(SineLane, self).local_coordinates(position)
+        return longi, lat-self.amplitude*np.sin(self.pulsation*longi)
+
+    def on_lane(self, position):
+        return super(SineLane, self).on_lane(screen)
+
+    def display(self, screen):
+        super(SineLane, self).display(screen)
 
 class Road(object):
     """
@@ -188,9 +211,9 @@ def test():
 
 def test_graphics():
     road = Road.create_random_road(4, 4.0, vehicles_count=3)
-    l = StraightLane([0,20],np.pi/2,4.0, [True,True])
+    l = SineLane([0,20],0,4.0, 3, 6.28/60, [False,False])
     road.lanes.append(l)
-    v = road.random_controlled_vehicle()
+    v = road.random_controlled_vehicle(ego=True)
     v.target_lane = len(road.lanes)-1
     road.vehicles.append(v)
 
@@ -214,6 +237,11 @@ def test_graphics():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    pause = not pause
+            v.handle_event(event)
+
         road.move_display_window(sim_surface)
         road.display_road(sim_surface)
         road.display_traffic(sim_surface)
