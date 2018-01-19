@@ -39,10 +39,11 @@ class RoadMDP(object):
         grid = np.zeros((len(self.road.lanes), self.T))
         for v in self.road.vehicles:
             if v is not self.ego_vehicle:
+                lane = self.road.get_lane(v.position)
                 margin = v.LENGTH/2 + self.ego_vehicle.LENGTH/2
                 collision_points = [(0, 2), (-margin, 1), (margin, 1)]
                 for m, cost in collision_points:
-                    distance = v.position[0] - self.ego_vehicle.position[0] + m
+                    distance = lane.local_coordinates(v.position)[0] - lane.local_coordinates(self.ego_vehicle.position)[0] + m
 
                     if ego_velocity == v.velocity:
                         continue
