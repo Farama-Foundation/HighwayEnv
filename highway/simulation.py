@@ -15,8 +15,8 @@ class Simulation:
     POLICY_FREQUENCY = 1
     RECORD_VIDEO = False
 
-    def __init__(self, vehicle_type=MDPVehicle, vehicles_count=0):
-        self.road = Road.create_random_road(4, 4.0, vehicles_count)
+    def __init__(self, vehicle_type=MDPVehicle, lanes_count = 4, vehicles_count=0):
+        self.road = Road.create_random_road(lanes_count, 4.0, vehicles_count)
         if vehicle_type == MDPVehicle:
             self.vehicle = self.road.random_mdp_vehicle(25, ego=True)
         elif vehicle_type == ControlledVehicle:
@@ -76,7 +76,7 @@ class Simulation:
             self.t += 1
 
     def display(self):
-        self.road.move_display_window(self.road_surface)
+        self.road.move_display_window_to(self.road_surface, self.vehicle.position)
         self.road.display_road(self.road_surface)
         if self.trajectory:
             self.vehicle.display_trajectory(self.road_surface, self.trajectory)
@@ -100,7 +100,7 @@ class Simulation:
         pygame.quit()
 
 def test():
-    sim = Simulation()
+    sim = Simulation(vehicles_count=50)
     while not sim.done:
         sim.process()
     sim.quit()

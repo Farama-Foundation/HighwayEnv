@@ -95,8 +95,6 @@ class Road(object):
     """
         The set of vehicles on the road, and its characteristics
     """
-    STRIPE_SPACING = 5
-    STRIPE_LENGTH = 3
     def __init__(self, lanes_count, lane_width, vehicles=[]):
         self.lanes = []
         for l in range(lanes_count):
@@ -133,7 +131,8 @@ class Road(object):
     def random_vehicle(self, velocity=None, ego=False):
         l = random.randint(0,len(self.lanes)-1)
         xmin = np.min([v.position[0] for v in self.vehicles]) if len(self.vehicles) else 0
-        v = Vehicle(self.lanes[l].position(xmin-2*self.STRIPE_SPACING, 0), 0, velocity, ego)
+        offset = 30*np.exp(-5/30*len(self.lanes))
+        v = Vehicle(self.lanes[l].position(xmin-offset, 0), 0, velocity, ego)
         return v
 
     def random_controlled_vehicle(self, velocity=None, ego=False):
@@ -142,9 +141,8 @@ class Road(object):
     def random_mdp_vehicle(self, velocity=None, ego=False):
         return MDPVehicle.create_from(self.random_vehicle(velocity, ego), self)
 
-    def move_display_window(self, screen):
-        if len(self.vehicles):
-            screen.origin = self.vehicles[-1].position-np.array([3*self.STRIPE_SPACING, screen.get_height()/(2*screen.SCALING)])
+    def move_display_window_to(self, screen, position):
+        screen.origin = position - np.array([15, screen.get_height()/(2*screen.SCALING)])
 
     def display_road(self, screen):
         screen.fill(screen.GREY)
@@ -183,10 +181,12 @@ class RoadSurface(pygame.Surface):
 
 def test():
     from simulation import Simulation
-    sim = Simulation(vehicles_count=30)
-    l = SineLane([0,20],0,4.0, 3, 6.28/60, [False,False])
+    sim = Simulation(lanes_count=1, vehicles_count=0)
+    l = SineLane(sim.road.lanes[-1].origin+np.array([0,9]),0,4.0, 3, 6.28/60, [False,False])
     sim.road.lanes.append(l)
-    sim.vehicle.target_lane = len(sim.road.lanes)-1
+    for _ in range(50):
+        sim.road.vehicles.append(sim.road.random_controlled_vehicle())
+    sim.vehicle.position[0] = sim.road.vehicles[-1].position[0]-10
 
     while not sim.done:
         sim.process()
