@@ -98,6 +98,9 @@ class Road(object):
             vehicle.step(dt)
 
     def get_lane(self, position):
+        return self.lanes[self.get_lane_index(position)]
+
+    def get_lane_index(self, position):
         lateral = [abs(l.local_coordinates(position)[1]) for l in self.lanes]
         return np.argmin(lateral)
 
@@ -162,7 +165,7 @@ class RoadSurface(pygame.Surface):
 
     def __init__(self, size, flags, surf):
         super(RoadSurface, self).__init__(size, flags, surf)
-        self.origin = [0, 0]
+        self.origin = np.array([0, 0])
 
     def pix(self, length):
         return int(length*self.SCALING)
@@ -185,6 +188,11 @@ def test():
 
 def test_graphics():
     road = Road.create_random_road(4, 4.0, vehicles_count=3)
+    l = StraightLane([0,20],np.pi/2,4.0, [True,True])
+    road.lanes.append(l)
+    v = road.random_controlled_vehicle()
+    v.target_lane = len(road.lanes)-1
+    road.vehicles.append(v)
 
     FPS = 30
     dt = 1/FPS

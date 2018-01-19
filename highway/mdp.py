@@ -28,15 +28,15 @@ class RoadMDP(object):
 
 
     def get_state(self):
-        grids = np.zeros((self.V, self.road.lanes, self.T))
+        grids = np.zeros((self.V, len(self.road.lanes), self.T))
         for k in range(self.V):
             grids[k,:,:] = self.generate_2D_grid(self.ego_vehicle.index_to_speed(k))
-        lane = self.road.get_lane(self.ego_vehicle.position)
+        lane = self.road.get_lane_index(self.ego_vehicle.position)
         speed = self.ego_vehicle.speed_index()
         return grids, lane, speed
 
     def generate_2D_grid(self, ego_velocity):
-        grid = np.zeros((self.road.lanes, self.T))
+        grid = np.zeros((len(self.road.lanes), self.T))
         for v in self.road.vehicles:
             if v is not self.ego_vehicle:
                 margin = v.LENGTH/2 + self.ego_vehicle.LENGTH/2
@@ -49,10 +49,10 @@ class RoadMDP(object):
                     time_of_impact = distance/(ego_velocity - v.velocity)
                     if time_of_impact < 0:
                         continue
-                    l, t = self.road.get_lane(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
+                    l, t = self.road.get_lane_index(v.position), int(time_of_impact/self.TIME_QUANTIFICATION)
                     if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
                         grid[l,t] = max(grid[l,t], cost)
-                    l, t = self.road.get_lane(v.position), int(np.ceil(time_of_impact/self.TIME_QUANTIFICATION))
+                    l, t = self.road.get_lane_index(v.position), int(np.ceil(time_of_impact/self.TIME_QUANTIFICATION))
                     if l >= 0 and l < np.shape(grid)[0] and t >= 0 and t < np.shape(grid)[1]:
                         grid[l,t] = max(grid[l,t], cost)
         return grid
@@ -64,7 +64,7 @@ class RoadMDP(object):
         # Inner high-frequency loop
         for k in range(int(self.MAX_ACTION_DURATION/self.ACTION_TIMESTEP)):
             self.road.step(self.ACTION_TIMESTEP)
-            new_state = (self.generate_grid(), self.road.get_lane(self.ego_vehicle.position))
+            new_state = (self.generate_grid(), self.road.get_lane_index(self.ego_vehicle.position))
             # Stop whenever macro-state changes
             # if (self.state[0] != new_state[0]).any() or self.state[1] != new_state[1]:
             #     break

@@ -4,6 +4,9 @@ import pygame
 import random
 import copy
 
+def wrap_to_pi(x):
+    return ((x+np.pi) % (2*np.pi)) - np.pi
+
 class Vehicle(object):
     """
         A moving vehicle and its dynamics.
@@ -53,13 +56,13 @@ class Vehicle(object):
                 self.action['steering'] = 0
 
     def display(self, screen):
-        s = pygame.Surface((screen.pix(self.LENGTH), screen.pix(self.WIDTH)), pygame.SRCALPHA)   # per-pixel alpha
-        s.fill(self.color)
-        pygame.draw.rect(s, screen.BLACK, (0,0,screen.pix(self.LENGTH),screen.pix(self.WIDTH)), 1)
+        s = pygame.Surface((screen.pix(self.LENGTH), screen.pix(self.LENGTH)), pygame.SRCALPHA)   # per-pixel alpha
+        pygame.draw.rect(s, self.color, (0,screen.pix(self.LENGTH)/2-screen.pix(self.WIDTH)/2,screen.pix(self.LENGTH),screen.pix(self.WIDTH)), 0)
+        pygame.draw.rect(s, screen.BLACK, (0,screen.pix(self.LENGTH)/2-screen.pix(self.WIDTH)/2,screen.pix(self.LENGTH),screen.pix(self.WIDTH)), 1)
         s = s.convert_alpha()
         h = self.heading if abs(self.heading) > 2*np.pi/180 else 0
         sr = pygame.transform.rotate(s, -h*180/np.pi)
-        screen.blit(sr, (screen.pos2pix(self.position[0]-self.LENGTH/2, self.position[1]-self.WIDTH/2)))
+        screen.blit(sr, (screen.pos2pix(self.position[0]-self.LENGTH/2, self.position[1]-self.LENGTH/2)))
 
     def display_trajectory(self, screen, states):
         for i in range(len(states)):
@@ -78,6 +81,7 @@ class ControlledVehicle(Vehicle):
         A vehicle piloted by a low-level controller, allowing high-level actions
         such as lane changes.
     """
+    MAX_STEERING_ANGLE = np.pi/4
 
     def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
         super(ControlledVehicle, self).__init__(position, heading, velocity, ego)
@@ -87,23 +91,24 @@ class ControlledVehicle(Vehicle):
 
     @classmethod
     def create_from(cls, vehicle, road):
-        return ControlledVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane(vehicle.position), vehicle.velocity)
+        return ControlledVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), vehicle.velocity)
 
     def step(self, dt):
         tau_a = 0.1
-        tau_ds = 5.0
-        tau_s = 0.4
+        tau_ds = 0.2
         Kpa = 1/tau_a
-        Kds = 1/(tau_ds*5)
-        Kps = 1/tau_s*Kds
+        Kds = 1/(tau_ds)
+        Kps = 0.1
         action = {}
-        action['steering'] = Kps*(-self.road.get_lane_coordinates(self.target_lane, self.position)[1]) - Kds*self.velocity*np.sin(self.heading)
+        heading_ref = -np.arctan(Kps*(self.road.get_lane_coordinates(self.target_lane, self.position)[1]))+self.road.lanes[self.target_lane].heading
+        action['steering'] = Kds*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/max(self.velocity,1)
+        action['steering'] = min(max(action['steering'], -self.MAX_STEERING_ANGLE), self.MAX_STEERING_ANGLE)
         action['acceleration'] = Kpa*(self.target_velocity - self.velocity)
 
         super(ControlledVehicle, self).step(dt, action)
 
-    def get_lane(self):
-        return self.road.get_lane(self.position)
+    def get_lane_index(self):
+        return self.road.get_lane_index(self.position)
 
     def display(self, screen):
         super(ControlledVehicle, self).display(screen)
@@ -147,7 +152,7 @@ class MDPVehicle(ControlledVehicle):
 
     @classmethod
     def create_from(cls, vehicle, road):
-        return MDPVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane(vehicle.position), vehicle.velocity)
+        return MDPVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), vehicle.velocity)
 
     def step(self, dt):
         self.target_velocity = self.index_to_speed(self.velocity_index)
@@ -186,9 +191,9 @@ class MDPVehicle(ControlledVehicle):
         elif action == "SLOWER":
             self.velocity_index = self.speed_to_index(self.velocity) - 1
         elif action == "LANE_RIGHT":
-            self.target_lane = self.get_lane()+1
+            self.target_lane = self.get_lane_index()+1
         elif action == "LANE_LEFT":
-            self.target_lane = self.get_lane()-1
+            self.target_lane = self.get_lane_index()-1
 
         self.velocity_index = min(max(self.velocity_index, 0), self.SPEED_COUNT-1)
         self.target_lane = min(max(self.target_lane, 0), len(self.road.lanes)-1)

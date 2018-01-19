@@ -64,6 +64,7 @@ def main():
             road.step(dt)
 
 
+        road.move_display_window(sim_surface)
         road.display_road(sim_surface)
         vehicle.display_trajectory(sim_surface, trajectory)
         road.display_traffic(sim_surface)
