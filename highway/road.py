@@ -111,7 +111,7 @@ class Road(object):
     def create_random_road(cls, lanes, lane_width, vehicles_count=100):
         r = Road(lanes, lane_width)
         for _ in range(vehicles_count):
-            r.vehicles.append(r.random_controlled_vehicle())
+            r.vehicles.append(ControlledVehicle.create_random(r))
         return r
 
     def step(self, dt):
@@ -127,19 +127,6 @@ class Road(object):
 
     def get_lane_coordinates(self, lane, position):
         return self.lanes[lane].local_coordinates(position)
-
-    def random_vehicle(self, velocity=None, ego=False):
-        l = random.randint(0,len(self.lanes)-1)
-        xmin = np.min([v.position[0] for v in self.vehicles]) if len(self.vehicles) else 0
-        offset = 30*np.exp(-5/30*len(self.lanes))
-        v = Vehicle(self.lanes[l].position(xmin-offset, 0), 0, velocity, ego)
-        return v
-
-    def random_controlled_vehicle(self, velocity=None, ego=False):
-        return ControlledVehicle.create_from(self.random_vehicle(velocity, ego), self)
-
-    def random_mdp_vehicle(self, velocity=None, ego=False):
-        return MDPVehicle.create_from(self.random_vehicle(velocity, ego), self)
 
     def move_display_window_to(self, screen, position):
         screen.origin = position - np.array([15, screen.get_height()/(2*screen.SCALING)])
@@ -185,7 +172,7 @@ def test():
     l = SineLane(sim.road.lanes[-1].origin+np.array([0,9]),0,4.0, 3, 6.28/60, [False,False])
     sim.road.lanes.append(l)
     for _ in range(50):
-        sim.road.vehicles.append(sim.road.random_controlled_vehicle())
+        sim.road.vehicles.append(ControlledVehicle.create_random(sim.road))
     sim.vehicle.position[0] = sim.road.vehicles[-1].position[0]-10
 
     while not sim.done:

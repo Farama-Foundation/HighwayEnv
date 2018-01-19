@@ -17,10 +17,7 @@ class Simulation:
 
     def __init__(self, vehicle_type=MDPVehicle, lanes_count = 4, vehicles_count=0):
         self.road = Road.create_random_road(lanes_count, 4.0, vehicles_count)
-        if vehicle_type == MDPVehicle:
-            self.vehicle = self.road.random_mdp_vehicle(25, ego=True)
-        elif vehicle_type == ControlledVehicle:
-            self.vehicle = ControlledVehicle.create_from(Vehicle([-20, self.road.get_lane(0).position(0,0)[1]], 0, 25, ego=True), self.road)
+        self.vehicle = vehicle_type.create_random(self.road, 25, ego=True)
         self.road.vehicles.append(self.vehicle)
 
         pygame.init()
@@ -76,6 +73,7 @@ class Simulation:
             self.t += 1
 
     def display(self):
+        print(self.vehicle)
         self.road.move_display_window_to(self.road_surface, self.vehicle.position)
         self.road.display_road(self.road_surface)
         if self.trajectory:

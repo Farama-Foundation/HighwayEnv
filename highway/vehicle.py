@@ -25,6 +25,14 @@ class Vehicle(object):
         self.color = self.GREEN if self.ego else self.YELLOW
         self.action = {'steering':0, 'acceleration':0}
 
+    @classmethod
+    def create_random(cls, road, velocity=None, ego=False):
+        l = random.randint(0,len(road.lanes)-1)
+        xmin = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
+        offset = 30*np.exp(-5/30*len(road.lanes))
+        v = Vehicle(road.lanes[l].position(xmin-offset, 0), 0, velocity, ego)
+        return v
+
     def step(self, dt, action=None):
         if not action:
             action = self.action
@@ -93,6 +101,10 @@ class ControlledVehicle(Vehicle):
     def create_from(cls, vehicle, road):
         return ControlledVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), vehicle.velocity)
 
+    @classmethod
+    def create_random(cls, road, velocity=None, ego=False):
+        return cls.create_from(Vehicle.create_random(road, velocity, ego), road)
+
     def step(self, dt):
         tau_a = 0.1
         tau_ds = 0.2
@@ -154,6 +166,10 @@ class MDPVehicle(ControlledVehicle):
     @classmethod
     def create_from(cls, vehicle, road):
         return MDPVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), vehicle.velocity)
+
+    @classmethod
+    def create_random(cls, road, velocity=None, ego=False):
+        return cls.create_from(Vehicle.create_random(road, velocity, ego), road)
 
     def step(self, dt):
         self.target_velocity = self.index_to_speed(self.velocity_index)
@@ -234,32 +250,40 @@ class OptionsVehicle(ControlledVehicle):
     def create_from(cls, vehicle, road):
         return OptionsVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), vehicle.velocity)
 
+    @classmethod
+    def create_random(cls, road, velocity=None, ego=False):
+        return cls.create_from(Vehicle.create_random(road, velocity, ego), road)
+
+    def add_option_over_vehicle(self, vehicle, placement):
+        self.options.append({'vehicle':vehicle, 'placement':placement})
+
     def step(self, dt):
+        for o in self.options:
+            v = o['vehicle']
+            if o['placement'] == "TAKE_WAY":
+                d = 1.0*v.velocity
+            elif o['placement'] == "GIVE_WAY":
+                d = -1.0*v.velocity
+            else:
+                d = 0
+            l = self.road.get_lane(v.position)
+            x = l.local_coordinates(self.position)[0]
+            xv = l.local_coordinates(v.position)[0]
+            Kp = 1/2
+            self.target_velocity = v.velocity + Kp*(d + xv - x)
+
         super(OptionsVehicle, self).step(dt)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                self.perform_action("FASTER")
+                self.perform_action("TAKE_WAY")
             if event.key == pygame.K_LEFT:
-                self.perform_action("SLOWER")
-            if event.key == pygame.K_DOWN:
-                self.perform_action("LANE_RIGHT")
-            if event.key == pygame.K_UP:
-                self.perform_action("LANE_LEFT")
+                self.perform_action("GIVE_WAY")
 
     def perform_action(self, action):
-        if action == "FASTER":
-            self.velocity_index = self.speed_to_index(self.velocity) + 1
-        elif action == "SLOWER":
-            self.velocity_index = self.speed_to_index(self.velocity) - 1
-        elif action == "LANE_RIGHT":
-            self.target_lane = self.get_lane_index()+1
-        elif action == "LANE_LEFT":
-            self.target_lane = self.get_lane_index()-1
-
-        self.velocity_index = min(max(self.velocity_index, 0), self.SPEED_COUNT-1)
-        self.target_lane = min(max(self.target_lane, 0), len(self.road.lanes)-1)
+        for o in self.options:
+            o['placement'] = action
 
     def predict_trajectory(self, actions, action_duration, log_duration, dt):
         states = []
@@ -279,12 +303,14 @@ class OptionsVehicle(ControlledVehicle):
         super(ControlledVehicle, self).display(screen)
 
 def test():
-    v = Vehicle([-20., 1.], 0, 20, ego=True)
+    from simulation import Simulation
+    sim = Simulation(vehicle_type=OptionsVehicle, lanes_count=2, vehicles_count=1)
+    other = sim.road.vehicles[0]
+    sim.vehicle.add_option_over_vehicle(other, 'TAKE_WAY')
 
-    print(v)
-    for _ in range(10):
-        v.step(0.1)
-    print(v)
+    while not sim.done:
+        sim.process()
+    sim.quit()
 
 if __name__ == '__main__':
     test()
