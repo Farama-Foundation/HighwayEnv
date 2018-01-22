@@ -18,6 +18,8 @@ class Vehicle(object):
     YELLOW = (200, 200, 0)
     BLUE = (100, 200, 255)
 
+    id_max = 0
+
     def __init__(self, position, heading=0, velocity=None, ego=False):
         self.position = np.array(position)
         self.heading = heading
@@ -25,6 +27,10 @@ class Vehicle(object):
         self.ego = ego
         self.color = self.GREEN if self.ego else self.YELLOW
         self.action = {'steering':0, 'acceleration':0}
+
+        self.lane = None
+        self.id = self.id_max
+        self.id_max += 1
 
     @classmethod
     def create_random(cls, road, velocity=None, ego=False):
@@ -80,7 +86,7 @@ class Vehicle(object):
             s.display(screen)
 
     def __str__(self):
-        return "{}, {}, {}".format(self.position, self.heading, self.velocity)
+        return "[{}]: {}, {}, {}".format(self.id, self.position, self.heading, self.velocity)
 
     def __repr__(self):
         return self.__str__()
