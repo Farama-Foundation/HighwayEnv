@@ -6,21 +6,23 @@ import pygame
 from vehicle import Vehicle, ControlledVehicle, MDPVehicle, IDMVehicle
 
 class Lane(object):
-    def __init__(self):
-        pass
-
-    def position(self, s):
-        pass
-
-    def heading(self, s):
-        pass
-
-    def local_coordinates(self, position):
-        pass
-
-class StraightLane(Lane):
     STRIPE_SPACING = 5
     STRIPE_LENGTH = 3
+    STRIPE_WIDTH = 0.3
+
+    def __init__(self):
+        raise Exception('Not implemented.')
+
+    def position(self, s):
+        raise Exception('Not implemented.')
+
+    def heading(self, s):
+        raise Exception('Not implemented.')
+
+    def local_coordinates(self, position):
+        raise Exception('Not implemented.')
+
+class StraightLane(Lane):
     def __init__(self, origin, heading, width, is_road_side=None):
         self.origin = origin
         self.heading = heading
@@ -57,7 +59,7 @@ class StraightLane(Lane):
         stripe_end = self.position(s0 + ticks*self.STRIPE_SPACING + self.STRIPE_LENGTH, (side-0.5)*self.width)
         pygame.draw.line(screen, screen.WHITE,
             (screen.vec2pix(stripe_start)),
-            (screen.vec2pix(stripe_end)), 2)
+            (screen.vec2pix(stripe_end)), max(screen.pix(self.STRIPE_WIDTH),1))
 
     def striped_line(self, screen, ticks, s0, side):
         for k in range(ticks):
@@ -65,7 +67,7 @@ class StraightLane(Lane):
             stripe_end = self.position(s0 + k*self.STRIPE_SPACING + self.STRIPE_LENGTH, (side-0.5)*self.width)
             pygame.draw.line(screen, screen.WHITE,
                 (screen.vec2pix(stripe_start)),
-                (screen.vec2pix(stripe_end)), 2)
+                (screen.vec2pix(stripe_end)), max(screen.pix(self.STRIPE_WIDTH),1))
 
 class SineLane(StraightLane):
     STRIPE_SPACING = 5
