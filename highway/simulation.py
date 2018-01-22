@@ -49,6 +49,10 @@ class Simulation:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.pause = not self.pause
+                if event.key == pygame.K_MINUS:
+                    self.road_surface.SCALING *= 1/1.3
+                if event.key == pygame.K_EQUALS:
+                    self.road_surface.SCALING *= 1.3
             self.vehicle.handle_event(event)
 
     def step(self):
