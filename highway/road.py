@@ -3,7 +3,7 @@ import numpy as np
 import random
 import pygame
 
-from vehicle import Vehicle, ControlledVehicle, MDPVehicle
+from vehicle import Vehicle, ControlledVehicle, MDPVehicle, IDMVehicle
 
 class Lane(object):
     def __init__(self):
@@ -105,18 +105,25 @@ class Road(object):
 
         self.lane_width = lane_width
         self.vehicles = vehicles
+        self.update_lanes()
 
 
     @classmethod
-    def create_random_road(cls, lanes, lane_width, vehicles_count=100):
+    def create_random_road(cls, lanes, lane_width, vehicles_count=50, vehicles_type=ControlledVehicle):
         r = Road(lanes, lane_width)
         for _ in range(vehicles_count):
-            r.vehicles.append(ControlledVehicle.create_random(r))
+            r.vehicles.append(vehicles_type.create_random(r))
+        r.update_lanes()
         return r
 
     def step(self, dt):
         for vehicle in self.vehicles:
             vehicle.step(dt)
+        self.update_lanes()
+
+    def update_lanes(self):
+        for v in self.vehicles:
+            v.lane = self.get_lane(v.position)
 
     def get_lane(self, position):
         return self.lanes[self.get_lane_index(position)]
@@ -127,6 +134,21 @@ class Road(object):
 
     def get_lane_coordinates(self, lane, position):
         return self.lanes[lane].local_coordinates(position)
+
+    def front_vehicle(self, vehicle):
+        lane = vehicle.lane
+        if not lane:
+            return None
+        s = lane.local_coordinates(vehicle.position)[0]
+        s_min = None
+        v_min = None
+        for v in self.vehicles:
+            if v is not vehicle and v.lane == lane:
+                s_v, _ = lane.local_coordinates(v.position)
+                if s < s_v and (s_min is None or s_v < s_min):
+                    s_min = s_v
+                    v_min = v
+        return v_min
 
     def move_display_window_to(self, screen, position):
         screen.origin = position - np.array([15, screen.get_height()/(2*screen.SCALING)])

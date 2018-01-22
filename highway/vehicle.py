@@ -16,6 +16,7 @@ class Vehicle(object):
 
     GREEN = (50, 200, 0)
     YELLOW = (200, 200, 0)
+    BLUE = (100, 200, 255)
 
     def __init__(self, position, heading=0, velocity=None, ego=False):
         self.position = np.array(position)
@@ -89,6 +90,11 @@ class ControlledVehicle(Vehicle):
         A vehicle piloted by a low-level controller, allowing high-level actions
         such as lane changes.
     """
+    TAU_A = 0.1
+    TAU_DS = 0.2
+    KP_A = 1/TAU_A
+    KD_S = 1/TAU_DS
+    KP_S = 0.1
     MAX_STEERING_ANGLE = np.pi/4
 
     def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
@@ -106,25 +112,16 @@ class ControlledVehicle(Vehicle):
         return cls.create_from(Vehicle.create_random(road, velocity, ego), road)
 
     def step(self, dt):
-        tau_a = 0.1
-        tau_ds = 0.2
-        Kpa = 1/tau_a
-        Kds = 1/(tau_ds)
-        Kps = 0.1
         action = {}
+        # Lateral controller: lane keeping
         lane_coords = self.road.get_lane_coordinates(self.target_lane, self.position)
-        heading_ref = -np.arctan(Kps*lane_coords[1])+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*tau_ds)
-        action['steering'] = Kds*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/max(self.velocity,1)
+        heading_ref = -np.arctan(self.KP_S*lane_coords[1])*np.sign(self.velocity)+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*self.TAU_DS)
+        action['steering'] = self.KD_S*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/self.velocity
         action['steering'] = min(max(action['steering'], -self.MAX_STEERING_ANGLE), self.MAX_STEERING_ANGLE)
-        action['acceleration'] = Kpa*(self.target_velocity - self.velocity)
+        # Longitudinal controller: velocity control
+        action['acceleration'] = self.KP_A*(self.target_velocity - self.velocity)
 
         super(ControlledVehicle, self).step(dt, action)
-
-    def get_lane_index(self):
-        return self.road.get_lane_index(self.position)
-
-    def display(self, screen):
-        super(ControlledVehicle, self).display(screen)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -146,6 +143,7 @@ class ControlledVehicle(Vehicle):
             self.target_lane += 1
         elif action == "LANE_LEFT":
             self.target_lane -= 1
+        self.target_lane = min(max(self.target_lane, 0), len(self.road.lanes)-1)
 
 
 class MDPVehicle(ControlledVehicle):
@@ -208,9 +206,9 @@ class MDPVehicle(ControlledVehicle):
         elif action == "SLOWER":
             self.velocity_index = self.speed_to_index(self.velocity) - 1
         elif action == "LANE_RIGHT":
-            self.target_lane = self.get_lane_index()+1
+            self.target_lane = self.road.get_lane_index(self.position)+1
         elif action == "LANE_LEFT":
-            self.target_lane = self.get_lane_index()-1
+            self.target_lane = self.road.get_lane_index(self.position)-1
 
         self.velocity_index = min(max(self.velocity_index, 0), self.SPEED_COUNT-1)
         self.target_lane = min(max(self.target_lane, 0), len(self.road.lanes)-1)
@@ -269,7 +267,7 @@ class OptionsVehicle(ControlledVehicle):
             l = self.road.get_lane(v.position)
             x = l.local_coordinates(self.position)[0]
             xv = l.local_coordinates(v.position)[0]
-            Kp = 1/2
+            Kp = 1./3
             self.target_velocity = v.velocity + Kp*(d + xv - x)
 
         super(OptionsVehicle, self).step(dt)
@@ -299,14 +297,60 @@ class OptionsVehicle(ControlledVehicle):
         return states
 
 
-    def display(self, screen):
-        super(ControlledVehicle, self).display(screen)
+class IDMVehicle(Vehicle):
+    """A longitudinal model"""
+    ACC_MAX = 3.0
+    BRAKE_ACC = 2.0
+    VELOCITY_WANTED = 20.0
+    DISTANCE_WANTED = 10.0
+    TIME_WANTED = 2.0
+    DELTA = 4.0
+
+    TAU_DS = 0.2
+    KD_S = 1/TAU_DS
+    KP_S = 0.1
+    MAX_STEERING_ANGLE = np.pi/4
+
+    def __init__(self, position, heading, velocity, ego, road, target_lane, front_vehicle):
+        super(IDMVehicle, self).__init__(position, heading, velocity, ego)
+        self.road = road
+        self.target_lane = target_lane
+        self.front_vehicle = front_vehicle
+        self.color = Vehicle.BLUE
+
+    @classmethod
+    def create_from(cls, vehicle, road):
+        return IDMVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), None)
+
+    @classmethod
+    def create_random(cls, road, velocity=None, ego=False):
+        return cls.create_from(Vehicle.create_random(road, velocity, ego), road)
+
+    def step(self, dt):
+        action = {}
+        # Lateral controller: lane keeping
+        lane_coords = self.road.get_lane_coordinates(self.target_lane, self.position)
+        heading_ref = -np.arctan(self.KP_S*lane_coords[1])+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*self.TAU_DS)
+        action['steering'] = self.KD_S*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/max(self.velocity,1)
+        action['steering'] = min(max(action['steering'], -self.MAX_STEERING_ANGLE), self.MAX_STEERING_ANGLE)
+
+        # Intelligent Driver Model
+        action['acceleration'] = self.ACC_MAX*(1-np.power(self.velocity/self.VELOCITY_WANTED, self.DELTA))
+        self.front_vehicle = self.road.front_vehicle(self)
+        if self.front_vehicle:
+            l = self.road.get_lane(self.position)
+            d = max(l.local_coordinates(self.front_vehicle.position)[0] - l.local_coordinates(self.position)[0], 1)
+            d_star = self.DISTANCE_WANTED + self.velocity*self.TIME_WANTED + \
+                self.velocity*(self.velocity-self.front_vehicle.velocity)/(2*np.sqrt(self.ACC_MAX*self.BRAKE_ACC))
+            action['acceleration'] -= self.ACC_MAX*np.power(d_star/d,2)
+        action['acceleration'] = min(max(action['acceleration'], -self.ACC_MAX), self.ACC_MAX)
+        super(IDMVehicle, self).step(dt, action)
 
 def test():
     from simulation import Simulation
-    sim = Simulation(vehicle_type=OptionsVehicle, lanes_count=2, vehicles_count=1)
-    other = sim.road.vehicles[0]
-    sim.vehicle.add_option_over_vehicle(other, 'TAKE_WAY')
+    sim = Simulation(lanes_count=2, vehicles_count=10, vehicles_type=IDMVehicle, ego_vehicle_type=ControlledVehicle)
+    # other = sim.road.vehicles[0]
+    # sim.vehicle.add_option_over_vehicle(other, 'TAKE_WAY')
 
     while not sim.done:
         sim.process()

@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 import pygame
-from vehicle import Vehicle, ControlledVehicle, MDPVehicle
+from vehicle import Vehicle, ControlledVehicle, MDPVehicle, IDMVehicle
 from road import Road, RoadSurface
 from mdp import RoadMDP, SimplifiedMDP
 import numpy as np
@@ -15,9 +15,9 @@ class Simulation:
     POLICY_FREQUENCY = 1
     RECORD_VIDEO = False
 
-    def __init__(self, vehicle_type=MDPVehicle, lanes_count = 4, vehicles_count=0):
-        self.road = Road.create_random_road(lanes_count, 4.0, vehicles_count)
-        self.vehicle = vehicle_type.create_random(self.road, 25, ego=True)
+    def __init__(self, lanes_count = 4, vehicles_count=0, vehicles_type=ControlledVehicle, ego_vehicle_type=MDPVehicle):
+        self.road = Road.create_random_road(lanes_count, 4.0, vehicles_count, vehicles_type)
+        self.vehicle = ego_vehicle_type.create_random(self.road, 25, ego=True)
         self.road.vehicles.append(self.vehicle)
 
         pygame.init()
