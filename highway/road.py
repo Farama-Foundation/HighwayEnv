@@ -151,7 +151,7 @@ class Road(object):
         return v_min
 
     def move_display_window_to(self, screen, position):
-        screen.origin = position - np.array([15, screen.get_height()/(2*screen.SCALING)])
+        screen.origin = position - np.array([0.3*screen.get_width()/screen.SCALING, screen.get_height()/(2*screen.SCALING)])
 
     def display_road(self, screen):
         screen.fill(screen.GREY)

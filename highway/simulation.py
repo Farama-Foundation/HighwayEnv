@@ -31,6 +31,7 @@ class Simulation:
         self.pause = False
         self.trajectory = None
         self.smdp = None
+        self.display_target = None
         self.screen = pygame.display.set_mode(size)
         self.road_surface = RoadSurface(panel_size, 0, pygame.Surface(panel_size))
         self.value_surface = pygame.Surface(panel_size)
@@ -72,9 +73,11 @@ class Simulation:
             self.road.step(self.dt)
             self.t += 1
 
+    def display_target_vehicle(self):
+        return self.display_target or self.vehicle
+
     def display(self):
-        print(self.vehicle)
-        self.road.move_display_window_to(self.road_surface, self.vehicle.position)
+        self.road.move_display_window_to(self.road_surface, self.display_target_vehicle().position)
         self.road.display_road(self.road_surface)
         if self.trajectory:
             self.vehicle.display_trajectory(self.road_surface, self.trajectory)
