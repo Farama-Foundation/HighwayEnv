@@ -190,7 +190,7 @@ class SimplifiedMDP(object):
 
 def test():
     r = Road.create_random_road(4, 4.0, vehicles_count=1)
-    v = Vehicle([-20, r.get_lateral_position(0)], 0, 25, ego=True)
+    v = Vehicle(r.lanes[0].position(0,0), 0, 25, ego=True)
     v = MDPVehicle.create_from(v, r)
     r.vehicles.append(v)
 
