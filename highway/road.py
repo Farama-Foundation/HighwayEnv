@@ -47,27 +47,32 @@ class StraightLane(Lane):
         longi, lat = self.local_coordinates(position)
         return np.abs(lat) <= self.width
 
-    def display(self, screen):
+    def display(self, screen, s_bounds=[-np.inf, np.inf]):
         s_origin, _ = self.local_coordinates(screen.origin)
         s0 = (int(s_origin)//self.STRIPE_SPACING)*self.STRIPE_SPACING
-        ticks = int((screen.get_height()+screen.get_width())/(self.STRIPE_SPACING*screen.SCALING))+1
+        stripes_count = int((screen.get_height()+screen.get_width())/(self.STRIPE_SPACING*screen.SCALING))+1
         for side in range(2):
-            self.continuous_line(screen, ticks, s0, side) if self.is_road_side[side] else self.striped_line(screen, ticks, s0, side)
+            if self.is_road_side[side]:
+                self.continuous_line(screen, stripes_count, s0, side, s_bounds)
+            else:
+                self.striped_line(screen, stripes_count, s0, side, s_bounds)
 
-    def continuous_line(self, screen, ticks, s0, side):
-        stripe_start = self.position(s0 + 0*self.STRIPE_SPACING, (side-0.5)*self.width)
-        stripe_end = self.position(s0 + ticks*self.STRIPE_SPACING + self.STRIPE_LENGTH, (side-0.5)*self.width)
+    def continuous_line(self, screen, stripes_count, s0, side, s_bounds):
+        stripe_start = min(max(s0 + 0*self.STRIPE_SPACING, s_bounds[0]), s_bounds[1])
+        stripe_end = min(max(s0 + stripes_count*self.STRIPE_SPACING + self.STRIPE_LENGTH, s_bounds[0]), s_bounds[1])
+        stripe_lat = (side-0.5)*self.width
         pygame.draw.line(screen, screen.WHITE,
-            (screen.vec2pix(stripe_start)),
-            (screen.vec2pix(stripe_end)), max(screen.pix(self.STRIPE_WIDTH),1))
+            (screen.vec2pix(self.position(stripe_start, stripe_lat))),
+            (screen.vec2pix(self.position(stripe_end, stripe_lat))), max(screen.pix(self.STRIPE_WIDTH),1))
 
-    def striped_line(self, screen, ticks, s0, side):
-        for k in range(ticks):
-            stripe_start = self.position(s0 + k*self.STRIPE_SPACING, (side-0.5)*self.width)
-            stripe_end = self.position(s0 + k*self.STRIPE_SPACING + self.STRIPE_LENGTH, (side-0.5)*self.width)
+    def striped_line(self, screen, stripes_count, s0, side, s_bounds):
+        for k in range(stripes_count):
+            stripe_start = min(max(s0 + k*self.STRIPE_SPACING, s_bounds[0]), s_bounds[1])
+            stripe_end = min(max(s0 + k*self.STRIPE_SPACING + self.STRIPE_LENGTH, s_bounds[0]), s_bounds[1])
+            stripe_lat = (side-0.5)*self.width
             pygame.draw.line(screen, screen.WHITE,
-                (screen.vec2pix(stripe_start)),
-                (screen.vec2pix(stripe_end)), max(screen.pix(self.STRIPE_WIDTH),1))
+                (screen.vec2pix(self.position(stripe_start, stripe_lat))),
+                (screen.vec2pix(self.position(stripe_end, stripe_lat))), max(screen.pix(self.STRIPE_WIDTH),1))
 
 class SineLane(StraightLane):
     STRIPE_SPACING = 5
