@@ -92,36 +92,76 @@ class SineLane(StraightLane):
         longi, lat = super(SineLane, self).local_coordinates(position)
         return longi, lat-self.amplitude*np.sin(self.pulsation*longi)
 
-    def on_lane(self, position):
-        return super(SineLane, self).on_lane(screen)
+class LanesConcatenation(Lane):
+    def __init__(self, lanes, end_abscissas):
+        self.lanes = lanes
+        self.end_abscissas = end_abscissas
+
+    def find_segment(self, s):
+        segment = 0
+        s_segment = s
+        for i in range(len(self.end_abscissas)-1):
+            if self.end_abscissas[i] > s:
+                break
+            else:
+                segment = i+1
+                s_segment -= self.end_abscissas[i]
+        return segment, s_segment
+
+    def position(self, s, lateral):
+        segment, s_segment = self.find_segment(s)
+        return self.lanes[segment].position(s_segment, lateral)
+
+    def heading_at(self, s):
+        segment, s_segment = self.find_segment(s)
+        return self.lanes[segment].heading_at(s_segment)
+
+    def local_coordinates(self, position):
+        ymin = None
+        lane = None
+        for i in range(len(self.lanes)):
+            x,y = self.lanes[i].local_coordinates(position)
+            if x < self.end_abscissas[i] or i == len(self.lanes)-1:
+                if ymin is None or abs(y) < ymin:
+                    ymin = abs(y)
+                    lane = i
+        x,y = self.lanes[lane].local_coordinates(position)
+        if lane>0:
+            x += self.end_abscissas[lane-1]
+        return x,y
 
     def display(self, screen):
-        super(SineLane, self).display(screen)
+        for i in range(len(self.lanes)):
+            s_bounds = [0, self.end_abscissas[i]] if i>0 else [-np.inf, self.end_abscissas[i]]
+            self.lanes[i].display(screen, s_bounds)
+
 
 class Road(object):
     """
         The set of vehicles on the road, and its characteristics
     """
-    def __init__(self, lanes_count, lane_width, vehicles=[]):
-        self.lanes = []
-        for l in range(lanes_count):
-            origin = np.array([0,l*lane_width])
-            heading = 0
-            is_road_side = [l==0, l==lanes_count-1]
-            self.lanes.append(StraightLane(origin, heading, lane_width, is_road_side))
-
-        self.lane_width = lane_width
+    def __init__(self, lanes=[], vehicles=[]):
+        self.lanes = lanes
         self.vehicles = vehicles
         self.update_lanes()
 
 
     @classmethod
-    def create_random_road(cls, lanes, lane_width, vehicles_count=50, vehicles_type=ControlledVehicle):
-        r = Road(lanes, lane_width)
-        for _ in range(vehicles_count):
-            r.vehicles.append(vehicles_type.create_random(r))
-        r.update_lanes()
+    def create_random_road(cls, lanes_count, lane_width, vehicles_count=50, vehicles_type=ControlledVehicle):
+        lanes = []
+        for l in range(lanes_count):
+            origin = np.array([0,l*lane_width])
+            heading = 0
+            is_road_side = [l==0, l==lanes_count-1]
+            lanes.append(StraightLane(origin, heading, lane_width, is_road_side))
+        r = Road(lanes)
+        r.add_random_vehicles(vehicles_count, vehicles_type)
         return r
+
+    def add_random_vehicles(self, vehicles_count=50, vehicles_type=ControlledVehicle):
+        for _ in range(vehicles_count):
+            self.vehicles.append(vehicles_type.create_random(self))
+            self.update_lanes()
 
     def step(self, dt):
         for vehicle in self.vehicles:
@@ -197,12 +237,14 @@ class RoadSurface(pygame.Surface):
 
 def test():
     from simulation import Simulation
-    sim = Simulation(lanes_count=1, vehicles_count=0)
-    l = SineLane(sim.road.lanes[-1].origin+np.array([0,9]),0,4.0, 3, 6.28/60, [False,False])
-    sim.road.lanes.append(l)
-    for _ in range(50):
-        sim.road.vehicles.append(ControlledVehicle.create_random(sim.road))
-    sim.vehicle.position[0] = sim.road.vehicles[-1].position[0]-10
+    # l = SineLane(sim.road.lanes[-1].origin+np.array([0,9]),0, 4.0, 3, 6.28/60, [False,False])
+    l1 = StraightLane(np.array([0,4]), 0, 4.0, [False,False])
+    l2 = StraightLane(np.array([100,4]), 30*3.14159/180, 4.0, [False,False])
+    l3 = StraightLane(np.array([187,55]), 0, 4.0, [False,False])
+    l4 = LanesConcatenation([l1, l2, l3], [100, 200, 300])
+    road = Road([l4])
+    road.add_random_vehicles(10, vehicles_type=IDMVehicle)
+    sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:
         sim.process()

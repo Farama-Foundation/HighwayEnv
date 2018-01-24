@@ -308,7 +308,7 @@ class IDMVehicle(Vehicle):
     ACC_MAX = 3.0
     BRAKE_ACC = 2.0
     VELOCITY_WANTED = 20.0
-    DISTANCE_WANTED = 10.0
+    DISTANCE_WANTED = 6.0
     TIME_WANTED = 2.0
     DELTA = 4.0
 
@@ -354,7 +354,9 @@ class IDMVehicle(Vehicle):
 
 def test():
     from simulation import Simulation
-    sim = Simulation(lanes_count=2, vehicles_count=10, vehicles_type=IDMVehicle, ego_vehicle_type=ControlledVehicle)
+    from road import Road
+    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=10, vehicles_type=IDMVehicle)
+    sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
     # other = sim.road.vehicles[0]
     # sim.vehicle.add_option_over_vehicle(other, 'TAKE_WAY')
 

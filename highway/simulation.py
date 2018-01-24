@@ -15,8 +15,8 @@ class Simulation:
     POLICY_FREQUENCY = 1
     RECORD_VIDEO = False
 
-    def __init__(self, lanes_count = 4, vehicles_count=0, vehicles_type=ControlledVehicle, ego_vehicle_type=MDPVehicle):
-        self.road = Road.create_random_road(lanes_count, 4.0, vehicles_count, vehicles_type)
+    def __init__(self, road, ego_vehicle_type=MDPVehicle):
+        self.road = road
         self.vehicle = ego_vehicle_type.create_random(self.road, 25, ego=True)
         self.road.vehicles.append(self.vehicle)
 
