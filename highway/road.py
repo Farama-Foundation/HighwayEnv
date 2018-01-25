@@ -101,7 +101,7 @@ class LanesConcatenation(Lane):
         segment = 0
         s_segment = s
         for i in range(len(self.end_abscissas)-1):
-            if self.end_abscissas[i] > s:
+            if self.end_abscissas[i] > s_segment:
                 break
             else:
                 segment = i+1
@@ -126,8 +126,7 @@ class LanesConcatenation(Lane):
                     ymin = abs(y)
                     lane = i
         x,y = self.lanes[lane].local_coordinates(position)
-        if lane>0:
-            x += self.end_abscissas[lane-1]
+        x += np.sum(self.end_abscissas[:lane])
         return x,y
 
     def display(self, screen):
