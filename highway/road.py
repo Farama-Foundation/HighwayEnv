@@ -140,7 +140,7 @@ class LanesConcatenation(Lane):
         lane = None
         for i in range(len(self.lanes)):
             x,y = self.lanes[i].local_coordinates(position)
-            if x < self.end_abscissas[i] or i == len(self.lanes)-1:
+            if (x > -self.STRIPE_SPACING or i == 0) and (x < self.end_abscissas[i] or i == len(self.lanes)-1):
                 if ymin is None or abs(y) < ymin:
                     ymin = abs(y)
                     lane = i
@@ -223,7 +223,6 @@ class Road(object):
     def display_traffic(self, screen):
         for v in self.vehicles:
             v.display(screen)
-
 
     def __repr__(self):
         return self.vehicles.__repr__()
