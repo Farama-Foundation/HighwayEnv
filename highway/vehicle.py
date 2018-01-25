@@ -146,10 +146,15 @@ class ControlledVehicle(Vehicle):
         elif action == "SLOWER":
             self.target_velocity -= 5
         elif action == "LANE_RIGHT":
-            self.target_lane += 1
+            next_lane = min(self.target_lane+1, len(self.road.lanes)-1)
+            x,y = self.road.lanes[next_lane].local_coordinates(self.position)
+            if abs(y) < 2*self.road.lanes[next_lane].width_at(x):
+                self.target_lane  = next_lane
         elif action == "LANE_LEFT":
-            self.target_lane -= 1
-        self.target_lane = min(max(self.target_lane, 0), len(self.road.lanes)-1)
+            next_lane = max(self.target_lane-1, 0)
+            x,y = self.road.lanes[next_lane].local_coordinates(self.position)
+            if abs(y) < 2*self.road.lanes[next_lane].width_at(x):
+                self.target_lane  = next_lane
 
 
 class MDPVehicle(ControlledVehicle):

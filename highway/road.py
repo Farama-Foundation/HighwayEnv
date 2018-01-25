@@ -16,7 +16,10 @@ class Lane(object):
     def position(self, s):
         raise Exception('Not implemented.')
 
-    def heading(self, s):
+    def heading_at(self, s):
+        raise Exception('Not implemented.')
+
+    def width_at(self, s):
         raise Exception('Not implemented.')
 
     def local_coordinates(self, position):
@@ -36,6 +39,9 @@ class StraightLane(Lane):
 
     def heading_at(self, s):
         return self.heading
+
+    def width_at(self, s):
+        return self.width
 
     def local_coordinates(self, position):
         delta = position - self.origin
@@ -119,6 +125,10 @@ class LanesConcatenation(Lane):
     def heading_at(self, s):
         segment, s_segment = self.find_segment(s)
         return self.lanes[segment].heading_at(s_segment)
+
+    def width_at(self, s):
+        segment, s_segment = self.find_segment(s)
+        return self.lanes[segment].width_at(s_segment)
 
     def local_coordinates(self, position):
         ymin = None
