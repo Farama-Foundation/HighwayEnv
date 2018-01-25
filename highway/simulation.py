@@ -49,10 +49,7 @@ class Simulation:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.pause = not self.pause
-                if event.key == pygame.K_MINUS:
-                    self.road_surface.SCALING *= 1/1.3
-                if event.key == pygame.K_EQUALS:
-                    self.road_surface.SCALING *= 1.3
+            self.road_surface.handle_event(event)
             self.vehicle.handle_event(event)
 
     def step(self):
@@ -81,7 +78,7 @@ class Simulation:
         return self.display_target or self.vehicle
 
     def display(self):
-        self.road.move_display_window_to(self.road_surface, self.display_target_vehicle().position)
+        self.road_surface.move_display_window_to(self.display_target_vehicle().position)
         self.road.display_road(self.road_surface)
         if self.trajectory:
             self.vehicle.display_trajectory(self.road_surface, self.trajectory)
@@ -105,7 +102,8 @@ class Simulation:
         pygame.quit()
 
 def test():
-    sim = Simulation(vehicles_count=50)
+    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=ControlledVehicle)
+    sim = Simulation(road)
     while not sim.done:
         sim.process()
     sim.quit()

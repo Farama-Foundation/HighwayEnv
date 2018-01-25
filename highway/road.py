@@ -200,9 +200,6 @@ class Road(object):
                     v_min = v
         return v_min
 
-    def move_display_window_to(self, screen, position):
-        screen.origin = position - np.array([0.3*screen.get_width()/screen.SCALING, screen.get_height()/(2*screen.SCALING)])
-
     def display_road(self, screen):
         screen.fill(screen.GREY)
         for l in self.lanes:
@@ -223,20 +220,38 @@ class RoadSurface(pygame.Surface):
     GREEN = (50, 200, 0)
     YELLOW = (200, 200, 0)
     WHITE = (255, 255, 255)
-    SCALING = 10.0
+    SCALING_FACTOR = 1.3
+    MOVING_FACTOR = 0.1
 
     def __init__(self, size, flags, surf):
         super(RoadSurface, self).__init__(size, flags, surf)
         self.origin = np.array([0, 0])
+        self.scaling = 10.0
+        self.centering_position = 0.5
 
     def pix(self, length):
-        return int(length*self.SCALING)
+        return int(length*self.scaling)
 
     def pos2pix(self, x, y):
         return self.pix(x-self.origin[0]), self.pix(y-self.origin[1])
 
     def vec2pix(self, vec):
         return self.pos2pix(vec[0], vec[1])
+
+    def move_display_window_to(self, position):
+        self.origin = position - np.array([self.centering_position*self.get_width()/self.scaling, self.get_height()/(2*self.scaling)])
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_l:
+                self.scaling *= 1/self.SCALING_FACTOR
+            if event.key == pygame.K_o:
+                self.scaling *= self.SCALING_FACTOR
+            if event.key == pygame.K_m:
+                self.centering_position -= self.MOVING_FACTOR
+            if event.key == pygame.K_k:
+                self.centering_position += self.MOVING_FACTOR
+
 
 def test():
     from simulation import Simulation
