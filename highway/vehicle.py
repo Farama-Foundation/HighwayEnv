@@ -304,18 +304,19 @@ class OptionsVehicle(ControlledVehicle):
 
 
 class IDMVehicle(Vehicle):
-    """A longitudinal model"""
+    """ Longitudinal controller that takes into account the front vehicle's distance and velocity.
+        Two settings are possible: IDM and MAXIMUM_VELOCITY.
+        The lateral controller is a lane keeping PD."""
+    CONTROLLER_IDM = 0
+    CONTROLLER_MAX_VELOCITY = 1
+
+    # IDM parameters
     ACC_MAX = 3.0
-    BRAKE_ACC = 2.0
+    BRAKE_ACC = 5.0
     VELOCITY_WANTED = 20.0
     DISTANCE_WANTED = 6.0
     TIME_WANTED = 2.0
     DELTA = 4.0
-
-    TAU_DS = 0.2
-    KD_S = 1/TAU_DS
-    KP_S = 0.1
-    MAX_STEERING_ANGLE = np.pi/4
 
     def __init__(self, position, heading, velocity, ego, road, target_lane, front_vehicle):
         super(IDMVehicle, self).__init__(position, heading, velocity, ego)
@@ -323,6 +324,7 @@ class IDMVehicle(Vehicle):
         self.target_lane = target_lane
         self.front_vehicle = front_vehicle
         self.color = Vehicle.BLUE
+        self.controller = self.CONTROLLER_IDM
 
     @classmethod
     def create_from(cls, vehicle, road):
@@ -336,21 +338,39 @@ class IDMVehicle(Vehicle):
         action = {}
         # Lateral controller: lane keeping
         lane_coords = self.road.get_lane_coordinates(self.target_lane, self.position)
-        heading_ref = -np.arctan(self.KP_S*lane_coords[1])+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*self.TAU_DS)
-        action['steering'] = self.KD_S*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/max(self.velocity,1)
-        action['steering'] = min(max(action['steering'], -self.MAX_STEERING_ANGLE), self.MAX_STEERING_ANGLE)
+        heading_ref = -np.arctan(ControlledVehicle.KP_S*lane_coords[1])+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*ControlledVehicle.TAU_DS)
+        action['steering'] = ControlledVehicle.KD_S*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/max(self.velocity,1)
+        action['steering'] = min(max(action['steering'], -ControlledVehicle.MAX_STEERING_ANGLE), ControlledVehicle.MAX_STEERING_ANGLE)
 
         # Intelligent Driver Model
-        action['acceleration'] = self.ACC_MAX*(1-np.power(self.velocity/self.VELOCITY_WANTED, self.DELTA))
-        self.front_vehicle = self.road.front_vehicle(self)
-        if self.front_vehicle:
-            l = self.road.get_lane(self.position)
-            d = max(l.local_coordinates(self.front_vehicle.position)[0] - l.local_coordinates(self.position)[0], 1)
-            d_star = self.DISTANCE_WANTED + self.velocity*self.TIME_WANTED + \
-                self.velocity*(self.velocity-self.front_vehicle.velocity)/(2*np.sqrt(self.ACC_MAX*self.BRAKE_ACC))
-            action['acceleration'] -= self.ACC_MAX*np.power(d_star/d,2)
-        action['acceleration'] = min(max(action['acceleration'], -self.ACC_MAX), self.ACC_MAX)
+        if self.controller == self.CONTROLLER_IDM:
+            action['acceleration'] = self.ACC_MAX*(1-np.power(self.velocity/self.VELOCITY_WANTED, self.DELTA))
+            self.front_vehicle = self.road.front_vehicle(self)
+            if self.front_vehicle:
+                l = self.road.get_lane(self.position)
+                d = max(l.local_coordinates(self.front_vehicle.position)[0] - l.local_coordinates(self.position)[0], 1)
+                d_star = self.DISTANCE_WANTED + self.velocity*self.TIME_WANTED + \
+                    self.velocity*(self.velocity-self.front_vehicle.velocity)/(2*np.sqrt(self.ACC_MAX*self.BRAKE_ACC))
+                action['acceleration'] -= self.ACC_MAX*np.power(d_star/d,2)
+
+        # Max velocity
+        if self.controller == self.CONTROLLER_MAX_VELOCITY:
+            action['acceleration'] = 2*ControlledVehicle.KP_A*(self.maximum_velocity() - self.velocity)
+
+        action['acceleration'] = min(max(action['acceleration'], -self.BRAKE_ACC), self.ACC_MAX)
         super(IDMVehicle, self).step(dt, action)
+
+    def maximum_velocity(self):
+        if not self.front_vehicle:
+            return self.VELOCITY_WANTED
+        a0 = self.BRAKE_ACC
+        a1 = self.BRAKE_ACC
+        tau = 1.0
+        l = self.road.get_lane(self.position)
+        d = max(l.local_coordinates(self.front_vehicle.position)[0] - l.local_coordinates(self.position)[0] - self.DISTANCE_WANTED, 0)
+        v1_0 = self.front_vehicle.velocity
+        delta = 4*(a0*a1*tau)**2+8*a0*(a1**2)*d+4*a0*a1*v1_0**2
+        return -a0*tau+np.sqrt(delta)/(2*a1)
 
 def test():
     from simulation import Simulation
