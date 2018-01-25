@@ -13,6 +13,7 @@ class Vehicle(object):
     """
     LENGTH = 5.0
     WIDTH = 2.0
+    STEERING_TAU = 0.2
 
     GREEN = (50, 200, 0)
     YELLOW = (200, 200, 0)
@@ -23,6 +24,7 @@ class Vehicle(object):
     def __init__(self, position, heading=0, velocity=None, ego=False):
         self.position = np.array(position)
         self.heading = heading
+        self.steering_angle = 0
         self.velocity = velocity or 20 - random.randint(0,3)
         self.ego = ego
         self.color = self.GREEN if self.ego else self.YELLOW
@@ -45,7 +47,8 @@ class Vehicle(object):
             action = self.action
         v = self.velocity*np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v*dt
-        self.heading += self.velocity*np.tan(action['steering'])/self.LENGTH*dt
+        self.heading += self.velocity*self.steering_angle/self.LENGTH*dt
+        self.steering_angle += 1/self.STEERING_TAU*(np.tan(action['steering']) - self.steering_angle)*dt
         self.velocity += action['acceleration']*dt
 
     def handle_event(self, event):
@@ -100,7 +103,7 @@ class ControlledVehicle(Vehicle):
     TAU_DS = 0.2
     KP_A = 1/TAU_A
     KD_S = 1/TAU_DS
-    KP_S = 0.1
+    KP_S = 0.04
     MAX_STEERING_ANGLE = np.pi/4
 
     def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
