@@ -47,32 +47,36 @@ class StraightLane(Lane):
         longi, lat = self.local_coordinates(position)
         return np.abs(lat) <= self.width
 
-    def display(self, screen, s_bounds=[-np.inf, np.inf]):
+    def display(self, screen, bounds=[-np.inf, np.inf]):
         s_origin, _ = self.local_coordinates(screen.origin)
         s0 = (int(s_origin)//self.STRIPE_SPACING)*self.STRIPE_SPACING
         stripes_count = int((screen.get_height()+screen.get_width())/(self.STRIPE_SPACING*screen.SCALING))+1
         for side in range(2):
             if self.is_road_side[side]:
-                self.continuous_line(screen, stripes_count, s0, side, s_bounds)
+                self.continuous_line(screen, stripes_count, s0, side, bounds)
             else:
-                self.striped_line(screen, stripes_count, s0, side, s_bounds)
+                self.striped_line(screen, stripes_count, s0, side, bounds)
 
-    def continuous_line(self, screen, stripes_count, s0, side, s_bounds):
-        stripe_start = min(max(s0 + 0*self.STRIPE_SPACING, s_bounds[0]), s_bounds[1])
-        stripe_end = min(max(s0 + stripes_count*self.STRIPE_SPACING + self.STRIPE_LENGTH, s_bounds[0]), s_bounds[1])
-        stripe_lat = (side-0.5)*self.width
-        pygame.draw.line(screen, screen.WHITE,
-            (screen.vec2pix(self.position(stripe_start, stripe_lat))),
-            (screen.vec2pix(self.position(stripe_end, stripe_lat))), max(screen.pix(self.STRIPE_WIDTH),1))
+    def continuous_line(self, screen, stripes_count, s0, side, bounds):
+        starts = [s0 + 0*self.STRIPE_SPACING]
+        ends = [s0 + stripes_count*self.STRIPE_SPACING + self.STRIPE_LENGTH]
+        lat = (side-0.5)*self.width
+        self.draw_stripes(screen, starts, ends, lat, bounds)
 
-    def striped_line(self, screen, stripes_count, s0, side, s_bounds):
-        for k in range(stripes_count):
-            stripe_start = min(max(s0 + k*self.STRIPE_SPACING, s_bounds[0]), s_bounds[1])
-            stripe_end = min(max(s0 + k*self.STRIPE_SPACING + self.STRIPE_LENGTH, s_bounds[0]), s_bounds[1])
-            stripe_lat = (side-0.5)*self.width
-            pygame.draw.line(screen, screen.WHITE,
-                (screen.vec2pix(self.position(stripe_start, stripe_lat))),
-                (screen.vec2pix(self.position(stripe_end, stripe_lat))), max(screen.pix(self.STRIPE_WIDTH),1))
+    def striped_line(self, screen, stripes_count, s0, side, bounds):
+        starts = s0 + np.arange(stripes_count)*self.STRIPE_SPACING
+        ends = s0 + np.arange(stripes_count)*self.STRIPE_SPACING+self.STRIPE_LENGTH
+        lat = (side-0.5)*self.width
+        self.draw_stripes(screen, starts, ends, lat, bounds)
+
+    def draw_stripes(self, screen, starts, ends, lat, bounds):
+        starts = np.minimum(np.maximum(starts, bounds[0]), bounds[1])
+        ends = np.minimum(np.maximum(ends, bounds[0]), bounds[1])
+        for k in range(len(starts)):
+            if abs(starts[k]-ends[k]) > 0.5*self.STRIPE_LENGTH:
+                pygame.draw.line(screen, screen.WHITE,
+                    (screen.vec2pix(self.position(starts[k], lat))),
+                    (screen.vec2pix(self.position(ends[k], lat))), max(screen.pix(self.STRIPE_WIDTH),1))
 
 class SineLane(StraightLane):
     STRIPE_SPACING = 5
@@ -131,8 +135,8 @@ class LanesConcatenation(Lane):
 
     def display(self, screen):
         for i in range(len(self.lanes)):
-            s_bounds = [0, self.end_abscissas[i]] if i>0 else [-np.inf, self.end_abscissas[i]]
-            self.lanes[i].display(screen, s_bounds)
+            bounds = [0, self.end_abscissas[i]] if i>0 else [-np.inf, self.end_abscissas[i]]
+            self.lanes[i].display(screen, bounds)
 
 
 class Road(object):
@@ -237,12 +241,13 @@ class RoadSurface(pygame.Surface):
 def test():
     from simulation import Simulation
     # l = SineLane(sim.road.lanes[-1].origin+np.array([0,9]),0, 4.0, 3, 6.28/60, [False,False])
-    l1 = StraightLane(np.array([0,4]), 0, 4.0, [False,False])
-    l2 = StraightLane(np.array([100,4]), 30*3.14159/180, 4.0, [False,False])
-    l3 = StraightLane(np.array([187,55]), 0, 4.0, [False,False])
-    l4 = LanesConcatenation([l1, l2, l3], [100, 200, 300])
-    road = Road([l4])
-    road.add_random_vehicles(10, vehicles_type=IDMVehicle)
+    ends = [50, 100, 50]
+    l0 = StraightLane(np.array([0,4]), 0, 4.0, [False,False])
+    l1 = StraightLane(l0.position(ends[0],0), 30*3.14159/180, 4.0, [False,False])
+    l2 = StraightLane(l1.position(ends[1],0), 0, 4.0, [False,False])
+    l = LanesConcatenation([l0, l1, l2], ends)
+    road = Road([l])
+    # road.add_random_vehicles(10, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:
