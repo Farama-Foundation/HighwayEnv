@@ -31,8 +31,8 @@ class Vehicle(object):
         self.action = {'steering':0, 'acceleration':0}
 
         self.lane = None
-        self.id = self.id_max
-        self.id_max += 1
+        self.id = Vehicle.id_max
+        Vehicle.id_max += 1
 
     @classmethod
     def create_random(cls, road, velocity=None, ego=False):
@@ -330,6 +330,11 @@ class IDMVehicle(Vehicle):
     TIME_WANTED = 1.0
     DELTA = 4.0
 
+    # Lane change parameters
+    LANE_CHANGE_MIN_ACC_GAIN = 0.2
+    LANE_CHANGE_MAX_ACC_LOSS = 3.
+    LANE_CHANGE_AVG_DELAY = 0.5
+
     def __init__(self, position, heading, velocity, ego, road, target_lane):
         super(IDMVehicle, self).__init__(position, heading, velocity, ego)
         self.road = road
@@ -348,17 +353,20 @@ class IDMVehicle(Vehicle):
 
     def step(self, dt):
         action = {}
+
+        self.change_lane_policy(dt)
+
         # Lateral controller: lane keeping
         lane_coords = self.road.get_lane_coordinates(self.target_lane, self.position)
         heading_ref = -np.arctan(ControlledVehicle.KP_S*lane_coords[1])+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*ControlledVehicle.TAU_DS)
         action['steering'] = ControlledVehicle.KD_S*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/max(self.velocity,1)
         action['steering'] = min(max(action['steering'], -ControlledVehicle.MAX_STEERING_ANGLE), ControlledVehicle.MAX_STEERING_ANGLE)
 
-        front_vehicle = self.road.front_vehicle(self)
+        front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
 
         # Intelligent Driver Model
         if self.controller == self.CONTROLLER_IDM:
-            action['acceleration'] = self.IDM(front_vehicle)
+            action['acceleration'] = IDMVehicle.IDM(ego_vehicle=self, front_vehicle=front_vehicle)
 
         # Max velocity
         if self.controller == self.CONTROLLER_MAX_VELOCITY:
@@ -368,16 +376,19 @@ class IDMVehicle(Vehicle):
         action['acceleration'] = min(max(action['acceleration'], -self.BRAKE_ACC), self.ACC_MAX)
         super(IDMVehicle, self).step(dt, action)
 
-    def IDM(self, front_vehicle=None):
-        acceleration = self.ACC_MAX*(1-np.power(self.velocity/self.target_velocity, self.DELTA))
+    @classmethod
+    def IDM(cls, ego_vehicle, front_vehicle=None):
+        if not ego_vehicle:
+            return None
+        acceleration = cls.ACC_MAX*(1-np.power(ego_vehicle.velocity/ego_vehicle.target_velocity, cls.DELTA))
         if front_vehicle:
-            d0 = self.DISTANCE_WANTED
-            tau = self.TIME_WANTED
-            ab = self.ACC_MAX*self.BRAKE_ACC
-            d = max(self.lane_distance_to_vehicle(front_vehicle)-self.LENGTH, 0.1)
-            dv = self.velocity-front_vehicle.velocity
-            d_star = d0 + self.velocity*tau + self.velocity*dv/(2*np.sqrt(ab))
-            acceleration -= self.ACC_MAX*np.power(d_star/d,2)
+            d0 = cls.DISTANCE_WANTED
+            tau = cls.TIME_WANTED
+            ab = cls.ACC_MAX*cls.BRAKE_ACC
+            d = max(ego_vehicle.lane_distance_to_vehicle(front_vehicle)-cls.LENGTH, 0.1)
+            dv = ego_vehicle.velocity-front_vehicle.velocity
+            d_star = d0 + ego_vehicle.velocity*tau + ego_vehicle.velocity*dv/(2*np.sqrt(ab))
+            acceleration -= cls.ACC_MAX*np.power(d_star/d,2)
         return acceleration
 
     def maximum_velocity(self, front_vehicle=None):
@@ -394,10 +405,47 @@ class IDMVehicle(Vehicle):
         v_max = -a0*tau+np.sqrt(delta)/(2*a1)
         return v_max
 
+    def change_lane_policy(self, dt=None):
+        if dt and np.random.randint(int(self.LANE_CHANGE_AVG_DELAY/dt)) != 0:
+            return
+
+        lanes = np.minimum(np.maximum(np.array([-1,1])+self.target_lane, 0), len(self.road.lanes)-1)
+        for l in lanes:
+            if l != self.target_lane and self.should_change_lane(l):
+                self.target_lane = l
+
+    def should_change_lane(self, lane_index):
+        # Is the target lane close enough?
+        x,y = self.road.lanes[lane_index].local_coordinates(self.position)
+        lane_close = abs(y) < 2*self.road.lanes[lane_index].width_at(x)
+        if not lane_close:
+            return False
+
+        # Is there an advantage for me to change lane?
+        front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
+        lane_front_vehicle, lane_rear_vehicle = self.road.neighbour_vehicles(self, self.road.lanes[lane_index])
+        current_acceleration = IDMVehicle.IDM(ego_vehicle=self, front_vehicle=front_vehicle)
+        predicted_acceleration = IDMVehicle.IDM(ego_vehicle=self, front_vehicle=lane_front_vehicle)
+        self_avantage = predicted_acceleration - current_acceleration > self.LANE_CHANGE_MIN_ACC_GAIN
+        if not self_avantage:
+            return False
+
+        # Is there a disadvantage for my target lane's rear vehicle?
+        if (self_avantage or rear_advantage) and lane_rear_vehicle:
+            rear_current_acceleration = IDMVehicle.IDM(ego_vehicle=lane_rear_vehicle, front_vehicle=lane_front_vehicle)
+            rear_predicted_acceleration = IDMVehicle.IDM(ego_vehicle=lane_rear_vehicle, front_vehicle=self)
+            lane_rear_disadvantage = rear_predicted_acceleration - rear_current_acceleration < -self.LANE_CHANGE_MAX_ACC_LOSS
+            if lane_rear_disadvantage:
+                return False
+
+        return True
+
+
+
 def test():
     from simulation import Simulation
     from road import Road
-    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=10, vehicles_type=IDMVehicle)
+    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=3, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:

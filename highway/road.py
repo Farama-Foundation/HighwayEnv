@@ -200,20 +200,23 @@ class Road(object):
     def get_lane_coordinates(self, lane, position):
         return self.lanes[lane].local_coordinates(position)
 
-    def front_vehicle(self, vehicle):
-        lane = vehicle.lane
+    def neighbour_vehicles(self, vehicle, lane=None):
+        lane = lane or vehicle.lane
         if not lane:
-            return None
+            return None, None
         s = lane.local_coordinates(vehicle.position)[0]
-        s_min = None
-        v_min = None
+        s_front = s_rear = None
+        v_front = v_rear = None
         for v in self.vehicles:
             if v is not vehicle and v.lane == lane:
                 s_v, _ = lane.local_coordinates(v.position)
-                if s < s_v and (s_min is None or s_v < s_min):
-                    s_min = s_v
-                    v_min = v
-        return v_min
+                if s < s_v and (s_front is None or s_v < s_front):
+                    s_front = s_v
+                    v_front = v
+                if s_v < s and (s_rear is None or s_v > s_rear):
+                    s_rear = s_v
+                    v_rear = v
+        return v_front, v_rear
 
     def display_road(self, screen):
         screen.fill(screen.GREY)

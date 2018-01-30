@@ -8,7 +8,7 @@ import os
 
 
 class Simulation:
-    SCREEN_WIDTH = 600
+    SCREEN_WIDTH = 1200
     SCREEN_HEIGHT = 600
     FPS = 30
     dt = 1/30
@@ -102,7 +102,7 @@ class Simulation:
         pygame.quit()
 
 def test():
-    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=ControlledVehicle)
+    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
     sim = Simulation(road)
     while not sim.done:
         sim.process()
