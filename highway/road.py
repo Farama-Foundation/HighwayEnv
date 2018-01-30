@@ -2,6 +2,7 @@ from __future__ import division, print_function
 import numpy as np
 import random
 import pygame
+import utils
 
 from vehicle import Vehicle, ControlledVehicle, MDPVehicle, IDMVehicle
 
@@ -81,8 +82,8 @@ class StraightLane(Lane):
         self.draw_stripes(screen, starts, ends, lat, bounds)
 
     def draw_stripes(self, screen, starts, ends, lat, bounds):
-        starts = np.minimum(np.maximum(starts, bounds[0]), bounds[1])
-        ends = np.minimum(np.maximum(ends, bounds[0]), bounds[1])
+        starts = utils.constrain(starts, bounds[0], bounds[1])
+        ends = utils.constrain(ends, bounds[0], bounds[1])
         for k in range(len(starts)):
             if abs(starts[k]-ends[k]) > 0.5*self.STRIPE_LENGTH:
                 pygame.draw.line(screen, screen.WHITE,

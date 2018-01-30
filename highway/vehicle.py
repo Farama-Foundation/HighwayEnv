@@ -3,6 +3,7 @@ import numpy as np
 import pygame
 import random
 import copy
+import utils
 
 def wrap_to_pi(x):
     return ((x+np.pi) % (2*np.pi)) - np.pi
@@ -378,20 +379,34 @@ class IDMVehicle(Vehicle):
 
     @classmethod
     def IDM(cls, ego_vehicle, front_vehicle=None):
+        """
+            Compute an acceleration command with the Intelligent Driver Model.
+
+            The acceleration is chosen so as to:
+            - reach a target velocity
+            - maintain a minimum safety distance (and safety time) w.r.t the front vehicle
+        """
         if not ego_vehicle:
-            return None
-        acceleration = cls.ACC_MAX*(1-np.power(ego_vehicle.velocity/ego_vehicle.target_velocity, cls.DELTA))
+            raise Exception("A vehicle should be provided to compute its longitudinal acceleration")
+        acceleration = cls.ACC_MAX*(1-np.power(ego_vehicle.velocity/utils.not_zero(ego_vehicle.target_velocity), cls.DELTA))
         if front_vehicle:
             d0 = cls.DISTANCE_WANTED
             tau = cls.TIME_WANTED
             ab = cls.ACC_MAX*cls.BRAKE_ACC
-            d = max(ego_vehicle.lane_distance_to_vehicle(front_vehicle)-cls.LENGTH, 0.1)
+            d = ego_vehicle.lane_distance_to_vehicle(front_vehicle) - cls.LENGTH
             dv = ego_vehicle.velocity-front_vehicle.velocity
             d_star = d0 + ego_vehicle.velocity*tau + ego_vehicle.velocity*dv/(2*np.sqrt(ab))
-            acceleration -= cls.ACC_MAX*np.power(d_star/d,2)
+            acceleration -= cls.ACC_MAX*np.power(d_star/utils.not_zero(d),2)
         return acceleration
 
     def maximum_velocity(self, front_vehicle=None):
+        """
+            Compute the maximum allowed velocity to avoid Inevitable Collision States.
+
+            Assume the front vehicle is going to brake at full decceleration and that
+            it will be noticed after a given delay, and compute the maximum velocity
+            which allows the ego-vehicle to brake enough to avoid the collision.
+        """
         if not front_vehicle:
             return self.target_velocity
         d0 = self.DISTANCE_WANTED
@@ -405,16 +420,28 @@ class IDMVehicle(Vehicle):
         v_max = -a0*tau+np.sqrt(delta)/(2*a1)
         return v_max
 
-    def change_lane_policy(self, dt=None):
-        if dt and np.random.randint(int(self.LANE_CHANGE_AVG_DELAY/dt)) != 0:
+    def change_lane_policy(self, dt):
+        """
+            Make a lane change decision
+            - only once in a while
+            - only if the lange change is relevant
+        """
+        if not utils.do_on_average_every(self.LANE_CHANGE_AVG_DELAY, dt):
             return
 
-        lanes = np.minimum(np.maximum(np.array([-1,1])+self.target_lane, 0), len(self.road.lanes)-1)
+        # Check if we should change to an adjacent lane
+        lanes = utils.constrain(self.target_lane+np.array([-1,1]), 0, len(self.road.lanes)-1)
         for l in lanes:
             if l != self.target_lane and self.should_change_lane(l):
                 self.target_lane = l
 
     def should_change_lane(self, lane_index):
+        """
+            Decide whether a change to a given lane is relevant:
+            - The lane should be close enough from the vehicle.
+            - After changing I should be able to accelerate more
+            - I should not impose too big an acceleration on the target lane rear vehicle.
+        """
         # Is the target lane close enough?
         x,y = self.road.lanes[lane_index].local_coordinates(self.position)
         lane_close = abs(y) < 2*self.road.lanes[lane_index].width_at(x)
@@ -431,7 +458,7 @@ class IDMVehicle(Vehicle):
             return False
 
         # Is there a disadvantage for my target lane's rear vehicle?
-        if (self_avantage or rear_advantage) and lane_rear_vehicle:
+        if lane_rear_vehicle:
             rear_current_acceleration = IDMVehicle.IDM(ego_vehicle=lane_rear_vehicle, front_vehicle=lane_front_vehicle)
             rear_predicted_acceleration = IDMVehicle.IDM(ego_vehicle=lane_rear_vehicle, front_vehicle=self)
             lane_rear_disadvantage = rear_predicted_acceleration - rear_current_acceleration < -self.LANE_CHANGE_MAX_ACC_LOSS
