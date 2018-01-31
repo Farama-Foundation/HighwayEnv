@@ -197,14 +197,14 @@ class MDPVehicle(ControlledVehicle):
     SPEED_COUNT = 1
     SPEED_MAX = 35
 
-    def __init__(self, road, position, heading, velocity, ego, target_lane, target_velocity):
+    def __init__(self, road, position, heading=0, velocity=None, ego=False, target_lane=None, target_velocity=None):
         super(MDPVehicle, self).__init__(road, position, heading, velocity, ego, target_lane, target_velocity)
-        self.velocity_index = self.speed_to_index(target_velocity)
+        self.velocity_index = self.speed_to_index(self.target_velocity)
         self.target_velocity = self.index_to_speed(self.velocity_index)
 
     @classmethod
     def create_from(cls, vehicle):
-        return MDPVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, vehicle.road.get_lane_index(vehicle.position), vehicle.velocity)
+        return MDPVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, None, None)
 
     @classmethod
     def create_random(cls, road, velocity=None, ego=False):
