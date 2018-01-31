@@ -178,15 +178,13 @@ class ControlledVehicle(Vehicle):
         elif action == "SLOWER":
             self.target_velocity -= 5
         elif action == "LANE_RIGHT":
-            next_lane = min(self.target_lane + 1, len(self.road.lanes) - 1)
-            x, y = self.road.lanes[next_lane].local_coordinates(self.position)
-            if abs(y) < 2 * self.road.lanes[next_lane].width_at(x):
-                self.target_lane = next_lane
+            target_lane = self.road.get_lane_index(self.position) + 1
+            if target_lane < len(self.road.lanes) and self.road.lanes[target_lane].is_reachable_from(self.position):
+                self.target_lane = target_lane
         elif action == "LANE_LEFT":
-            next_lane = max(self.target_lane - 1, 0)
-            x, y = self.road.lanes[next_lane].local_coordinates(self.position)
-            if abs(y) < 2 * self.road.lanes[next_lane].width_at(x):
-                self.target_lane = next_lane
+            target_lane = self.road.get_lane_index(self.position) - 1
+            if target_lane >= 0 and self.road.lanes[target_lane].is_reachable_from(self.position):
+                self.target_lane = target_lane
 
 
 class MDPVehicle(ControlledVehicle):
@@ -248,12 +246,15 @@ class MDPVehicle(ControlledVehicle):
         elif action == "SLOWER":
             self.velocity_index = self.speed_to_index(self.velocity) - 1
         elif action == "LANE_RIGHT":
-            self.target_lane = self.road.get_lane_index(self.position) + 1
+            target_lane = self.road.get_lane_index(self.position) + 1
+            if target_lane < len(self.road.lanes) and self.road.lanes[target_lane].is_reachable_from(self.position):
+                self.target_lane = target_lane
         elif action == "LANE_LEFT":
-            self.target_lane = self.road.get_lane_index(self.position) - 1
+            target_lane = self.road.get_lane_index(self.position) - 1
+            if target_lane >= 0 and self.road.lanes[target_lane].is_reachable_from(self.position):
+                self.target_lane = target_lane
 
-        self.velocity_index = min(max(self.velocity_index, 0), self.SPEED_COUNT - 1)
-        self.target_lane = min(max(self.target_lane, 0), len(self.road.lanes) - 1)
+        self.velocity_index = utils.constrain(self.velocity_index, 0, self.SPEED_COUNT - 1)
 
     def predict_trajectory(self, actions, action_duration, log_duration, dt):
         states = []
@@ -395,9 +396,7 @@ class IDMVehicle(ControlledVehicle):
             - I should not impose too big an acceleration on the target lane rear vehicle.
         """
         # Is the target lane close enough?
-        x, y = self.road.lanes[lane_index].local_coordinates(self.position)
-        lane_close = abs(y) < 2 * self.road.lanes[lane_index].width_at(x)
-        if not lane_close:
+        if not self.road.lanes[lane_index].is_reachable_from(self.position):
             return False
 
         # Is there an advantage for me to change lane?

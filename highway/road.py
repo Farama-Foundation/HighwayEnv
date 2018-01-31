@@ -25,6 +25,9 @@ class Lane(object):
     def local_coordinates(self, position):
         raise Exception('Not implemented.')
 
+    def is_reachable_from(self, position):
+        raise Exception('Not implemented.')
+
 
 class LineType:
     NONE = 0
@@ -33,8 +36,9 @@ class LineType:
 
 
 class StraightLane(Lane):
-    def __init__(self, origin, heading, width, line_types=None):
+    def __init__(self, origin, heading, width, line_types=None, bounds=None):
         super(StraightLane, self).__init__()
+        self.bounds = bounds or [-np.inf, np.inf]
         self.origin = origin
         self.heading = heading
         self.width = width
@@ -59,35 +63,40 @@ class StraightLane(Lane):
 
     def on_lane(self, position):
         longitudinal, lateral = self.local_coordinates(position)
-        return np.abs(lateral) <= self.width
+        is_on = np.abs(lateral) <= self.width / 2 and self.bounds[0] <= longitudinal < self.bounds[1]
+        distance = np.abs(lateral) if is_on else np.infty
+        return is_on, distance
 
-    def display(self, screen, bounds=None):
-        if bounds is None:
-            bounds = [-np.inf, np.inf]
+    def is_reachable_from(self, position):
+        longitudinal, lateral = self.local_coordinates(position)
+        is_close = np.abs(lateral) <= 2*self.width_at(longitudinal) and self.bounds[0] <= longitudinal < self.bounds[1]
+        return is_close
+
+    def display(self, screen):
         stripes_count = int(2 * (screen.get_height() + screen.get_width()) / (self.STRIPE_SPACING * screen.scaling))
         s_origin, _ = self.local_coordinates(screen.origin)
         s0 = (int(s_origin) // self.STRIPE_SPACING - stripes_count // 2) * self.STRIPE_SPACING
         for side in range(2):
             if self.line_types[side] == LineType.STRIPED:
-                self.striped_line(screen, stripes_count, s0, side, bounds)
+                self.striped_line(screen, stripes_count, s0, side)
             elif self.line_types[side] == LineType.CONTINUOUS:
-                self.continuous_line(screen, stripes_count, s0, side, bounds)
+                self.continuous_line(screen, stripes_count, s0, side)
 
-    def striped_line(self, screen, stripes_count, s0, side, bounds):
+    def striped_line(self, screen, stripes_count, s0, side):
         starts = s0 + np.arange(stripes_count) * self.STRIPE_SPACING
         ends = s0 + np.arange(stripes_count) * self.STRIPE_SPACING + self.STRIPE_LENGTH
         lat = (side - 0.5) * self.width
-        self.draw_stripes(screen, starts, ends, lat, bounds)
+        self.draw_stripes(screen, starts, ends, lat)
 
-    def continuous_line(self, screen, stripes_count, s0, side, bounds):
+    def continuous_line(self, screen, stripes_count, s0, side):
         starts = [s0 + 0 * self.STRIPE_SPACING]
         ends = [s0 + stripes_count * self.STRIPE_SPACING + self.STRIPE_LENGTH]
         lat = (side - 0.5) * self.width
-        self.draw_stripes(screen, starts, ends, lat, bounds)
+        self.draw_stripes(screen, starts, ends, lat)
 
-    def draw_stripes(self, screen, starts, ends, lat, bounds):
-        starts = utils.constrain(starts, bounds[0], bounds[1])
-        ends = utils.constrain(ends, bounds[0], bounds[1])
+    def draw_stripes(self, screen, starts, ends, lat):
+        starts = utils.constrain(starts, self.bounds[0], self.bounds[1])
+        ends = utils.constrain(ends, self.bounds[0], self.bounds[1])
         for k in range(len(starts)):
             if abs(starts[k] - ends[k]) > 0.5 * self.STRIPE_LENGTH:
                 pygame.draw.line(screen, screen.WHITE,
@@ -100,8 +109,8 @@ class SineLane(StraightLane):
     STRIPE_SPACING = 5
     STRIPE_LENGTH = 3
 
-    def __init__(self, origin, heading, width, amplitude, pulsation, line_types=None):
-        super(SineLane, self).__init__(origin, heading, width, line_types)
+    def __init__(self, origin, heading, width, amplitude, pulsation, line_types=None, bounds=None):
+        super(SineLane, self).__init__(origin, heading, width, line_types, bounds)
         self.amplitude = amplitude
         self.pulsation = pulsation
 
@@ -119,51 +128,68 @@ class SineLane(StraightLane):
 
 
 class LanesConcatenation(Lane):
-    def __init__(self, lanes, end_abscissas):
+    def __init__(self, lanes):
         super(LanesConcatenation, self).__init__()
         self.lanes = lanes
-        self.end_abscissas = end_abscissas
 
-    def find_segment(self, s):
+    def segment_from_longitudinal(self, longitudinal):
         segment = 0
-        s_segment = s
-        for i in range(len(self.end_abscissas) - 1):
-            if self.end_abscissas[i] > s_segment:
+        segment_longitudinal = longitudinal
+        for i in range(len(self.lanes) - 1):
+            if self.lanes[i].bounds[1] > segment_longitudinal:
                 break
             else:
                 segment = i + 1
-                s_segment -= self.end_abscissas[i]
-        return segment, s_segment
+                segment_longitudinal -= self.lanes[i].bounds[1]
+        return segment, segment_longitudinal
 
-    def position(self, s, lateral):
-        segment, s_segment = self.find_segment(s)
-        return self.lanes[segment].position(s_segment, lateral)
-
-    def heading_at(self, s):
-        segment, s_segment = self.find_segment(s)
-        return self.lanes[segment].heading_at(s_segment)
-
-    def width_at(self, s):
-        segment, s_segment = self.find_segment(s)
-        return self.lanes[segment].width_at(s_segment)
-
-    def local_coordinates(self, position):
+    def segment_from_position(self, position):
         y_min = None
-        lane = None
+        segment = None
+        first_infinite_segment = None
         for i in range(len(self.lanes)):
+            if first_infinite_segment is None and not np.isfinite(self.lanes[i].bounds[1]):
+                first_infinite_segment = i
+
             x, y = self.lanes[i].local_coordinates(position)
-            if (x > -self.STRIPE_SPACING or i == 0) and (x < self.end_abscissas[i] or i == len(self.lanes) - 1):
+            if (x > -self.STRIPE_SPACING or i == 0) and (x < self.lanes[i].bounds[1] or i == len(self.lanes) - 1):
                 if y_min is None or abs(y) < y_min:
                     y_min = abs(y)
-                    lane = i
-        x, y = self.lanes[lane].local_coordinates(position)
-        x += np.sum(self.end_abscissas[:lane])
+                    segment = i
+        if first_infinite_segment is not None:
+            segment = min(segment, first_infinite_segment)
+        return segment
+
+    def position(self, s, lateral):
+        segment, segment_longitudinal = self.segment_from_longitudinal(s)
+        return self.lanes[segment].position(segment_longitudinal, lateral)
+
+    def heading_at(self, s):
+        segment, segment_longitudinal = self.segment_from_longitudinal(s)
+        return self.lanes[segment].heading_at(segment_longitudinal)
+
+    def width_at(self, s):
+        segment, segment_longitudinal = self.segment_from_longitudinal(s)
+        return self.lanes[segment].width_at(segment_longitudinal)
+
+    def on_lane(self, position):
+        segment = self.segment_from_position(position)
+        return self.lanes[segment].on_lane(position)
+
+    def is_reachable_from(self, position):
+        segment = self.segment_from_position(position)
+        return self.lanes[segment].is_reachable_from(position)
+
+    def local_coordinates(self, position):
+        segment = self.segment_from_position(position)
+        x, y = self.lanes[segment].local_coordinates(position)
+        x += np.sum([self.lanes[i].bounds[1] for i in range(segment)])
+
         return x, y
 
     def display(self, screen):
         for i in range(len(self.lanes)):
-            bounds = [0, self.end_abscissas[i]] if i > 0 else [-np.inf, self.end_abscissas[i]]
-            self.lanes[i].display(screen, bounds)
+            self.lanes[i].display(screen)
 
 
 class Road(object):
@@ -291,10 +317,10 @@ def test():
     l0 = StraightLane(np.array([0, 0]), 0, 4.0, [LineType.CONTINUOUS, LineType.NONE])
     l1 = StraightLane(np.array([0, 4]), 0, 4.0, [LineType.STRIPED, LineType.CONTINUOUS])
 
-    lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS])
-    lc1 = StraightLane(lc0.position(ends[0], 0), -20 * 3.14159 / 180, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS])
-    lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0, [LineType.NONE, LineType.CONTINUOUS])
-    l2 = LanesConcatenation([lc0, lc1, lc2], ends)
+    lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[-np.inf, ends[0]])
+    lc1 = StraightLane(lc0.position(ends[0], 0), -20 * np.pi / 180, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[0, ends[1]])
+    lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0, [LineType.NONE, LineType.CONTINUOUS], bounds=[0, ends[2]])
+    l2 = LanesConcatenation([lc0, lc1, lc2])
     road = Road([l0, l1, l2])
     road.add_random_vehicles(30, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
