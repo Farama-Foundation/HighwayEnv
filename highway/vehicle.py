@@ -19,14 +19,18 @@ class Vehicle(object):
     GREEN = (50, 200, 0)
     YELLOW = (200, 200, 0)
     BLUE = (100, 200, 255)
+    BLACK = (60, 60, 60)
 
     id_max = 0
 
-    def __init__(self, position, heading=0, velocity=None, ego=False):
+    def __init__(self, road, position, heading=0, velocity=None, ego=False):
+        self.road = road
         self.position = np.array(position)
         self.heading = heading
         self.steering_angle = 0
-        self.velocity = velocity or 20 - random.randint(0,3)
+        if velocity is None:
+            velocity = 20 - random.randint(0,3)
+        self.velocity = velocity
         self.ego = ego
         self.color = self.GREEN if self.ego else self.YELLOW
         self.action = {'steering':0, 'acceleration':0}
@@ -40,7 +44,7 @@ class Vehicle(object):
         l = random.randint(0,len(road.lanes)-1)
         xmin = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
         offset = 30*np.exp(-5/30*len(road.lanes))
-        v = Vehicle(road.lanes[l].position(xmin-offset, 0), 0, velocity, ego)
+        v = Vehicle(road, road.lanes[l].position(xmin-offset, 0), 0, velocity, ego)
         return v
 
     def step(self, dt, action=None):
@@ -99,6 +103,15 @@ class Vehicle(object):
     def __repr__(self):
         return self.__str__()
 
+
+class Obstacle(Vehicle):
+    def __init__(self, road, position):
+        super(Obstacle, self).__init__(road, position, velocity=0)
+        self.color = Vehicle.BLACK
+        self.LENGTH = self.WIDTH
+        self.target_velocity = 0
+
+
 class ControlledVehicle(Vehicle):
     """
         A vehicle piloted by a low-level controller, allowing high-level actions
@@ -111,19 +124,18 @@ class ControlledVehicle(Vehicle):
     KP_S = 0.05
     MAX_STEERING_ANGLE = np.pi/4
 
-    def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
-        super(ControlledVehicle, self).__init__(position, heading, velocity, ego)
-        self.road = road
-        self.target_lane = target_lane
-        self.target_velocity = target_velocity
+    def __init__(self, road, position, heading=0, velocity=None, ego=False, target_lane=None, target_velocity=None):
+        super(ControlledVehicle, self).__init__(road, position, heading, velocity, ego)
+        self.target_lane = target_lane or road.get_lane_index(self.position)
+        self.target_velocity = target_velocity or self.velocity
 
     @classmethod
-    def create_from(cls, vehicle, road):
-        return ControlledVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), vehicle.velocity)
+    def create_from(cls, vehicle):
+        return ControlledVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, None, None)
 
     @classmethod
     def create_random(cls, road, velocity=None, ego=False):
-        return cls.create_from(Vehicle.create_random(road, velocity, ego), road)
+        return cls.create_from(Vehicle.create_random(road, velocity, ego))
 
     def step(self, dt):
         action = {}
@@ -175,18 +187,18 @@ class MDPVehicle(ControlledVehicle):
     SPEED_COUNT = 1
     SPEED_MAX = 35
 
-    def __init__(self, position, heading, velocity, ego, road, target_lane, target_velocity):
-        super(MDPVehicle, self).__init__(position, heading, velocity, ego, road, target_lane, target_velocity)
+    def __init__(self, road, position, heading, velocity, ego, target_lane, target_velocity):
+        super(MDPVehicle, self).__init__(road, position, heading, velocity, ego, target_lane, target_velocity)
         self.velocity_index = self.speed_to_index(target_velocity)
         self.target_velocity = self.index_to_speed(self.velocity_index)
 
     @classmethod
-    def create_from(cls, vehicle, road):
-        return MDPVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position), vehicle.velocity)
+    def create_from(cls, vehicle):
+        return MDPVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, vehicle.road.get_lane_index(vehicle.position), vehicle.velocity)
 
     @classmethod
     def create_random(cls, road, velocity=None, ego=False):
-        return cls.create_from(Vehicle.create_random(road, velocity, ego), road)
+        return cls.create_from(Vehicle.create_random(road, velocity, ego))
 
     def step(self, dt):
         self.target_velocity = self.index_to_speed(self.velocity_index)
@@ -327,7 +339,7 @@ class IDMVehicle(Vehicle):
     ACC_MAX = 3.0
     BRAKE_ACC = 5.0
     VELOCITY_WANTED = 20.0
-    DISTANCE_WANTED = 1.0
+    DISTANCE_WANTED = 5.0
     TIME_WANTED = 1.0
     DELTA = 4.0
 
@@ -336,21 +348,20 @@ class IDMVehicle(Vehicle):
     LANE_CHANGE_MAX_ACC_LOSS = 3.
     LANE_CHANGE_AVG_DELAY = 0.5
 
-    def __init__(self, position, heading, velocity, ego, road, target_lane):
-        super(IDMVehicle, self).__init__(position, heading, velocity, ego)
-        self.road = road
-        self.target_lane = target_lane
+    def __init__(self, road, position, heading=0, velocity=None, ego=False, target_lane=None):
+        super(IDMVehicle, self).__init__(road, position, heading, velocity, ego)
+        self.target_lane = target_lane or road.get_lane_index(self.position)
         self.color = Vehicle.BLUE
-        self.target_velocity = self.VELOCITY_WANTED + random.randint(-5,5)
+        self.target_velocity = self.VELOCITY_WANTED + random.randint(-5, 5)
         self.controller = self.CONTROLLER_IDM
 
     @classmethod
-    def create_from(cls, vehicle, road):
-        return IDMVehicle(vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, road, road.get_lane_index(vehicle.position))
+    def create_from(cls, vehicle):
+        return IDMVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, None)
 
     @classmethod
     def create_random(cls, road, velocity=None, ego=False):
-        return cls.create_from(Vehicle.create_random(road, velocity, ego), road)
+        return cls.create_from(Vehicle.create_random(road, velocity, ego))
 
     def step(self, dt):
         action = {}
@@ -393,7 +404,7 @@ class IDMVehicle(Vehicle):
             d0 = cls.DISTANCE_WANTED
             tau = cls.TIME_WANTED
             ab = cls.ACC_MAX*cls.BRAKE_ACC
-            d = ego_vehicle.lane_distance_to_vehicle(front_vehicle) - cls.LENGTH
+            d = ego_vehicle.lane_distance_to_vehicle(front_vehicle) - ego_vehicle.LENGTH/2 - front_vehicle.LENGTH/2
             dv = ego_vehicle.velocity-front_vehicle.velocity
             d_star = d0 + ego_vehicle.velocity*tau + ego_vehicle.velocity*dv/(2*np.sqrt(ab))
             acceleration -= cls.ACC_MAX*np.power(d_star/utils.not_zero(d),2)
@@ -414,7 +425,7 @@ class IDMVehicle(Vehicle):
         a1 = self.BRAKE_ACC
         tau = self.TIME_WANTED
         l = self.road.get_lane(self.position)
-        d = max(self.lane_distance_to_vehicle(front_vehicle)- self.LENGTH - d0 , 0)
+        d = max(self.lane_distance_to_vehicle(front_vehicle)- self.LENGTH/2 - front_vehicle.LENGTH/2 - d0 , 0)
         v1_0 = front_vehicle.velocity
         delta = 4*(a0*a1*tau)**2+8*a0*(a1**2)*d+4*a0*a1*v1_0**2
         v_max = -a0*tau+np.sqrt(delta)/(2*a1)

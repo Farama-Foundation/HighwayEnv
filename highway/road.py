@@ -274,7 +274,7 @@ class RoadSurface(pygame.Surface):
 def test():
     from simulation import Simulation
     # l = SineLane(sim.road.lanes[-1].origin+np.array([0,9]),0, 4.0, 3, 6.28/60, [False,False])
-    ends = [100, 20, np.inf]
+    ends = [100, 20, 100]
     l0 = StraightLane(np.array([0,0]), 0, 4.0, [LineType.CONTINUOUS, LineType.NONE])
     l1 = StraightLane(np.array([0,4]), 0, 4.0, [LineType.STRIPED, LineType.CONTINUOUS])
 
@@ -285,6 +285,7 @@ def test():
     road = Road([l0, l1, l2])
     road.add_random_vehicles(30, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
+    road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
 
     while not sim.done:
         sim.process()
