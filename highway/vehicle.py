@@ -140,14 +140,24 @@ class ControlledVehicle(Vehicle):
     def step(self, dt):
         action = {}
         # Lateral controller: lane keeping
-        lane_coords = self.road.get_lane_coordinates(self.target_lane, self.position)
-        heading_ref = -np.arctan(self.KP_S*lane_coords[1])*np.sign(self.velocity)+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*self.TAU_DS)
-        action['steering'] = self.KD_S*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/self.velocity
-        action['steering'] = min(max(action['steering'], -self.MAX_STEERING_ANGLE), self.MAX_STEERING_ANGLE)
+        action['steering'] = self.steering_control(self.target_lane)
         # Longitudinal controller: velocity control
-        action['acceleration'] = self.KP_A*(self.target_velocity - self.velocity)
+        action['acceleration'] = self.velocity_control(self.target_velocity)
 
         super(ControlledVehicle, self).step(dt, action)
+
+    def steering_control(self, target_lane):
+        lane_coords = self.road.get_lane_coordinates(target_lane, self.position)
+        lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
+        lane_future_heading = self.road.lanes[target_lane].heading_at(lane_next_coords)
+        heading_ref = -np.arctan(self.KP_S * lane_coords[1]) * np.sign(self.velocity) + lane_future_heading
+        steering = self.KD_S * wrap_to_pi(heading_ref - self.heading) * self.LENGTH / utils.not_zero(
+            self.velocity)
+        steering = utils.constrain(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
+        return steering
+
+    def velocity_control(self, target_velocity):
+        return self.KP_A*(target_velocity - self.velocity)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -262,7 +272,7 @@ class MDPVehicle(ControlledVehicle):
         super(ControlledVehicle, self).display(screen)
 
 
-class IDMVehicle(Vehicle):
+class IDMVehicle(ControlledVehicle):
     """ Longitudinal controller that takes into account the front vehicle's distance and velocity.
         Two settings are possible: IDM and MAXIMUM_VELOCITY.
         The lateral controller is a lane keeping PD."""
@@ -300,15 +310,11 @@ class IDMVehicle(Vehicle):
     def step(self, dt):
         action = {}
 
-        self.change_lane_policy(dt)
+        front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
 
         # Lateral controller: lane keeping
-        lane_coords = self.road.get_lane_coordinates(self.target_lane, self.position)
-        heading_ref = -np.arctan(ControlledVehicle.KP_S*lane_coords[1])+self.road.lanes[self.target_lane].heading_at(lane_coords[0]+self.velocity*ControlledVehicle.TAU_DS)
-        action['steering'] = ControlledVehicle.KD_S*wrap_to_pi(heading_ref-self.heading)*self.LENGTH/max(self.velocity,1)
-        action['steering'] = min(max(action['steering'], -ControlledVehicle.MAX_STEERING_ANGLE), ControlledVehicle.MAX_STEERING_ANGLE)
-
-        front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
+        self.change_lane_policy(dt)
+        action['steering'] = self.steering_control(self.target_lane)
 
         # Intelligent Driver Model
         if self.controller == self.CONTROLLER_IDM:
@@ -316,11 +322,11 @@ class IDMVehicle(Vehicle):
 
         # Max velocity
         if self.controller == self.CONTROLLER_MAX_VELOCITY:
-            v_reference = min(self.maximum_velocity(front_vehicle), self.target_velocity)
-            action['acceleration'] = 2*ControlledVehicle.KP_A*(v_reference - self.velocity)
+            self.target_velocity = min(self.maximum_velocity(front_vehicle), self.target_velocity)
+            action['acceleration'] = self.velocity_control(self.target_velocity)
 
-        action['acceleration'] = min(max(action['acceleration'], -self.BRAKE_ACC), self.ACC_MAX)
-        super(IDMVehicle, self).step(dt, action)
+        action['acceleration'] = utils.constrain(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
+        super(ControlledVehicle, self).step(dt, action)
 
     @classmethod
     def IDM(cls, ego_vehicle, front_vehicle=None):
