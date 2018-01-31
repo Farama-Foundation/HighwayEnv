@@ -15,10 +15,13 @@ class Simulation:
     POLICY_FREQUENCY = 1
     RECORD_VIDEO = False
 
-    def __init__(self, road, ego_vehicle_type=MDPVehicle):
+    def __init__(self, road, ego_vehicle_type=None):
         self.road = road
-        self.vehicle = ego_vehicle_type.create_random(self.road, 25, ego=True)
-        self.road.vehicles.append(self.vehicle)
+        if ego_vehicle_type:
+            self.vehicle = ego_vehicle_type.create_random(self.road, 25, ego=True)
+            self.road.vehicles.append(self.vehicle)
+        else:
+            self.vehicle = None
 
         pygame.init()
         pygame.display.set_caption("Highway")
@@ -50,12 +53,13 @@ class Simulation:
                 if event.key == pygame.K_SPACE:
                     self.pause = not self.pause
             self.road_surface.handle_event(event)
-            self.vehicle.handle_event(event)
+            if self.vehicle:
+                self.vehicle.handle_event(event)
 
     def step(self):
         if not self.pause:
             policy_call = self.t % (self.FPS//self.POLICY_FREQUENCY) == 0
-            if isinstance(self.vehicle, MDPVehicle) and policy_call:
+            if self.vehicle and isinstance(self.vehicle, MDPVehicle) and policy_call:
                 mdp = RoadMDP(self.road, self.vehicle)
                 self.smdp = SimplifiedMDP(mdp.state)
                 self.smdp.value_iteration()
