@@ -290,7 +290,7 @@ class IDMVehicle(ControlledVehicle):
     # Lane change parameters
     LANE_CHANGE_MIN_ACC_GAIN = 0.2
     LANE_CHANGE_MAX_ACC_LOSS = 3.
-    LANE_CHANGE_AVG_DELAY = 0.5
+    LANE_CHANGE_AVG_DELAY = 1.0
 
     def __init__(self, road, position, heading=0, velocity=None, ego=False, target_lane=None):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, ego)
@@ -381,7 +381,8 @@ class IDMVehicle(ControlledVehicle):
             return
 
         # Check if we should change to an adjacent lane
-        lanes = utils.constrain(self.target_lane + np.array([-1, 1]), 0, len(self.road.lanes) - 1)
+        lanes = utils.constrain(self.road.get_lane_index(self.position) + np.array([-1, 1]),
+                                0, len(self.road.lanes) - 1)
         for lane in lanes:
             if lane != self.target_lane and self.should_change_lane(lane):
                 self.target_lane = lane
