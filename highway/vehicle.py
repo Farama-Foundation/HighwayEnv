@@ -128,6 +128,7 @@ class ControlledVehicle(Vehicle):
     KD_S = 1 / TAU_DS
     KP_S = 0.05
     MAX_STEERING_ANGLE = np.pi / 4
+    STEERING_VEL_GAIN = 60
 
     def __init__(self, road, position, heading=0, velocity=None, ego=False, target_lane=None, target_velocity=None):
         super(ControlledVehicle, self).__init__(road, position, heading, velocity, ego)
@@ -152,7 +153,7 @@ class ControlledVehicle(Vehicle):
         lane_coords = self.road.get_lane_coordinates(target_lane, self.position)
         lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
         lane_future_heading = self.road.lanes[target_lane].heading_at(lane_next_coords)
-        heading_ref = -np.arctan(self.KP_S * lane_coords[1]) * np.sign(self.velocity) + lane_future_heading
+        heading_ref = -np.arctan(self.KP_S * lane_coords[1] * np.exp(-(self.velocity/self.STEERING_VEL_GAIN)**2)) * np.sign(self.velocity) + lane_future_heading
         steering = self.KD_S * utils.wrap_to_pi(heading_ref - self.heading) * self.LENGTH / utils.not_zero(
             self.velocity)
         steering = utils.constrain(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)

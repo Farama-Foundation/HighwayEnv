@@ -80,7 +80,7 @@ class SimplifiedMDP(object):
     GAMMA = 1.0
     COLLISION_COST = 10
     LANE_CHANGE_COST = 0.00
-    LEFT_LANE_COST = 0.00
+    LEFT_LANE_COST = -0.01
     HIGH_VELOCITY_REWARD = 0.5
     actions = {0: 'IDLE', 1: 'LANE_LEFT', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}
     cost = {0: 0, 1: -LANE_CHANGE_COST, 2: -LANE_CHANGE_COST, 3: 0, 4: 0}
