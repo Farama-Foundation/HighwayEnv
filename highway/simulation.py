@@ -1,8 +1,8 @@
 from __future__ import division, print_function
 import pygame
-from vehicle import Vehicle, ControlledVehicle, MDPVehicle, IDMVehicle
-from road import Road, RoadSurface
-from mdp import RoadMDP, SimplifiedMDP
+from highway.vehicle import ControlledVehicle, MDPVehicle, IDMVehicle
+from highway.road import Road, RoadSurface
+from highway.mdp import RoadMDP, SimplifiedMDP
 import numpy as np
 import os
 

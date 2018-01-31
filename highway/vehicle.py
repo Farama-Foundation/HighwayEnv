@@ -3,7 +3,7 @@ import numpy as np
 import pygame
 import random
 import copy
-import utils
+from highway import utils
 
 def wrap_to_pi(x):
     return ((x+np.pi) % (2*np.pi)) - np.pi

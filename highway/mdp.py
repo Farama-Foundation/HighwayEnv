@@ -4,8 +4,8 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 import pygame
 
-from vehicle import Vehicle, ControlledVehicle, MDPVehicle
-from road import Road
+from highway.vehicle import Vehicle, ControlledVehicle, MDPVehicle
+from highway.road import Road
 
 class RoadMDP(object):
     """

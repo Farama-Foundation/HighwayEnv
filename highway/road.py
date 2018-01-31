@@ -1,10 +1,8 @@
 from __future__ import division, print_function
 import numpy as np
-import random
 import pygame
-import utils
-
-from vehicle import Vehicle, ControlledVehicle, MDPVehicle, IDMVehicle
+from highway import utils
+from highway.vehicle import ControlledVehicle, IDMVehicle, Obstacle
 
 class Lane(object):
     STRIPE_SPACING = 5
