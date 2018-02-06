@@ -11,19 +11,22 @@ class VehicleLogger(object):
         pass
 
     def dump(self, vehicle, road=None, prefix=None):
-        default = 0
-        dump = {pre('x', prefix): vehicle.position[0] if vehicle else default,
-                pre('y', prefix): vehicle.position[1] if vehicle else default,
-                pre('psi', prefix): vehicle.heading if vehicle else default,
-                pre('v', prefix): vehicle.velocity * np.cos(vehicle.heading) if vehicle else default,
-                pre('acceleration', prefix): vehicle.action['acceleration'] if vehicle else default,
-                pre('steering', prefix): vehicle.action['steering'] if vehicle else default
-                }
+        dump = {
+            pre('v', prefix): vehicle.velocity if vehicle else 999,
+            pre('acceleration', prefix): vehicle.action['acceleration'] if vehicle else 0,
+            pre('steering', prefix): vehicle.action['steering'] if vehicle else 0
+        }
 
         if road:
+            # Add front vehicle logs
             front_vehicle, _ = road.neighbour_vehicles(vehicle)
-            front_dump = self.dump(front_vehicle, road=None, prefix='front')
+            front_dump = self.dump(front_vehicle, road=None, prefix=pre('front', prefix))
             dump.update(front_dump)
+
+            # Add front relative logs
+            if front_vehicle:
+                d = vehicle.lane_distance_to_vehicle(front_vehicle) - vehicle.LENGTH / 2 - front_vehicle.LENGTH / 2
+            dump[pre('front_distance', prefix)] = d if front_vehicle else 999
 
         return dump
 

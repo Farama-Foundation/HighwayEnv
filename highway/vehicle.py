@@ -57,6 +57,8 @@ class Vehicle(object):
         self.velocity += self.action['acceleration'] * dt
 
     def lane_distance_to_vehicle(self, vehicle):
+        if not vehicle:
+            return None
         lane = self.road.get_lane(self.position)
         return lane.local_coordinates(vehicle.position)[0] - lane.local_coordinates(self.position)[0]
 
