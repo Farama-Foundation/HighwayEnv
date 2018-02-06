@@ -220,6 +220,10 @@ class Road(object):
             self.vehicles.append(vehicles_type.create_random(self))
             self.update_lanes()
 
+    def act(self):
+        for vehicle in self.vehicles:
+            vehicle.act()
+
     def step(self, dt):
         for vehicle in self.vehicles:
             vehicle.step(dt)

@@ -45,14 +45,16 @@ class Vehicle(object):
         v = Vehicle(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity, ego)
         return v
 
-    def step(self, dt, action=None):
-        if not action:
-            action = self.action
+    def act(self, action=None):
+        if action:
+            self.action = action
+
+    def step(self, dt):
         v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v * dt
         self.heading += self.velocity * self.steering_angle / self.LENGTH * dt
-        self.steering_angle += 1 / self.STEERING_TAU * (np.tan(action['steering']) - self.steering_angle) * dt
-        self.velocity += action['acceleration'] * dt
+        self.steering_angle += 1 / self.STEERING_TAU * (np.tan(self.action['steering']) - self.steering_angle) * dt
+        self.velocity += self.action['acceleration'] * dt
 
     def lane_distance_to_vehicle(self, vehicle):
         lane = self.road.get_lane(self.position)
@@ -144,36 +146,7 @@ class ControlledVehicle(Vehicle):
     def create_random(cls, road, velocity=None, ego=False):
         return cls.create_from(Vehicle.create_random(road, velocity, ego))
 
-    def step(self, dt, action=None):
-        action = {'steering': self.steering_control(self.target_lane),
-                  'acceleration': self.velocity_control(self.target_velocity)}
-        super(ControlledVehicle, self).step(dt, action)
-
-    def steering_control(self, target_lane):
-        lane_coords = self.road.get_lane_coordinates(target_lane, self.position)
-        lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
-        lane_future_heading = self.road.lanes[target_lane].heading_at(lane_next_coords)
-        heading_ref = -np.arctan(self.KP_S * lane_coords[1] * np.exp(-(self.velocity/self.STEERING_VEL_GAIN)**2)) * np.sign(self.velocity) + lane_future_heading
-        steering = self.KD_S * utils.wrap_to_pi(heading_ref - self.heading) * self.LENGTH / utils.not_zero(
-            self.velocity)
-        steering = utils.constrain(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
-        return steering
-
-    def velocity_control(self, target_velocity):
-        return self.KP_A * (target_velocity - self.velocity)
-
-    def handle_event(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                self.perform_action("FASTER")
-            if event.key == pygame.K_LEFT:
-                self.perform_action("SLOWER")
-            if event.key == pygame.K_DOWN:
-                self.perform_action("LANE_RIGHT")
-            if event.key == pygame.K_UP:
-                self.perform_action("LANE_LEFT")
-
-    def perform_action(self, action):
+    def act(self, action=None):
         if action == "FASTER":
             self.target_velocity += 5
         elif action == "SLOWER":
@@ -186,6 +159,35 @@ class ControlledVehicle(Vehicle):
             target_lane = self.road.get_lane_index(self.position) - 1
             if target_lane >= 0 and self.road.lanes[target_lane].is_reachable_from(self.position):
                 self.target_lane = target_lane
+
+        action = {'steering': self.steering_control(self.target_lane),
+                  'acceleration': self.velocity_control(self.target_velocity)}
+        super(ControlledVehicle, self).act(action)
+
+    def steering_control(self, target_lane):
+        lane_coords = self.road.get_lane_coordinates(target_lane, self.position)
+        lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
+        lane_future_heading = self.road.lanes[target_lane].heading_at(lane_next_coords)
+        heading_ref = -np.arctan(self.KP_S * lane_coords[1] * np.exp(-(self.velocity/self.STEERING_VEL_GAIN)**2)) \
+            * np.sign(self.velocity) + lane_future_heading
+        steering = self.KD_S * utils.wrap_to_pi(heading_ref - self.heading) * self.LENGTH / utils.not_zero(
+            self.velocity)
+        steering = utils.constrain(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
+        return steering
+
+    def velocity_control(self, target_velocity):
+        return self.KP_A * (target_velocity - self.velocity)
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                self.act("FASTER")
+            if event.key == pygame.K_LEFT:
+                self.act("SLOWER")
+            if event.key == pygame.K_DOWN:
+                self.act("LANE_RIGHT")
+            if event.key == pygame.K_UP:
+                self.act("LANE_LEFT")
 
 
 class MDPVehicle(ControlledVehicle):
@@ -211,9 +213,22 @@ class MDPVehicle(ControlledVehicle):
     def create_random(cls, road, velocity=None, ego=False):
         return cls.create_from(Vehicle.create_random(road, velocity, ego))
 
-    def step(self, dt, action=None):
+    def act(self, action=None):
+        if action == "FASTER":
+            self.velocity_index = self.speed_to_index(self.velocity) + 1
+        elif action == "SLOWER":
+            self.velocity_index = self.speed_to_index(self.velocity) - 1
+        elif action == "LANE_RIGHT":
+            target_lane = self.road.get_lane_index(self.position) + 1
+            if target_lane < len(self.road.lanes) and self.road.lanes[target_lane].is_reachable_from(self.position):
+                self.target_lane = target_lane
+        elif action == "LANE_LEFT":
+            target_lane = self.road.get_lane_index(self.position) - 1
+            if target_lane >= 0 and self.road.lanes[target_lane].is_reachable_from(self.position):
+                self.target_lane = target_lane
+        self.velocity_index = utils.constrain(self.velocity_index, 0, self.SPEED_COUNT - 1)
         self.target_velocity = self.index_to_speed(self.velocity_index)
-        super(MDPVehicle, self).step(dt)
+        super(MDPVehicle, self).act(action)
 
     @classmethod
     def index_to_speed(cls, index):
@@ -233,38 +248,23 @@ class MDPVehicle(ControlledVehicle):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                self.perform_action("FASTER")
+                self.act("FASTER")
             if event.key == pygame.K_LEFT:
-                self.perform_action("SLOWER")
+                self.act("SLOWER")
             if event.key == pygame.K_DOWN:
-                self.perform_action("LANE_RIGHT")
+                self.act("LANE_RIGHT")
             if event.key == pygame.K_UP:
-                self.perform_action("LANE_LEFT")
-
-    def perform_action(self, action):
-        if action == "FASTER":
-            self.velocity_index = self.speed_to_index(self.velocity) + 1
-        elif action == "SLOWER":
-            self.velocity_index = self.speed_to_index(self.velocity) - 1
-        elif action == "LANE_RIGHT":
-            target_lane = self.road.get_lane_index(self.position) + 1
-            if target_lane < len(self.road.lanes) and self.road.lanes[target_lane].is_reachable_from(self.position):
-                self.target_lane = target_lane
-        elif action == "LANE_LEFT":
-            target_lane = self.road.get_lane_index(self.position) - 1
-            if target_lane >= 0 and self.road.lanes[target_lane].is_reachable_from(self.position):
-                self.target_lane = target_lane
-
-        self.velocity_index = utils.constrain(self.velocity_index, 0, self.SPEED_COUNT - 1)
+                self.act("LANE_LEFT")
 
     def predict_trajectory(self, actions, action_duration, log_duration, dt):
         states = []
         v = copy.deepcopy(self)
         t = 0
         for action in actions:
-            v.perform_action(action)
+            v.act(action) # High-level decision
             for _ in range(int(action_duration / dt)):
                 t += 1
+                v.act(None) # Low-level control action
                 v.step(dt)
                 if (t % int(log_duration / dt)) == 0:
                     states.append(copy.deepcopy(v))
@@ -292,14 +292,15 @@ class IDMVehicle(ControlledVehicle):
     # Lane change parameters
     LANE_CHANGE_MIN_ACC_GAIN = 0.2
     LANE_CHANGE_MAX_ACC_LOSS = 3.
-    LANE_CHANGE_AVG_DELAY = 1.0
+    LANE_CHANGE_DELAY = 1.0
 
     def __init__(self, road, position, heading=0, velocity=None, ego=False, target_lane=None):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, ego)
         self.target_lane = target_lane or road.get_lane_index(self.position)
         self.color = Vehicle.BLUE
-        self.target_velocity = self.VELOCITY_WANTED + random.randint(-5, 5)
+        self.target_velocity = self.VELOCITY_WANTED + 0*random.randint(-5, 5)
         self.controller = self.CONTROLLER_IDM
+        self.timer = np.random.random()*self.LANE_CHANGE_DELAY
 
     @classmethod
     def create_from(cls, vehicle):
@@ -309,13 +310,13 @@ class IDMVehicle(ControlledVehicle):
     def create_random(cls, road, velocity=None, ego=False):
         return cls.create_from(Vehicle.create_random(road, velocity, ego))
 
-    def step(self, dt, action=None):
+    def act(self, action=None):
         action = {}
 
         front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
 
         # Lateral controller: lane keeping
-        self.change_lane_policy(dt)
+        self.change_lane_policy()
         action['steering'] = self.steering_control(self.target_lane)
 
         # Intelligent Driver Model
@@ -328,7 +329,11 @@ class IDMVehicle(ControlledVehicle):
             action['acceleration'] = self.velocity_control(self.target_velocity)
 
         action['acceleration'] = utils.constrain(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
-        super(ControlledVehicle, self).step(dt, action)
+        super(ControlledVehicle, self).act(action)
+
+    def step(self, dt):
+        self.timer += dt
+        super(IDMVehicle, self).step(dt)
 
     @classmethod
     def idm(cls, ego_vehicle, front_vehicle=None):
@@ -373,14 +378,15 @@ class IDMVehicle(ControlledVehicle):
         v_max = -a0 * tau + np.sqrt(delta) / (2 * a1)
         return v_max
 
-    def change_lane_policy(self, dt):
+    def change_lane_policy(self):
         """
             Make a lane change decision
             - only once in a while
             - only if the lane change is relevant
         """
-        if not utils.do_on_average_every(self.LANE_CHANGE_AVG_DELAY, dt):
+        if not utils.do_every(self.LANE_CHANGE_DELAY, self.timer):
             return
+        self.timer = 0
 
         # Check if we should change to an adjacent lane
         lanes = utils.constrain(self.road.get_lane_index(self.position) + np.array([-1, 1]),
