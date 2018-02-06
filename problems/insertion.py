@@ -20,10 +20,14 @@ def make_road():
 
 
 def make_vehicles(road, highway_lane_2, insertion_lane):
-    vehicle = IDMVehicle(road, insertion_lane.position(0, 0))
-    ego_vehicle = ControlledVehicle(road, highway_lane_2.position(0,0))
-    road.vehicles.append(vehicle)
+    ego_vehicle = ControlledVehicle(road, highway_lane_2.position(0, 0))
+    ego_vehicle.target_velocity = 20
     road.vehicles.append(ego_vehicle)
+    # road.vehicles.append(IDMVehicle(road, insertion_lane.position(10, 0), velocity=10))
+    v = IDMVehicle(road, insertion_lane.position(30, 0), velocity=10)
+    v.target_velocity = 20
+    road.vehicles.append(v)
+    # road.vehicles.append(IDMVehicle(road, insertion_lane.position(50, 0), velocity=10))
     return ego_vehicle
 
 
@@ -32,6 +36,7 @@ def run():
     ego_vehicle = make_vehicles(road, highway_lane_2, insertion_lane)
     sim = Simulation(road)
     sim.vehicle = ego_vehicle
+    sim.RECORD_VIDEO = True
 
     while not sim.done:
         sim.process()
