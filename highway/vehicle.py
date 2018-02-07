@@ -458,20 +458,13 @@ class IDMVehicle(ControlledVehicle):
         action = {}
         front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
 
-        # Lateral controller: lane keeping
+        # Lateral: MOBIL
         self.change_lane_policy()
         action['steering'] = self.steering_control(self.target_lane_index)
 
-        # Intelligent Driver Model
-        if self.controller == self.CONTROLLER_IDM:
-            action['acceleration'] = IDMVehicle.idm(ego_vehicle=self, front_vehicle=front_vehicle)
-            action['acceleration'] = self.recover_from_stop(action['acceleration'])
-
-        # Max velocity
-        if self.controller == self.CONTROLLER_MAX_VELOCITY:
-            self.target_velocity = min(self.maximum_velocity(front_vehicle), self.target_velocity)
-            action['acceleration'] = self.velocity_control(self.target_velocity)
-
+        # Longitudinal: IDM
+        action['acceleration'] = IDMVehicle.idm(ego_vehicle=self, front_vehicle=front_vehicle)
+        action['acceleration'] = self.recover_from_stop(action['acceleration'])
         action['acceleration'] = utils.constrain(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
         super(ControlledVehicle, self).act(action)
 
@@ -522,6 +515,7 @@ class IDMVehicle(ControlledVehicle):
             which allows the ego-vehicle to brake enough to avoid the collision.
 
         :param front_vehicle: the preceding vehicle
+        :return: the maximum allowed velocity, and suggested acceleration
         """
         if not front_vehicle:
             return self.target_velocity
@@ -533,37 +527,51 @@ class IDMVehicle(ControlledVehicle):
         v1_0 = front_vehicle.velocity
         delta = 4 * (a0 * a1 * tau) ** 2 + 8 * a0 * (a1 ** 2) * d + 4 * a0 * a1 * v1_0 ** 2
         v_max = -a0 * tau + np.sqrt(delta) / (2 * a1)
-        return v_max
+
+        # Velocity control
+        self.target_velocity = min(self.maximum_velocity(front_vehicle), self.target_velocity)
+        acceleration = self.velocity_control(self.target_velocity)
+
+        return v_max, acceleration
 
     def change_lane_policy(self):
         """
-            Make a lane change decision
-            - only once in a while
-            - only if the lane change is relevant
+            Decide when to change lane.
+
+            Based on:
+            - frequency;
+            - closeness of the target lane;
+            - MOBIL model.
         """
         if not utils.do_every(self.LANE_CHANGE_DELAY, self.timer):
             return
         self.timer = 0
 
-        # Check if we should change to an adjacent lane
+        # List adjacent lanes
         lane_indexes = utils.constrain(self.road.get_lane_index(self.position) + np.array([-1, 1]),
                                        0, len(self.road.lanes) - 1)
         for lane_index in lane_indexes:
-            if lane_index != self.target_lane_index and self.mobil(lane_index):
+            # Is the candidate lane already being followed?
+            if lane_index == self.target_lane_index:
+                continue
+            # Is the candidate lane close enough?
+            if not self.road.lanes[lane_index].is_reachable_from(self.position):
+                continue
+            # Does the MOBIL model recommend a lane change?
+            if self.mobil(lane_index):
                 self.target_lane_index = lane_index
 
     def mobil(self, lane_index):
         """
             MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change
-            Returns whether the vehicle should change lane, if:
-            - The target lane is close enough.
-            - After changing it (and/or following vehicles) can accelerate more
-            - It doesn't impose an unsafe braking on its new following vehicle.
-        """
-        # Is the target lane close enough?
-        if not self.road.lanes[lane_index].is_reachable_from(self.position):
-            return False
 
+            The vehicle should change lane only if:
+            - after changing it (and/or following vehicles) can accelerate more;
+            - it doesn't impose an unsafe braking on its new following vehicle.
+
+        :param lane_index: the candidate lane for the change
+        :return: whether the lane change should be performed
+        """
         # Is the maneuver unsafe for the new following vehicle?
         new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.lanes[lane_index])
         new_following_a = IDMVehicle.idm(ego_vehicle=new_following, front_vehicle=new_preceding)
@@ -587,13 +595,16 @@ class IDMVehicle(ControlledVehicle):
 
     def recover_from_stop(self, acceleration):
         """
-            If stopped on the wrong lane, try a reversing maneuver
+            If stopped on the wrong lane, try a reversing maneuver.
+
         :param acceleration: desired acceleration from IDM
         :return: suggested acceleration to recover from being stuck
         """
-        if self.target_lane_index != self.lane_index and self.velocity < 5:
+        # Is the vehicle stopped on the wrong lane?
+        if self.target_lane_index != self.lane_index and self.velocity < 5 and acceleration < 0.9*self.ACC_MAX:
             preceding, following = self.road.neighbour_vehicles(self)
             new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.lanes[self.target_lane_index])
+
             # Check for free room behind on both lanes
             if (not following or self.lane_distance_to_vehicle(following) > 3 * self.LENGTH) and \
                     (not new_following or self.lane_distance_to_vehicle(new_following) > 3 * self.LENGTH):
