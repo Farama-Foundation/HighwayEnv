@@ -12,7 +12,7 @@ class Vehicle(object):
         The vehicle is represented by a dynamical system: a modified bicycle model.
         It's state is propagated depending on its steering and acceleration actions.
     """
-    ENABLE_CRASHES = True
+    COLLISIONS_ENABLED = True
 
     LENGTH = 5.0  # [m]
     WIDTH = 2.0  # [m]
@@ -131,15 +131,25 @@ class Vehicle(object):
             self.act(action)
 
     def check_collision(self, other):
-        """Check for collision with another vehicle.
+        """
+            Check for collision with another vehicle.
 
         :param other: the other vehicle
         """
-        if not self.ENABLE_CRASHES:
+        if not self.COLLISIONS_ENABLED or self.crashed or other is self:
             return
-        if other is self:
+
+        # Fast spherical pre-check
+        if np.linalg.norm(other.position - self.position) > self.LENGTH:
             return
-        if np.linalg.norm(self.position - other.position) < self.WIDTH/2 + other.WIDTH/2:
+
+        # Accurate elliptic check
+        u = other.position - self.position
+        c, s = np.cos(self.heading), np.sin(self.heading)
+        r = np.matrix([[c, -s], [s, c]])
+        ru = r.dot(u)
+        if np.sum(np.square(ru/np.array([self.LENGTH, self.WIDTH]))) < 1:
+            self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
             self.color = other.color = Vehicle.RED
 
