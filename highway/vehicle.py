@@ -27,8 +27,6 @@ class Vehicle(object):
     DEFAULT_COLOR = YELLOW
     EGO_COLOR = GREEN
 
-    id_max = 0
-
     def __init__(self, road, position, heading=0, velocity=0):
         self.road = road
         self.position = np.array(position)
@@ -40,9 +38,6 @@ class Vehicle(object):
         self.color = self.DEFAULT_COLOR
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
-
-        self.id = Vehicle.id_max
-        Vehicle.id_max += 1
 
     @classmethod
     def create_random(cls, road, velocity=None):
@@ -184,7 +179,7 @@ class Vehicle(object):
             s.display(surface)
 
     def __str__(self):
-        return "#{}:{}".format(self.id, self.position)
+        return "#{}: {}".format(id(self) % 1000, self.position)
 
     def __repr__(self):
         return self.__str__()
