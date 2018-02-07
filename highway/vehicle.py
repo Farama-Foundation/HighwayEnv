@@ -349,18 +349,11 @@ class MDPVehicle(ControlledVehicle):
             self.velocity_index = self.speed_to_index(self.velocity) + 1
         elif action == "SLOWER":
             self.velocity_index = self.speed_to_index(self.velocity) - 1
-        elif action == "LANE_RIGHT":
-            target_lane_index = self.lane_index + 1
-            if target_lane_index < len(self.road.lanes) and \
-                    self.road.lanes[target_lane_index].is_reachable_from(self.position):
-                self.target_lane_index = target_lane_index
-        elif action == "LANE_LEFT":
-            target_lane_index = self.lane_index - 1
-            if target_lane_index >= 0 and self.road.lanes[target_lane_index].is_reachable_from(self.position):
-                self.target_lane_index = target_lane_index
+        else:
+            super(MDPVehicle, self).act(action)
+            return
         self.velocity_index = utils.constrain(self.velocity_index, 0, self.SPEED_COUNT - 1)
         self.target_velocity = self.index_to_speed(self.velocity_index)
-
         super(MDPVehicle, self).act()
 
     @classmethod
@@ -413,9 +406,6 @@ class MDPVehicle(ControlledVehicle):
                 if (t % int(trajectory_timestep / dt)) == 0:
                     states.append(copy.deepcopy(v))
         return states
-
-    def display(self, screen):
-        super(ControlledVehicle, self).display(screen)
 
 
 class IDMVehicle(ControlledVehicle):
