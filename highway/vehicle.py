@@ -7,13 +7,16 @@ from highway import utils
 
 class Vehicle(object):
     """
-        A moving vehicle and its dynamics.
+        A moving vehicle on a road, and its dynamics.
+
+        The vehicle is represented by a dynamical system: a modified bicycle model.
+        It's state is propagated depending on its steering and acceleration actions.
     """
+    ENABLE_CRASHES = True
+
     LENGTH = 5.0  # [m]
     WIDTH = 2.0  # [m]
     STEERING_TAU = 0.2  # [s]
-    ENABLE_CRASHES = True
-
     DEFAULT_VELOCITIES = [20, 25]  # [m/s]
 
     RED = (255, 100, 100)
@@ -43,6 +46,16 @@ class Vehicle(object):
 
     @classmethod
     def create_random(cls, road, velocity=None):
+        """
+            Create a random vehicle on the road.
+
+            The lane and /or velocity are chosen randomly, while longitudinal position is chosen behind the last
+            vehicle in the road with density based on the number of lanes.
+
+        :param road: the road where the vehicle is driving
+        :param velocity: initial velocity in [m/s]. If None, will be chosen randomly
+        :return: A vehicle with random position and/or velocity
+        """
         lane = np.random.randint(0, len(road.lanes) - 1)
         x_min = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
         offset = 30 * np.exp(-5 / 30 * len(road.lanes))
@@ -51,10 +64,24 @@ class Vehicle(object):
         return v
 
     def act(self, action=None):
+        """
+            Store an action to be repeated.
+
+        :param action: the input action
+        """
         if action:
             self.action = action
 
     def step(self, dt):
+        """
+            Propagate the vehicle state given its actions.
+
+            Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.
+            If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.
+            The vehicle's current lane is updated.
+
+        :param dt: timestep of integration of the model [s]
+        """
         if self.crashed:
             self.action['steering'] = np.pi / 4 * (-1 + 2 * np.random.beta(0.5, 0.5))
             self.action['acceleration'] = (-1.0 + 0.2 * np.random.beta(0.5, 0.5)) * self.velocity
@@ -69,31 +96,44 @@ class Vehicle(object):
         self.lane = self.road.lanes[self.lane_index]
 
     def lane_distance_to_vehicle(self, vehicle):
+        """
+            Compute the signed distance to another vehicle along current lane.
+
+        :param vehicle: the other vehicle
+        :return: the distance to the other vehicle [m]
+        """
         if not vehicle:
             return np.nan
         return self.lane.local_coordinates(vehicle.position)[0] - self.lane.local_coordinates(self.position)[0]
 
     def handle_event(self, event):
-        if not self.action:
-            self.action = {}
+        """
+            Handle a pygame event.
+
+            The vehicle actions can be manually controlled.
+        :param event: the pygame event
+        """
+        action = self.action
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                self.action['acceleration'] = 4
+                action['acceleration'] = 4
             if event.key == pygame.K_LEFT:
-                self.action['acceleration'] = -6
+                action['acceleration'] = -6
             if event.key == pygame.K_DOWN:
-                self.action['steering'] = 20 * np.pi / 180
+                action['steering'] = 20 * np.pi / 180
             if event.key == pygame.K_UP:
-                self.action['steering'] = -20 * np.pi / 180
+                action['steering'] = -20 * np.pi / 180
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT:
-                self.action['acceleration'] = 0
+                action['acceleration'] = 0
             if event.key == pygame.K_LEFT:
-                self.action['acceleration'] = 0
+                action['acceleration'] = 0
             if event.key == pygame.K_DOWN:
-                self.action['steering'] = 0
+                action['steering'] = 0
             if event.key == pygame.K_UP:
-                self.action['steering'] = 0
+                action['steering'] = 0
+        if action != self.action:
+            self.act(action)
 
     def check_collision(self, other):
         """Check for collision with another vehicle.
@@ -108,27 +148,40 @@ class Vehicle(object):
             self.crashed = other.crashed = True
             self.color = other.color = Vehicle.RED
 
-    def display(self, screen):
-        s = pygame.Surface((screen.pix(self.LENGTH), screen.pix(self.LENGTH)), pygame.SRCALPHA)  # per-pixel alpha
+    def display(self, surface):
+        """
+            Display the vehicle on a pygame surface.
+
+            The vehicle is represented as a colored rotated rectangle.
+
+        :param surface: the surface to draw the vehicle on
+        """
+        s = pygame.Surface((surface.pix(self.LENGTH), surface.pix(self.LENGTH)), pygame.SRCALPHA)  # per-pixel alpha
         pygame.draw.rect(s, self.color, (0,
-                                         screen.pix(self.LENGTH) / 2 - screen.pix(self.WIDTH) / 2,
-                                         screen.pix(self.LENGTH), screen.pix(self.WIDTH)),
+                                         surface.pix(self.LENGTH) / 2 - surface.pix(self.WIDTH) / 2,
+                                         surface.pix(self.LENGTH), surface.pix(self.WIDTH)),
                          0)
-        pygame.draw.rect(s, screen.BLACK, (0,
-                                           screen.pix(self.LENGTH) / 2 - screen.pix(self.WIDTH) / 2,
-                                           screen.pix(self.LENGTH), screen.pix(self.WIDTH)),
+        pygame.draw.rect(s, surface.BLACK, (0,
+                                            surface.pix(self.LENGTH) / 2 - surface.pix(self.WIDTH) / 2,
+                                            surface.pix(self.LENGTH), surface.pix(self.WIDTH)),
                          1)
         s = pygame.Surface.convert_alpha(s)
         h = self.heading if abs(self.heading) > 2 * np.pi / 180 else 0
         sr = pygame.transform.rotate(s, -h * 180 / np.pi)
-        screen.blit(sr, (screen.pos2pix(self.position[0] - self.LENGTH / 2, self.position[1] - self.LENGTH / 2)))
+        surface.blit(sr, (surface.pos2pix(self.position[0] - self.LENGTH / 2, self.position[1] - self.LENGTH / 2)))
 
     @staticmethod
-    def display_trajectory(screen, states):
+    def display_trajectory(surface, states):
+        """
+            Display the whole trajectory of a vehicle on a pygame surface.
+
+        :param surface: the surface to draw the vehicle future states on
+        :param states: the list of vehicle states within the trajectory
+        """
         for i in range(len(states)):
             s = states[i]
-            s.color = (s.color[0], s.color[1], s.color[2], 50)
-            s.display(screen)
+            s.color = (s.color[0], s.color[1], s.color[2], 50)  # Color is made transparent
+            s.display(surface)
 
     def __str__(self):
         return "#{}:{}".format(self.id, self.position)
@@ -138,18 +191,26 @@ class Vehicle(object):
 
 
 class Obstacle(Vehicle):
+    """
+        A motionless obstacle at a given position.
+    """
+
     def __init__(self, road, position):
         super(Obstacle, self).__init__(road, position, velocity=0)
+        self.target_velocity = 0
         self.color = Vehicle.BLACK
         self.LENGTH = self.WIDTH
-        self.target_velocity = 0
 
 
 class ControlledVehicle(Vehicle):
     """
-        A vehicle piloted by a low-level controller, allowing high-level actions
-        such as lane changes.
+        A vehicle piloted by two low-level controller, allowing high-level actions
+        such as cruise control and lane changes.
+
+        - The longitudinal controller is a velocity controller;
+        - The lateral controller is a heading controller cascaded with a lateral position controller.
     """
+
     TAU_A = 0.1  # [s]
     TAU_DS = 0.3  # [s]
     KP_A = 1 / TAU_A
@@ -178,6 +239,14 @@ class ControlledVehicle(Vehicle):
         return cls.create_from(Vehicle.create_random(road, velocity))
 
     def act(self, action=None):
+        """
+            Perform a high-level action to change the desired lane or velocity.
+
+            - If a high-level action is provided, update the target velocity and lane;
+            - then, perform longitudinal and lateral control.
+
+        :param action: a high-level action
+        """
         if action == "FASTER":
             self.target_velocity += 5
         elif action == "SLOWER":
@@ -197,20 +266,42 @@ class ControlledVehicle(Vehicle):
         super(ControlledVehicle, self).act(action)
 
     def steering_control(self, target_lane_index):
+        """
+            Steer the vehicle to follow the center of an given lane.
+
+            The steering command is computed by a proportional heading controller, whose heading reference is set to the
+            target lane heading added with a proportional lateral position controller weighted by current velocity.
+
+        :param target_lane_index: index of the lane to follow
+        :return: a steering wheel angle command [rad]
+        """
         lane_coords = self.road.lanes[target_lane_index].local_coordinates(self.position)
         lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
         lane_future_heading = self.road.lanes[target_lane_index].heading_at(lane_next_coords)
-        heading_ref = -np.arctan(self.KP_S * lane_coords[1] * np.exp(-(self.velocity / self.STEERING_VEL_GAIN) ** 2)) \
-                      * np.sign(self.velocity) + lane_future_heading
+        heading_ref = lane_future_heading - np.arctan(self.KP_S * lane_coords[1] * np.sign(self.velocity) *
+                                                      np.exp(-(self.velocity / self.STEERING_VEL_GAIN) ** 2))
         steering = self.KD_S * utils.wrap_to_pi(heading_ref - self.heading) * self.LENGTH / utils.not_zero(
             self.velocity)
         steering = utils.constrain(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
         return steering
 
     def velocity_control(self, target_velocity):
+        """
+            Control the velocity of the vehicle.
+
+            Using a simple proportional controller.
+
+        :param target_velocity: the desired velocity
+        :return: an acceleration command [m/s2]
+        """
         return self.KP_A * (target_velocity - self.velocity)
 
     def handle_event(self, event):
+        """
+            Map the pygame keyboard events to actions.
+
+        :param event: the pygame event
+        """
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
                 self.act("FASTER")
@@ -224,8 +315,7 @@ class ControlledVehicle(Vehicle):
 
 class MDPVehicle(ControlledVehicle):
     """
-        A vehicle piloted by a low-level controller, allowing high-level actions
-        such as lane changes.
+        A controlled vehicle with a specified discrete range of allowed target velocities.
     """
 
     SPEED_COUNT = 1  # []
@@ -252,6 +342,14 @@ class MDPVehicle(ControlledVehicle):
         return cls.create_from(Vehicle.create_random(road, velocity))
 
     def act(self, action=None):
+        """
+            Perform a high-level action.
+
+            If the action is a velocity change, choose velocity from the allowed discrete range.
+            Else, forward action to the ControlledVehicle handler.
+
+        :param action: a high-level action
+        """
         if action == "FASTER":
             self.velocity_index = self.speed_to_index(self.velocity) + 1
         elif action == "SLOWER":
@@ -272,6 +370,11 @@ class MDPVehicle(ControlledVehicle):
 
     @classmethod
     def index_to_speed(cls, index):
+        """
+            Convert an index among allowed speeds to its corresponding speed
+        :param index: the speed index []
+        :return: the corresponding speed [m/s]
+        """
         if cls.SPEED_COUNT > 1:
             return cls.SPEED_MIN + index * (cls.SPEED_MAX - cls.SPEED_MIN) / (cls.SPEED_COUNT - 1)
         else:
@@ -279,13 +382,30 @@ class MDPVehicle(ControlledVehicle):
 
     @classmethod
     def speed_to_index(cls, speed):
+        """
+            Find the index of the closest speed allowed to a given speed.
+        :param speed: an input speed [m/s]
+        :return: the index of the closest speed allowed []
+        """
         x = (speed - cls.SPEED_MIN) / (cls.SPEED_MAX - cls.SPEED_MIN)
         return np.int(np.round(x * (cls.SPEED_COUNT - 1)))
 
     def speed_index(self):
+        """
+            The index of current velocity
+        """
         return self.speed_to_index(self.velocity)
 
-    def predict_trajectory(self, actions, action_duration, log_duration, dt):
+    def predict_trajectory(self, actions, action_duration, trajectory_timestep, dt):
+        """
+            Predict the future trajectory of the vehicle given a sequence of actions.
+
+        :param actions: a sequence of future actions.
+        :param action_duration: the duration of each action.
+        :param trajectory_timestep: the duration between each save of the vehicle state.
+        :param dt: the timestep of the simulation
+        :return: the sequence of future states
+        """
         states = []
         v = copy.deepcopy(self)
         t = 0
@@ -295,7 +415,7 @@ class MDPVehicle(ControlledVehicle):
                 t += 1
                 v.act()  # Low-level control action
                 v.step(dt)
-                if (t % int(log_duration / dt)) == 0:
+                if (t % int(trajectory_timestep / dt)) == 0:
                     states.append(copy.deepcopy(v))
         return states
 
@@ -304,13 +424,16 @@ class MDPVehicle(ControlledVehicle):
 
 
 class IDMVehicle(ControlledVehicle):
-    """ Longitudinal controller that takes into account the front vehicle's distance and velocity.
-        Two settings are possible: IDM and MAXIMUM_VELOCITY.
-        The lateral controller is a lane keeping PD."""
-    CONTROLLER_IDM = 0
-    CONTROLLER_MAX_VELOCITY = 1
+    """
+        A vehicle using both a longitudinal and a lateral decision policies.
 
-    # Longitudinal control parameters
+        - Longitudinal: the IDM model computes an acceleration given the preceding vehicle's distance and velocity.
+        - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.
+        """
+
+    IDM_COLOR = Vehicle.BLUE
+
+    # Longitudinal policy parameters
     ACC_MAX = 3.0  # [m/s2]
     BRAKE_ACC = 5.0  # [m/s2]
     VELOCITY_WANTED = 20.0  # [m/s]
@@ -318,19 +441,16 @@ class IDMVehicle(ControlledVehicle):
     TIME_WANTED = 1.0  # [s]
     DELTA = 4.0  # []
 
-    # Lane change parameters
+    # Lateral policy parameters
     POLITENESS = 0  # in [0, 1]
     LANE_CHANGE_MIN_ACC_GAIN = 0.2  # [m/s2]
     LANE_CHANGE_MAX_BRAKING_IMPOSED = 2.  # [m/s2]
     LANE_CHANGE_DELAY = 1.0  # [s]
 
-    IDM_COLOR = Vehicle.BLUE
-
     def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
         self.color = self.IDM_COLOR
-        self.target_velocity = self.VELOCITY_WANTED
-        self.controller = self.CONTROLLER_IDM
+        self.target_velocity = self.VELOCITY_WANTED + np.random.randint(-5,5)
         self.timer = np.random.random() * self.LANE_CHANGE_DELAY
 
     @classmethod
@@ -342,8 +462,15 @@ class IDMVehicle(ControlledVehicle):
         return cls.create_from(Vehicle.create_random(road, velocity))
 
     def act(self, action=None):
-        action = {}
+        """
+            Execute an action.
 
+            For now, no action is supported because the vehicle takes all decisions
+            of acceleration and lane changes on its own, based on the IDM and MOBIL models.
+
+        :param action: the action
+        """
+        action = {}
         front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
 
         # Lateral controller: lane keeping
@@ -364,6 +491,13 @@ class IDMVehicle(ControlledVehicle):
         super(ControlledVehicle, self).act(action)
 
     def step(self, dt):
+        """
+            Step the simulation.
+
+            Increases a timer used for decision policies, and step the vehicle dynamics.
+
+        :param dt: timestep
+        """
         self.timer += dt
         super(IDMVehicle, self).step(dt)
 
@@ -375,6 +509,10 @@ class IDMVehicle(ControlledVehicle):
             The acceleration is chosen so as to:
             - reach a target velocity
             - maintain a minimum safety distance (and safety time) w.r.t the front vehicle
+
+        :param ego_vehicle: the vehicle whose desired acceleration is to be computed
+        :param front_vehicle: the vehicle preceding the ego-vehicle
+        :return: the acceleration command for the ego-vehicle
         """
         if not ego_vehicle:
             return 0
@@ -397,6 +535,8 @@ class IDMVehicle(ControlledVehicle):
             Assume the front vehicle is going to brake at full deceleration and that
             it will be noticed after a given delay, and compute the maximum velocity
             which allows the ego-vehicle to brake enough to avoid the collision.
+
+        :param front_vehicle: the preceding vehicle
         """
         if not front_vehicle:
             return self.target_velocity
