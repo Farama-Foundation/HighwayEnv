@@ -200,8 +200,8 @@ class ControlledVehicle(Vehicle):
         lane_coords = self.road.lanes[target_lane_index].local_coordinates(self.position)
         lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
         lane_future_heading = self.road.lanes[target_lane_index].heading_at(lane_next_coords)
-        heading_ref = -np.arctan(self.KP_S * lane_coords[1] * np.exp(-(self.velocity/self.STEERING_VEL_GAIN)**2)) \
-            * np.sign(self.velocity) + lane_future_heading
+        heading_ref = -np.arctan(self.KP_S * lane_coords[1] * np.exp(-(self.velocity / self.STEERING_VEL_GAIN) ** 2)) \
+                      * np.sign(self.velocity) + lane_future_heading
         steering = self.KD_S * utils.wrap_to_pi(heading_ref - self.heading) * self.LENGTH / utils.not_zero(
             self.velocity)
         steering = utils.constrain(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
@@ -331,7 +331,7 @@ class IDMVehicle(ControlledVehicle):
         self.color = self.IDM_COLOR
         self.target_velocity = self.VELOCITY_WANTED
         self.controller = self.CONTROLLER_IDM
-        self.timer = np.random.random()*self.LANE_CHANGE_DELAY
+        self.timer = np.random.random() * self.LANE_CHANGE_DELAY
 
     @classmethod
     def create_from(cls, vehicle):
@@ -452,8 +452,8 @@ class IDMVehicle(ControlledVehicle):
         self_pred_a = IDMVehicle.idm(ego_vehicle=self, front_vehicle=new_preceding)
         old_following_a = IDMVehicle.idm(ego_vehicle=old_following, front_vehicle=self)
         old_following_pred_a = IDMVehicle.idm(ego_vehicle=old_following, front_vehicle=old_preceding)
-        jerk = self_pred_a - self_a + self.POLITENESS*(new_following_pred_a - new_following_a
-                                                       + old_following_pred_a - old_following_a)
+        jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
+                                                         + old_following_pred_a - old_following_a)
         if jerk < self.LANE_CHANGE_MIN_ACC_GAIN:
             return False
 
