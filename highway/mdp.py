@@ -4,7 +4,7 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 import pygame
 
-from highway.vehicle import Vehicle, MDPVehicle
+from highway.vehicle import MDPVehicle
 from highway.road import Road
 
 
@@ -198,19 +198,14 @@ class SimplifiedMDP(object):
 
 
 def test():
-    r = Road.create_random_road(4, 4.0, vehicles_count=1)
-    v = MDPVehicle(r, r.lanes[0].position(0, 0), 0, 25, ego=True)
-    r.vehicles.append(v)
-
-    mdp = RoadMDP(r, v)
-    print(mdp.state)
-    smdp = SimplifiedMDP(mdp.state)
-    print(smdp.value)
-    smdp.value_iteration()
-    print(smdp.value)
-    # action = smdp.pick_action()
-    # print(action)
-    # mdp.step(action)
+    from highway.simulation import Simulation
+    from highway.vehicle import IDMVehicle
+    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
+    sim = Simulation(road, ego_vehicle_type=MDPVehicle)
+    sim.RECORD_VIDEO = False
+    while not sim.done:
+        sim.process()
+    sim.quit()
 
 
 if __name__ == '__main__':

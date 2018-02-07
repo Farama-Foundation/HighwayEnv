@@ -128,7 +128,7 @@ class Simulation:
 def test():
     road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=MDPVehicle)
-    sim.RECORD_VIDEO = True
+    sim.RECORD_VIDEO = False
     while not sim.done:
         sim.process()
     sim.quit()
