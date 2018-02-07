@@ -200,7 +200,6 @@ class Road(object):
     def __init__(self, lanes=None, vehicles=None):
         self.lanes = lanes or []
         self.vehicles = vehicles or []
-        self.update_lanes()
 
     @classmethod
     def create_random_road(cls, lanes_count, lane_width, vehicles_count=50, vehicles_type=ControlledVehicle):
@@ -218,7 +217,6 @@ class Road(object):
     def add_random_vehicles(self, vehicles_count=50, vehicles_type=ControlledVehicle):
         for _ in range(vehicles_count):
             self.vehicles.append(vehicles_type.create_random(self))
-            self.update_lanes()
 
     def act(self):
         for vehicle in self.vehicles:
@@ -227,11 +225,6 @@ class Road(object):
     def step(self, dt):
         for vehicle in self.vehicles:
             vehicle.step(dt)
-        self.update_lanes()
-
-    def update_lanes(self):
-        for v in self.vehicles:
-            v.lane = self.get_lane(v.position)
 
     def get_lane(self, position):
         return self.lanes[self.get_lane_index(position)]
@@ -239,9 +232,6 @@ class Road(object):
     def get_lane_index(self, position):
         lateral = [abs(l.local_coordinates(position)[1]) for l in self.lanes]
         return int(np.argmin(lateral))
-
-    def get_lane_coordinates(self, lane, position):
-        return self.lanes[lane].local_coordinates(position)
 
     def neighbour_vehicles(self, vehicle, lane=None):
         lane = lane or vehicle.lane
@@ -321,9 +311,12 @@ def test():
     l0 = StraightLane(np.array([0, 0]), 0, 4.0, [LineType.CONTINUOUS, LineType.NONE])
     l1 = StraightLane(np.array([0, 4]), 0, 4.0, [LineType.STRIPED, LineType.CONTINUOUS])
 
-    lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[-np.inf, ends[0]])
-    lc1 = StraightLane(lc0.position(ends[0], 0), -20 * np.pi / 180, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[0, ends[1]])
-    lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0, [LineType.NONE, LineType.CONTINUOUS], bounds=[0, ends[2]])
+    lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS],
+                       bounds=[-np.inf, ends[0]])
+    lc1 = StraightLane(lc0.position(ends[0], 0), -20 * np.pi / 180, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS],
+                       bounds=[0, ends[1]])
+    lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0, [LineType.NONE, LineType.CONTINUOUS],
+                       bounds=[0, ends[2]])
     l2 = LanesConcatenation([lc0, lc1, lc2])
     road = Road([l0, l1, l2])
     road.add_random_vehicles(30, vehicles_type=IDMVehicle)

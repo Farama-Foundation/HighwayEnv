@@ -7,6 +7,7 @@ import numpy as np
 import os
 import logging
 
+
 class Simulation:
     SCREEN_WIDTH = 1200
     SCREEN_HEIGHT = 600
