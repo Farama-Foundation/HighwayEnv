@@ -225,6 +225,8 @@ class Road(object):
     def step(self, dt):
         for vehicle in self.vehicles:
             vehicle.step(dt)
+            for other in self.vehicles:
+                vehicle.check_collision(other)
 
     def get_lane(self, position):
         return self.lanes[self.get_lane_index(position)]

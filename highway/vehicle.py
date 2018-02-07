@@ -12,12 +12,14 @@ class Vehicle(object):
     LENGTH = 5.0  # [m]
     WIDTH = 2.0  # [m]
     STEERING_TAU = 0.2  # [s]
+    ENABLE_CRASHES = True
 
     DEFAULT_VELOCITIES = [20, 25]  # [m/s]
 
+    RED = (255, 100, 100)
     GREEN = (50, 200, 0)
-    YELLOW = (200, 200, 0)
     BLUE = (100, 200, 255)
+    YELLOW = (200, 200, 0)
     BLACK = (60, 60, 60)
     DEFAULT_COLOR = YELLOW
     EGO_COLOR = GREEN
@@ -34,6 +36,7 @@ class Vehicle(object):
         self.lane = self.road.lanes[self.lane_index]
         self.color = self.DEFAULT_COLOR
         self.action = {'steering': 0, 'acceleration': 0}
+        self.crashed = False
 
         self.id = Vehicle.id_max
         Vehicle.id_max += 1
@@ -52,6 +55,10 @@ class Vehicle(object):
             self.action = action
 
     def step(self, dt):
+        if self.crashed:
+            self.action['steering'] = np.pi / 4 * (-1 + 2 * np.random.beta(0.5, 0.5))
+            self.action['acceleration'] = (-1.0 + 0.2 * np.random.beta(0.5, 0.5)) * self.velocity
+
         v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v * dt
         self.heading += self.velocity * self.steering_angle / self.LENGTH * dt
@@ -87,6 +94,19 @@ class Vehicle(object):
                 self.action['steering'] = 0
             if event.key == pygame.K_UP:
                 self.action['steering'] = 0
+
+    def check_collision(self, other):
+        """Check for collision with another vehicle.
+
+        :param other: the other vehicle
+        """
+        if not self.ENABLE_CRASHES:
+            return
+        if other is self:
+            return
+        if np.linalg.norm(self.position - other.position) < self.WIDTH/2 + other.WIDTH/2:
+            self.crashed = other.crashed = True
+            self.color = other.color = Vehicle.RED
 
     def display(self, screen):
         s = pygame.Surface((screen.pix(self.LENGTH), screen.pix(self.LENGTH)), pygame.SRCALPHA)  # per-pixel alpha
