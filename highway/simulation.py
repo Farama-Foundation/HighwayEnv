@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 import pygame
-from highway.vehicle import MDPVehicle, IDMVehicle
+from highway.vehicle import Vehicle, MDPVehicle, IDMVehicle
 from highway.road import Road, RoadSurface
 from highway.mdp import RoadMDP, SimplifiedMDP
 import numpy as np
@@ -20,7 +20,8 @@ class Simulation:
     def __init__(self, road, ego_vehicle_type=None, displayed=True):
         self.road = road
         if ego_vehicle_type:
-            self.vehicle = ego_vehicle_type.create_random(self.road, 25, ego=True)
+            self.vehicle = ego_vehicle_type.create_random(self.road, 25)
+            self.vehicle.color = Vehicle.EGO_COLOR
             self.road.vehicles.append(self.vehicle)
         else:
             self.vehicle = None

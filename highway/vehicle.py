@@ -1,7 +1,6 @@
 from __future__ import division, print_function
 import numpy as np
 import pygame
-import random
 import copy
 from highway import utils
 
@@ -14,36 +13,38 @@ class Vehicle(object):
     WIDTH = 2.0
     STEERING_TAU = 0.2
 
+    DEFAULT_VELOCITIES = [20, 25]
+
     GREEN = (50, 200, 0)
     YELLOW = (200, 200, 0)
     BLUE = (100, 200, 255)
     BLACK = (60, 60, 60)
+    DEFAULT_COLOR = YELLOW
+    EGO_COLOR = GREEN
 
     id_max = 0
 
-    def __init__(self, road, position, heading=0, velocity=None, ego=False):
+    def __init__(self, road, position, heading=0, velocity=0):
         self.road = road
         self.position = np.array(position)
         self.heading = heading
         self.steering_angle = 0
-        if velocity is None:
-            velocity = 20 - random.randint(0, 3)
         self.velocity = velocity
-        self.ego = ego
-        self.color = self.GREEN if self.ego else self.YELLOW
-        self.action = {'steering': 0, 'acceleration': 0}
         self.lane_index = self.road.get_lane_index(self.position)
         self.lane = self.road.lanes[self.lane_index]
+        self.color = self.DEFAULT_COLOR
+        self.action = {'steering': 0, 'acceleration': 0}
 
         self.id = Vehicle.id_max
         Vehicle.id_max += 1
 
     @classmethod
-    def create_random(cls, road, velocity=None, ego=False):
-        lane = random.randint(0, len(road.lanes) - 1)
+    def create_random(cls, road, velocity=None):
+        lane = np.random.randint(0, len(road.lanes) - 1)
         x_min = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
         offset = 30 * np.exp(-5 / 30 * len(road.lanes))
-        v = Vehicle(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity, ego)
+        velocity = np.random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
+        v = Vehicle(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity)
         return v
 
     def act(self, action=None):
@@ -142,21 +143,19 @@ class ControlledVehicle(Vehicle):
                  position,
                  heading=0,
                  velocity=None,
-                 ego=False,
                  target_lane_index=None,
                  target_velocity=None):
-        super(ControlledVehicle, self).__init__(road, position, heading, velocity, ego)
+        super(ControlledVehicle, self).__init__(road, position, heading, velocity)
         self.target_lane_index = target_lane_index or self.lane_index
         self.target_velocity = target_velocity or self.velocity
 
     @classmethod
     def create_from(cls, vehicle):
-        return ControlledVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, None,
-                                 None)
+        return ControlledVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None, None)
 
     @classmethod
-    def create_random(cls, road, velocity=None, ego=False):
-        return cls.create_from(Vehicle.create_random(road, velocity, ego))
+    def create_random(cls, road, velocity=None):
+        return cls.create_from(Vehicle.create_random(road, velocity))
 
     def act(self, action=None):
         if action == "FASTER":
@@ -210,7 +209,7 @@ class MDPVehicle(ControlledVehicle):
     """
 
     SPEED_MIN = 25
-    SPEED_COUNT = 1
+    SPEED_COUNT = 2
     SPEED_MAX = 35
 
     def __init__(self,
@@ -218,20 +217,19 @@ class MDPVehicle(ControlledVehicle):
                  position,
                  heading=0,
                  velocity=None,
-                 ego=False,
                  target_lane_index=None,
                  target_velocity=None):
-        super(MDPVehicle, self).__init__(road, position, heading, velocity, ego, target_lane_index, target_velocity)
+        super(MDPVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity)
         self.velocity_index = self.speed_to_index(self.target_velocity)
         self.target_velocity = self.index_to_speed(self.velocity_index)
 
     @classmethod
     def create_from(cls, vehicle):
-        return MDPVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, None, None)
+        return MDPVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None, None)
 
     @classmethod
-    def create_random(cls, road, velocity=None, ego=False):
-        return cls.create_from(Vehicle.create_random(road, velocity, ego))
+    def create_random(cls, road, velocity=None):
+        return cls.create_from(Vehicle.create_random(road, velocity))
 
     def act(self, action=None):
         if action == "FASTER":
@@ -249,7 +247,8 @@ class MDPVehicle(ControlledVehicle):
                 self.target_lane_index = target_lane_index
         self.velocity_index = utils.constrain(self.velocity_index, 0, self.SPEED_COUNT - 1)
         self.target_velocity = self.index_to_speed(self.velocity_index)
-        super(MDPVehicle, self).act(action)
+
+        super(MDPVehicle, self).act()
 
     @classmethod
     def index_to_speed(cls, index):
@@ -266,17 +265,6 @@ class MDPVehicle(ControlledVehicle):
     def speed_index(self):
         return self.speed_to_index(self.velocity)
 
-    def handle_event(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                self.act("FASTER")
-            if event.key == pygame.K_LEFT:
-                self.act("SLOWER")
-            if event.key == pygame.K_DOWN:
-                self.act("LANE_RIGHT")
-            if event.key == pygame.K_UP:
-                self.act("LANE_LEFT")
-
     def predict_trajectory(self, actions, action_duration, log_duration, dt):
         states = []
         v = copy.deepcopy(self)
@@ -285,7 +273,7 @@ class MDPVehicle(ControlledVehicle):
             v.act(action)  # High-level decision
             for _ in range(int(action_duration / dt)):
                 t += 1
-                v.act(action=None)  # Low-level control action
+                v.act()  # Low-level control action
                 v.step(dt)
                 if (t % int(log_duration / dt)) == 0:
                     states.append(copy.deepcopy(v))
@@ -315,20 +303,22 @@ class IDMVehicle(ControlledVehicle):
     LANE_CHANGE_MAX_ACC_LOSS = 3.
     LANE_CHANGE_DELAY = 1.0
 
-    def __init__(self, road, position, heading=0, velocity=None, ego=False, target_lane_index=None):
-        super(IDMVehicle, self).__init__(road, position, heading, velocity, ego, target_lane_index)
-        self.color = Vehicle.BLUE
+    IDM_COLOR = Vehicle.BLUE
+
+    def __init__(self, road, position, heading=0, velocity=None, target_lane_index=None):
+        super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
+        self.color = self.IDM_COLOR
         self.target_velocity = self.VELOCITY_WANTED
         self.controller = self.CONTROLLER_IDM
         self.timer = np.random.random()*self.LANE_CHANGE_DELAY
 
     @classmethod
     def create_from(cls, vehicle):
-        return IDMVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, vehicle.ego, None)
+        return IDMVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None)
 
     @classmethod
-    def create_random(cls, road, velocity=None, ego=False):
-        return cls.create_from(Vehicle.create_random(road, velocity, ego))
+    def create_random(cls, road, velocity=None):
+        return cls.create_from(Vehicle.create_random(road, velocity))
 
     def act(self, action=None):
         action = {}
