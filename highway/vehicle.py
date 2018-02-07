@@ -353,6 +353,7 @@ class IDMVehicle(ControlledVehicle):
         # Intelligent Driver Model
         if self.controller == self.CONTROLLER_IDM:
             action['acceleration'] = IDMVehicle.idm(ego_vehicle=self, front_vehicle=front_vehicle)
+            action['acceleration'] = self.recover_from_stop(action['acceleration'])
 
         # Max velocity
         if self.controller == self.CONTROLLER_MAX_VELOCITY:
@@ -458,6 +459,21 @@ class IDMVehicle(ControlledVehicle):
 
         # All clear, let's go!
         return True
+
+    def recover_from_stop(self, acceleration):
+        """
+            If stopped on the wrong lane, try a reversing maneuver
+        :param acceleration: desired acceleration from IDM
+        :return: suggested acceleration to recover from being stuck
+        """
+        if self.target_lane_index != self.lane_index and self.velocity < 5:
+            preceding, following = self.road.neighbour_vehicles(self)
+            new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.lanes[self.target_lane_index])
+            # Check for free room behind on both lanes
+            if (not following or self.lane_distance_to_vehicle(following) > 3 * self.LENGTH) and \
+                    (not new_following or self.lane_distance_to_vehicle(new_following) > 3 * self.LENGTH):
+                return -self.ACC_MAX/2
+        return acceleration
 
 
 def test():
