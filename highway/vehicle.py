@@ -9,11 +9,11 @@ class Vehicle(object):
     """
         A moving vehicle and its dynamics.
     """
-    LENGTH = 5.0
-    WIDTH = 2.0
-    STEERING_TAU = 0.2
+    LENGTH = 5.0  # [m]
+    WIDTH = 2.0  # [m]
+    STEERING_TAU = 0.2  # [s]
 
-    DEFAULT_VELOCITIES = [20, 25]
+    DEFAULT_VELOCITIES = [20, 25]  # [m/s]
 
     GREEN = (50, 200, 0)
     YELLOW = (200, 200, 0)
@@ -43,7 +43,7 @@ class Vehicle(object):
         lane = np.random.randint(0, len(road.lanes) - 1)
         x_min = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
         offset = 30 * np.exp(-5 / 30 * len(road.lanes))
-        velocity = np.random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
+        velocity = velocity or np.random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
         v = Vehicle(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity)
         return v
 
@@ -130,19 +130,19 @@ class ControlledVehicle(Vehicle):
         A vehicle piloted by a low-level controller, allowing high-level actions
         such as lane changes.
     """
-    TAU_A = 0.1
-    TAU_DS = 0.3
+    TAU_A = 0.1  # [s]
+    TAU_DS = 0.3  # [s]
     KP_A = 1 / TAU_A
     KD_S = 1 / TAU_DS
-    KP_S = 0.05
-    MAX_STEERING_ANGLE = np.pi / 4
-    STEERING_VEL_GAIN = 60
+    KP_S = 0.05  # [1/m]
+    MAX_STEERING_ANGLE = np.pi / 4  # [rad]
+    STEERING_VEL_GAIN = 60  # [m/s]
 
     def __init__(self,
                  road,
                  position,
                  heading=0,
-                 velocity=None,
+                 velocity=0,
                  target_lane_index=None,
                  target_velocity=None):
         super(ControlledVehicle, self).__init__(road, position, heading, velocity)
@@ -208,9 +208,9 @@ class MDPVehicle(ControlledVehicle):
         such as lane changes.
     """
 
-    SPEED_MIN = 25
-    SPEED_COUNT = 2
-    SPEED_MAX = 35
+    SPEED_COUNT = 1  # []
+    SPEED_MIN = 25  # [m/s]
+    SPEED_MAX = 35  # [m/s]
 
     def __init__(self,
                  road,
@@ -291,21 +291,22 @@ class IDMVehicle(ControlledVehicle):
     CONTROLLER_MAX_VELOCITY = 1
 
     # Longitudinal control parameters
-    ACC_MAX = 3.0
-    BRAKE_ACC = 5.0
-    VELOCITY_WANTED = 20.0
-    DISTANCE_WANTED = 5.0
-    TIME_WANTED = 1.0
-    DELTA = 4.0
+    ACC_MAX = 3.0  # [m/s2]
+    BRAKE_ACC = 5.0  # [m/s2]
+    VELOCITY_WANTED = 20.0  # [m/s]
+    DISTANCE_WANTED = 5.0  # [m]
+    TIME_WANTED = 1.0  # [s]
+    DELTA = 4.0  # []
 
     # Lane change parameters
-    LANE_CHANGE_MIN_ACC_GAIN = 0.2
-    LANE_CHANGE_MAX_ACC_LOSS = 3.
-    LANE_CHANGE_DELAY = 1.0
+    POLITENESS = 0  # in [0, 1]
+    LANE_CHANGE_MIN_ACC_GAIN = 0.2  # [m/s2]
+    LANE_CHANGE_MAX_BRAKING_IMPOSED = 2.  # [m/s2]
+    LANE_CHANGE_DELAY = 1.0  # [s]
 
     IDM_COLOR = Vehicle.BLUE
 
-    def __init__(self, road, position, heading=0, velocity=None, target_lane_index=None):
+    def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
         self.color = self.IDM_COLOR
         self.target_velocity = self.VELOCITY_WANTED
@@ -355,7 +356,7 @@ class IDMVehicle(ControlledVehicle):
             - maintain a minimum safety distance (and safety time) w.r.t the front vehicle
         """
         if not ego_vehicle:
-            raise Exception("A vehicle should be provided to compute its longitudinal acceleration")
+            return 0
         acceleration = cls.ACC_MAX * (
                 1 - np.power(ego_vehicle.velocity / utils.not_zero(ego_vehicle.target_velocity), cls.DELTA))
         if front_vehicle:
@@ -402,36 +403,38 @@ class IDMVehicle(ControlledVehicle):
         lane_indexes = utils.constrain(self.road.get_lane_index(self.position) + np.array([-1, 1]),
                                        0, len(self.road.lanes) - 1)
         for lane_index in lane_indexes:
-            if lane_index != self.target_lane_index and self.should_change_lane(lane_index):
+            if lane_index != self.target_lane_index and self.mobil(lane_index):
                 self.target_lane_index = lane_index
 
-    def should_change_lane(self, lane_index):
+    def mobil(self, lane_index):
         """
-            Decide whether a change to a given lane is relevant:
-            - The lane should be close enough from the vehicle.
-            - After changing I should be able to accelerate more
-            - I should not impose too big an acceleration on the target lane rear vehicle.
+            MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change
+            Returns whether the vehicle should change lane, if:
+            - The target lane is close enough.
+            - After changing it (and/or following vehicles) can accelerate more
+            - It doesn't impose an unsafe braking on its new following vehicle.
         """
         # Is the target lane close enough?
         if not self.road.lanes[lane_index].is_reachable_from(self.position):
             return False
 
-        # Is there an advantage for me to change lane?
-        front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
-        lane_front_vehicle, lane_rear_vehicle = self.road.neighbour_vehicles(self, self.road.lanes[lane_index])
-        current_acceleration = IDMVehicle.idm(ego_vehicle=self, front_vehicle=front_vehicle)
-        predicted_acceleration = IDMVehicle.idm(ego_vehicle=self, front_vehicle=lane_front_vehicle)
-        self_advantage = predicted_acceleration - current_acceleration > self.LANE_CHANGE_MIN_ACC_GAIN
-        if not self_advantage:
+        # Is the maneuver unsafe for the new following vehicle?
+        new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.lanes[lane_index])
+        new_following_a = IDMVehicle.idm(ego_vehicle=new_following, front_vehicle=new_preceding)
+        new_following_pred_a = IDMVehicle.idm(ego_vehicle=new_following, front_vehicle=self)
+        if new_following_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
             return False
 
-        # Is there a disadvantage for the rear vehicle in target lane?
-        if lane_rear_vehicle:
-            current_acceleration = IDMVehicle.idm(ego_vehicle=lane_rear_vehicle, front_vehicle=lane_front_vehicle)
-            predicted_acceleration = IDMVehicle.idm(ego_vehicle=lane_rear_vehicle, front_vehicle=self)
-            lane_rear_disadvantage = predicted_acceleration - current_acceleration < -self.LANE_CHANGE_MAX_ACC_LOSS
-            if lane_rear_disadvantage:
-                return False
+        # Is there an advantage for me and/or my followers to change lane?
+        old_preceding, old_following = self.road.neighbour_vehicles(self)
+        self_a = IDMVehicle.idm(ego_vehicle=self, front_vehicle=old_preceding)
+        self_pred_a = IDMVehicle.idm(ego_vehicle=self, front_vehicle=new_preceding)
+        old_following_a = IDMVehicle.idm(ego_vehicle=old_following, front_vehicle=self)
+        old_following_pred_a = IDMVehicle.idm(ego_vehicle=old_following, front_vehicle=old_preceding)
+        jerk = self_pred_a - self_a + self.POLITENESS*(new_following_pred_a - new_following_a
+                                                       + old_following_pred_a - old_following_a)
+        if jerk < self.LANE_CHANGE_MIN_ACC_GAIN:
+            return False
 
         # All clear, let's go!
         return True
@@ -440,7 +443,7 @@ class IDMVehicle(ControlledVehicle):
 def test():
     from highway.simulation import Simulation
     from highway.road import Road
-    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=3, vehicles_type=IDMVehicle)
+    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=30, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:
