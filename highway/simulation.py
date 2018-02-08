@@ -12,8 +12,9 @@ class Simulation:
     SCREEN_WIDTH = 1200
     SCREEN_HEIGHT = 600
     FPS = 30
-    dt = 1 / 30
+    REAL_TIME_RATIO = 1
     POLICY_FREQUENCY = 1
+    TRAJECTORY_TIMESTEP = 0.35
     RECORD_VIDEO = False
     OUT_FOLDER = 'out'
 
@@ -28,6 +29,7 @@ class Simulation:
         self.displayed = displayed
 
         self.t = 0
+        self.dt = self.REAL_TIME_RATIO / self.FPS
         self.done = False
         self.pause = False
         self.trajectory = None
@@ -69,7 +71,7 @@ class Simulation:
         self.road.act()
 
         # Planning for ego-vehicle
-        policy_call = self.t % (self.FPS // self.POLICY_FREQUENCY) == 0
+        policy_call = self.t % (self.FPS // (self.REAL_TIME_RATIO*self.POLICY_FREQUENCY)) == 0
         if self.vehicle and isinstance(self.vehicle, MDPVehicle) and policy_call:
             mdp = RoadMDP(self.road, self.vehicle)
             self.smdp = SimplifiedMDP(mdp.state)
@@ -80,7 +82,7 @@ class Simulation:
             _, actions = self.smdp.plan()
             self.trajectory = self.vehicle.predict_trajectory(actions,
                                                               mdp.TIME_QUANTIFICATION,
-                                                              8 * self.dt,
+                                                              self.TRAJECTORY_TIMESTEP,
                                                               self.dt)
             action = self.smdp.pick_action()
             logging.debug(actions)
