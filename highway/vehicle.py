@@ -51,7 +51,7 @@ class Vehicle(object):
         :param velocity: initial velocity in [m/s]. If None, will be chosen randomly
         :return: A vehicle with random position and/or velocity
         """
-        lane = np.random.randint(0, len(road.lanes) - 1)
+        lane = np.random.randint(0, len(road.lanes))
         x_min = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
         offset = 30 * np.exp(-5 / 30 * len(road.lanes))
         velocity = velocity or np.random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
@@ -445,7 +445,7 @@ class IDMVehicle(ControlledVehicle):
     def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
         self.color = self.IDM_COLOR
-        self.target_velocity = self.VELOCITY_WANTED + np.random.randint(-5,5)
+        self.target_velocity = self.VELOCITY_WANTED + np.random.randint(-5, 5)
         self.timer = np.random.random() * self.LANE_CHANGE_DELAY
 
     @classmethod
@@ -513,6 +513,13 @@ class IDMVehicle(ControlledVehicle):
 
     @classmethod
     def desired_gap(cls, ego_vehicle, front_vehicle=None):
+        """
+            Compute the desired distance between a vehicle and its leading vehicle.
+
+        :param ego_vehicle: the vehicle being controlled
+        :param front_vehicle: its leading vehicle
+        :return: the desired distance between the two [m]
+        """
         d0 = cls.DISTANCE_WANTED
         tau = cls.TIME_WANTED
         ab = cls.ACC_MAX * cls.BRAKE_ACC
@@ -626,14 +633,16 @@ class IDMVehicle(ControlledVehicle):
         :param acceleration: desired acceleration from IDM
         :return: suggested acceleration to recover from being stuck
         """
+        stopped_velocity = 5
+        safe_distance = 30
         # Is the vehicle stopped on the wrong lane?
-        if self.target_lane_index != self.lane_index and self.velocity < 5:
-            preceding, following = self.road.neighbour_vehicles(self)
-            new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.lanes[self.target_lane_index])
-
+        if self.target_lane_index != self.lane_index and self.velocity < stopped_velocity:
+            _, rear = self.road.neighbour_vehicles(self)
+            _, new_rear = self.road.neighbour_vehicles(self, self.road.lanes[self.target_lane_index])
             # Check for free room behind on both lanes
-            if (not following or following.lane_distance_to(self) > self.desired_gap(following, self)) and \
-                    (not new_following or new_following.lane_distance_to(self) > self.desired_gap(new_following, self)):
+            if (not rear or rear.lane_distance_to(self) > safe_distance+self.desired_gap(rear, self)) and \
+                    (not new_rear or new_rear.lane_distance_to(self) > safe_distance+self.desired_gap(new_rear, self)):
+                # Reverse
                 return -self.ACC_MAX/2
         return acceleration
 
@@ -641,7 +650,7 @@ class IDMVehicle(ControlledVehicle):
 def test():
     from highway.simulation import Simulation
     from highway.road import Road
-    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=30, vehicles_type=IDMVehicle)
+    road = Road.create_random_road(lanes_count=3, lane_width=4.0, vehicles_count=30, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:
