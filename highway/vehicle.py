@@ -90,7 +90,7 @@ class Vehicle(object):
         self.lane_index = self.road.get_lane_index(self.position)
         self.lane = self.road.lanes[self.lane_index]
 
-    def lane_distance_to_vehicle(self, vehicle):
+    def lane_distance_to(self, vehicle):
         """
             Compute the signed distance to another vehicle along current lane.
 
@@ -507,14 +507,18 @@ class IDMVehicle(ControlledVehicle):
         acceleration = cls.ACC_MAX * (
                 1 - np.power(ego_vehicle.velocity / utils.not_zero(ego_vehicle.target_velocity), cls.DELTA))
         if front_vehicle:
-            d0 = cls.DISTANCE_WANTED
-            tau = cls.TIME_WANTED
-            ab = cls.ACC_MAX * cls.BRAKE_ACC
-            d = ego_vehicle.lane_distance_to_vehicle(front_vehicle) - ego_vehicle.LENGTH / 2 - front_vehicle.LENGTH / 2
-            dv = ego_vehicle.velocity - front_vehicle.velocity
-            d_star = d0 + ego_vehicle.velocity * tau + ego_vehicle.velocity * dv / (2 * np.sqrt(ab))
-            acceleration -= cls.ACC_MAX * np.power(d_star / utils.not_zero(d), 2)
+            d = ego_vehicle.lane_distance_to(front_vehicle) - ego_vehicle.LENGTH / 2 - front_vehicle.LENGTH / 2
+            acceleration -= cls.ACC_MAX * np.power(cls.desired_gap(ego_vehicle, front_vehicle) / utils.not_zero(d), 2)
         return acceleration
+
+    @classmethod
+    def desired_gap(cls, ego_vehicle, front_vehicle=None):
+        d0 = cls.DISTANCE_WANTED
+        tau = cls.TIME_WANTED
+        ab = cls.ACC_MAX * cls.BRAKE_ACC
+        dv = ego_vehicle.velocity - front_vehicle.velocity
+        d_star = d0 + ego_vehicle.velocity * tau + ego_vehicle.velocity * dv / (2 * np.sqrt(ab))
+        return d_star
 
     def maximum_velocity(self, front_vehicle=None):
         """
@@ -533,7 +537,7 @@ class IDMVehicle(ControlledVehicle):
         a0 = self.BRAKE_ACC
         a1 = self.BRAKE_ACC
         tau = self.TIME_WANTED
-        d = max(self.lane_distance_to_vehicle(front_vehicle) - self.LENGTH / 2 - front_vehicle.LENGTH / 2 - d0, 0)
+        d = max(self.lane_distance_to(front_vehicle) - self.LENGTH / 2 - front_vehicle.LENGTH / 2 - d0, 0)
         v1_0 = front_vehicle.velocity
         delta = 4 * (a0 * a1 * tau) ** 2 + 8 * a0 * (a1 ** 2) * d + 4 * a0 * a1 * v1_0 ** 2
         v_max = -a0 * tau + np.sqrt(delta) / (2 * a1)
@@ -553,17 +557,29 @@ class IDMVehicle(ControlledVehicle):
             - closeness of the target lane;
             - MOBIL model.
         """
+        # If a lane change already ongoing
+        if self.lane_index != self.target_lane_index:
+            # abort it if someone else is already changing into the same lane
+            for v in self.road.vehicles:
+                if v is not self \
+                        and v.lane_index != self.target_lane_index \
+                        and isinstance(v, ControlledVehicle) \
+                        and v.target_lane_index == self.target_lane_index:
+                    d = self.lane_distance_to(v)
+                    d_star = self.desired_gap(self, v)
+                    if 0 < d < d_star:
+                        self.target_lane_index = self.lane_index
+                        break
+            return
+
+        # else, at a given frequency,
         if not utils.do_every(self.LANE_CHANGE_DELAY, self.timer):
             return
         self.timer = 0
 
-        # List adjacent lanes
-        lane_indexes = utils.constrain(self.road.get_lane_index(self.position) + np.array([-1, 1]),
-                                       0, len(self.road.lanes) - 1)
+        # decide to make a lane change
+        lane_indexes = [self.lane_index + i for i in [-1, 1] if 0 <= self.lane_index + i < len(self.road.lanes)]
         for lane_index in lane_indexes:
-            # Is the candidate lane already being followed?
-            if lane_index == self.target_lane_index:
-                continue
             # Is the candidate lane close enough?
             if not self.road.lanes[lane_index].is_reachable_from(self.position):
                 continue
@@ -611,13 +627,13 @@ class IDMVehicle(ControlledVehicle):
         :return: suggested acceleration to recover from being stuck
         """
         # Is the vehicle stopped on the wrong lane?
-        if self.target_lane_index != self.lane_index and self.velocity < 5 and acceleration < 0.9*self.ACC_MAX:
+        if self.target_lane_index != self.lane_index and self.velocity < 5:
             preceding, following = self.road.neighbour_vehicles(self)
             new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.lanes[self.target_lane_index])
 
             # Check for free room behind on both lanes
-            if (not following or self.lane_distance_to_vehicle(following) > 3 * self.LENGTH) and \
-                    (not new_following or self.lane_distance_to_vehicle(new_following) > 3 * self.LENGTH):
+            if (not following or following.lane_distance_to(self) > self.desired_gap(following, self)) and \
+                    (not new_following or new_following.lane_distance_to(self) > self.desired_gap(new_following, self)):
                 return -self.ACC_MAX/2
         return acceleration
 
