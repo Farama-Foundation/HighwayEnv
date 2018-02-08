@@ -61,11 +61,11 @@ class StraightLane(Lane):
         lateral = np.dot(delta, self.direction_lateral)
         return longitudinal, lateral
 
-    def on_lane(self, position):
-        longitudinal, lateral = self.local_coordinates(position)
-        is_on = np.abs(lateral) <= self.width / 2 and self.bounds[0] <= longitudinal < self.bounds[1]
-        distance = np.abs(lateral) if is_on else np.infty
-        return is_on, distance
+    def on_lane(self, position, longitudinal=None, lateral=None):
+        if not longitudinal or not lateral:
+            longitudinal, lateral = self.local_coordinates(position)
+        is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 and self.bounds[0] <= longitudinal < self.bounds[1]
+        return is_on
 
     def is_reachable_from(self, position):
         longitudinal, lateral = self.local_coordinates(position)
@@ -172,7 +172,7 @@ class LanesConcatenation(Lane):
         segment, segment_longitudinal = self.segment_from_longitudinal(s)
         return self.lanes[segment].width_at(segment_longitudinal)
 
-    def on_lane(self, position):
+    def on_lane(self, position, longitudinal=None, lateral=None):
         segment = self.segment_from_position(position)
         return self.lanes[segment].on_lane(position)
 
@@ -244,7 +244,9 @@ class Road(object):
         v_front = v_rear = None
         for v in self.vehicles:
             if v is not vehicle and v.lane == lane:
-                s_v, _ = lane.local_coordinates(v.position)
+                s_v, lat_v = lane.local_coordinates(v.position)
+                if not lane.on_lane(v.position, s_v, lat_v):
+                    continue
                 if s < s_v and (s_front is None or s_v < s_front):
                     s_front = s_v
                     v_front = v
