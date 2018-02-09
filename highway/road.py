@@ -1,7 +1,9 @@
 from __future__ import division, print_function
 import numpy as np
+import pandas as pd
 import pygame
 from highway import utils
+from highway.logger import Loggable
 from highway.vehicle import ControlledVehicle, IDMVehicle, Obstacle
 
 
@@ -192,7 +194,7 @@ class LanesConcatenation(Lane):
             self.lanes[i].display(screen)
 
 
-class Road(object):
+class Road(Loggable):
     """
         The set of vehicles on the road, and its characteristics
     """
@@ -263,6 +265,13 @@ class Road(object):
     def display_traffic(self, screen):
         for v in self.vehicles:
             v.display(screen)
+
+    def dump(self):
+        for v in self.vehicles:
+            v.dump()
+
+    def get_log(self):
+        return pd.concat([v.get_log() for v in self.vehicles])
 
     def __repr__(self):
         return self.vehicles.__repr__()

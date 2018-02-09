@@ -1,11 +1,13 @@
 from __future__ import division, print_function
 import numpy as np
+import pandas as pd
 import pygame
 import copy
 from highway import utils
+from highway.logger import Loggable
 
 
-class Vehicle(object):
+class Vehicle(Loggable):
     """
         A moving vehicle on a road, and its dynamics.
 
@@ -33,11 +35,12 @@ class Vehicle(object):
         self.heading = heading
         self.steering_angle = 0
         self.velocity = velocity
-        self.lane_index = self.road.get_lane_index(self.position)
-        self.lane = self.road.lanes[self.lane_index]
+        self.lane_index = self.road.get_lane_index(self.position) if self.road else np.nan
+        self.lane = self.road.lanes[self.lane_index] if self.road else np.nan
         self.color = self.DEFAULT_COLOR
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
+        self.log = []
 
     @classmethod
     def create_random(cls, road, velocity=None):
@@ -174,6 +177,35 @@ class Vehicle(object):
         h = self.heading if abs(self.heading) > 2 * np.pi / 180 else 0
         sr = pygame.transform.rotate(s, -h * 180 / np.pi)
         surface.blit(sr, (surface.pos2pix(self.position[0] - self.LENGTH / 2, self.position[1] - self.LENGTH / 2)))
+
+    def dump(self):
+        """
+            Update the internal log of the vehicle, containing:
+                - its kinematics;
+                - some metrics relative to neighbour its vehicles.
+        """
+        data = {
+            'v': self.velocity,
+            'acceleration': self.action['acceleration'],
+            'steering': self.action['steering']}
+
+        if self.road:
+            front_vehicle, _ = self.road.neighbour_vehicles(self)
+            if front_vehicle:
+                front_data = {
+                    'front_v': front_vehicle.velocity,
+                    'front_distance': self.lane_distance_to(front_vehicle)}
+                data.update(front_data)
+
+        self.log.append(data)
+
+    def get_log(self):
+        """
+            Cast the internal log as a DataFrame.
+
+        :return: the DataFrame of the Vehicle's log.
+        """
+        return pd.DataFrame(self.log)
 
     @staticmethod
     def display_trajectory(surface, states):
