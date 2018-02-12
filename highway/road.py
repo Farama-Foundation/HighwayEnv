@@ -4,7 +4,7 @@ import pandas as pd
 import pygame
 from highway import utils
 from highway.logger import Loggable
-from highway.vehicle import ControlledVehicle, IDMVehicle, Obstacle
+from highway.vehicle import ControlledVehicle, IDMVehicle, Obstacle, Vehicle
 
 
 class Lane(object):
@@ -66,12 +66,14 @@ class StraightLane(Lane):
     def on_lane(self, position, longitudinal=None, lateral=None):
         if not longitudinal or not lateral:
             longitudinal, lateral = self.local_coordinates(position)
-        is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 and self.bounds[0] <= longitudinal < self.bounds[1]
+        is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 and \
+                    self.bounds[0] <= longitudinal < self.bounds[1] + Vehicle.LENGTH
         return is_on
 
     def is_reachable_from(self, position):
         longitudinal, lateral = self.local_coordinates(position)
-        is_close = np.abs(lateral) <= 2*self.width_at(longitudinal) and self.bounds[0] <= longitudinal < self.bounds[1]
+        is_close = np.abs(lateral) <= 2 * self.width_at(longitudinal) and self.bounds[0] <= longitudinal < self.bounds[
+            1]
         return is_close
 
     def display(self, screen):
@@ -97,8 +99,8 @@ class StraightLane(Lane):
         self.draw_stripes(screen, starts, ends, lat)
 
     def draw_stripes(self, screen, starts, ends, lat):
-        starts = utils.constrain(starts, self.bounds[0], self.bounds[1])
-        ends = utils.constrain(ends, self.bounds[0], self.bounds[1])
+        starts = np.clip(starts, self.bounds[0], self.bounds[1])
+        ends = np.clip(ends, self.bounds[0], self.bounds[1])
         for k in range(len(starts)):
             if abs(starts[k] - ends[k]) > 0.5 * self.STRIPE_LENGTH:
                 pygame.draw.line(screen, screen.WHITE,
@@ -111,22 +113,23 @@ class SineLane(StraightLane):
     STRIPE_SPACING = 5
     STRIPE_LENGTH = 3
 
-    def __init__(self, origin, heading, width, amplitude, pulsation, line_types=None, bounds=None):
+    def __init__(self, origin, heading, width, amplitude, pulsation, phase, line_types=None, bounds=None):
         super(SineLane, self).__init__(origin, heading, width, line_types, bounds)
         self.amplitude = amplitude
         self.pulsation = pulsation
+        self.phase = phase
 
     def position(self, longitudinal, lateral):
-        return super(SineLane, self).position(longitudinal,
-                                              lateral + self.amplitude * np.sin(self.pulsation * longitudinal))
+        return super(SineLane, self).position(longitudinal, lateral
+                                              + self.amplitude * np.sin(self.pulsation * longitudinal + self.phase))
 
     def heading_at(self, s):
         return super(SineLane, self).heading_at(s) + np.arctan(
-            self.amplitude * self.pulsation * np.cos(self.pulsation * s))
+            self.amplitude * self.pulsation * np.cos(self.pulsation * s + self.phase))
 
     def local_coordinates(self, position):
         longitudinal, lateral = super(SineLane, self).local_coordinates(position)
-        return longitudinal, lateral - self.amplitude * np.sin(self.pulsation * longitudinal)
+        return longitudinal, lateral - self.amplitude * np.sin(self.pulsation * longitudinal + self.phase)
 
 
 class LanesConcatenation(Lane):
@@ -320,19 +323,20 @@ class RoadSurface(pygame.Surface):
 def test():
     from highway.simulation import Simulation
     # l = SineLane(sim.road.lanes[-1].origin+np.array([0,9]),0, 4.0, 3, 6.28/60, [False,False])
-    ends = [100, 20, 100]
+    ends = [100, 50, 100]
     l0 = StraightLane(np.array([0, 0]), 0, 4.0, [LineType.CONTINUOUS, LineType.NONE])
     l1 = StraightLane(np.array([0, 4]), 0, 4.0, [LineType.STRIPED, LineType.CONTINUOUS])
 
     lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS],
                        bounds=[-np.inf, ends[0]])
-    lc1 = StraightLane(lc0.position(ends[0], 0), -20 * np.pi / 180, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS],
-                       bounds=[0, ends[1]])
+    amplitude = 3.3
+    lc1 = SineLane(lc0.position(ends[0], -amplitude), 0, 4.0, amplitude, 2 * np.pi / 100, np.pi / 2,
+                   [LineType.STRIPED, LineType.STRIPED], bounds=[0, ends[1]])
     lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0, [LineType.NONE, LineType.CONTINUOUS],
                        bounds=[0, ends[2]])
     l2 = LanesConcatenation([lc0, lc1, lc2])
     road = Road([l0, l1, l2])
-    road.add_random_vehicles(30, vehicles_type=IDMVehicle)
+    # road.add_random_vehicles(1, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
     road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
 
