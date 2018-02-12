@@ -182,7 +182,7 @@ class Vehicle(Loggable):
         """
             Update the internal log of the vehicle, containing:
                 - its kinematics;
-                - some metrics relative to neighbour its vehicles.
+                - some metrics relative to its neighbour vehicles.
         """
         data = {
             'v': self.velocity,
@@ -190,12 +190,17 @@ class Vehicle(Loggable):
             'steering': self.action['steering']}
 
         if self.road:
-            front_vehicle, _ = self.road.neighbour_vehicles(self)
+            front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
             if front_vehicle:
-                front_data = {
+                data.update({
                     'front_v': front_vehicle.velocity,
-                    'front_distance': self.lane_distance_to(front_vehicle)}
-                data.update(front_data)
+                    'front_distance': self.lane_distance_to(front_vehicle)
+                })
+            if rear_vehicle:
+                data.update({
+                    'rear_v': rear_vehicle.velocity,
+                    'rear_distance': rear_vehicle.lane_distance_to(self)
+                })
 
         self.log.append(data)
 
@@ -269,7 +274,7 @@ class ControlledVehicle(Vehicle):
 
     @classmethod
     def create_from(cls, vehicle):
-        return ControlledVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None, None)
+        return cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None, None)
 
     @classmethod
     def create_random(cls, road, velocity=None):
@@ -319,7 +324,7 @@ class ControlledVehicle(Vehicle):
                                                       np.exp(-(self.velocity / self.STEERING_VEL_GAIN) ** 2))
         steering = self.KD_S * utils.wrap_to_pi(heading_ref - self.heading) * self.LENGTH / utils.not_zero(
             self.velocity)
-        steering = utils.constrain(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
+        steering = np.clip(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
         return steering
 
     def velocity_control(self, target_velocity):
@@ -372,7 +377,7 @@ class MDPVehicle(ControlledVehicle):
 
     @classmethod
     def create_from(cls, vehicle):
-        return MDPVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None, None)
+        return cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None, None)
 
     @classmethod
     def create_random(cls, road, velocity=None):
@@ -394,7 +399,7 @@ class MDPVehicle(ControlledVehicle):
         else:
             super(MDPVehicle, self).act(action)
             return
-        self.velocity_index = utils.constrain(self.velocity_index, 0, self.SPEED_COUNT - 1)
+        self.velocity_index = np.clip(self.velocity_index, 0, self.SPEED_COUNT - 1)
         self.target_velocity = self.index_to_speed(self.velocity_index)
         super(MDPVehicle, self).act()
 
@@ -482,7 +487,7 @@ class IDMVehicle(ControlledVehicle):
 
     @classmethod
     def create_from(cls, vehicle):
-        return IDMVehicle(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None)
+        return cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None)
 
     @classmethod
     def create_random(cls, road, velocity=None):
@@ -507,7 +512,7 @@ class IDMVehicle(ControlledVehicle):
         # Longitudinal: IDM
         action['acceleration'] = IDMVehicle.idm(ego_vehicle=self, front_vehicle=front_vehicle)
         action['acceleration'] = self.recover_from_stop(action['acceleration'])
-        action['acceleration'] = utils.constrain(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
+        action['acceleration'] = np.clip(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
         super(ControlledVehicle, self).act(action)
 
     def step(self, dt):
@@ -679,10 +684,65 @@ class IDMVehicle(ControlledVehicle):
         return acceleration
 
 
+class LinearVehicle(ControlledVehicle):
+    ALPHA = 1.0
+    BETA = 2.0
+    GAMMA_FRONT = 50.0
+    GAMMA_REAR = 20.0
+    VELOCITY_WANTED = 20
+    DISTANCE_WANTED = 5
+    TIME_WANTED = 1.0
+    BRAKE_ACC = 5.0
+    ACC_MAX = 3.0
+
+    def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None):
+        super(LinearVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
+        self.color = (180, 250, 90)
+        self.target_velocity = self.VELOCITY_WANTED
+
+    @classmethod
+    def create_from(cls, vehicle):
+        return cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None)
+
+    @classmethod
+    def create_random(cls, road, velocity=None):
+        return cls.create_from(Vehicle.create_random(road, velocity))
+
+    def act(self, action=None):
+        """
+            Execute an action.
+
+            For now, no action is supported because the vehicle takes all decisions
+            of acceleration and lane changes on its own, based on a linear model.
+
+        :param action: the action
+        """
+        action = {}
+        front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
+
+        # Lateral: steering control
+        action['steering'] = self.steering_control(self.target_lane_index)
+
+        # Longitudinal: linear model
+        action['acceleration'] = self.ALPHA * (self.target_velocity - self.velocity)
+        d_safe = self.DISTANCE_WANTED+np.max(self.velocity, 0)*self.TIME_WANTED+self.LENGTH
+        if front_vehicle:
+            d = self.lane_distance_to(front_vehicle)
+            action['acceleration'] += self.BETA * min(front_vehicle.velocity - self.velocity, 0) \
+                + self.GAMMA_FRONT * min(d - d_safe, 0)
+        if rear_vehicle:
+            d = rear_vehicle.lane_distance_to(self)
+            action['acceleration'] += self.BETA * max(rear_vehicle.velocity - self.velocity, 0) \
+                + self.GAMMA_REAR * max(d_safe - d, 0)
+
+        action['acceleration'] = np.clip(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
+        super(ControlledVehicle, self).act(action)
+
+
 def test():
     from highway.simulation import Simulation
     from highway.road import Road
-    road = Road.create_random_road(lanes_count=3, lane_width=4.0, vehicles_count=30, vehicles_type=IDMVehicle)
+    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=5, vehicles_type=LinearVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:

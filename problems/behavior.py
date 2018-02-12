@@ -1,7 +1,8 @@
 from __future__ import division, print_function
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
-from highway.vehicle import IDMVehicle
+from highway.vehicle import IDMVehicle, LinearVehicle
 from highway.road import Road
 from highway.simulation import Simulation
 import highway.utils
@@ -11,8 +12,8 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 
 def generate_data(count):
-    road = Road.create_random_road(lanes_count=3, lane_width=4.0, vehicles_count=30, vehicles_type=IDMVehicle)
-    sim = Simulation(road, ego_vehicle_type=IDMVehicle, displayed=False)
+    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=50, vehicles_type=LinearVehicle)
+    sim = Simulation(road, ego_vehicle_type=LinearVehicle, displayed=False)
 
     for _ in range(count):
         sim.act()
@@ -25,22 +26,30 @@ def generate_data(count):
 def fit(dump):
     regr = linear_model.LinearRegression()
     d = dump[dump['front_distance'].notnull()
+             & dump['rear_distance'].notnull()
              & (-4 < dump['acceleration'])
-             & (dump['acceleration'] < 2)]
+             & (dump['acceleration'] < 2)].reset_index(drop=True)
+    d_safe = LinearVehicle.DISTANCE_WANTED + d['v'] * LinearVehicle.TIME_WANTED + LinearVehicle.LENGTH
     X = pd.concat([d['v'],
-                   d['front_distance'],
-                   1 / d['front_distance'],
-                   (d['front_v'] - d['v']) / d['front_distance'],
-                   d['v'] / d['front_distance'],
-                   d['v']**2,
-                   1 / d['front_distance']**2,
-                   d['front_v'] - d['v'],
-                   (d['front_v'] - d['v'])**2,
+                   np.minimum(d['front_v'] - d['v'], 0),
+                   np.minimum(d['front_distance'] - d_safe, 0),
+                   np.maximum(d['rear_v'] - d['v'], 0),
+                   np.maximum(d_safe - d['rear_distance'], 0)
                    ], axis=1)
+    # X = pd.concat([d['v'],
+    #                d['front_distance'],
+    #                1 / d['front_distance'],
+    #                (d['front_v'] - d['v']) / d['front_distance'],
+    #                d['v'] / d['front_distance'],
+    #                d['v']**2,
+    #                1 / d['front_distance']**2,
+    #                d['front_v'] - d['v'],
+    #                (d['front_v'] - d['v'])**2,
+    #                ], axis=1)
     y = d['acceleration']
     regr.fit(X, y)
     print(regr.coef_)
-    acc_pred = highway.utils.constrain(regr.predict(X), -IDMVehicle.BRAKE_ACC, IDMVehicle.ACC_MAX)
+    acc_pred = np.clip(regr.predict(X), -IDMVehicle.BRAKE_ACC, IDMVehicle.ACC_MAX)
 
     plt.scatter(y, y)
     plt.scatter(y, acc_pred)
@@ -54,7 +63,8 @@ def display(dump):
 
 
 def main():
-    dump = generate_data(100)
+    print('Generating data...')
+    dump = generate_data(30*5)
     print('Generation done.')
     # display(dump)
     fit(dump)
