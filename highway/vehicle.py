@@ -58,7 +58,7 @@ class Vehicle(Loggable):
         x_min = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
         offset = 30 * np.exp(-5 / 30 * len(road.lanes))
         velocity = velocity or np.random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
-        v = Vehicle(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity)
+        v = cls(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity)
         return v
 
     def act(self, action=None):
@@ -272,14 +272,6 @@ class ControlledVehicle(Vehicle):
         self.target_lane_index = target_lane_index or self.lane_index
         self.target_velocity = target_velocity or self.velocity
 
-    @classmethod
-    def create_from(cls, vehicle):
-        return cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None, None)
-
-    @classmethod
-    def create_random(cls, road, velocity=None):
-        return cls.create_from(Vehicle.create_random(road, velocity))
-
     def act(self, action=None):
         """
             Perform a high-level action to change the desired lane or velocity.
@@ -374,14 +366,6 @@ class MDPVehicle(ControlledVehicle):
         super(MDPVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity)
         self.velocity_index = self.speed_to_index(self.target_velocity)
         self.target_velocity = self.index_to_speed(self.velocity_index)
-
-    @classmethod
-    def create_from(cls, vehicle):
-        return cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None, None)
-
-    @classmethod
-    def create_random(cls, road, velocity=None):
-        return cls.create_from(Vehicle.create_random(road, velocity))
 
     def act(self, action=None):
         """
@@ -484,14 +468,6 @@ class IDMVehicle(ControlledVehicle):
         self.color = self.IDM_COLOR
         self.target_velocity = self.VELOCITY_WANTED + np.random.randint(-5, 5)
         self.timer = np.random.random() * self.LANE_CHANGE_DELAY
-
-    @classmethod
-    def create_from(cls, vehicle):
-        return cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None)
-
-    @classmethod
-    def create_random(cls, road, velocity=None):
-        return cls.create_from(Vehicle.create_random(road, velocity))
 
     def act(self, action=None):
         """
@@ -700,14 +676,6 @@ class LinearVehicle(IDMVehicle):
         self.color = (200, 0, 150)
 
     @classmethod
-    def create_from(cls, vehicle):
-        return cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity, None)
-
-    @classmethod
-    def create_random(cls, road, velocity=None):
-        return cls.create_from(Vehicle.create_random(road, velocity))
-
-    @classmethod
     def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
         """
             Compute an acceleration command with a Linear Model.
@@ -742,7 +710,7 @@ class LinearVehicle(IDMVehicle):
 def test():
     from highway.simulation import Simulation
     from highway.road import Road
-    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=20, vehicles_type=IDMVehicle)
+    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=20, vehicles_type=LinearVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:
