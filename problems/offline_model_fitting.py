@@ -31,21 +31,10 @@ def fit(dump):
              & (dump['acceleration'] < 2)].reset_index(drop=True)
     d_safe = LinearVehicle.DISTANCE_WANTED + d['v'] * LinearVehicle.TIME_WANTED + LinearVehicle.LENGTH
     X = pd.concat([d['v'],
-                   np.minimum(d['front_v'] - d['v'], 0),
+                   np.minimum(d['front_v'] - d['v'], 0) + np.maximum(d['rear_v'] - d['v'], 0),
                    np.minimum(d['front_distance'] - d_safe, 0),
-                   np.maximum(d['rear_v'] - d['v'], 0),
                    np.maximum(d_safe - d['rear_distance'], 0)
                    ], axis=1)
-    # X = pd.concat([d['v'],
-    #                d['front_distance'],
-    #                1 / d['front_distance'],
-    #                (d['front_v'] - d['v']) / d['front_distance'],
-    #                d['v'] / d['front_distance'],
-    #                d['v']**2,
-    #                1 / d['front_distance']**2,
-    #                d['front_v'] - d['v'],
-    #                (d['front_v'] - d['v'])**2,
-    #                ], axis=1)
     y = d['acceleration']
     regr.fit(X, y)
     print(regr.coef_)

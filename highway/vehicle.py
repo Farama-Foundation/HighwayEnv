@@ -21,11 +21,13 @@ class Vehicle(Loggable):
     STEERING_TAU = 0.2  # [s]
     DEFAULT_VELOCITIES = [20, 25]  # [m/s]
 
+    # Display
     RED = (255, 100, 100)
     GREEN = (50, 200, 0)
     BLUE = (100, 200, 255)
     YELLOW = (200, 200, 0)
     BLACK = (60, 60, 60)
+    PURPLE = (200, 0, 150)
     DEFAULT_COLOR = YELLOW
     EGO_COLOR = GREEN
 
@@ -286,13 +288,12 @@ class ControlledVehicle(Vehicle):
         elif action == "SLOWER":
             self.target_velocity -= 5
         elif action == "LANE_RIGHT":
-            target_lane_index = self.lane_index + 1
-            if target_lane_index < len(self.road.lanes) and \
-                    self.road.lanes[target_lane_index].is_reachable_from(self.position):
+            target_lane_index = np.clip(self.lane_index + 1, 0, len(self.road.lanes) - 1)
+            if self.road.lanes[target_lane_index].is_reachable_from(self.position):
                 self.target_lane_index = target_lane_index
         elif action == "LANE_LEFT":
-            target_lane_index = self.lane_index - 1
-            if target_lane_index >= 0 and self.road.lanes[target_lane_index].is_reachable_from(self.position):
+            target_lane_index = np.clip(self.lane_index - 1, 0, len(self.road.lanes) - 1)
+            if self.road.lanes[target_lane_index].is_reachable_from(self.position):
                 self.target_lane_index = target_lane_index
 
         action = {'steering': self.steering_control(self.target_lane_index),
@@ -463,8 +464,9 @@ class IDMVehicle(ControlledVehicle):
     LANE_CHANGE_MAX_BRAKING_IMPOSED = 2.  # [m/s2]
     LANE_CHANGE_DELAY = 1.0  # [s]
 
-    def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None):
+    def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
+        self.enable_lane_change = enable_lane_change
         self.color = self.IDM_COLOR
         self.target_velocity = self.VELOCITY_WANTED + np.random.randint(-5, 5)
         self.timer = np.random.random() * self.LANE_CHANGE_DELAY
@@ -482,7 +484,8 @@ class IDMVehicle(ControlledVehicle):
         front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
 
         # Lateral: MOBIL
-        self.change_lane_policy()
+        if self.enable_lane_change:
+            self.change_lane_policy()
         action['steering'] = self.steering_control(self.target_lane_index)
 
         # Longitudinal: IDM
@@ -669,11 +672,12 @@ class LinearVehicle(IDMVehicle):
     ALPHA = 1.0
     BETA = 2.0
     GAMMA_FRONT = 50.0
-    GAMMA_REAR = 20.0
+    GAMMA_REAR = 50.0
 
-    def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None):
-        super(LinearVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
-        self.color = (200, 0, 150)
+    def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
+        super(LinearVehicle, self).__init__(road, position, heading, velocity, target_lane_index, enable_lane_change)
+        self.color = Vehicle.PURPLE
+        self.target_velocity = self.VELOCITY_WANTED
 
     @classmethod
     def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
@@ -710,7 +714,7 @@ class LinearVehicle(IDMVehicle):
 def test():
     from highway.simulation import Simulation
     from highway.road import Road
-    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=20, vehicles_type=LinearVehicle)
+    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=30, vehicles_type=LinearVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:
