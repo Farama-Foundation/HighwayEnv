@@ -510,7 +510,9 @@ class IDMVehicle(ControlledVehicle):
         action['steering'] = self.steering_control(self.target_lane_index)
 
         # Longitudinal: IDM
-        action['acceleration'] = IDMVehicle.idm(ego_vehicle=self, front_vehicle=front_vehicle)
+        action['acceleration'] = self.acceleration(ego_vehicle=self,
+                                                   front_vehicle=front_vehicle,
+                                                   rear_vehicle=rear_vehicle)
         action['acceleration'] = self.recover_from_stop(action['acceleration'])
         action['acceleration'] = np.clip(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
         super(ControlledVehicle, self).act(action)
@@ -527,17 +529,20 @@ class IDMVehicle(ControlledVehicle):
         super(IDMVehicle, self).step(dt)
 
     @classmethod
-    def idm(cls, ego_vehicle, front_vehicle=None):
+    def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
         """
             Compute an acceleration command with the Intelligent Driver Model.
 
             The acceleration is chosen so as to:
-            - reach a target velocity
-            - maintain a minimum safety distance (and safety time) w.r.t the front vehicle
+            - reach a target velocity;
+            - maintain a minimum safety distance (and safety time) w.r.t the front vehicle.
 
-        :param ego_vehicle: the vehicle whose desired acceleration is to be computed
+        :param ego_vehicle: the vehicle whose desired acceleration is to be computed. It does not have to be an
+                            IDM vehicle, which is why this method is a class method. This allows an IDM vehicle to
+                            reason about other vehicles behaviors even though they may not IDMs.
         :param front_vehicle: the vehicle preceding the ego-vehicle
-        :return: the acceleration command for the ego-vehicle
+        :param rear_vehicle: the vehicle following the ego-vehicle
+        :return: the acceleration command for the ego-vehicle [m/s2]
         """
         if not ego_vehicle:
             return 0
@@ -644,17 +649,17 @@ class IDMVehicle(ControlledVehicle):
         """
         # Is the maneuver unsafe for the new following vehicle?
         new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.lanes[lane_index])
-        new_following_a = IDMVehicle.idm(ego_vehicle=new_following, front_vehicle=new_preceding)
-        new_following_pred_a = IDMVehicle.idm(ego_vehicle=new_following, front_vehicle=self)
+        new_following_a = IDMVehicle.acceleration(ego_vehicle=new_following, front_vehicle=new_preceding)
+        new_following_pred_a = IDMVehicle.acceleration(ego_vehicle=new_following, front_vehicle=self)
         if new_following_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
             return False
 
         # Is there an advantage for me and/or my followers to change lane?
         old_preceding, old_following = self.road.neighbour_vehicles(self)
-        self_a = IDMVehicle.idm(ego_vehicle=self, front_vehicle=old_preceding)
-        self_pred_a = IDMVehicle.idm(ego_vehicle=self, front_vehicle=new_preceding)
-        old_following_a = IDMVehicle.idm(ego_vehicle=old_following, front_vehicle=self)
-        old_following_pred_a = IDMVehicle.idm(ego_vehicle=old_following, front_vehicle=old_preceding)
+        self_a = IDMVehicle.acceleration(ego_vehicle=self, front_vehicle=old_preceding)
+        self_pred_a = IDMVehicle.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
+        old_following_a = IDMVehicle.acceleration(ego_vehicle=old_following, front_vehicle=self)
+        old_following_pred_a = IDMVehicle.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
         jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
                                                          + old_following_pred_a - old_following_a)
         if jerk < self.LANE_CHANGE_MIN_ACC_GAIN:
@@ -671,34 +676,28 @@ class IDMVehicle(ControlledVehicle):
         :return: suggested acceleration to recover from being stuck
         """
         stopped_velocity = 5
-        safe_distance = 30
+        safe_distance = 200
         # Is the vehicle stopped on the wrong lane?
         if self.target_lane_index != self.lane_index and self.velocity < stopped_velocity:
             _, rear = self.road.neighbour_vehicles(self)
             _, new_rear = self.road.neighbour_vehicles(self, self.road.lanes[self.target_lane_index])
             # Check for free room behind on both lanes
-            if (not rear or rear.lane_distance_to(self) > safe_distance+self.desired_gap(rear, self)) and \
-                    (not new_rear or new_rear.lane_distance_to(self) > safe_distance+self.desired_gap(new_rear, self)):
+            if (not rear or rear.lane_distance_to(self) > safe_distance) and \
+                    (not new_rear or new_rear.lane_distance_to(self) > safe_distance):
                 # Reverse
                 return -self.ACC_MAX/2
         return acceleration
 
 
-class LinearVehicle(ControlledVehicle):
+class LinearVehicle(IDMVehicle):
     ALPHA = 1.0
     BETA = 2.0
     GAMMA_FRONT = 50.0
     GAMMA_REAR = 20.0
-    VELOCITY_WANTED = 20
-    DISTANCE_WANTED = 5
-    TIME_WANTED = 1.0
-    BRAKE_ACC = 5.0
-    ACC_MAX = 3.0
 
     def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None):
         super(LinearVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
-        self.color = (180, 250, 90)
-        self.target_velocity = self.VELOCITY_WANTED
+        self.color = (200, 0, 150)
 
     @classmethod
     def create_from(cls, vehicle):
@@ -708,41 +707,42 @@ class LinearVehicle(ControlledVehicle):
     def create_random(cls, road, velocity=None):
         return cls.create_from(Vehicle.create_random(road, velocity))
 
-    def act(self, action=None):
+    @classmethod
+    def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
         """
-            Execute an action.
+            Compute an acceleration command with a Linear Model.
 
-            For now, no action is supported because the vehicle takes all decisions
-            of acceleration and lane changes on its own, based on a linear model.
+            The acceleration is chosen so as to:
+            - reach a target velocity;
+            - reach the velocity of the leading (resp following) vehicle, if it is lower (resp higher) than ego's;
+            - maintain a minimum safety distance w.r.t the leading vehicle.
 
-        :param action: the action
+        :param ego_vehicle: the vehicle whose desired acceleration is to be computed. It does not have to be an
+                            Linear vehicle, which is why this method is a class method. This allows a Linear vehicle to
+                            reason about other vehicles behaviors even though they may not Linear.
+        :param front_vehicle: the vehicle preceding the ego-vehicle
+        :param rear_vehicle: the vehicle following the ego-vehicle
+        :return: the acceleration command for the ego-vehicle [m/s2]
         """
-        action = {}
-        front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
-
-        # Lateral: steering control
-        action['steering'] = self.steering_control(self.target_lane_index)
-
-        # Longitudinal: linear model
-        action['acceleration'] = self.ALPHA * (self.target_velocity - self.velocity)
-        d_safe = self.DISTANCE_WANTED+np.max(self.velocity, 0)*self.TIME_WANTED+self.LENGTH
+        if not ego_vehicle:
+            return 0
+        acceleration = cls.ALPHA * (ego_vehicle.target_velocity - ego_vehicle.velocity)
+        d_safe = cls.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * cls.TIME_WANTED + ego_vehicle.LENGTH
         if front_vehicle:
-            d = self.lane_distance_to(front_vehicle)
-            action['acceleration'] += self.BETA * min(front_vehicle.velocity - self.velocity, 0) \
-                + self.GAMMA_FRONT * min(d - d_safe, 0)
+            d = ego_vehicle.lane_distance_to(front_vehicle)
+            acceleration += cls.BETA * min(front_vehicle.velocity - ego_vehicle.velocity, 0) \
+                + cls.GAMMA_FRONT * min(d - d_safe, 0)
         if rear_vehicle:
-            d = rear_vehicle.lane_distance_to(self)
-            action['acceleration'] += self.BETA * max(rear_vehicle.velocity - self.velocity, 0) \
-                + self.GAMMA_REAR * max(d_safe - d, 0)
-
-        action['acceleration'] = np.clip(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
-        super(ControlledVehicle, self).act(action)
+            d = rear_vehicle.lane_distance_to(ego_vehicle)
+            acceleration += cls.BETA * max(rear_vehicle.velocity - ego_vehicle.velocity, 0) \
+                + cls.GAMMA_REAR * max(d_safe - d, 0)
+        return acceleration
 
 
 def test():
     from highway.simulation import Simulation
     from highway.road import Road
-    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=5, vehicles_type=LinearVehicle)
+    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=20, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 
     while not sim.done:
