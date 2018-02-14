@@ -468,7 +468,7 @@ class IDMVehicle(ControlledVehicle):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
         self.enable_lane_change = enable_lane_change
         self.color = self.IDM_COLOR
-        self.target_velocity = self.VELOCITY_WANTED + np.random.randint(-5, 5)
+        self.target_velocity = self.VELOCITY_WANTED #+ np.random.randint(-5, 5)
         self.timer = np.random.random() * self.LANE_CHANGE_DELAY
 
     def act(self, action=None):
@@ -670,9 +670,11 @@ class IDMVehicle(ControlledVehicle):
 
 class LinearVehicle(IDMVehicle):
     ALPHA = 1.0
-    BETA = 2.0
-    GAMMA_FRONT = 50.0
-    GAMMA_REAR = 50.0
+    BETA_FRONT = 2.0
+    BETA_REAR = 0.0
+    GAMMA_FRONT = 10.0
+    GAMMA_REAR = 0.0
+    TIME_WANTED = 2.0
 
     def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
         super(LinearVehicle, self).__init__(road, position, heading, velocity, target_lane_index, enable_lane_change)
@@ -702,11 +704,11 @@ class LinearVehicle(IDMVehicle):
         d_safe = cls.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * cls.TIME_WANTED + ego_vehicle.LENGTH
         if front_vehicle:
             d = ego_vehicle.lane_distance_to(front_vehicle)
-            acceleration += cls.BETA * min(front_vehicle.velocity - ego_vehicle.velocity, 0) \
+            acceleration += cls.BETA_FRONT * min(front_vehicle.velocity - ego_vehicle.velocity, 0) \
                 + cls.GAMMA_FRONT * min(d - d_safe, 0)
         if rear_vehicle:
             d = rear_vehicle.lane_distance_to(ego_vehicle)
-            acceleration += cls.BETA * max(rear_vehicle.velocity - ego_vehicle.velocity, 0) \
+            acceleration += cls.BETA_REAR * max(rear_vehicle.velocity - ego_vehicle.velocity, 0) \
                 + cls.GAMMA_REAR * max(d_safe - d, 0)
         return acceleration
 

@@ -271,7 +271,8 @@ class Road(Loggable):
 
     def dump(self):
         for v in self.vehicles:
-            v.dump()
+            if not isinstance(v, Obstacle):
+                v.dump()
 
     def get_log(self):
         return pd.concat([v.get_log() for v in self.vehicles])
