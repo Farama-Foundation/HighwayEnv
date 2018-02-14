@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 
 class LinearEstimator(object):
-    RHO = 0.01
+    RHO = 10.0
 
     def __init__(self, vehicle):
         self.vehicle = vehicle
@@ -18,25 +18,25 @@ class LinearEstimator(object):
     def update(self, dt):
         f = self.vehicle_features()
 
-        # print(f[0, 2])
-        # f[0, 2] = 0
-        self.vehicle.action['acceleration'] = f.dot(np.array([[1.], [2.], [1]]))[0, 0]
+        # self.vehicle.action['acceleration'] = np.transpose(f).dot(np.array([[1.], [2.], [10]]))[0, 0]
         # print(self.vehicle.action['acceleration'])
 
         a = self.vehicle.action['acceleration']
-        self.weights += self.RHO*np.transpose(f)*(a - f.dot(self.weights))*dt
+        # self.weights += self.RHO*f*(a - np.transpose(f).dot(self.weights))*dt
+        if -self.vehicle.BRAKE_ACC < a < self.vehicle.ACC_MAX:
+            self.weights = np.linalg.inv(np.eye(3) + dt*self.RHO*f.dot(np.transpose(f))).dot(self.weights + dt*self.RHO*f*a)
         print('w = ', np.transpose(self.weights))
 
     def vehicle_features(self):
-        f = np.zeros((1, 3))
-        f[0, 0] = self.vehicle.target_velocity - self.vehicle.velocity
+        f = np.zeros((3, 1))
+        f[0] = self.vehicle.target_velocity - self.vehicle.velocity
         for v in (self.vehicle.road.neighbour_vehicles(self.vehicle)):
             if not v:
                 continue
             dp = self.vehicle.lane_distance_to(v)
             dv = v.velocity - self.vehicle.velocity
-            f[0, 1] = LinearEstimator.velocity_feature(dp, dv)
-            f[0, 2] = LinearEstimator.position_feature(dp, self.vehicle.velocity, v.velocity)
+            f[1] = LinearEstimator.velocity_feature(dp, dv)
+            f[2] = LinearEstimator.position_feature(dp, self.vehicle.velocity, v.velocity)
         return f
 
     @staticmethod
