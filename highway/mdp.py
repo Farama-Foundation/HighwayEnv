@@ -5,6 +5,7 @@ import matplotlib.cm as cm
 import pygame
 
 from highway.road import Road
+from highway import utils
 
 
 class RoadMDP(object):
@@ -12,86 +13,71 @@ class RoadMDP(object):
         A MDP representing the times to collision between the ego-vehicle and
         other vehicles on the road.
     """
-    HORIZON = 10.0
-    TIME_QUANTIFICATION = 1.0
     ACTION_TIMESTEP = 0.1
     MAX_ACTION_DURATION = 1.0
 
-    def __init__(self, road, ego_vehicle):
-        self.road = road
+    def __init__(self, ego_vehicle):
         self.ego_vehicle = ego_vehicle
-
-        self.T = int(self.HORIZON / self.TIME_QUANTIFICATION)
-        self.V = self.ego_vehicle.SPEED_COUNT
-
-        self.state = self.get_state()
-
-    def get_state(self):
-        grids = np.zeros((self.V, len(self.road.lanes), self.T))
-        for k in range(self.V):
-            grids[k, :, :] = self.generate_2d_grid(self.ego_vehicle.index_to_speed(k))
-        lane = self.road.get_lane_index(self.ego_vehicle.position)
-        speed = self.ego_vehicle.speed_index()
-        return grids, lane, speed
-
-    def generate_2d_grid(self, ego_velocity):
-        grid = np.zeros((len(self.road.lanes), self.T))
-        for v in self.road.vehicles:
-            if v is not self.ego_vehicle:
-                lane = self.road.get_lane(v.position)
-                margin = v.LENGTH / 2 + self.ego_vehicle.LENGTH / 2
-                collision_points = [(0, 2), (-margin, 1), (margin, 1)]
-                for m, cost in collision_points:
-                    distance = lane.local_coordinates(v.position)[0] - \
-                               lane.local_coordinates(self.ego_vehicle.position)[0] + m
-
-                    if ego_velocity == v.velocity:
-                        continue
-                    time_of_impact = distance / (ego_velocity - v.velocity)
-                    if time_of_impact < 0:
-                        continue
-                    l, t = self.road.get_lane_index(v.position), int(time_of_impact / self.TIME_QUANTIFICATION)
-                    if 0 <= l < np.shape(grid)[0] and 0 <= t < np.shape(grid)[1]:
-                        grid[l, t] = max(grid[l, t], cost)
-                    l, t = self.road.get_lane_index(v.position), int(np.ceil(time_of_impact / self.TIME_QUANTIFICATION))
-                    if 0 <= l < np.shape(grid)[0] and 0 <= t < np.shape(grid)[1]:
-                        grid[l, t] = max(grid[l, t], cost)
-        return grid
 
     def step(self, action):
         # Send order to low-level agent
-        self.ego_vehicle.perform_action(action)
+        self.ego_vehicle.act(action)
 
         # Inner high-frequency loop
-        new_state = self.state
         for k in range(int(self.MAX_ACTION_DURATION / self.ACTION_TIMESTEP)):
-            self.road.step(self.ACTION_TIMESTEP)
-            new_state = (self.generate_2d_grid(self.ego_vehicle.velocity),
-                         self.road.get_lane_index(self.ego_vehicle.position))
-            # Stop whenever macro-state changes
-            # if (self.state[0] != new_state[0]).any() or self.state[1] != new_state[1]:
-            #     break
-        self.state = new_state
-        return self.state
+            self.ego_vehicle.road.step(self.ACTION_TIMESTEP)
 
 
-class SimplifiedMDP(object):
+class TTCMDP(RoadMDP):
+    HORIZON = 10.0
+    TIME_QUANTIFICATION = 1.0
     GAMMA = 1.0
+
     COLLISION_COST = 10
     LANE_CHANGE_COST = 0.00
     LEFT_LANE_COST = -0.01
     HIGH_VELOCITY_REWARD = 0.5
+
     actions = {0: 'IDLE', 1: 'LANE_LEFT', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}
     cost = {0: 0, 1: -LANE_CHANGE_COST, 2: -LANE_CHANGE_COST, 3: 0, 4: 0}
 
-    def __init__(self, road_state):
-        self.grids, self.lane, self.speed = road_state
-
+    def __init__(self, ego_vehicle):
+        super(TTCMDP, self).__init__(ego_vehicle)
+        self.grids, self.lane, self.speed = self.get_state()
         self.V, self.L, self.T = np.shape(self.grids)
         self.value = np.zeros(np.shape(self.grids))
         self.state_reward = - self.COLLISION_COST * self.grids \
             - self.LEFT_LANE_COST * np.tile(np.arange(self.L)[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \
             + self.HIGH_VELOCITY_REWARD * np.tile(np.arange(self.V)[:, np.newaxis, np.newaxis], (1, self.L, self.T))
+
+    def get_state(self):
+        grids = np.zeros((self.ego_vehicle.SPEED_COUNT,
+                          len(self.ego_vehicle.road.lanes),
+                          int(self.HORIZON / self.TIME_QUANTIFICATION)))
+        self.fill_ttc_grid(grids)
+        lane = self.ego_vehicle.lane_index
+        speed = self.ego_vehicle.speed_index()
+        return grids, lane, speed
+
+    def fill_ttc_grid(self, grids):
+        for velocity_index in range(grids.shape[0]):
+            ego_velocity = self.ego_vehicle.index_to_speed(velocity_index)
+            for other in self.ego_vehicle.road.vehicles:
+                if (other is self.ego_vehicle) or (ego_velocity == other.velocity):
+                    continue
+                margin = other.LENGTH / 2 + self.ego_vehicle.LENGTH / 2
+                collision_points = [(0, 2), (-margin, 1), (margin, 1)]
+                for m, cost in collision_points:
+                    distance = self.ego_vehicle.lane_distance_to(other) + m
+                    time_to_collision = distance / utils.not_zero(ego_velocity - other.velocity)
+                    if time_to_collision < 0:
+                        continue
+                    # Quantize time-to-collision to both upper and lower values
+                    l = other.lane_index
+                    for t in [int(time_to_collision / self.TIME_QUANTIFICATION),
+                              int(np.ceil(time_to_collision / self.TIME_QUANTIFICATION))]:
+                        if 0 <= l < np.shape(grids)[1] and 0 <= t < np.shape(grids)[2]:
+                            grids[velocity_index, l, t] = max(grids[velocity_index, l, t], cost)
 
     def value_iteration(self, steps=50):
         for _ in range(steps):
