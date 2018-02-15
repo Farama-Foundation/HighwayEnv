@@ -2,7 +2,7 @@ from __future__ import division, print_function
 import pygame
 from highway.vehicle import Vehicle, MDPVehicle, IDMVehicle
 from highway.road import Road, RoadSurface
-from highway.mdp import RoadMDP, SimplifiedMDP
+from highway.mdp import RoadMDP, TTCMDP
 import numpy as np
 import os
 import logging
@@ -33,7 +33,7 @@ class Simulation:
         self.done = False
         self.pause = False
         self.trajectory = None
-        self.smdp = None
+        self.solver = None
         if self.displayed:
             pygame.init()
             pygame.display.set_caption("Highway")
@@ -48,8 +48,7 @@ class Simulation:
         self.handle_events()
         self.act()
         self.step()
-        if self.displayed:
-            self.display()
+        self.display()
 
     def handle_events(self):
         if self.displayed:
@@ -73,18 +72,17 @@ class Simulation:
         # Planning for ego-vehicle
         policy_call = self.t % (self.FPS // (self.REAL_TIME_RATIO*self.POLICY_FREQUENCY)) == 0
         if self.vehicle and isinstance(self.vehicle, MDPVehicle) and policy_call:
-            mdp = RoadMDP(self.road, self.vehicle)
-            self.smdp = SimplifiedMDP(mdp.state)
-            self.smdp.value_iteration()
-            logging.debug(mdp.state)
-            logging.debug(self.smdp.value)
+            self.solver = TTCMDP(self.vehicle)
+            self.solver.value_iteration()
+            logging.debug(self.solver.grids)
+            logging.debug(self.solver.value)
 
-            _, actions = self.smdp.plan()
+            _, actions = self.solver.plan()
             self.trajectory = self.vehicle.predict_trajectory(actions,
-                                                              mdp.TIME_QUANTIFICATION,
+                                                              self.solver.TIME_QUANTIFICATION,
                                                               self.TRAJECTORY_TIMESTEP,
                                                               self.dt)
-            action = self.smdp.pick_action()
+            action = self.solver.pick_action()
             logging.debug(actions)
             logging.debug(action)
 
@@ -99,6 +97,8 @@ class Simulation:
         return self.vehicle.position if self.vehicle else np.array([0, len(self.road.lanes) / 2 * 4])
 
     def display(self):
+        if not self.displayed:
+            return
         self.road_surface.move_display_window_to(self.display_position())
         self.road.display_road(self.road_surface)
         if self.trajectory:
@@ -106,8 +106,8 @@ class Simulation:
         self.road.display_traffic(self.road_surface)
         self.screen.blit(self.road_surface, (0, 0))
 
-        if self.smdp:
-            self.smdp.display(self.value_surface)
+        if self.solver:
+            self.solver.display(self.value_surface)
             self.screen.blit(self.value_surface, (0, self.SCREEN_HEIGHT / 2))
         self.clock.tick(self.FPS)
         pygame.display.flip()

@@ -459,7 +459,7 @@ class IDMVehicle(ControlledVehicle):
     DELTA = 4.0  # []
 
     # Lateral policy parameters
-    POLITENESS = 0  # in [0, 1]
+    POLITENESS = 0.2  # in [0, 1]
     LANE_CHANGE_MIN_ACC_GAIN = 0.2  # [m/s2]
     LANE_CHANGE_MAX_BRAKING_IMPOSED = 2.  # [m/s2]
     LANE_CHANGE_DELAY = 1.0  # [s]
@@ -672,7 +672,7 @@ class LinearVehicle(IDMVehicle):
     ALPHA = 1.0
     BETA_FRONT = 2.0
     BETA_REAR = 0.0
-    GAMMA_FRONT = 10.0
+    GAMMA_FRONT = 50.0
     GAMMA_REAR = 0.0
     TIME_WANTED = 2.0
 

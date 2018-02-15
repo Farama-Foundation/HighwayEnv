@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.cm as cm
 import pygame
+import copy
 
 from highway.road import Road
 from highway import utils
@@ -16,16 +17,51 @@ class RoadMDP(object):
     ACTION_TIMESTEP = 0.1
     MAX_ACTION_DURATION = 1.0
 
+    ACTIONS = {0: 'IDLE',
+               1: 'LANE_LEFT',
+               2: 'LANE_RIGHT'}#,
+               #3: 'FASTER',
+               #4: 'SLOWER'}
+
+    COLLISION_COST = 10
+    LANE_CHANGE_COST = 0.00
+    RIGHT_LANE_REWARD = 0.01
+    HIGH_VELOCITY_REWARD = 0.5
+
+    SAFE_DISTANCE = 100
+
     def __init__(self, ego_vehicle):
         self.ego_vehicle = ego_vehicle
 
     def step(self, action):
         # Send order to low-level agent
-        self.ego_vehicle.act(action)
+        self.ego_vehicle.act(self.ACTIONS[action])
 
         # Inner high-frequency loop
         for k in range(int(self.MAX_ACTION_DURATION / self.ACTION_TIMESTEP)):
+            self.ego_vehicle.road.act()
             self.ego_vehicle.road.step(self.ACTION_TIMESTEP)
+
+        return self.reward(action)
+
+    def reward(self, action):
+        action_reward = {0: 0, 1: -self.LANE_CHANGE_COST, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
+        state_reward = \
+            - self.COLLISION_COST*self.ego_vehicle.crashed \
+            + self.RIGHT_LANE_REWARD*self.ego_vehicle.lane_index \
+            + self.HIGH_VELOCITY_REWARD*self.ego_vehicle.speed_index()
+        return action_reward[action]+state_reward
+
+    def simplified(self):
+        state_copy = copy.deepcopy(self)
+        ev = state_copy.ego_vehicle
+        print('len', len(ev.road.vehicles))
+        ev.road.vehicles = [v for v in ev.road.vehicles if np.linalg.norm(v.position - ev.position) < self.SAFE_DISTANCE]
+        print('len', len(state_copy.ego_vehicle.road.vehicles))
+        return state_copy
+
+    def is_terminal(self):
+        return self.ego_vehicle.crashed
 
 
 class TTCMDP(RoadMDP):
@@ -33,22 +69,17 @@ class TTCMDP(RoadMDP):
     TIME_QUANTIFICATION = 1.0
     GAMMA = 1.0
 
-    COLLISION_COST = 10
-    LANE_CHANGE_COST = 0.00
-    LEFT_LANE_COST = -0.01
-    HIGH_VELOCITY_REWARD = 0.5
-
-    actions = {0: 'IDLE', 1: 'LANE_LEFT', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}
-    cost = {0: 0, 1: -LANE_CHANGE_COST, 2: -LANE_CHANGE_COST, 3: 0, 4: 0}
-
     def __init__(self, ego_vehicle):
         super(TTCMDP, self).__init__(ego_vehicle)
         self.grids, self.lane, self.speed = self.get_state()
         self.V, self.L, self.T = np.shape(self.grids)
         self.value = np.zeros(np.shape(self.grids))
-        self.state_reward = - self.COLLISION_COST * self.grids \
-            - self.LEFT_LANE_COST * np.tile(np.arange(self.L)[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \
+
+        self.state_reward = \
+            - self.COLLISION_COST * self.grids \
+            + self.RIGHT_LANE_REWARD * np.tile(np.arange(self.L)[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \
             + self.HIGH_VELOCITY_REWARD * np.tile(np.arange(self.V)[:, np.newaxis, np.newaxis], (1, self.L, self.T))
+        self.action_reward = {0: 0, 1: -self.LANE_CHANGE_COST, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
 
     def get_state(self):
         grids = np.zeros((self.ego_vehicle.SPEED_COUNT,
@@ -102,7 +133,7 @@ class TTCMDP(RoadMDP):
         return o, p, q
 
     def reward(self, h, i, j, action):
-        return self.state_reward[h, i, j] + self.cost[action]
+        return self.state_reward[h, i, j] + self.action_reward[action]
 
     def transition_model(self, a, h, i, j):
         """
@@ -141,7 +172,7 @@ class TTCMDP(RoadMDP):
         h, i, j = self.speed, self.lane, 0
         q_values = self.get_q_values(h, i, j)
         a = int(np.argmax(q_values))
-        return self.actions[a]
+        return self.ACTIONS[a]
 
     def plan(self):
         """
@@ -154,7 +185,7 @@ class TTCMDP(RoadMDP):
         q_values = self.get_q_values(h, i, j)
         while len(q_values):
             a = int(np.argmax(q_values))
-            actions.append(self.actions[a])
+            actions.append(self.ACTIONS[a])
             h, i, j = self.transition_model(a, h, i, j)
             path.append((h, i, j))
             q_values = self.get_q_values(h, i, j)
