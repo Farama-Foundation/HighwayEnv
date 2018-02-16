@@ -52,7 +52,7 @@ class Node(object):
             pygame.draw.rect(surface, color, (origin[0], origin[1], size[0], size[1]), 0)
             if selected:
                 red = (255, 0, 0)
-                pygame.draw.rect(surface, red,(origin[0], origin[1], size[0], size[1]), 1)
+                pygame.draw.rect(surface, red, (origin[0], origin[1], size[0], size[1]), 1)
         best_action = self.select_action(temperature=0)
         for a in RoadMDP.ACTIONS:
             if a in self.children:
@@ -109,11 +109,20 @@ class MCTS(object):
             value += reward
         return value
 
-    def pick_action(self, state):
+    def plan(self, state):
         for i in range(self.iterations):
             state_copy = copy.deepcopy(state)
             self.run(state_copy)
-        return self.root.select_action(temperature=0)
+        return self.get_plan()
+
+    def get_plan(self):
+        actions = []
+        node = self.root
+        while node.children:
+            action = node.select_action(temperature=0)
+            actions.append(action)
+            node = node.children[action]
+        return actions
 
     def step(self, action):
         if action in self.root.children:
@@ -134,11 +143,10 @@ class MCTSAgent(Agent):
         self.mcts = MCTS(MCTSAgent.random_policy, MCTSAgent.random_policy, iterations=10)
 
     def plan(self, state):
-        action = self.mcts.pick_action(state)
-        print([c.value for c in self.mcts.root.children.values()])
-        print('action = ', action)
-        self.mcts.step(action)
-        return [state.ACTIONS[action]]
+        actions = self.mcts.plan(state)
+        print(actions)
+        self.mcts.step(actions[0])
+        return [state.ACTIONS[a] for a in actions]
 
     @staticmethod
     def random_policy(s):
