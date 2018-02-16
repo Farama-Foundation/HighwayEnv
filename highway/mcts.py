@@ -1,6 +1,13 @@
 from __future__ import division, print_function
 import numpy as np
+import matplotlib as mpl
+import matplotlib.cm as cm
+import pygame
 import copy
+
+from highway.agent import Agent
+from highway.mdp import RoadMDP
+
 
 class Node(object):
     K = 1.0
@@ -13,7 +20,10 @@ class Node(object):
         self.value = 0
 
     def select_action(self, temperature):
-        return max(self.children.keys(), key=(lambda key: self.children[key].selection_strategy(temperature)))
+        if self.children:
+            return max(self.children.keys(), key=(lambda key: self.children[key].selection_strategy(temperature)))
+        else:
+            return None
 
     def expand(self, actions_distribution):
         actions, probabilities = actions_distribution
@@ -34,6 +44,24 @@ class Node(object):
         ucb = temperature * self.prior * np.sqrt(self.parent.count) / (1 + self.count)
         return self.value + ucb
 
+    def display(self, surface, origin, size, selected=False):
+        norm = mpl.colors.Normalize(vmin=-30, vmax=20)
+        cmap = cm.jet_r
+        color = cmap(norm(self.value), bytes=True)
+        if self.value != 0:
+            pygame.draw.rect(surface, color, (origin[0], origin[1], size[0], size[1]), 0)
+            if selected:
+                red = (255, 0, 0)
+                pygame.draw.rect(surface, red,(origin[0], origin[1], size[0], size[1]), 1)
+        best_action = self.select_action(temperature=0)
+        for a in RoadMDP.ACTIONS:
+            if a in self.children:
+                action_selected = (selected and (a == best_action))
+                self.children[a].display(surface,
+                                         (origin[0]+size[0], origin[1]+a*size[1]/len(self.children)),
+                                         (size[0], size[1]/len(self.children)),
+                                         selected=action_selected)
+
     def __str__(self, level=0):
         ret = "\t" * level + repr(self.value) + "\n"
         for child in self.children.values():
@@ -45,7 +73,7 @@ class Node(object):
 
 
 class MCTS(object):
-    def __init__(self, prior_policy, rollout_policy, iterations, temperature=1, max_depth=7):
+    def __init__(self, prior_policy, rollout_policy, iterations, temperature=10, max_depth=7):
 
         self.root = Node(parent=None)
         self.prior_policy = prior_policy
@@ -83,7 +111,6 @@ class MCTS(object):
 
     def pick_action(self, state):
         for i in range(self.iterations):
-            print('Run', i, 'tree', self.root.value)
             state_copy = copy.deepcopy(state)
             self.run(state_copy)
         return self.root.select_action(temperature=0)
@@ -95,38 +122,49 @@ class MCTS(object):
         else:
             self.root = Node(None)
 
+    def display(self, surface):
+        black = (0, 0, 0)
+        cell_size = (surface.get_width() // self.max_depth, surface.get_height())
+        pygame.draw.rect(surface, black, (0, 0, surface.get_width(), surface.get_height()), 0)
+        self.root.display(surface, (-cell_size[0], 0), cell_size, selected=True)
+
+
+class MCTSAgent(Agent):
+    def __init__(self, state=None):
+        self.mcts = MCTS(MCTSAgent.random_policy, MCTSAgent.random_policy, iterations=10)
+
+    def plan(self, state):
+        action = self.mcts.pick_action(state)
+        print([c.value for c in self.mcts.root.children.values()])
+        print('action = ', action)
+        self.mcts.step(action)
+        return [state.ACTIONS[action]]
+
+    @staticmethod
+    def random_policy(s):
+        return np.array(list(s.ACTIONS.keys())), np.ones((len(s.ACTIONS))) / len(s.ACTIONS)
+
+    def display(self, surface):
+        self.mcts.display(surface)
+
+
+
 
 def test():
     from highway.simulation import Simulation
     from highway.vehicle import MDPVehicle, IDMVehicle, Obstacle
     from highway.road import Road
-    from highway.mdp import RoadMDP
     road = Road.create_random_road(lanes_count=3, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
-    sim = Simulation(road, ego_vehicle_type=MDPVehicle)  # solver = mcts
+    sim = Simulation(road, ego_vehicle_type=MDPVehicle, agent_type=MCTSAgent)
     sim.RECORD_VIDEO = True
     # road.vehicles.append(Obstacle(road, [100., 4.]))
     # road.vehicles.append(Obstacle(road, [100., 8.]))
     # road.vehicles.append(Obstacle(road, [100., 12.]))
 
-    random_policy = lambda state: (np.array(list(RoadMDP.ACTIONS.keys())),
-                                   np.ones((len(RoadMDP.ACTIONS)))/len(RoadMDP.ACTIONS))
-    mcts = MCTS(random_policy, random_policy, iterations=100)
 
     while not sim.done:
         sim.handle_events()
-        sim.road.act()
-        # Planning for ego-vehicle
-        policy_call = sim.t % (sim.FPS // (sim.REAL_TIME_RATIO * sim.POLICY_FREQUENCY)) == 0
-        if policy_call:
-            mdp_state = RoadMDP(sim.vehicle)
-            print(len(mdp_state.ego_vehicle.road.vehicles), '->', len(mdp_state.simplified().ego_vehicle.road.vehicles))
-            action = mcts.pick_action(mdp_state.simplified())
-            sim.vehicle.act(RoadMDP.ACTIONS[action])
-            mcts.step(action)
-            # self.trajectory = self.vehicle.predict_trajectory(actions,
-            #                                                   self.smdp.TIME_QUANTIFICATION,
-            #                                                   self.TRAJECTORY_TIMESTEP,
-            #                                                   self.dt)
+        sim.act()
         sim.step()
         sim.display()
     sim.quit()

@@ -5,6 +5,7 @@ import matplotlib.cm as cm
 import pygame
 import copy
 
+from highway.agent import Agent
 from highway.road import Road
 from highway import utils
 
@@ -17,8 +18,8 @@ class RoadMDP(object):
     ACTION_TIMESTEP = 0.1
     MAX_ACTION_DURATION = 1.0
 
-    ACTIONS = {0: 'IDLE',
-               1: 'LANE_LEFT',
+    ACTIONS = {0: 'LANE_LEFT',
+               1: 'IDLE',
                2: 'LANE_RIGHT'}#,
                #3: 'FASTER',
                #4: 'SLOWER'}
@@ -28,7 +29,7 @@ class RoadMDP(object):
     RIGHT_LANE_REWARD = 0.01
     HIGH_VELOCITY_REWARD = 0.5
 
-    SAFE_DISTANCE = 100
+    SAFE_DISTANCE = 150
 
     def __init__(self, ego_vehicle):
         self.ego_vehicle = ego_vehicle
@@ -45,7 +46,7 @@ class RoadMDP(object):
         return self.reward(action)
 
     def reward(self, action):
-        action_reward = {0: 0, 1: -self.LANE_CHANGE_COST, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
+        action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
         state_reward = \
             - self.COLLISION_COST*self.ego_vehicle.crashed \
             + self.RIGHT_LANE_REWARD*self.ego_vehicle.lane_index \
@@ -55,51 +56,63 @@ class RoadMDP(object):
     def simplified(self):
         state_copy = copy.deepcopy(self)
         ev = state_copy.ego_vehicle
-        print('len', len(ev.road.vehicles))
         ev.road.vehicles = [v for v in ev.road.vehicles if np.linalg.norm(v.position - ev.position) < self.SAFE_DISTANCE]
-        print('len', len(state_copy.ego_vehicle.road.vehicles))
         return state_copy
 
     def is_terminal(self):
         return self.ego_vehicle.crashed
 
 
-class TTCMDP(RoadMDP):
+class TTCVIAgent(Agent):
     HORIZON = 10.0
     TIME_QUANTIFICATION = 1.0
     GAMMA = 1.0
 
-    def __init__(self, ego_vehicle):
-        super(TTCMDP, self).__init__(ego_vehicle)
-        self.grids, self.lane, self.speed = self.get_state()
+    def __init__(self, state):
+        self.state = state
+        self.grids = np.zeros((state.ego_vehicle.SPEED_COUNT,
+                              len(state.ego_vehicle.road.lanes),
+                              int(self.HORIZON / self.TIME_QUANTIFICATION)))
         self.V, self.L, self.T = np.shape(self.grids)
         self.value = np.zeros(np.shape(self.grids))
+        self.state_reward = np.zeros(np.shape(self.grids))
+        self.action_reward = {0: -state.LANE_CHANGE_COST, 1: 0, 2: -state.LANE_CHANGE_COST, 3: 0, 4: 0}
+        self.lane = self.speed = None
 
+    def plan(self, state):
+        # Update state and reward
+        self.state = state
+        self.update_ttc_state()
         self.state_reward = \
-            - self.COLLISION_COST * self.grids \
-            + self.RIGHT_LANE_REWARD * np.tile(np.arange(self.L)[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \
-            + self.HIGH_VELOCITY_REWARD * np.tile(np.arange(self.V)[:, np.newaxis, np.newaxis], (1, self.L, self.T))
-        self.action_reward = {0: 0, 1: -self.LANE_CHANGE_COST, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
+            - state.COLLISION_COST * self.grids \
+            + state.RIGHT_LANE_REWARD * np.tile(np.arange(self.L)[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \
+            + state.HIGH_VELOCITY_REWARD * np.tile(np.arange(self.V)[:, np.newaxis, np.newaxis], (1, self.L, self.T))
 
-    def get_state(self):
-        grids = np.zeros((self.ego_vehicle.SPEED_COUNT,
-                          len(self.ego_vehicle.road.lanes),
-                          int(self.HORIZON / self.TIME_QUANTIFICATION)))
-        self.fill_ttc_grid(grids)
-        lane = self.ego_vehicle.lane_index
-        speed = self.ego_vehicle.speed_index()
-        return grids, lane, speed
+        # Run value iteration
+        self.value.fill(0)
+        self.value_iteration()
+        print(self.value)
 
-    def fill_ttc_grid(self, grids):
-        for velocity_index in range(grids.shape[0]):
-            ego_velocity = self.ego_vehicle.index_to_speed(velocity_index)
-            for other in self.ego_vehicle.road.vehicles:
-                if (other is self.ego_vehicle) or (ego_velocity == other.velocity):
+        # Return chosen trajectory
+        path, actions = self.pick_trajectory()
+        return actions
+
+    def update_ttc_state(self):
+        self.fill_ttc_grid()
+        self.lane = self.state.ego_vehicle.lane_index
+        self.speed = self.state.ego_vehicle.speed_index()
+
+    def fill_ttc_grid(self):
+        self.grids.fill(0)
+        for velocity_index in range(self.grids.shape[0]):
+            ego_velocity = self.state.ego_vehicle.index_to_speed(velocity_index)
+            for other in self.state.ego_vehicle.road.vehicles:
+                if (other is self.state.ego_vehicle) or (ego_velocity == other.velocity):
                     continue
-                margin = other.LENGTH / 2 + self.ego_vehicle.LENGTH / 2
+                margin = other.LENGTH / 2 + self.state.ego_vehicle.LENGTH / 2
                 collision_points = [(0, 2), (-margin, 1), (margin, 1)]
                 for m, cost in collision_points:
-                    distance = self.ego_vehicle.lane_distance_to(other) + m
+                    distance = self.state.ego_vehicle.lane_distance_to(other) + m
                     time_to_collision = distance / utils.not_zero(ego_velocity - other.velocity)
                     if time_to_collision < 0:
                         continue
@@ -107,20 +120,20 @@ class TTCMDP(RoadMDP):
                     l = other.lane_index
                     for t in [int(time_to_collision / self.TIME_QUANTIFICATION),
                               int(np.ceil(time_to_collision / self.TIME_QUANTIFICATION))]:
-                        if 0 <= l < np.shape(grids)[1] and 0 <= t < np.shape(grids)[2]:
-                            grids[velocity_index, l, t] = max(grids[velocity_index, l, t], cost)
+                        if 0 <= l < np.shape(self.grids)[1] and 0 <= t < np.shape(self.grids)[2]:
+                            self.grids[velocity_index, l, t] = max(self.grids[velocity_index, l, t], cost)
 
     def value_iteration(self, steps=50):
         for _ in range(steps):
-            self.update()
+            self.backup()
 
-    def update(self):
+    def backup(self):
         new_value = np.zeros(np.shape(self.value))
         for h in range(self.V):
             for i in range(self.L):
                 for j in range(self.T):
                     q_values = self.get_q_values(h, i, j)
-                    if len(q_values):
+                    if q_values:
                         new_value[h, i, j] = self.GAMMA * np.max(q_values)
                     else:
                         new_value[h, i, j] = self.state_reward[h, i, j]
@@ -144,9 +157,9 @@ class TTCMDP(RoadMDP):
             j: time index
         """
         if a == 0:
-            return self.clamp_position(h, i, j + 1)  # IDLE
-        elif a == 1:
             return self.clamp_position(h, i - 1, j + 1)  # LEFT
+        elif a == 1:
+            return self.clamp_position(h, i, j + 1)  # IDLE
         elif a == 2:
             return self.clamp_position(h, i + 1, j + 1)  # RIGHT
         elif a == 3:
@@ -160,9 +173,9 @@ class TTCMDP(RoadMDP):
         q_values = []
         if j == self.T - 1:
             return q_values  # Terminal state
-        for k in range(0, 5):
-            o, p, q = self.transition_model(k, h, i, j)
-            q_values.append(self.reward(h, i, j, k) + self.value[o, p, q])
+        for a in range(0, 5):
+            o, p, q = self.transition_model(a, h, i, j)
+            q_values.append(self.reward(h, i, j, a) + self.value[o, p, q])
         return q_values
 
     def pick_action(self):
@@ -172,9 +185,9 @@ class TTCMDP(RoadMDP):
         h, i, j = self.speed, self.lane, 0
         q_values = self.get_q_values(h, i, j)
         a = int(np.argmax(q_values))
-        return self.ACTIONS[a]
+        return self.state.ACTIONS[a]
 
-    def plan(self):
+    def pick_trajectory(self):
         """
             Get a list of successive states following the optimal policy
             extracted from the current estimated value function.
@@ -185,7 +198,7 @@ class TTCMDP(RoadMDP):
         q_values = self.get_q_values(h, i, j)
         while len(q_values):
             a = int(np.argmax(q_values))
-            actions.append(self.ACTIONS[a])
+            actions.append(self.state.ACTIONS[a])
             h, i, j = self.transition_model(a, h, i, j)
             path.append((h, i, j))
             q_values = self.get_q_values(h, i, j)
@@ -207,7 +220,7 @@ class TTCMDP(RoadMDP):
                     pygame.draw.rect(surface, color, (
                         j * cell_size[0], i * cell_size[1] + h * velocity_size, cell_size[0], cell_size[1]), 0)
             pygame.draw.line(surface, black, (0, h * velocity_size), (self.T * cell_size[0], h * velocity_size), 1)
-        path, actions = self.plan()
+        path, actions = self.pick_trajectory()
         for (h, i, j) in path:
             pygame.draw.rect(surface, red,
                              (j * cell_size[0], i * cell_size[1] + h * velocity_size, cell_size[0], cell_size[1]), 1)
@@ -215,8 +228,8 @@ class TTCMDP(RoadMDP):
 
 def test():
     from highway.simulation import Simulation
-    from highway.vehicle import MDPVehicle, LinearVehicle
-    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=LinearVehicle)
+    from highway.vehicle import MDPVehicle, LinearVehicle, IDMVehicle
+    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=MDPVehicle)
     sim.RECORD_VIDEO = False
     while not sim.done:
