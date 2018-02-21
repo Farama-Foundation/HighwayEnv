@@ -56,15 +56,44 @@ class Node(object):
 
         return self.value + bonus
 
-    def display(self, surface, origin, size, selected=False):
-        norm = mpl.colors.Normalize(vmin=-30, vmax=20)
+    def display(self, surface, origin, size,
+                selected=False,
+                display_exploration=True,
+                display_count=False,
+                display_text=False):
+        # Display node value
         cmap = cm.jet_r
+        norm = mpl.colors.Normalize(vmin=-30, vmax=20)
         color = cmap(norm(self.value), bytes=True)
-        if self.value != 0:
-            pygame.draw.rect(surface, color, (origin[0], origin[1], size[0], size[1]), 0)
-            if selected:
-                red = (255, 0, 0)
-                pygame.draw.rect(surface, red, (origin[0], origin[1], size[0], size[1]), 1)
+        pygame.draw.rect(surface, color, (origin[0], origin[1], size[0], size[1]), 0)
+
+        # Add exploration bonus
+        if display_exploration:
+            norm = mpl.colors.Normalize(vmin=-30, vmax=20)
+            color = cmap(norm(self.selection_strategy(temperature=10)), bytes=True)
+            pygame.draw.polygon(surface, color, [(origin[0], origin[1] + size[1]),
+                                                 (origin[0] + size[0], origin[1]),
+                                                 (origin[0] + size[0], origin[1] + size[1])], 0)
+
+        # Add node count
+        if display_count:
+            norm = mpl.colors.Normalize(vmin=0, vmax=100)
+            color = cmap(norm(self.count), bytes=True)
+            pygame.draw.rect(surface, color, (origin[0], origin[1], 5, 5), 0)
+
+        # Add selection display
+        if selected:
+            red = (255, 0, 0)
+            pygame.draw.rect(surface, red, (origin[0], origin[1], size[0], size[1]), 1)
+
+        if display_text:
+            font = pygame.font.Font(None, 15)
+            text = font.render("{:.1f} / {:.1f}".format(self.value, self.selection_strategy(temperature=10)),
+                               1, (10, 10, 10), (255, 255, 255))
+            text_pos = text.get_rect(centerx=origin[0]+5, centery=origin[1]+5)
+            surface.blit(text, text_pos)
+
+        # Recursively display children nodes
         best_action = self.select_action(temperature=0)
         for a in RoadMDP.ACTIONS:
             if a in self.children:
