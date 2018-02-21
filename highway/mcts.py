@@ -19,12 +19,12 @@ class Node(object):
         self.count = 1
         self.value = 0
 
-    def select_action(self, temperature=10):
+    def select_action(self, temperature=None):
         if self.children:
-            if temperature > 0:
-                return max(self.children.keys(), key=(lambda key: self.children[key].selection_strategy(temperature)))
-            else:
+            if temperature == 0:
                 return max(self.children.keys(), key=(lambda key: self.children[key].count))
+            else:
+                return max(self.children.keys(), key=(lambda key: self.children[key].selection_strategy(temperature)))
         else:
             return None
 
@@ -43,40 +43,37 @@ class Node(object):
         if self.parent:
             self.parent.update_branch(value)
 
-    def selection_strategy(self, temperature):
-        # if self.parent:
-        #     bonus = temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
-        # else:
-        #     bonus = 0
+    def selection_strategy(self, temperature=None):
+        if not self.parent:
+            return self.value
 
-        if self.parent:
-            bonus = temperature*self.prior/self.count
-        else:
-            bonus = 0
+        if temperature is None:
+            temperature = 30*5
 
-        return self.value + bonus
+        # return self.value + temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
+        return self.value + temperature*self.prior/self.count
 
-    def display(self, surface, origin, size,
+    def display(self, surface, origin, size, depth=0,
                 selected=False,
-                display_exploration=True,
+                display_exploration=False,
                 display_count=False,
-                display_text=False):
+                display_text=True):
         # Display node value
         cmap = cm.jet_r
-        norm = mpl.colors.Normalize(vmin=-30, vmax=20)
+        norm = mpl.colors.Normalize(vmin=-15, vmax=30)
         color = cmap(norm(self.value), bytes=True)
         pygame.draw.rect(surface, color, (origin[0], origin[1], size[0], size[1]), 0)
 
         # Add exploration bonus
         if display_exploration:
-            norm = mpl.colors.Normalize(vmin=-30, vmax=20)
-            color = cmap(norm(self.selection_strategy(temperature=10)), bytes=True)
+            norm = mpl.colors.Normalize(vmin=-15, vmax=30)
+            color = cmap(norm(self.selection_strategy()), bytes=True)
             pygame.draw.polygon(surface, color, [(origin[0], origin[1] + size[1]),
                                                  (origin[0] + size[0], origin[1]),
                                                  (origin[0] + size[0], origin[1] + size[1])], 0)
 
         # Add node count
-        if display_count:
+        if display_count and depth < 3:
             norm = mpl.colors.Normalize(vmin=0, vmax=100)
             color = cmap(norm(self.count), bytes=True)
             pygame.draw.rect(surface, color, (origin[0], origin[1], 5, 5), 0)
@@ -86,11 +83,11 @@ class Node(object):
             red = (255, 0, 0)
             pygame.draw.rect(surface, red, (origin[0], origin[1], size[0], size[1]), 1)
 
-        if display_text:
+        if display_text and depth < 3:
             font = pygame.font.Font(None, 15)
-            text = font.render("{:.1f} / {:.1f}".format(self.value, self.selection_strategy(temperature=10)),
+            text = font.render("{:.1f} / {:.1f} / {}".format(self.value, self.selection_strategy(), self.count),
                                1, (10, 10, 10), (255, 255, 255))
-            text_pos = text.get_rect(centerx=origin[0]+5, centery=origin[1]+5)
+            text_pos = text.get_rect(centerx=origin[0]+20, centery=origin[1]+5)
             surface.blit(text, text_pos)
 
         # Recursively display children nodes
@@ -99,9 +96,9 @@ class Node(object):
             if a in self.children:
                 action_selected = (selected and (a == best_action))
                 self.children[a].display(surface,
-                                         (origin[0]+size[0], origin[1]+a*size[1]/len(self.children)),
-                                         (size[0], size[1]/len(self.children)),
-                                         selected=action_selected)
+                                         (origin[0]+size[0], origin[1]+a*size[1]/len(RoadMDP.ACTIONS)),
+                                         (size[0], size[1]/len(RoadMDP.ACTIONS)),
+                                         depth=depth+1, selected=action_selected)
 
     def __str__(self, level=0):
         ret = "\t" * level + repr(self.value) + "\n"
@@ -175,7 +172,7 @@ class MCTS(object):
         black = (0, 0, 0)
         cell_size = (surface.get_width() // self.max_depth, surface.get_height())
         pygame.draw.rect(surface, black, (0, 0, surface.get_width(), surface.get_height()), 0)
-        self.root.display(surface, (-cell_size[0], 0), cell_size, selected=True)
+        self.root.display(surface, (0, 0), cell_size, depth=0, selected=True)
 
 
 class MCTSAgent(Agent):
@@ -211,7 +208,6 @@ def test():
     from highway.road import Road
     road = Road.create_random_road(lanes_count=3, lane_width=4.0, vehicles_count=30, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=MDPVehicle, agent_type=MCTSAgent)
-    sim.RECORD_VIDEO = True
 
     while not sim.done:
         sim.process()
