@@ -20,16 +20,17 @@ class RoadMDP(object):
 
     ACTIONS = {0: 'LANE_LEFT',
                1: 'IDLE',
-               2: 'LANE_RIGHT'}#,
-               #3: 'FASTER',
-               #4: 'SLOWER'}
+               2: 'LANE_RIGHT',
+               3: 'FASTER',
+               4: 'SLOWER'}
+    ACTIONS_INDEXES = {v: k for k, v in ACTIONS.items()}
 
     COLLISION_COST = 10
     LANE_CHANGE_COST = 0.00
-    RIGHT_LANE_REWARD = 0.01
-    HIGH_VELOCITY_REWARD = 0.5
+    RIGHT_LANE_REWARD = 0.5
+    HIGH_VELOCITY_REWARD = 1.0
 
-    SAFE_DISTANCE = 150
+    SAFE_DISTANCE = 200
 
     def __init__(self, ego_vehicle):
         self.ego_vehicle = ego_vehicle
@@ -53,10 +54,26 @@ class RoadMDP(object):
             + self.HIGH_VELOCITY_REWARD*self.ego_vehicle.speed_index()
         return action_reward[action]+state_reward
 
+    def allowed_actions(self):
+        actions = [self.ACTIONS_INDEXES['IDLE']]
+        if self.ego_vehicle.lane_index > 0:
+            actions.append(self.ACTIONS_INDEXES['LANE_LEFT'])
+        if self.ego_vehicle.lane_index < len(self.ego_vehicle.road.lanes) - 1:
+            actions.append(self.ACTIONS_INDEXES['LANE_RIGHT'])
+        if self.ego_vehicle.velocity_index < self.ego_vehicle.SPEED_COUNT - 1:
+            actions.append(self.ACTIONS_INDEXES['FASTER'])
+        if self.ego_vehicle.velocity_index > 0:
+            actions.append(self.ACTIONS_INDEXES['SLOWER'])
+        return actions
+
     def simplified(self):
         state_copy = copy.deepcopy(self)
         ev = state_copy.ego_vehicle
-        ev.road.vehicles = [v for v in ev.road.vehicles if np.linalg.norm(v.position - ev.position) < self.SAFE_DISTANCE]
+        close_vehicles = []
+        for v in ev.road.vehicles:
+            if -self.SAFE_DISTANCE/10 < ev.lane_distance_to(v) < self.SAFE_DISTANCE:
+                close_vehicles.append(v)
+        ev.road.vehicles = close_vehicles
         return state_copy
 
     def is_terminal(self):
@@ -110,7 +127,7 @@ class TTCVIAgent(Agent):
                 if (other is self.state.ego_vehicle) or (ego_velocity == other.velocity):
                     continue
                 margin = other.LENGTH / 2 + self.state.ego_vehicle.LENGTH / 2
-                collision_points = [(0, 2), (-margin, 1), (margin, 1)]
+                collision_points = [(0, 1), (-margin, 0.5), (margin, 0.5)]
                 for m, cost in collision_points:
                     distance = self.state.ego_vehicle.lane_distance_to(other) + m
                     time_to_collision = distance / utils.not_zero(ego_velocity - other.velocity)
@@ -171,7 +188,7 @@ class TTCVIAgent(Agent):
 
     def get_q_values(self, h, i, j):
         q_values = []
-        if j == self.T - 1:
+        if j == self.T - 1 or self.grids[h, i, j] == 1:
             return q_values  # Terminal state
         for a in range(0, 5):
             o, p, q = self.transition_model(a, h, i, j)
@@ -202,13 +219,16 @@ class TTCVIAgent(Agent):
             h, i, j = self.transition_model(a, h, i, j)
             path.append((h, i, j))
             q_values = self.get_q_values(h, i, j)
+        # If terminal state, return default action
+        if not actions:
+            actions = [self.state.ACTIONS[1]]
         return path, actions
 
     def display(self, surface):
         black = (0, 0, 0)
         red = (255, 0, 0)
 
-        norm = mpl.colors.Normalize(vmin=-30, vmax=20)
+        norm = mpl.colors.Normalize(vmin=-15, vmax=30)
         cmap = cm.jet_r
         cell_size = (surface.get_width() // self.T, surface.get_height() // (self.L * self.V))
         velocity_size = surface.get_height() // self.V
@@ -231,7 +251,6 @@ def test():
     from highway.vehicle import MDPVehicle, LinearVehicle, IDMVehicle
     road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=MDPVehicle)
-    sim.RECORD_VIDEO = False
     while not sim.done:
         sim.process()
     sim.quit()

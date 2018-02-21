@@ -353,8 +353,8 @@ class MDPVehicle(ControlledVehicle):
         A controlled vehicle with a specified discrete range of allowed target velocities.
     """
 
-    SPEED_COUNT = 1  # []
-    SPEED_MIN = 25  # [m/s]
+    SPEED_COUNT = 3  # []
+    SPEED_MIN = 20  # [m/s]
     SPEED_MAX = 35  # [m/s]
 
     def __init__(self,

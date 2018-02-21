@@ -177,7 +177,7 @@ class MCTS(object):
 
 class MCTSAgent(Agent):
     def __init__(self, state=None):
-        self.mcts = MCTS(MCTSAgent.random_policy, MCTSAgent.random_policy, iterations=10)
+        self.mcts = MCTS(MCTSAgent.fast_policy, MCTSAgent.random_legal_policy, iterations=100)
         self.previous_action = None
 
     def plan(self, state):
@@ -188,20 +188,35 @@ class MCTSAgent(Agent):
 
     @staticmethod
     def random_policy(s):
-        return np.array(list(s.ACTIONS.keys())), np.ones((len(s.ACTIONS))) / len(s.ACTIONS)
+        probabilities = np.ones((len(s.ACTIONS))) / len(s.ACTIONS)
+        return list(s.ACTIONS.keys()), probabilities
 
     @staticmethod
-    def straight_policy(s, preference=0.33):
-        actions = np.array(list(s.ACTIONS.keys()))
-        labels = np.array(list(s.ACTIONS.values()))
-        probabilities = (1 - preference) / (len(s.ACTIONS) - 1) * np.ones((len(s.ACTIONS)))
-        probabilities[labels == 'IDLE'] = preference
-        return actions, probabilities
+    def random_legal_policy(s):
+        allowed_actions = s.allowed_actions()
+        probabilities = np.ones((len(allowed_actions))) / len(allowed_actions)
+        return allowed_actions, probabilities
+
+    @staticmethod
+    def fast_policy(s):
+        return MCTSAgent.preference_policy(s, 'FASTER')
+
+    @staticmethod
+    def straight_policy(s):
+        return MCTSAgent.preference_policy(s, 'IDLE')
+
+    @staticmethod
+    def preference_policy(s, action_label, ratio=2):
+        allowed_actions = s.allowed_actions()
+        for i in range(len(allowed_actions)):
+            if s.ACTIONS[allowed_actions[i]] == action_label:
+                probabilities = np.ones((len(allowed_actions))) / (len(allowed_actions) - 1 + ratio)
+                probabilities[i] *= ratio
+                return allowed_actions, probabilities
+        return MCTSAgent.random_legal_policy(s)
 
     def display(self, surface):
         self.mcts.display(surface)
-
-
 
 
 def test():
