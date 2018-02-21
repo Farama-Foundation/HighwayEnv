@@ -1,5 +1,9 @@
 from __future__ import division, print_function
+
+import datetime
 import pygame
+import shutil
+
 from highway.vehicle import Vehicle, MDPVehicle, IDMVehicle
 from highway.road import Road, RoadSurface
 from highway.mdp import RoadMDP, TTCVIAgent
@@ -15,8 +19,9 @@ class Simulation:
     REAL_TIME_RATIO = 1
     POLICY_FREQUENCY = 1
     TRAJECTORY_TIMESTEP = 0.35
-    RECORD_VIDEO = False
+    RECORD_VIDEO = True
     OUT_FOLDER = 'out'
+    TMP_FOLDER = os.path.join(OUT_FOLDER, 'tmp')
 
     def __init__(self, road, ego_vehicle_type=None, agent_type=TTCVIAgent, displayed=True):
         self.road = road
@@ -37,6 +42,7 @@ class Simulation:
             self.agent = agent_type(RoadMDP(self.vehicle))
         else:
             self.agent = None
+
         if self.displayed:
             pygame.init()
             pygame.display.set_caption("Highway")
@@ -46,6 +52,10 @@ class Simulation:
             self.road_surface = RoadSurface(panel_size, 0, pygame.Surface(panel_size))
             self.value_surface = pygame.Surface(panel_size)
             self.clock = pygame.time.Clock()
+
+            if self.RECORD_VIDEO:
+                self.make_video_dir()
+                self.video_name = 'highway_{}'.format(datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
 
     def process(self):
         self.handle_events()
@@ -107,25 +117,34 @@ class Simulation:
         pygame.display.flip()
 
         if self.RECORD_VIDEO:
-            if not os.path.exists(self.OUT_FOLDER):
-                os.mkdir(self.OUT_FOLDER)
-            pygame.image.save(self.screen, "{}/highway_{}.bmp".format(self.OUT_FOLDER, self.t))
+            pygame.image.save(self.screen, "{}/{}_{}.bmp".format(self.TMP_FOLDER, self.video_name, self.t))
             if self.vehicle.position[0] > \
                     np.max([o.position[0] for o in self.road.vehicles if o is not self.vehicle]) + 125\
                     or self.vehicle.crashed:
-                os.system("ffmpeg -r 60 -i out/highway_%d.bmp -vcodec libx264 -crf 25 out/highway.avi")
-                os.system("rm out/*.bmp")
+                os.system("ffmpeg -r 60 -i {0}/{2}_%d.bmp -vcodec libx264 -crf 25 {1}/{2}.avi"
+                          .format(self.TMP_FOLDER, self.OUT_FOLDER, self.video_name))
                 self.done = True
+
+    def make_video_dir(self):
+        if not os.path.exists(self.OUT_FOLDER):
+            os.mkdir(self.OUT_FOLDER)
+        self.clear_video_dir()
+        os.mkdir(self.TMP_FOLDER)
+
+    def clear_video_dir(self):
+        if os.path.exists(self.TMP_FOLDER):
+            shutil.rmtree(self.TMP_FOLDER, ignore_errors=True)
 
     def quit(self):
         if self.displayed:
             pygame.quit()
+            if self.RECORD_VIDEO:
+                self.clear_video_dir()
 
 
 def test():
-    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
+    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=5, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=MDPVehicle)
-    sim.RECORD_VIDEO = False
     while not sim.done:
         sim.process()
     sim.quit()
