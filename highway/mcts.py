@@ -16,7 +16,7 @@ class Node(object):
         self.parent = parent
         self.prior = prior
         self.children = {}
-        self.count = 0
+        self.count = 1
         self.value = 0
 
     def select_action(self, temperature=10):
@@ -35,8 +35,8 @@ class Node(object):
                 self.children[actions[i]] = Node(self, probabilities[i])
 
     def update(self, value):
-        self.count += 1
         self.value += self.K / self.count * (value - self.value)
+        self.count += 1
 
     def update_branch(self, value):
         self.update(value)
@@ -44,8 +44,17 @@ class Node(object):
             self.parent.update_branch(value)
 
     def selection_strategy(self, temperature):
-        ucb = temperature * self.prior * np.sqrt(self.parent.count) / (1 + self.count)
-        return self.value + ucb
+        # if self.parent:
+        #     bonus = temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
+        # else:
+        #     bonus = 0
+
+        if self.parent:
+            bonus = temperature*self.prior/self.count
+        else:
+            bonus = 0
+
+        return self.value + bonus
 
     def display(self, surface, origin, size, selected=False):
         norm = mpl.colors.Normalize(vmin=-30, vmax=20)
