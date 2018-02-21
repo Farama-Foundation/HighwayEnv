@@ -178,10 +178,12 @@ class MCTS(object):
 class MCTSAgent(Agent):
     def __init__(self, state=None):
         self.mcts = MCTS(MCTSAgent.random_policy, MCTSAgent.random_policy, iterations=10)
+        self.previous_action = None
 
     def plan(self, state):
+        self.mcts.step(self.previous_action)
         actions = self.mcts.plan(state)
-        self.mcts.step(actions[0])
+        self.previous_action = actions[0]
         return [state.ACTIONS[a] for a in actions]
 
     @staticmethod
