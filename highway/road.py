@@ -337,7 +337,6 @@ def test():
                        bounds=[0, ends[2]])
     l2 = LanesConcatenation([lc0, lc1, lc2])
     road = Road([l0, l1, l2])
-    # road.add_random_vehicles(1, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
     road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
 

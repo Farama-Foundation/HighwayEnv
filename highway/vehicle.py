@@ -83,8 +83,8 @@ class Vehicle(Loggable):
         :param dt: timestep of integration of the model [s]
         """
         if self.crashed:
-            self.action['steering'] = np.pi / 4 * (-1 + 2 * np.random.beta(0.5, 0.5))
-            self.action['acceleration'] = (-1.0 + 0.2 * np.random.beta(0.5, 0.5)) * self.velocity
+            self.action['steering'] = np.pi / 4 * (-1 + 2 * np.random.beta(0.5, 0.5)) * 0
+            self.action['acceleration'] = (-1.0 + 0.2 * np.random.beta(0.5, 0.5) * 0) * self.velocity
 
         v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v * dt
@@ -255,7 +255,7 @@ class ControlledVehicle(Vehicle):
         - The lateral controller is a heading controller cascaded with a lateral position controller.
     """
 
-    TAU_A = 0.1  # [s]
+    TAU_A = 0.3  # [s]
     TAU_DS = 0.3  # [s]
     KP_A = 1 / TAU_A
     KD_S = 1 / TAU_DS
@@ -459,7 +459,7 @@ class IDMVehicle(ControlledVehicle):
     DELTA = 4.0  # []
 
     # Lateral policy parameters
-    POLITENESS = 0.  # in [0, 1]
+    POLITENESS = 0.1  # in [0, 1]
     LANE_CHANGE_MIN_ACC_GAIN = 0.2  # [m/s2]
     LANE_CHANGE_MAX_BRAKING_IMPOSED = 2.  # [m/s2]
     LANE_CHANGE_DELAY = 1.0  # [s]
@@ -468,7 +468,6 @@ class IDMVehicle(ControlledVehicle):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
         self.enable_lane_change = enable_lane_change
         self.color = self.IDM_COLOR
-        self.target_velocity = self.VELOCITY_WANTED #+ np.random.randint(-5, 5)
         self.timer = np.random.random() * self.LANE_CHANGE_DELAY
 
     def act(self, action=None):

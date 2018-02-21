@@ -21,10 +21,6 @@ def wrap_to_pi(x):
     return ((x+np.pi) % (2*np.pi)) - np.pi
 
 
-def do_on_average_every(duration, dt):
-    return np.random.randint(int(duration/dt)) == 0
-
-
 def do_every(duration, timer):
     return duration < timer
 
