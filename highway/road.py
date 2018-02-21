@@ -294,7 +294,7 @@ class RoadSurface(pygame.Surface):
         super(RoadSurface, self).__init__(size, flags, surf)
         self.origin = np.array([0, 0])
         self.scaling = 10.0
-        self.centering_position = 0.5
+        self.centering_position = 0.3
 
     def pix(self, length):
         return int(length * self.scaling)

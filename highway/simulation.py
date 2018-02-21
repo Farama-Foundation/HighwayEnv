@@ -19,7 +19,9 @@ class Simulation:
     REAL_TIME_RATIO = 1
     POLICY_FREQUENCY = 1
     TRAJECTORY_TIMESTEP = 0.35
+
     RECORD_VIDEO = True
+    MAXIMUM_VIDEO_LENGTH = 5*60*FPS
     OUT_FOLDER = 'out'
     TMP_FOLDER = os.path.join(OUT_FOLDER, 'tmp')
 
@@ -118,9 +120,10 @@ class Simulation:
 
         if self.RECORD_VIDEO:
             pygame.image.save(self.screen, "{}/{}_{}.bmp".format(self.TMP_FOLDER, self.video_name, self.t))
-            if self.vehicle.position[0] > \
-                    np.max([o.position[0] for o in self.road.vehicles if o is not self.vehicle]) + 125\
-                    or self.vehicle.crashed:
+            if self.t > self.MAXIMUM_VIDEO_LENGTH \
+                    or (self.vehicle.crashed and self.vehicle.velocity < 1) \
+                    or self.vehicle.position[0] > 125 + np.max([o.position[0] for o in self.road.vehicles
+                                                                if o is not self.vehicle]):
                 os.system("ffmpeg -r 60 -i {0}/{2}_%d.bmp -vcodec libx264 -crf 25 {1}/{2}.avi"
                           .format(self.TMP_FOLDER, self.OUT_FOLDER, self.video_name))
                 self.done = True
