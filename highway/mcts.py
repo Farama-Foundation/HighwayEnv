@@ -19,9 +19,12 @@ class Node(object):
         self.count = 0
         self.value = 0
 
-    def select_action(self, temperature):
+    def select_action(self, temperature=10):
         if self.children:
-            return max(self.children.keys(), key=(lambda key: self.children[key].selection_strategy(temperature)))
+            if temperature > 0:
+                return max(self.children.keys(), key=(lambda key: self.children[key].selection_strategy(temperature)))
+            else:
+                return max(self.children.keys(), key=(lambda key: self.children[key].count))
         else:
             return None
 
