@@ -114,13 +114,12 @@ class Node(object):
 
 
 class MCTS(object):
-    def __init__(self, prior_policy, rollout_policy, iterations, temperature=10, max_depth=7):
+    def __init__(self, prior_policy, rollout_policy, iterations, max_depth=7):
 
         self.root = Node(parent=None)
         self.prior_policy = prior_policy
         self.rollout_policy = rollout_policy
         self.iterations = iterations
-        self.temperature = temperature
         self.max_depth = max_depth
 
     def run(self, state):
@@ -128,13 +127,13 @@ class MCTS(object):
         value = 0
         depth = self.max_depth
         while depth > 0 and node.children and not state.is_terminal():
-            action = node.select_action(self.temperature)
+            action = node.select_action()
             reward = state.step(action)
             value += reward
             node = node.children[action]
             depth = depth - 1
 
-        if not state.is_terminal() or node == self.root:
+        if (not state.is_terminal()) or (node == self.root):
             node.expand(self.prior_policy(state))
 
         value = self.evaluate(state, value, limit=depth)
@@ -185,13 +184,20 @@ class MCTSAgent(Agent):
 
     def plan(self, state):
         actions = self.mcts.plan(state)
-        print(actions)
         self.mcts.step(actions[0])
         return [state.ACTIONS[a] for a in actions]
 
     @staticmethod
     def random_policy(s):
         return np.array(list(s.ACTIONS.keys())), np.ones((len(s.ACTIONS))) / len(s.ACTIONS)
+
+    @staticmethod
+    def straight_policy(s, preference=0.33):
+        actions = np.array(list(s.ACTIONS.keys()))
+        labels = np.array(list(s.ACTIONS.values()))
+        probabilities = (1 - preference) / (len(s.ACTIONS) - 1) * np.ones((len(s.ACTIONS)))
+        probabilities[labels == 'IDLE'] = preference
+        return actions, probabilities
 
     def display(self, surface):
         self.mcts.display(surface)
@@ -201,21 +207,14 @@ class MCTSAgent(Agent):
 
 def test():
     from highway.simulation import Simulation
-    from highway.vehicle import MDPVehicle, IDMVehicle, Obstacle
+    from highway.vehicle import MDPVehicle, IDMVehicle, Obstacle, ControlledVehicle
     from highway.road import Road
-    road = Road.create_random_road(lanes_count=3, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
+    road = Road.create_random_road(lanes_count=3, lane_width=4.0, vehicles_count=30, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=MDPVehicle, agent_type=MCTSAgent)
     sim.RECORD_VIDEO = True
-    # road.vehicles.append(Obstacle(road, [100., 4.]))
-    # road.vehicles.append(Obstacle(road, [100., 8.]))
-    # road.vehicles.append(Obstacle(road, [100., 12.]))
-
 
     while not sim.done:
-        sim.handle_events()
-        sim.act()
-        sim.step()
-        sim.display()
+        sim.process()
     sim.quit()
 
 
