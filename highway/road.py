@@ -252,7 +252,7 @@ class Road(Loggable):
                 s_v, lat_v = lane.local_coordinates(v.position)
                 if not lane.on_lane(v.position, s_v, lat_v):
                     continue
-                if s < s_v and (s_front is None or s_v < s_front):
+                if s <= s_v and (s_front is None or s_v <= s_front):
                     s_front = s_v
                     v_front = v
                 if s_v < s and (s_rear is None or s_v > s_rear):
