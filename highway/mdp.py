@@ -15,7 +15,7 @@ class RoadMDP(object):
         A MDP representing the times to collision between the ego-vehicle and
         other vehicles on the road.
     """
-    ACTION_TIMESTEP = 0.1
+    ACTION_TIMESTEP = 1/30
     MAX_ACTION_DURATION = 1.0
 
     ACTIONS = {0: 'LANE_LEFT',
@@ -30,7 +30,7 @@ class RoadMDP(object):
     RIGHT_LANE_REWARD = 0.5
     HIGH_VELOCITY_REWARD = 1.0
 
-    SAFE_DISTANCE = 200
+    SAFE_DISTANCE = 150
 
     def __init__(self, ego_vehicle):
         self.ego_vehicle = ego_vehicle
@@ -71,7 +71,7 @@ class RoadMDP(object):
         ev = state_copy.ego_vehicle
         close_vehicles = []
         for v in ev.road.vehicles:
-            if -self.SAFE_DISTANCE/10 < ev.lane_distance_to(v) < self.SAFE_DISTANCE:
+            if -self.SAFE_DISTANCE/2 < ev.lane_distance_to(v) < self.SAFE_DISTANCE:
                 close_vehicles.append(v)
         ev.road.vehicles = close_vehicles
         return state_copy
