@@ -6,7 +6,7 @@ import pygame
 import copy
 
 from highway.agent import Agent
-from highway.road import Road
+from highway.road.road import Road
 from highway import utils
 
 

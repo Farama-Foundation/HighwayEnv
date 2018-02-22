@@ -233,7 +233,7 @@ class MCTSAgent(Agent):
 
 def test():
     from highway.simulation import Simulation
-    from highway.road import Road
+    from highway.road.road import Road
     from highway.vehicle.behavior import IDMVehicle
     from highway.vehicle.control import MDPVehicle
     road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=40, vehicles_type=IDMVehicle)

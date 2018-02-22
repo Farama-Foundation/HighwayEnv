@@ -279,7 +279,7 @@ class LinearVehicle(IDMVehicle):
 
 def test():
     from highway.simulation import Simulation
-    from highway.road import Road
+    from highway.road.road import Road
     road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=30, vehicles_type=LinearVehicle)
     sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
 

@@ -1,5 +1,6 @@
 from __future__ import division, print_function
 
+
 class Loggable(object):
     """
         Implements an object whose metrics can be logged through
@@ -21,7 +22,7 @@ class Loggable(object):
 
 
 def test():
-    from highway.vehicle import Vehicle
+    from highway.vehicle.dynamics import Vehicle
     r = None
     v = Vehicle(r, [0, 0], 0, 20)
     v.dump()

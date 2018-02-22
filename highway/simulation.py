@@ -8,7 +8,7 @@ import os
 
 from highway.vehicle.control import MDPVehicle
 from highway.vehicle.dynamics import Vehicle
-from highway.road import Road, RoadSurface
+from highway.road.road import Road, RoadSurface
 from highway.mdp import RoadMDP, TTCVIAgent
 
 
