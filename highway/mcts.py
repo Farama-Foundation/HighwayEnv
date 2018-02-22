@@ -18,6 +18,7 @@ class Node(object):
         self.children = {}
         self.count = 1
         self.value = 0
+        self.state = None
 
     def select_action(self, temperature=None):
         if self.children:
@@ -130,7 +131,9 @@ class MCTS(object):
             node = node.children[action]
             depth = depth - 1
 
-        if (not state.is_terminal()) or (node == self.root):
+        if not node.children and \
+                (not state.is_terminal() or node == self.root):
+            node.state = copy.deepcopy(state)
             node.expand(self.prior_policy(state))
 
         value = self.evaluate(state, value, limit=depth)
@@ -177,7 +180,7 @@ class MCTS(object):
 
 class MCTSAgent(Agent):
     def __init__(self, state=None):
-        self.mcts = MCTS(MCTSAgent.fast_policy, MCTSAgent.random_legal_policy, iterations=100)
+        self.mcts = MCTS(MCTSAgent.fast_policy, MCTSAgent.random_legal_policy, iterations=20)
         self.previous_action = None
 
     def plan(self, state):
@@ -185,6 +188,15 @@ class MCTSAgent(Agent):
         actions = self.mcts.plan(state)
         self.previous_action = actions[0]
         return [state.ACTIONS[a] for a in actions]
+
+    def get_predicted_states(self):
+        states = []
+        node = self.mcts.root
+        while node.children:
+            action = node.select_action(temperature=0)
+            states.append(node.state)
+            node = node.children[action]
+        return states
 
     @staticmethod
     def random_policy(s):
