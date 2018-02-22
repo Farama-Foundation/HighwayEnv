@@ -1,8 +1,10 @@
 from __future__ import division, print_function
 import numpy as np
 from highway.road import LineType, StraightLane, SineLane, LanesConcatenation, Road
-from highway.vehicle import Obstacle, ControlledVehicle, IDMVehicle
 from highway.simulation import Simulation
+from highway.vehicle.behavior import IDMVehicle
+from highway.vehicle.control import ControlledVehicle
+from highway.vehicle.dynamics import Obstacle
 
 
 def make_road():

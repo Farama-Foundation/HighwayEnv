@@ -1,11 +1,13 @@
 from __future__ import division, print_function
 import numpy as np
-from highway.vehicle import ControlledVehicle, LinearVehicle
 from highway.road import Road
 from highway.simulation import Simulation
+from highway.vehicle.control import ControlledVehicle
 
 from sklearn import datasets, linear_model
 from sklearn.metrics import mean_squared_error, r2_score
+
+from highway.vehicle.behavior import LinearVehicle
 
 
 class LinearEstimator(object):

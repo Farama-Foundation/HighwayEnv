@@ -1,15 +1,15 @@
 from __future__ import division, print_function
 
+import numpy as np
 import datetime
 import pygame
 import shutil
+import os
 
-from highway.vehicle import Vehicle, MDPVehicle, IDMVehicle
+from highway.vehicle.control import MDPVehicle
+from highway.vehicle.dynamics import Vehicle
 from highway.road import Road, RoadSurface
 from highway.mdp import RoadMDP, TTCVIAgent
-import numpy as np
-import os
-import logging
 
 
 class Simulation:
@@ -164,6 +164,7 @@ class Simulation:
 
 
 def test():
+    from highway.vehicle.behavior import IDMVehicle
     road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=5, vehicles_type=IDMVehicle)
     sim = Simulation(road, ego_vehicle_type=MDPVehicle)
     while not sim.done:

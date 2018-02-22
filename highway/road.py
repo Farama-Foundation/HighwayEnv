@@ -2,9 +2,10 @@ from __future__ import division, print_function
 import numpy as np
 import pandas as pd
 import pygame
-from highway import utils
+
 from highway.logger import Loggable
-from highway.vehicle import ControlledVehicle, IDMVehicle, Obstacle, Vehicle
+from highway.vehicle.control import ControlledVehicle
+from highway.vehicle.dynamics import Vehicle, Obstacle
 
 
 class Lane(object):
@@ -67,7 +68,7 @@ class StraightLane(Lane):
         if not longitudinal or not lateral:
             longitudinal, lateral = self.local_coordinates(position)
         is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 and \
-                    self.bounds[0] <= longitudinal < self.bounds[1] + Vehicle.LENGTH
+            self.bounds[0] <= longitudinal < self.bounds[1] + Vehicle.LENGTH
         return is_on
 
     def is_reachable_from(self, position):

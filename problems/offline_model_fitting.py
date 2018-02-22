@@ -2,13 +2,14 @@ from __future__ import division, print_function
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from highway.vehicle import Vehicle, IDMVehicle, LinearVehicle, Obstacle
 from highway.road import Road
 from highway.simulation import Simulation
-import highway.utils
 
-from sklearn import datasets, linear_model
+from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
+
+from highway.vehicle.behavior import IDMVehicle, LinearVehicle
+from highway.vehicle.dynamics import Vehicle, Obstacle
 
 
 def generate_data(count):
