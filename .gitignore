@@ -24,4 +24,4 @@
 *.synctex.gz
 *-eps-converted-to.pdf
 .idea/*
-*/out/*
+**/out/*
