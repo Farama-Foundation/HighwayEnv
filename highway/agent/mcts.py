@@ -5,8 +5,8 @@ import matplotlib.cm as cm
 import pygame
 import copy
 
-from highway.agent import Agent
-from highway.mdp import RoadMDP
+from highway.agent.agent import Agent
+from highway.road.mdp import RoadMDP
 
 
 class Node(object):
