@@ -1,27 +1,11 @@
+# Compiled sources
 *.pyc
-*.aux
-*.glo
-*.idx
-*.log
-*.toc
-*.ist
-*.acn
-*.acr
-*.alg
-*.bbl
-*.blg
-*.dvi
-*.glg
-*.gls
-*.ilg
-*.ind
-*.lof
-*.lot
-*.maf
-*.mtc
-*.mtc1
-*.out
-*.synctex.gz
-*-eps-converted-to.pdf
+
+# Sphinx build
+_build
+
+# Editor files
 .idea/*
+
+# Outputs
 **/out/*
