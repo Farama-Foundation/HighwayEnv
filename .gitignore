@@ -1,8 +1,9 @@
 # Compiled sources
 *.pyc
 
-# Sphinx build
+# Sphinx documentation files
 _build
+docs
 
 # Editor files
 .idea/*
