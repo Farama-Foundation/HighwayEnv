@@ -1,14 +1,9 @@
 from __future__ import division, print_function
 import numpy as np
-import pygame
 from highway.vehicle.dynamics import Vehicle
 
 
 class Lane(object):
-    STRIPE_SPACING = 5
-    STRIPE_LENGTH = 3
-    STRIPE_WIDTH = 0.3
-
     def __init__(self):
         pass
 
@@ -72,38 +67,6 @@ class StraightLane(Lane):
         is_close = np.abs(lateral) <= 2 * self.width_at(longitudinal) and self.bounds[0] <= longitudinal < self.bounds[
             1]
         return is_close
-
-    def display(self, screen):
-        stripes_count = int(2 * (screen.get_height() + screen.get_width()) / (self.STRIPE_SPACING * screen.scaling))
-        s_origin, _ = self.local_coordinates(screen.origin)
-        s0 = (int(s_origin) // self.STRIPE_SPACING - stripes_count // 2) * self.STRIPE_SPACING
-        for side in range(2):
-            if self.line_types[side] == LineType.STRIPED:
-                self.striped_line(screen, stripes_count, s0, side)
-            elif self.line_types[side] == LineType.CONTINUOUS:
-                self.continuous_line(screen, stripes_count, s0, side)
-
-    def striped_line(self, screen, stripes_count, s0, side):
-        starts = s0 + np.arange(stripes_count) * self.STRIPE_SPACING
-        ends = s0 + np.arange(stripes_count) * self.STRIPE_SPACING + self.STRIPE_LENGTH
-        lat = (side - 0.5) * self.width
-        self.draw_stripes(screen, starts, ends, lat)
-
-    def continuous_line(self, screen, stripes_count, s0, side):
-        starts = [s0 + 0 * self.STRIPE_SPACING]
-        ends = [s0 + stripes_count * self.STRIPE_SPACING + self.STRIPE_LENGTH]
-        lat = (side - 0.5) * self.width
-        self.draw_stripes(screen, starts, ends, lat)
-
-    def draw_stripes(self, screen, starts, ends, lat):
-        starts = np.clip(starts, self.bounds[0], self.bounds[1])
-        ends = np.clip(ends, self.bounds[0], self.bounds[1])
-        for k in range(len(starts)):
-            if abs(starts[k] - ends[k]) > 0.5 * self.STRIPE_LENGTH:
-                pygame.draw.line(screen, screen.WHITE,
-                                 (screen.vec2pix(self.position(starts[k], lat))),
-                                 (screen.vec2pix(self.position(ends[k], lat))),
-                                 max(screen.pix(self.STRIPE_WIDTH), 1))
 
 
 class SineLane(StraightLane):
@@ -188,7 +151,3 @@ class LanesConcatenation(Lane):
         x += np.sum([self.lanes[i].bounds[1] for i in range(segment)])
 
         return x, y
-
-    def display(self, screen):
-        for i in range(len(self.lanes)):
-            self.lanes[i].display(screen)

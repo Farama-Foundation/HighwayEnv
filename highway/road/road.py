@@ -1,13 +1,11 @@
 from __future__ import division, print_function
 import numpy as np
 import pandas as pd
-import pygame
 
 from highway.logger import Loggable
 from highway.road.lane import LineType, StraightLane
 from highway.vehicle.control import ControlledVehicle
 from highway.vehicle.dynamics import Obstacle
-from highway.vehicle.graphics import VehicleGraphics
 
 
 class Road(Loggable):
@@ -73,15 +71,6 @@ class Road(Loggable):
                     v_rear = v
         return v_front, v_rear
 
-    def display_road(self, screen):
-        screen.fill(screen.GREY)
-        for l in self.lanes:
-            l.display(screen)
-
-    def display_traffic(self, screen):
-        for v in self.vehicles:
-            VehicleGraphics.display(v, screen)
-
     def dump(self):
         for v in self.vehicles:
             if not isinstance(v, Obstacle):
@@ -92,46 +81,6 @@ class Road(Loggable):
 
     def __repr__(self):
         return self.vehicles.__repr__()
-
-
-class RoadSurface(pygame.Surface):
-    BLACK = (0, 0, 0)
-    GREY = (100, 100, 100)
-    GREEN = (50, 200, 0)
-    YELLOW = (200, 200, 0)
-    WHITE = (255, 255, 255)
-    SCALING_FACTOR = 1.3
-    MOVING_FACTOR = 0.1
-
-    def __init__(self, size, flags, surf):
-        super(RoadSurface, self).__init__(size, flags, surf)
-        self.origin = np.array([0, 0])
-        self.scaling = 10.0
-        self.centering_position = 0.3
-
-    def pix(self, length):
-        return int(length * self.scaling)
-
-    def pos2pix(self, x, y):
-        return self.pix(x - self.origin[0]), self.pix(y - self.origin[1])
-
-    def vec2pix(self, vec):
-        return self.pos2pix(vec[0], vec[1])
-
-    def move_display_window_to(self, position):
-        self.origin = position - np.array(
-            [self.centering_position * self.get_width() / self.scaling, self.get_height() / (2 * self.scaling)])
-
-    def handle_event(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_l:
-                self.scaling *= 1 / self.SCALING_FACTOR
-            if event.key == pygame.K_o:
-                self.scaling *= self.SCALING_FACTOR
-            if event.key == pygame.K_m:
-                self.centering_position -= self.MOVING_FACTOR
-            if event.key == pygame.K_k:
-                self.centering_position += self.MOVING_FACTOR
 
 
 def test():

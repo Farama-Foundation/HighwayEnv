@@ -7,8 +7,8 @@ import shutil
 import os
 
 from highway.vehicle.control import MDPVehicle
-from highway.vehicle.dynamics import Vehicle
-from highway.road.road import Road, RoadSurface
+from highway.road.road import Road
+from highway.road.graphics import RoadSurface, RoadGraphics
 from highway.mdp.road_mdp import RoadMDP
 from highway.agent.ttc_vi import TTCVIAgent
 from highway.vehicle.graphics import VehicleGraphics
@@ -124,10 +124,10 @@ class Simulation:
         if not self.displayed:
             return
         self.road_surface.move_display_window_to(self.window_position())
-        self.road.display_road(self.road_surface)
+        RoadGraphics.display(self.road, self.road_surface)
         if self.trajectory:
             VehicleGraphics.display_trajectory(self.trajectory, self.road_surface)
-        self.road.display_traffic(self.road_surface)
+            RoadGraphics.display_traffic(self.road, self.road_surface)
         self.screen.blit(self.road_surface, (0, 0))
 
         if self.agent:

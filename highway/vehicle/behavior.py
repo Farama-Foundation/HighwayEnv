@@ -1,7 +1,6 @@
 from __future__ import division, print_function
 import numpy as np
 from highway.vehicle.control import ControlledVehicle
-from highway.vehicle.dynamics import Vehicle
 from highway import utils
 
 

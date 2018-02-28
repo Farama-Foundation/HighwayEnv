@@ -1,6 +1,5 @@
 from __future__ import division, print_function
 import numpy as np
-import pygame
 import copy
 from highway import utils
 from highway.vehicle.dynamics import Vehicle
