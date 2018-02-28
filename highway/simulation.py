@@ -6,6 +6,7 @@ import pygame
 import shutil
 import os
 
+from highway.agent.graphics import AgentGraphics
 from highway.vehicle.control import MDPVehicle
 from highway.road.road import Road
 from highway.road.graphics import RoadSurface, RoadGraphics
@@ -90,7 +91,6 @@ class Simulation:
         policy_call = self.t % (self.FPS // (self.REAL_TIME_RATIO*self.POLICY_FREQUENCY)) == 0
         if self.agent and policy_call:
             actions = self.agent.plan(RoadMDP(self.vehicle).simplified())
-            # self.display_prediction()
             self.trajectory = self.vehicle.predict_trajectory(actions,
                                                               RoadMDP.MAX_ACTION_DURATION,
                                                               self.TRAJECTORY_TIMESTEP,
@@ -102,36 +102,22 @@ class Simulation:
             self.road.step(self.dt)
             self.t += 1
 
-    def display_prediction(self):
-        states = self.agent.get_predicted_states()
-        for state in states:
-            if not state:
-                continue
-            self.road_surface.move_display_window_to(state.ego_vehicle.position)
-            self.road.display_road(self.road_surface)
-            state.ego_vehicle.road.display_traffic(self.road_surface)
-            self.screen.blit(self.road_surface, (0, 0))
-            for _ in range(10):
-                self.clock.tick(self.FPS)
-                pygame.display.flip()
-                pygame.image.save(self.screen, "{}/{}_{}.bmp".format(self.TMP_FOLDER, self.video_name, self.frame_count))
-                self.frame_count += 1
-
     def window_position(self):
         return self.vehicle.position if self.vehicle else np.array([0, len(self.road.lanes) / 2 * 4])
 
     def display(self):
         if not self.displayed:
             return
+
         self.road_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.road, self.road_surface)
         if self.trajectory:
             VehicleGraphics.display_trajectory(self.trajectory, self.road_surface)
-            RoadGraphics.display_traffic(self.road, self.road_surface)
+        RoadGraphics.display_traffic(self.road, self.road_surface)
         self.screen.blit(self.road_surface, (0, 0))
 
         if self.agent:
-            self.agent.display(self.value_surface)
+            AgentGraphics.display(self.agent, self.value_surface)
             self.screen.blit(self.value_surface, (0, self.SCREEN_HEIGHT / 2))
         self.clock.tick(self.FPS)
         pygame.display.flip()

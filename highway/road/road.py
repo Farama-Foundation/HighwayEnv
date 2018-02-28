@@ -81,32 +81,3 @@ class Road(Loggable):
 
     def __repr__(self):
         return self.vehicles.__repr__()
-
-
-def test():
-    from highway.simulation import Simulation
-    from highway.road.lane import SineLane, LanesConcatenation
-
-    ends = [100, 50, 100]
-    l0 = StraightLane(np.array([0, 0]), 0, 4.0, [LineType.CONTINUOUS, LineType.NONE])
-    l1 = StraightLane(np.array([0, 4]), 0, 4.0, [LineType.STRIPED, LineType.CONTINUOUS])
-
-    lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS],
-                       bounds=[-np.inf, ends[0]])
-    amplitude = 3.3
-    lc1 = SineLane(lc0.position(ends[0], -amplitude), 0, 4.0, amplitude, 2 * np.pi / 100, np.pi / 2,
-                   [LineType.STRIPED, LineType.STRIPED], bounds=[0, ends[1]])
-    lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0, [LineType.NONE, LineType.CONTINUOUS],
-                       bounds=[0, ends[2]])
-    l2 = LanesConcatenation([lc0, lc1, lc2])
-    road = Road([l0, l1, l2])
-    sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
-    road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
-
-    while not sim.done:
-        sim.process()
-    sim.quit()
-
-
-if __name__ == '__main__':
-    test()

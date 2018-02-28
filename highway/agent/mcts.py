@@ -1,12 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
-import matplotlib as mpl
-import matplotlib.cm as cm
-import pygame
 import copy
-
 from highway.agent.agent import Agent
-from highway.mdp.mdp import MDP
 
 
 class Node(object):
@@ -18,7 +13,6 @@ class Node(object):
         self.children = {}
         self.count = 1
         self.value = 0
-        self.state = None
 
     def select_action(self, temperature=None):
         if self.children:
@@ -54,53 +48,6 @@ class Node(object):
         # return self.value + temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
         return self.value + temperature*self.prior/self.count
 
-    def display(self, surface, origin, size, depth=0,
-                selected=False,
-                display_exploration=False,
-                display_count=False,
-                display_text=True):
-        # Display node value
-        cmap = cm.jet_r
-        norm = mpl.colors.Normalize(vmin=-15, vmax=30)
-        color = cmap(norm(self.value), bytes=True)
-        pygame.draw.rect(surface, color, (origin[0], origin[1], size[0], size[1]), 0)
-
-        # Add exploration bonus
-        if display_exploration:
-            norm = mpl.colors.Normalize(vmin=-15, vmax=30)
-            color = cmap(norm(self.selection_strategy()), bytes=True)
-            pygame.draw.polygon(surface, color, [(origin[0], origin[1] + size[1]),
-                                                 (origin[0] + size[0], origin[1]),
-                                                 (origin[0] + size[0], origin[1] + size[1])], 0)
-
-        # Add node count
-        if display_count and depth < 3:
-            norm = mpl.colors.Normalize(vmin=0, vmax=100)
-            color = cmap(norm(self.count), bytes=True)
-            pygame.draw.rect(surface, color, (origin[0], origin[1], 5, 5), 0)
-
-        # Add selection display
-        if selected:
-            red = (255, 0, 0)
-            pygame.draw.rect(surface, red, (origin[0], origin[1], size[0], size[1]), 1)
-
-        if display_text and depth < 3:
-            font = pygame.font.Font(None, 15)
-            text = font.render("{:.1f} / {:.1f} / {}".format(self.value, self.selection_strategy(), self.count),
-                               1, (10, 10, 10), (255, 255, 255))
-            text_pos = text.get_rect(centerx=origin[0]+20, centery=origin[1]+5)
-            surface.blit(text, text_pos)
-
-        # Recursively display children nodes
-        best_action = self.select_action(temperature=0)
-        for a in RoadMDP.ACTIONS:
-            if a in self.children:
-                action_selected = (selected and (a == best_action))
-                self.children[a].display(surface,
-                                         (origin[0]+size[0], origin[1]+a*size[1]/len(RoadMDP.ACTIONS)),
-                                         (size[0], size[1]/len(RoadMDP.ACTIONS)),
-                                         depth=depth+1, selected=action_selected)
-
     def __str__(self, level=0):
         ret = "\t" * level + repr(self.value) + "\n"
         for child in self.children.values():
@@ -133,7 +80,6 @@ class MCTS(object):
 
         if not node.children and \
                 (not state.is_terminal() or node == self.root):
-            node.state = copy.deepcopy(state)
             node.expand(self.prior_policy(state))
 
         value = self.evaluate(state, value, limit=depth)
@@ -171,12 +117,6 @@ class MCTS(object):
         else:
             self.root = Node(None)
 
-    def display(self, surface):
-        black = (0, 0, 0)
-        cell_size = (surface.get_width() // self.max_depth, surface.get_height())
-        pygame.draw.rect(surface, black, (0, 0, surface.get_width(), surface.get_height()), 0)
-        self.root.display(surface, (0, 0), cell_size, depth=0, selected=True)
-
 
 class MCTSAgent(Agent):
     def __init__(self, state=None, iterations=50):
@@ -188,18 +128,6 @@ class MCTSAgent(Agent):
         actions = self.mcts.plan(state)
         self.previous_action = actions[0]
         return [state.ACTIONS[a] for a in actions]
-
-    def get_predicted_states(self):
-        states = []
-        node = self.mcts.root
-        while node.children:
-            action = node.select_action(temperature=0)
-            states.append(node.state)
-            node = node.children[action]
-        return states
-
-    def display(self, surface):
-        self.mcts.display(surface)
 
     @staticmethod
     def random_policy(s):
@@ -230,20 +158,3 @@ class MCTSAgent(Agent):
     @staticmethod
     def idle_policy(s):
         return MCTSAgent.preference_policy(s, 'IDLE')
-
-
-def test():
-    from highway.simulation import Simulation
-    from highway.road.road import Road
-    from highway.vehicle.behavior import IDMVehicle
-    from highway.vehicle.control import MDPVehicle
-    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=40, vehicles_type=IDMVehicle)
-    sim = Simulation(road, ego_vehicle_type=MDPVehicle, agent_type=MCTSAgent)
-
-    while not sim.done:
-        sim.process()
-    sim.quit()
-
-
-if __name__ == '__main__':
-    test()

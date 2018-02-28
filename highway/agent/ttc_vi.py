@@ -1,11 +1,6 @@
 from __future__ import division, print_function
 import numpy as np
-import matplotlib as mpl
-import matplotlib.cm as cm
-import pygame
-
 from highway.agent.agent import Agent
-from highway.road.road import Road
 from highway import utils
 
 
@@ -152,40 +147,3 @@ class TTCVIAgent(Agent):
         if not actions:
             actions = [self.state.ACTIONS[1]]
         return path, actions
-
-    def display(self, surface):
-        black = (0, 0, 0)
-        red = (255, 0, 0)
-
-        norm = mpl.colors.Normalize(vmin=-15, vmax=30)
-        cmap = cm.jet_r
-        cell_size = (surface.get_width() // self.T, surface.get_height() // (self.L * self.V))
-        velocity_size = surface.get_height() // self.V
-
-        for h in range(self.V):
-            for i in range(self.L):
-                for j in range(self.T):
-                    color = cmap(norm(self.value[h, i, j]), bytes=True)
-                    pygame.draw.rect(surface, color, (
-                        j * cell_size[0], i * cell_size[1] + h * velocity_size, cell_size[0], cell_size[1]), 0)
-            pygame.draw.line(surface, black, (0, h * velocity_size), (self.T * cell_size[0], h * velocity_size), 1)
-        path, actions = self.pick_trajectory()
-        for (h, i, j) in path:
-            pygame.draw.rect(surface, red,
-                             (j * cell_size[0], i * cell_size[1] + h * velocity_size, cell_size[0], cell_size[1]), 1)
-
-
-def test():
-    from highway.simulation import Simulation
-    from highway.vehicle.behavior import IDMVehicle
-    from highway.vehicle.control import MDPVehicle
-
-    road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=50, vehicles_type=IDMVehicle)
-    sim = Simulation(road, ego_vehicle_type=MDPVehicle)
-    while not sim.done:
-        sim.process()
-    sim.quit()
-
-
-if __name__ == '__main__':
-    test()
