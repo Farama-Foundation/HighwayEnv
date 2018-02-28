@@ -69,7 +69,6 @@ class InsertionMDP(MDP):
     @staticmethod
     def make_vehicles(road):
         ego_vehicle = MDPVehicle(road, road.lanes[1].position(0, 0), velocity=30)
-        ego_vehicle.color = ego_vehicle.GREEN
         road.vehicles.append(ego_vehicle)
         road.vehicles.append(ControlledVehicle(road, road.lanes[1].position(30, 0), velocity=30))
         road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(30, 0), velocity=30))

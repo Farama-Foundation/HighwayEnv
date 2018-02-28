@@ -11,6 +11,7 @@ from highway.vehicle.dynamics import Vehicle
 from highway.road.road import Road, RoadSurface
 from highway.mdp.road_mdp import RoadMDP
 from highway.agent.ttc_vi import TTCVIAgent
+from highway.vehicle.graphics import VehicleGraphics
 
 
 class Simulation:
@@ -30,7 +31,6 @@ class Simulation:
         self.road = road
         if ego_vehicle_type:
             self.vehicle = ego_vehicle_type.create_random(self.road, 25)
-            self.vehicle.color = Vehicle.EGO_COLOR
             self.road.vehicles.append(self.vehicle)
         else:
             self.vehicle = None
@@ -77,7 +77,7 @@ class Simulation:
                         self.pause = not self.pause
                 self.road_surface.handle_event(event)
                 if self.vehicle:
-                    self.vehicle.handle_event(event)
+                    VehicleGraphics.handle_event(self.vehicle, event)
 
     def act(self):
         if self.pause:
@@ -126,7 +126,7 @@ class Simulation:
         self.road_surface.move_display_window_to(self.window_position())
         self.road.display_road(self.road_surface)
         if self.trajectory:
-            self.vehicle.display_trajectory(self.road_surface, self.trajectory)
+            VehicleGraphics.display_trajectory(self.trajectory, self.road_surface)
         self.road.display_traffic(self.road_surface)
         self.screen.blit(self.road_surface, (0, 0))
 

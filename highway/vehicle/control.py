@@ -91,22 +91,6 @@ class ControlledVehicle(Vehicle):
         """
         return self.KP_A * (target_velocity - self.velocity)
 
-    def handle_event(self, event):
-        """
-            Map the pygame keyboard events to actions.
-
-        :param event: the pygame event
-        """
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                self.act("FASTER")
-            if event.key == pygame.K_LEFT:
-                self.act("SLOWER")
-            if event.key == pygame.K_DOWN:
-                self.act("LANE_RIGHT")
-            if event.key == pygame.K_UP:
-                self.act("LANE_LEFT")
-
 
 class MDPVehicle(ControlledVehicle):
     """
@@ -115,7 +99,7 @@ class MDPVehicle(ControlledVehicle):
 
     SPEED_COUNT = 3  # []
     SPEED_MIN = 20  # [m/s]
-    SPEED_MAX = 35  # [m/s]
+    SPEED_MAX = 40  # [m/s]
 
     def __init__(self,
                  road,

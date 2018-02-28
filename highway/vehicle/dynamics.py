@@ -1,7 +1,6 @@
 from __future__ import division, print_function
 import numpy as np
 import pandas as pd
-import pygame
 from highway.logger import Loggable
 
 
@@ -24,16 +23,6 @@ class Vehicle(Loggable):
     DEFAULT_VELOCITIES = [20, 25]
     """ Range for random initial velocities [ù/s] """
 
-    # Display
-    RED = (255, 100, 100)
-    GREEN = (50, 200, 0)
-    BLUE = (100, 200, 255)
-    YELLOW = (200, 200, 0)
-    BLACK = (60, 60, 60)
-    PURPLE = (200, 0, 150)
-    DEFAULT_COLOR = YELLOW
-    EGO_COLOR = GREEN
-
     def __init__(self, road, position, heading=0, velocity=0):
         self.road = road
         self.position = np.array(position)
@@ -42,7 +31,6 @@ class Vehicle(Loggable):
         self.velocity = velocity
         self.lane_index = self.road.get_lane_index(self.position) if self.road else np.nan
         self.lane = self.road.lanes[self.lane_index] if self.road else np.nan
-        self.color = self.DEFAULT_COLOR
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
         self.log = []
@@ -109,35 +97,6 @@ class Vehicle(Loggable):
             return np.nan
         return self.lane.local_coordinates(vehicle.position)[0] - self.lane.local_coordinates(self.position)[0]
 
-    def handle_event(self, event):
-        """
-            Handle a pygame event.
-
-            The vehicle actions can be manually controlled.
-        :param event: the pygame event
-        """
-        action = self.action
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                action['acceleration'] = 4
-            if event.key == pygame.K_LEFT:
-                action['acceleration'] = -6
-            if event.key == pygame.K_DOWN:
-                action['steering'] = 20 * np.pi / 180
-            if event.key == pygame.K_UP:
-                action['steering'] = -20 * np.pi / 180
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_RIGHT:
-                action['acceleration'] = 0
-            if event.key == pygame.K_LEFT:
-                action['acceleration'] = 0
-            if event.key == pygame.K_DOWN:
-                action['steering'] = 0
-            if event.key == pygame.K_UP:
-                action['steering'] = 0
-        if action != self.action:
-            self.act(action)
-
     def check_collision(self, other):
         """
             Check for collision with another vehicle.
@@ -159,29 +118,6 @@ class Vehicle(Loggable):
         if np.sum(np.square(ru/np.array([self.LENGTH, self.WIDTH]))) < 1:
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
-            self.color = other.color = Vehicle.RED
-
-    def display(self, surface):
-        """
-            Display the vehicle on a pygame surface.
-
-            The vehicle is represented as a colored rotated rectangle.
-
-        :param surface: the surface to draw the vehicle on
-        """
-        s = pygame.Surface((surface.pix(self.LENGTH), surface.pix(self.LENGTH)), pygame.SRCALPHA)  # per-pixel alpha
-        pygame.draw.rect(s, self.color, (0,
-                                         surface.pix(self.LENGTH) / 2 - surface.pix(self.WIDTH) / 2,
-                                         surface.pix(self.LENGTH), surface.pix(self.WIDTH)),
-                         0)
-        pygame.draw.rect(s, surface.BLACK, (0,
-                                            surface.pix(self.LENGTH) / 2 - surface.pix(self.WIDTH) / 2,
-                                            surface.pix(self.LENGTH), surface.pix(self.WIDTH)),
-                         1)
-        s = pygame.Surface.convert_alpha(s)
-        h = self.heading if abs(self.heading) > 2 * np.pi / 180 else 0
-        sr = pygame.transform.rotate(s, -h * 180 / np.pi)
-        surface.blit(sr, (surface.pos2pix(self.position[0] - self.LENGTH / 2, self.position[1] - self.LENGTH / 2)))
 
     def dump(self):
         """
@@ -217,19 +153,6 @@ class Vehicle(Loggable):
         """
         return pd.DataFrame(self.log)
 
-    @staticmethod
-    def display_trajectory(surface, states):
-        """
-            Display the whole trajectory of a vehicle on a pygame surface.
-
-        :param surface: the surface to draw the vehicle future states on
-        :param states: the list of vehicle states within the trajectory
-        """
-        for i in range(len(states)):
-            s = states[i]
-            s.color = (s.color[0], s.color[1], s.color[2], 50)  # Color is made transparent
-            s.display(surface)
-
     def __str__(self):
         return "#{}: {}".format(id(self) % 1000, self.position)
 
@@ -245,5 +168,4 @@ class Obstacle(Vehicle):
     def __init__(self, road, position):
         super(Obstacle, self).__init__(road, position, velocity=0)
         self.target_velocity = 0
-        self.color = Vehicle.BLACK
         self.LENGTH = self.WIDTH

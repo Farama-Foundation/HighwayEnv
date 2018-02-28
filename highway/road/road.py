@@ -7,6 +7,7 @@ from highway.logger import Loggable
 from highway.road.lane import LineType, StraightLane
 from highway.vehicle.control import ControlledVehicle
 from highway.vehicle.dynamics import Obstacle
+from highway.vehicle.graphics import VehicleGraphics
 
 
 class Road(Loggable):
@@ -79,7 +80,7 @@ class Road(Loggable):
 
     def display_traffic(self, screen):
         for v in self.vehicles:
-            v.display(screen)
+            VehicleGraphics.display(v, screen)
 
     def dump(self):
         for v in self.vehicles:

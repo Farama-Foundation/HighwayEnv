@@ -13,8 +13,6 @@ class IDMVehicle(ControlledVehicle):
         - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.
         """
 
-    IDM_COLOR = Vehicle.BLUE
-
     # Longitudinal policy parameters
     ACC_MAX = 3.0  # [m/s2]
     BRAKE_ACC = 5.0  # [m/s2]
@@ -32,7 +30,6 @@ class IDMVehicle(ControlledVehicle):
     def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
         self.enable_lane_change = enable_lane_change
-        self.color = self.IDM_COLOR
         self.timer = np.random.random() * self.LANE_CHANGE_DELAY
 
     def act(self, action=None):
@@ -56,7 +53,7 @@ class IDMVehicle(ControlledVehicle):
         action['acceleration'] = self.acceleration(ego_vehicle=self,
                                                    front_vehicle=front_vehicle,
                                                    rear_vehicle=rear_vehicle)
-        action['acceleration'] = self.recover_from_stop(action['acceleration'])
+        # action['acceleration'] = self.recover_from_stop(action['acceleration'])
         action['acceleration'] = np.clip(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
         super(ControlledVehicle, self).act(action)
 
@@ -242,7 +239,6 @@ class LinearVehicle(IDMVehicle):
 
     def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
         super(LinearVehicle, self).__init__(road, position, heading, velocity, target_lane_index, enable_lane_change)
-        self.color = Vehicle.PURPLE
         self.target_velocity = self.VELOCITY_WANTED
 
     @classmethod
@@ -275,18 +271,3 @@ class LinearVehicle(IDMVehicle):
             acceleration += cls.BETA_REAR * max(rear_vehicle.velocity - ego_vehicle.velocity, 0) \
                 + cls.GAMMA_REAR * max(d_safe - d, 0)
         return acceleration
-
-
-def test():
-    from highway.simulation import Simulation
-    from highway.road.road import Road
-    road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=30, vehicles_type=LinearVehicle)
-    sim = Simulation(road, ego_vehicle_type=ControlledVehicle)
-
-    while not sim.done:
-        sim.process()
-    sim.quit()
-
-
-if __name__ == '__main__':
-    test()
