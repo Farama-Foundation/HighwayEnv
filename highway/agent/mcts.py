@@ -6,7 +6,7 @@ import pygame
 import copy
 
 from highway.agent.agent import Agent
-from highway.road.mdp import RoadMDP
+from highway.mdp.mdp import MDP
 
 
 class Node(object):
@@ -179,8 +179,8 @@ class MCTS(object):
 
 
 class MCTSAgent(Agent):
-    def __init__(self, state=None):
-        self.mcts = MCTS(MCTSAgent.fast_policy, MCTSAgent.random_legal_policy, iterations=20)
+    def __init__(self, state=None, iterations=50):
+        self.mcts = MCTS(MCTSAgent.idle_policy, MCTSAgent.random_available_policy, iterations=iterations)
         self.previous_action = None
 
     def plan(self, state):
@@ -198,37 +198,38 @@ class MCTSAgent(Agent):
             node = node.children[action]
         return states
 
-    @staticmethod
-    def random_policy(s):
-        probabilities = np.ones((len(s.ACTIONS))) / len(s.ACTIONS)
-        return list(s.ACTIONS.keys()), probabilities
+    def display(self, surface):
+        self.mcts.display(surface)
 
     @staticmethod
-    def random_legal_policy(s):
-        allowed_actions = s.allowed_actions()
-        probabilities = np.ones((len(allowed_actions))) / len(allowed_actions)
-        return allowed_actions, probabilities
+    def random_policy(s):
+        actions = s.get_actions()
+        probabilities = np.ones((len(actions))) / len(actions)
+        return list(actions.keys()), probabilities
+
+    @staticmethod
+    def random_available_policy(s):
+        available_actions = s.get_available_actions()
+        probabilities = np.ones((len(available_actions))) / len(available_actions)
+        return available_actions, probabilities
+
+    @staticmethod
+    def preference_policy(s, action_label, ratio=2):
+        allowed_actions = s.get_available_actions()
+        for i in range(len(allowed_actions)):
+            if s.ACTIONS[allowed_actions[i]] == action_label:
+                probabilities = np.ones((len(allowed_actions))) / (len(allowed_actions) - 1 + ratio)
+                probabilities[i] *= ratio
+                return allowed_actions, probabilities
+        return MCTSAgent.random_available_policy(s)
 
     @staticmethod
     def fast_policy(s):
         return MCTSAgent.preference_policy(s, 'FASTER')
 
     @staticmethod
-    def straight_policy(s):
+    def idle_policy(s):
         return MCTSAgent.preference_policy(s, 'IDLE')
-
-    @staticmethod
-    def preference_policy(s, action_label, ratio=2):
-        allowed_actions = s.allowed_actions()
-        for i in range(len(allowed_actions)):
-            if s.ACTIONS[allowed_actions[i]] == action_label:
-                probabilities = np.ones((len(allowed_actions))) / (len(allowed_actions) - 1 + ratio)
-                probabilities[i] *= ratio
-                return allowed_actions, probabilities
-        return MCTSAgent.random_legal_policy(s)
-
-    def display(self, surface):
-        self.mcts.display(surface)
 
 
 def test():

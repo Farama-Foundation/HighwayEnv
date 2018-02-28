@@ -9,7 +9,7 @@ import os
 from highway.vehicle.control import MDPVehicle
 from highway.vehicle.dynamics import Vehicle
 from highway.road.road import Road, RoadSurface
-from highway.road.mdp import RoadMDP
+from highway.mdp.road_mdp import RoadMDP
 from highway.agent.ttc_vi import TTCVIAgent
 
 
@@ -117,13 +117,13 @@ class Simulation:
                 pygame.image.save(self.screen, "{}/{}_{}.bmp".format(self.TMP_FOLDER, self.video_name, self.frame_count))
                 self.frame_count += 1
 
-    def display_position(self):
+    def window_position(self):
         return self.vehicle.position if self.vehicle else np.array([0, len(self.road.lanes) / 2 * 4])
 
     def display(self):
         if not self.displayed:
             return
-        self.road_surface.move_display_window_to(self.display_position())
+        self.road_surface.move_display_window_to(self.window_position())
         self.road.display_road(self.road_surface)
         if self.trajectory:
             self.vehicle.display_trajectory(self.road_surface, self.trajectory)

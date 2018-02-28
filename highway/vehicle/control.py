@@ -121,7 +121,7 @@ class MDPVehicle(ControlledVehicle):
                  road,
                  position,
                  heading=0,
-                 velocity=None,
+                 velocity=0,
                  target_lane_index=None,
                  target_velocity=None):
         super(MDPVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity)
