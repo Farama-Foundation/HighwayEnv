@@ -13,11 +13,16 @@ class Vehicle(Loggable):
         It's state is propagated depending on its steering and acceleration actions.
     """
     COLLISIONS_ENABLED = True
+    """ Enable collision detection between vehicles """
 
-    LENGTH = 5.0  # [m]
-    WIDTH = 2.0  # [m]
-    STEERING_TAU = 0.2  # [s]
-    DEFAULT_VELOCITIES = [20, 25]  # [m/s]
+    LENGTH = 5.0
+    """ Vehicle length [m] """
+    WIDTH = 2.0
+    """ Vehicle width [m] """
+    STEERING_TAU = 0.2
+    """ Steering wheel response time [s] """
+    DEFAULT_VELOCITIES = [20, 25]
+    """ Range for random initial velocities [ù/s] """
 
     # Display
     RED = (255, 100, 100)
