@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
 import copy
-from highway.agent.agent import Agent
+from highway.agent.abstract import Agent
 
 
 class Node(object):

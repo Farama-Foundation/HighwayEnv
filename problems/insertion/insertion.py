@@ -4,7 +4,7 @@ import numpy as np
 from highway.agent.mcts import MCTSAgent
 from highway.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
 from highway.road.road import Road
-from highway.mdp.mdp import MDP
+from highway.mdp.abstract import MDP
 from highway.mdp.road_mdp import RoadMDP
 from highway.simulation import Simulation
 from highway.vehicle.behavior import IDMVehicle

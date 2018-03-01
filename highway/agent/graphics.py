@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 import matplotlib as mpl
 import matplotlib.cm as cm
 import pygame

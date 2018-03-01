@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 import numpy as np
-from highway.agent.agent import Agent
+from highway.agent.abstract import Agent
 from highway import utils
 
 

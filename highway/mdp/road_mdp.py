@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import copy
 
-from highway.mdp.mdp import MDP
+from highway.mdp.abstract import MDP
 
 
 class RoadMDP(MDP):
