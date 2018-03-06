@@ -54,12 +54,13 @@ class VehicleGraphics(object):
         color = cls.DEFAULT_COLOR
         if vehicle.crashed:
             color = cls.RED
-        elif isinstance(vehicle, MDPVehicle):
-            color = cls.EGO_COLOR
-        elif isinstance(vehicle, IDMVehicle):
-            color = cls.BLUE
+
         elif isinstance(vehicle, LinearVehicle):
             color = cls.PURPLE
+        elif isinstance(vehicle, IDMVehicle):
+            color = cls.BLUE
+        elif isinstance(vehicle, MDPVehicle):
+            color = cls.EGO_COLOR
         if transparent:
             color = (color[0], color[1], color[2], 50)
         return color
