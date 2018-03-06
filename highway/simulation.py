@@ -9,7 +9,7 @@ import os
 from highway.agent.graphics import AgentGraphics
 from highway.vehicle.control import MDPVehicle
 from highway.road.road import Road
-from highway.road.graphics import RoadSurface, RoadGraphics
+from highway.road.graphics import WindowSurface, RoadGraphics
 from highway.mdp.road_mdp import RoadMDP
 from highway.agent.ttc_vi import TTCVIAgent
 from highway.vehicle.graphics import VehicleGraphics
@@ -54,7 +54,7 @@ class Simulation:
             size = [self.SCREEN_WIDTH, self.SCREEN_HEIGHT]
             panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2)
             self.screen = pygame.display.set_mode(size)
-            self.road_surface = RoadSurface(panel_size, 0, pygame.Surface(panel_size))
+            self.road_surface = WindowSurface(panel_size, 0, pygame.Surface(panel_size))
             self.value_surface = pygame.Surface(panel_size)
             self.clock = pygame.time.Clock()
 

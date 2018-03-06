@@ -1,36 +1,101 @@
 from __future__ import division, print_function
+from abc import ABCMeta, abstractmethod
 import numpy as np
 from highway.vehicle.dynamics import Vehicle
 
 
-class Lane(object):
-    def __init__(self):
-        pass
+class AbstractLane(object):
+    """
+        A lane on the road, described by its central curve.
+    """
+    metaclass__ = ABCMeta
 
+    @abstractmethod
     def position(self, longitudinal, lateral):
-        raise Exception('Not implemented.')
+        """
+            Convert local lane coordinates to a world position.
 
-    def heading_at(self, s):
-        raise Exception('Not implemented.')
+        :param longitudinal: longitudinal lane coordinate [m]
+        :param lateral: lateral lane coordinate [m]
+        :return: the corresponding world position [m]
+        """
+        raise NotImplementedError()
 
-    def width_at(self, s):
-        raise Exception('Not implemented.')
-
+    @abstractmethod
     def local_coordinates(self, position):
-        raise Exception('Not implemented.')
+        """
+            Convert a world position to local lane coordinates.
 
+        :param position: a world position [m]
+        :return: the (longitudinal, lateral) lane coordinates [m]
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def heading_at(self, longitudinal):
+        """
+            Get the lane heading at a given longitudinal lane coordinate.
+
+        :param longitudinal: longitudinal lane coordinate [m]
+        :return: the lane heading [rad]
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def width_at(self, longitudinal):
+        """
+            Get the lane width at a given longitudinal lane coordinate.
+
+        :param longitudinal: longitudinal lane coordinate [m]
+        :return: the lane width [m]
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def is_reachable_from(self, position):
-        raise Exception('Not implemented.')
+        """
+            Whether the lane is reachable from a given world position
+
+        :param position: the world position [m]
+        :return: is the lane reachable?
+        """
+        raise NotImplementedError()
+
+    def on_lane(self, position, longitudinal=None, lateral=None):
+        """
+            Whether a given world position is on the lane.
+
+        :param position: a world position [m]
+        :param longitudinal: (optional) the corresponding longitudinal lane coordinate, if known [m]
+        :param lateral: (optional) the corresponding lateral lane coordinate, if known [m]
+        :return: is the position on the lane?
+        """
+        NotImplementedError()
 
 
 class LineType:
+    """
+        A lane side line type.
+    """
     NONE = 0
     STRIPED = 1
     CONTINUOUS = 2
 
 
-class StraightLane(Lane):
+class StraightLane(AbstractLane):
+    """
+        A lane going in straight line.
+    """
     def __init__(self, origin, heading, width, line_types=None, bounds=None):
+        """
+            New straight lane.
+
+        :param origin: the lane starting position [m]
+        :param heading: the lane direction [rad]
+        :param width: the lane width [m]
+        :param line_types: the type of lines on both sides of the lane
+        :param bounds: longitudinal coordinates of the lane start and end [m]
+        """
         super(StraightLane, self).__init__()
         self.bounds = bounds or [-np.inf, np.inf]
         self.origin = origin
@@ -70,10 +135,23 @@ class StraightLane(Lane):
 
 
 class SineLane(StraightLane):
-    STRIPE_SPACING = 5
-    STRIPE_LENGTH = 3
+    """
+        A sinusoidal lane
+    """
 
     def __init__(self, origin, heading, width, amplitude, pulsation, phase, line_types=None, bounds=None):
+        """
+            New sinusoidal lane.
+
+        :param origin: the lane starting position [m]
+        :param heading: the lane axis direction [rad]
+        :param width: the lane width [m]
+        :param amplitude: the lane oscillation amplitude [m]
+        :param pulsation: the lane pulsation [rad/m]
+        :param phase: the lane initial phase [rad]
+        :param line_types: the type of lines on both sides of the lane
+        :param bounds: longitudinal coordinates of the lane start and end [m]
+        """
         super(SineLane, self).__init__(origin, heading, width, line_types, bounds)
         self.amplitude = amplitude
         self.pulsation = pulsation
@@ -92,12 +170,26 @@ class SineLane(StraightLane):
         return longitudinal, lateral - self.amplitude * np.sin(self.pulsation * longitudinal + self.phase)
 
 
-class LanesConcatenation(Lane):
+class LanesConcatenation(AbstractLane):
+    """
+        A lane defined as the concatenation of several sub-lanes.
+    """
     def __init__(self, lanes):
+        """
+            New concatenated lane.
+
+        :param lanes: the list of lanes composing the concatenated lane
+        """
         super(LanesConcatenation, self).__init__()
         self.lanes = lanes
 
     def segment_from_longitudinal(self, longitudinal):
+        """
+            Get the index of the sub-lane corresponding to a longitudinal coordinate in the concatenated lane frame.
+
+        :param longitudinal: the longitudinal coordinate in the concatenated lane local frame. [m]
+        :return: the index of the sub-lane closest to this position.
+        """
         segment = 0
         segment_longitudinal = longitudinal
         for i in range(len(self.lanes) - 1):
@@ -109,6 +201,12 @@ class LanesConcatenation(Lane):
         return segment, segment_longitudinal
 
     def segment_from_position(self, position):
+        """
+            Get the index of the sub-lane corresponding to world position.
+
+        :param position: a world position [m]
+        :return: the index of the sub-lane closest to this position.
+        """
         y_min = None
         segment = None
         first_infinite_segment = None
@@ -117,7 +215,7 @@ class LanesConcatenation(Lane):
                 first_infinite_segment = i
 
             x, y = self.lanes[i].local_coordinates(position)
-            if (x > -self.STRIPE_SPACING or i == 0) and (x < self.lanes[i].bounds[1] or i == len(self.lanes) - 1):
+            if (x > -5 or i == 0) and (x < self.lanes[i].bounds[1] or i == len(self.lanes) - 1):
                 if y_min is None or abs(y) < y_min:
                     y_min = abs(y)
                     segment = i
