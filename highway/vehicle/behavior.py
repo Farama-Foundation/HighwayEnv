@@ -13,11 +13,12 @@ class IDMVehicle(ControlledVehicle):
         """
 
     # Longitudinal policy parameters
-    ACC_MAX = 3.0  # [m/s2]
-    BRAKE_ACC = 5.0  # [m/s2]
+    ACC_MAX = 6.0  # [m/s2]
+    COMFORT_ACC_MAX = 3.0  # [m/s2]
+    COMFORT_ACC_MIN = -5.0  # [m/s2]
     VELOCITY_WANTED = 20.0  # [m/s]
     DISTANCE_WANTED = 5.0  # [m]
-    TIME_WANTED = 1.0  # [s]
+    TIME_WANTED = 1.5  # [s]
     DELTA = 4.0  # []
 
     # Lateral policy parameters
@@ -53,7 +54,7 @@ class IDMVehicle(ControlledVehicle):
                                                    front_vehicle=front_vehicle,
                                                    rear_vehicle=rear_vehicle)
         # action['acceleration'] = self.recover_from_stop(action['acceleration'])
-        action['acceleration'] = np.clip(action['acceleration'], -self.BRAKE_ACC, self.ACC_MAX)
+        action['acceleration'] = np.clip(action['acceleration'], -self.ACC_MAX, self.ACC_MAX)
         super(ControlledVehicle, self).act(action)
 
     def step(self, dt):
@@ -85,11 +86,11 @@ class IDMVehicle(ControlledVehicle):
         """
         if not ego_vehicle:
             return 0
-        acceleration = cls.ACC_MAX * (
+        acceleration = cls.COMFORT_ACC_MAX * (
                 1 - np.power(ego_vehicle.velocity / utils.not_zero(ego_vehicle.target_velocity), cls.DELTA))
         if front_vehicle:
-            d = ego_vehicle.lane_distance_to(front_vehicle) - ego_vehicle.LENGTH / 2 - front_vehicle.LENGTH / 2
-            acceleration -= cls.ACC_MAX * np.power(cls.desired_gap(ego_vehicle, front_vehicle) / utils.not_zero(d), 2)
+            d = ego_vehicle.lane_distance_to(front_vehicle)
+            acceleration -= cls.COMFORT_ACC_MAX * np.power(cls.desired_gap(ego_vehicle, front_vehicle) / utils.not_zero(d), 2)
         return acceleration
 
     @classmethod
@@ -101,9 +102,9 @@ class IDMVehicle(ControlledVehicle):
         :param front_vehicle: its leading vehicle
         :return: the desired distance between the two [m]
         """
-        d0 = cls.DISTANCE_WANTED
+        d0 = cls.DISTANCE_WANTED + ego_vehicle.LENGTH / 2 + front_vehicle.LENGTH / 2
         tau = cls.TIME_WANTED
-        ab = cls.ACC_MAX * cls.BRAKE_ACC
+        ab = -cls.COMFORT_ACC_MAX * cls.COMFORT_ACC_MIN
         dv = ego_vehicle.velocity - front_vehicle.velocity
         d_star = d0 + ego_vehicle.velocity * tau + ego_vehicle.velocity * dv / (2 * np.sqrt(ab))
         return d_star
@@ -122,8 +123,8 @@ class IDMVehicle(ControlledVehicle):
         if not front_vehicle:
             return self.target_velocity
         d0 = self.DISTANCE_WANTED
-        a0 = self.BRAKE_ACC
-        a1 = self.BRAKE_ACC
+        a0 = self.COMFORT_ACC_MIN
+        a1 = self.COMFORT_ACC_MIN
         tau = self.TIME_WANTED
         d = max(self.lane_distance_to(front_vehicle) - self.LENGTH / 2 - front_vehicle.LENGTH / 2 - d0, 0)
         v1_0 = front_vehicle.velocity
@@ -224,15 +225,15 @@ class IDMVehicle(ControlledVehicle):
             if (not rear or rear.lane_distance_to(self) > safe_distance) and \
                     (not new_rear or new_rear.lane_distance_to(self) > safe_distance):
                 # Reverse
-                return -self.ACC_MAX/2
+                return -self.COMFORT_ACC_MAX / 2
         return acceleration
 
 
 class LinearVehicle(IDMVehicle):
-    ALPHA = 1.0
-    BETA_FRONT = 2.0
+    ALPHA = 0.5
+    BETA_FRONT = 1.0
     BETA_REAR = 0.0
-    GAMMA_FRONT = 50.0
+    GAMMA_FRONT = 5.0
     GAMMA_REAR = 0.0
     TIME_WANTED = 2.0
 
