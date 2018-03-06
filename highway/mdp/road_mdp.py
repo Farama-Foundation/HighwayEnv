@@ -42,9 +42,20 @@ class RoadMDP(MDP):
 
     @classmethod
     def get_actions(cls):
+        """
+            Get the action space.
+        """
         return cls.ACTIONS
 
     def get_available_actions(self):
+        """
+            Get the list of currently available actions.
+
+            Lane changes are not available on the boundary of the road, and velocity changes are not available at
+            maximal or minimal velocity.
+
+        :return: the list of available actions
+        """
         actions = [self.ACTIONS_INDEXES['IDLE']]
         if self.ego_vehicle.lane_index > 0:
             actions.append(self.ACTIONS_INDEXES['LANE_LEFT'])
@@ -57,6 +68,12 @@ class RoadMDP(MDP):
         return actions
 
     def reward(self, action):
+        """
+            Define the reward associated with performing a given action and ending up in the current state.
+
+        :param action: the last action performed
+        :return: the reward
+        """
         action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
         state_reward = \
             - self.COLLISION_COST*self.ego_vehicle.crashed \
@@ -65,6 +82,13 @@ class RoadMDP(MDP):
         return action_reward[action]+state_reward
 
     def simplified(self):
+        """
+            Return a simplified copy of the state where distant vehicles have been removed from the road.
+
+            This is meant to lower the policy computational load while preserving the optimal actions set.
+
+        :return: a simplified mdp state
+        """
         state_copy = copy.deepcopy(self)
         ev = state_copy.ego_vehicle
         close_vehicles = []
@@ -75,4 +99,7 @@ class RoadMDP(MDP):
         return state_copy
 
     def is_terminal(self):
+        """
+        :return: Whether the current state is a terminal state
+        """
         return self.ego_vehicle.crashed
