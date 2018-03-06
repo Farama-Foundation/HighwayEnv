@@ -7,12 +7,26 @@ from highway.vehicle.graphics import VehicleGraphics
 
 
 class LaneGraphics(object):
+    """
+        A visualization of a lane.
+    """
     STRIPE_SPACING = 5
+    """ Offset between stripes [m]"""
+
     STRIPE_LENGTH = 3
+    """ Length of a stripe [m]"""
+
     STRIPE_WIDTH = 0.3
+    """ Width of a stripe [m]"""
 
     @classmethod
     def display(cls, lane, surface):
+        """
+            Display a lane on a surface.
+
+        :param lane: the lane to be displayed
+        :param surface: the pygame surface
+        """
         if isinstance(lane, LanesConcatenation):
             for i in range(len(lane.lanes)):
                 cls.display(lane.lanes[i], surface)
@@ -29,6 +43,15 @@ class LaneGraphics(object):
 
     @classmethod
     def striped_line(cls, lane, surface, stripes_count, s0, side):
+        """
+            Draw a striped line on one side of a lane, on a surface.
+
+        :param lane: the lane
+        :param surface: the pygame surface
+        :param stripes_count: the number of stripes to draw
+        :param s0: the longitudinal position of the first stripe [m]
+        :param side: which side of the road to draw [0:left, 1:right]
+        """
         starts = s0 + np.arange(stripes_count) * cls.STRIPE_SPACING
         ends = s0 + np.arange(stripes_count) * cls.STRIPE_SPACING + cls.STRIPE_LENGTH
         lats = [(side - 0.5) * lane.width_at(s) for s in starts]
@@ -36,6 +59,15 @@ class LaneGraphics(object):
 
     @classmethod
     def continuous_line(cls, lane, surface, stripes_count, s0, side):
+        """
+            Draw a continuous line on one side of a lane, on a surface.
+
+        :param lane: the lane
+        :param surface: the pygame surface
+        :param stripes_count: the number of stripes that would be drawn if the line was striped
+        :param s0: the longitudinal position of the start of the line [m]
+        :param side: which side of the road to draw [0:left, 1:right]
+        """
         starts = [s0 + 0 * cls.STRIPE_SPACING]
         ends = [s0 + stripes_count * cls.STRIPE_SPACING + cls.STRIPE_LENGTH]
         lats = [(side - 0.5) * lane.width_at(s) for s in starts]
@@ -43,6 +75,15 @@ class LaneGraphics(object):
 
     @classmethod
     def draw_stripes(cls, lane, surface, starts, ends, lats):
+        """
+            Draw a set of stripes along a lane.
+
+        :param lane: the lane
+        :param surface: the surface to draw on
+        :param starts: a list of starting longitudinal positions for each stripe [m]
+        :param ends:  a list of ending longitudinal positions for each stripe [m]
+        :param lats: a list of lateral positions for each stripe [m]
+        """
         starts = np.clip(starts, lane.bounds[0], lane.bounds[1])
         ends = np.clip(ends, lane.bounds[0], lane.bounds[1])
         for k in range(len(starts)):
@@ -54,19 +95,37 @@ class LaneGraphics(object):
 
 
 class RoadGraphics(object):
+    """
+        A visualization of a road lanes and vehicles.
+    """
     @classmethod
     def display(cls, road, surface):
+        """
+            Display the road lanes on a surface.
+
+        :param road: the road to be displayed
+        :param surface: the pygame surface
+        """
         surface.fill(surface.GREY)
         for l in road.lanes:
             LaneGraphics.display(l, surface)
 
     @classmethod
     def display_traffic(cls, road, surface):
+        """
+            Display the road vehicles on a surface.
+
+        :param road: the road to be displayed
+        :param surface: the pygame surface
+        """
         for v in road.vehicles:
             VehicleGraphics.display(v, surface)
 
 
-class RoadSurface(pygame.Surface):
+class WindowSurface(pygame.Surface):
+    """
+        A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area.
+    """
     BLACK = (0, 0, 0)
     GREY = (100, 100, 100)
     GREEN = (50, 200, 0)
@@ -76,25 +135,55 @@ class RoadSurface(pygame.Surface):
     MOVING_FACTOR = 0.1
 
     def __init__(self, size, flags, surf):
-        super(RoadSurface, self).__init__(size, flags, surf)
+        """
+            New window surface.
+        """
+        super(WindowSurface, self).__init__(size, flags, surf)
         self.origin = np.array([0, 0])
         self.scaling = 10.0
         self.centering_position = 0.3
 
     def pix(self, length):
+        """
+            Convert a distance [m] to pixels [px].
+
+        :param length: the input distance [m]
+        :return: the corresponding size [px]
+        """
         return int(length * self.scaling)
 
     def pos2pix(self, x, y):
+        """
+            Convert two world coordinates [m] into a position in the surface [px]
+
+        :param x: x world coordinate [m]
+        :param y: y world coordinate [m]
+        :return: the coordinates of the corresponding pixel [px]
+        """
         return self.pix(x - self.origin[0]), self.pix(y - self.origin[1])
 
     def vec2pix(self, vec):
+        """
+             Convert a world position [m] into a position in the surface [px].
+        :param vec: a world position [m]
+        :return: the coordinates of the corresponding pixel [px]
+        """
         return self.pos2pix(vec[0], vec[1])
 
     def move_display_window_to(self, position):
+        """
+            Set the origin of the displayed area to center on a given world position.
+        :param position: a world position [m]
+        """
         self.origin = position - np.array(
             [self.centering_position * self.get_width() / self.scaling, self.get_height() / (2 * self.scaling)])
 
     def handle_event(self, event):
+        """
+            Handle pygame events for moving and zooming in the displayed area.
+
+        :param event: a pygame event
+        """
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_l:
                 self.scaling *= 1 / self.SCALING_FACTOR
