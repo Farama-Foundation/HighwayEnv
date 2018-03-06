@@ -2,7 +2,11 @@ from __future__ import division, print_function
 from abc import ABCMeta, abstractmethod
 
 
-class Agent(object):
+class AbstractAgent(object):
+    """
+        An abstract class specifying the interface of a generic agent.
+        The agent interacts with an environment that implements the highway.mdp.abstract.MDP interface.
+    """
     metaclass__ = ABCMeta
 
     @abstractmethod
