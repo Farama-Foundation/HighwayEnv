@@ -48,6 +48,12 @@ class MCTSGraphics(object):
         pygame.draw.rect(surface, cls.BLACK, (0, 0, surface.get_width(), surface.get_height()), 0)
         cls.display_node(agent.mcts.root, surface, (0, 0), cell_size, depth=0, selected=True)
 
+        actions = agent.mcts.get_plan()
+        font = pygame.font.Font(None, 15)
+        text = font.render('-'.join(map(str, actions)), 1, (10, 10, 10), (255, 255, 255))
+        surface.blit(text, (5, surface.get_height()-15))
+
+
     @classmethod
     def display_node(cls, node, surface, origin, size, depth=0,
                      selected=False,
@@ -95,8 +101,7 @@ class MCTSGraphics(object):
             font = pygame.font.Font(None, 15)
             text = font.render("{:.1f} / {:.1f} / {}".format(node.value, node.selection_strategy(), node.count),
                                1, (10, 10, 10), (255, 255, 255))
-            text_pos = text.get_rect(centerx=origin[0]+30, centery=origin[1]+5)
-            surface.blit(text, text_pos)
+            surface.blit(text, (origin[0]+2, origin[1]+2))
 
         # Recursively display children nodes
         best_action = node.select_action(temperature=0)
