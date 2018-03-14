@@ -82,10 +82,21 @@ class Node(object):
             return self.value
 
         if temperature is None:
-            temperature = 50*5
+            temperature = 30*5
 
         # return self.value + temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
         return self.value + temperature*self.prior/self.count
+
+    def convert_visits_to_prior_in_branch(self):
+        """
+            For any node in the subtree, convert the distribution of all children visit counts to prior
+            probabilities, and reset the visit counts.
+        """
+        self.count = 1
+        total_count = sum([child.count for child in self.children.values()])
+        for child in self.children.values():
+            child.prior = child.count/total_count
+            child.convert_visits_to_prior_in_branch()
 
     def __str__(self, level=0):
         ret = "\t" * level + repr(self.value) + "\n"
@@ -165,6 +176,7 @@ class MCTS(object):
         :return: the list of actions
         """
         for i in range(self.iterations):
+            print(i+1, '/', self.iterations)
             state_copy = copy.deepcopy(state)
             self.run(state_copy)
         return self.get_plan()
@@ -186,17 +198,40 @@ class MCTS(object):
 
     def step(self, action):
         """
+            Update the MCTS tree when the agent performs an action
+
+        :param action: the chosen action from the root node
+        """
+        self.step_by_reset()
+
+    def step_by_reset(self):
+        """
+            Reset the MCTS tree to a root node for the new state.
+        """
+        self.root = Node(None)
+
+    def step_by_subtree(self, action):
+        """
             Replace the MCTS tree by its subtree corresponding to the chosen action.
 
         :param action: a chosen action from the root node
-        :return: the tree corresponding to the next state
         """
         if action in self.root.children:
             self.root = self.root.children[action]
             self.root.parent = None
         else:
             # The selected action was never explored, start a new tree.
-            self.root = Node(None)
+            self.step_by_reset()
+
+    def step_by_prior(self, action):
+        """
+            Replace the MCTS tree by its subtree corresponding to the chosen action, but also convert the visit counts
+            to prior probabilities and before resetting them.
+
+        :param action: a chosen action from the root node
+        """
+        self.step_by_subtree(action)
+        self.root.convert_visits_to_prior_in_branch()
 
 
 class MCTSAgent(AbstractAgent):
