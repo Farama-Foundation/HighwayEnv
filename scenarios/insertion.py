@@ -16,8 +16,8 @@ class InsertionMDP(MDP):
     """
         Describe an MDP with a particular lanes and vehicle configuration, and a specific reward function.
     """
-    VELOCITY_REWARD = 0.05
-    RIGHT_LANE_REWARD = 0.5
+    VELOCITY_REWARD = 1.0
+    RIGHT_LANE_REWARD = 1.0
     INSERTION_LANE_COST = 10
     ACCELERATION_COST = 0*3.0
     LANE_CHANGE_COST = 0*3.0
@@ -35,9 +35,9 @@ class InsertionMDP(MDP):
     def reward(self, action):
         action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: -self.ACCELERATION_COST, 4: -self.ACCELERATION_COST}
         reward = -RoadMDP.COLLISION_COST * self.ego_vehicle.crashed \
-            + self.RIGHT_LANE_REWARD * (self.ego_vehicle.lane_index == 1) \
+            + self.RIGHT_LANE_REWARD * (self.ego_vehicle.lane_index == len(self.road.lanes)-2) \
             - self.INSERTION_LANE_COST * (self.ego_vehicle.lane_index == len(self.road.lanes)-1) \
-            + self.VELOCITY_REWARD * self.ego_vehicle.velocity
+            + self.VELOCITY_REWARD * self.ego_vehicle.velocity_index
         return reward + action_reward[action]
 
     @classmethod
@@ -62,21 +62,21 @@ class InsertionMDP(MDP):
                        [LineType.STRIPED, LineType.STRIPED], bounds=[0, ends[1]])
         lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0, [LineType.NONE, LineType.CONTINUOUS], bounds=[0, ends[2]])
         l2 = LanesConcatenation([lc0, lc1, lc2])
-        road = Road([l0, l1, l2])
+        road = Road([l1, l2])
         road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
         return road
 
     @staticmethod
     def make_vehicles(road):
-        ego_vehicle = MDPVehicle(road, road.lanes[1].position(0, 0), velocity=30)
+        ego_vehicle = MDPVehicle(road, road.lanes[-2].position(0, 0), velocity=30)
         road.vehicles.append(ego_vehicle)
-        road.vehicles.append(ControlledVehicle(road, road.lanes[1].position(30, 0), velocity=30))
-        road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(30, 0), velocity=30))
-        road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(0, 0), velocity=30))
-        road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(-30, 0), velocity=30))
+        # road.vehicles.append(ControlledVehicle(road, road.lanes[1].position(30, 0), velocity=30))
+        # road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(30, 0), velocity=30))
+        # road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(0, 0), velocity=30))
+        # road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(-30, 0), velocity=30))
 
         # road.vehicles.append(IDMVehicle(road, road.lanes[2].position(10, 0), velocity=10))
-        inserting_v = IDMVehicle(road, road.lanes[2].position(60, 0), velocity=20)
+        inserting_v = IDMVehicle(road, road.lanes[-1].position(60, 0), velocity=20)
         inserting_v.target_velocity = 30
         road.vehicles.append(inserting_v)
         # road.vehicles.append(IDMVehicle(road, road.lanes[2].position(50, 0), velocity=10))
@@ -107,6 +107,7 @@ def run():
                                                               sim.TRAJECTORY_TIMESTEP,
                                                               sim.dt)
             sim.vehicle.act(actions[0])
+            print("reward", mdp.reward(mdp.road_mdp.ACTIONS_INDEXES[actions[0]]))
 
         sim.step()
         sim.display()
