@@ -18,9 +18,9 @@ setup(
 
     keywords='autonomous highway driving simulation environment reinforcement learning',
     packages=find_packages(exclude=['docs', 'tests*']),
-    install_requires=['numpy', 'pygame', 'jupyter'],
+    install_requires=['numpy', 'pygame', 'jupyter', 'matplotlib', 'pandas'],
     extras_require={
-        'dev': ['scipy', 'matplotlib', 'pandas'],
+        'dev': ['scipy'],
     },
     entry_points={
         'console_scripts': [],
