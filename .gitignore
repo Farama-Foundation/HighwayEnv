@@ -1,7 +1,13 @@
 # Compiled sources
 *.pyc
 
-# Sphinx documentation files
+# Setup
+**.egg*
+
+# Jupyter notebooks
+**.ipynb_checkpoints*
+
+# Sphinx documentation
 _build
 docs
 
