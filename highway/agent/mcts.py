@@ -21,7 +21,7 @@ class Node(object):
         self.parent = parent
         self.prior = prior
         self.children = {}
-        self.count = 1
+        self.count = 0
         self.value = 0
 
     def select_action(self, temperature=None):
@@ -58,8 +58,8 @@ class Node(object):
 
         :param total_reward: the total reward obtained through a trajectory passing by this node
         """
-        self.value += self.K / self.count * (total_reward - self.value)
         self.count += 1
+        self.value += self.K / self.count * (total_reward - self.value)
 
     def update_branch(self, total_reward):
         """
@@ -85,7 +85,7 @@ class Node(object):
             temperature = 30*5
 
         # return self.value + temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
-        return self.value + temperature*self.prior/self.count
+        return self.value + temperature*self.prior/(self.count+1)
 
     def convert_visits_to_prior_in_branch(self):
         """
@@ -93,9 +93,9 @@ class Node(object):
             probabilities, and reset the visit counts.
         """
         self.count = 1
-        total_count = sum([child.count for child in self.children.values()])
+        total_count = sum([(child.count+1) for child in self.children.values()])
         for child in self.children.values():
-            child.prior = child.count/total_count
+            child.prior = (child.count+1)/total_count
             child.convert_visits_to_prior_in_branch()
 
     def __str__(self, level=0):
