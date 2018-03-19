@@ -96,7 +96,7 @@ class MDPVehicle(ControlledVehicle):
         A controlled vehicle with a specified discrete range of allowed target velocities.
     """
 
-    SPEED_COUNT = 2  # []
+    SPEED_COUNT = 3  # []
     SPEED_MIN = 20  # [m/s]
     SPEED_MAX = 30  # [m/s]
 
