@@ -238,13 +238,15 @@ class MCTSAgent(AbstractAgent):
     """
         An agent that uses Monte Carlo Tree Search to plan a sequence of action in an MDP.
     """
-    def __init__(self, state=None, iterations=100):
+    def __init__(self, state=None, prior_policy=None, rollout_policy=None, iterations=100):
         """
             A new MCTS agent.
         :param state: the current MDP state
         :param iterations: the number of MCTS iterations
         """
-        self.mcts = MCTS(MCTSAgent.fast_policy, MCTSAgent.random_available_policy, iterations=iterations)
+        prior_policy = prior_policy or MCTSAgent.fast_policy
+        rollout_policy = rollout_policy or MCTSAgent.random_available_policy
+        self.mcts = MCTS(prior_policy, rollout_policy, iterations=iterations)
         self.previous_action = None
 
     def plan(self, state):

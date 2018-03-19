@@ -17,10 +17,9 @@ class InsertionMDP(MDP):
         Describe an MDP with a particular lanes and vehicle configuration, and a specific reward function.
     """
     VELOCITY_REWARD = 1.0
-    RIGHT_LANE_REWARD = 1.0
-    INSERTION_LANE_COST = 10
-    ACCELERATION_COST = 0*3.0
-    LANE_CHANGE_COST = 0*3.0
+    RIGHT_LANE_REWARD = 0.0
+    ACCELERATION_COST = 0
+    LANE_CHANGE_COST = 0
 
     def __init__(self):
         self.road = InsertionMDP.make_road()
@@ -36,8 +35,9 @@ class InsertionMDP(MDP):
         action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: -self.ACCELERATION_COST, 4: -self.ACCELERATION_COST}
         reward = -RoadMDP.COLLISION_COST * self.ego_vehicle.crashed \
             + self.RIGHT_LANE_REWARD * (self.ego_vehicle.lane_index == len(self.road.lanes)-2) \
-            - self.INSERTION_LANE_COST * (self.ego_vehicle.lane_index == len(self.road.lanes)-1) \
             + self.VELOCITY_REWARD * self.ego_vehicle.velocity_index
+
+        reward += 0.1*self.inserting_v.velocity
         return reward + action_reward[action]
 
     @classmethod
@@ -56,11 +56,13 @@ class InsertionMDP(MDP):
         l0 = StraightLane(np.array([0, 0]), 0, 4.0, [LineType.CONTINUOUS, LineType.NONE])
         l1 = StraightLane(np.array([0, 4]), 0, 4.0, [LineType.STRIPED, LineType.CONTINUOUS])
 
-        lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0, [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[-np.inf, ends[0]])
+        lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0,
+                           [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[-np.inf, ends[0]], forbidden=True)
         amplitude = 3.3
         lc1 = SineLane(lc0.position(ends[0], -amplitude), 0, 4.0, amplitude, 2 * np.pi / (2*ends[1]), np.pi / 2,
-                       [LineType.STRIPED, LineType.STRIPED], bounds=[0, ends[1]])
-        lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0, [LineType.NONE, LineType.CONTINUOUS], bounds=[0, ends[2]])
+                       [LineType.STRIPED, LineType.STRIPED], bounds=[0, ends[1]], forbidden=True)
+        lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0,
+                           [LineType.NONE, LineType.CONTINUOUS], bounds=[0, ends[2]], forbidden=True)
         l2 = LanesConcatenation([lc0, lc1, lc2])
         road = Road([l1, l2])
         road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
@@ -68,26 +70,22 @@ class InsertionMDP(MDP):
 
     @staticmethod
     def make_vehicles(road):
-        ego_vehicle = MDPVehicle(road, road.lanes[-2].position(0, 0), velocity=30)
+        ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
         road.vehicles.append(ego_vehicle)
-        # road.vehicles.append(ControlledVehicle(road, road.lanes[1].position(30, 0), velocity=30))
-        # road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(30, 0), velocity=30))
-        # road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(0, 0), velocity=30))
-        # road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(-30, 0), velocity=30))
 
-        # road.vehicles.append(IDMVehicle(road, road.lanes[2].position(10, 0), velocity=10))
+        road.vehicles.append(ControlledVehicle(road, road.lanes[-2].position(20, 0), velocity=30))
         inserting_v = IDMVehicle(road, road.lanes[-1].position(60, 0), velocity=20)
-        inserting_v.target_velocity = 30
+        inserting_v.target_velocity = 28
         road.vehicles.append(inserting_v)
-        # road.vehicles.append(IDMVehicle(road, road.lanes[2].position(50, 0), velocity=10))
         return ego_vehicle, inserting_v
 
 
 def run():
+    np.random.seed(1)
     mdp = InsertionMDP()
     sim = Simulation(mdp.road)
     sim.vehicle = mdp.ego_vehicle
-    sim.agent = MCTSAgent(mdp, iterations=100)
+    sim.agent = MCTSAgent(mdp, prior_policy=MCTSAgent.fast_policy, rollout_policy=MCTSAgent.idle_policy, iterations=50)
     sim.RECORD_VIDEO = False
     sim.road_surface.centering_position = 0.5
 

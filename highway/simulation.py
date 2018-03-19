@@ -95,7 +95,8 @@ class Simulation:
                                                               RoadMDP.MAX_ACTION_DURATION,
                                                               self.TRAJECTORY_TIMESTEP,
                                                               self.dt)
-            self.vehicle.act(actions[0])
+            if actions:
+                self.vehicle.act(actions[0])
 
     def step(self):
         if not self.pause:

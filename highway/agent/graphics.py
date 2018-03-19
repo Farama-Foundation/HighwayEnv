@@ -25,8 +25,6 @@ class AgentGraphics(object):
             TTCVIGraphics.display(agent, surface)
         elif isinstance(agent, MCTSAgent):
             MCTSGraphics.display(agent, surface)
-        else:
-            raise NotImplementedError()
 
 
 class MCTSGraphics(object):
