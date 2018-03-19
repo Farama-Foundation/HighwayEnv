@@ -82,7 +82,7 @@ class Node(object):
             return self.value
 
         if temperature is None:
-            temperature = 30*5
+            temperature = 100*5
 
         # return self.value + temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
         return self.value + temperature*self.prior/(self.count+1)

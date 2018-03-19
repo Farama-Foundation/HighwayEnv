@@ -2,6 +2,7 @@ from __future__ import division, print_function
 import numpy as np
 
 from highway.agent.mcts import MCTSAgent
+from highway.agent.single_trajectory import SingleTrajectoryAgent
 from highway.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
 from highway.road.road import Road
 from highway.mdp.abstract import MDP
@@ -16,10 +17,11 @@ class InsertionMDP(MDP):
     """
         Describe an MDP with a particular lanes and vehicle configuration, and a specific reward function.
     """
-    VELOCITY_REWARD = 1.0
-    RIGHT_LANE_REWARD = 0.0
+    VELOCITY_REWARD = 1.5
+    INSERTING_VELOCITY_REWARD = 0*2.0/20.0
+    RIGHT_LANE_REWARD = 0.5
     ACCELERATION_COST = 0
-    LANE_CHANGE_COST = 0
+    LANE_CHANGE_COST = 1.0
 
     def __init__(self):
         self.road = InsertionMDP.make_road()
@@ -34,10 +36,10 @@ class InsertionMDP(MDP):
     def reward(self, action):
         action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: -self.ACCELERATION_COST, 4: -self.ACCELERATION_COST}
         reward = -RoadMDP.COLLISION_COST * self.ego_vehicle.crashed \
-            + self.RIGHT_LANE_REWARD * (self.ego_vehicle.lane_index == len(self.road.lanes)-2) \
+            + self.RIGHT_LANE_REWARD * self.ego_vehicle.lane_index \
             + self.VELOCITY_REWARD * self.ego_vehicle.velocity_index
 
-        reward += 0.1*self.inserting_v.velocity
+        reward += self.INSERTING_VELOCITY_REWARD*self.inserting_v.velocity
         return reward + action_reward[action]
 
     @classmethod
@@ -64,7 +66,7 @@ class InsertionMDP(MDP):
         lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0,
                            [LineType.NONE, LineType.CONTINUOUS], bounds=[0, ends[2]], forbidden=True)
         l2 = LanesConcatenation([lc0, lc1, lc2])
-        road = Road([l1, l2])
+        road = Road([l0, l1, l2])
         road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
         return road
 
@@ -73,9 +75,14 @@ class InsertionMDP(MDP):
         ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
         road.vehicles.append(ego_vehicle)
 
-        road.vehicles.append(ControlledVehicle(road, road.lanes[-2].position(20, 0), velocity=30))
+        # road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(20, 0), velocity=30))
+        road.vehicles.append(ControlledVehicle(road, road.lanes[1].position(35, 0), velocity=30))
+        road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(-65, 0), velocity=31.5))
+
+        IDMVehicle.TIME_WANTED = 1.0
+        IDMVehicle.POLITENESS = 0.0
         inserting_v = IDMVehicle(road, road.lanes[-1].position(60, 0), velocity=20)
-        inserting_v.target_velocity = 28
+        inserting_v.target_velocity = 30
         road.vehicles.append(inserting_v)
         return ego_vehicle, inserting_v
 
@@ -85,9 +92,9 @@ def run():
     mdp = InsertionMDP()
     sim = Simulation(mdp.road)
     sim.vehicle = mdp.ego_vehicle
-    sim.agent = MCTSAgent(mdp, prior_policy=MCTSAgent.fast_policy, rollout_policy=MCTSAgent.idle_policy, iterations=50)
-    sim.RECORD_VIDEO = False
-    sim.road_surface.centering_position = 0.5
+    sim.agent = MCTSAgent(mdp, prior_policy=MCTSAgent.fast_policy, rollout_policy=MCTSAgent.idle_policy, iterations=150)
+    # sim.agent = SingleTrajectoryAgent(['IDLE', 'FASTER', 'SLOWER'], 'IDLE')
+    sim.RECORD_VIDEO = True
 
     while not sim.done:
         sim.handle_events()
@@ -106,6 +113,7 @@ def run():
                                                               sim.dt)
             sim.vehicle.act(actions[0])
             print("reward", mdp.reward(mdp.road_mdp.ACTIONS_INDEXES[actions[0]]))
+            print("inserting velocity", mdp.inserting_v.velocity)
 
         sim.step()
         sim.display()
