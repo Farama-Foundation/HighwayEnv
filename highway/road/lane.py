@@ -86,7 +86,7 @@ class StraightLane(AbstractLane):
     """
         A lane going in straight line.
     """
-    def __init__(self, origin, heading, width, line_types=None, bounds=None):
+    def __init__(self, origin, heading, width, line_types=None, bounds=None, forbidden=False):
         """
             New straight lane.
 
@@ -95,6 +95,7 @@ class StraightLane(AbstractLane):
         :param width: the lane width [m]
         :param line_types: the type of lines on both sides of the lane
         :param bounds: longitudinal coordinates of the lane start and end [m]
+        :param forbidden: is changing to this lane forbidden
         """
         super(StraightLane, self).__init__()
         self.bounds = bounds or [-np.inf, np.inf]
@@ -104,6 +105,7 @@ class StraightLane(AbstractLane):
         self.line_types = line_types or [LineType.STRIPED, LineType.STRIPED]
         self.direction = np.array([np.cos(self.heading), np.sin(self.heading)])
         self.direction_lateral = np.array([-self.direction[1], self.direction[0]])
+        self.forbidden = forbidden
 
     def position(self, longitudinal, lateral):
         return self.origin + longitudinal * self.direction + lateral * self.direction_lateral
@@ -128,6 +130,8 @@ class StraightLane(AbstractLane):
         return is_on
 
     def is_reachable_from(self, position):
+        if self.forbidden:
+            return False
         longitudinal, lateral = self.local_coordinates(position)
         is_close = np.abs(lateral) <= 2 * self.width_at(longitudinal) and self.bounds[0] <= longitudinal < self.bounds[
             1]
@@ -139,7 +143,8 @@ class SineLane(StraightLane):
         A sinusoidal lane
     """
 
-    def __init__(self, origin, heading, width, amplitude, pulsation, phase, line_types=None, bounds=None):
+    def __init__(self, origin, heading, width, amplitude, pulsation, phase,
+                 line_types=None, bounds=None, forbidden=False):
         """
             New sinusoidal lane.
 
@@ -149,10 +154,8 @@ class SineLane(StraightLane):
         :param amplitude: the lane oscillation amplitude [m]
         :param pulsation: the lane pulsation [rad/m]
         :param phase: the lane initial phase [rad]
-        :param line_types: the type of lines on both sides of the lane
-        :param bounds: longitudinal coordinates of the lane start and end [m]
         """
-        super(SineLane, self).__init__(origin, heading, width, line_types, bounds)
+        super(SineLane, self).__init__(origin, heading, width, line_types, bounds, forbidden)
         self.amplitude = amplitude
         self.pulsation = pulsation
         self.phase = phase
