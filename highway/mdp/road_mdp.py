@@ -57,9 +57,12 @@ class RoadMDP(MDP):
         :return: the list of available actions
         """
         actions = [self.ACTIONS_INDEXES['IDLE']]
-        if self.ego_vehicle.lane_index > 0:
+        li = self.ego_vehicle.lane_index
+        if li > 0 \
+                and self.ego_vehicle.road.lanes[li-1].is_reachable_from(self.ego_vehicle.position):
             actions.append(self.ACTIONS_INDEXES['LANE_LEFT'])
-        if self.ego_vehicle.lane_index < len(self.ego_vehicle.road.lanes) - 1:
+        if li < len(self.ego_vehicle.road.lanes) - 1 \
+                and self.ego_vehicle.road.lanes[li+1].is_reachable_from(self.ego_vehicle.position):
             actions.append(self.ACTIONS_INDEXES['LANE_RIGHT'])
         if self.ego_vehicle.velocity_index < self.ego_vehicle.SPEED_COUNT - 1:
             actions.append(self.ACTIONS_INDEXES['FASTER'])
