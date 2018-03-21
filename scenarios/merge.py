@@ -13,19 +13,19 @@ from highway.vehicle.control import ControlledVehicle, MDPVehicle
 from highway.vehicle.dynamics import Obstacle
 
 
-class InsertionMDP(MDP):
+class MergeMDP(MDP):
     """
         Describe an MDP with a particular lanes and vehicle configuration, and a specific reward function.
     """
     VELOCITY_REWARD = 1.5
-    INSERTING_VELOCITY_REWARD = 0*2.0/20.0
+    MERGING_VELOCITY_REWARD = 0 * 2.0 / 20.0
     RIGHT_LANE_REWARD = 0.5
     ACCELERATION_COST = 0
     LANE_CHANGE_COST = 1.0
 
     def __init__(self):
-        self.road = InsertionMDP.make_road()
-        self.ego_vehicle, self.inserting_v = InsertionMDP.make_vehicles(self.road)
+        self.road = MergeMDP.make_road()
+        self.ego_vehicle, self.merging_v = MergeMDP.make_vehicles(self.road)
         self.road_mdp = RoadMDP(self.ego_vehicle)
         self.ACTIONS = self.road_mdp.ACTIONS
 
@@ -39,7 +39,7 @@ class InsertionMDP(MDP):
             + self.RIGHT_LANE_REWARD * self.ego_vehicle.lane_index \
             + self.VELOCITY_REWARD * self.ego_vehicle.velocity_index
 
-        reward += self.INSERTING_VELOCITY_REWARD*self.inserting_v.velocity
+        reward += self.MERGING_VELOCITY_REWARD * self.merging_v.velocity
         return reward + action_reward[action]
 
     @classmethod
@@ -81,15 +81,15 @@ class InsertionMDP(MDP):
 
         IDMVehicle.TIME_WANTED = 1.0
         IDMVehicle.POLITENESS = 0.0
-        inserting_v = IDMVehicle(road, road.lanes[-1].position(60, 0), velocity=20)
-        inserting_v.target_velocity = 30
-        road.vehicles.append(inserting_v)
-        return ego_vehicle, inserting_v
+        merging_v = IDMVehicle(road, road.lanes[-1].position(60, 0), velocity=20)
+        merging_v.target_velocity = 30
+        road.vehicles.append(merging_v)
+        return ego_vehicle, merging_v
 
 
 def run():
     np.random.seed(1)
-    mdp = InsertionMDP()
+    mdp = MergeMDP()
     sim = Simulation(mdp.road)
     sim.vehicle = mdp.ego_vehicle
     sim.agent = MCTSAgent(mdp, prior_policy=MCTSAgent.fast_policy, rollout_policy=MCTSAgent.idle_policy, iterations=150)
@@ -112,8 +112,6 @@ def run():
                                                               sim.TRAJECTORY_TIMESTEP,
                                                               sim.dt)
             sim.vehicle.act(actions[0])
-            print("reward", mdp.reward(mdp.road_mdp.ACTIONS_INDEXES[actions[0]]))
-            print("inserting velocity", mdp.inserting_v.velocity)
 
         sim.step()
         sim.display()
