@@ -33,6 +33,19 @@ class ControlledVehicle(Vehicle):
         self.target_lane_index = target_lane_index or self.lane_index
         self.target_velocity = target_velocity or self.velocity
 
+    @classmethod
+    def create_from(cls, vehicle):
+        """
+            Create a new vehicle from an existing one.
+            The vehicle dynamics and target dynamics are copied, other properties are default.
+
+        :param vehicle: a vehicle
+        :return: a new vehicle at the same dynamical state
+        """
+        v = cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity,
+                vehicle.target_lane_index, vehicle.target_velocity)
+        return v
+
     def act(self, action=None):
         """
             Perform a high-level action to change the desired lane or velocity.

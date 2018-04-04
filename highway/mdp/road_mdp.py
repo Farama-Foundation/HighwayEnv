@@ -101,6 +101,19 @@ class RoadMDP(MDP):
         ev.road.vehicles = close_vehicles
         return state_copy
 
+    def change_agents_to(self, agent_type):
+        """
+            Change the type of all agents on the road
+        :param agent_type: The new type of agents
+        :return: a new RoadMDP with modified agents type
+        """
+        state_copy = copy.deepcopy(self)
+        vehicles = state_copy.ego_vehicle.road.vehicles
+        for i, v in enumerate(vehicles):
+            if v is not state_copy.ego_vehicle:
+                vehicles[i] = agent_type.create_from(v)
+        return state_copy
+
     def is_terminal(self):
         """
         :return: Whether the current state is a terminal state
