@@ -9,7 +9,6 @@
 
 # Sphinx documentation
 _build
-docs
 
 # Editor files
 .idea/*
