@@ -54,6 +54,18 @@ class Vehicle(Loggable):
         v = cls(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity)
         return v
 
+    @classmethod
+    def create_from(cls, vehicle):
+        """
+            Create a new vehicle from an existing one.
+            Only the vehicle dynamics are copied, other properties are default.
+
+        :param vehicle: a vehicle
+        :return: a new vehicle at the same dynamical state
+        """
+        v = cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity)
+        return v
+
     def act(self, action=None):
         """
             Store an action to be repeated.
