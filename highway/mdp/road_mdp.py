@@ -9,8 +9,6 @@ class RoadMDP(MDP):
         A MDP representing the times to collision between the ego-vehicle and
         other vehicles on the road.
     """
-    ACTION_TIMESTEP = 1/30
-    MAX_ACTION_DURATION = 1.0
 
     ACTIONS = {0: 'LANE_LEFT',
                1: 'IDLE',
@@ -26,17 +24,19 @@ class RoadMDP(MDP):
 
     SAFE_DISTANCE = 150
 
-    def __init__(self, ego_vehicle):
+    def __init__(self, ego_vehicle, action_timestep=1/30, action_duration=1.0):
         self.ego_vehicle = ego_vehicle
+        self.action_timestep = action_timestep
+        self.action_duration = action_duration
 
     def step(self, action):
         # Send order to low-level agent
         self.ego_vehicle.act(self.ACTIONS[action])
 
         # Inner high-frequency loop
-        for k in range(int(self.MAX_ACTION_DURATION / self.ACTION_TIMESTEP)):
+        for k in range(int(self.action_duration / self.action_timestep)):
             self.ego_vehicle.road.act()
-            self.ego_vehicle.road.step(self.ACTION_TIMESTEP)
+            self.ego_vehicle.road.step(self.action_timestep)
 
         return self.reward(action)
 

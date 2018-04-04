@@ -19,11 +19,11 @@ class Simulation:
     SCREEN_WIDTH = 1200
     SCREEN_HEIGHT = 800
     FPS = 30
-    REAL_TIME_RATIO = 1
     POLICY_FREQUENCY = 1
     TRAJECTORY_TIMESTEP = 0.35
 
     RECORD_VIDEO = True
+    VIDEO_SPEED = 2
     MAXIMUM_VIDEO_LENGTH = 5*60*FPS
     OUT_FOLDER = 'out'
     TMP_FOLDER = os.path.join(OUT_FOLDER, 'tmp')
@@ -39,7 +39,7 @@ class Simulation:
 
         self.t = 0
         self.frame_count = 0
-        self.dt = self.REAL_TIME_RATIO / self.FPS
+        self.dt = 1 / self.FPS
         self.done = False
         self.pause = False
         self.trajectory = None
@@ -88,11 +88,12 @@ class Simulation:
         self.road.act()
 
         # Planning for ego-vehicle
-        policy_call = self.t % (self.FPS // (self.REAL_TIME_RATIO*self.POLICY_FREQUENCY)) == 0
+        policy_call = self.t % (self.FPS // self.POLICY_FREQUENCY) == 0
         if self.agent and policy_call:
-            actions = self.agent.plan(RoadMDP(self.vehicle).simplified())
+            mdp = RoadMDP(self.vehicle, action_timestep=1/self.FPS, action_duration=1/self.POLICY_FREQUENCY).simplified()
+            actions = self.agent.plan(mdp)
             self.trajectory = self.vehicle.predict_trajectory(actions,
-                                                              RoadMDP.MAX_ACTION_DURATION,
+                                                              1/self.POLICY_FREQUENCY,
                                                               self.TRAJECTORY_TIMESTEP,
                                                               self.dt)
             if actions:
@@ -124,7 +125,7 @@ class Simulation:
         pygame.display.flip()
 
         if self.RECORD_VIDEO and not self.pause:
-            pygame.image.save(self.screen, "{}/{}_{}.bmp".format(self.TMP_FOLDER, self.video_name, self.frame_count))
+            pygame.image.save(self.screen, "{}/{}_{:04d}.bmp".format(self.TMP_FOLDER, self.video_name, self.frame_count))
             self.frame_count += 1
             if self.t > self.MAXIMUM_VIDEO_LENGTH \
                     or (self.vehicle.crashed and self.vehicle.velocity < 1) \
@@ -146,8 +147,8 @@ class Simulation:
         if self.displayed:
             pygame.quit()
             if self.RECORD_VIDEO:
-                os.system("ffmpeg -r 60 -i {0}/{2}_%d.bmp -vcodec libx264 -crf 25 {1}/{2}.avi"
-                          .format(self.TMP_FOLDER, self.OUT_FOLDER, self.video_name))
+                os.system("ffmpeg -r {3} -i {0}/{2}_%04d.bmp -vcodec libx264 -crf 25 {1}/{2}.avi"
+                          .format(self.TMP_FOLDER, self.OUT_FOLDER, self.video_name, self.FPS*self.VIDEO_SPEED))
                 self.clear_video_dir()
 
 
