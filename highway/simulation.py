@@ -149,6 +149,9 @@ class Simulation:
             if self.RECORD_VIDEO:
                 os.system("ffmpeg -r {3} -i {0}/{2}_%04d.bmp -vcodec libx264 -crf 25 {1}/{2}.avi"
                           .format(self.TMP_FOLDER, self.OUT_FOLDER, self.video_name, self.FPS*self.VIDEO_SPEED))
+                delay = int(np.round(100/(self.VIDEO_SPEED*self.FPS)))
+                os.system("convert -delay {3} -loop 0 {0}/{2}*.bmp {1}/{2}.gif"
+                          .format(self.TMP_FOLDER, self.OUT_FOLDER, self.video_name, delay))
                 self.clear_video_dir()
 
 
