@@ -51,7 +51,6 @@ class MCTSGraphics(object):
         text = font.render('-'.join(map(str, actions)), 1, (10, 10, 10), (255, 255, 255))
         surface.blit(text, (5, surface.get_height()-15))
 
-
     @classmethod
     def display_node(cls, node, surface, origin, size, depth=0,
                      selected=False,
@@ -97,7 +96,7 @@ class MCTSGraphics(object):
 
         if display_text and depth < 3:
             font = pygame.font.Font(None, 15)
-            text = font.render("{:.1f} / {:.1f} / {}".format(node.value, node.selection_strategy(), node.count),
+            text = font.render("{:.1f} / {:.1f} / {} / {:.2f}".format(node.value, node.selection_strategy(), node.count, node.prior),
                                1, (10, 10, 10), (255, 255, 255))
             surface.blit(text, (origin[0]+2, origin[1]+2))
 
