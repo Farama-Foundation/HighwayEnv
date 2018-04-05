@@ -230,10 +230,10 @@ class IDMVehicle(ControlledVehicle):
 
 
 class LinearVehicle(IDMVehicle):
-    ALPHA = 0.5
-    BETA_FRONT = 1.0
+    ALPHA = 0.3
+    BETA_FRONT = 0.2
     BETA_REAR = 0.0
-    GAMMA_FRONT = 5.0
+    GAMMA_FRONT = 0.7
     GAMMA_REAR = 0.0
     TIME_WANTED = 2.0
 
