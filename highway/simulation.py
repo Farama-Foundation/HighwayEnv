@@ -16,9 +16,9 @@ from highway.vehicle.graphics import VehicleGraphics
 
 
 class Simulation:
-    SCREEN_WIDTH = 1200
-    SCREEN_HEIGHT = 800
-    FPS = 30
+    SCREEN_WIDTH = 600
+    SCREEN_HEIGHT = 150
+    FPS = 15
     POLICY_FREQUENCY = 1
     TRAJECTORY_TIMESTEP = 0.35
     DISPLAY_AGENT = True
@@ -52,13 +52,13 @@ class Simulation:
         if self.displayed:
             pygame.init()
             pygame.display.set_caption("Highway")
-            size = [self.SCREEN_WIDTH, self.SCREEN_HEIGHT]
             if self.DISPLAY_AGENT:
+                self.SCREEN_HEIGHT *= 2
                 panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT/2)
                 self.agent_surface = pygame.Surface(panel_size)
             else:
                 panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-            self.screen = pygame.display.set_mode(size)
+            self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
             self.road_surface = WindowSurface(panel_size, 0, pygame.Surface(panel_size))
             self.clock = pygame.time.Clock()
 
