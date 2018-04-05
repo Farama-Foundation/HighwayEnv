@@ -2,6 +2,7 @@ from __future__ import division, print_function
 import copy
 
 from highway.mdp.abstract import MDP
+from highway.vehicle.dynamics import Obstacle
 
 
 class RoadMDP(MDP):
@@ -110,7 +111,7 @@ class RoadMDP(MDP):
         state_copy = copy.deepcopy(self)
         vehicles = state_copy.ego_vehicle.road.vehicles
         for i, v in enumerate(vehicles):
-            if v is not state_copy.ego_vehicle:
+            if v is not state_copy.ego_vehicle and not isinstance(v, Obstacle):
                 vehicles[i] = agent_type.create_from(v)
         return state_copy
 

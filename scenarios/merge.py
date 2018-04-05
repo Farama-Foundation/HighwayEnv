@@ -1,5 +1,6 @@
 from __future__ import division, print_function
 import numpy as np
+import copy
 
 from highway.agent.mcts import MCTSAgent
 from highway.agent.single_trajectory import SingleTrajectoryAgent
@@ -24,9 +25,9 @@ class MergeMDP(MDP):
     LANE_CHANGE_COST = 1.0
 
     def __init__(self):
-        self.road = MergeMDP.make_road()
-        self.ego_vehicle, self.merging_v = MergeMDP.make_vehicles(self.road)
-        self.road_mdp = RoadMDP(self.ego_vehicle)
+        road = MergeMDP.make_road()
+        ego_vehicle = MergeMDP.make_vehicles(road)
+        self.road_mdp = RoadMDP(ego_vehicle)
         self.ACTIONS = self.road_mdp.ACTIONS
 
     def step(self, action):
@@ -35,11 +36,14 @@ class MergeMDP(MDP):
 
     def reward(self, action):
         action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: -self.ACCELERATION_COST, 4: -self.ACCELERATION_COST}
-        reward = -RoadMDP.COLLISION_COST * self.ego_vehicle.crashed \
-            + self.RIGHT_LANE_REWARD * self.ego_vehicle.lane_index \
-            + self.VELOCITY_REWARD * self.ego_vehicle.velocity_index
+        reward = -RoadMDP.COLLISION_COST * self.road_mdp.ego_vehicle.crashed \
+            + self.RIGHT_LANE_REWARD * self.road_mdp.ego_vehicle.lane_index \
+            + self.VELOCITY_REWARD * self.road_mdp.ego_vehicle.velocity_index
 
-        reward += self.MERGING_VELOCITY_REWARD * self.merging_v.velocity
+        road = self.road_mdp.ego_vehicle.road
+        for vehicle in road.vehicles:
+            if vehicle.lane_index == len(road.lanes)-1 and isinstance(vehicle, ControlledVehicle):
+                reward -= self.MERGING_VELOCITY_REWARD * (vehicle.target_velocity - vehicle.velocity)
         return reward + action_reward[action]
 
     @classmethod
@@ -84,16 +88,29 @@ class MergeMDP(MDP):
         merging_v = IDMVehicle(road, road.lanes[-1].position(60, 0), velocity=20)
         merging_v.target_velocity = 30
         road.vehicles.append(merging_v)
-        return ego_vehicle, merging_v
+        return ego_vehicle
+
+    def change_agents_to(self, agent_type):
+        """
+            Change the type of all agents on the road
+        :param agent_type: The new type of agents
+        :return: a new RoadMDP with modified agents type
+        """
+        state_copy = copy.deepcopy(self)
+        state_copy.road_mdp = state_copy.road_mdp.change_agents_to(agent_type)
+        return state_copy
 
 
 def run():
-    np.random.seed(1)
     mdp = MergeMDP()
-    sim = Simulation(mdp.road)
-    sim.vehicle = mdp.ego_vehicle
-    sim.agent = MCTSAgent(mdp, prior_policy=MCTSAgent.fast_policy, rollout_policy=MCTSAgent.idle_policy, iterations=150)
-    # sim.agent = SingleTrajectoryAgent(['IDLE', 'FASTER', 'SLOWER'], 'IDLE')
+    sim = Simulation(mdp.road_mdp.ego_vehicle.road)
+    sim.vehicle = mdp.road_mdp.ego_vehicle
+    sim.agent = MCTSAgent(mdp,
+                          prior_policy=MCTSAgent.fast_policy,
+                          rollout_policy=MCTSAgent.idle_policy,
+                          iterations=100,
+                          assume_vehicle_type=LinearVehicle)
+    # sim.agent = SingleTrajectoryAgent(['LANE_LEFT'], 'IDLE')
     sim.RECORD_VIDEO = True
 
     while not sim.done:
@@ -103,15 +120,20 @@ def run():
         sim.road.act()
 
         # Planning for ego-vehicle
-        policy_call = sim.t % (sim.FPS // (sim.REAL_TIME_RATIO * sim.POLICY_FREQUENCY)) == 0
+        policy_call = sim.t % (sim.FPS // sim.POLICY_FREQUENCY) == 0
         if sim.agent and policy_call:
             actions = sim.agent.plan(mdp)
-            # sim.display_prediction()
             sim.trajectory = sim.vehicle.predict_trajectory(actions,
-                                                              RoadMDP.MAX_ACTION_DURATION,
-                                                              sim.TRAJECTORY_TIMESTEP,
-                                                              sim.dt)
+                                                            1/sim.POLICY_FREQUENCY,
+                                                            sim.TRAJECTORY_TIMESTEP,
+                                                            sim.dt)
+            print('reward', mdp.reward(RoadMDP.ACTIONS_INDEXES[actions[0]]))
             sim.vehicle.act(actions[0])
+            print('action', actions[0])
+
+        # End of episode
+        if sim.vehicle.position[0] > 400:
+            sim.done = True
 
         sim.step()
         sim.display()
@@ -119,5 +141,5 @@ def run():
 
 
 if __name__ == '__main__':
-    np.random.seed(1)
+    # np.random.seed(3)
     run()
