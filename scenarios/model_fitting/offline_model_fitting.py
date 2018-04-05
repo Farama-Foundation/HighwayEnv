@@ -14,15 +14,16 @@ from highway.vehicle.dynamics import Obstacle
 
 def generate_data(count):
     # Vehicle.COLLISIONS_ENABLED = False
-    vehicle_type = IDMVehicle
+    vehicle_type = LinearVehicle
     road = Road.create_random_road(lanes_count=2, lane_width=4.0, vehicles_count=5, vehicles_type=vehicle_type)
     sim = Simulation(road, ego_vehicle_type=vehicle_type, displayed=True)
     sim.RECORD_VIDEO = False
     road.add_random_vehicles(5, vehicles_type=vehicle_type)
     road.vehicles.append(Obstacle(road, np.array([50., 0])))
     road.vehicles.append(Obstacle(road, np.array([130., 4.])))
-    # for v in road.vehicles:
-    #     v.enable_lane_change = False
+    for v in road.vehicles:
+        v.target_velocity = LinearVehicle.VELOCITY_WANTED
+        #     v.enable_lane_change = False
 
     for _ in range(count):
         sim.handle_events()
@@ -31,28 +32,23 @@ def generate_data(count):
         sim.step()
         sim.display()
     sim.quit()
-    return [v.get_log() for v in road.vehicles]
+    return [v.get_log() for v in road.vehicles if not isinstance(v, Obstacle)]
 
 
 def get_features(data):
     v0 = LinearVehicle.VELOCITY_WANTED
     d_safe = LinearVehicle.DISTANCE_WANTED + data['v'] * LinearVehicle.TIME_WANTED + LinearVehicle.LENGTH
-    return pd.concat([v0 - data['v'],
-                      np.minimum(data['front_v'] - data['v'], 0),
-                      0*np.maximum(data['rear_v'] - data['v'], 0),
-                      np.minimum(data['front_distance'] - d_safe, 0),
-                      np.maximum(d_safe - data['rear_distance'], 0)
-                      ], axis=1)
+
+    velocity = v0 - data['v']
+    front_velocity = np.minimum(data['front_v'] - data['v'], 0)
+    front_distance = np.minimum(data['front_distance'] - d_safe, 0)
+
+    return pd.concat([velocity, front_velocity, front_distance], axis=1).fillna(0)
 
 
 def fit(dump):
     regr = linear_model.LinearRegression()
-    try:
-        data = dump[dump['front_distance'].notnull()
-                    & dump['rear_distance'].notnull()].reset_index(drop=True)
-    except KeyError:
-        return None, None
-
+    data = dump
     X = get_features(data)
     y = data['acceleration']
 
@@ -97,6 +93,7 @@ def main():
     print('Generation done.')
     yy = np.array([])
     yyp = np.array([])
+    dumps = [pd.concat(dumps)]
     for d in dumps:
         y, y_pred = fit(d)
         if y is not None:
