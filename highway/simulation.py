@@ -21,6 +21,7 @@ class Simulation:
     FPS = 30
     POLICY_FREQUENCY = 1
     TRAJECTORY_TIMESTEP = 0.35
+    DISPLAY_AGENT = True
 
     RECORD_VIDEO = True
     VIDEO_SPEED = 2
@@ -52,10 +53,13 @@ class Simulation:
             pygame.init()
             pygame.display.set_caption("Highway")
             size = [self.SCREEN_WIDTH, self.SCREEN_HEIGHT]
-            panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2)
+            if self.DISPLAY_AGENT:
+                panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT/2)
+                self.agent_surface = pygame.Surface(panel_size)
+            else:
+                panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
             self.screen = pygame.display.set_mode(size)
             self.road_surface = WindowSurface(panel_size, 0, pygame.Surface(panel_size))
-            self.value_surface = pygame.Surface(panel_size)
             self.clock = pygame.time.Clock()
 
             if self.RECORD_VIDEO:
@@ -118,9 +122,9 @@ class Simulation:
         RoadGraphics.display_traffic(self.road, self.road_surface)
         self.screen.blit(self.road_surface, (0, 0))
 
-        if self.agent:
-            AgentGraphics.display(self.agent, self.value_surface)
-            self.screen.blit(self.value_surface, (0, self.SCREEN_HEIGHT / 2))
+        if self.DISPLAY_AGENT and self.agent:
+            AgentGraphics.display(self.agent, self.agent_surface)
+            self.screen.blit(self.agent_surface, (0, self.SCREEN_HEIGHT / 2))
         self.clock.tick(self.FPS)
         pygame.display.flip()
 
