@@ -9,7 +9,7 @@ from highway.road.road import Road
 from highway.mdp.abstract import MDP
 from highway.mdp.road_mdp import RoadMDP
 from highway.simulation import Simulation
-from highway.vehicle.behavior import IDMVehicle
+from highway.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway.vehicle.control import ControlledVehicle, MDPVehicle
 from highway.vehicle.dynamics import Obstacle
 
@@ -18,11 +18,11 @@ class MergeMDP(MDP):
     """
         Describe an MDP with a particular lanes and vehicle configuration, and a specific reward function.
     """
-    VELOCITY_REWARD = 1.5
-    MERGING_VELOCITY_REWARD = 0 * 2.0 / 20.0
+    VELOCITY_REWARD = 1.0
+    MERGING_VELOCITY_REWARD = 2.0 / 20.0
     RIGHT_LANE_REWARD = 0.5
     ACCELERATION_COST = 0
-    LANE_CHANGE_COST = 1.0
+    LANE_CHANGE_COST = 0*1.0
 
     def __init__(self):
         road = MergeMDP.make_road()
@@ -79,13 +79,13 @@ class MergeMDP(MDP):
         ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
         road.vehicles.append(ego_vehicle)
 
-        # road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(20, 0), velocity=30))
-        road.vehicles.append(ControlledVehicle(road, road.lanes[1].position(35, 0), velocity=30))
-        road.vehicles.append(ControlledVehicle(road, road.lanes[0].position(-65, 0), velocity=31.5))
+        road.vehicles.append(IDMVehicle(road, road.lanes[0].position(20, 0), velocity=30))
+        road.vehicles.append(IDMVehicle(road, road.lanes[1].position(35, 0), velocity=30))
+        road.vehicles.append(IDMVehicle(road, road.lanes[0].position(-65, 0), velocity=31.5))
 
         IDMVehicle.TIME_WANTED = 1.0
         IDMVehicle.POLITENESS = 0.0
-        merging_v = IDMVehicle(road, road.lanes[-1].position(60, 0), velocity=20)
+        merging_v = IDMVehicle(road, road.lanes[-1].position(70, 0), velocity=20)
         merging_v.target_velocity = 30
         road.vehicles.append(merging_v)
         return ego_vehicle
