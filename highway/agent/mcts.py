@@ -82,20 +82,24 @@ class Node(object):
             return self.value
 
         if temperature is None:
-            temperature = 100*5
+            temperature = 30*5
 
         # return self.value + temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
         return self.value + temperature*self.prior/(self.count+1)
 
-    def convert_visits_to_prior_in_branch(self):
+    def convert_visits_to_prior_in_branch(self, regularization=0.2):
         """
             For any node in the subtree, convert the distribution of all children visit counts to prior
             probabilities, and reset the visit counts.
+
+        :param regularization: in [0, 1], used to add some probability mass to all children.
+                               when 0, the prior is a Boltzmann distribution of visit counts
+                               when 1, the prior is a uniform distribution
         """
         self.count = 1
         total_count = sum([(child.count+1) for child in self.children.values()])
         for child in self.children.values():
-            child.prior = (child.count+1)/total_count
+            child.prior = regularization*(child.count+1)/total_count + regularization/len(self.children)
             child.convert_visits_to_prior_in_branch()
 
     def __str__(self, level=0):
@@ -202,7 +206,7 @@ class MCTS(object):
 
         :param action: the chosen action from the root node
         """
-        self.step_by_reset()
+        self.step_by_prior(action)
 
     def step_by_reset(self):
         """
