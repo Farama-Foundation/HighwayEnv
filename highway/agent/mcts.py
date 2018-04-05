@@ -82,12 +82,12 @@ class Node(object):
             return self.value
 
         if temperature is None:
-            temperature = 30*5
+            temperature = 40*5
 
         # return self.value + temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
         return self.value + temperature*self.prior/(self.count+1)
 
-    def convert_visits_to_prior_in_branch(self, regularization=0.2):
+    def convert_visits_to_prior_in_branch(self, regularization=0.5):
         """
             For any node in the subtree, convert the distribution of all children visit counts to prior
             probabilities, and reset the visit counts.
@@ -96,7 +96,7 @@ class Node(object):
                                when 0, the prior is a Boltzmann distribution of visit counts
                                when 1, the prior is a uniform distribution
         """
-        self.count = 1
+        self.count = 0
         total_count = sum([(child.count+1) for child in self.children.values()])
         for child in self.children.values():
             child.prior = regularization*(child.count+1)/total_count + regularization/len(self.children)
@@ -242,15 +242,19 @@ class MCTSAgent(AbstractAgent):
     """
         An agent that uses Monte Carlo Tree Search to plan a sequence of action in an MDP.
     """
-    def __init__(self, state=None, prior_policy=None, rollout_policy=None, iterations=100):
+    def __init__(self, state=None, prior_policy=None, rollout_policy=None, iterations=75, assume_vehicle_type=None):
         """
             A new MCTS agent.
         :param state: the current MDP state
+        :param prior_policy: The prior distribution over actions given a state
+        :param rollout_policy: The distribution over actions used when evaluating leaves
         :param iterations: the number of MCTS iterations
+        :param assume_vehicle_type: the model used to predict the vehicles behavior. If None, the true model is used.
         """
         prior_policy = prior_policy or MCTSAgent.fast_policy
         rollout_policy = rollout_policy or MCTSAgent.random_available_policy
         self.mcts = MCTS(prior_policy, rollout_policy, iterations=iterations)
+        self.assume_vehicle_type = assume_vehicle_type
         self.previous_action = None
 
     def plan(self, state):
@@ -263,6 +267,9 @@ class MCTSAgent(AbstractAgent):
         :return: the list of MDP action labels
         """
         self.mcts.step(self.previous_action)
+
+        if self.assume_vehicle_type:
+            state = state.change_agents_to(self.assume_vehicle_type)
         actions = self.mcts.plan(state)
         self.previous_action = actions[0]
         return [state.ACTIONS[a] for a in actions]
