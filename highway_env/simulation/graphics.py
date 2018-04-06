@@ -6,9 +6,9 @@ import pygame
 import shutil
 import os
 
-from highway.agent.graphics import AgentGraphics
-from highway.road.graphics import WindowSurface, RoadGraphics
-from highway.vehicle.graphics import VehicleGraphics
+from highway_env.agent.graphics import AgentGraphics
+from highway_env.road.graphics import WindowSurface, RoadGraphics
+from highway_env.vehicle.graphics import VehicleGraphics
 
 
 class SimulationWindow(object):
@@ -103,8 +103,8 @@ class SimulationWindow(object):
                       .format(self.TMP_FOLDER,
                               self.OUT_FOLDER,
                               self.video_name,
-                              self.simulation.SIMULATION_FREQUENCY*self.VIDEO_SPEED))
-            delay = int(np.round(100/(self.VIDEO_SPEED*self.FPS)))
+                              self.VIDEO_SPEED*self.simulation.SIMULATION_FREQUENCY))
+            delay = int(np.round(100/(self.VIDEO_SPEED*self.simulation.SIMULATION_FREQUENCY)))
             os.system("convert -delay {3} -loop 0 {0}/{2}*.bmp {1}/{2}.gif"
                       .format(self.TMP_FOLDER,
                               self.OUT_FOLDER,

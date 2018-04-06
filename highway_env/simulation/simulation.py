@@ -1,9 +1,9 @@
 from __future__ import division, print_function
 import numpy as np
 
-from highway.vehicle.control import MDPVehicle
-from highway.mdp.road_mdp import RoadMDP
-from highway.agent.ttc_vi import TTCVIAgent
+from highway_env.vehicle.control import MDPVehicle
+from highway_env.mdp.road_mdp import RoadMDP
+from highway_env.agent.ttc_vi import TTCVIAgent
 
 
 class Simulation:

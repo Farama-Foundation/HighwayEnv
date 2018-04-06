@@ -5,7 +5,7 @@ from abc import ABCMeta, abstractmethod
 class AbstractAgent(object):
     """
         An abstract class specifying the interface of a generic agent.
-        The agent interacts with an environment that implements the highway.mdp.abstract.MDP interface.
+        The agent interacts with an environment that implements the highway_env.mdp.abstract.MDP interface.
     """
     metaclass__ = ABCMeta
 

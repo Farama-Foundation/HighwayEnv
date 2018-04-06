@@ -1,8 +1,8 @@
 from __future__ import division, print_function
 import copy
 
-from highway.mdp.abstract import MDP
-from highway.vehicle.dynamics import Obstacle
+from highway_env.mdp.abstract import MDP
+from highway_env.vehicle.dynamics import Obstacle
 
 
 class RoadMDP(MDP):

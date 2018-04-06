@@ -1,6 +1,6 @@
 import copy
 
-from highway.agent.abstract import AbstractAgent
+from highway_env.agent.abstract import AbstractAgent
 
 
 class SingleTrajectoryAgent(AbstractAgent):

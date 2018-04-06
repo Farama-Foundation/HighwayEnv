@@ -22,7 +22,7 @@ class Loggable(object):
 
 
 def test():
-    from highway.vehicle.dynamics import Vehicle
+    from highway_env.vehicle.dynamics import Vehicle
     r = None
     v = Vehicle(r, [0, 0], 0, 20)
     v.dump()

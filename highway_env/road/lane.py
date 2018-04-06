@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 from abc import ABCMeta, abstractmethod
 import numpy as np
-from highway.vehicle.dynamics import Vehicle
+from highway_env.vehicle.dynamics import Vehicle
 
 
 class AbstractLane(object):

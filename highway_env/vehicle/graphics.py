@@ -2,9 +2,9 @@ from __future__ import division, print_function
 import numpy as np
 import pygame
 
-from highway.vehicle.dynamics import Vehicle
-from highway.vehicle.control import ControlledVehicle, MDPVehicle
-from highway.vehicle.behavior import IDMVehicle, LinearVehicle
+from highway_env.vehicle.dynamics import Vehicle
+from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
+from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 
 
 class VehicleGraphics(object):

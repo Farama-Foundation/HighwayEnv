@@ -2,16 +2,16 @@ from __future__ import division, print_function
 import numpy as np
 import copy
 
-from highway.agent.mcts import MCTSAgent
-from highway.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
-from highway.road.road import Road
-from highway.mdp.abstract import MDP
-from highway.mdp.road_mdp import RoadMDP
-from highway.simulation.graphics import SimulationWindow
-from highway.simulation.simulation import Simulation
-from highway.vehicle.behavior import IDMVehicle, LinearVehicle
-from highway.vehicle.control import ControlledVehicle, MDPVehicle
-from highway.vehicle.dynamics import Obstacle
+from highway_env.agent.mcts import MCTSAgent
+from highway_env.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
+from highway_env.road.road import Road
+from highway_env.mdp.abstract import MDP
+from highway_env.mdp.road_mdp import RoadMDP
+from highway_env.simulation.graphics import SimulationWindow
+from highway_env.simulation.simulation import Simulation
+from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
+from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
+from highway_env.vehicle.dynamics import Obstacle
 
 
 class MergeMDP(MDP):
