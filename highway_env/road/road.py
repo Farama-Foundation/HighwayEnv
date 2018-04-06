@@ -2,10 +2,10 @@ from __future__ import division, print_function
 import numpy as np
 import pandas as pd
 
-from highway.logger import Loggable
-from highway.road.lane import LineType, StraightLane
-from highway.vehicle.control import ControlledVehicle
-from highway.vehicle.dynamics import Obstacle
+from highway_env.logger import Loggable
+from highway_env.road.lane import LineType, StraightLane
+from highway_env.vehicle.control import ControlledVehicle
+from highway_env.vehicle.dynamics import Obstacle
 
 
 class Road(Loggable):

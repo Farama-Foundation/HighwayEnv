@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
-from highway.agent.abstract import AbstractAgent
-from highway import utils
+from highway_env.agent.abstract import AbstractAgent
+from highway_env import utils
 
 
 class TTCVIAgent(AbstractAgent):

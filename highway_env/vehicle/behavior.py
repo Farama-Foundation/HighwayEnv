@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
-from highway.vehicle.control import ControlledVehicle
-from highway import utils
+from highway_env.vehicle.control import ControlledVehicle
+from highway_env import utils
 
 
 class IDMVehicle(ControlledVehicle):

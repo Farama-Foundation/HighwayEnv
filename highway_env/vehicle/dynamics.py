@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
 import pandas as pd
-from highway.logger import Loggable
+from highway_env.logger import Loggable
 
 
 class Vehicle(Loggable):

@@ -1,9 +1,9 @@
-from highway.agent.mcts import MCTSAgent
-from highway.road.road import Road
-from highway.simulation.graphics import SimulationWindow
-from highway.simulation.simulation import Simulation
-from highway.vehicle.control import MDPVehicle
-from highway.vehicle.behavior import IDMVehicle
+from highway_env.agent.mcts import MCTSAgent
+from highway_env.road.road import Road
+from highway_env.simulation.graphics import SimulationWindow
+from highway_env.simulation.simulation import Simulation
+from highway_env.vehicle.control import MDPVehicle
+from highway_env.vehicle.behavior import IDMVehicle
 
 
 def test(agent_type):

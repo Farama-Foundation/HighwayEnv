@@ -1,10 +1,10 @@
 from __future__ import division, print_function
 import numpy as np
-from highway.road import Road
-from highway.simulation.simulation import Simulation
-from highway.vehicle.control import ControlledVehicle
+from highway_env.road import Road
+from highway_env.simulation.simulation import Simulation
+from highway_env.vehicle.control import ControlledVehicle
 
-from highway.vehicle.behavior import LinearVehicle
+from highway_env.vehicle.behavior import LinearVehicle
 
 
 class LinearEstimator(object):

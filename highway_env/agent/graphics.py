@@ -3,9 +3,9 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 import pygame
 
-from highway.agent.mcts import MCTSAgent
-from highway.agent.ttc_vi import TTCVIAgent
-from highway.mdp.road_mdp import RoadMDP  # TODO: Replace with Generic MDP
+from highway_env.agent.mcts import MCTSAgent
+from highway_env.agent.ttc_vi import TTCVIAgent
+from highway_env.mdp.road_mdp import RoadMDP  # TODO: Replace with Generic MDP
 
 
 class AgentGraphics(object):

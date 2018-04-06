@@ -2,8 +2,8 @@ from __future__ import division, print_function
 import numpy as np
 import pygame
 
-from highway.road.lane import LineType, LanesConcatenation
-from highway.vehicle.graphics import VehicleGraphics
+from highway_env.road.lane import LineType, LanesConcatenation
+from highway_env.vehicle.graphics import VehicleGraphics
 
 
 class LaneGraphics(object):
