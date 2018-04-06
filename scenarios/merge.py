@@ -3,12 +3,12 @@ import numpy as np
 import copy
 
 from highway.agent.mcts import MCTSAgent
-from highway.agent.single_trajectory import SingleTrajectoryAgent
 from highway.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
 from highway.road.road import Road
 from highway.mdp.abstract import MDP
 from highway.mdp.road_mdp import RoadMDP
-from highway.simulation import Simulation
+from highway.simulation.graphics import SimulationWindow
+from highway.simulation.simulation import Simulation
 from highway.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway.vehicle.control import ControlledVehicle, MDPVehicle
 from highway.vehicle.dynamics import Obstacle
@@ -110,34 +110,37 @@ def run():
                           rollout_policy=MCTSAgent.idle_policy,
                           iterations=100,
                           assume_vehicle_type=LinearVehicle)
+    window = SimulationWindow(sim)
     # sim.agent = SingleTrajectoryAgent(['LANE_LEFT'], 'IDLE')
-    sim.RECORD_VIDEO = True
 
-    while not sim.done:
-        sim.handle_events()
+    action = None
+    while not window.done:
+        window.handle_events()
 
         # Default action for all vehicles
         sim.road.act()
 
         # Planning for ego-vehicle
-        policy_call = sim.t % (sim.FPS // sim.POLICY_FREQUENCY) == 0
+        policy_call = sim.t % (sim.SIMULATION_FREQUENCY // sim.POLICY_FREQUENCY) == 0
         if sim.agent and policy_call:
-            actions = sim.agent.plan(mdp)
-            sim.trajectory = sim.vehicle.predict_trajectory(actions,
-                                                            1/sim.POLICY_FREQUENCY,
-                                                            sim.TRAJECTORY_TIMESTEP,
-                                                            sim.dt)
-            print('reward', mdp.reward(RoadMDP.ACTIONS_INDEXES[actions[0]]))
-            sim.vehicle.act(actions[0])
-            print('action', actions[0])
+            if action:
+                print('reward', mdp.reward(RoadMDP.ACTIONS_INDEXES[action]))
+            actions = sim.agent.plan(mdp)  # Here the mdp must be merge mdp and not created on the fly
+            sim.planned_trajectory = sim.vehicle.predict_trajectory(actions,
+                                                                    1 / sim.POLICY_FREQUENCY,
+                                                                    sim.TRAJECTORY_TIMESTEP,
+                                                                    sim.dt)
+            action = actions[0]
+            sim.vehicle.act(action)
+            print('action', action)
 
         # End of episode
         if sim.vehicle.position[0] > 400:
             sim.done = True
 
         sim.step()
-        sim.display()
-    sim.quit()
+        window.display()
+    window.quit()
 
 
 if __name__ == '__main__':
