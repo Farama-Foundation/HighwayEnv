@@ -3,10 +3,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from highway.road.road import Road
-from highway.simulation import Simulation
+from highway.simulation.simulation import Simulation
 
 from sklearn import linear_model
-from sklearn.metrics import mean_squared_error, r2_score
 
 from highway.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway.vehicle.dynamics import Obstacle

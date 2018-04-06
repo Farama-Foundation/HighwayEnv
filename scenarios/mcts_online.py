@@ -1,6 +1,6 @@
 from highway.agent.mcts import MCTSAgent
 from highway.road.road import Road
-from highway.simulation import Simulation
+from highway.simulation.simulation import Simulation
 from highway.vehicle.control import MDPVehicle
 from highway.vehicle.behavior import IDMVehicle
 from highway.vehicle.dynamics import Obstacle
