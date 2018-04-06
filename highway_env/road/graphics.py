@@ -140,7 +140,7 @@ class WindowSurface(pygame.Surface):
         """
         super(WindowSurface, self).__init__(size, flags, surf)
         self.origin = np.array([0, 0])
-        self.scaling = 10.0
+        self.scaling = 6.0
         self.centering_position = 0.3
 
     def pix(self, length):
