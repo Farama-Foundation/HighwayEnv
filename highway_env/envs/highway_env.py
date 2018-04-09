@@ -1,54 +1,41 @@
-import gym
-from gym import error, spaces, utils
-from gym.utils import seeding
-import numpy as np
+from __future__ import division, print_function
 
-from highway_env.mdp.road_mdp import RoadMDP
+from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.road import Road
-from highway_env.simulation.graphics import SimulationWindow
-from highway_env.simulation.simulation import Simulation
 from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import MDPVehicle
 
 
-class HighwayEnv(gym.Env):
+class HighwayEnv(AbstractEnv):
     metadata = {'render.modes': ['human']}
+
+    COLLISION_COST = 10
+    LANE_CHANGE_COST = 0.0
+    RIGHT_LANE_REWARD = 0.5
+    HIGH_VELOCITY_REWARD = 1.0
 
     def __init__(self):
         road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=20, vehicles_type=IDMVehicle)
-        self.sim = Simulation(road, ego_vehicle_type=MDPVehicle, agent_type=None)
-        self.viewer = None
-        self.observation_space = spaces.Box(low=-1, high=1, shape=(1, 1), dtype=np.float32)
-        self.action_space = spaces.Discrete(5)
+        vehicle = MDPVehicle.create_random(road, 25)
+        road.vehicles.append(vehicle)
+        super(HighwayEnv, self).__init__(road, vehicle)
 
-    def step(self, action):
-        self.sim.act()
-        self.sim.vehicle.act(RoadMDP.ACTIONS[action])
-        self.sim.step()
-        self.sim.ending_criterion()
+    def observation(self):
+        return 1
 
-        ob = 1
-        reward = 1
-        done = self.sim.done
+    def reward(self, action):
+        action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
+        state_reward = \
+            - self.COLLISION_COST * self.vehicle.crashed \
+            + self.RIGHT_LANE_REWARD * self.vehicle.lane_index \
+            + self.HIGH_VELOCITY_REWARD * self.vehicle.speed_index()
+        return action_reward[action] + state_reward
 
-        return ob, reward, done, {}
+    def is_terminal(self):
+        """
+        :return: Whether the current state is a terminal state
+        """
+        return self.vehicle.crashed
 
     def reset(self):
         pass
-
-    def render(self, mode='human', close=False):
-        if mode == 'rgb_array':
-            return None  # Unsupported for now
-        elif mode == 'human':
-            self._get_viewer().handle_events()
-            self._get_viewer().display()
-
-    def _get_viewer(self):
-        if self.viewer is None:
-            self.viewer = SimulationWindow(self.sim, agent_displayed=False, record_video=False)
-        return self.viewer
-
-    def close(self):
-        if self.viewer is not None:
-            self.viewer.quit()
-        self.viewer = None

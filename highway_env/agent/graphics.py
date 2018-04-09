@@ -5,7 +5,7 @@ import pygame
 
 from highway_env.agent.mcts import MCTSAgent
 from highway_env.agent.ttc_vi import TTCVIAgent
-from highway_env.mdp.road_mdp import RoadMDP  # TODO: Replace with Generic MDP
+from highway_env.envs.abstract import AbstractEnv
 
 
 class AgentGraphics(object):
@@ -102,12 +102,12 @@ class MCTSGraphics(object):
 
         # Recursively display children nodes
         best_action = node.select_action(temperature=0)
-        for a in RoadMDP.ACTIONS:
+        for a in AbstractEnv.ACTIONS:
             if a in node.children:
                 action_selected = (selected and (a == best_action))
                 cls.display_node(node.children[a], surface,
-                                 (origin[0]+size[0], origin[1]+a*size[1]/len(RoadMDP.ACTIONS)),
-                                 (size[0], size[1]/len(RoadMDP.ACTIONS)),
+                                 (origin[0]+size[0], origin[1]+a*size[1]/len(AbstractEnv.ACTIONS)),
+                                 (size[0], size[1]/len(AbstractEnv.ACTIONS)),
                                  depth=depth+1, selected=action_selected)
 
 
