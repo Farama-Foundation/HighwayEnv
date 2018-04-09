@@ -7,7 +7,7 @@ from highway_env.road.lane import LineType, StraightLane, SineLane, LanesConcate
 from highway_env.road.road import Road
 from highway_env.mdp.abstract import MDP
 from highway_env.mdp.road_mdp import RoadMDP
-from highway_env.simulation.graphics import SimulationWindow
+from highway_env.simulation.graphics import SimulationViewer
 from highway_env.simulation.simulation import Simulation
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
@@ -110,7 +110,7 @@ def run():
                           rollout_policy=MCTSAgent.idle_policy,
                           iterations=100,
                           assume_vehicle_type=LinearVehicle)
-    window = SimulationWindow(sim)
+    window = SimulationViewer(sim)
     # sim.agent = SingleTrajectoryAgent(['LANE_LEFT'], 'IDLE')
 
     action = None

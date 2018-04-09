@@ -142,7 +142,7 @@ class MCTS(object):
         depth = self.max_depth
         while depth > 0 and node.children and not state.is_terminal():
             action = node.select_action()
-            reward = state.step(action)
+            _, reward, _, _ = state.step(action)
             total_reward += reward
             node = node.children[action]
             depth = depth - 1
@@ -168,7 +168,7 @@ class MCTS(object):
                 break
             actions, probabilities = self.rollout_policy(state)
             action = np.random.choice(actions, 1, p=probabilities)[0]
-            reward = state.step(action)
+            _, reward, _, _ = state.step(action)
             total_reward += reward
         return total_reward
 
@@ -272,7 +272,7 @@ class MCTSAgent(AbstractAgent):
             state = state.change_agents_to(self.assume_vehicle_type)
         actions = self.mcts.plan(state)
         self.previous_action = actions[0]
-        return [state.ACTIONS[a] for a in actions]
+        return actions
 
     @staticmethod
     def random_policy(state):

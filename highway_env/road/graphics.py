@@ -122,7 +122,7 @@ class RoadGraphics(object):
             VehicleGraphics.display(v, surface)
 
 
-class WindowSurface(pygame.Surface):
+class WorldSurface(pygame.Surface):
     """
         A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area.
     """
@@ -135,10 +135,7 @@ class WindowSurface(pygame.Surface):
     MOVING_FACTOR = 0.1
 
     def __init__(self, size, flags, surf):
-        """
-            New window surface.
-        """
-        super(WindowSurface, self).__init__(size, flags, surf)
+        super(WorldSurface, self).__init__(size, flags, surf)
         self.origin = np.array([0, 0])
         self.scaling = 6.0
         self.centering_position = 0.3
