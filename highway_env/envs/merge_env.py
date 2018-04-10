@@ -56,6 +56,9 @@ class MergeEnv(AbstractEnv):
         return reward + action_reward[action]
 
     def is_terminal(self):
+        """
+            The episode is over when a collision occurs or when the access ramp has been passed.
+        """
         return self.vehicle.crashed or self.vehicle.position[0] > 400
 
     def reset(self):

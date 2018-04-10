@@ -1,5 +1,4 @@
 from __future__ import division, print_function
-
 import pygame
 
 from highway_env.agent.graphics import AgentGraphics
@@ -9,6 +8,10 @@ from highway_env.vehicle.graphics import VehicleGraphics
 
 
 class SimulationViewer(EnvViewer):
+    """
+        A simulation viewer displays at the same place the representation of an environment state and the reasoning of
+        an agent.
+    """
 
     def __init__(self, simulation, record_video=True):
         self.simulation = simulation
@@ -20,6 +23,9 @@ class SimulationViewer(EnvViewer):
         self.sim_surface = WorldSurface(panel_size, 0, pygame.Surface(panel_size))
 
     def display(self):
+        """
+            Display the road, vehicles and trajectory prediction on the first panel, and agent reasoning on the second.
+        """
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
         if self.simulation.planned_trajectory:
