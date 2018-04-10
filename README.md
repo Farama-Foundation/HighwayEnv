@@ -1,42 +1,91 @@
 # highway-env
-An environment for simulated highway driving tasks
+An collection of environments for highway driving tactical decision-making tasks
 
 ![Highway driving](docs/media/highway-driving.gif)
 
-## Environment
 
-### Roads
+## Installation
 
-TODO
+`pip install --user git+https://github.com/eleurent/highway-env`
 
-### Physics
+## Usage
 
-TODO
+```
+import higwhay_env
 
-### Control
+env = gym.make("highway-v0")
 
-TODO
+done = False
+while not done:
+    action = ... # Your agent code here
+    obs, reward, done, _ = env.step(action)
+    env.render()
+```
 
-### Behaviours
+## The environments
 
-TODO
+### Highway
 
-## Tasks
+```
+env = gym.make("highway-v0")
+```
 
-### Highway driving
-
-TODO
+In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles.
+The agent's objective is to reach a high velocity while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.
 
 ### Merge
 
-TODO
+```
+env = gym.make("highway-merge-v0")
+```
 
-## Agents
+On this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high velocity while making room for the vehicles so that they can safely merge in the traffic.
 
-### Value Iteration
+## The framework
 
-TODO
+New highway driving environments can easily be made from a set of building blocks.
+
+### Roads
+
+A `Road` is composed of several `Lanes` and a list of `Vehicles`. The Lanes are described by their center line curve and local coordinate system.
+
+### Vehicle physics
+
+The vehicles dynamics are represented in the `Vehicle` class by a bicycle model.
+
+```
+dx = v*cos(psi)
+dy = v*sin(psi)
+dv = a
+dpsi = v/l*tan(beta)
+```
+Where *(x, y)* is the vehicle position, *v* its velocity and *psi* its heading.
+*a* is the acceleration command and *beta* is the slip angle at the center of gravity, used as a steering command.
+
+### Control
+
+The `ControlledVehicle` class implements a low-level controller on top of a `Vehicle`, allowing to track a given target velocity and follow a target lane.
+
+### Behaviours
+
+The vehicles populating the highway follow simple and realistic behaviours that dictate how they accelerate and steer on the road.
+
+In the `IDMVehicle` class,
+* Longitudinal Model: the acceleration of the vehicle is given by the Intelligent Driver Model (IDM) from [(Treiber et al, 2000)](https://arxiv.org/abs/cond-mat/0002177).
+* Lateral Model: the discrete lane change decisions are given by the MOBIL model from [(Kesting et al, 2007)](https://www.researchgate.net/publication/239439179_General_Lane-Changing_Model_MOBIL_for_Car-Following_Models).
+
+In the `LinearVehicle` class, the longitudinal behavior is defined as a linear weighting of several features, such as the distance and velocity difference to the leading vehicle.
+
+## The agents
+
+### Value Iteration - TTC
+
+![Value Iteration - TTC](docs/media/ttc-vi.gif)
+
+This agent uses a simple representation of the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road, and performs a Value Iteration to compute the corresponding value function.
+
+The transition function of the TTC-state is simplistic and assumes that each vehicle will keep driving at a constant velocity without changing lanes.
 
 ### Monte-Carlo Tree Search
 
-TODO
+This agent uses a transition and reward model to perform a stochastic tree search of the optimal trajectory. No particular assumption is required on the state representation or transition model.
