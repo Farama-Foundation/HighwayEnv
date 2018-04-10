@@ -38,7 +38,13 @@ class HighwayEnv(AbstractEnv):
         return action_reward[action] + state_reward
 
     def is_terminal(self):
-        return self.vehicle.crashed
+        """
+            The episode is over if the ego vehicle crashed or if it successfully passed all other vehicles.
+        """
+        is_first = len(self.road.vehicles) > 1 and (self.vehicle.position[0] > 50 + max(
+                        [o.position[0] for o in self.road.vehicles if o is not self.vehicle]))
+
+        return self.vehicle.crashed or is_first
 
     def reset(self):
         # TODO
