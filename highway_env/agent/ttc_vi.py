@@ -43,14 +43,15 @@ class TTCVIAgent(AbstractAgent):
         :param state: the current MDP state
         """
         self.state = state
-        self.grids = np.zeros((state.ego_vehicle.SPEED_COUNT,
-                              len(state.ego_vehicle.road.lanes),
+        self.grids = np.zeros((state.vehicle.SPEED_COUNT,
+                              len(state.vehicle.road.lanes),
                               int(self.HORIZON / self.TIME_QUANTIZATION)))
         self.V, self.L, self.T = np.shape(self.grids)
         self.value = np.zeros(np.shape(self.grids))
         self.state_reward = np.zeros(np.shape(self.grids))
         self.action_reward = {0: -state.LANE_CHANGE_COST, 1: 0, 2: -state.LANE_CHANGE_COST, 3: 0, 4: 0}
         self.lane = self.speed = None
+        self.update_ttc_state()
 
     def plan(self, state):
         """
@@ -83,8 +84,8 @@ class TTCVIAgent(AbstractAgent):
             Extract the TTC-grid and TTC-state (velocity, lane, time=0) from the current MDP state.
         """
         self.fill_ttc_grid()
-        self.lane = self.state.ego_vehicle.lane_index
-        self.speed = self.state.ego_vehicle.speed_index()
+        self.lane = self.state.vehicle.lane_index
+        self.speed = self.state.vehicle.speed_index()
 
     def fill_ttc_grid(self):
         """
@@ -93,14 +94,14 @@ class TTCVIAgent(AbstractAgent):
         """
         self.grids.fill(0)
         for velocity_index in range(self.grids.shape[0]):
-            ego_velocity = self.state.ego_vehicle.index_to_speed(velocity_index)
-            for other in self.state.ego_vehicle.road.vehicles:
-                if (other is self.state.ego_vehicle) or (ego_velocity == other.velocity):
+            ego_velocity = self.state.vehicle.index_to_speed(velocity_index)
+            for other in self.state.road.vehicles:
+                if (other is self.state.vehicle) or (ego_velocity == other.velocity):
                     continue
-                margin = other.LENGTH / 2 + self.state.ego_vehicle.LENGTH / 2
+                margin = other.LENGTH / 2 + self.state.vehicle.LENGTH / 2
                 collision_points = [(0, 1), (-margin, 0.5), (margin, 0.5)]
                 for m, cost in collision_points:
-                    distance = self.state.ego_vehicle.lane_distance_to(other) + m
+                    distance = self.state.vehicle.lane_distance_to(other) + m
                     time_to_collision = distance / utils.not_zero(ego_velocity - other.velocity)
                     if time_to_collision < 0:
                         continue
@@ -209,7 +210,7 @@ class TTCVIAgent(AbstractAgent):
         h, i, j = self.speed, self.lane, 0
         q_values = self.get_q_values(h, i, j)
         a = int(np.argmax(q_values))
-        return self.state.ACTIONS[a]
+        return a
 
     def pick_trajectory(self):
         """
@@ -224,11 +225,11 @@ class TTCVIAgent(AbstractAgent):
         q_values = self.get_q_values(h, i, j)
         while len(q_values):
             a = int(np.argmax(q_values))
-            actions.append(self.state.ACTIONS[a])
+            actions.append(a)
             h, i, j = self.transition_model(a, h, i, j)
             path.append((h, i, j))
             q_values = self.get_q_values(h, i, j)
         # If terminal state, return default action
         if not actions:
-            actions = [self.state.ACTIONS[1]]
+            actions = [1]
         return path, actions
