@@ -7,6 +7,12 @@ from highway_env.vehicle.control import MDPVehicle
 
 
 class HighwayEnv(AbstractEnv):
+    """
+        A highway driving environment.
+
+        The vehicle is driving on a straight highway with several lanes, and is rewarded for reaching a high velocity,
+        staying on the rightmost lanes and avoiding collisions.
+    """
     metadata = {'render.modes': ['human']}
 
     COLLISION_COST = 10
@@ -32,10 +38,8 @@ class HighwayEnv(AbstractEnv):
         return action_reward[action] + state_reward
 
     def is_terminal(self):
-        """
-        :return: Whether the current state is a terminal state
-        """
         return self.vehicle.crashed
 
     def reset(self):
+        # TODO
         pass
