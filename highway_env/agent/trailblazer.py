@@ -26,7 +26,8 @@ class MaxNode(object):
         count = 1
         U = np.inf
         while len(candidates) > 1 and U >= (1 - self.eta)*epsilon:
-            sqr = (np.log(self.K*count/(self.delta*epsilon)) + self.gamma / (self.eta - self.gamma) + self.alpha + 1) / count
+            sqr = (np.log(self.K*count/(self.delta*epsilon)) +
+                   self.gamma / (self.eta - self.gamma) + self.alpha + 1) / count
             U = 2/(1-self.gamma)*np.sqrt(sqr)
             mu = [(b, b.run(count, U*self.eta/(1-self.eta))) for b in candidates]
             mu_sup = max(mu, key=lambda c: c[1])[1]

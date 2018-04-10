@@ -86,8 +86,8 @@ class Vehicle(Loggable):
         :param dt: timestep of integration of the model [s]
         """
         if self.crashed:
-            self.action['steering'] = np.pi / 4 * (-1 + 2 * np.random.beta(0.5, 0.5)) * 0
-            self.action['acceleration'] = (-1.0 + 0.2 * np.random.beta(0.5, 0.5) * 0) * self.velocity
+            self.action['steering'] = 0
+            self.action['acceleration'] = -self.velocity
 
         v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v * dt

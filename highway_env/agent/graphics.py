@@ -44,7 +44,8 @@ class MCTSGraphics(object):
         """
         cell_size = (surface.get_width() // agent.mcts.max_depth, surface.get_height())
         pygame.draw.rect(surface, cls.BLACK, (0, 0, surface.get_width(), surface.get_height()), 0)
-        cls.display_node(agent.mcts.root, surface, (0, 0), cell_size, depth=0, selected=True)
+        cls.display_node(agent.mcts.root, surface, (0, 0), cell_size,
+                         temperature=agent.mcts.temperature, depth=0, selected=True)
 
         actions = agent.mcts.get_plan()
         font = pygame.font.Font(None, 15)
@@ -52,7 +53,9 @@ class MCTSGraphics(object):
         surface.blit(text, (5, surface.get_height()-15))
 
     @classmethod
-    def display_node(cls, node, surface, origin, size, depth=0,
+    def display_node(cls, node, surface, origin, size,
+                     temperature=0,
+                     depth=0,
                      selected=False,
                      display_exploration=False,
                      display_count=False,
@@ -96,7 +99,10 @@ class MCTSGraphics(object):
 
         if display_text and depth < 3:
             font = pygame.font.Font(None, 15)
-            text = font.render("{:.1f} / {:.1f} / {} / {:.2f}".format(node.value, node.selection_strategy(), node.count, node.prior),
+            text = font.render("{:.1f} / {:.1f} / {} / {:.2f}".format(node.value,
+                                                                      node.selection_strategy(temperature),
+                                                                      node.count,
+                                                                      node.prior),
                                1, (10, 10, 10), (255, 255, 255))
             surface.blit(text, (origin[0]+2, origin[1]+2))
 
@@ -108,7 +114,7 @@ class MCTSGraphics(object):
                 cls.display_node(node.children[a], surface,
                                  (origin[0]+size[0], origin[1]+a*size[1]/len(AbstractEnv.ACTIONS)),
                                  (size[0], size[1]/len(AbstractEnv.ACTIONS)),
-                                 depth=depth+1, selected=action_selected)
+                                 depth=depth+1, temperature=temperature, selected=action_selected)
 
 
 class TTCVIGraphics(object):

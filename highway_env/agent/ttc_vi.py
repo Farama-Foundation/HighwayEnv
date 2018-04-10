@@ -105,11 +105,11 @@ class TTCVIAgent(AbstractAgent):
                     if time_to_collision < 0:
                         continue
                     # Quantize time-to-collision to both upper and lower values
-                    l = other.lane_index
-                    for t in [int(time_to_collision / self.TIME_QUANTIZATION),
-                              int(np.ceil(time_to_collision / self.TIME_QUANTIZATION))]:
-                        if 0 <= l < np.shape(self.grids)[1] and 0 <= t < np.shape(self.grids)[2]:
-                            self.grids[velocity_index, l, t] = max(self.grids[velocity_index, l, t], cost)
+                    lane = other.lane_index
+                    for time in [int(time_to_collision / self.TIME_QUANTIZATION),
+                                 int(np.ceil(time_to_collision / self.TIME_QUANTIZATION))]:
+                        if 0 <= lane < np.shape(self.grids)[1] and 0 <= time < np.shape(self.grids)[2]:
+                            self.grids[velocity_index, lane, time] = max(self.grids[velocity_index, lane, time], cost)
 
     def value_iteration(self, steps=50):
         """

@@ -42,7 +42,7 @@ class EnvViewer(object):
             if self.env.vehicle:
                 VehicleGraphics.handle_event(self.env.vehicle, event)
 
-    def display(self, trajectory=None):
+    def display(self):
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
         RoadGraphics.display_traffic(self.env.road, self.sim_surface)
