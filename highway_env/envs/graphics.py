@@ -31,6 +31,7 @@ class EnvViewer(object):
         self.clock = pygame.time.Clock()
 
         if self.record_video:
+            self.frame = 0
             self.make_video_dir()
             self.video_name = 'highway_{}'.format(datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
 
@@ -51,13 +52,17 @@ class EnvViewer(object):
         pygame.display.flip()
 
         if self.record_video:
+            self.frame += 1
             pygame.image.save(self.screen, "{}/{}_{:04d}.bmp".format(self.TMP_FOLDER,
                                                                      self.video_name,
-                                                                     self.env.t))
+                                                                     self.frame))
 
     def window_position(self):
         if self.env.vehicle:
-            return self.env.vehicle.position
+            if False:
+                return self.env.vehicle.position
+            else:
+                return np.array([self.env.vehicle.position[0], len(self.env.road.lanes) / 2 * 4 - 2])
         else:
             return np.array([0, len(self.env.road.lanes) / 2 * 4])
 
