@@ -12,15 +12,17 @@ class Simulation(object):
         self.env = env
         self.agent = agent
         self.planned_trajectory = []
+        self.done = False
 
     def step(self):
         actions = self.agent.plan(self.env.simplified())
-        self.planned_trajectory = self.env.vehicle.predict_trajectory(actions,
+        self.planned_trajectory = self.env.vehicle.predict_trajectory([self.env.ACTIONS[a] for a in actions],
                                                                       1 / self.env.POLICY_FREQUENCY,
                                                                       self.TRAJECTORY_TIMESTEP,
                                                                       1 / self.env.SIMULATION_FREQUENCY)
         if actions:
-            self.env.step(actions[0])
+            _, reward, terminal, _ = self.env.step(actions[0])
+            self.done = terminal or self.env.done
 
     def render(self, mode='human'):
         if mode == 'rgb_array':
@@ -33,6 +35,9 @@ class Simulation(object):
         if self.env.viewer is None:
             self.env.viewer = SimulationViewer(self, record_video=False)
         return self.env.viewer
+
+    def close(self):
+        self.env.close()
 
 
     # def ending_criterion(self):

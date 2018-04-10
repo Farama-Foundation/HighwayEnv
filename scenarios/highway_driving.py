@@ -1,3 +1,5 @@
+from __future__ import division, print_function
+
 import gym
 import highway_env
 
@@ -11,8 +13,9 @@ def test():
     sim = Simulation(env, agent)
 
     sim.render()
-    for _ in range(5):
+    while not sim.done:
         sim.step()
+    sim.close()
 
 
 if __name__ == '__main__':
