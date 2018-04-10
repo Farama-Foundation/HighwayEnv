@@ -10,7 +10,7 @@ An collection of environments for highway driving tactical decision-making tasks
 
 ## Usage
 
-```
+```python
 import higwhay_env
 
 env = gym.make("highway-v0")
@@ -26,7 +26,7 @@ while not done:
 
 ### Highway
 
-```
+```python
 env = gym.make("highway-v0")
 ```
 
@@ -35,7 +35,7 @@ The agent's objective is to reach a high velocity while avoiding collisions with
 
 ### Merge
 
-```
+```python
 env = gym.make("highway-merge-v0")
 ```
 
@@ -53,7 +53,7 @@ A `Road` is composed of several `Lanes` and a list of `Vehicles`. The Lanes are 
 
 The vehicles dynamics are represented in the `Vehicle` class by a bicycle model.
 
-```
+```python
 dx = v*cos(psi)
 dy = v*sin(psi)
 dv = a

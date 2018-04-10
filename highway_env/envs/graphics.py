@@ -11,6 +11,9 @@ from highway_env.vehicle.graphics import VehicleGraphics
 
 
 class EnvViewer(object):
+    """
+        A viewer to render a highway driving environment.
+    """
     SCREEN_WIDTH = 600
     SCREEN_HEIGHT = 150
 
@@ -36,6 +39,9 @@ class EnvViewer(object):
             self.video_name = 'highway_{}'.format(datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
 
     def handle_events(self):
+        """
+            Handle pygame events by forwarding them to the display and environment vehicle.
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.env.close()
@@ -44,6 +50,9 @@ class EnvViewer(object):
                 VehicleGraphics.handle_event(self.env.vehicle, event)
 
     def display(self):
+        """
+            Display the road and vehicles on a pygame window.
+        """
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
         RoadGraphics.display_traffic(self.env.road, self.sim_surface)
@@ -58,6 +67,9 @@ class EnvViewer(object):
                                                                      self.frame))
 
     def window_position(self):
+        """
+        :return: the world position of the center of the displayed window.
+        """
         if self.env.vehicle:
             if False:
                 return self.env.vehicle.position
@@ -67,16 +79,27 @@ class EnvViewer(object):
             return np.array([0, len(self.env.road.lanes) / 2 * 4])
 
     def make_video_dir(self):
+        """
+            Make a temporary directory to hold the rendered images. If already existing, clear it.
+        """
         if not os.path.exists(self.OUT_FOLDER):
             os.mkdir(self.OUT_FOLDER)
         self.clear_video_dir()
         os.mkdir(self.TMP_FOLDER)
 
     def clear_video_dir(self):
+        """
+            Clear the temporary directory containing the rendered images.
+        """
         if os.path.exists(self.TMP_FOLDER):
             shutil.rmtree(self.TMP_FOLDER, ignore_errors=True)
 
     def close(self):
+        """
+            Close the pygame window.
+
+            If video frames were recorded, convert them to a video/gif file
+        """
         pygame.quit()
         if self.record_video:
             os.system("ffmpeg -r {3} -i {0}/{2}_%04d.bmp -vcodec libx264 -crf 25 {1}/{2}.avi"

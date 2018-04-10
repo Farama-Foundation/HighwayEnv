@@ -30,6 +30,11 @@ class HighwayEnv(AbstractEnv):
         return 1
 
     def reward(self, action):
+        """
+        The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
+        :param action: the last action performed
+        :return: the corresponding reward
+        """
         action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
         state_reward = \
             - self.COLLISION_COST * self.vehicle.crashed \
