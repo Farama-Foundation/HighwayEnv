@@ -48,7 +48,7 @@ class MCTSGraphics(object):
                          temperature=agent.mcts.temperature, depth=0, selected=True)
 
         actions = agent.mcts.get_plan()
-        font = pygame.font.Font(None, 15)
+        font = pygame.font.Font(None, 13)
         text = font.render('-'.join(map(str, actions)), 1, (10, 10, 10), (255, 255, 255))
         surface.blit(text, (5, surface.get_height()-15))
 
@@ -97,14 +97,14 @@ class MCTSGraphics(object):
         if selected:
             pygame.draw.rect(surface, cls.RED, (origin[0], origin[1], size[0], size[1]), 1)
 
-        if display_text and depth < 3:
-            font = pygame.font.Font(None, 15)
+        if display_text and depth < 2:
+            font = pygame.font.Font(None, 13)
             text = font.render("{:.1f} / {:.1f} / {} / {:.2f}".format(node.value,
                                                                       node.selection_strategy(temperature),
                                                                       node.count,
                                                                       node.prior),
                                1, (10, 10, 10), (255, 255, 255))
-            surface.blit(text, (origin[0]+2, origin[1]+2))
+            surface.blit(text, (origin[0]+1, origin[1]+1))
 
         # Recursively display children nodes
         best_action = node.select_action(temperature=0)
