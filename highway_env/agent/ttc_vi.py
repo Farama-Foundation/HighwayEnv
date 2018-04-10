@@ -1,5 +1,6 @@
 from __future__ import division, print_function
 import numpy as np
+import operator
 from highway_env.agent.abstract import AbstractAgent
 from highway_env import utils
 
@@ -49,7 +50,12 @@ class TTCVIAgent(AbstractAgent):
         self.V, self.L, self.T = np.shape(self.grids)
         self.value = np.zeros(np.shape(self.grids))
         self.state_reward = np.zeros(np.shape(self.grids))
-        self.action_reward = {0: -state.LANE_CHANGE_COST, 1: 0, 2: -state.LANE_CHANGE_COST, 3: 0, 4: 0}
+        acceleration_cost = 0.01  # Used to favour idle to acceleration in timesteps other than 0
+        self.action_reward = {0: -state.LANE_CHANGE_COST,
+                              1: 0,
+                              2: -state.LANE_CHANGE_COST,
+                              3: acceleration_cost,
+                              4: acceleration_cost}
         self.lane = self.speed = None
         self.update_ttc_state()
 
@@ -131,7 +137,7 @@ class TTCVIAgent(AbstractAgent):
                 for j in range(self.T):
                     q_values = self.get_q_values(h, i, j)
                     if q_values:
-                        new_value[h, i, j] = self.GAMMA * np.max(q_values)
+                        new_value[h, i, j] = self.GAMMA * np.max(list(q_values.values()))
                     else:
                         new_value[h, i, j] = self.state_reward[h, i, j]
         self.value = new_value
@@ -171,6 +177,9 @@ class TTCVIAgent(AbstractAgent):
         :param i: lane index
         :param j: time index
         """
+        if j == self.T - 1 or self.grids[h, i, j] == 1:
+            return None  # Terminal state
+
         if a == 0:
             return self.clip_position(h, i - 1, j + 1)  # LEFT
         elif a == 1:
@@ -178,9 +187,17 @@ class TTCVIAgent(AbstractAgent):
         elif a == 2:
             return self.clip_position(h, i + 1, j + 1)  # RIGHT
         elif a == 3:
-            return self.clip_position(h + 1, i, j + 1)  # FASTER
+            if j == 0:
+                return self.clip_position(h + 1, i, j + 1)  # FASTER
+            else:
+                # FASTER can only be used at the first timestep
+                return None
         elif a == 4:
-            return self.clip_position(h - 1, i, j + 1)  # SLOWER
+            if j == 0:
+                return self.clip_position(h - 1, i, j + 1)  # SLOWER
+            else:
+                # SLOWER can only be used at the first timestep
+                return None
         else:
             return None
 
@@ -193,12 +210,13 @@ class TTCVIAgent(AbstractAgent):
         :param j: time index
         :return: the list of state-action Q-values
         """
-        q_values = []
-        if j == self.T - 1 or self.grids[h, i, j] == 1:
-            return q_values  # Terminal state
+        q_values = {}
+
         for a in range(0, 5):
-            o, p, q = self.transition_model(a, h, i, j)
-            q_values.append(self.reward(h, i, j, a) + self.value[o, p, q])
+            next_state = self.transition_model(a, h, i, j)
+            if next_state:
+                o, p, q = next_state
+                q_values[a] = (self.reward(h, i, j, a) + self.value[o, p, q])
         return q_values
 
     def pick_action(self):
@@ -209,7 +227,7 @@ class TTCVIAgent(AbstractAgent):
         """
         h, i, j = self.speed, self.lane, 0
         q_values = self.get_q_values(h, i, j)
-        a = int(np.argmax(q_values))
+        a = max(q_values.items(), key=operator.itemgetter(1))[0]
         return a
 
     def pick_trajectory(self):
@@ -224,7 +242,7 @@ class TTCVIAgent(AbstractAgent):
         actions = []
         q_values = self.get_q_values(h, i, j)
         while len(q_values):
-            a = int(np.argmax(q_values))
+            a = max(q_values.items(), key=operator.itemgetter(1))[0]
             actions.append(a)
             h, i, j = self.transition_model(a, h, i, j)
             path.append((h, i, j))
