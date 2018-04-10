@@ -23,7 +23,8 @@ class LinearEstimator(object):
         a = self.vehicle.action['acceleration']
         # self.weights += self.RHO*f*(a - np.transpose(f).dot(self.weights))*dt
         if -self.vehicle.BRAKE_ACC < a < self.vehicle.ACC_MAX:
-            self.weights = np.linalg.inv(np.eye(3) + dt*self.RHO*f.dot(np.transpose(f))).dot(self.weights + dt*self.RHO*f*a)
+            self.weights = np.linalg.inv(
+                np.eye(3) + dt*self.RHO*f.dot(np.transpose(f))).dot(self.weights + dt*self.RHO*f*a)
         print('w = ', np.transpose(self.weights))
 
     def vehicle_features(self):

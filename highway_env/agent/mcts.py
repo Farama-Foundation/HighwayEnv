@@ -71,7 +71,7 @@ class Node(object):
         if self.parent:
             self.parent.update_branch(total_reward)
 
-    def selection_strategy(self, temperature=None):
+    def selection_strategy(self, temperature):
         """
             Select an action according to its value, prior probability and visit count.
 
@@ -80,9 +80,6 @@ class Node(object):
         """
         if not self.parent:
             return self.value
-
-        if temperature is None:
-            temperature = 40*5
 
         # return self.value + temperature * self.prior * np.sqrt(np.log(self.parent.count) / self.count)
         return self.value + temperature*self.prior/(self.count+1)
@@ -116,19 +113,21 @@ class MCTS(object):
     """
        An implementation of Monte-Carlo Tree Search, with Upper Confidence Tree exploration.
     """
-    def __init__(self, prior_policy, rollout_policy, iterations, max_depth=7):
+    def __init__(self, prior_policy, rollout_policy, iterations, temperature, max_depth=7):
         """
             New MCTS instance.
 
         :param prior_policy: the prior policy used when expanding and selecting nodes
         :param rollout_policy: the rollout policy used to estimate the value of a leaf node
         :param iterations: the number of iterations
+        :param temperature: the temperature of exploration
         :param max_depth: the maximum depth of the tree
         """
         self.root = Node(parent=None)
         self.prior_policy = prior_policy
         self.rollout_policy = rollout_policy
         self.iterations = iterations
+        self.temperature = temperature
         self.max_depth = max_depth
 
     def run(self, state):
@@ -141,7 +140,7 @@ class MCTS(object):
         total_reward = 0
         depth = self.max_depth
         while depth > 0 and node.children and not state.is_terminal():
-            action = node.select_action()
+            action = node.select_action(temperature=self.temperature)
             _, reward, _, _ = state.step(action)
             total_reward += reward
             node = node.children[action]
@@ -242,18 +241,25 @@ class MCTSAgent(AbstractAgent):
     """
         An agent that uses Monte Carlo Tree Search to plan a sequence of action in an MDP.
     """
-    def __init__(self, state=None, prior_policy=None, rollout_policy=None, iterations=75, assume_vehicle_type=None):
+    def __init__(self,
+                 state=None,
+                 prior_policy=None,
+                 rollout_policy=None,
+                 iterations=75,
+                 temperature=100,
+                 assume_vehicle_type=None):
         """
             A new MCTS agent.
         :param state: the current MDP state
         :param prior_policy: The prior distribution over actions given a state
         :param rollout_policy: The distribution over actions used when evaluating leaves
         :param iterations: the number of MCTS iterations
+        :param temperature: the temperature of exploration
         :param assume_vehicle_type: the model used to predict the vehicles behavior. If None, the true model is used.
         """
         prior_policy = prior_policy or MCTSAgent.fast_policy
         rollout_policy = rollout_policy or MCTSAgent.random_available_policy
-        self.mcts = MCTS(prior_policy, rollout_policy, iterations=iterations)
+        self.mcts = MCTS(prior_policy, rollout_policy, iterations=iterations, temperature=temperature)
         self.assume_vehicle_type = assume_vehicle_type
         self.previous_action = None
 

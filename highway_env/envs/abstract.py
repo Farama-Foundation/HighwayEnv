@@ -89,11 +89,11 @@ class AbstractEnv(gym.Env):
 
             The action is executed by the ego-vehicle, and all other vehicles on the road performs their default
             behaviour for several simulation timesteps until the next decision making step.
-        :param action: the action performed by the ego-vehicle
+        :param int action: the action performed by the ego-vehicle
         :return: a tuple (observation, reward, terminal, info)
         """
         # Forward action to the vehicle
-        self.vehicle.act(self.ACTIONS[int(action)])
+        self.vehicle.act(self.ACTIONS[action])
 
         # Simulate
         for k in range(int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY)):
