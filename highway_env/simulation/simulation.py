@@ -38,11 +38,3 @@ class Simulation(object):
 
     def close(self):
         self.env.close()
-
-    # def ending_criterion(self):
-    #     if self.t/self.SIMULATION_FREQUENCY > self.MAXIMUM_SIMULATION_TIME \
-    #             or (self.vehicle.crashed and self.vehicle.velocity < 1) \
-    #             or ((len(self.road.vehicles) > 1)
-    #                 and (self.vehicle.position[0] > 50 + np.max(
-    #                     [o.position[0] for o in self.road.vehicles if o is not self.vehicle]))):
-    #         self.done = True
