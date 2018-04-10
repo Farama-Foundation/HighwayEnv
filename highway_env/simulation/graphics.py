@@ -34,6 +34,7 @@ class SimulationViewer(EnvViewer):
         pygame.display.flip()
 
         if self.record_video:
+            self.frame += 1
             pygame.image.save(self.screen, "{}/{}_{:04d}.bmp".format(self.TMP_FOLDER,
                                                                      self.video_name,
-                                                                     self.env.t))
+                                                                     self.frame))

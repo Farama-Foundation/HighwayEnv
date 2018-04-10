@@ -33,7 +33,7 @@ class Simulation(object):
 
     def _get_viewer(self):
         if self.env.viewer is None:
-            self.env.viewer = SimulationViewer(self, record_video=False)
+            self.env.viewer = SimulationViewer(self, record_video=True)
         return self.env.viewer
 
     def close(self):
