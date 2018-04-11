@@ -80,6 +80,7 @@ class LineType:
     NONE = 0
     STRIPED = 1
     CONTINUOUS = 2
+    CONTINUOUS_LINE = 3
 
 
 class StraightLane(AbstractLane):

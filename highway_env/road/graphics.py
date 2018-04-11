@@ -39,6 +39,8 @@ class LaneGraphics(object):
             if lane.line_types[side] == LineType.STRIPED:
                 cls.striped_line(lane, surface, stripes_count, s0, side)
             elif lane.line_types[side] == LineType.CONTINUOUS:
+                cls.continuous_curve(lane, surface, stripes_count, s0, side)
+            elif lane.line_types[side] == LineType.CONTINUOUS_LINE:
                 cls.continuous_line(lane, surface, stripes_count, s0, side)
 
     @classmethod
@@ -54,6 +56,22 @@ class LaneGraphics(object):
         """
         starts = s0 + np.arange(stripes_count) * cls.STRIPE_SPACING
         ends = s0 + np.arange(stripes_count) * cls.STRIPE_SPACING + cls.STRIPE_LENGTH
+        lats = [(side - 0.5) * lane.width_at(s) for s in starts]
+        cls.draw_stripes(lane, surface, starts, ends, lats)
+
+    @classmethod
+    def continuous_curve(cls, lane, surface, stripes_count, s0, side):
+        """
+            Draw a striped line on one side of a lane, on a surface.
+
+        :param lane: the lane
+        :param surface: the pygame surface
+        :param stripes_count: the number of stripes to draw
+        :param s0: the longitudinal position of the first stripe [m]
+        :param side: which side of the road to draw [0:left, 1:right]
+        """
+        starts = s0 + np.arange(stripes_count) * cls.STRIPE_SPACING
+        ends = s0 + np.arange(stripes_count) * cls.STRIPE_SPACING + cls.STRIPE_SPACING
         lats = [(side - 0.5) * lane.width_at(s) for s in starts]
         cls.draw_stripes(lane, surface, starts, ends, lats)
 
@@ -131,14 +149,16 @@ class WorldSurface(pygame.Surface):
     GREEN = (50, 200, 0)
     YELLOW = (200, 200, 0)
     WHITE = (255, 255, 255)
+    INITIAL_SCALING = 5.5
+    INITIAL_CENTERING = 0.3
     SCALING_FACTOR = 1.3
     MOVING_FACTOR = 0.1
 
     def __init__(self, size, flags, surf):
         super(WorldSurface, self).__init__(size, flags, surf)
         self.origin = np.array([0, 0])
-        self.scaling = 6.0
-        self.centering_position = 0.3
+        self.scaling = self.INITIAL_SCALING
+        self.centering_position = self.INITIAL_CENTERING
 
     def pix(self, length):
         """
