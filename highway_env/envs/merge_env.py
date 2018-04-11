@@ -20,9 +20,9 @@ class MergeEnv(AbstractEnv):
 
     VELOCITY_REWARD = 1.0
     MERGING_VELOCITY_REWARD = 2.0 / 20.0
-    RIGHT_LANE_REWARD = 0.5
+    RIGHT_LANE_REWARD = 0.4
     ACCELERATION_COST = 0
-    LANE_CHANGE_COST = 0
+    LANE_CHANGE_COST = 0.7
     COLLISION_COST = 10
 
     def __init__(self):
@@ -72,16 +72,22 @@ class MergeEnv(AbstractEnv):
         :return: the road
         """
         ends = [80, 80, 80]
-        l0 = StraightLane(np.array([0, 0]), 0, 4.0, [LineType.CONTINUOUS, LineType.NONE])
-        l1 = StraightLane(np.array([0, 4]), 0, 4.0, [LineType.STRIPED, LineType.CONTINUOUS])
+        l0 = StraightLane(np.array([0, 0]), 0, 4.0, [LineType.CONTINUOUS_LINE, LineType.NONE])
+        lm0 = StraightLane(np.array([0, 4]), 0, 4.0,
+                           [LineType.STRIPED, LineType.CONTINUOUS_LINE], bounds=[-np.inf, sum(ends[0:2])])
+        lm1 = StraightLane(lm0.position(sum(ends[0:2]), 0), 0, 4.0,
+                           [LineType.STRIPED, LineType.STRIPED], bounds=[0, ends[2]])
+        lm2 = StraightLane(lm1.position(ends[2], 0), 0, 4.0,
+                           [LineType.STRIPED, LineType.CONTINUOUS_LINE], bounds=[0, np.inf])
+        l1 = LanesConcatenation([lm0, lm1, lm2])
 
         lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0,
-                           [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[-np.inf, ends[0]], forbidden=True)
-        amplitude = 3.3
+                           [LineType.CONTINUOUS_LINE, LineType.CONTINUOUS_LINE], bounds=[-np.inf, ends[0]], forbidden=True)
+        amplitude = 3.25
         lc1 = SineLane(lc0.position(ends[0], -amplitude), 0, 4.0, amplitude, 2 * np.pi / (2*ends[1]), np.pi / 2,
-                       [LineType.STRIPED, LineType.STRIPED], bounds=[0, ends[1]], forbidden=True)
+                       [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[0, ends[1]], forbidden=True)
         lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0,
-                           [LineType.NONE, LineType.CONTINUOUS], bounds=[0, ends[2]], forbidden=True)
+                           [LineType.NONE, LineType.CONTINUOUS_LINE], bounds=[0, ends[2]], forbidden=True)
         l2 = LanesConcatenation([lc0, lc1, lc2])
         road = Road([l0, l1, l2])
         road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
@@ -97,11 +103,11 @@ class MergeEnv(AbstractEnv):
         ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
         road.vehicles.append(ego_vehicle)
 
-        road.vehicles.append(IDMVehicle(road, road.lanes[0].position(20, 0), velocity=30))
-        road.vehicles.append(IDMVehicle(road, road.lanes[1].position(35, 0), velocity=30))
+        road.vehicles.append(IDMVehicle(road, road.lanes[0].position(20, 0), velocity=29))
+        road.vehicles.append(IDMVehicle(road, road.lanes[1].position(0, 0), velocity=31))
         road.vehicles.append(IDMVehicle(road, road.lanes[0].position(-65, 0), velocity=31.5))
 
-        merging_v = IDMVehicle(road, road.lanes[-1].position(70, 0), velocity=20)
+        merging_v = IDMVehicle(road, road.lanes[-1].position(40, 0), velocity=20)
         merging_v.TIME_WANTED = 1.0
         merging_v.POLITENESS = 0.0
         merging_v.target_velocity = 30
