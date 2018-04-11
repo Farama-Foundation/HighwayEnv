@@ -1,8 +1,7 @@
 # highway-env
 An collection of environments for highway driving tactical decision-making tasks
 
-![Highway driving](docs/media/highway-driving.gif)
-
+![Highway driving](docs/media/highway.gif)
 
 ## Installation
 
@@ -33,6 +32,9 @@ env = gym.make("highway-v0")
 In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles.
 The agent's objective is to reach a high velocity while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.
 
+![Highway driving](docs/media/highway.gif)
+
+
 ### Merge
 
 ```python
@@ -40,6 +42,9 @@ env = gym.make("highway-merge-v0")
 ```
 
 On this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high velocity while making room for the vehicles so that they can safely merge in the traffic.
+
+![Merge](docs/media/merge.gif)
+
 
 ## The framework
 
@@ -59,7 +64,7 @@ dy = v*sin(psi)
 dv = a
 dpsi = v/l*tan(beta)
 ```
-Where *(x, y)* is the vehicle position, *v* its velocity and *psi* its heading.
+Where *(x, y)* is the vehicle position, *v* its forward velocity and *psi* its heading.
 *a* is the acceleration command and *beta* is the slip angle at the center of gravity, used as a steering command.
 
 ### Control
@@ -78,14 +83,14 @@ In the `LinearVehicle` class, the longitudinal behavior is defined as a linear w
 
 ## The agents
 
-### Value Iteration - TTC
+### Time-To-Collision Value Iteration
 
-![Value Iteration - TTC](docs/media/ttc-vi.gif)
+![Value Iteration - TTC](docs/media/ttcvi.gif)
 
-This agent uses a simple representation of the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road, and performs a Value Iteration to compute the corresponding value function.
+This agent uses a simple representation of the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road, and performs a Value Iteration to compute the corresponding optimal value function.
 
-The transition function of the TTC-state is simplistic and assumes that each vehicle will keep driving at a constant velocity without changing lanes.
+The transition function of the TTC-state is simplistic and assumes that each vehicle will keep driving at a constant velocity without changing lanes. This model bias can be a source of mistakes.
 
 ### Monte-Carlo Tree Search
 
-This agent uses a transition and reward model to perform a stochastic tree search of the optimal trajectory. No particular assumption is required on the state representation or transition model.
+This agent uses a transition and reward model to perform a stochastic tree search [(Coulom, 2006)](https://hal.inria.fr/inria-00116992/document) of the optimal trajectory. No particular assumption is required on the state representation or transition model.
