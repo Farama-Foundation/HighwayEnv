@@ -17,8 +17,9 @@ class HighwayEnv(AbstractEnv):
 
     COLLISION_COST = 10
     LANE_CHANGE_COST = 0.0
-    RIGHT_LANE_REWARD = 0.5
+    RIGHT_LANE_REWARD = 0.4
     HIGH_VELOCITY_REWARD = 1.0
+    EPISODE_SUCCESS = 10.0
 
     def __init__(self):
         road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=20, vehicles_type=IDMVehicle)
@@ -39,18 +40,20 @@ class HighwayEnv(AbstractEnv):
         state_reward = \
             - self.COLLISION_COST * self.vehicle.crashed \
             + self.RIGHT_LANE_REWARD * self.vehicle.lane_index \
-            + self.HIGH_VELOCITY_REWARD * self.vehicle.speed_index()
+            + self.HIGH_VELOCITY_REWARD * self.vehicle.speed_index() \
+            + self.EPISODE_SUCCESS * self.all_vehicles_passed()
         return action_reward[action] + state_reward
 
     def is_terminal(self):
         """
             The episode is over if the ego vehicle crashed or if it successfully passed all other vehicles.
         """
-        is_first = len(self.road.vehicles) > 1 and (self.vehicle.position[0] > 50 + max(
-                        [o.position[0] for o in self.road.vehicles if o is not self.vehicle]))
-
-        return self.vehicle.crashed or is_first
+        return self.vehicle.crashed or self.all_vehicles_passed()
 
     def reset(self):
         # TODO
         pass
+
+    def all_vehicles_passed(self):
+        return len(self.road.vehicles) > 1 and (self.vehicle.position[0] > 50 + max(
+            [o.position[0] for o in self.road.vehicles if o is not self.vehicle]))
