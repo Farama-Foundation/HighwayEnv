@@ -38,8 +38,8 @@ class Road(Loggable):
         for lane in range(lanes_count):
             origin = np.array([0, lane * lane_width])
             heading = 0
-            line_types = [LineType.CONTINUOUS if lane == 0 else LineType.STRIPED,
-                          LineType.CONTINUOUS if lane == lanes_count - 1 else LineType.NONE]
+            line_types = [LineType.CONTINUOUS_LINE if lane == 0 else LineType.STRIPED,
+                          LineType.CONTINUOUS_LINE if lane == lanes_count - 1 else LineType.NONE]
             lanes.append(StraightLane(origin, heading, lane_width, line_types))
         r = Road(lanes)
         r.add_random_vehicles(vehicles_count, vehicles_type)
