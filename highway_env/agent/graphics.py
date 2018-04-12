@@ -50,7 +50,7 @@ class MCTSGraphics(object):
         actions = agent.mcts.get_plan()
         font = pygame.font.Font(None, 13)
         text = font.render('-'.join(map(str, actions)), 1, (10, 10, 10), (255, 255, 255))
-        surface.blit(text, (5, surface.get_height()-15))
+        surface.blit(text, (1, surface.get_height()-10))
 
     @classmethod
     def display_node(cls, node, surface, origin, size,
@@ -59,7 +59,8 @@ class MCTSGraphics(object):
                      selected=False,
                      display_exploration=False,
                      display_count=False,
-                     display_text=True):
+                     display_text=True,
+                     display_prior=False):
         """
             Display an MCTS node at a given position on a surface.
 
@@ -99,10 +100,10 @@ class MCTSGraphics(object):
 
         if display_text and depth < 2:
             font = pygame.font.Font(None, 13)
-            text = font.render("{:.1f} / {:.1f} / {} / {:.2f}".format(node.value,
-                                                                      node.selection_strategy(temperature),
-                                                                      node.count,
-                                                                      node.prior),
+            text = "{:.1f} / {:.1f} / {}".format(node.value, node.selection_strategy(temperature), node.count)
+            if display_prior:
+                text += " / {:.2f}".format(node.prior)
+            text = font.render(text,
                                1, (10, 10, 10), (255, 255, 255))
             surface.blit(text, (origin[0]+1, origin[1]+1))
 
