@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 
 import os
+import datetime
 
 from gym.wrappers import Monitor
 from gym.wrappers.monitoring import video_recorder
@@ -12,6 +13,7 @@ class MonitorV2(Monitor):
                  write_upon_reset=False, uid=None, mode=None):
         if video_callable is None:
             video_callable = MonitorV2.always_call_video
+        directory = self.postfix_directory(directory)
         super(MonitorV2, self).__init__(env, directory, video_callable, force, resume, write_upon_reset, uid, mode)
 
     def close(self):
@@ -37,3 +39,7 @@ class MonitorV2(Monitor):
     @staticmethod
     def always_call_video(i):
         return True
+
+    @staticmethod
+    def postfix_directory(directory):
+        return os.path.join(directory, 'run_{}'.format(datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')))
