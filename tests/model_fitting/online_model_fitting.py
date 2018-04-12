@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
 from highway_env.road import Road
-from highway_env.simulation.simulation import Simulation
+from highway_env.wrappers.simulation import Simulation
 from highway_env.vehicle.control import ControlledVehicle
 
 from highway_env.vehicle.behavior import LinearVehicle

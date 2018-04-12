@@ -16,7 +16,7 @@ class SimulationViewer(EnvViewer):
     def __init__(self, simulation, record_video=True):
         self.simulation = simulation
         self.SCREEN_HEIGHT *= 2
-        super(SimulationViewer, self).__init__(self.simulation.env, record_video=record_video)
+        super(SimulationViewer, self).__init__(self.simulation.highway_env, record_video=record_video)
 
         panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2)
         self.agent_surface = pygame.Surface(panel_size)
