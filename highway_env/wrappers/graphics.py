@@ -13,10 +13,10 @@ class SimulationViewer(EnvViewer):
         an agent.
     """
 
-    def __init__(self, simulation, record_video=True):
+    def __init__(self, simulation):
         self.simulation = simulation
         self.SCREEN_HEIGHT *= 2
-        super(SimulationViewer, self).__init__(self.simulation.highway_env, record_video=record_video)
+        super(SimulationViewer, self).__init__(self.simulation.highway_env)
 
         panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2)
         self.agent_surface = pygame.Surface(panel_size)
@@ -38,9 +38,3 @@ class SimulationViewer(EnvViewer):
 
         self.clock.tick(self.env.SIMULATION_FREQUENCY)
         pygame.display.flip()
-
-        if self.record_video:
-            self.frame += 1
-            pygame.image.save(self.screen, "{}/{}_{:04d}.bmp".format(self.TMP_FOLDER,
-                                                                     self.video_name,
-                                                                     self.frame))
