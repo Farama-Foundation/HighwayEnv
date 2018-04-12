@@ -32,7 +32,7 @@ class HighwayEnv(AbstractEnv):
 
     @staticmethod
     def _create_road():
-        road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=3, vehicles_type=IDMVehicle)
+        road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=20, vehicles_type=IDMVehicle)
         vehicle = MDPVehicle.create_random(road, 25)
         road.vehicles.append(vehicle)
         return road, vehicle
