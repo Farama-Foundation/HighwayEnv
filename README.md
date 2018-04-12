@@ -1,7 +1,10 @@
 # highway-env
-An collection of environments for highway driving tactical decision-making tasks
+A collection of environments for *highway driving* and tactical decision-making tasks
 
-![Highway driving](docs/media/highway.gif)
+<p align="center">
+    <img src="docs/media/highway-env.gif"><br/>
+    <em>An episode of one of the environments available in higwhay-env.</em>
+</p>
 
 ## Installation
 
@@ -32,7 +35,10 @@ env = gym.make("highway-v0")
 In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles.
 The agent's objective is to reach a high velocity while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.
 
-![Highway driving](docs/media/highway.gif)
+<p align="center">
+    <img src="docs/media/highway.gif"><br/>
+    <em>The higwhay-v0 environment.</em>
+</p>
 
 
 ### Merge
@@ -43,7 +49,10 @@ env = gym.make("highway-merge-v0")
 
 On this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high velocity while making room for the vehicles so that they can safely merge in the traffic.
 
-![Merge](docs/media/merge.gif)
+<p align="center">
+    <img src="docs/media/merge.gif"><br/>
+    <em>The highway-merge-v0 environment.</em>
+</p>
 
 
 ## The framework
@@ -85,7 +94,10 @@ In the `LinearVehicle` class, the longitudinal behavior is defined as a linear w
 
 ### Time-To-Collision Value Iteration
 
-![Value Iteration - TTC](docs/media/ttcvi.gif)
+<p align="center">
+    <img src="docs/media/ttcvi.gif"><br/>
+    <em>The TTC Value Iteration agent solving highway-v0.</em>
+</p>
 
 This agent uses a simple representation of the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road, and performs a Value Iteration to compute the corresponding optimal value function.
 
@@ -93,4 +105,9 @@ The transition function of the TTC-state is simplistic and assumes that each veh
 
 ### Monte-Carlo Tree Search
 
-This agent uses a transition and reward model to perform a stochastic tree search [(Coulom, 2006)](https://hal.inria.fr/inria-00116992/document) of the optimal trajectory. No particular assumption is required on the state representation or transition model.
+This agent leverages a transition and reward models to perform a stochastic tree search [(Coulom, 2006)](https://hal.inria.fr/inria-00116992/document) of the optimal trajectory. No particular assumption is required on the state representation or transition model.
+
+<p align="center">
+    <img src="docs/media/mcts.gif"><br/>
+    <em>The MCTS agent solving highway-v0.</em>
+</p>
