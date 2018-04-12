@@ -187,6 +187,13 @@ class AbstractEnv(gym.Env):
     #     return state_copy
 
     def _automatic_rendering(self):
+        """
+            Automatically render the intermediate frames while an action is still ongoing.
+            This allows to render the whole video and not only single steps corresponding to agent decision-making.
+
+            If a callback has been set, use it to perform the rendering. This is useful for the environment wrappers
+            such as video-recording monitor that need to access these intermediate renderings.
+        """
         if self.viewer is not None:
             self.should_update_rendering = True
 
