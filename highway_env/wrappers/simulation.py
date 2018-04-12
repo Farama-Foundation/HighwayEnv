@@ -13,7 +13,7 @@ class Simulation(object):
     MAXIMUM_SIMULATION_TIME = 3 * 60
     TRAJECTORY_TIMESTEP = 0.35
 
-    def __init__(self, env, agent, initial_observation, highway_env=None, render_agent=True):
+    def __init__(self, env, agent, initial_observation, highway_env=None, render_agent=True, episodes=1):
         """
 
         :param env: The environment to be solved, possibly wrapping an AbstractEnv environment
@@ -26,9 +26,10 @@ class Simulation(object):
         self.observation = initial_observation
         self.highway_env = highway_env if highway_env else env
         self.render_agent = render_agent
+        self.episodes = episodes
         self.planned_trajectory = []
         self.done = False
-        self.t = 0
+        self.steps = 0
 
     def step(self):
         """
@@ -43,10 +44,20 @@ class Simulation(object):
 
         if actions:
             self.observation, reward, terminal, _ = self.env.step(actions[0])
-            self.done = terminal or self.highway_env.done
+            if terminal:
+                self.next_episode()
 
-        self.t += 1
-        if self.t > self.MAXIMUM_SIMULATION_TIME:
+        self.steps += 1
+        if self.steps > self.MAXIMUM_SIMULATION_TIME:
+            self.next_episode()
+
+        self.done = self.done or self.highway_env.done
+
+    def next_episode(self):
+        self.episodes -= 1
+        if self.episodes > 0:
+            self.env.reset()
+        else:
             self.done = True
 
     def render(self, mode='human'):
