@@ -66,6 +66,13 @@ class EnvViewer(object):
                                                                      self.video_name,
                                                                      self.frame))
 
+    def get_image(self):
+        """
+        :return: the rendered image as a rbg array
+        """
+        data = pygame.surfarray.array3d(self.screen)
+        return np.moveaxis(data, 0, 1)
+
     def window_position(self):
         """
         :return: the world position of the center of the displayed window.

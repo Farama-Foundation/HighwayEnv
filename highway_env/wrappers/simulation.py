@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 
 from highway_env.envs.graphics import EnvViewer
-from highway_env.simulation.graphics import SimulationViewer
+from highway_env.wrappers.graphics import SimulationViewer
 
 
 class Simulation(object):
@@ -30,6 +30,9 @@ class Simulation(object):
         self.planned_trajectory = []
         self.done = False
         self.steps = 0
+
+        if self.render_agent:
+            self.highway_env.viewer = SimulationViewer(self, record_video=False)
 
     def step(self):
         """
@@ -70,10 +73,10 @@ class Simulation(object):
 
         if self.highway_env.viewer is None:
             if self.render_agent:
-                self.highway_env.viewer = SimulationViewer(self, record_video=True)
+                self.highway_env.viewer = SimulationViewer(self, record_video=False)
             else:
-                self.highway_env.viewer = EnvViewer(self.env, record_video=True)
-        self.env.render()
+                self.highway_env.viewer = EnvViewer(self.env, record_video=False)
+        self.env.render(mode)
 
     def close(self):
         """

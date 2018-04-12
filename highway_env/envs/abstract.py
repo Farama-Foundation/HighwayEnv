@@ -15,7 +15,7 @@ class AbstractEnv(gym.Env):
         velocity. The action space is fixed, but the observation space and reward function must be defined in the
         environment implementations.
     """
-    metadata = {'render.modes': ['human']}
+    metadata = {'render.modes': ['human', 'rgb_array']}
 
     ACTIONS = {0: 'LANE_LEFT',
                1: 'IDLE',
@@ -49,18 +49,21 @@ class AbstractEnv(gym.Env):
 
         self.done = False
         self.viewer = None
+        self.automatic_rendering_callback = None
+        self.should_update_rendering = True
+        self.rendering_mode = 'human'
         self.observation_space = None
         self.action_space = spaces.Discrete(len(self.ACTIONS))
         self.observation_space = spaces.Box(low=-1, high=1, shape=(1, 1), dtype=np.float32)
 
-    def observation(self):
+    def _observation(self):
         """
             Return the observation of the current state, which must be consistent with self.observation_space.
         :return: the observation
         """
         raise NotImplementedError()
 
-    def reward(self, action):
+    def _reward(self, action):
         """
             Return the reward associated with performing a given action and ending up in the current state.
 
@@ -69,7 +72,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError()
 
-    def is_terminal(self):
+    def _is_terminal(self):
         """
             Check whether the current state is a terminal state
         :return:is the state terminal
@@ -100,17 +103,16 @@ class AbstractEnv(gym.Env):
             self.road.act()
             self.road.step(1 / self.SIMULATION_FREQUENCY)
 
-            # Render simulation
-            if self.viewer is not None:
-                self.render()
+            # Automatically render intermediate simulation steps if a viewer has been launched
+            self._automatic_rendering()
 
             # Stop at terminal states
-            if self.done or self.is_terminal():
+            if self.done or self._is_terminal():
                 break
 
-        obs = self.observation()
-        reward = self.reward(action)
-        terminal = self.is_terminal()
+        obs = self._observation()
+        reward = self._reward(action)
+        terminal = self._is_terminal()
         info = {}
 
         return obs, reward, terminal, info
@@ -122,14 +124,20 @@ class AbstractEnv(gym.Env):
             Create a viewer if none exists, and use it to render an image.
         :param mode: the rendering mode
         """
+        self.rendering_mode = mode
+
         if self.viewer is None:
             self.viewer = EnvViewer(self, record_video=False)
 
-        if mode == 'rgb_array':
-            raise NotImplementedError()
-        elif mode == 'human':
+        # If the frame has already been rendered, do nothing
+        if self.should_update_rendering:
             self.viewer.display()
+
+        if mode == 'rgb_array':
+            return self.viewer.get_image()
+        elif mode == 'human':
             self.viewer.handle_events()
+        self.should_update_rendering = False
 
     def close(self):
         """
@@ -178,7 +186,16 @@ class AbstractEnv(gym.Env):
     #             vehicles[i] = agent_type.create_from(v)
     #     return state_copy
 
-    def simplified(self):
+    def _automatic_rendering(self):
+        if self.viewer is not None:
+            self.should_update_rendering = True
+
+            if self.automatic_rendering_callback:
+                self.automatic_rendering_callback()
+            else:
+                self.render(self.rendering_mode)
+
+    def _simplified(self):
         """
             Return a simplified copy of the environment where distant vehicles have been removed from the road.
 
@@ -203,7 +220,7 @@ class AbstractEnv(gym.Env):
         result = cls.__new__(cls)
         memo[id(self)] = result
         for k, v in self.__dict__.items():
-            if k != 'viewer':
+            if k not in ['viewer', 'automatic_rendering_callback']:
                 setattr(result, k, copy.deepcopy(v, memo))
             else:
                 setattr(result, k, None)
