@@ -79,7 +79,6 @@ class TTCVIAgent(AbstractAgent):
         # Run value iteration
         self.value.fill(0)
         self.value_iteration()
-        print(self.value)
 
         # Return chosen trajectory
         path, actions = self.pick_trajectory()

@@ -205,7 +205,7 @@ class MCTS(object):
 
         :param action: the chosen action from the root node
         """
-        self.step_by_prior(action)
+        self.step_by_subtree(action)
 
     def step_by_reset(self):
         """
