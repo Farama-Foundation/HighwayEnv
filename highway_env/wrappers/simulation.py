@@ -31,8 +31,9 @@ class Simulation(object):
         self.done = False
         self.steps = 0
 
+        # If agent rendering is requested, create or replace the environment viewer by a simulation viewer
         if self.render_agent:
-            self.highway_env.viewer = SimulationViewer(self, record_video=False)
+            self.highway_env.viewer = SimulationViewer(self)
 
     def step(self):
         """
@@ -66,16 +67,8 @@ class Simulation(object):
     def render(self, mode='human'):
         """
             Render the environment.
-
-            Create a viewer if none exists, and use it to render an image.
         :param mode: the rendering mode
         """
-
-        if self.highway_env.viewer is None:
-            if self.render_agent:
-                self.highway_env.viewer = SimulationViewer(self, record_video=False)
-            else:
-                self.highway_env.viewer = EnvViewer(self.env, record_video=False)
         self.env.render(mode)
 
     def close(self):
