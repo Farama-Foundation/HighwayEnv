@@ -37,27 +37,16 @@ class TTCVIAgent(AbstractAgent):
         The discount factor used for planning, in [0, 1].
     """
 
-    def __init__(self, state):
+    def __init__(self):
         """
             New instance of TTCVI agent.
-
-        :param state: the current MDP state
         """
-        self.state = state
-        self.grids = np.zeros((state.vehicle.SPEED_COUNT,
-                              len(state.vehicle.road.lanes),
-                              int(self.HORIZON / self.TIME_QUANTIZATION)))
-        self.V, self.L, self.T = np.shape(self.grids)
-        self.value = np.zeros(np.shape(self.grids))
-        self.state_reward = np.zeros(np.shape(self.grids))
-        acceleration_cost = 0.01  # Used to favour idle to acceleration in timesteps other than 0
-        self.action_reward = {0: -state.LANE_CHANGE_COST,
-                              1: 0,
-                              2: -state.LANE_CHANGE_COST,
-                              3: acceleration_cost,
-                              4: acceleration_cost}
+        self.state = None
+        self.grids = self.value = None
+        self.V = self.L = self.T = None
+        self.state_reward = None
+        self.action_reward = self.state_reward = None
         self.lane = self.speed = None
-        self.update_ttc_state()
 
     def plan(self, state):
         """
@@ -68,9 +57,22 @@ class TTCVIAgent(AbstractAgent):
         :param state: the current MDP state
         :return: a list of optimal actions
         """
+        # Initialize variables if needed
+        if self.grids is None:
+            self.grids = np.zeros((state.vehicle.SPEED_COUNT,
+                                   len(state.vehicle.road.lanes),
+                                   int(self.HORIZON / self.TIME_QUANTIZATION)))
+            self.V, self.L, self.T = np.shape(self.grids)
+            self.value = np.zeros(np.shape(self.grids))
+
         # Update state and reward
         self.state = state
         self.update_ttc_state()
+        self.action_reward = {0: -state.LANE_CHANGE_COST,
+                              1: 0,
+                              2: -state.LANE_CHANGE_COST,
+                              3: 0,
+                              4: 0}
         self.state_reward = \
             - state.COLLISION_COST * self.grids \
             + state.RIGHT_LANE_REWARD * np.tile(np.arange(self.L)[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \

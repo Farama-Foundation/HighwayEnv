@@ -43,18 +43,22 @@ class AbstractEnv(gym.Env):
         The maximum distance of any vehicle present in the observation [m]
     """
 
+
+
     def __init__(self, road, vehicle):
         self.road = road
         self.vehicle = vehicle
 
+        self.action_space = spaces.Discrete(len(self.ACTIONS))
+        self.observation_space = spaces.Box(low=-1, high=1, shape=(1, 1), dtype=np.float32)
+
         self.done = False
+        self.steps = 0
+
         self.viewer = None
         self.automatic_rendering_callback = None
         self.should_update_rendering = True
         self.rendering_mode = 'human'
-        self.observation_space = None
-        self.action_space = spaces.Discrete(len(self.ACTIONS))
-        self.observation_space = spaces.Box(low=-1, high=1, shape=(1, 1), dtype=np.float32)
 
     def _observation(self):
         """
@@ -84,7 +88,8 @@ class AbstractEnv(gym.Env):
             Reset the environment to it's initial configuration
         :return: the observation of the reset state
         """
-        raise NotImplementedError()
+        self.steps = 0
+        return self._observation()
 
     def step(self, action):
         """
@@ -115,6 +120,7 @@ class AbstractEnv(gym.Env):
         terminal = self._is_terminal()
         info = {}
 
+        self.steps += 1
         return obs, reward, terminal, info
 
     def render(self, mode='human'):

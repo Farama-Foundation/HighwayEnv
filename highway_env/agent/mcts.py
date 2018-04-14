@@ -139,18 +139,20 @@ class MCTS(object):
         node = self.root
         total_reward = 0
         depth = self.max_depth
-        while depth > 0 and node.children and not state.is_terminal():
+        terminal = False
+        while depth > 0 and node.children and not terminal:
             action = node.select_action(temperature=self.temperature)
-            _, reward, _, _ = state.step(action)
+            _, reward, terminal, _ = state.step(action)
             total_reward += reward
             node = node.children[action]
             depth = depth - 1
 
         if not node.children and \
-                (not state.is_terminal() or node == self.root):
+                (not terminal or node == self.root):
             node.expand(self.prior_policy(state))
 
-        total_reward = self.evaluate(state, total_reward, limit=depth)
+        if not terminal:
+            total_reward = self.evaluate(state, total_reward, limit=depth)
         node.update_branch(total_reward)
 
     def evaluate(self, state, total_reward=0, limit=10):
@@ -163,12 +165,12 @@ class MCTS(object):
         :return: the total reward of the rollout trajectory
         """
         for _ in range(limit):
-            if state.is_terminal():
-                break
             actions, probabilities = self.rollout_policy(state)
             action = np.random.choice(actions, 1, p=probabilities)[0]
-            _, reward, _, _ = state.step(action)
+            _, reward, terminal, _ = state.step(action)
             total_reward += reward
+            if terminal:
+                break
         return total_reward
 
     def plan(self, state):
@@ -242,7 +244,6 @@ class MCTSAgent(AbstractAgent):
         An agent that uses Monte Carlo Tree Search to plan a sequence of action in an MDP.
     """
     def __init__(self,
-                 state=None,
                  prior_policy=None,
                  rollout_policy=None,
                  iterations=75,
@@ -250,7 +251,6 @@ class MCTSAgent(AbstractAgent):
                  assume_vehicle_type=None):
         """
             A new MCTS agent.
-        :param state: the current MDP state
         :param prior_policy: The prior distribution over actions given a state
         :param rollout_policy: The distribution over actions used when evaluating leaves
         :param iterations: the number of MCTS iterations
