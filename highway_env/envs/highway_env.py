@@ -20,6 +20,8 @@ class HighwayEnv(AbstractEnv):
     HIGH_VELOCITY_REWARD = 1.0
     EPISODE_SUCCESS = 10.0
 
+    MAXIMUM_SIMULATION_STEPS = 3 * 60
+
     def __init__(self):
         road, vehicle = HighwayEnv._create_road()
         super(HighwayEnv, self).__init__(road, vehicle)
@@ -28,7 +30,7 @@ class HighwayEnv(AbstractEnv):
         road, vehicle = HighwayEnv._create_road()
         self.road = road
         self.vehicle = vehicle
-        return self._observation()
+        return super(HighwayEnv, self).reset()
 
     @staticmethod
     def _create_road():
@@ -58,7 +60,7 @@ class HighwayEnv(AbstractEnv):
         """
             The episode is over if the ego vehicle crashed or if it successfully passed all other vehicles.
         """
-        return self.vehicle.crashed or self._all_vehicles_passed()
+        return self.vehicle.crashed or self._all_vehicles_passed() or self.steps > self.MAXIMUM_SIMULATION_STEPS
 
     def _all_vehicles_passed(self):
         return len(self.road.vehicles) > 1 and (self.vehicle.position[0] > 50 + max(
