@@ -42,4 +42,4 @@ class MonitorV2(Monitor):
 
     @staticmethod
     def postfix_directory(directory):
-        return os.path.join(directory, 'run_{}'.format(datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')))
+        return os.path.join(directory, 'run_{}'.format(datetime.datetime.now().strftime('%Y%m%d-%H%M%S')))
