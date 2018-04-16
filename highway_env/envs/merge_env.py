@@ -4,7 +4,7 @@ import numpy as np
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
 from highway_env.road.road import Road
-from highway_env.vehicle.behavior import IDMVehicle
+from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle
 
@@ -55,15 +55,18 @@ class MergeEnv(AbstractEnv):
                 reward += self.MERGING_VELOCITY_REWARD * (vehicle.target_velocity - vehicle.velocity)
         return reward + action_reward[action]
 
-    def is_terminal(self):
+    def _is_terminal(self):
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
         return self.vehicle.crashed or self.vehicle.position[0] > 400
 
     def reset(self):
-        # TODO
-        pass
+        road = MergeEnv.make_road()
+        vehicle = MergeEnv.make_vehicles(road)
+        self.road = road
+        self.vehicle = vehicle
+        return super(MergeEnv, self).reset()
 
     @staticmethod
     def make_road():
@@ -103,11 +106,11 @@ class MergeEnv(AbstractEnv):
         ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
         road.vehicles.append(ego_vehicle)
 
-        road.vehicles.append(IDMVehicle(road, road.lanes[0].position(20, 0), velocity=29))
-        road.vehicles.append(IDMVehicle(road, road.lanes[1].position(0, 0), velocity=31))
-        road.vehicles.append(IDMVehicle(road, road.lanes[0].position(-65, 0), velocity=31.5))
+        road.vehicles.append(LinearVehicle(road, road.lanes[0].position(20, 0), velocity=29))
+        road.vehicles.append(LinearVehicle(road, road.lanes[1].position(0, 0), velocity=31))
+        road.vehicles.append(LinearVehicle(road, road.lanes[0].position(-65, 0), velocity=31.5))
 
-        merging_v = IDMVehicle(road, road.lanes[-1].position(40, 0), velocity=20)
+        merging_v = LinearVehicle(road, road.lanes[-1].position(40, 0), velocity=20)
         merging_v.TIME_WANTED = 1.0
         merging_v.POLITENESS = 0.0
         merging_v.target_velocity = 30

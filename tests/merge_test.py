@@ -4,25 +4,22 @@ import gym
 import highway_env
 
 from highway_env.agent.mcts import MCTSAgent
+from highway_env.agent.ttc_vi import TTCVIAgent
 from highway_env.wrappers.simulation import Simulation
+from highway_env.wrappers.monitor import MonitorV2
 
 
-def run():
+def test():
     env = gym.make('highway-merge-v0')
-    agent = MCTSAgent(env,
-                      prior_policy=MCTSAgent.fast_policy,
+    monitor = MonitorV2(env, 'out', force=True)
+    agent = MCTSAgent(prior_policy=MCTSAgent.fast_policy,
                       rollout_policy=MCTSAgent.idle_policy,
-                      iterations=100,
+                      iterations=50,
                       assume_vehicle_type=None)
-    sim = Simulation(env, agent)
-
-    sim.step()
-    sim.render()
-    while not sim.done:
-        sim.step()
-    sim.close()
+    # agent = TTCVIAgent()
+    sim = Simulation(monitor, agent, highway_env=env, episodes=10)
+    sim.run()
 
 
 if __name__ == '__main__':
-    # np.random.seed(3)
-    run()
+    test()
