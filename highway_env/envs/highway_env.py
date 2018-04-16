@@ -14,11 +14,11 @@ class HighwayEnv(AbstractEnv):
         staying on the rightmost lanes and avoiding collisions.
     """
 
-    COLLISION_COST = 10
-    LANE_CHANGE_COST = 0.0
-    RIGHT_LANE_REWARD = 0.4
-    HIGH_VELOCITY_REWARD = 1.0
-    EPISODE_SUCCESS = 10.0
+    COLLISION_REWARD = -1
+    LEFT_LANE_REWARD = -0.1
+    HIGH_VELOCITY_REWARD = 0.2
+    EPISODE_SUCCESS_REWARD = 1.0
+    LANE_CHANGE_REWARD = -0
 
     MAXIMUM_SIMULATION_STEPS = 3 * 60
 
@@ -45,12 +45,12 @@ class HighwayEnv(AbstractEnv):
         :param action: the last action performed
         :return: the corresponding reward
         """
-        action_reward = {0: -self.LANE_CHANGE_COST, 1: 0, 2: -self.LANE_CHANGE_COST, 3: 0, 4: 0}
+        action_reward = {0: self.LANE_CHANGE_REWARD, 1: 0, 2: self.LANE_CHANGE_REWARD, 3: 0, 4: 0}
         state_reward = \
-            - self.COLLISION_COST * self.vehicle.crashed \
-            + self.RIGHT_LANE_REWARD * self.vehicle.lane_index \
-            + self.HIGH_VELOCITY_REWARD * self.vehicle.speed_index() \
-            + self.EPISODE_SUCCESS * self._all_vehicles_passed()
+            + self.COLLISION_REWARD * self.vehicle.crashed \
+            + self.LEFT_LANE_REWARD * (len(self.road.lanes) - 1 - self.vehicle.lane_index) / (len(self.road.lanes) - 1) \
+            + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1) \
+            + self.EPISODE_SUCCESS_REWARD * self._all_vehicles_passed()
         return action_reward[action] + state_reward
 
     def _observation(self):

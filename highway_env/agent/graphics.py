@@ -68,6 +68,7 @@ class MCTSGraphics(object):
         :param surface: the pygame surface on which the node is displayed
         :param origin: the location of the node on the surface [px]
         :param size: the size of the node on the surface [px]
+        :param temperature: the temperature used for exploration bonus visualization
         :param depth: the depth of the node in the tree
         :param selected: whether the node is within a selected branch of the tree
         :param display_exploration: display the exploration bonus
@@ -76,13 +77,13 @@ class MCTSGraphics(object):
         """
         # Display node value
         cmap = cm.jet_r
-        norm = mpl.colors.Normalize(vmin=-15, vmax=30)
+        norm = mpl.colors.Normalize(vmin=-2, vmax=2)
         color = cmap(norm(node.value), bytes=True)
         pygame.draw.rect(surface, color, (origin[0], origin[1], size[0], size[1]), 0)
 
         # Add exploration bonus
         if display_exploration:
-            norm = mpl.colors.Normalize(vmin=-15, vmax=30)
+            norm = mpl.colors.Normalize(vmin=-2, vmax=2)
             color = cmap(norm(node.selection_strategy()), bytes=True)
             pygame.draw.polygon(surface, color, [(origin[0], origin[1] + size[1]),
                                                  (origin[0] + size[0], origin[1]),
@@ -133,7 +134,7 @@ class TTCVIGraphics(object):
         :param agent: the agent to be displayed
         :param surface: the surface on which the agent is displayed.
         """
-        norm = mpl.colors.Normalize(vmin=-15, vmax=30)
+        norm = mpl.colors.Normalize(vmin=-2, vmax=2)
         cmap = cm.jet_r
         cell_size = (surface.get_width() // agent.T, surface.get_height() // (agent.L * agent.V))
         velocity_size = surface.get_height() // agent.V
