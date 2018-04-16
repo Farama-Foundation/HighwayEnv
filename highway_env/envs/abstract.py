@@ -43,8 +43,6 @@ class AbstractEnv(gym.Env):
         The maximum distance of any vehicle present in the observation [m]
     """
 
-
-
     def __init__(self, road, vehicle):
         self.road = road
         self.vehicle = vehicle
@@ -140,6 +138,7 @@ class AbstractEnv(gym.Env):
             self.viewer.display()
 
         if mode == 'rgb_array':
+            self.viewer.handle_events()
             return self.viewer.get_image()
         elif mode == 'human':
             self.viewer.handle_events()

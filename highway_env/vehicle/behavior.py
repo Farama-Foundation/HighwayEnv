@@ -232,15 +232,14 @@ class IDMVehicle(ControlledVehicle):
 
 class LinearVehicle(IDMVehicle):
     ALPHA = 0.3
-    BETA_FRONT = 0.2
+    BETA_FRONT = 0.14
     BETA_REAR = 0.0
-    GAMMA_FRONT = 0.7
+    GAMMA_FRONT = 0.8
     GAMMA_REAR = 0.0
     TIME_WANTED = 2.0
 
     def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
         super(LinearVehicle, self).__init__(road, position, heading, velocity, target_lane_index, enable_lane_change)
-        self.target_velocity = self.VELOCITY_WANTED
 
     @classmethod
     def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
