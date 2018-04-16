@@ -68,15 +68,17 @@ class TTCVIAgent(AbstractAgent):
         # Update state and reward
         self.state = state
         self.update_ttc_state()
-        self.action_reward = {0: -state.LANE_CHANGE_COST,
+        self.action_reward = {0: state.LANE_CHANGE_REWARD,
                               1: 0,
-                              2: -state.LANE_CHANGE_COST,
+                              2: state.LANE_CHANGE_REWARD,
                               3: 0,
                               4: 0}
+        lanes = (self.L - 1 - np.arange(self.L))/(self.L - 1)
+        vels = np.arange(self.V)/(self.V - 1)
         self.state_reward = \
-            - state.COLLISION_COST * self.grids \
-            + state.RIGHT_LANE_REWARD * np.tile(np.arange(self.L)[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \
-            + state.HIGH_VELOCITY_REWARD * np.tile(np.arange(self.V)[:, np.newaxis, np.newaxis], (1, self.L, self.T))
+            + state.COLLISION_REWARD * self.grids \
+            + state.LEFT_LANE_REWARD * np.tile(lanes[np.newaxis, :, np.newaxis], (self.V, 1, self.T)) \
+            + state.HIGH_VELOCITY_REWARD * np.tile(vels[:, np.newaxis, np.newaxis], (1, self.L, self.T))
 
         # Run value iteration
         self.value.fill(0)

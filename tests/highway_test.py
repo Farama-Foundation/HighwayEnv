@@ -13,8 +13,8 @@ def test():
     IDMVehicle.POLITENESS = 0
     env = gym.make('highway-v0')
     monitor = MonitorV2(env, 'out', force=True)
-    agent = MCTSAgent(temperature=200, iterations=75)
-    # agent = TTCVIAgent()
+    # agent = MCTSAgent(temperature=20, iterations=75)
+    agent = TTCVIAgent()
     sim = Simulation(monitor, agent, highway_env=env, episodes=20)
     sim.run()
 

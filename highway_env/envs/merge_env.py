@@ -18,41 +18,41 @@ class MergeEnv(AbstractEnv):
         vehicles.
     """
 
-    VELOCITY_REWARD = 1.0
-    MERGING_VELOCITY_REWARD = 2.0 / 20.0
-    RIGHT_LANE_REWARD = 0.4
-    ACCELERATION_COST = 0
-    LANE_CHANGE_COST = 0.7
-    COLLISION_COST = 10
+    COLLISION_REWARD = -1
+    LEFT_LANE_REWARD = -0.1
+    HIGH_VELOCITY_REWARD = 0.2
+    MERGING_VELOCITY_REWARD = -0.4 / 20.0
+    LANE_CHANGE_REWARD = -0.12
 
     def __init__(self):
         road = MergeEnv.make_road()
         vehicle = MergeEnv.make_vehicles(road)
         super(MergeEnv, self).__init__(road, vehicle)
 
-    def observation(self):
-        return 1
+    def _observation(self):
+        return self
 
-    def reward(self, action):
+    def _reward(self, action):
         """
             The vehicle is rewarded for driving with high velocity on lanes to the right and avoiding collisions, but
             an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low velocity.
         :param action: the action performed
         :return: the reward of the state-action transition
         """
-        action_reward = {0: -self.LANE_CHANGE_COST,
+        action_reward = {0: self.LANE_CHANGE_REWARD,
                          1: 0,
-                         2: -self.LANE_CHANGE_COST,
-                         3: -self.ACCELERATION_COST,
-                         4: -self.ACCELERATION_COST}
-        reward = -self.COLLISION_COST * self.vehicle.crashed \
-            + self.RIGHT_LANE_REWARD * self.vehicle.lane_index \
-            + self.VELOCITY_REWARD * self.vehicle.velocity_index
+                         2: self.LANE_CHANGE_REWARD,
+                         3: 0,
+                         4: 0}
+        reward = self.COLLISION_REWARD * self.vehicle.crashed \
+            + self.LEFT_LANE_REWARD * (len(self.road.lanes) - 1 - self.vehicle.lane_index) / (
+                             len(self.road.lanes) - 1) \
+            + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index
 
         # Altruistic penalty
         for vehicle in self.road.vehicles:
             if vehicle.lane_index == len(self.road.lanes)-1 and isinstance(vehicle, ControlledVehicle):
-                reward -= self.MERGING_VELOCITY_REWARD * (vehicle.target_velocity - vehicle.velocity)
+                reward += self.MERGING_VELOCITY_REWARD * (vehicle.target_velocity - vehicle.velocity)
         return reward + action_reward[action]
 
     def is_terminal(self):

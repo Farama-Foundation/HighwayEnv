@@ -247,7 +247,7 @@ class MCTSAgent(AbstractAgent):
                  prior_policy=None,
                  rollout_policy=None,
                  iterations=75,
-                 temperature=100,
+                 temperature=10,
                  assume_vehicle_type=None):
         """
             A new MCTS agent.
