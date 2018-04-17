@@ -8,6 +8,7 @@ A collection of environments for *highway driving* and tactical decision-making 
 </p>
 
 [![Build Status](https://travis-ci.org/eleurent/highway-env.svg?branch=master)](https://travis-ci.org/eleurent/highway-env)
+[![Docs Status](https://media.readthedocs.org/static/projects/badges/passing.svg)](https://eleurent.github.io/highway-env/)
 
 ## Installation
 
