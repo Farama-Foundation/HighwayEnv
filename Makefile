@@ -5,7 +5,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = highway-env
-SOURCEDIR     = docs/sources
+SOURCEDIR     = docs/source
 BUILDDIR      = docs/_build
 
 # Put it first so that "make" without argument is like "make help".
