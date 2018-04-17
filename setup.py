@@ -22,7 +22,7 @@ setup(
     tests_require=['pytest'],
     extras_require={
         'dev': ['scipy'],
-        'deploy': ['pytest-runner', 'sphinx']
+        'deploy': ['pytest-runner', 'sphinx', 'sphinx_rtd_theme']
     },
     entry_points={
         'console_scripts': [],
