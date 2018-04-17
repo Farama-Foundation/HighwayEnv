@@ -5,8 +5,8 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = highway-env
-SOURCEDIR     = docs
-BUILDDIR      = _build
+SOURCEDIR     = docs/sources
+BUILDDIR      = .
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -15,11 +15,11 @@ help:
 .PHONY: help Makefile
 
 apidoc:
-	# sphinx-apidoc -o docs -e highway_env
-	cd highway_env ; mv -vf __init__.py __init__.py.old ; sphinx-apidoc -f -o ../docs -e -M . ; mv -vf __init__.py.old __init__.py; cd ..
+	sphinx-apidoc -o docs/sources -e highway_env
+	# cd highway_env ; mv -vf __init__.py __init__.py.old ; sphinx-apidoc -f -o ../docs -e -M . ; mv -vf __init__.py.old __init__.py; cd ..
 
 http:
-	python -mwebbrowser "http://localhost:8000/_build/html/"
+	python -mwebbrowser "http://localhost:8000/"
 	python -m SimpleHTTPServer
 
 
