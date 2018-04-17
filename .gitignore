@@ -13,5 +13,8 @@ _build
 # Editor files
 .idea/*
 
+# Test files
+.pytest_cache/*
+
 # Outputs
 **/out/*
