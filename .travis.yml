@@ -7,3 +7,17 @@ install:
   - pip install .
 script:
   - pytest
+
+
+before_deploy:
+  - pip install -r doc-requirements.txt
+- "if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then make apidoc; make html;fi"
+
+deploy:
+    - provider: pages
+      skip-cleanup: true
+      github-token: $GH_TOKEN
+      local-dir: doc/_build/html
+      on:
+        branch: master
+        python: 3.5
