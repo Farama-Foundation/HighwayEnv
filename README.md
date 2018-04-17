@@ -1,10 +1,13 @@
 # highway-env
+
 A collection of environments for *highway driving* and tactical decision-making tasks
 
 <p align="center">
     <img src="docs/media/highway-env.gif"><br/>
     <em>An episode of one of the environments available in higwhay-env.</em>
 </p>
+
+[![Build Status](https://travis-ci.org/eleurent/highway-env.svg?branch=master)](https://travis-ci.org/eleurent/highway-env)
 
 ## Installation
 
