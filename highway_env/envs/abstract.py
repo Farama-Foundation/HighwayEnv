@@ -131,7 +131,7 @@ class AbstractEnv(gym.Env):
         self.rendering_mode = mode
 
         if self.viewer is None:
-            self.viewer = EnvViewer(self, record_video=False)
+            self.viewer = EnvViewer(self)
 
         # If the frame has already been rendered, do nothing
         if self.should_update_rendering:
