@@ -48,7 +48,7 @@ class HighwayEnv(AbstractEnv):
         action_reward = {0: self.LANE_CHANGE_REWARD, 1: 0, 2: self.LANE_CHANGE_REWARD, 3: 0, 4: 0}
         state_reward = \
             + self.COLLISION_REWARD * self.vehicle.crashed \
-            + self.LEFT_LANE_REWARD * (len(self.road.lanes) - 1 - self.vehicle.lane_index) / (len(self.road.lanes) - 1) \
+            + self.LEFT_LANE_REWARD * (len(self.road.lanes)-1 - self.vehicle.lane_index) / (len(self.road.lanes) - 1) \
             + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1) \
             + self.EPISODE_SUCCESS_REWARD * self._all_vehicles_passed()
         return action_reward[action] + state_reward
