@@ -10,7 +10,7 @@ Welcome to highway-env's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: highway
+.. automodule:: highway_env
 
 Indices and tables
 ==================
