@@ -1,4 +1,4 @@
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.road import Road
