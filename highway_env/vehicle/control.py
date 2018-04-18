@@ -42,8 +42,8 @@ class ControlledVehicle(Vehicle):
         :param vehicle: a vehicle
         :return: a new vehicle at the same dynamical state
         """
-        v = cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity,
-                vehicle.target_lane_index, vehicle.target_velocity)
+        v = cls(vehicle.road, vehicle.position, heading=vehicle.heading, velocity=vehicle.velocity,
+                target_lane_index=vehicle.target_lane_index, target_velocity=vehicle.target_velocity)
         return v
 
     def act(self, action=None):
