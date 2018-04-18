@@ -2,6 +2,7 @@ from __future__ import division, print_function
 import numpy as np
 import copy
 from highway_env.agent.abstract import AbstractAgent
+from highway_env.vehicle.dynamics import Obstacle
 
 
 class Node(object):
@@ -181,7 +182,8 @@ class MCTS(object):
         :return: the list of actions
         """
         for i in range(self.iterations):
-            print(i+1, '/', self.iterations)
+            if (i+1) % 10 == 0:
+                print(i+1, '/', self.iterations)
             state_copy = copy.deepcopy(state)
             self.run(state_copy)
         return self.get_plan()
@@ -275,7 +277,7 @@ class MCTSAgent(AbstractAgent):
         self.mcts.step(self.previous_action)
 
         if self.assume_vehicle_type:
-            state = state.change_agents_to(self.assume_vehicle_type)
+            state = MCTSAgent.change_agent_model(state, self.assume_vehicle_type)
         actions = self.mcts.plan(state)
         self.previous_action = actions[0]
         return actions
@@ -343,3 +345,18 @@ class MCTSAgent(AbstractAgent):
         :return: a list of action indexes and a list of their respective probabilities
         """
         return MCTSAgent.preference_policy(state, 'IDLE')
+
+    @staticmethod
+    def change_agent_model(state, agent_type):
+        """
+            Change the type of all agents on the road
+        :param state: The state describing the road and vehicles
+        :param agent_type: The new type of behavior for other vehicles
+        :return: a new state with modified behavior model for other agents
+        """
+        state_copy = copy.deepcopy(state)
+        vehicles = state_copy.road.vehicles
+        for i, v in enumerate(vehicles):
+            if v is not state_copy.vehicle and not isinstance(v, Obstacle):
+                vehicles[i] = agent_type.create_from(v)
+        return state_copy
