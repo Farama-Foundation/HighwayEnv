@@ -60,7 +60,7 @@ class MCTSGraphics(object):
                      display_exploration=False,
                      display_count=False,
                      display_text=True,
-                     display_prior=False):
+                     display_prior=True):
         """
             Display an MCTS node at a given position on a surface.
 
@@ -74,6 +74,7 @@ class MCTSGraphics(object):
         :param display_exploration: display the exploration bonus
         :param display_count: display the visitation count of the node
         :param display_text: display a text showing the value and visitation count of the node
+        :param display_prior: show the prior probability of each action
         """
         # Display node value
         cmap = cm.jet_r
@@ -101,7 +102,7 @@ class MCTSGraphics(object):
 
         if display_text and depth < 2:
             font = pygame.font.Font(None, 13)
-            text = "{:.1f} / {:.1f} / {}".format(node.value, node.selection_strategy(temperature), node.count)
+            text = "{:.2f} / {:.2f} / {}".format(node.value, node.selection_strategy(temperature), node.count)
             if display_prior:
                 text += " / {:.2f}".format(node.prior)
             text = font.render(text,
