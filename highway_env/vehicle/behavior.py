@@ -27,8 +27,13 @@ class IDMVehicle(ControlledVehicle):
     LANE_CHANGE_MAX_BRAKING_IMPOSED = 2.0  # [m/s2]
     LANE_CHANGE_DELAY = 1.0  # [s]
 
-    def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
-        super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
+    def __init__(self, road, position,
+                 heading=0,
+                 velocity=0,
+                 target_lane_index=None,
+                 target_velocity=None,
+                 enable_lane_change=True):
+        super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity)
         self.enable_lane_change = enable_lane_change
         self.timer = (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
 
@@ -238,8 +243,14 @@ class LinearVehicle(IDMVehicle):
     GAMMA_REAR = 0.0
     TIME_WANTED = 2.0
 
-    def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
-        super(LinearVehicle, self).__init__(road, position, heading, velocity, target_lane_index, enable_lane_change)
+    def __init__(self, road, position,
+                 heading=0,
+                 velocity=0,
+                 target_lane_index=None,
+                 target_velocity=None,
+                 enable_lane_change=True):
+        super(LinearVehicle, self).__init__(road, position,
+                                            heading, velocity, target_lane_index, target_velocity, enable_lane_change)
 
     @classmethod
     def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
