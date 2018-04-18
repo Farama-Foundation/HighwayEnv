@@ -24,7 +24,12 @@ class Road(Loggable):
         self.vehicles = vehicles or []
 
     @classmethod
-    def create_random_road(cls, lanes_count, lane_width, vehicles_count=50, vehicles_type=ControlledVehicle):
+    def create_random_road(cls,
+                           lanes_count,
+                           lane_width=4,
+                           vehicles_count=50,
+                           vehicles_type=ControlledVehicle,
+                           np_random=None):
         """
             Create a road composed of straight adjacent lanes with randomly located vehicles on it.
 
@@ -32,6 +37,7 @@ class Road(Loggable):
         :param lane_width: lanes width [m]
         :param vehicles_count: number of vehicles on the road
         :param vehicles_type: type of vehicles on the road
+        :param np.random.RandomState np_random: a random number generator
         :return: the created road
         """
         lanes = []
@@ -42,18 +48,19 @@ class Road(Loggable):
                           LineType.CONTINUOUS_LINE if lane == lanes_count - 1 else LineType.NONE]
             lanes.append(StraightLane(origin, heading, lane_width, line_types))
         r = Road(lanes)
-        r.add_random_vehicles(vehicles_count, vehicles_type)
+        r.add_random_vehicles(vehicles_count, vehicles_type, np_random)
         return r
 
-    def add_random_vehicles(self, vehicles_count=50, vehicles_type=ControlledVehicle):
+    def add_random_vehicles(self, vehicles_count=50, vehicles_type=ControlledVehicle, np_random=None):
         """
             Create some new random vehicles of a given type, and add them on the road.
 
         :param vehicles_count: number of vehicles to create
         :param vehicles_type: type of vehicles to create
+        :param np.random.RandomState np_random: a random number generator
         """
         for _ in range(vehicles_count):
-            self.vehicles.append(vehicles_type.create_random(self))
+            self.vehicles.append(vehicles_type.create_random(self, np_random=np_random))
 
     def act(self):
         """

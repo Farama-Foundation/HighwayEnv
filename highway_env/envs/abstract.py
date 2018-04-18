@@ -2,6 +2,7 @@ from __future__ import division, print_function, absolute_import
 import copy
 import gym
 from gym import spaces
+from gym.utils import seeding
 import numpy as np
 
 from highway_env.envs.graphics import EnvViewer
@@ -43,20 +44,32 @@ class AbstractEnv(gym.Env):
         The maximum distance of any vehicle present in the observation [m]
     """
 
-    def __init__(self, road, vehicle):
-        self.road = road
-        self.vehicle = vehicle
+    def __init__(self):
+        # Seeding
+        self.np_random = None
+        self.seed()
 
+        # Scene
+        self.road = None
+        self.vehicle = None
+
+        # Spaces
         self.action_space = spaces.Discrete(len(self.ACTIONS))
-        self.observation_space = spaces.Box(low=-1, high=1, shape=(1, 1), dtype=np.float32)
+        self.observation_space = spaces.Discrete(1)
 
+        # Running
         self.done = False
         self.steps = 0
 
+        # Rendering
         self.viewer = None
         self.automatic_rendering_callback = None
         self.should_update_rendering = True
         self.rendering_mode = 'human'
+
+    def seed(self, seed=None):
+        self.np_random, seed = seeding.np_random(seed)
+        return [seed]
 
     def _observation(self):
         """
@@ -98,6 +111,9 @@ class AbstractEnv(gym.Env):
         :param int action: the action performed by the ego-vehicle
         :return: a tuple (observation, reward, terminal, info)
         """
+        if self.road is None or self.vehicle is None:
+            raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
+
         # Forward action to the vehicle
         self.vehicle.act(self.ACTIONS[action])
 
@@ -138,8 +154,9 @@ class AbstractEnv(gym.Env):
             self.viewer.display()
 
         if mode == 'rgb_array':
+            image = self.viewer.get_image()
             self.viewer.handle_events()
-            return self.viewer.get_image()
+            return image
         elif mode == 'human':
             self.viewer.handle_events()
         self.should_update_rendering = False

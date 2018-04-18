@@ -36,7 +36,7 @@ class Vehicle(Loggable):
         self.log = []
 
     @classmethod
-    def create_random(cls, road, velocity=None, spacing=1):
+    def create_random(cls, road, velocity=None, spacing=1, np_random=None):
         """
             Create a random vehicle on the road.
 
@@ -46,13 +46,16 @@ class Vehicle(Loggable):
         :param road: the road where the vehicle is driving
         :param velocity: initial velocity in [m/s]. If None, will be chosen randomly
         :param spacing: ratio of spacing to the front vehicle, 1 being the default
+        :param np.random.RandomState np_random: a random number generator
         :return: A vehicle with random position and/or velocity
         """
+        if np_random is None:
+            np_random = np.random
         default_spacing = 30
-        lane = np.random.randint(0, len(road.lanes))
+        lane = np_random.randint(0, len(road.lanes))
         x_min = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
         offset = spacing * default_spacing * np.exp(-5 / 30 * len(road.lanes))
-        velocity = velocity or np.random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
+        velocity = velocity or np_random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
         v = cls(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity)
         return v
 

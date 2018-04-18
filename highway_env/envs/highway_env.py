@@ -1,4 +1,5 @@
 from __future__ import division, print_function, absolute_import
+import numpy as np
 
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.road import Road
@@ -23,19 +24,19 @@ class HighwayEnv(AbstractEnv):
     MAXIMUM_SIMULATION_STEPS = 3 * 60
 
     def __init__(self):
-        road, vehicle = HighwayEnv._create_road()
-        super(HighwayEnv, self).__init__(road, vehicle)
+        super(HighwayEnv, self).__init__()
+        self.road, self.vehicle = self._create_road()
 
     def reset(self):
-        road, vehicle = HighwayEnv._create_road()
-        self.road = road
-        self.vehicle = vehicle
+        self.road, self.vehicle = self._create_road()
         return super(HighwayEnv, self).reset()
 
-    @staticmethod
-    def _create_road():
-        road = Road.create_random_road(lanes_count=4, lane_width=4.0, vehicles_count=20, vehicles_type=IDMVehicle)
-        vehicle = MDPVehicle.create_random(road, 25, spacing=6)
+    def _create_road(self):
+        road = Road.create_random_road(lanes_count=4,
+                                       vehicles_count=5,
+                                       vehicles_type=IDMVehicle,
+                                       np_random=self.np_random)
+        vehicle = MDPVehicle.create_random(road, 25, spacing=6, np_random=self.np_random)
         road.vehicles.append(vehicle)
         return road, vehicle
 

@@ -25,9 +25,9 @@ class MergeEnv(AbstractEnv):
     LANE_CHANGE_REWARD = -0.12
 
     def __init__(self):
-        road = MergeEnv.make_road()
-        vehicle = MergeEnv.make_vehicles(road)
-        super(MergeEnv, self).__init__(road, vehicle)
+        super(MergeEnv, self).__init__()
+        self.road = MergeEnv.make_road()
+        self.vehicle = MergeEnv.make_vehicles(self.road)
 
     def _observation(self):
         return self
@@ -62,10 +62,8 @@ class MergeEnv(AbstractEnv):
         return self.vehicle.crashed or self.vehicle.position[0] > 400
 
     def reset(self):
-        road = MergeEnv.make_road()
-        vehicle = MergeEnv.make_vehicles(road)
-        self.road = road
-        self.vehicle = vehicle
+        self.road = MergeEnv.make_road()
+        self.vehicle = MergeEnv.make_vehicles(self.road)
         return super(MergeEnv, self).reset()
 
     @staticmethod
