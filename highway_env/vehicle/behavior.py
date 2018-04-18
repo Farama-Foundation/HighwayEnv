@@ -30,7 +30,7 @@ class IDMVehicle(ControlledVehicle):
     def __init__(self, road, position, heading=0, velocity=0, target_lane_index=None, enable_lane_change=True):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index)
         self.enable_lane_change = enable_lane_change
-        self.timer = np.random.random() * self.LANE_CHANGE_DELAY
+        self.timer = (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
 
     def act(self, action=None):
         """

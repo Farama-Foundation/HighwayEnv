@@ -12,18 +12,20 @@ class Simulation(object):
     """
     TRAJECTORY_TIMESTEP = 0.35
 
-    def __init__(self, env, agent, highway_env=None, render_agent=True, episodes=1):
+    def __init__(self, env, agent, highway_env=None, render_agent=True, env_seed=None, episodes=1):
         """
 
         :param env: The environment to be solved, possibly wrapping an AbstractEnv environment
         :param agent: The agent solving the environment
         :param AbstractEnv highway_env: if different from env, the wrapped AbstractEnv
         :param render_agent: Whether the agent should be rendered in the Viewer
+        :param env_seed: the seed used for the environment randomness source
         """
         self.env = env
         self.agent = agent
         self.highway_env = highway_env if highway_env else env
         self.render_agent = render_agent
+        self.env_seed = env_seed
         self.episodes = episodes
         self.planned_trajectory = []
         self.observation = None
@@ -41,6 +43,7 @@ class Simulation(object):
         for _ in range(self.episodes):
             # Run episode
             terminal = False
+            self.env.seed(self.env_seed)
             self.observation = self.env.reset()
             while not terminal:
                 # Step until a terminal step is reached
