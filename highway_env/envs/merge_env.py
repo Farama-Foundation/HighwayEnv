@@ -21,8 +21,8 @@ class MergeEnv(AbstractEnv):
     COLLISION_REWARD = -1
     LEFT_LANE_REWARD = -0.1
     HIGH_VELOCITY_REWARD = 0.2
-    MERGING_VELOCITY_REWARD = -0.4 / 20.0
-    LANE_CHANGE_REWARD = -0.12
+    MERGING_VELOCITY_REWARD = -0.2
+    LANE_CHANGE_REWARD = -0.05
 
     def __init__(self):
         super(MergeEnv, self).__init__()
@@ -45,14 +45,15 @@ class MergeEnv(AbstractEnv):
                          3: 0,
                          4: 0}
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
-            + self.LEFT_LANE_REWARD * (len(self.road.lanes) - 1 - self.vehicle.lane_index) / (
-                             len(self.road.lanes) - 1) \
-            + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index
+            + self.LEFT_LANE_REWARD * (len(self.road.lanes) - 2 - self.vehicle.lane_index) / (
+                             len(self.road.lanes) - 2) \
+            + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
 
         # Altruistic penalty
         for vehicle in self.road.vehicles:
             if vehicle.lane_index == len(self.road.lanes)-1 and isinstance(vehicle, ControlledVehicle):
-                reward += self.MERGING_VELOCITY_REWARD * (vehicle.target_velocity - vehicle.velocity)
+                reward += self.MERGING_VELOCITY_REWARD * \
+                          (vehicle.target_velocity - vehicle.velocity) / vehicle.target_velocity
         return reward + action_reward[action]
 
     def _is_terminal(self):
