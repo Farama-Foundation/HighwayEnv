@@ -195,19 +195,6 @@ class AbstractEnv(gym.Env):
             actions.append(self.ACTIONS_INDEXES['SLOWER'])
         return actions
 
-    # def change_agents_to(self, agent_type):
-    #     """
-    #         Change the type of all agents on the road
-    #     :param agent_type: The new type of agents
-    #     :return: a new RoadMDP with modified agents type
-    #     """
-    #     state_copy = copy.deepcopy(self)
-    #     vehicles = state_copy.ego_vehicle.road.vehicles
-    #     for i, v in enumerate(vehicles):
-    #         if v is not state_copy.ego_vehicle and not isinstance(v, Obstacle):
-    #             vehicles[i] = agent_type.create_from(v)
-    #     return state_copy
-
     def _automatic_rendering(self):
         """
             Automatically render the intermediate frames while an action is still ongoing.
