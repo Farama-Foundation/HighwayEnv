@@ -1,10 +1,7 @@
 from __future__ import division, print_function, absolute_import
 
 import numpy as np
-import datetime
 import pygame
-import shutil
-import os
 
 from highway_env.road.graphics import WorldSurface, RoadGraphics
 from highway_env.vehicle.graphics import VehicleGraphics
@@ -16,11 +13,6 @@ class EnvViewer(object):
     """
     SCREEN_WIDTH = 600
     SCREEN_HEIGHT = 150
-
-    # TODO: move video recording to a monitoring wrapper
-    VIDEO_SPEED = 2
-    OUT_FOLDER = 'out'
-    TMP_FOLDER = os.path.join(OUT_FOLDER, 'tmp')
 
     def __init__(self, env):
         self.env = env
