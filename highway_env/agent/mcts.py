@@ -360,3 +360,38 @@ class MCTSAgent(AbstractAgent):
             if v is not state_copy.vehicle and not isinstance(v, Obstacle):
                 vehicles[i] = agent_type.create_from(v)
         return state_copy
+
+
+class RobustMCTSAgent(AbstractAgent):
+    def __init__(self,
+                 models,
+                 prior_policy=None,
+                 rollout_policy=None,
+                 iterations=75,
+                 temperature=10):
+        """
+            A new MCTS agent with multiple models.
+        :param models: a list of possible transition models
+        :param prior_policy: The prior distribution over actions given a state
+        :param rollout_policy: The distribution over actions used when evaluating leaves
+        :param iterations: the number of MCTS iterations
+        :param temperature: the temperature of exploration
+        """
+
+        self.agents = [MCTSAgent(prior_policy, rollout_policy, iterations, temperature, assume_vehicle_type=model)
+                       for model in models]
+
+    def plan(self, state):
+        for agent in self.agents:
+            agent.plan(state)
+
+        min_action_values = {k: np.inf for k in state.ACTIONS.keys()}
+        for agent in self.agents:
+            min_action_values = {k: min(v, agent.mcts.root.children[k].value)
+                                 for k, v in min_action_values.items()
+                                 if k in agent.mcts.root.children}
+        action = max(min_action_values.keys(), key=(lambda key: min_action_values[key]))
+        for agent in self.agents:
+            agent.previous_action = action
+
+        return [action]
