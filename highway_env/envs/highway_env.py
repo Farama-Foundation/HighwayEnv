@@ -16,24 +16,34 @@ class HighwayEnv(AbstractEnv):
     """
 
     COLLISION_REWARD = -1
+    """ The reward received when colliding with a vehicle."""
     LEFT_LANE_REWARD = -0.1
+    """ The reward received when driving on the left-most lanes, linearly mapped to zero for other lanes."""
     HIGH_VELOCITY_REWARD = 0.2
-    EPISODE_SUCCESS_REWARD = 1.0
+    """ The reward received when driving at full speed, linearly mapped to zero for lower speeds."""
     LANE_CHANGE_REWARD = -0
+    """ The reward received at each lane change action."""
 
-    MAXIMUM_SIMULATION_STEPS = 3 * 60
+    DURATION = 60
+    """ Number of steps until the termination of the episode [s]."""
 
     def __init__(self):
         super(HighwayEnv, self).__init__()
-        self.road, self.vehicle = self._create_road()
+        self.steps = 0
+        self.reset()
 
     def reset(self):
         self.road, self.vehicle = self._create_road()
-        return super(HighwayEnv, self).reset()
+        self.steps = 0
+        return self._observation()
+
+    def step(self, action):
+        self.steps += 1
+        return super(HighwayEnv, self).step(action)
 
     def _create_road(self):
         road = Road.create_random_road(lanes_count=4,
-                                       vehicles_count=5,
+                                       vehicles_count=20,
                                        vehicles_type=IDMVehicle,
                                        np_random=self.np_random)
         vehicle = MDPVehicle.create_random(road, 25, spacing=6, np_random=self.np_random)
@@ -50,8 +60,7 @@ class HighwayEnv(AbstractEnv):
         state_reward = \
             + self.COLLISION_REWARD * self.vehicle.crashed \
             + self.LEFT_LANE_REWARD * (len(self.road.lanes)-1 - self.vehicle.lane_index) / (len(self.road.lanes) - 1) \
-            + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1) \
-            + self.EPISODE_SUCCESS_REWARD * self._all_vehicles_passed()
+            + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
         return action_reward[action] + state_reward
 
     def _observation(self):
@@ -59,10 +68,6 @@ class HighwayEnv(AbstractEnv):
 
     def _is_terminal(self):
         """
-            The episode is over if the ego vehicle crashed or if it successfully passed all other vehicles.
+            The episode is over if the ego vehicle crashed or the time is out.
         """
-        return self.vehicle.crashed or self._all_vehicles_passed() or self.steps > self.MAXIMUM_SIMULATION_STEPS
-
-    def _all_vehicles_passed(self):
-        return len(self.road.vehicles) > 1 and (self.vehicle.position[0] > 50 + max(
-            [o.position[0] for o in self.road.vehicles if o is not self.vehicle]))
+        return self.vehicle.crashed or self.steps > self.DURATION

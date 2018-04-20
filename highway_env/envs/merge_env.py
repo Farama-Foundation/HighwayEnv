@@ -21,7 +21,7 @@ class MergeEnv(AbstractEnv):
     COLLISION_REWARD = -1
     LEFT_LANE_REWARD = -0.1
     HIGH_VELOCITY_REWARD = 0.2
-    MERGING_VELOCITY_REWARD = -0.2
+    MERGING_VELOCITY_REWARD = -0.3
     LANE_CHANGE_REWARD = -0.05
 
     def __init__(self):
@@ -110,8 +110,8 @@ class MergeEnv(AbstractEnv):
         road.vehicles.append(LinearVehicle(road, road.lanes[0].position(-65, 0), velocity=31.5))
 
         merging_v = LinearVehicle(road, road.lanes[-1].position(40, 0), velocity=20)
-        merging_v.TIME_WANTED = 1.0
-        merging_v.POLITENESS = 0.0
+        # merging_v.TIME_WANTED = 1.0
+        # merging_v.POLITENESS = 0.0
         merging_v.target_velocity = 30
         road.vehicles.append(merging_v)
         return ego_vehicle
