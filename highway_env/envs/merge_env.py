@@ -65,7 +65,7 @@ class MergeEnv(AbstractEnv):
     def reset(self):
         self.road = MergeEnv.make_road()
         self.vehicle = MergeEnv.make_vehicles(self.road)
-        return super(MergeEnv, self).reset()
+        return self._observation()
 
     @staticmethod
     def make_road():
