@@ -59,7 +59,6 @@ class AbstractEnv(gym.Env):
 
         # Running
         self.done = False
-        self.steps = 0
 
         # Rendering
         self.viewer = None
@@ -99,8 +98,7 @@ class AbstractEnv(gym.Env):
             Reset the environment to it's initial configuration
         :return: the observation of the reset state
         """
-        self.steps = 0
-        return self._observation()
+        raise NotImplementedError()
 
     def step(self, action):
         """
@@ -134,7 +132,6 @@ class AbstractEnv(gym.Env):
         terminal = self._is_terminal()
         info = {}
 
-        self.steps += 1
         return obs, reward, terminal, info
 
     def render(self, mode='human'):
