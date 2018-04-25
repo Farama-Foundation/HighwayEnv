@@ -14,6 +14,16 @@ from gym.utils.json_utils import json_encode_np
 
 
 class MonitorV2(Monitor):
+    """
+        A modified Environment Monitor that includes the following features:
+
+        - Each run directory is automatically named with date and time
+        - The stats recorder is a StatsRecorderV2, that implements additional features, including the environment seed
+        at each episode so that they can be reproduced
+        - The wrapped environment is closed with the monitor
+        - Video recording of all frames during an ongoing environment step
+        - Automatic saving of all fields of the stats recorder
+    """
     RUN_PREFIX = 'run'
     STATS_HORIZON = 7
 
@@ -35,6 +45,11 @@ class MonitorV2(Monitor):
         self.env.close()
         super(MonitorV2, self).close()
 
+    def seed(self, seed=None):
+        seeds = super(MonitorV2, self).seed(seed)
+        self.stats_recorder.seed = seeds[0]  # Not sure why gym envs typically return *a list* of one seed
+        return seeds
+
     def reset_video_recorder(self):
         # Close any existing video recorder
         if self.video_recorder:
@@ -49,6 +64,7 @@ class MonitorV2(Monitor):
             enabled=self._video_enabled(),
         )
 
+        # Instead of capturing just one frame, allow the environment to send all render frames when a step is ongoing
         self.env.automatic_rendering_callback = self.video_recorder.capture_frame
 
     @staticmethod
@@ -118,11 +134,16 @@ class MonitorV2(Monitor):
 class StatsRecorderV2(StatsRecorder):
     def __init__(self, horizon, directory, file_prefix, autoreset=False, env_id=None):
         super(StatsRecorderV2, self).__init__(directory, file_prefix, autoreset, env_id)
-        self.horizon = horizon
 
+        # Average rewards
+        self.horizon = horizon
         self.episode_avg_rewards = []
         self.avg_rewards = []
         self.rewards_history = []
+
+        # Seed
+        self.seed = None  # Set by the monitor when seeding the wrapped env
+        self.episode_seeds = []
 
     def after_reset(self, observation):
         self.rewards_history = []
@@ -142,6 +163,7 @@ class StatsRecorderV2(StatsRecorder):
     def save_complete(self):
         if self.steps is not None:
             self.episode_avg_rewards.append(sum(self.avg_rewards) / len(self.avg_rewards))
+            self.episode_seeds.append(self.seed)
             super(StatsRecorderV2, self).save_complete()
 
     def flush(self):
@@ -155,5 +177,6 @@ class StatsRecorderV2(StatsRecorder):
                 'episode_lengths': self.episode_lengths,
                 'episode_rewards': self.episode_rewards,
                 'episode_avg_rewards': self.episode_avg_rewards,
+                'episode_seeds': self.episode_seeds,
                 'episode_types': self.episode_types,
             }, f, default=json_encode_np)

@@ -3,6 +3,7 @@ import numpy as np
 import copy
 from highway_env.agent.abstract import AbstractAgent
 from highway_env.vehicle.dynamics import Obstacle
+from gym.utils import seeding
 
 
 class Node(object):
@@ -130,6 +131,17 @@ class MCTS(object):
         self.iterations = iterations
         self.temperature = temperature
         self.max_depth = max_depth
+        self.np_random = None
+        self.seed()
+
+    def seed(self, seed=None):
+        """
+            Seed the rollout policy randomness source
+        :param seed: the seed to be used
+        :return: the used seed
+        """
+        self.np_random, seed = seeding.np_random(seed)
+        return [seed]
 
     def run(self, state):
         """
@@ -167,7 +179,7 @@ class MCTS(object):
         """
         for _ in range(limit):
             actions, probabilities = self.rollout_policy(state)
-            action = np.random.choice(actions, 1, p=probabilities)[0]
+            action = self.np_random.choice(actions, 1, p=probabilities)[0]
             _, reward, terminal, _ = state.step(action)
             total_reward += reward
             if terminal:
@@ -271,8 +283,8 @@ class MCTSAgent(AbstractAgent):
 
             Start by updating the previously found tree with the last action performed.
 
-        :param state: the current MDP state
-        :return: the list of MDP action labels
+        :param state: the current state
+        :return: the list of actions
         """
         self.mcts.step(self.previous_action)
 
@@ -281,6 +293,12 @@ class MCTSAgent(AbstractAgent):
         actions = self.mcts.plan(state)
         self.previous_action = actions[0]
         return actions
+
+    def reset(self):
+        self.mcts.step_by_reset()
+
+    def seed(self, seed=None):
+        return self.mcts.seed(seed)
 
     @staticmethod
     def random_policy(state):
