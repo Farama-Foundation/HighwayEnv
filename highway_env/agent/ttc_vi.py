@@ -88,6 +88,12 @@ class TTCVIAgent(AbstractAgent):
         path, actions = self.pick_trajectory()
         return actions
 
+    def reset(self):
+        pass
+
+    def seed(self, seed=None):
+        return None
+
     def update_ttc_state(self):
         """
             Extract the TTC-grid and TTC-state (velocity, lane, time=0) from the current MDP state.

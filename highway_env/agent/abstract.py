@@ -18,3 +18,18 @@ class AbstractAgent(object):
         :return: the optimal sequence of actions [a0, a1, a2...]
         """
         raise NotImplementedError()
+
+    @abstractmethod
+    def reset(self):
+        """
+            Reset the agent to its initial internal state
+        """
+        raise NotImplementedError()
+
+    def seed(self, seed=None):
+        """
+            Seed the agent's random number generator
+        :param seed: the seed to be used
+        :return: the used seed
+        """
+        raise NotImplementedError()
