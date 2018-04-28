@@ -1,8 +1,8 @@
 from __future__ import division, print_function
-
+import multiprocessing
 import gym
-import highway_env
 
+import highway_env
 from highway_env.agent.mcts import MCTSAgent
 from highway_env.agent.ttc_vi import TTCVIAgent
 from highway_env.wrappers.simulation import Simulation
@@ -22,4 +22,6 @@ def test():
 
 
 if __name__ == '__main__':
-    test()
+    for i in range(4):
+        p = multiprocessing.Process(target=test)
+        p.start()
