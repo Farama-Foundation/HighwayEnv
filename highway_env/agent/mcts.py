@@ -413,3 +413,13 @@ class RobustMCTSAgent(AbstractAgent):
             agent.previous_action = action
 
         return [action]
+
+    def reset(self):
+        for agent in self.agents:
+            agent.reset()
+
+    def seed(self, seed=None):
+        for agent in self.agents:
+            seeds = agent.seed(seed)
+            seed = seeds[0]
+        return seed
