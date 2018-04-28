@@ -4,7 +4,7 @@ import numpy as np
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
 from highway_env.road.road import Road
-from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
+from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle
 
@@ -26,8 +26,9 @@ class MergeEnv(AbstractEnv):
 
     def __init__(self):
         super(MergeEnv, self).__init__()
-        self.road = MergeEnv.make_road()
-        self.vehicle = MergeEnv.make_vehicles(self.road)
+        self.other_vehicles_type = IDMVehicle
+        self.make_road()
+        self.make_vehicles()
 
     def _observation(self):
         return self
@@ -60,15 +61,14 @@ class MergeEnv(AbstractEnv):
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
-        return self.vehicle.crashed or self.vehicle.position[0] > 400
+        return self.vehicle.crashed or self.vehicle.position[0] > 300
 
     def reset(self):
-        self.road = MergeEnv.make_road()
-        self.vehicle = MergeEnv.make_vehicles(self.road)
+        self.make_road()
+        self.make_vehicles()
         return self._observation()
 
-    @staticmethod
-    def make_road():
+    def make_road(self):
         """
             Make a road composed of a straight highway and a merging lane.
         :return: the road
@@ -93,25 +93,22 @@ class MergeEnv(AbstractEnv):
         l2 = LanesConcatenation([lc0, lc1, lc2])
         road = Road([l0, l1, l2])
         road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
-        return road
+        self.road = road
 
-    @staticmethod
-    def make_vehicles(road):
+    def make_vehicles(self):
         """
             Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
-        :param road: the road on which the vehicles drive
         :return: the ego-vehicle
         """
-        ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
+        road = self.road
+        ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40+3*self.np_random.rand(), 0), velocity=30)
         road.vehicles.append(ego_vehicle)
 
-        road.vehicles.append(LinearVehicle(road, road.lanes[0].position(20, 0), velocity=29))
-        road.vehicles.append(LinearVehicle(road, road.lanes[1].position(0, 0), velocity=31))
-        road.vehicles.append(LinearVehicle(road, road.lanes[0].position(-65, 0), velocity=31.5))
+        road.vehicles.append(self.other_vehicles_type(road, road.lanes[0].position(20+3*self.np_random.rand(), 0), velocity=29+1*self.np_random.rand()))
+        road.vehicles.append(self.other_vehicles_type(road, road.lanes[1].position(0, 0), velocity=31+1*self.np_random.rand()))
+        road.vehicles.append(self.other_vehicles_type(road, road.lanes[0].position(-65+3*self.np_random.rand(), 0), velocity=31.5+1*self.np_random.rand()))
 
-        merging_v = LinearVehicle(road, road.lanes[-1].position(40, 0), velocity=20)
-        # merging_v.TIME_WANTED = 1.0
-        # merging_v.POLITENESS = 0.0
+        merging_v = self.other_vehicles_type(road, road.lanes[-1].position(40+3*self.np_random.rand(), 0), velocity=20)
         merging_v.target_velocity = 30
         road.vehicles.append(merging_v)
-        return ego_vehicle
+        self.vehicle = ego_vehicle
