@@ -19,4 +19,10 @@ class SingleTrajectoryAgent(AbstractAgent):
         else:
             return [self.default_action]
 
+    def seed(self, seed=None):
+        return None
+
+    def reset(self):
+        pass
+
 
