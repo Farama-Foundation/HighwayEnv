@@ -27,11 +27,12 @@ class MonitorV2(Monitor):
     RUN_PREFIX = 'run'
     STATS_HORIZON = 7
 
-    def __init__(self, env, directory, video_callable=None, force=False, resume=False,
+    def __init__(self, env, directory, add_subdirectory=True, video_callable=None, force=False, resume=False,
                  write_upon_reset=False, uid=None, mode=None):
         if video_callable is None:
             video_callable = MonitorV2.always_call_video
-        directory = self.run_directory(directory)
+        if add_subdirectory:
+            directory = self.run_directory(directory)
         super(MonitorV2, self).__init__(env, directory, video_callable, force, resume, write_upon_reset, uid, mode)
 
     def _start(self, directory, video_callable=None, force=False, resume=False, write_upon_reset=False, uid=None,
