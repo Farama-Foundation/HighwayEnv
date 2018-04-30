@@ -236,11 +236,7 @@ class IDMVehicle(ControlledVehicle):
 
 
 class LinearVehicle(IDMVehicle):
-    ALPHA = 0.3
-    BETA_FRONT = 0.14
-    BETA_REAR = 0.0
-    GAMMA_FRONT = 0.8
-    GAMMA_REAR = 0.0
+    PARAMETERS = [0.3, 0.14, 0.8]
     TIME_WANTED = 2.0
 
     def __init__(self, road, position,
@@ -271,14 +267,18 @@ class LinearVehicle(IDMVehicle):
         """
         if not ego_vehicle:
             return 0
-        acceleration = cls.ALPHA * (ego_vehicle.target_velocity - ego_vehicle.velocity)
+        acceleration = cls.PARAMETERS[0] * (ego_vehicle.target_velocity - ego_vehicle.velocity)
         d_safe = cls.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * cls.TIME_WANTED + ego_vehicle.LENGTH
         if front_vehicle:
             d = ego_vehicle.lane_distance_to(front_vehicle)
-            acceleration += cls.BETA_FRONT * min(front_vehicle.velocity - ego_vehicle.velocity, 0) \
-                + cls.GAMMA_FRONT * min(d - d_safe, 0)
-        if rear_vehicle:
-            d = rear_vehicle.lane_distance_to(ego_vehicle)
-            acceleration += cls.BETA_REAR * max(rear_vehicle.velocity - ego_vehicle.velocity, 0) \
-                + cls.GAMMA_REAR * max(d_safe - d, 0)
+            acceleration += cls.PARAMETERS[1] * min(front_vehicle.velocity - ego_vehicle.velocity, 0) \
+                + cls.PARAMETERS[2] * min(d - d_safe, 0)
         return acceleration
+
+
+class AggressiveVehicle(LinearVehicle):
+    PARAMETERS = [0.4, 0.1, 0.5]
+
+
+class DefensiveVehicle(LinearVehicle):
+    PARAMETERS = [0.3, 0.25, 2.0]

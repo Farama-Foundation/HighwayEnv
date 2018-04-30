@@ -7,7 +7,7 @@ import highway_env
 
 from highway_env.agent.mcts import MCTSAgent, RobustMCTSAgent
 from highway_env.wrappers.analyzer import RunAnalyzer
-from highway_env.vehicle.behavior import AggressiveLinearVehicle, DefensiveLinearVehicle, IDMVehicle, LinearVehicle
+from highway_env.vehicle.behavior import AggressiveVehicle, DefensiveVehicle, IDMVehicle, LinearVehicle
 from highway_env.wrappers.simulation import Simulation
 from highway_env.wrappers.monitor import MonitorV2
 
@@ -24,10 +24,10 @@ def evaluate(world_vehicle_type, agent, agent_name):
 
 if __name__ == '__main__':
     jobs = []
-    for world_type in [IDMVehicle, LinearVehicle]:
-        for (agent_type, name) in [(MCTSAgent(iterations=50, assume_vehicle_type=IDMVehicle), IDMVehicle.__name__),
-                                   (MCTSAgent(iterations=50, assume_vehicle_type=LinearVehicle), LinearVehicle.__name__),
-                                   (RobustMCTSAgent(models=[IDMVehicle, LinearVehicle], iterations=50), RobustMCTSAgent.__name__)]:
+    for world_type in [AggressiveVehicle, DefensiveVehicle]:
+        for (agent_type, name) in [(MCTSAgent(iterations=50, assume_vehicle_type=AggressiveVehicle), AggressiveVehicle.__name__),
+                                   (MCTSAgent(iterations=50, assume_vehicle_type=DefensiveVehicle), DefensiveVehicle.__name__),
+                                   (RobustMCTSAgent(models=[AggressiveVehicle, DefensiveVehicle], iterations=50), RobustMCTSAgent.__name__)]:
                 p = multiprocessing.Process(target=evaluate, args=(world_type, agent_type, name))
                 jobs.append(p)
                 p.start()
