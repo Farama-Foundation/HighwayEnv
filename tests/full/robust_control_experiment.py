@@ -24,13 +24,20 @@ def evaluate(world_vehicle_type, agent, agent_name):
 
 if __name__ == '__main__':
     jobs = []
-    for world_type in [AggressiveVehicle, DefensiveVehicle]:
-        for (agent_type, name) in [(MCTSAgent(iterations=50, assume_vehicle_type=AggressiveVehicle), AggressiveVehicle.__name__),
-                                   (MCTSAgent(iterations=50, assume_vehicle_type=DefensiveVehicle), DefensiveVehicle.__name__),
-                                   (RobustMCTSAgent(models=[AggressiveVehicle, DefensiveVehicle], iterations=50), RobustMCTSAgent.__name__)]:
-                p = multiprocessing.Process(target=evaluate, args=(world_type, agent_type, name))
-                jobs.append(p)
-                p.start()
+    for world_type in [IDMVehicle, LinearVehicle]:
+        for (agent_type, name) in \
+                [(MCTSAgent(iterations=50,
+                            assume_vehicle_type=LinearVehicle,
+                            rollout_policy=MCTSAgent.idle_policy), LinearVehicle.__name__),
+                 (MCTSAgent(iterations=50,
+                            assume_vehicle_type=IDMVehicle,
+                            rollout_policy=MCTSAgent.idle_policy), IDMVehicle.__name__),
+                 (RobustMCTSAgent(iterations=50,
+                                  models=[LinearVehicle, IDMVehicle],
+                                  rollout_policy=MCTSAgent.idle_policy), RobustMCTSAgent.__name__)]:
+            p = multiprocessing.Process(target=evaluate, args=(world_type, agent_type, name))
+            jobs.append(p)
+            p.start()
     for job in jobs:
         job.join()
 
