@@ -101,14 +101,14 @@ class MergeEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         road = self.road
-        ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40+3*self.np_random.rand(), 0), velocity=30)
+        ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
         road.vehicles.append(ego_vehicle)
 
-        road.vehicles.append(self.other_vehicles_type(road, road.lanes[0].position(20+3*self.np_random.rand(), 0), velocity=29+1*self.np_random.rand()))
-        road.vehicles.append(self.other_vehicles_type(road, road.lanes[1].position(0, 0), velocity=31+1*self.np_random.rand()))
-        road.vehicles.append(self.other_vehicles_type(road, road.lanes[0].position(-65+3*self.np_random.rand(), 0), velocity=31.5+1*self.np_random.rand()))
+        road.vehicles.append(self.other_vehicles_type(road, road.lanes[0].position(20, 0), velocity=29))
+        road.vehicles.append(self.other_vehicles_type(road, road.lanes[1].position(0, 0), velocity=31))
+        road.vehicles.append(self.other_vehicles_type(road, road.lanes[0].position(-65, 0), velocity=31.5))
 
-        merging_v = self.other_vehicles_type(road, road.lanes[-1].position(40+3*self.np_random.rand(), 0), velocity=20)
+        merging_v = self.other_vehicles_type(road, road.lanes[-1].position(40, 0), velocity=20)
         merging_v.target_velocity = 30
         road.vehicles.append(merging_v)
         self.vehicle = ego_vehicle
