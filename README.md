@@ -96,6 +96,10 @@ In the `LinearVehicle` class, the longitudinal behavior is defined as a linear w
 
 ## The agents
 
+Agents solving the `highway-env` environments are available in the [RL-Agents](https://github.com/eleurent/rl-agents) repository.
+
+`pip install --user git+https://github.com/eleurent/rl-agents`
+
 ### Time-To-Collision Value Iteration
 
 <p align="center">
