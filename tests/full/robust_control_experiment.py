@@ -3,13 +3,12 @@ from __future__ import division, print_function
 import multiprocessing
 import glob
 import gym
-import highway_env
 
-from highway_env.agent.mcts import MCTSAgent, RobustMCTSAgent
-from highway_env.wrappers.analyzer import RunAnalyzer
-from highway_env.vehicle.behavior import AggressiveVehicle, DefensiveVehicle, IDMVehicle, LinearVehicle
+from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
+from rl_agents.agents.tree_search.mcts import MCTSAgent, RobustMCTSAgent
+from rl_agents.wrappers.analyzer import RunAnalyzer
+from rl_agents.wrappers.monitor import MonitorV2
 from highway_env.wrappers.simulation import Simulation
-from highway_env.wrappers.monitor import MonitorV2
 
 
 def evaluate(world_vehicle_type, agent, agent_name):

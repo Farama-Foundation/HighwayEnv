@@ -1,6 +1,5 @@
 from __future__ import division, print_function
 
-from highway_env.envs.graphics import EnvViewer
 from highway_env.wrappers.graphics import SimulationViewer
 
 

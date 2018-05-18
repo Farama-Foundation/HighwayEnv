@@ -3,12 +3,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from highway_env.road.road import Road
-from highway_env.wrappers.simulation import Simulation
 
 from sklearn import linear_model
 
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.dynamics import Obstacle
+from highway_env.wrappers.simulation import Simulation
 
 
 def generate_data(count):

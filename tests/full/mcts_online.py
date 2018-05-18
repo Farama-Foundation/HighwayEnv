@@ -1,12 +1,13 @@
-from highway_env.agent.mcts import MCTSAgent
+
 from highway_env.road.road import Road
-from highway_env.wrappers.simulation import Simulation
 from highway_env.vehicle.control import MDPVehicle
 from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.dynamics import Obstacle
 
 import gym
-import highway_env
+
+from rl_agents.agents.tree_search.mcts import MCTSAgent
+from highway_env.wrappers.simulation import Simulation
 
 
 def main():

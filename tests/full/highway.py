@@ -2,11 +2,9 @@ from __future__ import division, print_function
 import multiprocessing
 import gym
 
-import highway_env
 from highway_env.vehicle.behavior import IDMVehicle
-from highway_env.wrappers.monitor import MonitorV2
-from highway_env.agent.mcts import MCTSAgent
-from highway_env.agent.ttc_vi import TTCVIAgent
+from rl_agents.agents.tree_search.mcts import MCTSAgent
+from rl_agents.wrappers.monitor import MonitorV2
 from highway_env.wrappers.simulation import Simulation
 
 
