@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import pygame
 
-from highway_env.agent.graphics import AgentGraphics
+from rl_agents.agents.graphics import AgentGraphics
 from highway_env.envs.graphics import EnvViewer
 from highway_env.road.graphics import WorldSurface, RoadGraphics
 from highway_env.vehicle.graphics import VehicleGraphics
