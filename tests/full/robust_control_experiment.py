@@ -6,19 +6,16 @@ import gym
 
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from rl_agents.agents.tree_search.mcts import MCTSAgent, RobustMCTSAgent
-from rl_agents.wrappers.analyzer import RunAnalyzer
-from rl_agents.wrappers.monitor import MonitorV2
-from highway_env.wrappers.simulation import Simulation
+from rl_agents.trainer.analyzer import RunAnalyzer
+from rl_agents.trainer.simulation import Simulation
 
 
 def evaluate(world_vehicle_type, agent, agent_name):
     env = gym.make('highway-merge-v0')
     env.other_vehicles_type = world_vehicle_type
     directory = 'out/robust_{}_{}'.format(world_vehicle_type.__name__, agent_name)
-    monitor = MonitorV2(env, directory, add_subdirectory=False)
-
-    sim = Simulation(monitor, agent, highway_env=env, episodes=5)
-    sim.run()
+    sim = Simulation(env, agent, directory=directory, num_episodes=5)
+    sim.test()
 
 
 if __name__ == '__main__':

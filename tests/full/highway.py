@@ -4,18 +4,16 @@ import gym
 
 from highway_env.vehicle.behavior import IDMVehicle
 from rl_agents.agents.tree_search.mcts import MCTSAgent
-from rl_agents.wrappers.monitor import MonitorV2
-from highway_env.wrappers.simulation import Simulation
+from rl_agents.trainer.simulation import Simulation
 
 
 def test():
     IDMVehicle.POLITENESS = 0
     env = gym.make('highway-v0')
-    monitor = MonitorV2(env, 'out', force=True)
     agent = MCTSAgent(temperature=30, iterations=100)
     # agent = TTCVIAgent()
-    sim = Simulation(monitor, agent, highway_env=env, episodes=25, sim_seed=None)
-    sim.run()
+    sim = Simulation(env, agent, num_episodes=25, sim_seed=None)
+    sim.test()
 
 
 if __name__ == '__main__':
