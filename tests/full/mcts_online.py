@@ -7,7 +7,7 @@ from highway_env.vehicle.dynamics import Obstacle
 import gym
 
 from rl_agents.agents.tree_search.mcts import MCTSAgent
-from highway_env.wrappers.simulation import Simulation
+from rl_agents.trainer.simulation import Simulation
 
 
 def main():
@@ -22,14 +22,13 @@ def main():
     sim = Simulation(env, agent)
 
     t = 0
-    sim.render()
     while not sim.done:
         sim.step()
         t += 1
         if t == 10:
             print('Added obstacle')
             env.road.vehicles.append(Obstacle(road, [env.vehicle.position[0] + 50., env.vehicle.position[1]]))
-    sim.quit()
+    sim.close()
 
 
 if __name__ == '__main__':
