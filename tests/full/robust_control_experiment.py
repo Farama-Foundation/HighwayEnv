@@ -11,6 +11,7 @@ from rl_agents.trainer.simulation import Simulation
 
 
 def evaluate(world_vehicle_type, agent, agent_name):
+    gym.logger.set_level(gym.logger.INFO)
     env = gym.make('highway-merge-v0')
     env.other_vehicles_type = world_vehicle_type
     directory = 'out/robust_{}_{}'.format(world_vehicle_type.__name__, agent_name)
