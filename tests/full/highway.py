@@ -11,7 +11,7 @@ def test():
     gym.logger.set_level(gym.logger.INFO)
     IDMVehicle.POLITENESS = 0
     env = gym.make('highway-v0')
-    agent = MCTSAgent(temperature=30, iterations=50)
+    agent = MCTSAgent(env, temperature=30, iterations=50)
     # agent = TTCVIAgent()
     sim = Simulation(env, agent, num_episodes=25, sim_seed=None)
     sim.test()

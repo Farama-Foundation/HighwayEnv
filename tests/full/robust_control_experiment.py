@@ -14,6 +14,7 @@ def evaluate(world_vehicle_type, agent, agent_name):
     gym.logger.set_level(gym.logger.INFO)
     env = gym.make('highway-merge-v0')
     env.other_vehicles_type = world_vehicle_type
+    agent.env = env
     directory = 'out/robust_{}_{}'.format(world_vehicle_type.__name__, agent_name)
     sim = Simulation(env, agent, directory=directory, num_episodes=5)
     sim.test()
@@ -23,10 +24,10 @@ if __name__ == '__main__':
     jobs = []
     for world_type in [IDMVehicle, LinearVehicle]:
         for (agent_type, name) in \
-                [(MCTSAgent(iterations=50,
+                [(MCTSAgent(None, iterations=50,
                             assume_vehicle_type=LinearVehicle,
                             rollout_policy=MCTSAgent.idle_policy), LinearVehicle.__name__),
-                 (MCTSAgent(iterations=50,
+                 (MCTSAgent(None, iterations=50,
                             assume_vehicle_type=IDMVehicle,
                             rollout_policy=MCTSAgent.idle_policy), IDMVehicle.__name__),
                  (RobustMCTSAgent(iterations=50,
