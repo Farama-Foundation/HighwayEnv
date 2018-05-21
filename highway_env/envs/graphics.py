@@ -24,6 +24,15 @@ class EnvViewer(object):
         self.sim_surface = WorldSurface(panel_size, 0, pygame.Surface(panel_size))
         self.clock = pygame.time.Clock()
 
+        self.agent_display = None
+        self.agent_surface = None
+
+    def set_agent_display(self, agent_display):
+        if self.agent_display is None:
+            self.agent_display = agent_display
+            self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, 2 * self.SCREEN_HEIGHT))
+            self.agent_surface = pygame.Surface((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+
     def handle_events(self):
         """
             Handle pygame events by forwarding them to the display and environment vehicle.
@@ -43,6 +52,11 @@ class EnvViewer(object):
         RoadGraphics.display(self.env.road, self.sim_surface)
         RoadGraphics.display_traffic(self.env.road, self.sim_surface)
         self.screen.blit(self.sim_surface, (0, 0))
+
+        if self.agent_display:
+            self.agent_display(self.agent_surface)
+            self.screen.blit(self.agent_surface, (0, self.SCREEN_HEIGHT))
+
         self.clock.tick(self.env.SIMULATION_FREQUENCY)
         pygame.display.flip()
 

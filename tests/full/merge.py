@@ -9,7 +9,8 @@ from rl_agents.trainer.simulation import Simulation
 def test():
     gym.logger.set_level(gym.logger.INFO)
     env = gym.make('highway-merge-v0')
-    agent = MCTSAgent(prior_policy=MCTSAgent.fast_policy,
+    agent = MCTSAgent(env,
+                      prior_policy=MCTSAgent.fast_policy,
                       rollout_policy=MCTSAgent.idle_policy,
                       iterations=50,
                       assume_vehicle_type=None)
