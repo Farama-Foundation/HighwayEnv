@@ -24,6 +24,9 @@ class HighwayEnv(AbstractEnv):
     LANE_CHANGE_REWARD = -0
     """ The reward received at each lane change action."""
 
+    LANES_COUNT = 4
+    VEHICLES_COUNT = 20
+    INITIAL_SPACING = 6
     DURATION = 60
     """ Number of steps until the termination of the episode [s]."""
 
@@ -42,11 +45,11 @@ class HighwayEnv(AbstractEnv):
         return super(HighwayEnv, self).step(action)
 
     def _create_road(self):
-        road = Road.create_random_road(lanes_count=4,
-                                       vehicles_count=20,
+        road = Road.create_random_road(lanes_count=self.LANES_COUNT,
+                                       vehicles_count=self.VEHICLES_COUNT,
                                        vehicles_type=IDMVehicle,
                                        np_random=self.np_random)
-        vehicle = MDPVehicle.create_random(road, 25, spacing=6, np_random=self.np_random)
+        vehicle = MDPVehicle.create_random(road, 25, spacing=self.INITIAL_SPACING, np_random=self.np_random)
         road.vehicles.append(vehicle)
         return road, vehicle
 
@@ -64,7 +67,7 @@ class HighwayEnv(AbstractEnv):
         return action_reward[action] + state_reward
 
     def _observation(self):
-        return self._simplified()
+        return super(HighwayEnv, self)._observation()
 
     def _is_terminal(self):
         """

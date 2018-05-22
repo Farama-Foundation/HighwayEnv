@@ -62,6 +62,10 @@ class Road(Loggable):
         for _ in range(vehicles_count):
             self.vehicles.append(vehicles_type.create_random(self, np_random=np_random))
 
+    def close_vehicles_to(self, vehicle, distances):
+        return [v for v in self.vehicles if (distances[0] < vehicle.lane_distance_to(v) < distances[1]
+                                             and v is not vehicle)]
+
     def act(self):
         """
             Decide the actions of each entity on the road.
