@@ -1,11 +1,14 @@
 from __future__ import division, print_function, absolute_import
 import copy
 import gym
+import pandas
 from gym import spaces
 from gym.utils import seeding
 import numpy as np
 
+from highway_env import utils
 from highway_env.envs.graphics import EnvViewer
+from highway_env.vehicle.control import MDPVehicle
 
 
 class AbstractEnv(gym.Env):
@@ -44,6 +47,9 @@ class AbstractEnv(gym.Env):
         The maximum distance of any vehicle present in the observation [m]
     """
 
+    OBSERVATION_FEATURES = ['presence', 'x', 'y', 'vx', 'vy']
+    OBSERVATION_VEHICLES = 5
+
     def __init__(self):
         # Seeding
         self.np_random = None
@@ -55,7 +61,8 @@ class AbstractEnv(gym.Env):
 
         # Spaces
         self.action_space = spaces.Discrete(len(self.ACTIONS))
-        self.observation_space = spaces.Discrete(1)
+        self.observation_space = spaces.Box(shape=(len(self.OBSERVATION_FEATURES)*self.OBSERVATION_VEHICLES,),
+                                            low=-1, high=1)
 
         # Running
         self.done = False
@@ -65,6 +72,7 @@ class AbstractEnv(gym.Env):
         self.automatic_rendering_callback = None
         self.should_update_rendering = True
         self.rendering_mode = 'human'
+        self.enable_auto_render = False
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -75,7 +83,28 @@ class AbstractEnv(gym.Env):
             Return the observation of the current state, which must be consistent with self.observation_space.
         :return: the observation
         """
-        raise NotImplementedError()
+        df = pandas.DataFrame.from_records([self.vehicle.to_dict()])
+        df.loc[0, 'x'] = 0
+        df.loc[0, 'y'] = 0
+        df.loc[0, 'vx'] = utils.remap(df.loc[0, 'vx'], [MDPVehicle.SPEED_MIN, MDPVehicle.SPEED_MAX], [0, 1])
+        df.loc[0, 'vy'] = utils.remap(df.loc[0, 'vy'], [MDPVehicle.SPEED_MIN, MDPVehicle.SPEED_MAX], [-1, 1])
+
+        close_vehicles = self.road.close_vehicles_to(self.vehicle,
+                                                     [-self.PERCEPTION_DISTANCE/2, self.PERCEPTION_DISTANCE])
+        df = df.append(pandas.DataFrame.from_records([v.to_dict(self.vehicle)
+                                                      for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]]),
+                       ignore_index=True)
+        delta_v = MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN
+        df.loc[1:, 'x'] = utils.remap(df.loc[1:, 'x'], [-self.PERCEPTION_DISTANCE, self.PERCEPTION_DISTANCE], [-1, 1])
+        df.loc[1:, 'y'] = utils.remap(df.loc[1:, 'y'], [-12, 12], [-1, 1])
+        df.loc[1:, 'vx'] = utils.remap(df.loc[1:, 'vx'], [-delta_v, delta_v], [-1, 1])
+        df.loc[1:, 'vy'] = utils.remap(df.loc[1:, 'vy'], [-delta_v, delta_v], [-1, 1])
+
+        if df.shape[0] < self.OBSERVATION_VEHICLES:
+            rows = -np.ones((self.OBSERVATION_VEHICLES - df.shape[0], len(self.OBSERVATION_FEATURES)))
+            df = df.append(pandas.DataFrame(data=rows, columns=self.OBSERVATION_FEATURES), ignore_index=True)
+        df = df[self.OBSERVATION_FEATURES]
+        return np.ravel(df.as_matrix())
 
     def _reward(self, action):
         """
@@ -127,6 +156,8 @@ class AbstractEnv(gym.Env):
             if self.done or self._is_terminal():
                 break
 
+        self.enable_auto_render = False
+
         obs = self._observation()
         reward = self._reward(action)
         terminal = self._is_terminal()
@@ -145,6 +176,8 @@ class AbstractEnv(gym.Env):
 
         if self.viewer is None:
             self.viewer = EnvViewer(self)
+
+        self.enable_auto_render = True
 
         # If the frame has already been rendered, do nothing
         if self.should_update_rendering:
@@ -200,7 +233,7 @@ class AbstractEnv(gym.Env):
             If a callback has been set, use it to perform the rendering. This is useful for the environment wrappers
             such as video-recording monitor that need to access these intermediate renderings.
         """
-        if self.viewer is not None:
+        if self.viewer is not None and self.enable_auto_render:
             self.should_update_rendering = True
 
             if self.automatic_rendering_callback:
@@ -208,7 +241,7 @@ class AbstractEnv(gym.Env):
             else:
                 self.render(self.rendering_mode)
 
-    def _simplified(self):
+    def simplified(self):
         """
             Return a simplified copy of the environment where distant vehicles have been removed from the road.
 
@@ -217,12 +250,7 @@ class AbstractEnv(gym.Env):
         :return: a simplified environment state
         """
         state_copy = copy.deepcopy(self)
-        ev = state_copy.vehicle
-        close_vehicles = []
-        for v in state_copy.road.vehicles:
-            if -self.PERCEPTION_DISTANCE/2 < ev.lane_distance_to(v) < self.PERCEPTION_DISTANCE:
-                close_vehicles.append(v)
-        state_copy.road.vehicles = close_vehicles
+        state_copy.road.vehicles = state_copy.road.close_vehicles_to(state_copy.vehicle, [-self.PERCEPTION_DISTANCE/2, self.PERCEPTION_DISTANCE])
         return state_copy
 
     def __deepcopy__(self, memo):

@@ -137,6 +137,20 @@ class Vehicle(Loggable):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
 
+    def to_dict(self, origin_vehicle=None):
+        d = {
+            'presence': 1,
+            'x': self.position[0],
+            'y': self.position[1],
+            'vx': self.velocity * np.cos(self.heading),
+            'vy': self.velocity * np.sin(self.heading)
+        }
+        if origin_vehicle:
+            origin_dict = origin_vehicle.to_dict()
+            for key in ['x', 'y', 'vx', 'vy']:
+                d[key] -= origin_dict[key]
+        return d
+
     def dump(self):
         """
             Update the internal log of the vehicle, containing:

@@ -24,3 +24,6 @@ def wrap_to_pi(x):
 def do_every(duration, timer):
     return duration < timer
 
+
+def remap(v, x, y):
+    return y[0] + (v-x[0])*(y[1]-y[0])/(x[1]-x[0])
