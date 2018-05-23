@@ -11,10 +11,11 @@
 _build
 
 # Editor files
-.idea/*
+.idea
 
 # Test files
-.pytest_cache/*
+.pytest_cache
+.cache
 
 # Outputs
 **/out/*
