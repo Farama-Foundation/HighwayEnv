@@ -13,7 +13,7 @@ def test_highway_step():
         obs, reward, done, info = env.step(action)
     env.close()
 
-    assert obs
+    assert obs is not None
     assert reward
     assert not done
 
@@ -27,6 +27,6 @@ def test_merge_step():
         obs, reward, done, info = env.step(action)
     env.close()
 
-    assert obs
+    assert obs is not None
     assert reward
     assert not done
