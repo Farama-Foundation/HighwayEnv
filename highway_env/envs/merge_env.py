@@ -31,7 +31,7 @@ class MergeEnv(AbstractEnv):
         self.make_vehicles()
 
     def _observation(self):
-        return self
+        return super(MergeEnv, self)._observation()
 
     def _reward(self, action):
         """
