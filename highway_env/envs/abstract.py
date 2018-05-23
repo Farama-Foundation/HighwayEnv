@@ -83,28 +83,38 @@ class AbstractEnv(gym.Env):
             Return the observation of the current state, which must be consistent with self.observation_space.
         :return: the observation
         """
+        # Add ego-vehicle
         df = pandas.DataFrame.from_records([self.vehicle.to_dict()])
         df.loc[0, 'x'] = 0
         df.loc[0, 'y'] = 0
         df.loc[0, 'vx'] = utils.remap(df.loc[0, 'vx'], [MDPVehicle.SPEED_MIN, MDPVehicle.SPEED_MAX], [0, 1])
         df.loc[0, 'vy'] = utils.remap(df.loc[0, 'vy'], [MDPVehicle.SPEED_MIN, MDPVehicle.SPEED_MAX], [-1, 1])
 
+        # Add nearby traffic
         close_vehicles = self.road.close_vehicles_to(self.vehicle,
                                                      [-self.PERCEPTION_DISTANCE/2, self.PERCEPTION_DISTANCE])
         df = df.append(pandas.DataFrame.from_records([v.to_dict(self.vehicle)
                                                       for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]]),
                        ignore_index=True)
+        # Normalize values
         delta_v = MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN
         df.loc[1:, 'x'] = utils.remap(df.loc[1:, 'x'], [-self.PERCEPTION_DISTANCE, self.PERCEPTION_DISTANCE], [-1, 1])
         df.loc[1:, 'y'] = utils.remap(df.loc[1:, 'y'], [-12, 12], [-1, 1])
         df.loc[1:, 'vx'] = utils.remap(df.loc[1:, 'vx'], [-delta_v, delta_v], [-1, 1])
         df.loc[1:, 'vy'] = utils.remap(df.loc[1:, 'vy'], [-delta_v, delta_v], [-1, 1])
 
+        # Fill missing rows
         if df.shape[0] < self.OBSERVATION_VEHICLES:
             rows = -np.ones((self.OBSERVATION_VEHICLES - df.shape[0], len(self.OBSERVATION_FEATURES)))
             df = df.append(pandas.DataFrame(data=rows, columns=self.OBSERVATION_FEATURES), ignore_index=True)
+
+        # Reorder
         df = df[self.OBSERVATION_FEATURES]
-        return np.ravel(df.values)
+        # Clip
+        obs = np.clip(df.values, -1, 1)
+        # Flatten
+        obs = np.ravel(obs)
+        return obs
 
     def _reward(self, action):
         """
