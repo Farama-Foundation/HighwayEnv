@@ -3,7 +3,7 @@ import multiprocessing
 import gym
 
 from highway_env.vehicle.behavior import IDMVehicle
-from rl_agents.agents.dqn.dqn_pytorch import DqnPytorchAgent
+from rl_agents.agents.dqn.dqn_pytorch import DQNPytorchAgent
 from rl_agents.agents.tree_search.mcts import MCTSAgent
 from rl_agents.trainer.simulation import Simulation
 
@@ -18,7 +18,7 @@ def dqn_pytorch(environment):
         "epsilon_tau": 50000*2,
         "target_update": 1
     }
-    return DqnPytorchAgent(environment, config)
+    return DQNPytorchAgent(environment, config)
 
 
 def configure_environment(environment, level):
