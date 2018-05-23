@@ -104,7 +104,7 @@ class AbstractEnv(gym.Env):
             rows = -np.ones((self.OBSERVATION_VEHICLES - df.shape[0], len(self.OBSERVATION_FEATURES)))
             df = df.append(pandas.DataFrame(data=rows, columns=self.OBSERVATION_FEATURES), ignore_index=True)
         df = df[self.OBSERVATION_FEATURES]
-        return np.ravel(df.as_matrix())
+        return np.ravel(df.values)
 
     def _reward(self, action):
         """
