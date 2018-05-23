@@ -22,6 +22,8 @@ class ControlledVehicle(Vehicle):
     MAX_STEERING_ANGLE = np.pi / 4  # [rad]
     STEERING_VEL_GAIN = 60  # [m/s]
 
+    DELTA_VELOCITY = 5  # [m/s]
+
     def __init__(self,
                  road,
                  position,
@@ -56,9 +58,9 @@ class ControlledVehicle(Vehicle):
         :param action: a high-level action
         """
         if action == "FASTER":
-            self.target_velocity += 5
+            self.target_velocity += self.DELTA_VELOCITY
         elif action == "SLOWER":
-            self.target_velocity -= 5
+            self.target_velocity -= self.DELTA_VELOCITY
         elif action == "LANE_RIGHT":
             target_lane_index = np.clip(self.lane_index + 1, 0, len(self.road.lanes) - 1)
             if self.road.lanes[target_lane_index].is_reachable_from(self.position):
