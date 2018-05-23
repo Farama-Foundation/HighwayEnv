@@ -6,7 +6,7 @@ from rl_agents.agents.tree_search.mcts import MCTSAgent
 from rl_agents.trainer.simulation import Simulation
 
 
-def test():
+def main():
     gym.logger.set_level(gym.logger.INFO)
     env = gym.make('highway-merge-v0')
     agent = MCTSAgent(env,
@@ -20,5 +20,5 @@ def test():
 
 if __name__ == '__main__':
     for i in range(4):
-        p = multiprocessing.Process(target=test)
+        p = multiprocessing.Process(target=main)
         p.start()
