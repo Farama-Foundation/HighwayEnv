@@ -32,11 +32,11 @@ def test():
     gym.logger.set_level(gym.logger.INFO)
     IDMVehicle.POLITENESS = 0
     env = gym.make('highway-v0')
-    configure_environment(env, "EASY")
+    # configure_environment(env, "EASY")
 
-    # agent = MCTSAgent(env, temperature=30, iterations=50)
+    agent = MCTSAgent(env, temperature=50, iterations=50, max_depth=7)
     # agent = TTCVIAgent()
-    agent = dqn_pytorch(env)
+    # agent = dqn_pytorch(env)
     sim = Simulation(env, agent, num_episodes=5000*2, sim_seed=None, recover=True)
     sim.test()
 
@@ -44,5 +44,5 @@ def test():
 if __name__ == '__main__':
     test()
     # for i in range(4):
-    #     p = multiprocessing.Process(target=test)
+    #     p = multiprocessing.Process(target=tests)
     #     p.start()
