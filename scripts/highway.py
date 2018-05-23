@@ -28,7 +28,8 @@ def configure_environment(environment, level):
         environment.VEHICLES_COUNT = 5
         environment.DURATION = 20
 
-def test():
+
+def main():
     gym.logger.set_level(gym.logger.INFO)
     IDMVehicle.POLITENESS = 0
     env = gym.make('highway-v0')
@@ -42,7 +43,7 @@ def test():
 
 
 if __name__ == '__main__':
-    test()
+    main()
     # for i in range(4):
     #     p = multiprocessing.Process(target=tests)
     #     p.start()
