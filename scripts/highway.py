@@ -21,6 +21,16 @@ def dqn_pytorch(environment):
     return DQNPytorchAgent(environment, config)
 
 
+def mcts(environment):
+    fast_policy = lambda state: MCTSAgent.preference_policy(state, environment.ACTIONS_INDEXES['FASTER'])
+    return MCTSAgent(environment,
+                     prior_policy=fast_policy,
+                     rollout_policy=MCTSAgent.random_available_policy,
+                     temperature=50,
+                     iterations=50,
+                     max_depth=7)
+
+
 def configure_environment(environment, level):
     if level == "EASY":
         environment.LANES_COUNT = 2
@@ -35,9 +45,9 @@ def main():
     env = gym.make('highway-v0')
     # configure_environment(env, "EASY")
 
-    agent = MCTSAgent(env, temperature=50, iterations=50, max_depth=7)
     # agent = TTCVIAgent()
     # agent = dqn_pytorch(env)
+    agent = mcts(env)
     sim = Simulation(env, agent, num_episodes=5000*2, sim_seed=None, recover=True)
     sim.test()
 

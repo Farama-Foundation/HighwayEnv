@@ -9,6 +9,7 @@ import numpy as np
 from highway_env import utils
 from highway_env.envs.graphics import EnvViewer
 from highway_env.vehicle.control import MDPVehicle
+from highway_env.vehicle.dynamics import Obstacle
 
 
 class AbstractEnv(gym.Env):
@@ -263,6 +264,20 @@ class AbstractEnv(gym.Env):
         state_copy.road.vehicles = state_copy.road.close_vehicles_to(
             state_copy.vehicle, [-self.PERCEPTION_DISTANCE/2, self.PERCEPTION_DISTANCE]) + [state_copy.vehicle]
         return state_copy
+
+    def change_vehicles(self, vehicle_type):
+        """
+            Change the type of all agents on the road
+        :param env: An AbstractEnv describing the road and vehicles
+        :param vehicle_type: The new type of behavior for other vehicles
+        :return: a new state with modified behavior model for other agents
+        """
+        env_copy = copy.deepcopy(self)
+        vehicles = env_copy.road.vehicles
+        for i, v in enumerate(vehicles):
+            if v is not env_copy.vehicle and not isinstance(v, Obstacle):
+                vehicles[i] = vehicle_type.create_from(v)
+        return env_copy
 
     def __deepcopy__(self, memo):
         """

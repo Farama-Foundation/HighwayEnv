@@ -3,11 +3,29 @@ from __future__ import division, print_function
 import multiprocessing
 import glob
 import gym
+import dill as pickle
 
+from highway_env.envs.abstract import AbstractEnv
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from rl_agents.agents.tree_search.mcts import MCTSAgent, RobustMCTSAgent
 from rl_agents.trainer.analyzer import RunAnalyzer
 from rl_agents.trainer.simulation import Simulation
+
+
+def idle_policy(state):
+    return MCTSAgent.preference_policy(state, AbstractEnv.ACTIONS_INDEXES['IDLE'])
+
+
+def fast_policy(state):
+    return MCTSAgent.preference_policy(state, AbstractEnv.ACTIONS_INDEXES['FASTER'])
+
+
+def assume_linear(env):
+    return env.change_vehicles(LinearVehicle)
+
+
+def assume_idm(env):
+    return env.change_vehicles(IDMVehicle)
 
 
 def evaluate(world_vehicle_type, agent, agent_name):
@@ -25,14 +43,19 @@ if __name__ == '__main__':
     for world_type in [IDMVehicle, LinearVehicle]:
         for (agent_type, name) in \
                 [(MCTSAgent(None, iterations=50,
-                            assume_vehicle_type=LinearVehicle,
-                            rollout_policy=MCTSAgent.idle_policy), LinearVehicle.__name__),
+                            env_preprocessor=assume_linear,
+                            prior_policy=fast_policy,
+                            rollout_policy=idle_policy), LinearVehicle.__name__),
                  (MCTSAgent(None, iterations=50,
-                            assume_vehicle_type=IDMVehicle,
-                            rollout_policy=MCTSAgent.idle_policy), IDMVehicle.__name__),
-                 (RobustMCTSAgent(iterations=50,
-                                  models=[LinearVehicle, IDMVehicle],
-                                  rollout_policy=MCTSAgent.idle_policy), RobustMCTSAgent.__name__)]:
+                            env_preprocessor=assume_idm,
+                            prior_policy=fast_policy,
+                            rollout_policy=idle_policy), IDMVehicle.__name__),
+                 (RobustMCTSAgent(None,
+                                  iterations=50,
+                                  models=[assume_linear,
+                                          assume_idm],
+                                  prior_policy=fast_policy,
+                                  rollout_policy=idle_policy), RobustMCTSAgent.__name__)]:
             p = multiprocessing.Process(target=evaluate, args=(world_type, agent_type, name))
             jobs.append(p)
             p.start()
