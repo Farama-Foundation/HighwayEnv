@@ -53,7 +53,7 @@ def mcts_with_prior(environment):
 def configure_environment(environment, level):
     if level == "EASY":
         environment.LANES_COUNT = 2
-        environment.INITIAL_SPACING = 1
+        environment.INITIAL_SPACING = 2
         environment.VEHICLES_COUNT = 5
         environment.DURATION = 20
 
