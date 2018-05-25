@@ -1,5 +1,6 @@
 from __future__ import division, print_function
 
+from functools import partial
 import multiprocessing
 import glob
 import gym
@@ -11,12 +12,10 @@ from rl_agents.trainer.analyzer import RunAnalyzer
 from rl_agents.trainer.simulation import Simulation
 
 
-def idle_policy(state):
-    return MCTSAgent.preference_policy(state, AbstractEnv.ACTIONS_INDEXES['IDLE'])
+idle_policy = partial(MCTSAgent.preference_policy, action_index=AbstractEnv.ACTIONS_INDEXES['IDLE'])
 
 
-def fast_policy(state):
-    return MCTSAgent.preference_policy(state, AbstractEnv.ACTIONS_INDEXES['FASTER'])
+fast_policy = partial(MCTSAgent.preference_policy, action_index=AbstractEnv.ACTIONS_INDEXES['FASTER'])
 
 
 def assume_linear(env):

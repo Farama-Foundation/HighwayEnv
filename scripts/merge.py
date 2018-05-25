@@ -9,7 +9,8 @@ from rl_agents.trainer.simulation import Simulation
 def main():
     gym.logger.set_level(gym.logger.INFO)
     env = gym.make('highway-merge-v0')
-    fast_policy = lambda state: MCTSAgent.preference_policy(state, env.ACTIONS_INDEXES['FASTER'])
+    from functools import partial
+    fast_policy = partial(MCTSAgent.preference_policy, action_index=env.ACTIONS_INDEXES['FASTER'])
     agent = MCTSAgent(env,
                       prior_policy=fast_policy,
                       rollout_policy=MCTSAgent.random_available_policy,

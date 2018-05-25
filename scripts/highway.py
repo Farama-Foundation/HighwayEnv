@@ -21,13 +21,14 @@ def dqn_pytorch(environment):
     return DQNPytorchAgent(environment, config)
 
 
-def mcts(environment):
-    fast_policy = lambda state: MCTSAgent.preference_policy(state, environment.ACTIONS_INDEXES['FASTER'])
+def mcts(environment, iterations=75, temperature=10):
+    from functools import partial
+    fast_policy = partial(MCTSAgent.preference_policy, action_index=environment.ACTIONS_INDEXES['FASTER'])
     return MCTSAgent(environment,
                      prior_policy=fast_policy,
                      rollout_policy=MCTSAgent.random_available_policy,
-                     iterations=75,
-                     temperature=10,
+                     iterations=iterations,
+                     temperature=temperature,
                      max_depth=7)
 
 
