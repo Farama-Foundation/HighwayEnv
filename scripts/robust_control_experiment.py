@@ -3,7 +3,6 @@ from __future__ import division, print_function
 import multiprocessing
 import glob
 import gym
-import dill as pickle
 
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
