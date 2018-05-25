@@ -17,7 +17,7 @@ class HighwayEnv(AbstractEnv):
 
     COLLISION_REWARD = -1
     """ The reward received when colliding with a vehicle."""
-    LEFT_LANE_REWARD = -0.1
+    RIGHT_LANE_REWARD = 0.1
     """ The reward received when driving on the left-most lanes, linearly mapped to zero for other lanes."""
     HIGH_VELOCITY_REWARD = 0.2
     """ The reward received when driving at full speed, linearly mapped to zero for lower speeds."""
@@ -27,6 +27,7 @@ class HighwayEnv(AbstractEnv):
     LANES_COUNT = 4
     VEHICLES_COUNT = 20
     INITIAL_SPACING = 6
+
     DURATION = 60
     """ Number of steps until the termination of the episode [s]."""
 
@@ -62,7 +63,7 @@ class HighwayEnv(AbstractEnv):
         action_reward = {0: self.LANE_CHANGE_REWARD, 1: 0, 2: self.LANE_CHANGE_REWARD, 3: 0, 4: 0}
         state_reward = \
             + self.COLLISION_REWARD * self.vehicle.crashed \
-            + self.LEFT_LANE_REWARD * (len(self.road.lanes)-1 - self.vehicle.target_lane_index) / (len(self.road.lanes) - 1) \
+            + self.RIGHT_LANE_REWARD * self.vehicle.target_lane_index / (len(self.road.lanes) - 1) \
             + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
         return action_reward[action] + state_reward
 
