@@ -66,6 +66,13 @@ class Road(Loggable):
         return [v for v in self.vehicles if (distances[0] < vehicle.lane_distance_to(v) < distances[1]
                                              and v is not vehicle)]
 
+    def closest_vehicles_to(self, vehicle, count):
+        sorted_v = sorted([v for v in self.vehicles
+                           if v is not vehicle
+                           and -2*vehicle.LENGTH < vehicle.lane_distance_to(v)],
+                          key=lambda v: abs(vehicle.lane_distance_to(v)))
+        return sorted_v[:count]
+
     def act(self):
         """
             Decide the actions of each entity on the road.

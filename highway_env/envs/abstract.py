@@ -86,21 +86,22 @@ class AbstractEnv(gym.Env):
         """
         # Add ego-vehicle
         df = pandas.DataFrame.from_records([self.vehicle.to_dict()])
+        # Normalize values
+        road_width = self.road.lanes[0].width_at(0) * len(self.road.lanes)
         df.loc[0, 'x'] = 0
-        df.loc[0, 'y'] = 0
+        df.loc[0, 'y'] = utils.remap(df.loc[0, 'y'], [0, road_width], [0, 1])
         df.loc[0, 'vx'] = utils.remap(df.loc[0, 'vx'], [MDPVehicle.SPEED_MIN, MDPVehicle.SPEED_MAX], [0, 1])
-        df.loc[0, 'vy'] = utils.remap(df.loc[0, 'vy'], [MDPVehicle.SPEED_MIN, MDPVehicle.SPEED_MAX], [-1, 1])
+        df.loc[0, 'vy'] = utils.remap(df.loc[0, 'vy'], [-MDPVehicle.SPEED_MAX, MDPVehicle.SPEED_MAX], [-1, 1])
 
         # Add nearby traffic
-        close_vehicles = self.road.close_vehicles_to(self.vehicle,
-                                                     [-self.PERCEPTION_DISTANCE/2, self.PERCEPTION_DISTANCE])
+        close_vehicles = self.road.closest_vehicles_to(self.vehicle, self.OBSERVATION_VEHICLES)
         df = df.append(pandas.DataFrame.from_records([v.to_dict(self.vehicle)
                                                       for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]]),
                        ignore_index=True)
         # Normalize values
-        delta_v = MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN
+        delta_v = 2*(MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN)
         df.loc[1:, 'x'] = utils.remap(df.loc[1:, 'x'], [-self.PERCEPTION_DISTANCE, self.PERCEPTION_DISTANCE], [-1, 1])
-        df.loc[1:, 'y'] = utils.remap(df.loc[1:, 'y'], [-12, 12], [-1, 1])
+        df.loc[1:, 'y'] = utils.remap(df.loc[1:, 'y'], [-road_width, road_width], [-1, 1])
         df.loc[1:, 'vx'] = utils.remap(df.loc[1:, 'vx'], [-delta_v, delta_v], [-1, 1])
         df.loc[1:, 'vy'] = utils.remap(df.loc[1:, 'vy'], [-delta_v, delta_v], [-1, 1])
 
