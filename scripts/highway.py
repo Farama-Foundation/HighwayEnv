@@ -57,7 +57,16 @@ def configure_environment(environment, level):
         environment.INITIAL_SPACING = 2
         environment.VEHICLES_COUNT = 5
         environment.DURATION = 20
-
+    if level == "MEDIUM":
+        environment.LANES_COUNT = 3
+        environment.INITIAL_SPACING = 2
+        environment.VEHICLES_COUNT = 10
+        environment.DURATION = 30
+    if level == "HARD":
+        environment.LANES_COUNT = 4
+        environment.INITIAL_SPACING = 3
+        environment.VEHICLES_COUNT = 15
+        environment.DURATION = 40
 
 def main():
     gym.logger.set_level(gym.logger.INFO)
