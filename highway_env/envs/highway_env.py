@@ -1,5 +1,6 @@
 from __future__ import division, print_function, absolute_import
 import numpy as np
+from gym import logger
 
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.road import Road
@@ -24,15 +25,30 @@ class HighwayEnv(AbstractEnv):
     LANE_CHANGE_REWARD = -0
     """ The reward received at each lane change action."""
 
-    LANES_COUNT = 4
-    VEHICLES_COUNT = 20
-    INITIAL_SPACING = 6
-
-    DURATION = 60
-    """ Number of steps until the termination of the episode [s]."""
+    DIFFICULTY_LEVELS = {
+        "EASY": {
+            "lanes_count": 2,
+            "initial_spacing": 2,
+            "vehicles_count": 5,
+            "duration": 20,
+        },
+        "MEDIUM": {
+            "lanes_count": 3,
+            "initial_spacing": 2,
+            "vehicles_count": 10,
+            "duration": 30,
+        },
+        "HARD": {
+            "lanes_count": 4,
+            "initial_spacing": 3,
+            "vehicles_count": 15,
+            "duration": 40,
+        },
+    }
 
     def __init__(self):
         super(HighwayEnv, self).__init__()
+        self.config = self.DIFFICULTY_LEVELS["HARD"]
         self.steps = 0
         self.reset()
 
@@ -45,12 +61,20 @@ class HighwayEnv(AbstractEnv):
         self.steps += 1
         return super(HighwayEnv, self).step(action)
 
+    def set_difficulty_level(self, level):
+        if level in self.DIFFICULTY_LEVELS:
+            logger.info("Set difficulty level to: {}".format(level))
+            self.config = self.DIFFICULTY_LEVELS[level]
+            self.reset()
+        else:
+            raise ValueError("Invalid difficulty level, choose among {}".format(str(self.DIFFICULTY_LEVELS.keys())))
+
     def _create_road(self):
-        road = Road.create_random_road(lanes_count=self.LANES_COUNT,
-                                       vehicles_count=self.VEHICLES_COUNT,
+        road = Road.create_random_road(lanes_count=self.config["lanes_count"],
+                                       vehicles_count=self.config["vehicles_count"],
                                        vehicles_type=IDMVehicle,
                                        np_random=self.np_random)
-        vehicle = MDPVehicle.create_random(road, 25, spacing=self.INITIAL_SPACING, np_random=self.np_random)
+        vehicle = MDPVehicle.create_random(road, 25, spacing=self.config["initial_spacing"], np_random=self.np_random)
         road.vehicles.append(vehicle)
         return road, vehicle
 
@@ -74,4 +98,4 @@ class HighwayEnv(AbstractEnv):
         """
             The episode is over if the ego vehicle crashed or the time is out.
         """
-        return self.vehicle.crashed or self.steps > self.DURATION
+        return self.vehicle.crashed or self.steps > self.config["duration"]

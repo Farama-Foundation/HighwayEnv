@@ -5,7 +5,42 @@ import gym
 from highway_env.vehicle.behavior import IDMVehicle
 from rl_agents.agents.dqn.dqn_pytorch import DQNPytorchAgent
 from rl_agents.agents.tree_search.mcts import MCTSAgent, MCTSWithPriorPolicyAgent
+from rl_agents.trainer.benchmark import Benchmark
 from rl_agents.trainer.simulation import Simulation
+
+
+def main():
+    env = prepare_environment()
+    evaluate_agent(env)
+    # benchmark_agents(env)
+
+
+def prepare_environment():
+    gym.logger.set_level(gym.logger.INFO)
+    env = gym.make('highway-v0')
+    env.set_difficulty_level("HARD")
+    return env
+
+
+def evaluate_agent(env):
+    # agent = TTCVIAgent()
+    agent = dqn_pytorch(env)
+    # agent = mcts(env)
+    # agent = mcts_with_prior(env)
+    sim = Simulation(env, agent, num_episodes=80, sim_seed=None)
+    sim.test()
+
+
+def benchmark_agents(env):
+    # agents = [mcts(env, iterations=20), mcts(env, iterations=60), mcts(env, iterations=100)]
+    agents = [mcts_with_prior(env, epsilon=0.3),
+              mcts_with_prior(env, epsilon=0.5),
+              mcts_with_prior(env, epsilon=0.7),
+              mcts_with_prior(env, epsilon=0.8),
+              mcts_with_prior(env, epsilon=0.9),
+              mcts_with_prior(env, epsilon=1.0)]
+    benchmark = Benchmark(env, agents, num_episodes=25)
+    benchmark.run()
 
 
 def dqn_pytorch(environment):
@@ -32,18 +67,18 @@ def mcts(environment, iterations=75, temperature=10):
                      max_depth=7)
 
 
-def mcts_with_prior(environment):
+def mcts_with_prior(environment, epsilon=0.5):
     config = {
         "layers": [256, 256],
         "memory_capacity": 50000,
         "batch_size": 100,
         "gamma": 0.9,
-        "epsilon": [0.3, 0.3],
+        "epsilon": [epsilon, epsilon],
         "epsilon_tau": 50000*2,
         "target_update": 1
     }
     prior_agent = DQNPytorchAgent(environment, config)
-    prior_agent.load('out/HighwayEnv/DQNPytorchAgent/saved_models/dqn_256_256_50000.tar')
+    prior_agent.load('out/HighwayEnv/DQNPytorchAgent/saved_models/easy_15000.tar')
     return MCTSWithPriorPolicyAgent(environment,
                                     prior_agent=prior_agent,
                                     iterations=25,
@@ -51,39 +86,11 @@ def mcts_with_prior(environment):
                                     max_depth=7)
 
 
-def configure_environment(environment, level):
-    if level == "EASY":
-        environment.LANES_COUNT = 2
-        environment.INITIAL_SPACING = 2
-        environment.VEHICLES_COUNT = 5
-        environment.DURATION = 20
-    if level == "MEDIUM":
-        environment.LANES_COUNT = 3
-        environment.INITIAL_SPACING = 2
-        environment.VEHICLES_COUNT = 10
-        environment.DURATION = 30
-    if level == "HARD":
-        environment.LANES_COUNT = 4
-        environment.INITIAL_SPACING = 3
-        environment.VEHICLES_COUNT = 15
-        environment.DURATION = 40
-
-def main():
-    gym.logger.set_level(gym.logger.INFO)
-    IDMVehicle.POLITENESS = 0
-    env = gym.make('highway-v0')
-    configure_environment(env, "EASY")
-
-    # agent = TTCVIAgent()
-    # agent = dqn_pytorch(env)
-    # agent = mcts(env)
-    agent = mcts_with_prior(env)
-    sim = Simulation(env, agent, num_episodes=80, sim_seed=None)
-    sim.test()
-
-
 if __name__ == '__main__':
-    for i in range(4):
-        p = multiprocessing.Process(target=main)
-        p.start()
-    # main()
+    num_processes = 1
+    if num_processes > 1:
+        for i in range(4):
+            p = multiprocessing.Process(target=main)
+            p.start()
+    else:
+        main()
