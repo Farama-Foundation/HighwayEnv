@@ -29,9 +29,9 @@ class EnvViewer(object):
 
     def set_agent_display(self, agent_display):
         if self.agent_display is None:
-            self.agent_display = agent_display
             self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, 2 * self.SCREEN_HEIGHT))
             self.agent_surface = pygame.Surface((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        self.agent_display = agent_display
 
     def handle_events(self):
         """
