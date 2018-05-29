@@ -1,5 +1,7 @@
 from __future__ import division, print_function, absolute_import
 
+import os
+
 import numpy as np
 import pygame
 
@@ -23,6 +25,10 @@ class EnvViewer(object):
         self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
         self.sim_surface = WorldSurface(panel_size, 0, pygame.Surface(panel_size))
         self.clock = pygame.time.Clock()
+
+        self.enabled = True
+        if "SDL_VIDEODRIVER" in os.environ and os.environ["SDL_VIDEODRIVER"] == "dummy":
+            self.enabled = False
 
         self.agent_display = None
         self.agent_surface = None
@@ -48,6 +54,9 @@ class EnvViewer(object):
         """
             Display the road and vehicles on a pygame window.
         """
+        if not self.enabled:
+            return
+
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
         RoadGraphics.display_traffic(self.env.road, self.sim_surface)
