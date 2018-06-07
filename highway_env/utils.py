@@ -1,4 +1,7 @@
 from __future__ import division, print_function
+
+import importlib
+
 import numpy as np
 
 EPSILON = 0.01
@@ -27,3 +30,9 @@ def do_every(duration, timer):
 
 def remap(v, x, y):
     return y[0] + (v-x[0])*(y[1]-y[0])/(x[1]-x[0])
+
+
+def class_from_path(path):
+    module_name, class_name = path.rsplit(".", 1)
+    class_object = getattr(importlib.import_module(module_name), class_name)
+    return class_object

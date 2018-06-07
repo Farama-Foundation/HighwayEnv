@@ -48,7 +48,7 @@ class HighwayEnv(AbstractEnv):
 
     def __init__(self):
         super(HighwayEnv, self).__init__()
-        self.config = self.DIFFICULTY_LEVELS["HARD"]
+        self.config = self.DIFFICULTY_LEVELS["HARD"].copy()
         self.steps = 0
         self.reset()
 
@@ -64,10 +64,13 @@ class HighwayEnv(AbstractEnv):
     def set_difficulty_level(self, level):
         if level in self.DIFFICULTY_LEVELS:
             logger.info("Set difficulty level to: {}".format(level))
-            self.config = self.DIFFICULTY_LEVELS[level]
+            self.config.update(self.DIFFICULTY_LEVELS[level])
             self.reset()
         else:
             raise ValueError("Invalid difficulty level, choose among {}".format(str(self.DIFFICULTY_LEVELS.keys())))
+
+    def configure(self, config):
+        self.config.update(config)
 
     def _create_road(self):
         road = Road.create_random_road(lanes_count=self.config["lanes_count"],

@@ -1,10 +1,10 @@
 from __future__ import division, print_function, absolute_import
 import numpy as np
 
+from highway_env import utils
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
 from highway_env.road.road import Road
-from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle
 
@@ -26,11 +26,16 @@ class MergeEnv(AbstractEnv):
 
     PERCEPTION_DISTANCE = 1000
 
+    DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"}
+
     def __init__(self):
         super(MergeEnv, self).__init__()
-        self.other_vehicles_type = IDMVehicle
+        self.config = self.DEFAULT_CONFIG.copy()
         self.make_road()
         self.make_vehicles()
+
+    def configure(self, config):
+        self.config.update(config)
 
     def _observation(self):
         return super(MergeEnv, self)._observation()
@@ -105,11 +110,12 @@ class MergeEnv(AbstractEnv):
         ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
         road.vehicles.append(ego_vehicle)
 
-        road.vehicles.append(self.other_vehicles_type(road, road.lanes[0].position(20, 0), velocity=29))
-        road.vehicles.append(self.other_vehicles_type(road, road.lanes[1].position(0, 0), velocity=31))
-        road.vehicles.append(self.other_vehicles_type(road, road.lanes[0].position(-65, 0), velocity=31.5))
+        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        road.vehicles.append(other_vehicles_type(road, road.lanes[0].position(20, 0), velocity=29))
+        road.vehicles.append(other_vehicles_type(road, road.lanes[1].position(0, 0), velocity=31))
+        road.vehicles.append(other_vehicles_type(road, road.lanes[0].position(-65, 0), velocity=31.5))
 
-        merging_v = self.other_vehicles_type(road, road.lanes[-1].position(40, 0), velocity=20)
+        merging_v = other_vehicles_type(road, road.lanes[-1].position(40, 0), velocity=20)
         merging_v.target_velocity = 30
         road.vehicles.append(merging_v)
         self.vehicle = ego_vehicle
