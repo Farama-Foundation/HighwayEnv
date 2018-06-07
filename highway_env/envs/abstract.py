@@ -266,18 +266,20 @@ class AbstractEnv(gym.Env):
             state_copy.vehicle, [-self.PERCEPTION_DISTANCE/2, self.PERCEPTION_DISTANCE]) + [state_copy.vehicle]
         return state_copy
 
-    def change_vehicles(self, vehicle_type):
+    def change_vehicles(self, vehicle_class_path):
         """
-            Change the type of all agents on the road
-        :param env: An AbstractEnv describing the road and vehicles
-        :param vehicle_type: The new type of behavior for other vehicles
-        :return: a new state with modified behavior model for other agents
+            Change the type of all vehicles on the road
+        :param vehicle_class_path: The path of the class of behavior for other vehicles
+                             Example: "highway_env.vehicle.behavior.IDMVehicle"
+        :return: a new environment with modified behavior model for other vehicles
         """
+        vehicle_class = utils.class_from_path(vehicle_class_path)
+
         env_copy = copy.deepcopy(self)
         vehicles = env_copy.road.vehicles
         for i, v in enumerate(vehicles):
             if v is not env_copy.vehicle and not isinstance(v, Obstacle):
-                vehicles[i] = vehicle_type.create_from(v)
+                vehicles[i] = vehicle_class.create_from(v)
         return env_copy
 
     def __deepcopy__(self, memo):
