@@ -100,7 +100,18 @@ Agents solving the `highway-env` environments are available in the [RL-Agents](h
 
 `pip install --user git+https://github.com/eleurent/rl-agents`
 
-### Time-To-Collision Value Iteration
+### Deep Q-Network
+
+
+<p align="center">
+    <img src="docs/media/dqn.gif"><br/>
+    <em>The DQN agent solving highway-v0.</em>
+</p>
+
+This model-free reinforcement learning agent performs Q-learning with function approximation, using a neural network to represent the state-action value function Q.
+
+
+### Value Iteration
 
 <p align="center">
     <img src="docs/media/ttcvi.gif"><br/>
@@ -109,7 +120,7 @@ Agents solving the `highway-env` environments are available in the [RL-Agents](h
 
 This agent uses a simple representation of the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road, and performs a Value Iteration to compute the corresponding optimal value function.
 
-The transition function of the TTC-state is simplistic and assumes that each vehicle will keep driving at a constant velocity without changing lanes. This model bias can be a source of mistakes.
+The transition model of the TTC-state is simplistic and assumes that each vehicle will keep driving at a constant velocity without changing lanes. This model bias can be a source of mistakes.
 
 ### Monte-Carlo Tree Search
 
