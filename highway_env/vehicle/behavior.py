@@ -32,10 +32,26 @@ class IDMVehicle(ControlledVehicle):
                  velocity=0,
                  target_lane_index=None,
                  target_velocity=None,
-                 enable_lane_change=True):
+                 enable_lane_change=True,
+                 timer=None):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity)
         self.enable_lane_change = enable_lane_change
-        self.timer = (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
+        self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
+
+    @classmethod
+    def create_from(cls, vehicle):
+        """
+            Create a new vehicle from an existing one.
+            The vehicle dynamics and target dynamics are copied, other properties are default.
+
+        :param vehicle: a vehicle
+        :return: a new vehicle at the same dynamical state
+        """
+        timer = None if not hasattr(vehicle, 'timer') else vehicle.timer
+        v = cls(vehicle.road, vehicle.position, heading=vehicle.heading, velocity=vehicle.velocity,
+                target_lane_index=vehicle.target_lane_index, target_velocity=vehicle.target_velocity,
+                timer=timer)
+        return v
 
     def act(self, action=None):
         """
@@ -244,9 +260,16 @@ class LinearVehicle(IDMVehicle):
                  velocity=0,
                  target_lane_index=None,
                  target_velocity=None,
-                 enable_lane_change=True):
-        super(LinearVehicle, self).__init__(road, position,
-                                            heading, velocity, target_lane_index, target_velocity, enable_lane_change)
+                 enable_lane_change=True,
+                 timer=None):
+        super(LinearVehicle, self).__init__(road,
+                                            position,
+                                            heading,
+                                            velocity,
+                                            target_lane_index,
+                                            target_velocity,
+                                            enable_lane_change,
+                                            timer)
 
     @classmethod
     def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
