@@ -186,7 +186,7 @@ class Vehicle(Loggable):
         return pd.DataFrame(self.log)
 
     def __str__(self):
-        return "#{}: {}".format(id(self) % 1000, self.position)
+        return "{} #{}: {}".format(self.__class__.__name__, id(self) % 1000, self.position)
 
     def __repr__(self):
         return self.__str__()
