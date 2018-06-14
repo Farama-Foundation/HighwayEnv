@@ -218,10 +218,10 @@ class IDMVehicle(ControlledVehicle):
 
         # Is there an advantage for me and/or my followers to change lane?
         old_preceding, old_following = self.road.neighbour_vehicles(self)
-        self_a = IDMVehicle.acceleration(ego_vehicle=self, front_vehicle=old_preceding)
-        self_pred_a = IDMVehicle.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
-        old_following_a = IDMVehicle.acceleration(ego_vehicle=old_following, front_vehicle=self)
-        old_following_pred_a = IDMVehicle.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
+        self_a = self.acceleration(ego_vehicle=self, front_vehicle=old_preceding)
+        self_pred_a = self.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
+        old_following_a = self.acceleration(ego_vehicle=old_following, front_vehicle=self)
+        old_following_pred_a = self.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
         jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
                                                          + old_following_pred_a - old_following_a)
         if jerk < self.LANE_CHANGE_MIN_ACC_GAIN:
