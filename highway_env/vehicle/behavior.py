@@ -300,8 +300,20 @@ class LinearVehicle(IDMVehicle):
 
 
 class AggressiveVehicle(LinearVehicle):
-    PARAMETERS = [0.4, 0.1, 0.5]
+    LANE_CHANGE_MIN_ACC_GAIN = 1.0  # [m/s2]
+    MERGE_ACC_GAIN = 0.8
+    MERGE_VEL_RATIO = 0.75
+    MERGE_TARGET_VEL = 30
+    PARAMETERS = [MERGE_ACC_GAIN/((1-MERGE_VEL_RATIO)*MERGE_TARGET_VEL),
+                  MERGE_ACC_GAIN / (MERGE_VEL_RATIO * MERGE_TARGET_VEL),
+                  0.5]
 
 
 class DefensiveVehicle(LinearVehicle):
-    PARAMETERS = [0.3, 0.25, 2.0]
+    LANE_CHANGE_MIN_ACC_GAIN = 1.0  # [m/s2]
+    MERGE_ACC_GAIN = 1.2
+    MERGE_VEL_RATIO = 0.75
+    MERGE_TARGET_VEL = 30
+    PARAMETERS = [MERGE_ACC_GAIN/((1-MERGE_VEL_RATIO)*MERGE_TARGET_VEL),
+                  MERGE_ACC_GAIN / (MERGE_VEL_RATIO * MERGE_TARGET_VEL),
+                  2.0]
