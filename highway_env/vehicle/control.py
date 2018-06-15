@@ -17,10 +17,9 @@ class ControlledVehicle(Vehicle):
     TAU_A = 0.3  # [s]
     TAU_DS = 0.3  # [s]
     KP_A = 1 / TAU_A
-    KD_S = 1 / TAU_DS
-    KP_S = 0.05  # [1/m]
+    KP_HEADING = 1 / TAU_DS
+    KP_LATERAL = 1 / 1.0  # [1/s]
     MAX_STEERING_ANGLE = np.pi / 4  # [rad]
-    STEERING_VEL_GAIN = 60  # [m/s]
 
     DELTA_VELOCITY = 5  # [m/s]
 
@@ -78,8 +77,10 @@ class ControlledVehicle(Vehicle):
         """
             Steer the vehicle to follow the center of an given lane.
 
-            The steering command is computed by a proportional heading controller, whose heading reference is set to the
-            target lane heading added with a proportional lateral position controller weighted by current velocity.
+        1. Lateral position is controlled by a proportional controller yielding a lateral velocity command
+        2. Lateral velocity command is converted to a heading reference
+        3. Heading is controlled by a proportional controller yielding a heading rate command
+        4. Heading rate command is converted to a steering angle
 
         :param target_lane_index: index of the lane to follow
         :return: a steering wheel angle command [rad]
@@ -87,12 +88,17 @@ class ControlledVehicle(Vehicle):
         lane_coords = self.road.lanes[target_lane_index].local_coordinates(self.position)
         lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
         lane_future_heading = self.road.lanes[target_lane_index].heading_at(lane_next_coords)
-        heading_ref = lane_future_heading - np.arctan(self.KP_S * lane_coords[1] * np.sign(self.velocity) *
-                                                      np.exp(-(self.velocity / self.STEERING_VEL_GAIN) ** 2))
-        steering = self.KD_S * utils.wrap_to_pi(heading_ref - self.heading) * self.LENGTH / utils.not_zero(
-            self.velocity)
-        steering = np.clip(steering, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
-        return steering
+
+        # Lateral position control
+        lateral_velocity_command = - self.KP_LATERAL * lane_coords[1]
+        # Lateral velocity to heading
+        heading_ref = lane_future_heading + np.arcsin(lateral_velocity_command/utils.not_zero(self.velocity))
+        # Heading control
+        heading_rate_command = self.KP_HEADING * (heading_ref - self.heading)
+        # Heading rate to steering angle
+        steering_angle = self.LENGTH / utils.not_zero(self.velocity) * np.arctan(heading_rate_command)
+        steering_angle = np.clip(steering_angle, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
+        return steering_angle
 
     def velocity_control(self, target_velocity):
         """
