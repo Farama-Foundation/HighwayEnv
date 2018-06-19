@@ -158,11 +158,22 @@ class Vehicle(Loggable):
                 - some metrics relative to its neighbour vehicles.
         """
         data = {
+            'x': self.position[0],
+            'y': self.position[1],
+            'psi': self.heading,
+            'vx': self.velocity * np.cos(self.heading),
+            'vy': self.velocity * np.sin(self.heading),
             'v': self.velocity,
             'acceleration': self.action['acceleration'],
             'steering': self.action['steering']}
 
         if self.road:
+            for lane_index in range(len(self.road.lanes)):
+                lane_coords = self.road.lanes[lane_index].local_coordinates(self.position)
+                data.update({
+                    'dy_lane_{}'.format(lane_index): lane_coords[1],
+                    'psi_lane_{}'.format(lane_index): self.road.lanes[lane_index].heading_at(lane_coords[0])
+                })
             front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
             if front_vehicle:
                 data.update({
