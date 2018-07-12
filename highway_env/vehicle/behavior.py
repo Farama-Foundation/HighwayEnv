@@ -321,3 +321,107 @@ class DefensiveVehicle(LinearVehicle):
     PARAMETERS = [MERGE_ACC_GAIN / ((1 - MERGE_VEL_RATIO) * MERGE_TARGET_VEL),
                   MERGE_ACC_GAIN / (MERGE_VEL_RATIO * MERGE_TARGET_VEL),
                   2.0]
+
+
+class IntervalObserver(object):
+    """
+        Observer for the interval-membership of a LinearVehicle under parameter uncertainty.
+
+        The model trajectory is stored in a model_vehicle, and the lower and upper bounds of the states are stored
+        in a min_vehicle and max_vehicle. Note that these vehicles do not follow a proper Vehicle dynamics, and
+        are only used for storage of the bounds.
+    """
+    def __init__(self, vehicle):
+        self.vehicle = vehicle
+        self.model_vehicle = LinearVehicle.create_from(vehicle)
+        self.min_vehicle = LinearVehicle.create_from(vehicle)
+        self.max_vehicle = LinearVehicle.create_from(vehicle)
+
+    def step(self, dt):
+        """
+            Step the interval observer dynamics
+        :param dt: timestep [s]
+        """
+        # Parameters interval
+        theta_a = LinearVehicle.PARAMETERS
+        theta_b = ControlledVehicle.STEERING_GAIN
+        theta_a_i = [0.5*np.array(theta_a), 2*np.array(theta_a)]
+        theta_b_i = [theta_b - 0.5 * np.ones(np.shape(theta_b)), theta_b + 0.5 * np.ones(np.shape(theta_b))]
+
+        # Commands interval
+        front_vehicle, _ = self.vehicle.road.neighbour_vehicles(self.vehicle)
+        phi_a = LinearVehicle.acceleration_features(ego_vehicle=self.vehicle, front_vehicle=front_vehicle)
+        phi_b = self.vehicle.steering_features(self.vehicle.target_lane_index)
+        phi_a_bounds = 0*1
+        phi_b_bounds = 0*np.array([0.5*self.vehicle.LENGTH/self.vehicle.velocity**2, 0])
+        phi_a_i, phi_b_i = [phi_a-phi_a_bounds, phi_a+phi_a_bounds], [phi_b-phi_b_bounds, phi_b+phi_b_bounds]
+        a_i = IntervalObserver.intervals_product(theta_a_i, phi_a_i)
+        b_i = IntervalObserver.intervals_product(theta_b_i, phi_b_i)
+
+        # Velocities interval
+        v_i = [self.min_vehicle.velocity, self.max_vehicle.velocity]
+        dv_i = a_i
+        psi_i = [self.min_vehicle.heading, self.max_vehicle.heading]
+        tan_b_i = [np.tan(b_i[0])/self.vehicle.LENGTH, np.tan(b_i[1])/self.vehicle.LENGTH]
+        d_psi_i = IntervalObserver.intervals_product(v_i, tan_b_i)
+
+        # Position interval
+        cos_i = [-1 if psi_i[0] <= np.pi <= psi_i[1] else min(map(np.cos, psi_i)),
+                 1 if psi_i[0] <= 0 <= psi_i[1] else max(map(np.cos, psi_i))]
+        sin_i = [-1 if psi_i[0] <= -np.pi/2 <= psi_i[1] else min(map(np.sin, psi_i)),
+                 1 if psi_i[0] <= np.pi/2 <= psi_i[1] else max(map(np.sin, psi_i))]
+        dx_i = IntervalObserver.intervals_product(v_i, cos_i)
+        dy_i = IntervalObserver.intervals_product(v_i, sin_i)
+
+        # Interval dynamics integration
+        self.min_vehicle.action['acceleration'] = a_i[0]
+        self.min_vehicle.action['steering'] = b_i[0]
+        self.min_vehicle.velocity += dv_i[0]*dt
+        self.min_vehicle.heading += d_psi_i[0]*dt
+        self.min_vehicle.position[0] += dx_i[0]*dt
+        self.min_vehicle.position[1] += dy_i[0]*dt
+        self.max_vehicle.action['acceleration'] = a_i[1]
+        self.max_vehicle.action['steering'] = b_i[1]
+        self.max_vehicle.velocity += dv_i[1] * dt
+        self.max_vehicle.heading += d_psi_i[1] * dt
+        self.max_vehicle.position[0] += dx_i[1] * dt
+        self.max_vehicle.position[1] += dy_i[1]*dt
+        self.model_vehicle.action['acceleration'] = theta_a @ phi_a
+        self.model_vehicle.action['steering'] = theta_b @ phi_b
+        self.model_vehicle.position += self.model_vehicle.velocity*np.array([np.cos(self.model_vehicle.heading),
+                                                                             np.sin(self.model_vehicle.heading)])*dt
+        self.model_vehicle.velocity += self.model_vehicle.action['acceleration']*dt
+        self.model_vehicle.heading += self.model_vehicle.velocity/self.vehicle.LENGTH * \
+                                      np.tan(self.model_vehicle.action['steering'])*dt
+
+    @staticmethod
+    def intervals_product(a, b):
+        """
+            Compute product of two intervals
+        :param a: interval [a_min, a_max]
+        :param b: interval [b_min, b_max]
+        :return: the interval of their product ab
+        """
+        p = lambda x: np.maximum(x, 0)
+        n = lambda x: np.maximum(-x, 0)
+        return \
+            [np.dot(p(a[0]), p(b[0])) - np.dot(p(a[1]), n(b[0])) - np.dot(n(a[0]), p(b[1])) + np.dot(n(a[1]), n(b[1])),
+             np.dot(p(a[1]), p(b[1])) - np.dot(p(a[0]), n(b[1])) - np.dot(n(a[1]), p(b[0])) + np.dot(n(a[0]), n(b[0]))]
+
+    def compute_trajectories(self, n, dt):
+        """
+            Compute the model trajectory and corresponding state intervals
+        :param n: number of steps in the trajectory
+        :param dt: timestep [s]
+        :return: model trajectory, minimum bound, and maximum bound
+        """
+        model_traj, min_traj, max_traj = [], [], []
+        self.model_vehicle = LinearVehicle.create_from(self.vehicle)
+        self.min_vehicle = LinearVehicle.create_from(self.vehicle)
+        self.max_vehicle = LinearVehicle.create_from(self.vehicle)
+        for _ in range(n):
+            model_traj.append(Vehicle.create_from(self.model_vehicle))
+            min_traj.append(Vehicle.create_from(self.min_vehicle))
+            max_traj.append(Vehicle.create_from(self.max_vehicle))
+            self.step(dt)
+        return model_traj, min_traj, max_traj
