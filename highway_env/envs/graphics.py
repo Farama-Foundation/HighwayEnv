@@ -60,12 +60,12 @@ class EnvViewer(object):
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
         RoadGraphics.display_traffic(self.env.road, self.sim_surface)
-        self.screen.blit(self.sim_surface, (0, 0))
 
         if self.agent_display:
-            self.agent_display(self.agent_surface)
+            self.agent_display(self.agent_surface, self.sim_surface)
             self.screen.blit(self.agent_surface, (0, self.SCREEN_HEIGHT))
 
+        self.screen.blit(self.sim_surface, (0, 0))
         self.clock.tick(self.env.SIMULATION_FREQUENCY)
         pygame.display.flip()
 
