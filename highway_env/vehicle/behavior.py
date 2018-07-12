@@ -288,15 +288,19 @@ class LinearVehicle(IDMVehicle):
         :param rear_vehicle: the vehicle following the ego-vehicle
         :return: the acceleration command for the ego-vehicle [m/s2]
         """
-        if not ego_vehicle:
-            return 0
-        acceleration = cls.PARAMETERS[0] * (ego_vehicle.target_velocity - ego_vehicle.velocity)
-        d_safe = cls.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * cls.TIME_WANTED + ego_vehicle.LENGTH
-        if front_vehicle:
-            d = ego_vehicle.lane_distance_to(front_vehicle)
-            acceleration += cls.PARAMETERS[1] * min(front_vehicle.velocity - ego_vehicle.velocity, 0) \
-                + cls.PARAMETERS[2] * min(d - d_safe, 0)
-        return acceleration
+        return np.dot(cls.PARAMETERS, cls.acceleration_features(ego_vehicle, front_vehicle, rear_vehicle))
+
+    @classmethod
+    def acceleration_features(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
+        vt, dv, dp = 0, 0, 0
+        if ego_vehicle:
+            vt = ego_vehicle.target_velocity - ego_vehicle.velocity
+            d_safe = cls.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * cls.TIME_WANTED + ego_vehicle.LENGTH
+            if front_vehicle:
+                d = ego_vehicle.lane_distance_to(front_vehicle)
+                dv = min(front_vehicle.velocity - ego_vehicle.velocity, 0)
+                dp = min(d - d_safe, 0)
+        return np.transpose(np.array([vt, dv, dp]))
 
 
 class AggressiveVehicle(LinearVehicle):
@@ -304,7 +308,7 @@ class AggressiveVehicle(LinearVehicle):
     MERGE_ACC_GAIN = 0.8
     MERGE_VEL_RATIO = 0.75
     MERGE_TARGET_VEL = 30
-    PARAMETERS = [MERGE_ACC_GAIN/((1-MERGE_VEL_RATIO)*MERGE_TARGET_VEL),
+    PARAMETERS = [MERGE_ACC_GAIN / ((1 - MERGE_VEL_RATIO) * MERGE_TARGET_VEL),
                   MERGE_ACC_GAIN / (MERGE_VEL_RATIO * MERGE_TARGET_VEL),
                   0.5]
 
@@ -314,6 +318,6 @@ class DefensiveVehicle(LinearVehicle):
     MERGE_ACC_GAIN = 1.2
     MERGE_VEL_RATIO = 0.75
     MERGE_TARGET_VEL = 30
-    PARAMETERS = [MERGE_ACC_GAIN/((1-MERGE_VEL_RATIO)*MERGE_TARGET_VEL),
+    PARAMETERS = [MERGE_ACC_GAIN / ((1 - MERGE_VEL_RATIO) * MERGE_TARGET_VEL),
                   MERGE_ACC_GAIN / (MERGE_VEL_RATIO * MERGE_TARGET_VEL),
                   2.0]
