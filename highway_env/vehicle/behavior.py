@@ -386,8 +386,8 @@ class IntervalObserver(object):
         self.max_vehicle.heading += d_psi_i[1] * dt
         self.max_vehicle.position[0] += dx_i[1] * dt
         self.max_vehicle.position[1] += dy_i[1]*dt
-        self.model_vehicle.action['acceleration'] = theta_a @ phi_a
-        self.model_vehicle.action['steering'] = theta_b @ phi_b
+        self.model_vehicle.action['acceleration'] = np.dot(theta_a, phi_a)
+        self.model_vehicle.action['steering'] = np.dot(theta_b, phi_b)
         self.model_vehicle.position += self.model_vehicle.velocity*np.array([np.cos(self.model_vehicle.heading),
                                                                              np.sin(self.model_vehicle.heading)])*dt
         self.model_vehicle.velocity += self.model_vehicle.action['acceleration']*dt
