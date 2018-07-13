@@ -300,7 +300,7 @@ class LinearVehicle(IDMVehicle):
                 d = ego_vehicle.lane_distance_to(front_vehicle)
                 dv = min(front_vehicle.velocity - ego_vehicle.velocity, 0)
                 dp = min(d - d_safe, 0)
-        return np.transpose(np.array([vt, dv, dp]))
+        return np.array([vt, dv, dp])
 
 
 class AggressiveVehicle(LinearVehicle):
@@ -331,11 +331,13 @@ class IntervalObserver(object):
         in a min_vehicle and max_vehicle. Note that these vehicles do not follow a proper Vehicle dynamics, and
         are only used for storage of the bounds.
     """
-    def __init__(self, vehicle):
+    def __init__(self, road_observer, vehicle):
+        self.road_observer = road_observer
         self.vehicle = vehicle
         self.model_vehicle = LinearVehicle.create_from(vehicle)
         self.min_vehicle = LinearVehicle.create_from(vehicle)
         self.max_vehicle = LinearVehicle.create_from(vehicle)
+        self.model_traj, self.min_traj, self.max_traj = [], [], []
 
     def step(self, dt):
         """
@@ -345,16 +347,22 @@ class IntervalObserver(object):
         # Parameters interval
         theta_a = LinearVehicle.PARAMETERS
         theta_b = ControlledVehicle.STEERING_GAIN
-        theta_a_i = [0.5*np.array(theta_a), 2*np.array(theta_a)]
-        theta_b_i = [theta_b - 0.5 * np.ones(np.shape(theta_b)), theta_b + 0.5 * np.ones(np.shape(theta_b))]
+        theta_a_i = np.vstack((0.5*np.array(theta_a), 2*np.array(theta_a)))
+        theta_b_i = np.vstack((0.5*np.array(theta_b), 1*np.array(theta_b)))
+
+        # Features interval
+        # TODO: For now, we assume the current front vehicle will stay the same at short term
+        front_vehicle, _ = self.vehicle.road.neighbour_vehicles(self.vehicle)
+        front_observer_model = self.road_observer.observers[front_vehicle].model_vehicle if front_vehicle else None
+        # TODO: For now, constant interval around features from model estimates
+        phi_a = LinearVehicle.acceleration_features(ego_vehicle=self.model_vehicle, front_vehicle=front_observer_model)
+        phi_b = self.model_vehicle.steering_features(self.vehicle.target_lane_index)
+        phi_a_bounds = 0
+        phi_b_bounds = 0
+        phi_a_i, phi_b_i = [phi_a - phi_a_bounds, phi_a + phi_a_bounds], [phi_b - phi_b_bounds, phi_b + phi_b_bounds]
+        # TODO: Use the correct intervals computation instead
 
         # Commands interval
-        front_vehicle, _ = self.vehicle.road.neighbour_vehicles(self.vehicle)
-        phi_a = LinearVehicle.acceleration_features(ego_vehicle=self.vehicle, front_vehicle=front_vehicle)
-        phi_b = self.vehicle.steering_features(self.vehicle.target_lane_index)
-        phi_a_bounds = 0*1
-        phi_b_bounds = 0*np.array([0.5*self.vehicle.LENGTH/self.vehicle.velocity**2, 0])
-        phi_a_i, phi_b_i = [phi_a-phi_a_bounds, phi_a+phi_a_bounds], [phi_b-phi_b_bounds, phi_b+phi_b_bounds]
         a_i = IntervalObserver.intervals_product(theta_a_i, phi_a_i)
         b_i = IntervalObserver.intervals_product(theta_b_i, phi_b_i)
 
@@ -394,6 +402,20 @@ class IntervalObserver(object):
         self.model_vehicle.heading += self.model_vehicle.velocity/self.vehicle.LENGTH * \
                                       np.tan(self.model_vehicle.action['steering'])*dt
 
+        # Store trajectories
+        self.model_traj.append(Vehicle.create_from(self.model_vehicle))
+        self.min_traj.append(Vehicle.create_from(self.min_vehicle))
+        self.max_traj.append(Vehicle.create_from(self.max_vehicle))
+
+    def reset(self):
+        """
+            Reset the model and bounds estimates on current vehicle state, and clear trajectories
+        """
+        self.model_traj, self.min_traj, self.max_traj = [], [], []
+        self.model_vehicle = LinearVehicle.create_from(self.vehicle)
+        self.min_vehicle = LinearVehicle.create_from(self.vehicle)
+        self.max_vehicle = LinearVehicle.create_from(self.vehicle)
+
     @staticmethod
     def intervals_product(a, b):
         """
@@ -408,20 +430,27 @@ class IntervalObserver(object):
             [np.dot(p(a[0]), p(b[0])) - np.dot(p(a[1]), n(b[0])) - np.dot(n(a[0]), p(b[1])) + np.dot(n(a[1]), n(b[1])),
              np.dot(p(a[1]), p(b[1])) - np.dot(p(a[0]), n(b[1])) - np.dot(n(a[1]), p(b[0])) + np.dot(n(a[0]), n(b[0]))]
 
+    def get_trajectories(self):
+        return self.model_traj, self.min_traj, self.max_traj
+
+
+class RoadObserver(object):
+    def __init__(self, road):
+        self.road = road
+        self.observers = {vehicle: IntervalObserver(self, vehicle)
+                          for vehicle in road.vehicles if isinstance(vehicle, ControlledVehicle)}
+
+    def step(self, dt):
+        for observer in self.observers.values():
+            observer.step(dt)
+
     def compute_trajectories(self, n, dt):
         """
-            Compute the model trajectory and corresponding state intervals
-        :param n: number of steps in the trajectory
-        :param dt: timestep [s]
-        :return: model trajectory, minimum bound, and maximum bound
+            Compute for each vehicle model trajectory and corresponding state intervals
+            :param n: number of steps in the trajectory
+            :param dt: timestep [s]
         """
-        model_traj, min_traj, max_traj = [], [], []
-        self.model_vehicle = LinearVehicle.create_from(self.vehicle)
-        self.min_vehicle = LinearVehicle.create_from(self.vehicle)
-        self.max_vehicle = LinearVehicle.create_from(self.vehicle)
+        for observer in self.observers.values():
+            observer.reset()
         for _ in range(n):
-            model_traj.append(Vehicle.create_from(self.model_vehicle))
-            min_traj.append(Vehicle.create_from(self.min_vehicle))
-            max_traj.append(Vehicle.create_from(self.max_vehicle))
             self.step(dt)
-        return model_traj, min_traj, max_traj
