@@ -347,20 +347,47 @@ class IntervalObserver(object):
         # Parameters interval
         theta_a = LinearVehicle.PARAMETERS
         theta_b = ControlledVehicle.STEERING_GAIN
-        theta_a_i = np.vstack((0.5*np.array(theta_a), 2*np.array(theta_a)))
-        theta_b_i = np.vstack((0.5*np.array(theta_b), 1*np.array(theta_b)))
+        theta_a_i = np.vstack((0.7*np.array(theta_a), 1.3*np.array(theta_a)))
+        theta_b_i = np.vstack((0.7*np.array(theta_b), 1.*np.array(theta_b)))
 
         # Features interval
         # TODO: For now, we assume the current front vehicle will stay the same at short term
         front_vehicle, _ = self.vehicle.road.neighbour_vehicles(self.vehicle)
-        front_observer_model = self.road_observer.observers[front_vehicle].model_vehicle if front_vehicle else None
-        # TODO: For now, constant interval around features from model estimates
-        phi_a = LinearVehicle.acceleration_features(ego_vehicle=self.model_vehicle, front_vehicle=front_observer_model)
+        front_observer = self.road_observer.observers[front_vehicle] if front_vehicle else None
+        front_observer_model = front_observer.model_vehicle if front_vehicle else None
+        phi_a = self.model_vehicle.acceleration_features(ego_vehicle=self.model_vehicle,
+                                                         front_vehicle=front_observer_model)
         phi_b = self.model_vehicle.steering_features(self.vehicle.target_lane_index)
-        phi_a_bounds = 0
-        phi_b_bounds = 0
-        phi_a_i, phi_b_i = [phi_a - phi_a_bounds, phi_a + phi_a_bounds], [phi_b - phi_b_bounds, phi_b + phi_b_bounds]
-        # TODO: Use the correct intervals computation instead
+        # Acceleration features
+        # Target velocity
+        phi_a_i = np.zeros((2, 3))
+        v_i = np.array([self.min_vehicle.velocity, self.max_vehicle.velocity])
+        phi_a_i[:, 0] = IntervalObserver.intervals_diff([self.model_vehicle.target_velocity]*2, v_i)
+        if front_observer:
+            # Front vehicle velocity
+            v_f_i = [front_observer.min_vehicle.velocity, front_observer.max_vehicle.velocity]
+            phi_a_i[:, 1] = IntervalObserver.interval_negative_part(IntervalObserver.intervals_diff(v_f_i, v_i))
+            # Front vehicle distance
+            # TODO: Use proper lane distance instead of X difference
+            x_i = [self.min_vehicle.position[0], self.max_vehicle.position[0]]
+            xf_i = [front_observer.min_vehicle.position[0], front_observer.max_vehicle.position[0]]
+            d_i = IntervalObserver.intervals_diff(xf_i, x_i)
+            d_safe_i = self.model_vehicle.DISTANCE_WANTED + self.vehicle.LENGTH + self.model_vehicle.TIME_WANTED * np.array(v_i)
+            phi_a_i[:, 2] = IntervalObserver.interval_negative_part(IntervalObserver.intervals_diff(d_i, d_safe_i))
+        # Steering features
+        # Lane position
+        lane_coords = self.vehicle.road.lanes[self.vehicle.target_lane_index].local_coordinates(self.vehicle.position)
+        lane_y = self.vehicle.position[1] - lane_coords[1]
+        lane_next_coords = lane_coords[0] + self.vehicle.velocity * (self.vehicle.TAU_DS + self.vehicle.STEERING_TAU)
+        lane_psi = self.vehicle.road.lanes[self.vehicle.target_lane_index].heading_at(lane_next_coords)
+        y_i = np.array([self.min_vehicle.position[1], self.max_vehicle.position[1]])
+        psi_i = np.array([self.min_vehicle.heading, self.max_vehicle.heading])
+        i_v_i = 1/np.array(list(reversed(v_i)))
+        i_v2_i = i_v_i ** 2
+
+        phi_b_i = np.transpose(np.array(
+            [IntervalObserver.intervals_product((lane_y - np.flip(y_i, 0)) * self.vehicle.LENGTH, i_v2_i),
+             IntervalObserver.intervals_product((lane_psi - np.flip(psi_i, 0)) * self.vehicle.LENGTH, i_v_i)]))
 
         # Commands interval
         a_i = IntervalObserver.intervals_product(theta_a_i, phi_a_i)
@@ -403,9 +430,9 @@ class IntervalObserver(object):
                                       np.tan(self.model_vehicle.action['steering'])*dt
 
         # Store trajectories
-        self.model_traj.append(Vehicle.create_from(self.model_vehicle))
-        self.min_traj.append(Vehicle.create_from(self.min_vehicle))
-        self.max_traj.append(Vehicle.create_from(self.max_vehicle))
+        self.model_traj.append(LinearVehicle.create_from(self.model_vehicle))
+        self.min_traj.append(LinearVehicle.create_from(self.min_vehicle))
+        self.max_traj.append(LinearVehicle.create_from(self.max_vehicle))
 
     def reset(self):
         """
@@ -419,16 +446,35 @@ class IntervalObserver(object):
     @staticmethod
     def intervals_product(a, b):
         """
-            Compute product of two intervals
+            Compute the product of two intervals
         :param a: interval [a_min, a_max]
         :param b: interval [b_min, b_max]
         :return: the interval of their product ab
         """
         p = lambda x: np.maximum(x, 0)
         n = lambda x: np.maximum(-x, 0)
-        return \
+        return np.array(
             [np.dot(p(a[0]), p(b[0])) - np.dot(p(a[1]), n(b[0])) - np.dot(n(a[0]), p(b[1])) + np.dot(n(a[1]), n(b[1])),
-             np.dot(p(a[1]), p(b[1])) - np.dot(p(a[0]), n(b[1])) - np.dot(n(a[1]), p(b[0])) + np.dot(n(a[0]), n(b[0]))]
+             np.dot(p(a[1]), p(b[1])) - np.dot(p(a[0]), n(b[1])) - np.dot(n(a[1]), p(b[0])) + np.dot(n(a[0]), n(b[0]))])
+
+    @staticmethod
+    def intervals_diff(a, b):
+        """
+            Compute the difference of two intervals
+        :param a: interval [a_min, a_max]
+        :param b: interval [b_min, b_max]
+        :return: the interval of their difference a - b
+        """
+        return np.array([a[0] - b[1], a[1] - b[0]])
+
+    @staticmethod
+    def interval_negative_part(a):
+        """
+            Compute the negative part of an interval
+        :param a: interval [a_min, a_max]
+        :return: the interval of its negative part min(a, 0)
+        """
+        return np.minimum(a, 0)
 
     def get_trajectories(self):
         return self.model_traj, self.min_traj, self.max_traj
