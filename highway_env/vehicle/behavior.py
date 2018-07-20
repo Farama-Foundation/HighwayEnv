@@ -334,9 +334,9 @@ class IntervalObserver(object):
     def __init__(self, road_observer, vehicle):
         self.road_observer = road_observer
         self.vehicle = vehicle
-        self.model_vehicle = LinearVehicle.create_from(vehicle)
-        self.min_vehicle = LinearVehicle.create_from(vehicle)
-        self.max_vehicle = LinearVehicle.create_from(vehicle)
+        self.model_vehicle = None
+        self.min_vehicle = None
+        self.max_vehicle = None
         self.model_traj, self.min_traj, self.max_traj = [], [], []
 
     def step(self, dt):
@@ -344,49 +344,47 @@ class IntervalObserver(object):
             Step the interval observer dynamics
         :param dt: timestep [s]
         """
+
+        # Input state intervals
+        x_i = [self.min_vehicle.position[0], self.max_vehicle.position[0]]
+        y_i = np.array([self.min_vehicle.position[1], self.max_vehicle.position[1]])
+        v_i = [self.min_vehicle.velocity, self.max_vehicle.velocity]
+        psi_i = [self.min_vehicle.heading, self.max_vehicle.heading]
+
         # Parameters interval
         theta_a = LinearVehicle.PARAMETERS
         theta_b = ControlledVehicle.STEERING_GAIN
-        theta_a_i = np.vstack((0.7*np.array(theta_a), 1.3*np.array(theta_a)))
-        theta_b_i = np.vstack((0.7*np.array(theta_b), 1.*np.array(theta_b)))
+        theta_a_i = np.vstack((0.9*np.array(theta_a), 1.1*np.array(theta_a)))
+        theta_b_i = np.vstack((0.9*np.array(theta_b), 1.1*np.array(theta_b)))
 
         # Features interval
         # TODO: For now, we assume the current front vehicle will stay the same at short term
         front_vehicle, _ = self.vehicle.road.neighbour_vehicles(self.vehicle)
         front_observer = self.road_observer.observers[front_vehicle] if front_vehicle else None
-        front_observer_model = front_observer.model_vehicle if front_vehicle else None
-        phi_a = self.model_vehicle.acceleration_features(ego_vehicle=self.model_vehicle,
-                                                         front_vehicle=front_observer_model)
-        phi_b = self.model_vehicle.steering_features(self.vehicle.target_lane_index)
+        front_model_vehicle = front_observer.model_vehicle if front_vehicle else None
         # Acceleration features
-        # Target velocity
+        phi_a = self.model_vehicle.acceleration_features(ego_vehicle=self.model_vehicle,
+                                                         front_vehicle=front_model_vehicle)
         phi_a_i = np.zeros((2, 3))
-        v_i = np.array([self.min_vehicle.velocity, self.max_vehicle.velocity])
         phi_a_i[:, 0] = IntervalObserver.intervals_diff([self.model_vehicle.target_velocity]*2, v_i)
         if front_observer:
-            # Front vehicle velocity
             v_f_i = [front_observer.min_vehicle.velocity, front_observer.max_vehicle.velocity]
             phi_a_i[:, 1] = IntervalObserver.interval_negative_part(IntervalObserver.intervals_diff(v_f_i, v_i))
-            # Front vehicle distance
             # TODO: Use proper lane distance instead of X difference
-            x_i = [self.min_vehicle.position[0], self.max_vehicle.position[0]]
             xf_i = [front_observer.min_vehicle.position[0], front_observer.max_vehicle.position[0]]
             d_i = IntervalObserver.intervals_diff(xf_i, x_i)
-            d_safe_i = self.model_vehicle.DISTANCE_WANTED + self.vehicle.LENGTH + self.model_vehicle.TIME_WANTED * np.array(v_i)
+            d_safe_i = LinearVehicle.DISTANCE_WANTED + self.vehicle.LENGTH + LinearVehicle.TIME_WANTED * np.array(v_i)
             phi_a_i[:, 2] = IntervalObserver.interval_negative_part(IntervalObserver.intervals_diff(d_i, d_safe_i))
+
         # Steering features
-        # Lane position
+        # TODO: For now, we assume the current target lane will stay the same at short term
+        phi_b = self.model_vehicle.steering_features(self.vehicle.target_lane_index)
         lane_coords = self.vehicle.road.lanes[self.vehicle.target_lane_index].local_coordinates(self.vehicle.position)
         lane_y = self.vehicle.position[1] - lane_coords[1]
-        lane_next_coords = lane_coords[0] + self.vehicle.velocity * (self.vehicle.TAU_DS + self.vehicle.STEERING_TAU)
-        lane_psi = self.vehicle.road.lanes[self.vehicle.target_lane_index].heading_at(lane_next_coords)
-        y_i = np.array([self.min_vehicle.position[1], self.max_vehicle.position[1]])
-        psi_i = np.array([self.min_vehicle.heading, self.max_vehicle.heading])
-        i_v_i = 1/np.array(list(reversed(v_i)))
-        i_v2_i = i_v_i ** 2
-
+        lane_psi = self.vehicle.road.lanes[self.vehicle.target_lane_index].heading_at(lane_coords[0])
+        i_v_i = 1/np.flip(v_i, 0)
         phi_b_i = np.transpose(np.array(
-            [IntervalObserver.intervals_product((lane_y - np.flip(y_i, 0)) * self.vehicle.LENGTH, i_v2_i),
+            [IntervalObserver.intervals_product((lane_y - np.flip(y_i, 0)) * self.vehicle.LENGTH, i_v_i ** 2),
              IntervalObserver.intervals_product((lane_psi - np.flip(psi_i, 0)) * self.vehicle.LENGTH, i_v_i)]))
 
         # Commands interval
@@ -394,9 +392,7 @@ class IntervalObserver(object):
         b_i = IntervalObserver.intervals_product(theta_b_i, phi_b_i)
 
         # Velocities interval
-        v_i = [self.min_vehicle.velocity, self.max_vehicle.velocity]
         dv_i = a_i
-        psi_i = [self.min_vehicle.heading, self.max_vehicle.heading]
         tan_b_i = [np.tan(b_i[0])/self.vehicle.LENGTH, np.tan(b_i[1])/self.vehicle.LENGTH]
         d_psi_i = IntervalObserver.intervals_product(v_i, tan_b_i)
 
