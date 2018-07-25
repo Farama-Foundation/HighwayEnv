@@ -331,31 +331,58 @@ class IntervalObserver(object):
         in a min_vehicle and max_vehicle. Note that these vehicles do not follow a proper Vehicle dynamics, and
         are only used for storage of the bounds.
     """
-    def __init__(self, road_observer, vehicle):
+    def __init__(self,
+                 road_observer,
+                 vehicle,
+                 theta_a=LinearVehicle.PARAMETERS,
+                 theta_b=ControlledVehicle.STEERING_GAIN,
+                 theta_a_i=None,
+                 theta_b_i=None):
+        """
+        :param RoadObserver road_observer: The observer of the nearby traffic
+        :param vehicle: The vehicle whose trajectory interval is estimated
+        :param theta_a: An acceleration parameter estimate
+        :param theta_b: A steering parameter estimate
+        :param theta_a_i: The interval of possible acceleration parameters
+        :param theta_b_i: The interval of possible steering parameters
+        """
         self.road_observer = road_observer
         self.vehicle = vehicle
+        self.theta_a = np.array(theta_a)
+        self.theta_b = np.array(theta_b)
+        self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([0.5 * self.theta_a, 2 * self.theta_a])
+        self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([0.5 * self.theta_b, 2 * self.theta_b])
+
         self.model_vehicle = None
         self.min_vehicle = None
         self.max_vehicle = None
         self.model_traj, self.min_traj, self.max_traj = [], [], []
 
+    def duplicate(self):
+        new_observer = IntervalObserver(self.road_observer,
+                         self.vehicle,
+                         theta_a=self.theta_a,
+                         theta_b=self.theta_b,
+                         theta_a_i=self.theta_a_i,
+                         theta_b_i=self.theta_b_i)
+        new_observer.model_vehicle = LinearVehicle.create_from(self.model_vehicle)
+        new_observer.min_vehicle = LinearVehicle.create_from(self.min_vehicle)
+        new_observer.max_vehicle = LinearVehicle.create_from(self.max_vehicle)
+        return new_observer
+
     def step(self, dt):
+        self.partial_step(dt)
+
+    def observer_step(self, dt):
         """
             Step the interval observer dynamics
         :param dt: timestep [s]
         """
-
         # Input state intervals
         x_i = [self.min_vehicle.position[0], self.max_vehicle.position[0]]
         y_i = np.array([self.min_vehicle.position[1], self.max_vehicle.position[1]])
         v_i = [self.min_vehicle.velocity, self.max_vehicle.velocity]
         psi_i = [self.min_vehicle.heading, self.max_vehicle.heading]
-
-        # Parameters interval
-        theta_a = LinearVehicle.PARAMETERS
-        theta_b = ControlledVehicle.STEERING_GAIN
-        theta_a_i = np.vstack((0.9*np.array(theta_a), 1.1*np.array(theta_a)))
-        theta_b_i = np.vstack((0.9*np.array(theta_b), 1.1*np.array(theta_b)))
 
         # Features interval
         # TODO: For now, we assume the current front vehicle will stay the same at short term
@@ -388,8 +415,8 @@ class IntervalObserver(object):
              IntervalObserver.intervals_product((lane_psi - np.flip(psi_i, 0)) * self.vehicle.LENGTH, i_v_i)]))
 
         # Commands interval
-        a_i = IntervalObserver.intervals_product(theta_a_i, phi_a_i)
-        b_i = IntervalObserver.intervals_product(theta_b_i, phi_b_i)
+        a_i = IntervalObserver.intervals_product(self.theta_a_i, phi_a_i)
+        b_i = IntervalObserver.intervals_product(self.theta_b_i, phi_b_i)
 
         # Velocities interval
         dv_i = a_i
@@ -417,8 +444,8 @@ class IntervalObserver(object):
         self.max_vehicle.heading += d_psi_i[1] * dt
         self.max_vehicle.position[0] += dx_i[1] * dt
         self.max_vehicle.position[1] += dy_i[1]*dt
-        self.model_vehicle.action['acceleration'] = np.dot(theta_a, phi_a)
-        self.model_vehicle.action['steering'] = np.dot(theta_b, phi_b)
+        self.model_vehicle.action['acceleration'] = np.dot(self.theta_a, phi_a)
+        self.model_vehicle.action['steering'] = np.dot(self.theta_b, phi_b)
         self.model_vehicle.position += self.model_vehicle.velocity*np.array([np.cos(self.model_vehicle.heading),
                                                                              np.sin(self.model_vehicle.heading)])*dt
         self.model_vehicle.velocity += self.model_vehicle.action['acceleration']*dt
@@ -426,6 +453,31 @@ class IntervalObserver(object):
                                       np.tan(self.model_vehicle.action['steering'])*dt
 
         # Store trajectories
+        self.store_trajectories()
+
+    def partial_step(self, dt, alpha=0):
+        observer_minus = self.duplicate()
+        observer_minus.max_vehicle.position = (1 - alpha) * observer_minus.min_vehicle.position + \
+                                              alpha * observer_minus.max_vehicle.position
+        observer_minus.max_vehicle.velocity = (1 - alpha) * observer_minus.min_vehicle.velocity + \
+                                              alpha * observer_minus.max_vehicle.velocity
+        observer_minus.max_vehicle.heading = (1 - alpha) * observer_minus.min_vehicle.heading + \
+                                             alpha * observer_minus.max_vehicle.heading
+        observer_plus = self.duplicate()
+        observer_plus.min_vehicle.position = alpha * observer_plus.min_vehicle.position + \
+                                             (1 - alpha) * observer_plus.max_vehicle.position
+        observer_plus.min_vehicle.velocity = alpha * observer_plus.min_vehicle.velocity + \
+                                             (1 - alpha) * observer_plus.max_vehicle.velocity
+        observer_plus.min_vehicle.heading = alpha * observer_plus.min_vehicle.heading + \
+                                            (1 - alpha) * observer_plus.max_vehicle.heading
+        observer_minus.observer_step(dt)
+        observer_plus.observer_step(dt)
+        self.observer_step(dt)  # In order to step the model vehicle
+        self.min_vehicle = observer_minus.min_vehicle
+        self.max_vehicle = observer_plus.max_vehicle
+        self.store_trajectories()
+
+    def store_trajectories(self):
         self.model_traj.append(LinearVehicle.create_from(self.model_vehicle))
         self.min_traj.append(LinearVehicle.create_from(self.min_vehicle))
         self.max_traj.append(LinearVehicle.create_from(self.max_vehicle))
