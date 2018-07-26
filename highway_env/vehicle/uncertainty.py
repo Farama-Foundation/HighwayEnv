@@ -55,12 +55,13 @@ class IntervalObserver(object):
         self.partial_step(dt)
         self.store_trajectories()
 
-    def observer_step(self, dt, assume_constant_lane=True):
+    def observer_step(self, dt, lane_change_model="constant"):
         """
             Step the interval observer dynamics
         :param dt: timestep [s]
-        :param assume_constant_lane: If true, assume that the vehicle will stay on its current lane.
-                                    Else, assume that a lane change decision is possible at any timestep
+        :param lane_change_model: - constant: assume that the vehicle will stay on its current lane.
+                                  - all: assume that any lane change decision is possible at any timestep
+                                  - right: assume that a right lane change decision is possible at any timestep
         """
         # Input state intervals
         x_i = [self.min_vehicle.position[0], self.max_vehicle.position[0]]
@@ -90,7 +91,12 @@ class IntervalObserver(object):
         # Steering features
         phi_b = self.model_vehicle.steering_features(self.vehicle.target_lane_index)
         phi_b_i = None
-        lanes = [self.vehicle.target_lane_index] if assume_constant_lane else range(len(self.road_observer.road.lanes))
+        if lane_change_model == "constant":
+            lanes = [self.vehicle.target_lane_index]
+        elif lane_change_model == "all":
+            lanes = range(len(self.road_observer.road.lanes))
+        elif lane_change_model == "right":
+            lanes = range(self.vehicle.target_lane_index, len(self.road_observer.road.lanes))
         for lane_index in lanes:
             lane_coords = self.vehicle.road.lanes[lane_index].local_coordinates(self.vehicle.position)
             lane_y = self.vehicle.position[1] - lane_coords[1]
