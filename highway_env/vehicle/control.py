@@ -101,19 +101,6 @@ class ControlledVehicle(Vehicle):
         steering_angle = np.clip(steering_angle, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
         return steering_angle
 
-    def linear_steering_control(self, target_lane_index):
-        steering_angle = np.dot(np.array(self.STEERING_GAIN), self.steering_features(target_lane_index))
-        steering_angle = np.clip(steering_angle, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
-        return steering_angle
-
-    def steering_features(self, target_lane_index):
-        lane_coords = self.road.lanes[target_lane_index].local_coordinates(self.position)
-        lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
-        lane_future_heading = self.road.lanes[target_lane_index].heading_at(lane_next_coords)
-        features = np.array([-lane_coords[1] * self.LENGTH / (utils.not_zero(self.velocity) ** 2),
-                             (lane_future_heading - self.heading) * self.LENGTH / utils.not_zero(self.velocity)])
-        return np.transpose(features)
-
     def velocity_control(self, target_velocity):
         """
             Control the velocity of the vehicle.
