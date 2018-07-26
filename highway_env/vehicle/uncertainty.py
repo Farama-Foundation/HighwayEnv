@@ -55,10 +55,12 @@ class IntervalObserver(object):
         self.partial_step(dt)
         self.store_trajectories()
 
-    def observer_step(self, dt):
+    def observer_step(self, dt, assume_constant_lane=True):
         """
             Step the interval observer dynamics
         :param dt: timestep [s]
+        :param assume_constant_lane: If true, assume that the vehicle will stay on its current lane.
+                                    Else, assume that a lane change decision is possible at any timestep
         """
         # Input state intervals
         x_i = [self.min_vehicle.position[0], self.max_vehicle.position[0]]
@@ -86,15 +88,23 @@ class IntervalObserver(object):
             phi_a_i[:, 2] = IntervalObserver.interval_negative_part(IntervalObserver.intervals_diff(d_i, d_safe_i))
 
         # Steering features
-        # TODO: For now, we assume the current target lane will stay the same at short term
         phi_b = self.model_vehicle.steering_features(self.vehicle.target_lane_index)
-        lane_coords = self.vehicle.road.lanes[self.vehicle.target_lane_index].local_coordinates(self.vehicle.position)
-        lane_y = self.vehicle.position[1] - lane_coords[1]
-        lane_psi = self.vehicle.road.lanes[self.vehicle.target_lane_index].heading_at(lane_coords[0])
-        i_v_i = 1/np.flip(v_i, 0)
-        phi_b_i = np.transpose(np.array(
-            [IntervalObserver.intervals_product((lane_y - np.flip(y_i, 0)) * self.vehicle.LENGTH, i_v_i ** 2),
-             IntervalObserver.intervals_product((lane_psi - np.flip(psi_i, 0)) * self.vehicle.LENGTH, i_v_i)]))
+        phi_b_i = None
+        lanes = [self.vehicle.target_lane_index] if assume_constant_lane else range(len(self.road_observer.road.lanes))
+        for lane_index in lanes:
+            lane_coords = self.vehicle.road.lanes[lane_index].local_coordinates(self.vehicle.position)
+            lane_y = self.vehicle.position[1] - lane_coords[1]
+            lane_psi = self.vehicle.road.lanes[self.vehicle.target_lane_index].heading_at(lane_coords[0])
+            i_v_i = 1/np.flip(v_i, 0)
+            phi_b_i_lane = np.transpose(np.array(
+                [IntervalObserver.intervals_product((lane_y - np.flip(y_i, 0)) * self.vehicle.LENGTH, i_v_i ** 2),
+                 IntervalObserver.intervals_product((lane_psi - np.flip(psi_i, 0)) * self.vehicle.LENGTH, i_v_i)]))
+            # Union of candidate feature intervals
+            if phi_b_i is None:
+                phi_b_i = phi_b_i_lane
+            else:
+                phi_b_i[0] = np.minimum(phi_b_i[0], phi_b_i_lane[0])
+                phi_b_i[1] = np.maximum(phi_b_i[1], phi_b_i_lane[1])
 
         # Commands interval
         a_i = IntervalObserver.intervals_product(self.theta_a_i, phi_a_i)
