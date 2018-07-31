@@ -52,6 +52,7 @@ class IntervalObserver(object):
         return new_observer
 
     def step(self, dt):
+        # self.observer_step(dt)
         self.partial_step(dt)
         self.store_trajectories()
 
@@ -64,10 +65,10 @@ class IntervalObserver(object):
                                   - right: assume that a right lane change decision is possible at any timestep
         """
         # Input state intervals
-        x_i = [self.min_vehicle.position[0], self.max_vehicle.position[0]]
+        x_i = np.array([self.min_vehicle.position[0], self.max_vehicle.position[0]])
         y_i = np.array([self.min_vehicle.position[1], self.max_vehicle.position[1]])
-        v_i = [self.min_vehicle.velocity, self.max_vehicle.velocity]
-        psi_i = [self.min_vehicle.heading, self.max_vehicle.heading]
+        v_i = np.array([self.min_vehicle.velocity, self.max_vehicle.velocity])
+        psi_i = np.array([self.min_vehicle.heading, self.max_vehicle.heading])
 
         # Features interval
         # TODO: For now, we assume the current front vehicle will stay the same at short term
@@ -78,7 +79,7 @@ class IntervalObserver(object):
         phi_a = self.model_vehicle.acceleration_features(ego_vehicle=self.model_vehicle,
                                                          front_vehicle=front_model_vehicle)
         phi_a_i = np.zeros((2, 3))
-        phi_a_i[:, 0] = IntervalObserver.intervals_diff([self.model_vehicle.target_velocity]*2, v_i)
+        phi_a_i[:, 0] = [0, 0]
         if front_observer:
             v_f_i = [front_observer.min_vehicle.velocity, front_observer.max_vehicle.velocity]
             phi_a_i[:, 1] = IntervalObserver.interval_negative_part(IntervalObserver.intervals_diff(v_f_i, v_i))
@@ -103,8 +104,8 @@ class IntervalObserver(object):
             lane_psi = self.vehicle.road.lanes[self.vehicle.target_lane_index].heading_at(lane_coords[0])
             i_v_i = 1/np.flip(v_i, 0)
             phi_b_i_lane = np.transpose(np.array(
-                [IntervalObserver.intervals_product((lane_y - np.flip(y_i, 0)) * self.vehicle.LENGTH, i_v_i ** 2),
-                 IntervalObserver.intervals_product((lane_psi - np.flip(psi_i, 0)) * self.vehicle.LENGTH, i_v_i)]))
+                [IntervalObserver.intervals_product((lane_y - np.flip(y_i, 0)), i_v_i),
+                 [0, 0]]))
             # Union of candidate feature intervals
             if phi_b_i is None:
                 phi_b_i = phi_b_i_lane
@@ -117,9 +118,17 @@ class IntervalObserver(object):
         b_i = IntervalObserver.intervals_product(self.theta_b_i, phi_b_i)
 
         # Velocities interval
-        dv_i = a_i
-        tan_b_i = [np.tan(b_i[0])/self.vehicle.LENGTH, np.tan(b_i[1])/self.vehicle.LENGTH]
-        d_psi_i = IntervalObserver.intervals_product(v_i, tan_b_i)
+        keep_stability = True
+        if keep_stability:
+            dv_i = IntervalObserver.integrator_interval(v_i - self.model_vehicle.target_velocity, self.theta_a_i[:, 0])
+        else:
+            dv_i = IntervalObserver.intervals_product(self.theta_b_i[:, 1], self.model_vehicle.target_velocity - np.flip(v_i, 0))
+        dv_i += a_i
+        if keep_stability:
+            d_psi_i = IntervalObserver.integrator_interval(psi_i - lane_psi, self.theta_b_i[:, 1])
+        else:
+            d_psi_i = IntervalObserver.intervals_product(self.theta_b_i[:, 1], lane_psi - np.flip(psi_i, 0))
+        d_psi_i += b_i
 
         # Position interval
         cos_i = [-1 if psi_i[0] <= np.pi <= psi_i[1] else min(map(np.cos, psi_i)),
@@ -229,6 +238,23 @@ class IntervalObserver(object):
         :return: the interval of its negative part min(a, 0)
         """
         return np.minimum(a, 0)
+
+    @staticmethod
+    def integrator_interval(x, k):
+        """
+            Compute the interval of an integrator system: dx = -k*x
+        :param x: state interval
+        :param k: gain interval, must be positive
+        :return: interval for dx
+        """
+
+        if x[0] >= 0:
+            interval_gain = np.flip(-k, 0)
+        elif x[1] <= 0:
+            interval_gain = -k
+        else:
+            interval_gain = -np.array([k[0], k[0]])
+        return interval_gain*x  # Note: no flip of x, contrary to using intervals_product(k,interval_minus(x))
 
     def get_trajectories(self):
         return self.model_traj, self.min_traj, self.max_traj
