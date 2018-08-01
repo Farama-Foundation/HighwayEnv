@@ -88,7 +88,7 @@ class IntervalVehicle(LinearVehicle):
         front_observer = front_vehicle.interval_observer if front_vehicle and isinstance(front_vehicle, IntervalVehicle) else None
         # Acceleration features
         phi_a_i = np.zeros((2, 3))
-        phi_a_i[:, 0] = [-0.1, 0.1]
+        phi_a_i[:, 0] = [0, 0]
         if front_observer:
             phi_a_i[:, 1] = IntervalVehicle.interval_negative_part(
                 IntervalVehicle.intervals_diff(front_observer.velocity, v_i))
