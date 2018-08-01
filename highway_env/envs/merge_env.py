@@ -24,8 +24,6 @@ class MergeEnv(AbstractEnv):
     MERGING_VELOCITY_REWARD = -0.5
     LANE_CHANGE_REWARD = -0.05
 
-    PERCEPTION_DISTANCE = 1000
-
     DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"}
 
     def __init__(self):

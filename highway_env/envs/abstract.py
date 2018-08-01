@@ -253,7 +253,7 @@ class AbstractEnv(gym.Env):
             else:
                 self.render(self.rendering_mode)
 
-    def simplified(self):
+    def simplify(self):
         """
             Return a simplified copy of the environment where distant vehicles have been removed from the road.
 
