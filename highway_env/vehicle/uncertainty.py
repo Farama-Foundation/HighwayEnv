@@ -1,6 +1,7 @@
 import copy
 import numpy as np
 
+from highway_env import utils
 from highway_env.vehicle.behavior import LinearVehicle
 
 
@@ -250,3 +251,26 @@ class IntervalVehicle(LinearVehicle):
             interval_gain = -np.array([k[0], k[0]])
         return interval_gain*x  # Note: no flip of x, contrary to using intervals_product(k,interval_minus(x))
 
+    def check_collision(self, other):
+        """
+            Check for collision with another vehicle.
+
+        :param other: the other vehicle
+        """
+        if not self.COLLISIONS_ENABLED or self.crashed or other is self:
+            return
+
+        # Fast rectangular pre-check
+        if not utils.point_in_rectangle(other.position,
+                                        self.interval_observer.position[0]-self.LENGTH,
+                                        self.interval_observer.position[1]+self.LENGTH):
+            return
+
+        # Projection of other vehicle to uncertainty rectangle. This is the possible position of this vehicle which is
+        # the most likely to collide with other vehicle
+        projection = np.minimum(np.maximum(other.position, self.interval_observer.position[0]),
+                                self.interval_observer.position[1])
+        # Accurate elliptic check
+        if utils.point_in_ellipse(other.position, projection, self.heading, self.LENGTH, self.WIDTH):
+            self.velocity = other.velocity = min(self.velocity, other.velocity)
+            self.crashed = other.crashed = True
