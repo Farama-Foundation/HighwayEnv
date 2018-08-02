@@ -56,10 +56,15 @@ class IntervalVehicle(LinearVehicle):
 
     @classmethod
     def create_from(cls, vehicle):
-        timer = None if not hasattr(vehicle, 'timer') else vehicle.timer
-        v = cls(vehicle.road, vehicle.position, heading=vehicle.heading, velocity=vehicle.velocity,
-                target_lane_index=vehicle.target_lane_index, target_velocity=vehicle.target_velocity,
-                timer=timer, theta_a_i=None, theta_b_i=None)
+        v = cls(vehicle.road,
+                vehicle.position,
+                heading=vehicle.heading,
+                velocity=vehicle.velocity,
+                target_lane_index=getattr(vehicle, 'target_lane_index', None),
+                target_velocity=getattr(vehicle, 'target_velocity', None),
+                timer=getattr(vehicle, 'timer', None),
+                theta_a_i=getattr(vehicle, 'theta_a_i', None),
+                theta_b_i=getattr(vehicle, 'theta_b_i', None))
         if isinstance(vehicle, IntervalVehicle):
             v.interval_observer = copy.deepcopy(vehicle.interval_observer)
         return v
@@ -115,7 +120,10 @@ class IntervalVehicle(LinearVehicle):
         elif lane_change_model == "all":
             lanes = range(len(self.road.lanes))
         elif lane_change_model == "right":
-            lanes = range(self.target_lane_index, len(self.road.lanes))
+            lanes = [self.target_lane_index]
+            if self.target_lane_index < len(self.road.lanes)-1 \
+                    and self.road.lanes[self.target_lane_index+1].is_reachable_from(self.position):
+                lanes += [self.target_lane_index+1]
         for lane_index in lanes:
             lane_coords = self.road.lanes[lane_index].local_coordinates(self.position)
             lane_y = self.position[1] - lane_coords[1]

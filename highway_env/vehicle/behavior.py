@@ -47,10 +47,9 @@ class IDMVehicle(ControlledVehicle):
         :param vehicle: a vehicle
         :return: a new vehicle at the same dynamical state
         """
-        timer = None if not hasattr(vehicle, 'timer') else vehicle.timer
         v = cls(vehicle.road, vehicle.position, heading=vehicle.heading, velocity=vehicle.velocity,
                 target_lane_index=vehicle.target_lane_index, target_velocity=vehicle.target_velocity,
-                timer=timer)
+                timer=getattr(vehicle, 'timer', None))
         return v
 
     def act(self, action=None):
