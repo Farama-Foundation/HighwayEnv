@@ -66,10 +66,10 @@ class IntervalVehicle(LinearVehicle):
     def step(self, dt):
         # self.observer_step(dt)
         self.partial_step(dt)
-        self.store_trajectories()
         super(IntervalVehicle, self).step(dt)
+        self.store_trajectories()
 
-    def observer_step(self, dt, lane_change_model="model"):
+    def observer_step(self, dt, lane_change_model="right"):
         """
             Step the interval observer dynamics
         :param dt: timestep [s]
