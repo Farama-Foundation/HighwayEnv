@@ -85,7 +85,17 @@ class IntervalVehicle(LinearVehicle):
         # Features interval
         # TODO: For now, we assume the front vehicle follows the models' front vehicle
         front_vehicle, _ = self.road.neighbour_vehicles(self)
-        front_observer = front_vehicle.interval_observer if front_vehicle and isinstance(front_vehicle, IntervalVehicle) else None
+        if front_vehicle:
+            if isinstance(front_vehicle, IntervalVehicle):
+                # Use interval from the observer estimate of the front vehicle
+                front_observer = front_vehicle.interval_observer
+            else:
+                # The front vehicle trajectory interval is not being estimated, so it should be considered as certain.
+                # We use a new observer created from that current vehicle state, which will have full certainty.
+                front_observer = IntervalVehicle.create_from(front_vehicle).interval_observer
+        else:
+            front_observer = None
+
         # Acceleration features
         phi_a_i = np.zeros((2, 3))
         phi_a_i[:, 0] = [0, 0]
