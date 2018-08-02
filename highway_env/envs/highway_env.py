@@ -2,6 +2,7 @@ from __future__ import division, print_function, absolute_import
 import numpy as np
 from gym import logger
 
+from highway_env import utils
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.road import Road
 from highway_env.vehicle.behavior import IDMVehicle
@@ -19,7 +20,7 @@ class HighwayEnv(AbstractEnv):
     COLLISION_REWARD = -1
     """ The reward received when colliding with a vehicle."""
     RIGHT_LANE_REWARD = 0.1
-    """ The reward received when driving on the left-most lanes, linearly mapped to zero for other lanes."""
+    """ The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes."""
     HIGH_VELOCITY_REWARD = 0.2
     """ The reward received when driving at full speed, linearly mapped to zero for lower speeds."""
     LANE_CHANGE_REWARD = -0
@@ -31,18 +32,21 @@ class HighwayEnv(AbstractEnv):
             "initial_spacing": 2,
             "vehicles_count": 5,
             "duration": 20,
+            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"
         },
         "MEDIUM": {
             "lanes_count": 3,
             "initial_spacing": 2,
             "vehicles_count": 10,
             "duration": 30,
+            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"
         },
         "HARD": {
             "lanes_count": 4,
             "initial_spacing": 3,
             "vehicles_count": 15,
             "duration": 40,
+            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"
         },
     }
 
@@ -75,7 +79,7 @@ class HighwayEnv(AbstractEnv):
     def _create_road(self):
         road = Road.create_random_road(lanes_count=self.config["lanes_count"],
                                        vehicles_count=self.config["vehicles_count"],
-                                       vehicles_type=IDMVehicle,
+                                       vehicles_type=utils.class_from_path(self.config["other_vehicles_type"]),
                                        np_random=self.np_random)
         vehicle = MDPVehicle.create_random(road, 25, spacing=self.config["initial_spacing"], np_random=self.np_random)
         road.vehicles.append(vehicle)
