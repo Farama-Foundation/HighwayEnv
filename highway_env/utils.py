@@ -24,6 +24,32 @@ def wrap_to_pi(x):
     return ((x+np.pi) % (2*np.pi)) - np.pi
 
 
+def point_in_rectangle(point, rect_min, rect_max):
+    """
+        Check if a point is inside a rectangle
+    :param point:
+    :param rect_min:
+    :param rect_max:
+    :return:
+    """
+    return rect_min[0] <= point[0] <= rect_max[0] and rect_min[1] <= point[1] <= rect_max[1]
+
+
+def point_in_ellipse(point, center, angle, length, width):
+    """
+        Check if a point is inside an ellipse
+    :param point: a point
+    :param center: ellipse center
+    :param angle: ellipse main axis angle
+    :param length: ellipse big axis
+    :param width: ellipse small axis
+    """
+    c, s = np.cos(angle), np.sin(angle)
+    r = np.matrix([[c, -s], [s, c]])
+    ru = r.dot(point - center)
+    return np.sum(np.square(ru / np.array([length, width]))) < 1
+
+
 def do_every(duration, timer):
     return duration < timer
 

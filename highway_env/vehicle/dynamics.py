@@ -1,6 +1,8 @@
 from __future__ import division, print_function
 import numpy as np
 import pandas as pd
+
+from highway_env import utils
 from highway_env.logger import Loggable
 
 
@@ -129,11 +131,7 @@ class Vehicle(Loggable):
             return
 
         # Accurate elliptic check
-        u = other.position - self.position
-        c, s = np.cos(self.heading), np.sin(self.heading)
-        r = np.matrix([[c, -s], [s, c]])
-        ru = r.dot(u)
-        if np.sum(np.square(ru/np.array([self.LENGTH, self.WIDTH]))) < 1:
+        if utils.point_in_ellipse(other.position, self.position, self.heading, self.LENGTH, self.WIDTH):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
 
