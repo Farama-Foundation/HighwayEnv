@@ -5,13 +5,6 @@ from highway_env import utils
 from highway_env.vehicle.behavior import LinearVehicle
 
 
-class VehicleInterval(object):
-    def __init__(self, position, velocity, heading):
-        self.position = position
-        self.velocity = velocity
-        self.heading = heading
-
-
 class IntervalVehicle(LinearVehicle):
     """
         Observer for the interval-membership of a LinearVehicle under parameter uncertainty.
@@ -45,12 +38,10 @@ class IntervalVehicle(LinearVehicle):
                                               timer)
         theta_a = np.array(LinearVehicle.ACCELERATION_PARAMETERS)
         theta_b = np.array(LinearVehicle.STEERING_GAIN)
-        self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([0.5*theta_a, 2*theta_a])
-        self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([0.5*theta_b, 2*theta_b])
+        self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([1*theta_a, 1*theta_a])
+        self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([1*theta_b, 1*theta_b])
 
-        self.interval_observer = VehicleInterval(np.array([self.position, self.position], dtype=float),
-                                                 np.array([self.velocity, self.velocity], dtype=float),
-                                                 np.array([self.heading, self.heading], dtype=float))
+        self.interval_observer = VehicleInterval(self)
         self.trajectory = []
         self.observer_trajectory = []
 
@@ -65,8 +56,6 @@ class IntervalVehicle(LinearVehicle):
                 timer=getattr(vehicle, 'timer', None),
                 theta_a_i=getattr(vehicle, 'theta_a_i', None),
                 theta_b_i=getattr(vehicle, 'theta_b_i', None))
-        if isinstance(vehicle, IntervalVehicle):
-            v.interval_observer = copy.deepcopy(vehicle.interval_observer)
         return v
 
     def step(self, dt):
@@ -83,6 +72,9 @@ class IntervalVehicle(LinearVehicle):
                                   - all: assume that any lane change decision is possible at any timestep
                                   - right: assume that a right lane change decision is possible at any timestep
         """
+        if self.crashed:
+            self.interval_observer = VehicleInterval(self)
+
         # Input state intervals
         position_i = self.interval_observer.position
         v_i = self.interval_observer.velocity
@@ -183,10 +175,12 @@ class IntervalVehicle(LinearVehicle):
         # 1. Split x_i(t) into two upper and lower intervals x_i_-(t) and x_i_+(t)
         o = self.interval_observer
         v_minus = IntervalVehicle.create_from(self)
+        v_minus.interval_observer = copy.deepcopy(self.interval_observer)
         v_minus.interval_observer.position[1, :] = (1 - alpha) * o.position[0, :] + alpha * o.position[1, :]
         v_minus.interval_observer.velocity[1] = (1 - alpha) * o.velocity[0] + alpha * o.velocity[1]
         v_minus.interval_observer.heading[1] = (1 - alpha) * o.heading[0] + alpha * o.heading[1]
         v_plus = IntervalVehicle.create_from(self)
+        v_plus.interval_observer = copy.deepcopy(self.interval_observer)
         v_plus.interval_observer.position[0, :] = alpha * o.position[0, :] + (1 - alpha) * o.position[1, :]
         v_plus.interval_observer.velocity[0] = alpha * o.velocity[0] + (1 - alpha) * o.velocity[1]
         v_plus.interval_observer.heading[0] = alpha * o.heading[0] + (1 - alpha) * o.heading[1]
@@ -282,3 +276,10 @@ class IntervalVehicle(LinearVehicle):
         if utils.point_in_ellipse(other.position, projection, self.heading, self.LENGTH, self.WIDTH):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
+
+
+class VehicleInterval(object):
+    def __init__(self, vehicle):
+        self.position = np.array([vehicle.position, vehicle.position], dtype=float)
+        self.velocity = np.array([vehicle.velocity, vehicle.velocity], dtype=float)
+        self.heading = np.array([vehicle.heading, vehicle.heading], dtype=float)
