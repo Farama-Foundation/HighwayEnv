@@ -22,7 +22,7 @@ class Vehicle(Loggable):
     """ Vehicle width [m] """
     STEERING_TAU = 0.2
     """ Steering wheel response time [s] """
-    DEFAULT_VELOCITIES = [20, 25]
+    DEFAULT_VELOCITIES = [23, 26]
     """ Range for random initial velocities [m/s] """
 
     def __init__(self, road, position, heading=0, velocity=0):
