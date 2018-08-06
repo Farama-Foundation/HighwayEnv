@@ -3,6 +3,7 @@ import numpy as np
 
 from highway_env import utils
 from highway_env.vehicle.behavior import LinearVehicle
+from highway_env.vehicle.control import MDPVehicle
 
 
 class IntervalVehicle(LinearVehicle):
@@ -74,6 +75,7 @@ class IntervalVehicle(LinearVehicle):
         """
         if self.crashed:
             self.interval_observer = VehicleInterval(self)
+            return
 
         # Input state intervals
         position_i = self.interval_observer.position
@@ -255,10 +257,14 @@ class IntervalVehicle(LinearVehicle):
 
     def check_collision(self, other):
         """
-            Check for collision with another vehicle.
+            For robust planning, we assume that MDPVehicles collide with the uncertainty set of an IntervalVehicle,
+            which corresponds to worst-case outcome.
 
         :param other: the other vehicle
         """
+        if not isinstance(other, MDPVehicle):
+            return super(IntervalVehicle, self).check_collision(other)
+
         if not self.COLLISIONS_ENABLED or self.crashed or other is self:
             return
 
