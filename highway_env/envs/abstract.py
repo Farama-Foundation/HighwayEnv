@@ -8,6 +8,7 @@ import numpy as np
 
 from highway_env import utils
 from highway_env.envs.graphics import EnvViewer
+from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle
 
@@ -280,6 +281,15 @@ class AbstractEnv(gym.Env):
         for i, v in enumerate(vehicles):
             if v is not env_copy.vehicle and not isinstance(v, Obstacle):
                 vehicles[i] = vehicle_class.create_from(v)
+        return env_copy
+
+    def set_vehicles_lane_preference(self, right_lane=False):
+        env_copy = copy.deepcopy(self)
+        if right_lane:
+            for v in env_copy.road.vehicles:
+                if isinstance(v, IDMVehicle):
+                    v.RIGHT_LANE_CHANGE_MIN_ACC_GAIN = 0
+                    v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 10
         return env_copy
 
     def __deepcopy__(self, memo):
