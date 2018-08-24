@@ -100,7 +100,7 @@ Agents solving the `highway-env` environments are available in the [RL-Agents](h
 
 `pip install --user git+https://github.com/eleurent/rl-agents`
 
-### Deep Q-Network
+### [Deep Q-Network](https://github.com/eleurent/rl-agents/tree/master/rl_agents/agents/dqn)
 
 
 <p align="center">
@@ -111,18 +111,19 @@ Agents solving the `highway-env` environments are available in the [RL-Agents](h
 This model-free reinforcement learning agent performs Q-learning with function approximation, using a neural network to represent the state-action value function Q.
 
 
-### Value Iteration
+### [Value Iteration](https://github.com/eleurent/rl-agents/blob/master/rl_agents/agents/dynamic_programming/value_iteration.py)
 
 <p align="center">
     <img src="docs/media/ttcvi.gif"><br/>
-    <em>The TTC Value Iteration agent solving highway-v0.</em>
+    <em>The Value Iteration agent solving highway-v0.</em>
 </p>
 
-This agent uses a simple representation of the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road, and performs a Value Iteration to compute the corresponding optimal value function.
+The Value Iteration is only compatible with finite discrete MDPs, so the environment is first approximated by a [finite-mdp environment](https://github.com/eleurent/finite-mdp) using `env.to_finite_mdp()`. This simplified state representation describes the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road. The transition model is simplistic and assumes that each vehicle will keep driving at a constant velocity without changing lanes. This model bias can be a source of mistakes.
 
-The transition model of the TTC-state is simplistic and assumes that each vehicle will keep driving at a constant velocity without changing lanes. This model bias can be a source of mistakes.
+The agent then performs a Value Iteration to compute the corresponding optimal state-value function.
 
-### Monte-Carlo Tree Search
+
+### [Monte-Carlo Tree Search](https://github.com/eleurent/rl-agents/blob/master/rl_agents/agents/tree_search/mcts.py)
 
 This agent leverages a transition and reward models to perform a stochastic tree search [(Coulom, 2006)](https://hal.inria.fr/inria-00116992/document) of the optimal trajectory. No particular assumption is required on the state representation or transition model.
 
