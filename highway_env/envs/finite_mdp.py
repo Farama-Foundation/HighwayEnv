@@ -7,7 +7,9 @@ import numpy as np
 from highway_env import utils
 
 
-def finite_mdp(env):
+def finite_mdp(env,
+               time_quantization=1.,
+               horizon=10.):
     """
         Time-To-Collision (TTC) representation of the state.
 
@@ -26,10 +28,14 @@ def finite_mdp(env):
         If the ego-vehicle has the ability to change its velocity, an additional layer is added to the occupancy grid
         to iterate over the different velocity choices available.
 
-        Finally, this state is flattened for compatibility with the FiniteMDP environment.
+        Finally, this state is flattened for compatibility with the FiniteMDPEnv environment.
+
+    :param AbstractEnv env: an environment
+    :param time_quantization: the time quantization used in the state representation [s]
+    :param horizon: the horizon on which the collisions are predicted [s]
     """
     # Compute TTC grid
-    grid = compute_ttc_grid(env)
+    grid = compute_ttc_grid(env, time_quantization, horizon)
 
     # Compute current state
     grid_state = (env.vehicle.speed_index(), env.vehicle.lane_index, 0)
@@ -67,13 +73,11 @@ def finite_mdp(env):
         raise "The finite_mdp module is required for conversion. {}".format(e)
 
 
-def compute_ttc_grid(env):
+def compute_ttc_grid(env, time_quantization, horizon):
     """
         For each ego-velocity and lane, compute the predicted time-to-collision to each vehicle within the lane and
         store the results in an occupancy grid.
     """
-    time_quantization = 1.0  # The time quantization used in the state representation [s]
-    horizon = 10.0
     grid = np.zeros((env.vehicle.SPEED_COUNT, len(env.road.lanes), int(horizon / time_quantization)))
     for velocity_index in range(grid.shape[0]):
         ego_velocity = env.vehicle.index_to_speed(velocity_index)
