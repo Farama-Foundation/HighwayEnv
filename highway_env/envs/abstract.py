@@ -7,6 +7,7 @@ from gym.utils import seeding
 import numpy as np
 
 from highway_env import utils
+from highway_env.envs.finite_mdp import finite_mdp
 from highway_env.envs.graphics import EnvViewer
 from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import MDPVehicle
@@ -291,6 +292,9 @@ class AbstractEnv(gym.Env):
                     v.RIGHT_LANE_CHANGE_MIN_ACC_GAIN = 0
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 10
         return env_copy
+
+    def to_finite_mdp(self):
+        return finite_mdp(self)
 
     def __deepcopy__(self, memo):
         """
