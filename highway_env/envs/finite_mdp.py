@@ -62,7 +62,7 @@ def finite_mdp(env,
     # Compute terminal states
     collision = grid == 1
     end_of_horizon = np.fromfunction(lambda h, i, j: j == grid.shape[2] - 1, grid.shape, dtype=int)
-    terminal = collision | end_of_horizon
+    terminal = np.ravel(collision | end_of_horizon)
 
     # Creation of a new finite MDP
     try:
