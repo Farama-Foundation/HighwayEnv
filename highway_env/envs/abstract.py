@@ -294,7 +294,7 @@ class AbstractEnv(gym.Env):
         return env_copy
 
     def to_finite_mdp(self):
-        return finite_mdp(self)
+        return finite_mdp(self, time_quantization=1/self.POLICY_FREQUENCY)
 
     def __deepcopy__(self, memo):
         """
