@@ -290,7 +290,7 @@ class AbstractEnv(gym.Env):
             for v in env_copy.road.vehicles:
                 if isinstance(v, IDMVehicle):
                     v.RIGHT_LANE_CHANGE_MIN_ACC_GAIN = 0
-                    v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 10
+                    v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
 
     def to_finite_mdp(self):
