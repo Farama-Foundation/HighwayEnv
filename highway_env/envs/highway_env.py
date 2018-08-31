@@ -21,7 +21,7 @@ class HighwayEnv(AbstractEnv):
     """ The reward received when colliding with a vehicle."""
     RIGHT_LANE_REWARD = 0.1
     """ The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes."""
-    HIGH_VELOCITY_REWARD = 0.2
+    HIGH_VELOCITY_REWARD = 0.4
     """ The reward received when driving at full speed, linearly mapped to zero for lower speeds."""
     LANE_CHANGE_REWARD = -0
     """ The reward received at each lane change action."""
