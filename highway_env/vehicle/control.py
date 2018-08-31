@@ -19,7 +19,6 @@ class ControlledVehicle(Vehicle):
     KP_A = 1 / TAU_A
     KP_HEADING = 1 / TAU_DS
     KP_LATERAL = 1 / 1.0  # [1/s]
-    STEERING_GAIN = [KP_HEADING * KP_LATERAL, KP_HEADING]
     MAX_STEERING_ANGLE = np.pi / 4  # [rad]
 
     DELTA_VELOCITY = 5  # [m/s]

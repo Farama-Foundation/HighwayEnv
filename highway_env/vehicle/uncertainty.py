@@ -38,7 +38,7 @@ class IntervalVehicle(LinearVehicle):
                                               enable_lane_change,
                                               timer)
         theta_a = np.array(LinearVehicle.ACCELERATION_PARAMETERS)
-        theta_b = np.array(LinearVehicle.STEERING_GAIN)
+        theta_b = np.array(LinearVehicle.STEERING_PARAMETERS)
         self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([1*theta_a, 1*theta_a])
         self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([1*theta_b, 1*theta_b])
 
@@ -123,9 +123,9 @@ class IntervalVehicle(LinearVehicle):
             lane_y = self.position[1] - lane_coords[1]
             lane_psi = self.road.lanes[self.target_lane_index].heading_at(lane_coords[0])
             i_v_i = 1/np.flip(v_i, 0)
-            phi_b_i_lane = np.transpose(np.array(
-                [IntervalVehicle.intervals_product((lane_y - np.flip(position_i[:, 1], 0)), i_v_i),
-                 [0, 0]]))
+            phi_b_i_lane = np.transpose(np.array([
+                [0, 0],
+                IntervalVehicle.intervals_product((lane_y - np.flip(position_i[:, 1], 0)), i_v_i)]))
             # Union of candidate feature intervals
             if phi_b_i is None:
                 phi_b_i = phi_b_i_lane
@@ -148,7 +148,7 @@ class IntervalVehicle(LinearVehicle):
         if keep_stability:
             d_psi_i = IntervalVehicle.integrator_interval(psi_i - lane_psi, self.theta_b_i[:, 1])
         else:
-            d_psi_i = IntervalVehicle.intervals_product(self.theta_b_i[:, 1], lane_psi - np.flip(psi_i, 0))
+            d_psi_i = IntervalVehicle.intervals_product(self.theta_b_i[:, 0], lane_psi - np.flip(psi_i, 0))
         d_psi_i += b_i
 
         # Position interval

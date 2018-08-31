@@ -255,6 +255,8 @@ class LinearVehicle(IDMVehicle):
         A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters
     """
     ACCELERATION_PARAMETERS = [0.3, 0.14, 0.8]
+    STEERING_PARAMETERS = [ControlledVehicle.KP_HEADING, ControlledVehicle.KP_HEADING * ControlledVehicle.KP_LATERAL]
+
     TIME_WANTED = 2.0
 
     def __init__(self, road, position,
@@ -311,7 +313,7 @@ class LinearVehicle(IDMVehicle):
         :param target_lane_index: index of the lane to follow
         :return: a steering wheel angle command [rad]
         """
-        steering_angle = np.dot(np.array(self.STEERING_GAIN), self.steering_features(target_lane_index))
+        steering_angle = np.dot(np.array(self.STEERING_PARAMETERS), self.steering_features(target_lane_index))
         steering_angle = np.clip(steering_angle, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
         return steering_angle
 
@@ -324,8 +326,8 @@ class LinearVehicle(IDMVehicle):
         lane_coords = self.road.lanes[target_lane_index].local_coordinates(self.position)
         lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + self.STEERING_TAU)
         lane_future_heading = self.road.lanes[target_lane_index].heading_at(lane_next_coords)
-        features = np.array([-lane_coords[1] * self.LENGTH / (utils.not_zero(self.velocity) ** 2),
-                             (lane_future_heading - self.heading) * self.LENGTH / utils.not_zero(self.velocity)])
+        features = np.array([(lane_future_heading - self.heading) * self.LENGTH / utils.not_zero(self.velocity),
+                             -lane_coords[1] * self.LENGTH / (utils.not_zero(self.velocity) ** 2)])
         return features
 
 
