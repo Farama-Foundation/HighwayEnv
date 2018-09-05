@@ -286,12 +286,13 @@ class AbstractEnv(gym.Env):
                 vehicles[i] = vehicle_class.create_from(v)
         return env_copy
 
-    def set_vehicles_lane_preference(self, right_lane=False):
+    def set_preferred_lane(self, preferred_lane=None):
         env_copy = copy.deepcopy(self)
-        if right_lane:
+        if preferred_lane:
             for v in env_copy.road.vehicles:
                 if isinstance(v, IDMVehicle):
                     raise NotImplementedError()
+                    # Vehicle with lane preference are also less cautious
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
 

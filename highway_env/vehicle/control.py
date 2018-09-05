@@ -33,6 +33,7 @@ class ControlledVehicle(Vehicle):
                  target_velocity=None):
         super(ControlledVehicle, self).__init__(road, position, heading, velocity)
         self.target_lane_index = target_lane_index or self.lane_index
+        self.preferred_lane = None
         self.target_velocity = target_velocity or self.velocity
 
     @classmethod
