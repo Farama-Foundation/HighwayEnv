@@ -214,7 +214,7 @@ class IDMVehicle(ControlledVehicle):
         if new_following_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
             return False
 
-        # Is there an advantage for me and/or my followers to change lane?
+        # Is there an acceleration advantage for me and/or my followers to change lane?
         old_preceding, old_following = self.road.neighbour_vehicles(self)
         self_a = self.acceleration(ego_vehicle=self, front_vehicle=old_preceding)
         self_pred_a = self.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
@@ -222,13 +222,16 @@ class IDMVehicle(ControlledVehicle):
         old_following_pred_a = self.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
         jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
                                                          + old_following_pred_a - old_following_a)
-
-        min_acc_gain = self.LANE_CHANGE_MIN_ACC_GAIN
-        if self.preferred_lane is None:
-            if jerk < min_acc_gain:
+        if jerk < self.LANE_CHANGE_MIN_ACC_GAIN and self.preferred_lane is None:
                 return False
-        else:
+
+        # Do I have a preferred lane which is safe for me to access?
+        if self.preferred_lane:
+            # Wrong direction
             if np.sign(lane_index - self.target_lane_index) != np.sign(self.preferred_lane - self.target_lane_index):
+                return False
+            # Unsafe braking required
+            elif self_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
                 return False
 
         # All clear, let's go!
