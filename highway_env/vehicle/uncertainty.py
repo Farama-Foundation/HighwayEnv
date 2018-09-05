@@ -38,9 +38,9 @@ class IntervalVehicle(LinearVehicle):
                                               enable_lane_change,
                                               timer)
         theta_a = np.array(LinearVehicle.ACCELERATION_PARAMETERS)
-        theta_b = np.array(LinearVehicle.STEERING_PARAMETERS)
-        self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([1*theta_a, 1*theta_a])
-        self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([1*theta_b, 1*theta_b])
+        theta_b = np.array(LinearVehicle.STEERING_GAIN)
+        self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([0.5*theta_a, 2*theta_a])
+        self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([0.5*theta_b, 2*theta_b])
 
         self.interval_observer = VehicleInterval(self)
         self.trajectory = []
@@ -65,7 +65,7 @@ class IntervalVehicle(LinearVehicle):
         super(IntervalVehicle, self).step(dt)
         self.store_trajectories()
 
-    def observer_step(self, dt, lane_change_model="right"):
+    def observer_step(self, dt, lane_change_model="model"):
         """
             Step the interval observer dynamics
         :param dt: timestep [s]
