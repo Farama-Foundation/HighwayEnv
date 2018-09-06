@@ -8,12 +8,64 @@ from highway_env.vehicle.control import ControlledVehicle
 from highway_env.vehicle.dynamics import Obstacle
 
 
+class RoadNetwork(object):
+    def __init__(self):
+        self.graph = {}
+
+    def add_node(self, node):
+        if node not in self.graph:
+            self.graph[node] = []
+
+    def add_lane(self, _from, _to, lane):
+        if _from not in self.graph:
+            self.graph[_from] = {}
+        if _to not in self.graph[_from]:
+            self.graph[_from][_to] = []
+        self.graph[_from][_to].append(lane)
+
+    def get_lane(self, index):
+        _from, _to, _id = index
+        return self.graph[_from][_to][_id]
+
+    def get_lane_index(self, position):
+        """
+            Get the index of the lane closest to a world position.
+
+        :param position: a world position [m]
+        :return: the index of the closest lane
+        """
+        indexes, distances = [], []
+        for _from, to_dict in self.graph.items():
+            for _to, lanes in to_dict.items():
+                for _id, l in enumerate(lanes):
+                    s, r = l.local_coordinates(position)
+                    distances.append(abs(r) + max(s-l.length, 0) + max(0-s, 0))
+                    indexes.append((_from, _to, _id))
+        return indexes[int(np.argmin(distances))]
+
+    def next_lane(self, current_index, plan=[]):
+        _from, _to, _id = current_index
+        if plan:
+            raise NotImplementedError()
+        else:
+            try:
+                next_to = list(self.graph[_to].keys())[np.random.randint(len(self.graph[_to]))]
+                if len(self.graph[_from][_to]) == len(self.graph[_from][_to]):
+                    next_id = _id
+                else:
+                    next_id = np.random.randint(len(self.graph[_to][next_to]))
+            except KeyError as e:
+                print(e)
+                return current_index
+        return _to, next_to, next_id
+
+
 class Road(Loggable):
     """
         A road is a set of lanes, and a set of vehicles driving on these lanes
     """
 
-    def __init__(self, lanes=None, vehicles=None):
+    def __init__(self, lanes=None, network=None, vehicles=None):
         """
             New road.
 
@@ -21,6 +73,7 @@ class Road(Loggable):
         :param vehicles: the vehicles driving on the road
         """
         self.lanes = lanes or []
+        self.network = network or []
         self.vehicles = vehicles or []
 
     @classmethod
@@ -90,25 +143,6 @@ class Road(Loggable):
             vehicle.step(dt)
             for other in self.vehicles:
                 vehicle.check_collision(other)
-
-    def get_lane(self, position):
-        """
-            Get the lane closest to a world position.
-
-        :param position: a world position [m]
-        :return: the closest lane
-        """
-        return self.lanes[self.get_lane_index(position)]
-
-    def get_lane_index(self, position):
-        """
-            Get the index of the lane closest to a world position.
-
-        :param position: a world position [m]
-        :return: the index of the closest lane
-        """
-        lateral = [abs(l.local_coordinates(position)[1]) for l in self.lanes]
-        return int(np.argmin(lateral))
 
     def neighbour_vehicles(self, vehicle, lane=None):
         """

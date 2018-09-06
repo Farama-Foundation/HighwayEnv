@@ -2,7 +2,7 @@ from __future__ import division, print_function
 import numpy as np
 import pygame
 
-from highway_env.road.lane import LineType, LanesConcatenation
+from highway_env.road.lane import LineType
 from highway_env.vehicle.graphics import VehicleGraphics
 
 
@@ -27,11 +27,6 @@ class LaneGraphics(object):
         :param lane: the lane to be displayed
         :param surface: the pygame surface
         """
-        if isinstance(lane, LanesConcatenation):
-            for i in range(len(lane.lanes)):
-                cls.display(lane.lanes[i], surface)
-            return
-
         stripes_count = int(2 * (surface.get_height() + surface.get_width()) / (cls.STRIPE_SPACING * surface.scaling))
         s_origin, _ = lane.local_coordinates(surface.origin)
         s0 = (int(s_origin) // cls.STRIPE_SPACING - stripes_count // 2) * cls.STRIPE_SPACING
@@ -102,8 +97,8 @@ class LaneGraphics(object):
         :param ends:  a list of ending longitudinal positions for each stripe [m]
         :param lats: a list of lateral positions for each stripe [m]
         """
-        starts = np.clip(starts, lane.bounds[0], lane.bounds[1])
-        ends = np.clip(ends, lane.bounds[0], lane.bounds[1])
+        starts = np.clip(starts, 0, lane.length)
+        ends = np.clip(ends, 0, lane.length)
         for k in range(len(starts)):
             if abs(starts[k] - ends[k]) > 0.5 * cls.STRIPE_LENGTH:
                 pygame.draw.line(surface, surface.WHITE,
@@ -125,8 +120,10 @@ class RoadGraphics(object):
         :param surface: the pygame surface
         """
         surface.fill(surface.GREY)
-        for l in road.lanes:
-            LaneGraphics.display(l, surface)
+        for _from in road.network.graph.keys():
+            for _to in road.network.graph[_from].keys():
+                for l in road.network.graph[_from][_to]:
+                    LaneGraphics.display(l, surface)
 
     @classmethod
     def display_traffic(cls, road, surface):
