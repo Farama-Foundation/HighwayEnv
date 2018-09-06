@@ -9,6 +9,7 @@ import numpy as np
 from highway_env import utils
 from highway_env.envs.finite_mdp import finite_mdp
 from highway_env.envs.graphics import EnvViewer
+from highway_env.road.lane import AbstractLane
 from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle
@@ -89,7 +90,8 @@ class AbstractEnv(gym.Env):
         # Add ego-vehicle
         df = pandas.DataFrame.from_records([self.vehicle.to_dict()])
         # Normalize values
-        road_width = self.road.lanes[0].width_at(0) * len(self.road.lanes)
+        MAX_ROAD_LANES = 4
+        road_width = AbstractLane.DEFAULT_WIDTH * MAX_ROAD_LANES
         df.loc[0, 'x'] = 0
         df.loc[0, 'y'] = utils.remap(df.loc[0, 'y'], [0, road_width], [0, 1])
         df.loc[0, 'vx'] = utils.remap(df.loc[0, 'vx'], [MDPVehicle.SPEED_MIN, MDPVehicle.SPEED_MAX], [0, 1])

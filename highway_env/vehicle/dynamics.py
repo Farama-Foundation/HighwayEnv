@@ -31,8 +31,8 @@ class Vehicle(Loggable):
         self.heading = heading
         self.steering_angle = 0
         self.velocity = velocity
-        self.lane_index = self.road.get_lane_index(self.position) if self.road else np.nan
-        self.lane = self.road.lanes[self.lane_index] if self.road else None
+        self.lane_index = self.road.network.get_lane_index(self.position) if self.road else np.nan
+        self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
         self.log = []
@@ -103,8 +103,8 @@ class Vehicle(Loggable):
         self.velocity += self.action['acceleration'] * dt
 
         if self.road:
-            self.lane_index = self.road.get_lane_index(self.position)
-            self.lane = self.road.lanes[self.lane_index]
+            self.lane_index = self.road.network.get_lane_index(self.position)
+            self.lane = self.road.network.get_lane(self.lane_index)
 
     def lane_distance_to(self, vehicle):
         """

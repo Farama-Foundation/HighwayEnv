@@ -81,7 +81,7 @@ class EnvViewer(object):
         :return: the world position of the center of the displayed window.
         """
         if self.env.vehicle:
-            if False:
+            if True:
                 return self.env.vehicle.position
             else:
                 return np.array([self.env.vehicle.position[0], len(self.env.road.lanes) / 2 * 4 - 2])

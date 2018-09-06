@@ -3,7 +3,7 @@ import numpy as np
 
 from highway_env import utils
 from highway_env.envs.abstract import AbstractEnv
-from highway_env.road.lane import LineType, StraightLane, SineLane, LanesConcatenation
+from highway_env.road.lane import LineType, StraightLane, SineLane
 from highway_env.road.road import Road
 from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle

@@ -56,17 +56,23 @@ class ControlledVehicle(Vehicle):
 
         :param action: a high-level action
         """
+        # At the end of a lane, automatically switch to a next one
+        if self.lane_index == self.target_lane_index and self.lane.after_end(self.position):
+            self.target_lane_index = self.road.network.next_lane(self.lane_index)
+
         if action == "FASTER":
             self.target_velocity += self.DELTA_VELOCITY
         elif action == "SLOWER":
             self.target_velocity -= self.DELTA_VELOCITY
         elif action == "LANE_RIGHT":
-            target_lane_index = np.clip(self.lane_index + 1, 0, len(self.road.lanes) - 1)
-            if self.road.lanes[target_lane_index].is_reachable_from(self.position):
+            _from, _to, _id = self.lane_index
+            target_lane_index = _from, _to, np.clip(_id + 1, 0, len(self.road.network.graph[_from][_to]) - 1)
+            if self.road.network.get_lane(target_lane_index).is_reachable_from(self.position):
                 self.target_lane_index = target_lane_index
         elif action == "LANE_LEFT":
-            target_lane_index = np.clip(self.lane_index - 1, 0, len(self.road.lanes) - 1)
-            if self.road.lanes[target_lane_index].is_reachable_from(self.position):
+            _from, _to, _id = self.lane_index
+            target_lane_index = _from, _to, np.clip(_id - 1, 0, len(self.road.network.graph[_from][_to]) - 1)
+            if self.road.network.get_lane(target_lane_index).is_reachable_from(self.position):
                 self.target_lane_index = target_lane_index
 
         action = {'steering': self.steering_control(self.target_lane_index),
@@ -85,17 +91,19 @@ class ControlledVehicle(Vehicle):
         :param target_lane_index: index of the lane to follow
         :return: a steering wheel angle command [rad]
         """
-        lane_coords = self.road.lanes[target_lane_index].local_coordinates(self.position)
+        target_lane = self.road.network.get_lane(target_lane_index)
+        lane_coords = target_lane.local_coordinates(self.position)
         lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + Vehicle.STEERING_TAU)
-        lane_future_heading = self.road.lanes[target_lane_index].heading_at(lane_next_coords)
+        lane_future_heading = target_lane.heading_at(lane_next_coords)
 
         # Lateral position control
         lateral_velocity_command = - self.KP_LATERAL * lane_coords[1]
         # Lateral velocity to heading
-        heading_ref = lane_future_heading + np.arcsin(lateral_velocity_command/utils.not_zero(self.velocity))
+        heading_ref = lane_future_heading + np.arcsin(np.clip(
+            lateral_velocity_command/utils.not_zero(self.velocity), -1, 1))
         # Heading control
-        heading_rate_command = self.KP_HEADING * (heading_ref - self.heading)
-        # Heading rate to steering angle
+        heading_rate_command = self.KP_HEADING * utils.wrap_to_pi(heading_ref - self.heading)
+         # Heading rate to steering angle
         steering_angle = self.LENGTH / utils.not_zero(self.velocity) * np.arctan(heading_rate_command)
         steering_angle = np.clip(steering_angle, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
         return steering_angle
