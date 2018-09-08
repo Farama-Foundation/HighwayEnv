@@ -75,6 +75,12 @@ class RoadNetwork(object):
     def is_same_road(lane_index_1, lane_index_2):
         return lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1]
 
+    @staticmethod
+    def is_connected_road(lane_index_1, lane_index_2):
+        return (lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1]) \
+               or lane_index_1[1] == lane_index_2[0] \
+               or lane_index_1[0] == lane_index_2[1]
+
 
 class Road(Loggable):
     """
