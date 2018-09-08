@@ -94,8 +94,8 @@ def compute_ttc_grid(env, time_quantization, horizon):
                 if time_to_collision < 0:
                     continue
                 # Quantize time-to-collision to both upper and lower values
-                if env.road.network.is_same_road(other.lane_index, env.vehicle.lane_index):
-                    lane = other.lane_index[3]
+                if env.road.network.is_connected_road(other.lane_index, env.vehicle.lane_index):
+                    lane = other.lane_index[2]
                 else:
                     continue
                 for time in [int(time_to_collision / time_quantization),
