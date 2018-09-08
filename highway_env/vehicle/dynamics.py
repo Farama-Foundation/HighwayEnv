@@ -20,8 +20,6 @@ class Vehicle(Loggable):
     """ Vehicle length [m] """
     WIDTH = 2.0
     """ Vehicle width [m] """
-    STEERING_TAU = 0.2
-    """ Steering wheel response time [s] """
     DEFAULT_VELOCITIES = [20, 21]
     """ Range for random initial velocities [m/s] """
 
@@ -29,7 +27,6 @@ class Vehicle(Loggable):
         self.road = road
         self.position = np.array(position).astype('float')
         self.heading = heading
-        self.steering_angle = 0
         self.velocity = velocity
         self.lane_index = self.road.network.get_lane_index(self.position) if self.road else np.nan
         self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
@@ -98,8 +95,7 @@ class Vehicle(Loggable):
 
         v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v * dt
-        self.heading += self.velocity * self.steering_angle / self.LENGTH * dt
-        self.steering_angle += 1 / self.STEERING_TAU * (np.tan(self.action['steering']) - self.steering_angle) * dt
+        self.heading += self.velocity * np.tan(self.action['steering']) / self.LENGTH * dt
         self.velocity += self.action['acceleration'] * dt
 
         if self.road:
