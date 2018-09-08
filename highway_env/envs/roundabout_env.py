@@ -1,6 +1,7 @@
 from __future__ import division, print_function, absolute_import
 import numpy as np
 
+from highway_env import utils
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.envs.graphics import EnvViewer
 from highway_env.road.lane import LineType, StraightLane, CircularLane
@@ -12,6 +13,8 @@ class RoundaboutEnv(AbstractEnv):
 
     COLLISION_REWARD = -1
     HIGH_VELOCITY_REWARD = 0.2
+    RIGHT_LANE_REWARD = 0
+    LANE_CHANGE_REWARD = 0
 
     DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"}
 
@@ -46,18 +49,22 @@ class RoundaboutEnv(AbstractEnv):
 
     def make_road(self):
         length = 40
-        width = 4
+        center = [0, -length]
+        radius = [length, length+4]
+        line = [[LineType.CONTINUOUS, LineType.STRIPED], [LineType.NONE, LineType.CONTINUOUS]]
+        alpha = 10
 
-        n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
         net = RoadNetwork()
-        net.add_lane(0, 1, CircularLane([0, -length], length, np.pi/2, 0, line_types=[c, s]))
-        net.add_lane(1, 2, CircularLane([0, -length], length, 0, -np.pi/2, line_types=[c, s]))
-        net.add_lane(2, 3, CircularLane([0, -length], length, -np.pi/2, -np.pi, line_types=[c, s]))
-        net.add_lane(3, 0, CircularLane([0, -length], length, np.pi, np.pi/2, line_types=[c, s]))
-        net.add_lane(0, 1, CircularLane([0, -length], length+width, np.pi/2, 0, line_types=[n, c]))
-        net.add_lane(1, 2, CircularLane([0, -length], length+width, 0, -np.pi/2, line_types=[n, c]))
-        net.add_lane(2, 3, CircularLane([0, -length], length+width, -np.pi/2, -np.pi, line_types=[n, c]))
-        net.add_lane(3, 0, CircularLane([0, -length], length+width, np.pi, np.pi/2, line_types=[n, c]))
+        for lane in [0, 1]:
+            net.add_lane(0, 1, CircularLane(center, radius[lane], rad(90-alpha), rad(alpha), line_types=line[lane]))
+            net.add_lane(1, 2, CircularLane(center, radius[lane], rad(alpha), rad(-alpha), line_types=line[lane]))
+            net.add_lane(2, 3, CircularLane(center, radius[lane], rad(-alpha), rad(-90+alpha), line_types=line[lane]))
+            net.add_lane(3, 4, CircularLane(center, radius[lane], rad(-90+alpha), rad(-90-alpha), line_types=line[lane]))
+            net.add_lane(4, 5, CircularLane(center, radius[lane], rad(-90-alpha), rad(-180+alpha), line_types=line[lane]))
+            net.add_lane(5, 6, CircularLane(center, radius[lane], rad(-180+alpha), rad(-180-alpha), line_types=line[lane]))
+            net.add_lane(6, 7, CircularLane(center, radius[lane], rad(180-alpha), rad(90+alpha), line_types=line[lane]))
+            net.add_lane(7, 0, CircularLane(center, radius[lane], rad(90+alpha), rad(90-alpha), line_types=line[lane]))
+        net.add_lane(10, 0, StraightLane([0, 50], [10, 6]))
 
         road = Road(network=net)
         self.road = road
@@ -68,8 +75,21 @@ class RoundaboutEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         road = self.road
-        ego_vehicle = MDPVehicle(road, road.network.get_lane((0, 1, 0)).position(0, 0), velocity=10)
+        ego_vehicle = MDPVehicle(road,
+                                 road.network.get_lane((10, 0, 0)).position(0, 0),
+                                 velocity=10,
+                                 heading=road.network.get_lane((10, 0, 0)).heading)
         MDPVehicle.SPEED_MIN = 5
         MDPVehicle.SPEED_MAX = 20
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
+
+        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        for i in range(3):
+            road.vehicles.append(other_vehicles_type(road,
+                                                     road.network.get_lane((6, 7, 0)).position(-10*i, 0),
+                                                     velocity=10))
+
+
+def rad(deg):
+    return deg*np.pi/180
