@@ -38,7 +38,7 @@ def finite_mdp(env,
     grid = compute_ttc_grid(env, time_quantization, horizon)
 
     # Compute current state
-    grid_state = (env.vehicle.speed_index(), env.vehicle.lane_index, 0)
+    grid_state = (env.vehicle.speed_index(), env.vehicle.lane_index[2], 0)
     state = np.ravel_multi_index(grid_state, grid.shape)
 
     # Compute transition function
@@ -48,8 +48,8 @@ def finite_mdp(env,
 
     # Compute reward function
     v, l, t = grid.shape
-    lanes = np.arange(l)/(l - 1)
-    velocities = np.arange(v)/(v - 1)
+    lanes = np.arange(l)/max(l - 1, 1)
+    velocities = np.arange(v)/max(v - 1, 1)
     state_reward = \
         + env.COLLISION_REWARD * grid \
         + env.RIGHT_LANE_REWARD * np.tile(lanes[np.newaxis, :, np.newaxis], (v, 1, t)) \
@@ -66,11 +66,12 @@ def finite_mdp(env,
 
     # Creation of a new finite MDP
     try:
-        module = importlib.import_module("finite_mdp.envs.finite_mdp")
+        module = importlib.import_module("finite_mdp.mdp")
         mdp = module.DeterministicMDP(transition, reward, terminal, state=state)
+        mdp.original_shape = grid.shape
         return mdp
     except ModuleNotFoundError as e:
-        raise "The finite_mdp module is required for conversion. {}".format(e)
+        raise ModuleNotFoundError("The finite_mdp module is required for conversion. {}".format(e))
 
 
 def compute_ttc_grid(env, time_quantization, horizon):
@@ -78,7 +79,8 @@ def compute_ttc_grid(env, time_quantization, horizon):
         For each ego-velocity and lane, compute the predicted time-to-collision to each vehicle within the lane and
         store the results in an occupancy grid.
     """
-    grid = np.zeros((env.vehicle.SPEED_COUNT, len(env.road.lanes), int(horizon / time_quantization)))
+    road_lanes = env.road.network.road_lanes(env.vehicle.lane_index)
+    grid = np.zeros((env.vehicle.SPEED_COUNT, len(road_lanes), int(horizon / time_quantization)))
     for velocity_index in range(grid.shape[0]):
         ego_velocity = env.vehicle.index_to_speed(velocity_index)
         for other in env.road.vehicles:
@@ -92,7 +94,10 @@ def compute_ttc_grid(env, time_quantization, horizon):
                 if time_to_collision < 0:
                     continue
                 # Quantize time-to-collision to both upper and lower values
-                lane = other.lane_index
+                if env.road.network.is_same_road(other.lane_index, env.vehicle.lane_index):
+                    lane = other.lane_index[3]
+                else:
+                    continue
                 for time in [int(time_to_collision / time_quantization),
                              int(np.ceil(time_to_collision / time_quantization))]:
                     if 0 <= lane < grid.shape[1] and 0 <= time < grid.shape[2]:

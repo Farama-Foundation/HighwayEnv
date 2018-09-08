@@ -59,6 +59,22 @@ class RoadNetwork(object):
                 return current_index
         return _to, next_to, next_id
 
+    def road_lanes(self, lane_index):
+        return self.graph[lane_index[0]][lane_index[1]]
+
+    def neighbour_lanes(self, lane_index):
+        _from, _to, _id = lane_index
+        lanes = []
+        if _id > 0:
+            lanes.append((_from, _to, _id - 1))
+        if _id < len(self.graph[_from][_to]) - 1:
+            lanes.append((_from, _to, _id + 1))
+        return lanes
+
+    @staticmethod
+    def is_same_road(lane_index_1, lane_index_2):
+        return lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1]
+
 
 class Road(Loggable):
     """

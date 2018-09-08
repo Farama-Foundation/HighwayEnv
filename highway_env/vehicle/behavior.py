@@ -189,10 +189,9 @@ class IDMVehicle(ControlledVehicle):
         self.timer = 0
 
         # decide to make a lane change
-        lane_indexes = [self.lane_index + i for i in [-1, 1] if 0 <= self.lane_index + i < len(self.road.lanes)]
-        for lane_index in lane_indexes:
+        for lane_index in self.road.network.neighbour_lanes(self.lane_index):
             # Is the candidate lane close enough?
-            if not self.road.lanes[lane_index].is_reachable_from(self.position):
+            if not self.road.network.get_lane(lane_index).is_reachable_from(self.position):
                 continue
             # Does the MOBIL model recommend a lane change?
             if self.mobil(lane_index):
@@ -210,7 +209,7 @@ class IDMVehicle(ControlledVehicle):
         :return: whether the lane change should be performed
         """
         # Is the maneuver unsafe for the new following vehicle?
-        new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.lanes[lane_index])
+        new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.network.get_lane(lane_index))
         new_following_a = IDMVehicle.acceleration(ego_vehicle=new_following, front_vehicle=new_preceding)
         new_following_pred_a = IDMVehicle.acceleration(ego_vehicle=new_following, front_vehicle=self)
         if new_following_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:

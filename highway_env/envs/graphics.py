@@ -35,7 +35,10 @@ class EnvViewer(object):
 
     def set_agent_display(self, agent_display):
         if self.agent_display is None:
-            self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, 2 * self.SCREEN_HEIGHT))
+            if self.SCREEN_WIDTH > self.SCREEN_HEIGHT:
+                self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, 2 * self.SCREEN_HEIGHT))
+            else:
+                self.screen = pygame.display.set_mode((2 * self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
             self.agent_surface = pygame.Surface((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.agent_display = agent_display
 
@@ -63,7 +66,10 @@ class EnvViewer(object):
 
         if self.agent_display:
             self.agent_display(self.agent_surface, self.sim_surface)
-            self.screen.blit(self.agent_surface, (0, self.SCREEN_HEIGHT))
+            if self.SCREEN_WIDTH > self.SCREEN_HEIGHT:
+                self.screen.blit(self.agent_surface, (0, self.SCREEN_HEIGHT))
+            else:
+                self.screen.blit(self.agent_surface, (self.SCREEN_WIDTH, 0))
 
         self.screen.blit(self.sim_surface, (0, 0))
         self.clock.tick(self.env.SIMULATION_FREQUENCY)
