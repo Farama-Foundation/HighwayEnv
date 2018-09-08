@@ -24,7 +24,6 @@ class IDMVehicle(ControlledVehicle):
     # Lateral policy parameters
     POLITENESS = 0.  # in [0, 1]
     LANE_CHANGE_MIN_ACC_GAIN = 0.2  # [m/s2]
-    RIGHT_LANE_CHANGE_MIN_ACC_GAIN = LANE_CHANGE_MIN_ACC_GAIN
     LANE_CHANGE_MAX_BRAKING_IMPOSED = 2.0  # [m/s2]
     LANE_CHANGE_DELAY = 1.0  # [s]
 
@@ -223,9 +222,7 @@ class IDMVehicle(ControlledVehicle):
         old_following_pred_a = self.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
         jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
                                                          + old_following_pred_a - old_following_a)
-        min_acc_gain = self.RIGHT_LANE_CHANGE_MIN_ACC_GAIN if lane_index == self.target_lane_index + 1\
-            else self.LANE_CHANGE_MIN_ACC_GAIN
-        if jerk < min_acc_gain:
+        if jerk < self.LANE_CHANGE_MIN_ACC_GAIN:
             return False
 
         # All clear, let's go!
