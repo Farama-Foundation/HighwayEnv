@@ -196,8 +196,6 @@ class CircularLane(AbstractLane):
         return self.center + (self.radius - lateral * self.direction)*np.array([np.cos(phi), np.sin(phi)])
 
     def heading_at(self, s):
-        if self.direction == 1:
-            print("pause")
         phi = self.direction * s / self.radius + self.start_phase
         psi = phi + np.pi/2 * self.direction
         return psi
