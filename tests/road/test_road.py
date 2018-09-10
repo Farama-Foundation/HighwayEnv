@@ -8,12 +8,6 @@ from highway_env.vehicle.control import ControlledVehicle
 from highway_env.vehicle.dynamics import Vehicle
 
 
-# def test_random():
-#     r = Road.create_random_road(lanes_count=6, lane_width=4.0, vehicles_count=42)
-#     assert len(r.lanes) == 6
-#     assert len(r.vehicles) == 42
-
-
 def test_network():
     # Diamond
     net = RoadNetwork()
@@ -39,9 +33,6 @@ def test_network():
         road.step(dt)
         if lane_index != v.target_lane_index:
             lane_index = v.target_lane_index
-            print("switch lane to", lane_index)
             lane_changes += 1
     assert lane_changes == 3
-
-    assert False
 
