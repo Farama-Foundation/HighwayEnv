@@ -92,9 +92,10 @@ class HighwayEnv(AbstractEnv):
         :return: the corresponding reward
         """
         action_reward = {0: self.LANE_CHANGE_REWARD, 1: 0, 2: self.LANE_CHANGE_REWARD, 3: 0, 4: 0}
+        neighbours = self.road.network.neighbour_lanes(self.vehicle.lane_index)
         state_reward = \
             + self.COLLISION_REWARD * self.vehicle.crashed \
-            + self.RIGHT_LANE_REWARD * self.vehicle.target_lane_index / (len(self.road.lanes) - 1) \
+            + self.RIGHT_LANE_REWARD * self.vehicle.target_lane_index / len(neighbours) \
             + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
         return action_reward[action] + state_reward
 
