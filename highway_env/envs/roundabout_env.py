@@ -87,9 +87,9 @@ class RoundaboutEnv(AbstractEnv):
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for i in range(3):
             road.vehicles.append(other_vehicles_type(road,
-                                                     road.network.get_lane((7, 0, 0)).position(20*i, 0),
+                                                     road.network.get_lane((6, 7, 0)).position(20*i, 0),
                                                      velocity=10,
-                                                     heading=road.network.get_lane((7, 0, 0)).heading_at(-20*i)))
+                                                     heading=road.network.get_lane((6, 7, 0)).heading_at(20*i)))
 
 
 def rad(deg):
