@@ -74,7 +74,7 @@ def finite_mdp(env,
         raise ModuleNotFoundError("The finite_mdp module is required for conversion. {}".format(e))
 
 
-def compute_ttc_grid(env, time_quantization, horizon):
+def compute_ttc_grid(env, time_quantization, horizon, considered_lanes="all"):
     """
         For each ego-velocity and lane, compute the predicted time-to-collision to each vehicle within the lane and
         store the results in an occupancy grid.
@@ -94,10 +94,14 @@ def compute_ttc_grid(env, time_quantization, horizon):
                 if time_to_collision < 0:
                     continue
                 # Quantize time-to-collision to both upper and lower values
-                if env.road.network.is_connected_road(other.lane_index, env.vehicle.lane_index):
-                    lane = other.lane_index[2]
+                if considered_lanes == "all":
+                    pass
+                elif considered_lanes == "connected" and \
+                        env.road.network.is_connected_road(other.lane_index, env.vehicle.lane_index):
+                    pass
                 else:
                     continue
+                lane = other.lane_index[2]
                 for time in [int(time_to_collision / time_quantization),
                              int(np.ceil(time_to_collision / time_quantization))]:
                     if 0 <= lane < grid.shape[1] and 0 <= time < grid.shape[2]:
