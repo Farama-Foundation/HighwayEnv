@@ -35,7 +35,7 @@ class Vehicle(Loggable):
         self.log = []
 
     @classmethod
-    def create_random(cls, road, velocity=None, spacing=1, np_random=None):
+    def create_random(cls, road, velocity=None, spacing=1, np_random=None, prepend=False):
         """
             Create a random vehicle on the road.
 
@@ -53,11 +53,16 @@ class Vehicle(Loggable):
         default_spacing = 30
         _from = np_random.choice(list(road.network.graph.keys()))
         _to = np_random.choice(list(road.network.graph[_from].keys()))
-        _id = np_random.choice(road.network.graph[_from][_to])
-        x_min = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
+        _id = np_random.choice(len(road.network.graph[_from][_to]))
         offset = spacing * default_spacing * np.exp(-5 / 30 * len(road.network.graph[_from][_to]))
+        if prepend:
+            x0 = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
+            x0 -= offset
+        else:
+            x0 = np.max([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 3*offset
+            x0 += offset
         velocity = velocity or np_random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
-        v = cls(road, road.network.get_lane((_from, _to, _id)).position(x_min - offset, 0), 0, velocity)
+        v = cls(road, road.network.get_lane((_from, _to, _id)).position(x0, 0), 0, velocity)
         return v
 
     @classmethod

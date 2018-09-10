@@ -81,7 +81,7 @@ class HighwayEnv(AbstractEnv):
                                        vehicles_count=self.config["vehicles_count"],
                                        vehicles_type=utils.class_from_path(self.config["other_vehicles_type"]),
                                        np_random=self.np_random)
-        vehicle = MDPVehicle.create_random(road, 25, spacing=self.config["initial_spacing"], np_random=self.np_random)
+        vehicle = MDPVehicle.create_random(road, 25, spacing=self.config["initial_spacing"], prepend=True, np_random=self.np_random)
         road.vehicles.append(vehicle)
         return road, vehicle
 
@@ -95,7 +95,7 @@ class HighwayEnv(AbstractEnv):
         neighbours = self.road.network.neighbour_lanes(self.vehicle.lane_index)
         state_reward = \
             + self.COLLISION_REWARD * self.vehicle.crashed \
-            + self.RIGHT_LANE_REWARD * self.vehicle.target_lane_index / len(neighbours) \
+            + self.RIGHT_LANE_REWARD * self.vehicle.target_lane_index[2] / len(neighbours) \
             + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
         return action_reward[action] + state_reward
 

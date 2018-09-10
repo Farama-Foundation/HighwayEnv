@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
 import pandas as pd
+from gym import logger
 
 from highway_env.logger import Loggable
 from highway_env.road.lane import LineType, StraightLane
@@ -54,8 +55,8 @@ class RoadNetwork(object):
                     next_id = _id
                 else:
                     next_id = np.random.randint(len(self.graph[_to][next_to]))
-            except KeyError as e:
-                print(e)
+            except KeyError:
+                logger.warning("End of lane reached.")
                 return current_index
         return _to, next_to, next_id
 
@@ -115,7 +116,7 @@ class Road(Loggable):
         net = RoadNetwork()
         for lane in range(lanes_count):
             origin = [0, lane * StraightLane.DEFAULT_WIDTH]
-            end = [1000, lane * StraightLane.DEFAULT_WIDTH]
+            end = [10000, lane * StraightLane.DEFAULT_WIDTH]
             line_types = [LineType.CONTINUOUS_LINE if lane == 0 else LineType.STRIPED,
                           LineType.CONTINUOUS_LINE if lane == lanes_count - 1 else LineType.NONE]
             net.add_lane(0, 1, StraightLane(origin, end, line_types=line_types))
