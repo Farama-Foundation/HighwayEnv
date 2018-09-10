@@ -87,21 +87,19 @@ class Road(Loggable):
         A road is a set of lanes, and a set of vehicles driving on these lanes
     """
 
-    def __init__(self, lanes=None, network=None, vehicles=None):
+    def __init__(self, network=None, vehicles=None):
         """
             New road.
 
-        :param lanes: the lanes composing the road
+        :param network: the road network describing the lanes
         :param vehicles: the vehicles driving on the road
         """
-        self.lanes = lanes or []
         self.network = network or []
         self.vehicles = vehicles or []
 
     @classmethod
     def create_random_road(cls,
                            lanes_count,
-                           lane_width=4,
                            vehicles_count=50,
                            vehicles_type=ControlledVehicle,
                            np_random=None):
@@ -109,20 +107,19 @@ class Road(Loggable):
             Create a road composed of straight adjacent lanes with randomly located vehicles on it.
 
         :param lanes_count: number of lanes
-        :param lane_width: lanes width [m]
         :param vehicles_count: number of vehicles on the road
         :param vehicles_type: type of vehicles on the road
         :param np.random.RandomState np_random: a random number generator
         :return: the created road
         """
-        lanes = []
+        net = RoadNetwork()
         for lane in range(lanes_count):
-            origin = np.array([0, lane * lane_width])
-            heading = 0
+            origin = [0, lane * StraightLane.DEFAULT_WIDTH]
+            end = [1000, lane * StraightLane.DEFAULT_WIDTH]
             line_types = [LineType.CONTINUOUS_LINE if lane == 0 else LineType.STRIPED,
                           LineType.CONTINUOUS_LINE if lane == lanes_count - 1 else LineType.NONE]
-            lanes.append(StraightLane(origin, heading, lane_width, line_types))
-        r = Road(lanes)
+            net.add_lane(0, 1, StraightLane(origin, end, line_types=line_types))
+        r = Road(network=net)
         r.add_random_vehicles(vehicles_count, vehicles_type, np_random)
         return r
 

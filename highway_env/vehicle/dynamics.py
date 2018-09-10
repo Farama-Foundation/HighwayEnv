@@ -51,11 +51,13 @@ class Vehicle(Loggable):
         if np_random is None:
             np_random = np.random
         default_spacing = 30
-        lane = np_random.randint(0, len(road.lanes))
+        _from = np_random.choice(list(road.network.graph.keys()))
+        _to = np_random.choice(list(road.network.graph[_from].keys()))
+        _id = np_random.choice(road.network.graph[_from][_to])
         x_min = np.min([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 0
-        offset = spacing * default_spacing * np.exp(-5 / 30 * len(road.lanes))
+        offset = spacing * default_spacing * np.exp(-5 / 30 * len(road.network.graph[_from][_to]))
         velocity = velocity or np_random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
-        v = cls(road, road.lanes[lane].position(x_min - offset, 0), 0, velocity)
+        v = cls(road, road.network.get_lane((_from, _to, _id)).position(x_min - offset, 0), 0, velocity)
         return v
 
     @classmethod
@@ -127,7 +129,7 @@ class Vehicle(Loggable):
             return
 
         # Accurate elliptic check
-        if utils.point_in_ellipse(other.position, self.position, self.heading, self.LENGTH, self.WIDTH):
+        if utils.point_in_ellipse(other.position, self.position, self.heading, self.LENGTH/2, self.WIDTH/2):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
 
@@ -162,11 +164,11 @@ class Vehicle(Loggable):
             'steering': self.action['steering']}
 
         if self.road:
-            for lane_index in range(len(self.road.lanes)):
-                lane_coords = self.road.lanes[lane_index].local_coordinates(self.position)
+            for lane_index in self.road.network.neighbour_lanes(self.lane_index):
+                lane_coords = self.road.network.get_lane(lane_index).local_coordinates(self.position)
                 data.update({
                     'dy_lane_{}'.format(lane_index): lane_coords[1],
-                    'psi_lane_{}'.format(lane_index): self.road.lanes[lane_index].heading_at(lane_coords[0])
+                    'psi_lane_{}'.format(lane_index): self.road.network.get_lane(lane_index).heading_at(lane_coords[0])
                 })
             front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
             if front_vehicle:

@@ -251,7 +251,7 @@ class IDMVehicle(ControlledVehicle):
         # Is the vehicle stopped on the wrong lane?
         if self.target_lane_index != self.lane_index and self.velocity < stopped_velocity:
             _, rear = self.road.neighbour_vehicles(self)
-            _, new_rear = self.road.neighbour_vehicles(self, self.road.lanes[self.target_lane_index])
+            _, new_rear = self.road.neighbour_vehicles(self, self.road.network.get_lane(self.target_lane_index))
             # Check for free room behind on both lanes
             if (not rear or rear.lane_distance_to(self) > safe_distance) and \
                     (not new_rear or new_rear.lane_distance_to(self) > safe_distance):
@@ -333,9 +333,10 @@ class LinearVehicle(IDMVehicle):
         :param target_lane_index: index of the lane to follow
         :return: a array of features
         """
-        lane_coords = self.road.lanes[target_lane_index].local_coordinates(self.position)
+        lane = self.road.network.get_lane(target_lane_index)
+        lane_coords = lane.local_coordinates(self.position)
         lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + self.STEERING_TAU)
-        lane_future_heading = self.road.lanes[target_lane_index].heading_at(lane_next_coords)
+        lane_future_heading = lane.heading_at(lane_next_coords)
         features = np.array([(lane_future_heading - self.heading) * self.LENGTH / utils.not_zero(self.velocity),
                              -lane_coords[1] * self.LENGTH / (utils.not_zero(self.velocity) ** 2)])
         return features

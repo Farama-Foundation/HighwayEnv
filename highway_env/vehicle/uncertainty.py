@@ -112,16 +112,17 @@ class IntervalVehicle(LinearVehicle):
         if lane_change_model == "model":
             lanes = [self.target_lane_index]
         elif lane_change_model == "all":
-            lanes = range(len(self.road.lanes))
+            lanes = self.road.network.neighbour_lanes(self.target_lane_index) + [self.target_lane_index]
         elif lane_change_model == "right":
             lanes = [self.target_lane_index]
-            if self.target_lane_index < len(self.road.lanes)-1 \
-                    and self.road.lanes[self.target_lane_index+1].is_reachable_from(self.position):
+            _from, _to, _id = self.target_lane_index
+            if _id < len(self.road.network.graph[_from][_to]) \
+                    and self.road.network.get_lane((_from, _to, _id + 1)).is_reachable_from(self.position):
                 lanes += [self.target_lane_index+1]
         for lane_index in lanes:
-            lane_coords = self.road.lanes[lane_index].local_coordinates(self.position)
+            lane_coords = self.road.get_lane(lane_index).local_coordinates(self.position)
             lane_y = self.position[1] - lane_coords[1]
-            lane_psi = self.road.lanes[self.target_lane_index].heading_at(lane_coords[0])
+            lane_psi = self.road.get_lane(lane_index).heading_at(lane_coords[0])
             i_v_i = 1/np.flip(v_i, 0)
             phi_b_i_lane = np.transpose(np.array([
                 [0, 0],
