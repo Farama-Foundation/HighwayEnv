@@ -36,6 +36,7 @@ class IDMVehicle(ControlledVehicle):
                  timer=None):
         super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity)
         self.enable_lane_change = enable_lane_change
+        self.route = None
         self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
 
     @classmethod
@@ -222,13 +223,14 @@ class IDMVehicle(ControlledVehicle):
         old_following_pred_a = self.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
         jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
                                                          + old_following_pred_a - old_following_a)
-        if jerk < self.LANE_CHANGE_MIN_ACC_GAIN and self.preferred_lane is None:
+        if jerk < self.LANE_CHANGE_MIN_ACC_GAIN and self.route is None:
                 return False
 
-        # Do I have a preferred lane which is safe for me to access?
-        if self.preferred_lane:
+        # Do I have a planned route for a lane which is safe for me to access?
+        if self.route:
             # Wrong direction
-            if np.sign(lane_index - self.target_lane_index) != np.sign(self.preferred_lane - self.target_lane_index):
+            route_lane = self.route[0]
+            if np.sign(lane_index[2] - self.target_lane_index[2]) != np.sign(route_lane[2] - self.target_lane_index[2]):
                 return False
             # Unsafe braking required
             elif self_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
