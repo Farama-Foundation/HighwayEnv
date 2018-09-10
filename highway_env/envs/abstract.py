@@ -228,13 +228,13 @@ class AbstractEnv(gym.Env):
         :return: the list of available actions
         """
         actions = [self.ACTIONS_INDEXES['IDLE']]
-        li = self.vehicle.lane_index
-        if li > 0 \
-                and self.road.lanes[li-1].is_reachable_from(self.vehicle.position):
-            actions.append(self.ACTIONS_INDEXES['LANE_LEFT'])
-        if li < len(self.road.lanes) - 1 \
-                and self.road.lanes[li+1].is_reachable_from(self.vehicle.position):
-            actions.append(self.ACTIONS_INDEXES['LANE_RIGHT'])
+        for l_index in self.road.network.neighbour_lanes(self.vehicle.lane_index):
+            if l_index[2] < self.vehicle.lane_index[2] \
+                    and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position):
+                actions.append(self.ACTIONS_INDEXES['LANE_LEFT'])
+            if l_index[2] > self.vehicle.lane_index[2] \
+                    and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position):
+                actions.append(self.ACTIONS_INDEXES['LANE_RIGHT'])
         if self.vehicle.velocity_index < self.vehicle.SPEED_COUNT - 1:
             actions.append(self.ACTIONS_INDEXES['FASTER'])
         if self.vehicle.velocity_index > 0:
