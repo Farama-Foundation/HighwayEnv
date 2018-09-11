@@ -228,7 +228,7 @@ class AbstractEnv(gym.Env):
         :return: the list of available actions
         """
         actions = [self.ACTIONS_INDEXES['IDLE']]
-        for l_index in self.road.network.neighbour_lanes(self.vehicle.lane_index):
+        for l_index in self.road.network.side_lanes(self.vehicle.lane_index):
             if l_index[2] < self.vehicle.lane_index[2] \
                     and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position):
                 actions.append(self.ACTIONS_INDEXES['LANE_LEFT'])

@@ -189,7 +189,7 @@ class IDMVehicle(ControlledVehicle):
         self.timer = 0
 
         # decide to make a lane change
-        for lane_index in self.road.network.neighbour_lanes(self.lane_index):
+        for lane_index in self.road.network.side_lanes(self.lane_index):
             # Is the candidate lane close enough?
             if not self.road.network.get_lane(lane_index).is_reachable_from(self.position):
                 continue

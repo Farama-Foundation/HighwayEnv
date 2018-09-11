@@ -112,7 +112,7 @@ class IntervalVehicle(LinearVehicle):
         if lane_change_model == "model":
             lanes = [self.target_lane_index]
         elif lane_change_model == "all":
-            lanes = self.road.network.neighbour_lanes(self.target_lane_index) + [self.target_lane_index]
+            lanes = self.road.network.side_lanes(self.target_lane_index) + [self.target_lane_index]
         elif lane_change_model == "right":
             lanes = [self.target_lane_index]
             _from, _to, _id = self.target_lane_index

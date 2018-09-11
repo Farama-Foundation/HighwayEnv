@@ -79,7 +79,7 @@ def compute_ttc_grid(env, time_quantization, horizon, considered_lanes="all"):
         For each ego-velocity and lane, compute the predicted time-to-collision to each vehicle within the lane and
         store the results in an occupancy grid.
     """
-    road_lanes = env.road.network.road_lanes(env.vehicle.lane_index)
+    road_lanes = env.road.network.all_side_lanes(env.vehicle.lane_index)
     grid = np.zeros((env.vehicle.SPEED_COUNT, len(road_lanes), int(horizon / time_quantization)))
     for velocity_index in range(grid.shape[0]):
         ego_velocity = env.vehicle.index_to_speed(velocity_index)
