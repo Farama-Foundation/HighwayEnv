@@ -151,19 +151,18 @@ class SineLane(StraightLane):
         A sinusoidal lane
     """
 
-    def __init__(self, start, heading, width, amplitude, pulsation, phase,
-                 line_types=None, bounds=None, forbidden=False):
+    def __init__(self, start, end, amplitude, pulsation, phase,
+                 width=StraightLane.DEFAULT_WIDTH, line_types=None, forbidden=False):
         """
             New sinusoidal lane.
 
         :param start: the lane starting position [m]
-        :param heading: the lane axis direction [rad]
-        :param width: the lane width [m]
+        :param end: the lane ending position [m]
         :param amplitude: the lane oscillation amplitude [m]
         :param pulsation: the lane pulsation [rad/m]
         :param phase: the lane initial phase [rad]
         """
-        super(SineLane, self).__init__(start, heading, width, line_types, bounds, forbidden)
+        super(SineLane, self).__init__(start, end,  width, line_types, forbidden)
         self.amplitude = amplitude
         self.pulsation = pulsation
         self.phase = phase
