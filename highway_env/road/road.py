@@ -60,10 +60,10 @@ class RoadNetwork(object):
                 return current_index
         return _to, next_to, next_id
 
-    def road_lanes(self, lane_index):
+    def all_side_lanes(self, lane_index):
         return self.graph[lane_index[0]][lane_index[1]]
 
-    def neighbour_lanes(self, lane_index):
+    def side_lanes(self, lane_index):
         _from, _to, _id = lane_index
         lanes = []
         if _id > 0:

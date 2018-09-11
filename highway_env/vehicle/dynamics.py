@@ -169,7 +169,7 @@ class Vehicle(Loggable):
             'steering': self.action['steering']}
 
         if self.road:
-            for lane_index in self.road.network.neighbour_lanes(self.lane_index):
+            for lane_index in self.road.network.side_lanes(self.lane_index):
                 lane_coords = self.road.network.get_lane(lane_index).local_coordinates(self.position)
                 data.update({
                     'dy_lane_{}'.format(lane_index): lane_coords[1],
