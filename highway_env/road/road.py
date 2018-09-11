@@ -28,7 +28,7 @@ class RoadNetwork(object):
         _from, _to, _id = index
         return self.graph[_from][_to][_id]
 
-    def get_lane_index(self, position):
+    def get_closest_lane_index(self, position):
         """
             Get the index of the lane closest to a world position.
 
@@ -39,22 +39,25 @@ class RoadNetwork(object):
         for _from, to_dict in self.graph.items():
             for _to, lanes in to_dict.items():
                 for _id, l in enumerate(lanes):
-                    s, r = l.local_coordinates(position)
-                    distances.append(abs(r) + max(s-l.length, 0) + max(0-s, 0))
+                    distances.append(l.distance(position))
                     indexes.append((_from, _to, _id))
         return indexes[int(np.argmin(distances))]
 
-    def next_lane(self, current_index, plan=[]):
+    def next_lane(self, current_index, plan=[], position=None):
         _from, _to, _id = current_index
         if plan:
             raise NotImplementedError()
         else:
             try:
                 next_to = list(self.graph[_to].keys())[np.random.randint(len(self.graph[_to]))]
-                if len(self.graph[_from][_to]) == len(self.graph[_from][_to]):
+                # If next road has same number of lane, stay on the same lane
+                if len(self.graph[_from][_to]) == len(self.graph[_to][next_to]):
                     next_id = _id
+                # Else, pick closest lane
                 else:
-                    next_id = np.random.randint(len(self.graph[_to][next_to]))
+                    lanes = range(len(self.graph[_to][next_to]))
+                    next_id = min(lanes,
+                                  key=lambda l: self.get_lane((_to, next_to, l)).distance(position))
             except KeyError:
                 logger.warning("End of lane reached.")
                 return current_index
