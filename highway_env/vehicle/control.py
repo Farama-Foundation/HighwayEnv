@@ -57,10 +57,7 @@ class ControlledVehicle(Vehicle):
 
         :param action: a high-level action
         """
-        # At the end of a lane, automatically switch to a next one
-        if self.lane_index == self.target_lane_index and self.lane.after_end(self.position):
-            self.target_lane_index = self.road.network.next_lane(self.lane_index)
-
+        self.follow_road()
         if action == "FASTER":
             self.target_velocity += self.DELTA_VELOCITY
         elif action == "SLOWER":
@@ -79,6 +76,13 @@ class ControlledVehicle(Vehicle):
         action = {'steering': self.steering_control(self.target_lane_index),
                   'acceleration': self.velocity_control(self.target_velocity)}
         super(ControlledVehicle, self).act(action)
+
+    def follow_road(self):
+        """
+           At the end of a lane, automatically switch to a next one.
+        """
+        if self.lane_index == self.target_lane_index and self.lane.after_end(self.position):
+            self.target_lane_index = self.road.network.next_lane(self.lane_index, position=self.position)
 
     def steering_control(self, target_lane_index):
         """
