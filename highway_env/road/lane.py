@@ -87,6 +87,13 @@ class AbstractLane(object):
             longitudinal, _ = self.local_coordinates(position)
         return longitudinal > self.length - Vehicle.LENGTH
 
+    def distance(self, position):
+        """
+            Compute the L1 distance [m] from a position to the lane
+        """
+        s, r = self.local_coordinates(position)
+        return abs(r) + max(s - self.length, 0) + max(0 - s, 0)
+
 
 class LineType:
     """
