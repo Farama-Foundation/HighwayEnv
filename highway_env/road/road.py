@@ -76,14 +76,16 @@ class RoadNetwork(object):
         return lanes
 
     @staticmethod
-    def is_same_road(lane_index_1, lane_index_2):
-        return lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1]
+    def is_same_road(lane_index_1, lane_index_2, same_lane=False):
+        return lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1] \
+               and (not same_lane or lane_index_1[2] == lane_index_2[2])
 
     @staticmethod
-    def is_connected_road(lane_index_1, lane_index_2):
-        return (lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1]) \
-               or lane_index_1[1] == lane_index_2[0] \
-               or lane_index_1[0] == lane_index_2[1]
+    def is_connected_road(lane_index_1, lane_index_2, same_lane=False):
+        return ((lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1])
+                or lane_index_1[1] == lane_index_2[0]
+                or lane_index_1[0] == lane_index_2[1]) \
+               and (not same_lane or lane_index_1[2] == lane_index_2[2])
 
 
 class Road(Loggable):
@@ -167,23 +169,24 @@ class Road(Loggable):
             for other in self.vehicles:
                 vehicle.check_collision(other)
 
-    def neighbour_vehicles(self, vehicle, lane=None):
+    def neighbour_vehicles(self, vehicle, lane_index=None):
         """
             Find the preceding and following vehicles of a given vehicle.
         :param vehicle: the vehicle whose neighbours must be found
-        :param lane: the lane on which to look for preceding and following vehicles.
+        :param lane_index: the lane on which to look for preceding and following vehicles.
                      It doesn't have to be the current vehicle lane but can also be another lane, in which case the
                      vehicle is projected on it considering its local coordinates in the lane.
         :return: its preceding vehicle, its following vehicle
         """
-        lane = lane or vehicle.lane
-        if not lane:
+        lane_index = lane_index or vehicle.lane_index
+        if not lane_index:
             return None, None
-        s = lane.local_coordinates(vehicle.position)[0]
+        lane = self.network.get_lane(lane_index)
+        s = self.network.get_lane(lane_index).local_coordinates(vehicle.position)[0]
         s_front = s_rear = None
         v_front = v_rear = None
         for v in self.vehicles:
-            if v is not vehicle and v.lane == lane:
+            if v is not vehicle and self.network.is_connected_road(v.lane_index, lane_index, same_lane=True):
                 s_v, lat_v = lane.local_coordinates(v.position)
                 if not lane.on_lane(v.position, s_v, lat_v):
                     continue

@@ -210,7 +210,7 @@ class IDMVehicle(ControlledVehicle):
         :return: whether the lane change should be performed
         """
         # Is the maneuver unsafe for the new following vehicle?
-        new_preceding, new_following = self.road.neighbour_vehicles(self, self.road.network.get_lane(lane_index))
+        new_preceding, new_following = self.road.neighbour_vehicles(self, lane_index)
         new_following_a = IDMVehicle.acceleration(ego_vehicle=new_following, front_vehicle=new_preceding)
         new_following_pred_a = IDMVehicle.acceleration(ego_vehicle=new_following, front_vehicle=self)
         if new_following_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
