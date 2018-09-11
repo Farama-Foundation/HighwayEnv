@@ -4,7 +4,7 @@ import numpy as np
 from highway_env import utils
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, SineLane
-from highway_env.road.road import Road
+from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle
 
@@ -56,8 +56,7 @@ class MergeEnv(AbstractEnv):
 
         # Altruistic penalty
         for vehicle in self.road.vehicles:
-            raise NotImplementedError()
-            if vehicle.lane_index == (0, 0, 0) and isinstance(vehicle, ControlledVehicle):
+            if vehicle.lane_index == ("b", "c", 2) and isinstance(vehicle, ControlledVehicle):
                 reward += self.MERGING_VELOCITY_REWARD * \
                           (vehicle.target_velocity - vehicle.velocity) / vehicle.target_velocity
         return reward + action_reward[action]
@@ -66,7 +65,7 @@ class MergeEnv(AbstractEnv):
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
-        return self.vehicle.crashed or self.vehicle.position[0] > 300
+        return self.vehicle.crashed or self.vehicle.position[0] > 370
 
     def reset(self):
         self.make_road()
@@ -78,45 +77,48 @@ class MergeEnv(AbstractEnv):
             Make a road composed of a straight highway and a merging lane.
         :return: the road
         """
-        raise NotImplementedError()
-        # ends = [80, 80, 80]
-        # l0 = StraightLane(np.array([0, 0]), 0, 4.0, [LineType.CONTINUOUS_LINE, LineType.NONE])
-        # lm0 = StraightLane(np.array([0, 4]), 0, 4.0,
-        #                    [LineType.STRIPED, LineType.CONTINUOUS_LINE], bounds=[-np.inf, sum(ends[0:2])])
-        # lm1 = StraightLane(lm0.position(sum(ends[0:2]), 0), 0, 4.0,
-        #                    [LineType.STRIPED, LineType.STRIPED], bounds=[0, ends[2]])
-        # lm2 = StraightLane(lm1.position(ends[2], 0), 0, 4.0,
-        #                    [LineType.STRIPED, LineType.CONTINUOUS_LINE], bounds=[0, np.inf])
-        # l1 = LanesConcatenation([lm0, lm1, lm2])
-        #
-        # lc0 = StraightLane(np.array([0, 6.5 + 4 + 4]), 0, 4.0,
-        #                    [LineType.CONTINUOUS_LINE, LineType.CONTINUOUS_LINE], bounds=[-np.inf, ends[0]], forbidden=True)
-        # amplitude = 3.25
-        # lc1 = SineLane(lc0.position(ends[0], -amplitude), 0, 4.0, amplitude, 2 * np.pi / (2*ends[1]), np.pi / 2,
-        #                [LineType.CONTINUOUS, LineType.CONTINUOUS], bounds=[0, ends[1]], forbidden=True)
-        # lc2 = StraightLane(lc1.position(ends[1], 0), 0, 4.0,
-        #                    [LineType.NONE, LineType.CONTINUOUS_LINE], bounds=[0, ends[2]], forbidden=True)
-        # l2 = LanesConcatenation([lc0, lc1, lc2])
-        # road = Road([l0, l1, l2])
-        # road.vehicles.append(Obstacle(road, lc2.position(ends[2], 0)))
-        # self.road = road
+        net = RoadNetwork()
+
+        # Highway lanes
+        ends = [150, 80, 80, 150]  # Before, converging, merge, after
+        c, s, n = LineType.CONTINUOUS_LINE, LineType.STRIPED, LineType.NONE
+        y = [0, StraightLane.DEFAULT_WIDTH]
+        line_type = [[c, s], [n, c]]
+        line_type_merge = [[c, s], [n, s]]
+        for i in range(2):
+            net.add_lane("a", "b", StraightLane([0, y[i]], [sum(ends[:2]), y[i]], line_types=line_type[i]))
+            net.add_lane("b", "c", StraightLane([sum(ends[:2]), y[i]], [sum(ends[:3]), y[i]], line_types=line_type_merge[i]))
+            net.add_lane("c", "d", StraightLane([sum(ends[:3]), y[i]], [sum(ends), y[i]], line_types=line_type[i]))
+
+        # Merging lane
+        amplitude = 3.25
+        ljk = StraightLane([0, 6.5 + 4 + 4], [ends[0], 6.5 + 4 + 4], line_types=[c, c], forbidden=True)
+        lkb = SineLane(ljk.position(ends[0], -amplitude), ljk.position(sum(ends[:2]), -amplitude),
+                       amplitude, 2 * np.pi / (2*ends[1]), np.pi / 2, line_types=[c, c], forbidden=True)
+        lbc = StraightLane(lkb.position(ends[1], 0), lkb.position(ends[1], 0) + [ends[2], 0],
+                           line_types=[n, c], forbidden=True)
+        net.add_lane("j", "k", ljk)
+        net.add_lane("k", "b", lkb)
+        net.add_lane("b", "c", lbc)
+        road = Road(network=net)
+        road.vehicles.append(Obstacle(road, lbc.position(ends[2], 0)))
+        self.road = road
 
     def make_vehicles(self):
         """
             Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
         :return: the ego-vehicle
         """
-        raise NotImplementedError()
-        # road = self.road
-        # ego_vehicle = MDPVehicle(road, road.lanes[-2].position(-40, 0), velocity=30)
-        # road.vehicles.append(ego_vehicle)
-        #
-        # other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        # road.vehicles.append(other_vehicles_type(road, road.lanes[0].position(20, 0), velocity=29))
-        # road.vehicles.append(other_vehicles_type(road, road.lanes[1].position(0, 0), velocity=31))
-        # road.vehicles.append(other_vehicles_type(road, road.lanes[0].position(-65, 0), velocity=31.5))
-        #
-        # merging_v = other_vehicles_type(road, road.lanes[-1].position(40, 0), velocity=20)
-        # merging_v.target_velocity = 30
-        # road.vehicles.append(merging_v)
-        # self.vehicle = ego_vehicle
+        road = self.road
+        ego_vehicle = MDPVehicle(road, road.network.get_lane(("a", "b", 1)).position(30, 0), velocity=30)
+        road.vehicles.append(ego_vehicle)
+
+        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), velocity=29))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), velocity=31))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), velocity=31.5))
+
+        merging_v = other_vehicles_type(road, road.network.get_lane(("j", "k", 0)).position(110, 0), velocity=20)
+        merging_v.target_velocity = 30
+        road.vehicles.append(merging_v)
+        self.vehicle = ego_vehicle
