@@ -59,7 +59,7 @@ class RoadNetwork(object):
                     next_id = min(lanes,
                                   key=lambda l: self.get_lane((_to, next_to, l)).distance(position))
             except KeyError:
-                logger.warning("End of lane reached.")
+                logger.warn("End of lane reached.")
                 return current_index
         return _to, next_to, next_id
 
@@ -77,15 +77,42 @@ class RoadNetwork(object):
 
     @staticmethod
     def is_same_road(lane_index_1, lane_index_2, same_lane=False):
+        """
+            Is same road, potentially with different lane?
+        """
         return lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1] \
                and (not same_lane or lane_index_1[2] == lane_index_2[2])
 
     @staticmethod
-    def is_connected_road(lane_index_1, lane_index_2, same_lane=False):
+    def is_same_route_road(lane_index_1, lane_index_2, same_lane=False):
+        """
+            Is the lane 2 among:
+            - lane 1;
+            - roads that lead to lane 1;
+            - roads that lane 1 is leading to?
+        """
         return ((lane_index_1[0] == lane_index_2[0] and lane_index_1[1] == lane_index_2[1])
                 or lane_index_1[1] == lane_index_2[0]
                 or lane_index_1[0] == lane_index_2[1]) \
                and (not same_lane or lane_index_1[2] == lane_index_2[2])
+
+    def is_connected_road(self, lane_index_1, lane_index_2, same_lane=False, depth=0):
+        """
+            Is the lane 2 among:
+            - roads that lead to the same destination as lane 1;
+            - roads that lead to lane 1;
+            - roads that lane 1 is leading to?
+        """
+        if depth == 0:
+            return (lane_index_1[1] == lane_index_2[1]
+                    or lane_index_1[1] == lane_index_2[0]
+                    or lane_index_1[0] == lane_index_2[1]) \
+                   and (not same_lane or lane_index_1[2] == lane_index_2[2])
+        else:
+            _from, _to, _id = lane_index_1
+            return any([self.is_connected_road((_to, l1_to, _id), lane_index_2, depth - 1)
+                        for l1_to in self.graph[_to].keys()])
+
 
 
 class Road(Loggable):
