@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import pytest
 
-from highway_env.road.road import Road
+from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.dynamics import Vehicle
 
 FPS = 15
@@ -40,7 +40,7 @@ def test_brake():
 
 
 def test_front():
-    r = Road.create_random_road(lanes_count=1, lane_width=0, vehicles_count=0)
+    r = Road(RoadNetwork.straight_road_network(1))
     v1 = Vehicle(road=r, position=[0, 0], velocity=20)
     v2 = Vehicle(road=r, position=[10, 0], velocity=10)
     r.vehicles.extend([v1, v2])
