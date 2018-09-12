@@ -30,10 +30,12 @@ class ControlledVehicle(Vehicle):
                  heading=0,
                  velocity=0,
                  target_lane_index=None,
-                 target_velocity=None):
+                 target_velocity=None,
+                 route=None):
         super(ControlledVehicle, self).__init__(road, position, heading, velocity)
         self.target_lane_index = target_lane_index or self.lane_index
         self.target_velocity = target_velocity or self.velocity
+        self.route = route
 
     @classmethod
     def create_from(cls, vehicle):
@@ -45,7 +47,8 @@ class ControlledVehicle(Vehicle):
         :return: a new vehicle at the same dynamical state
         """
         v = cls(vehicle.road, vehicle.position, heading=vehicle.heading, velocity=vehicle.velocity,
-                target_lane_index=vehicle.target_lane_index, target_velocity=vehicle.target_velocity)
+                target_lane_index=vehicle.target_lane_index, target_velocity=vehicle.target_velocity,
+                route=vehicle.route)
         return v
 
     def act(self, action=None):
@@ -81,8 +84,11 @@ class ControlledVehicle(Vehicle):
         """
            At the end of a lane, automatically switch to a next one.
         """
+        # TODO: use np_random argument
         if self.road.network.get_lane(self.target_lane_index).after_end(self.position):
-            self.target_lane_index = self.road.network.next_lane(self.target_lane_index, position=self.position)
+            self.target_lane_index = self.road.network.next_lane(self.target_lane_index,
+                                                                 route=self.route,
+                                                                 position=self.position)
 
     def steering_control(self, target_lane_index):
         """
@@ -140,8 +146,9 @@ class MDPVehicle(ControlledVehicle):
                  heading=0,
                  velocity=0,
                  target_lane_index=None,
-                 target_velocity=None):
-        super(MDPVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity)
+                 target_velocity=None,
+                 route=None):
+        super(MDPVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity, route)
         self.velocity_index = self.speed_to_index(self.target_velocity)
         self.target_velocity = self.index_to_speed(self.velocity_index)
 

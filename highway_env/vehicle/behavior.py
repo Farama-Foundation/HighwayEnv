@@ -32,11 +32,11 @@ class IDMVehicle(ControlledVehicle):
                  velocity=0,
                  target_lane_index=None,
                  target_velocity=None,
+                 route=None,
                  enable_lane_change=True,
                  timer=None):
-        super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity)
+        super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity, route)
         self.enable_lane_change = enable_lane_change
-        self.route = None
         self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
 
     @classmethod
@@ -50,7 +50,7 @@ class IDMVehicle(ControlledVehicle):
         """
         v = cls(vehicle.road, vehicle.position, heading=vehicle.heading, velocity=vehicle.velocity,
                 target_lane_index=vehicle.target_lane_index, target_velocity=vehicle.target_velocity,
-                timer=getattr(vehicle, 'timer', None))
+                route=vehicle.route, timer=getattr(vehicle, 'timer', None))
         return v
 
     def act(self, action=None):
@@ -218,25 +218,25 @@ class IDMVehicle(ControlledVehicle):
         if new_following_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
             return False
 
-        # Is there an acceleration advantage for me and/or my followers to change lane?
-        old_preceding, old_following = self.road.neighbour_vehicles(self)
-        self_a = self.acceleration(ego_vehicle=self, front_vehicle=old_preceding)
-        self_pred_a = self.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
-        old_following_a = self.acceleration(ego_vehicle=old_following, front_vehicle=self)
-        old_following_pred_a = self.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
-        jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
-                                                         + old_following_pred_a - old_following_a)
-        if jerk < self.LANE_CHANGE_MIN_ACC_GAIN and self.route is None:
-                return False
-
-        # Do I have a planned route for a lane which is safe for me to access?
-        if self.route:
+        # Do I have a planned route for a specific lane which is safe for me to access?
+        if self.route and self.route[0][2]:
             # Wrong direction
-            route_lane = self.route[0]
-            if np.sign(lane_index[2] - self.target_lane_index[2]) != np.sign(route_lane[2] - self.target_lane_index[2]):
+            if np.sign(lane_index[2] - self.target_lane_index[2]) != np.sign(self.route[0][2] - self.target_lane_index[2]):
                 return False
             # Unsafe braking required
             elif self_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
+                return False
+
+        # Is there an acceleration advantage for me and/or my followers to change lane?
+        else:
+            old_preceding, old_following = self.road.neighbour_vehicles(self)
+            self_a = self.acceleration(ego_vehicle=self, front_vehicle=old_preceding)
+            self_pred_a = self.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
+            old_following_a = self.acceleration(ego_vehicle=old_following, front_vehicle=self)
+            old_following_pred_a = self.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
+            jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
+                                                             + old_following_pred_a - old_following_a)
+            if jerk < self.LANE_CHANGE_MIN_ACC_GAIN:
                 return False
 
         # All clear, let's go!
@@ -277,6 +277,7 @@ class LinearVehicle(IDMVehicle):
                  velocity=0,
                  target_lane_index=None,
                  target_velocity=None,
+                 route=None,
                  enable_lane_change=True,
                  timer=None):
         super(LinearVehicle, self).__init__(road,
@@ -285,6 +286,7 @@ class LinearVehicle(IDMVehicle):
                                             velocity,
                                             target_lane_index,
                                             target_velocity,
+                                            route,
                                             enable_lane_change,
                                             timer)
 
