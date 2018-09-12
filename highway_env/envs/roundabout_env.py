@@ -33,14 +33,14 @@ class RoundaboutEnv(AbstractEnv):
 
     def _reward(self, action):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
-                 + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
+                 + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / max(self.vehicle.SPEED_COUNT - 1, 1)
         return reward
 
     def _is_terminal(self):
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
-        return self.vehicle.crashed
+        return self.vehicle.crashed or self.vehicle.lane_index == ("nxs", "nxr", 0)
 
     def reset(self):
         self.make_road()
@@ -50,8 +50,8 @@ class RoundaboutEnv(AbstractEnv):
     def make_road(self):
         # Circle lanes: (s)outh/(e)ast/(n)orth/(w)est (e)ntry/e(x)it.
         center = [0, 0]  # [m]
-        radius = 40  # [m]
-        alpha = 30  # [deg]
+        radius = 30  # [m]
+        alpha = 20  # [deg]
 
         net = RoadNetwork()
         radii = [radius, radius+4]
@@ -69,7 +69,7 @@ class RoundaboutEnv(AbstractEnv):
 
         # Access lanes: (r)oad/(s)ine
         access = 200  # [m]
-        dev = 160  # [m]
+        dev = 120  # [m]
         a = 5  # [m]
         delta_st = 0.21*dev  # [m]
 
@@ -85,6 +85,11 @@ class RoundaboutEnv(AbstractEnv):
         net.add_lane("ex", "exs", SineLane([-dev / 2 + delta_en, 2+a], [dev / 2, 2+a], a, w, -np.pi / 2 + w * delta_en, line_types=[c, c]))
         net.add_lane("exs", "exr", StraightLane([dev / 2, 2], [access, 2], line_types=[n, c]))
 
+        net.add_lane("ner", "nes", StraightLane([-2, -access], [-2, -dev / 2], line_types=[s, c]))
+        net.add_lane("nes", "ne", SineLane([-2 - a, -dev / 2], [-2 - a, -dev / 2 + delta_st], a, w, -np.pi / 2, line_types=[c, c]))
+        net.add_lane("nx", "nxs", SineLane([2 + a, dev / 2 - delta_en], [2 + a, -dev / 2], a, w, -np.pi / 2 + w * delta_en, line_types=[c, c]))
+        net.add_lane("nxs", "nxr", StraightLane([2, -dev / 2], [2, -access], line_types=[n, c]))
+
         road = Road(network=net)
         self.road = road
 
@@ -96,20 +101,28 @@ class RoundaboutEnv(AbstractEnv):
         road = self.road
         ego_lane = road.network.get_lane(("ser", "ses", 0))
         ego_vehicle = MDPVehicle(road,
-                                 ego_lane.position(90, 0),
+                                 ego_lane.position(130, 0),
                                  velocity=10,
-                                 heading=ego_lane.heading_at(90))
+                                 heading=ego_lane.heading_at(130),
+                                 route=[("ser", "ses", None),
+                                        ("ses", "se", None),
+                                        ("se", "ex", None),
+                                        ("ex", "ee", None),
+                                        ("ee", "nx", 1),
+                                        ("nx", "nxs", None),
+                                        ])
         MDPVehicle.SPEED_MIN = 5
-        MDPVehicle.SPEED_MAX = 20
+        MDPVehicle.SPEED_MAX = 15
+        MDPVehicle.SPEED_COUNT = 3
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        for i in range(3):
-            road.vehicles.append(other_vehicles_type(road,
-                                                     road.network.get_lane(("we", "sx", 0)).position(20*i, 0),
-                                                     velocity=10,
-                                                     heading=road.network.get_lane(("we", "sx", 0)).heading_at(20*i)))
+        road.vehicles.append(other_vehicles_type(road,
+                                                 road.network.get_lane(("we", "sx", 0)).position(10, 0),
+                                                 velocity=11,
+                                                 heading=road.network.get_lane(("we", "sx", 0)).heading_at(10),
+                                                 route=[("sx", "se", None)]))
 
 
 def rad(deg):
