@@ -85,7 +85,7 @@ class AbstractLane(object):
     def after_end(self, position, longitudinal=None, lateral=None):
         if not longitudinal:
             longitudinal, _ = self.local_coordinates(position)
-        return longitudinal > self.length - Vehicle.LENGTH
+        return longitudinal > self.length - Vehicle.LENGTH / 2
 
     def distance(self, position):
         """
