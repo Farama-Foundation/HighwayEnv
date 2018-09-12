@@ -28,7 +28,7 @@ def test_network():
     dt = 1/15
     lane_index = v.target_lane_index
     lane_changes = 0
-    for _ in range(15*5*10):
+    for _ in range(int(20/dt)):
         road.act()
         road.step(dt)
         if lane_index != v.target_lane_index:
