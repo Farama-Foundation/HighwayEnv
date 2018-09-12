@@ -81,8 +81,6 @@ def compute_ttc_grid(env, time_quantization, horizon, considered_lanes="all"):
     """
     road_lanes = env.road.network.all_side_lanes(env.vehicle.lane_index)
     grid = np.zeros((env.vehicle.SPEED_COUNT, len(road_lanes), int(horizon / time_quantization)))
-    lane = env.vehicle.lane
-    psi_lane = lane.heading_at(lane.local_coordinates(env.vehicle.position)[0])
     for velocity_index in range(grid.shape[0]):
         ego_velocity = env.vehicle.index_to_speed(velocity_index)
         for other in env.road.vehicles:
@@ -92,24 +90,24 @@ def compute_ttc_grid(env, time_quantization, horizon, considered_lanes="all"):
             collision_points = [(0, 1), (-margin, 0.5), (margin, 0.5)]
             for m, cost in collision_points:
                 distance = env.vehicle.lane_distance_to(other) + m
-                other_projected_velocity = other.velocity * np.cos(other.heading - psi_lane)
+                other_projected_velocity = other.velocity
                 time_to_collision = distance / utils.not_zero(ego_velocity - other_projected_velocity)
                 if time_to_collision < 0:
                     continue
-                # Quantize time-to-collision to both upper and lower values
-                lanes = []
-                if env.road.network.is_connected_road(env.vehicle.lane_index, other.lane_index, depth=1):
+                if env.road.network.is_connected_road(env.vehicle.lane_index, other.lane_index,
+                                                      route=env.vehicle.route, depth=3):
                     # Same road, or connected road with same number of lanes
                     if len(env.road.network.all_side_lanes(other.lane_index)) == len(env.road.network.all_side_lanes(env.vehicle.lane_index)):
-                        lanes = [other.lane_index[2]]
+                        lane = [other.lane_index[2]]
                     # Different road of different number of lanes: uncertainty on future lane, use all
                     else:
-                        lanes = range(grid.shape[1])
-                for lane in lanes:
+                        lane = range(grid.shape[1])
+                    # Quantize time-to-collision to both upper and lower values
                     for time in [int(time_to_collision / time_quantization),
                                  int(np.ceil(time_to_collision / time_quantization))]:
-                        if 0 <= lane < grid.shape[1] and 0 <= time < grid.shape[2]:
-                            grid[velocity_index, lane, time] = max(grid[velocity_index, lane, time], cost)
+                        if 0 <= time < grid.shape[2]:
+                            # TODO: check lane overflow (e.g. vehicle with higher lane id than current road capacity)
+                            grid[velocity_index, lane, time] = np.maximum(grid[velocity_index, lane, time], cost)
     return grid
 
 
