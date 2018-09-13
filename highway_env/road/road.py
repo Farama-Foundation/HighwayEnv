@@ -76,38 +76,29 @@ class RoadNetwork(object):
         next_to = None
         # Pick next road according to planned route
         if route:
-            while route[0][:2] == current_index[:2]:  # Next road in route is current road, skip it
+            if route[0][:2] == current_index[:2]:  # We just finished the first step of the route, drop it.
                 route.pop(0)
             if route and route[0][0] == _to:  # Next road in route is starting at the end of current road.
-                _, next_to, next_id = route.pop(0)
-                # If lane id is not specified
-                if not next_id:
-                    if _id < len(self.graph[_to][next_to]):
-                        # keep current lane id if the next road has enough lanes
-                        next_id = _id
-                    else:
-                        # pick closest lane
-                        lanes = range(len(self.graph[_to][next_to]))
-                        next_id = min(lanes,
-                                      key=lambda l: self.get_lane((_to, next_to, l)).distance(position))
-
-            else:
+                _, next_to, route_id = route[0]
+            elif route:
                 logger.warn("Route {} does not start after current road {}.".format(route[0], current_index))
         # Randomly pick next road
         if not next_to:
             try:
                 next_to = list(self.graph[_to].keys())[np_random.randint(len(self.graph[_to]))]
-                # If next road has same number of lane, stay on the same lane
-                if len(self.graph[_from][_to]) == len(self.graph[_to][next_to]):
-                    next_id = _id
-                # Else, pick closest lane
-                else:
-                    lanes = range(len(self.graph[_to][next_to]))
-                    next_id = min(lanes,
-                                  key=lambda l: self.get_lane((_to, next_to, l)).distance(position))
             except KeyError:
                 logger.warn("End of lane reached.")
                 return current_index
+
+        # If next road has same number of lane, stay on the same lane
+        if len(self.graph[_from][_to]) == len(self.graph[_to][next_to]):
+            next_id = _id
+        # Else, pick closest lane
+        else:
+            lanes = range(len(self.graph[_to][next_to]))
+            next_id = min(lanes,
+                          key=lambda l: self.get_lane((_to, next_to, l)).distance(position))
+
         return _to, next_to, next_id
 
     def all_side_lanes(self, lane_index):

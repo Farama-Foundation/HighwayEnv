@@ -219,6 +219,8 @@ class IDMVehicle(ControlledVehicle):
             return False
 
         # Do I have a planned route for a specific lane which is safe for me to access?
+        old_preceding, old_following = self.road.neighbour_vehicles(self)
+        self_pred_a = self.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
         if self.route and self.route[0][2]:
             # Wrong direction
             if np.sign(lane_index[2] - self.target_lane_index[2]) != np.sign(self.route[0][2] - self.target_lane_index[2]):
@@ -229,9 +231,7 @@ class IDMVehicle(ControlledVehicle):
 
         # Is there an acceleration advantage for me and/or my followers to change lane?
         else:
-            old_preceding, old_following = self.road.neighbour_vehicles(self)
             self_a = self.acceleration(ego_vehicle=self, front_vehicle=old_preceding)
-            self_pred_a = self.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
             old_following_a = self.acceleration(ego_vehicle=old_following, front_vehicle=self)
             old_following_pred_a = self.acceleration(ego_vehicle=old_following, front_vehicle=old_preceding)
             jerk = self_pred_a - self_a + self.POLITENESS * (new_following_pred_a - new_following_a
