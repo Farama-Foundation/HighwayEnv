@@ -30,8 +30,6 @@ class RoadNetwork(object):
         """
         if _from not in self.graph:
             self.graph[_from] = {}
-        if _to not in self.graph:
-            self.graph[_to] = {}
         if _to not in self.graph[_from]:
             self.graph[_from][_to] = []
         self.graph[_from][_to].append(lane)
