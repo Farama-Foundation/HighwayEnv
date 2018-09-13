@@ -98,9 +98,10 @@ class RoundaboutEnv(AbstractEnv):
             Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
         :return: the ego-vehicle
         """
-        road = self.road
-        ego_lane = road.network.get_lane(("ser", "ses", 0))
-        ego_vehicle = MDPVehicle(road,
+
+        # Ego-vehicle
+        ego_lane = self.road.network.get_lane(("ser", "ses", 0))
+        ego_vehicle = MDPVehicle(self.road,
                                  ego_lane.position(130, 0),
                                  velocity=10,
                                  heading=ego_lane.heading_at(130),
@@ -114,15 +115,21 @@ class RoundaboutEnv(AbstractEnv):
         MDPVehicle.SPEED_MIN = 5
         MDPVehicle.SPEED_MAX = 15
         MDPVehicle.SPEED_COUNT = 3
-        road.vehicles.append(ego_vehicle)
+        self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 
+        # Other vehicles
+        east_route = [("sx", "se", None), ("se", "ex", 1), ("ex", "exs", None)]
+        north_route = [("sx", "se", None), ("se", "ex", None), ("ex", "ee", None), ("ee", "nx", 1), ("nx", "nxs", None)]
+        south_route = [("sx", "sxs", None)]
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        road.vehicles.append(other_vehicles_type(road,
-                                                 road.network.get_lane(("we", "sx", 0)).position(10, 0),
-                                                 velocity=11,
-                                                 heading=road.network.get_lane(("we", "sx", 0)).heading_at(10),
-                                                 route=[("sx", "se", None)]))
+        self.road.vehicles.append(
+            other_vehicles_type(
+                self.road,
+                self.road.network.get_lane(("we", "sx", 0)).position(10, 0),
+                velocity=11,
+                heading=self.road.network.get_lane(("we", "sx", 0)).heading_at(10),
+                route=north_route))
 
 
 def rad(deg):
