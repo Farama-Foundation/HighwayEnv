@@ -30,6 +30,8 @@ class RoadNetwork(object):
         """
         if _from not in self.graph:
             self.graph[_from] = {}
+        if _to not in self.graph:
+            self.graph[_to] = {}
         if _to not in self.graph[_from]:
             self.graph[_from][_to] = []
         self.graph[_from][_to].append(lane)
@@ -100,6 +102,36 @@ class RoadNetwork(object):
                           key=lambda l: self.get_lane((_to, next_to, l)).distance(position))
 
         return _to, next_to, next_id
+
+    def bfs_paths(self, start, goal):
+        """
+            Breadth-first search of all routes from start to goal.
+
+        :param start: starting node
+        :param goal: goal node
+        :return: list of paths from start to goal.
+        """
+        queue = [(start, [start])]
+        while queue:
+            (node, path) = queue.pop(0)
+            for _next in set(self.graph[node].keys()) - set(path):
+                if _next == goal:
+                    yield path + [_next]
+                else:
+                    queue.append((_next, path + [_next]))
+
+    def shortest_path(self, start, goal):
+        """
+            Breadth-first search of shortest path from start to goal.
+
+        :param start: starting node
+        :param goal: goal node
+        :return: shortest path from start to goal.
+        """
+        try:
+            return next(self.bfs_paths(start, goal))
+        except StopIteration:
+            return None
 
     def all_side_lanes(self, lane_index):
         """
