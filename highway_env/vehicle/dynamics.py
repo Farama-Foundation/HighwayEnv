@@ -134,7 +134,7 @@ class Vehicle(Loggable):
             return
 
         # Accurate elliptic check
-        if utils.point_in_ellipse(other.position, self.position, self.heading, self.LENGTH/2, self.WIDTH/2):
+        if utils.point_in_ellipse(other.position, self.position, self.heading, self.LENGTH, self.WIDTH):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
 
