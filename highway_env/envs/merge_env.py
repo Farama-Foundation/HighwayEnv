@@ -59,7 +59,10 @@ class MergeEnv(AbstractEnv):
             if vehicle.lane_index == ("b", "c", 2) and isinstance(vehicle, ControlledVehicle):
                 reward += self.MERGING_VELOCITY_REWARD * \
                           (vehicle.target_velocity - vehicle.velocity) / vehicle.target_velocity
-        return reward + action_reward[action]
+
+        return utils.remap(action_reward[action] + reward,
+                           [self.COLLISION_REWARD, self.HIGH_VELOCITY_REWARD + self.RIGHT_LANE_REWARD],
+                           [0, 1])
 
     def _is_terminal(self):
         """

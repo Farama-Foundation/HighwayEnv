@@ -34,7 +34,7 @@ class RoundaboutEnv(AbstractEnv):
     def _reward(self, action):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
                  + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / max(self.vehicle.SPEED_COUNT - 1, 1)
-        return reward
+        return utils.remap(reward, [self.COLLISION_REWARD, self.HIGH_VELOCITY_REWARD], [0, 1])
 
     def _is_terminal(self):
         """
