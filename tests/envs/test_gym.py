@@ -22,8 +22,7 @@ def test_merge_step():
     env = gym.make('highway-merge-v0')
 
     env.reset()
-    for i in range(3):
-        action = env.action_space.sample()
+    for action in [1, 1, 1]:
         obs, reward, done, info = env.step(action)
     env.close()
 
