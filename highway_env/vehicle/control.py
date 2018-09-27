@@ -140,11 +140,16 @@ class ControlledVehicle(Vehicle):
         """
         return self.KP_A * (target_velocity - self.velocity)
 
-    def cycle_next_intersection(self):
+    def set_route_at_intersection(self, _to):
+        """
+            Set the road to be followed at the next intersection.
+            Erase current planned route.
+        :param _to: index of the road to follow at next intersection, in the road network
+        """
         if self.route and len(self.route) > 1:
             next_destinations = self.road.network.graph[self.route[1][0]]
             next_destinations_from = list(next_destinations.keys())
-            next_index = (next_destinations_from.index(self.route[1][1]) + 1) % len(next_destinations_from)
+            next_index = _to % len(next_destinations_from)
             self.route = [self.route[0], (self.route[1][0], next_destinations_from[next_index], self.route[1][2])]
 
 

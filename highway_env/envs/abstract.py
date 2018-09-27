@@ -46,7 +46,7 @@ class AbstractEnv(gym.Env):
     """
         The frequency at which the agent can take actions [Hz]
     """
-    PERCEPTION_DISTANCE = 300
+    PERCEPTION_DISTANCE = 5.0 * MDPVehicle.SPEED_MAX
     """
         The maximum distance of any vehicle present in the observation [m]
     """
@@ -296,11 +296,11 @@ class AbstractEnv(gym.Env):
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
 
-    def cycle_next_intersection(self):
+    def set_route_at_intersection(self, _to):
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
             if isinstance(v, IDMVehicle):
-                v.cycle_next_intersection()
+                v.set_route_at_intersection(_to)
         return env_copy
 
     def to_finite_mdp(self):
