@@ -46,7 +46,7 @@ class AbstractEnv(gym.Env):
     """
         The frequency at which the agent can take actions [Hz]
     """
-    PERCEPTION_DISTANCE = 150
+    PERCEPTION_DISTANCE = 300
     """
         The maximum distance of any vehicle present in the observation [m]
     """
