@@ -5,7 +5,6 @@ from gym import logger
 from highway_env import utils
 from highway_env.envs.abstract import AbstractEnv
 from highway_env.road.road import Road
-from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import MDPVehicle
 
 
@@ -32,21 +31,24 @@ class HighwayEnv(AbstractEnv):
             "initial_spacing": 2,
             "vehicles_count": 5,
             "duration": 20,
-            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"
+            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+            "centering_position": 0.3
         },
         "MEDIUM": {
             "lanes_count": 3,
             "initial_spacing": 2,
             "vehicles_count": 10,
             "duration": 30,
-            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"
+            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+            "centering_position": 0.3
         },
         "HARD": {
             "lanes_count": 4,
             "initial_spacing": 3,
-            "vehicles_count": 15,
+            "vehicles_count": 50,
             "duration": 40,
-            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"
+            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+            "centering_position": 0.3
         },
     }
 

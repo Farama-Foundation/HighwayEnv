@@ -147,7 +147,7 @@ class WorldSurface(pygame.Surface):
     YELLOW = (200, 200, 0)
     WHITE = (255, 255, 255)
     INITIAL_SCALING = 5.5
-    INITIAL_CENTERING = 0.3
+    INITIAL_CENTERING = 0.5
     SCALING_FACTOR = 1.3
     MOVING_FACTOR = 0.1
 
