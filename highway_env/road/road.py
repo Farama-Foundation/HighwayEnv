@@ -87,7 +87,7 @@ class RoadNetwork(object):
             try:
                 next_to = list(self.graph[_to].keys())[np_random.randint(len(self.graph[_to]))]
             except KeyError:
-                logger.warn("End of lane reached.")
+                # logger.warn("End of lane reached.")
                 return current_index
 
         # If next road has same number of lane, stay on the same lane
