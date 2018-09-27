@@ -296,6 +296,13 @@ class AbstractEnv(gym.Env):
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
 
+    def cycle_next_intersection(self):
+        env_copy = copy.deepcopy(self)
+        for v in env_copy.road.vehicles:
+            if isinstance(v, IDMVehicle):
+                v.cycle_next_intersection()
+        return env_copy
+
     def to_finite_mdp(self):
         return finite_mdp(self, time_quantization=1/self.POLICY_FREQUENCY)
 
