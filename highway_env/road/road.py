@@ -115,7 +115,7 @@ class RoadNetwork(object):
             for _next in set(self.graph[node].keys()) - set(path):
                 if _next == goal:
                     yield path + [_next]
-                else:
+                elif _next in self.graph:
                     queue.append((_next, path + [_next]))
 
     def shortest_path(self, start, goal):
