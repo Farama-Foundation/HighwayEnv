@@ -133,8 +133,9 @@ class Vehicle(Loggable):
         if np.linalg.norm(other.position - self.position) > self.LENGTH:
             return
 
-        # Accurate elliptic check
-        if utils.point_in_ellipse(other.position, self.position, self.heading, self.LENGTH, self.WIDTH):
+        # Accurate rectangular check
+        if utils.rotated_rectangles_intersect((self.position, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
+                                              (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading)):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
 
