@@ -16,6 +16,8 @@ class RoundaboutEnv(AbstractEnv):
     RIGHT_LANE_REWARD = 0
     LANE_CHANGE_REWARD = 0
 
+    DURATION = 11
+
     DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle"}
 
     def __init__(self):
@@ -23,6 +25,7 @@ class RoundaboutEnv(AbstractEnv):
         self.config = self.DEFAULT_CONFIG.copy()
         self.make_road()
         self.make_vehicles()
+        self.steps = 0
         EnvViewer.SCREEN_HEIGHT = 600
 
     def configure(self, config):
@@ -40,12 +43,17 @@ class RoundaboutEnv(AbstractEnv):
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
-        return self.vehicle.crashed or self.vehicle.lane_index == ("nxs", "nxr", 0)
+        return self.vehicle.crashed or self.steps > self.DURATION
 
     def reset(self):
         self.make_road()
         self.make_vehicles()
+        self.steps = 0
         return self._observation()
+
+    def step(self, action):
+        self.steps += 1
+        return super(RoundaboutEnv, self).step(action)
 
     def make_road(self):
         # Circle lanes: (s)outh/(e)ast/(n)orth/(w)est (e)ntry/e(x)it.
@@ -103,7 +111,7 @@ class RoundaboutEnv(AbstractEnv):
         ego_lane = self.road.network.get_lane(("ser", "ses", 0))
         ego_vehicle = MDPVehicle(self.road,
                                  ego_lane.position(130, 0),
-                                 velocity=10,
+                                 velocity=15,
                                  heading=ego_lane.heading_at(130)).plan_route_to("nxs")
         MDPVehicle.SPEED_MIN = 5
         MDPVehicle.SPEED_MAX = 15
@@ -116,9 +124,16 @@ class RoundaboutEnv(AbstractEnv):
         self.road.vehicles.append(
             other_vehicles_type(
                 self.road,
-                self.road.network.get_lane(("we", "sx", 0)).position(10, 0),
+                self.road.network.get_lane(("we", "sx", 0)).position(0, 0),
                 velocity=16,
-                heading=self.road.network.get_lane(("we", "sx", 0)).heading_at(10)).plan_route_to("exs"))
+                heading=self.road.network.get_lane(("we", "sx", 0)).heading_at(0)).plan_route_to("exs"))
+        for i in list(range(2, 3)) + list(range(-1, 0)):
+            self.road.vehicles.append(
+                other_vehicles_type(
+                    self.road,
+                    self.road.network.get_lane(("we", "sx", 0)).position(20*i, 0),
+                    velocity=16,
+                    heading=self.road.network.get_lane(("we", "sx", 0)).heading_at(20*i)))
 
 
 def rad(deg):
