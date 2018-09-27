@@ -140,6 +140,13 @@ class ControlledVehicle(Vehicle):
         """
         return self.KP_A * (target_velocity - self.velocity)
 
+    def cycle_next_intersection(self):
+        if self.route and len(self.route) > 1:
+            next_destinations = self.road.network.graph[self.route[1][0]]
+            next_destinations_from = list(next_destinations.keys())
+            next_index = (next_destinations_from.index(self.route[1][1]) + 1) % len(next_destinations_from)
+            self.route = [self.route[0], (self.route[1][0], next_destinations_from[next_index], self.route[1][2])]
+
 
 class MDPVehicle(ControlledVehicle):
     """
