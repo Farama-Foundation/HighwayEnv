@@ -34,7 +34,7 @@ def test_velocity_control():
     road = Road(RoadNetwork.straight_road_network(1))
     v = ControlledVehicle(road=road, position=road.network.get_lane((0, 1, 0)).position(0, 0), velocity=20, heading=0)
     v.act('FASTER')
-    for _ in range(1 * FPS):
+    for _ in range(int(3 * v.TAU_A * FPS)):
         v.act()
         v.step(dt=1/FPS)
     assert v.velocity == pytest.approx(20+v.DELTA_VELOCITY, abs=0.5)
