@@ -195,7 +195,7 @@ class RoadNetwork(object):
         return False
 
     @staticmethod
-    def straight_road_network(lanes=4, length=1000):
+    def straight_road_network(lanes=4, length=10000):
         net = RoadNetwork()
         for lane in range(lanes):
             origin = [0, lane * StraightLane.DEFAULT_WIDTH]
