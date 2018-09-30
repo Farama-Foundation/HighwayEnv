@@ -14,13 +14,13 @@ class ControlledVehicle(Vehicle):
         - The lateral controller is a heading controller cascaded with a lateral position controller.
     """
 
-    TAU_A = 0.3  # [s]
-    TAU_DS = 0.3  # [s]
-    PURSUIT_TAU = TAU_DS  # [s]
+    TAU_A = 0.6  # [s]
+    TAU_DS = 0.2  # [s]
+    PURSUIT_TAU = 2*TAU_DS  # [s]
     KP_A = 1 / TAU_A
     KP_HEADING = 1 / TAU_DS
-    KP_LATERAL = 1 / 1.0  # [1/s]
-    MAX_STEERING_ANGLE = np.pi / 4  # [rad]
+    KP_LATERAL = 1 / 0.5  # [1/s]
+    MAX_STEERING_ANGLE = np.pi / 3  # [rad]
 
     DELTA_VELOCITY = 5  # [m/s]
 
