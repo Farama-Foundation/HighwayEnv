@@ -4,7 +4,7 @@ from gym import logger
 
 from highway_env import utils
 from highway_env.envs.abstract import AbstractEnv
-from highway_env.road.road import Road
+from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.control import MDPVehicle
 
 
@@ -59,7 +59,8 @@ class HighwayEnv(AbstractEnv):
         self.reset()
 
     def reset(self):
-        self.road, self.vehicle = self._create_road()
+        self._create_road()
+        self._create_vehicles()
         self.steps = 0
         return self._observation()
 
@@ -79,13 +80,22 @@ class HighwayEnv(AbstractEnv):
         self.config.update(config)
 
     def _create_road(self):
-        road = Road.create_random_road(lanes_count=self.config["lanes_count"],
-                                       vehicles_count=self.config["vehicles_count"],
-                                       vehicles_type=utils.class_from_path(self.config["other_vehicles_type"]),
-                                       np_random=self.np_random)
-        vehicle = MDPVehicle.create_random(road, 25, spacing=self.config["initial_spacing"], prepend=True, np_random=self.np_random)
-        road.vehicles.append(vehicle)
-        return road, vehicle
+        """
+            Create a road composed of straight adjacent lanes.
+        """
+        self.road = Road(network=RoadNetwork.straight_road_network(self.config["lanes_count"]),
+                         np_random=self.np_random)
+
+    def _create_vehicles(self):
+        """
+            Create some new random vehicles of a given type, and add them on the road.
+        """
+        self.vehicle = MDPVehicle.create_random(self.road, 25, spacing=self.config["initial_spacing"])
+        self.road.vehicles.append(self.vehicle)
+
+        vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        for _ in range(self.config["vehicles_count"]):
+            self.road.vehicles.append(vehicles_type.create_random(self.road))
 
     def _reward(self, action):
         """
