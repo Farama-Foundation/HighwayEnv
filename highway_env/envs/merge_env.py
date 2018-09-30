@@ -30,8 +30,7 @@ class MergeEnv(AbstractEnv):
     def __init__(self):
         super(MergeEnv, self).__init__()
         self.config = self.DEFAULT_CONFIG.copy()
-        self.make_road()
-        self.make_vehicles()
+        self.reset()
 
     def configure(self, config):
         self.config.update(config)
@@ -72,11 +71,11 @@ class MergeEnv(AbstractEnv):
         return self.vehicle.crashed or self.vehicle.position[0] > 370
 
     def reset(self):
-        self.make_road()
-        self.make_vehicles()
+        self._make_road()
+        self._make_vehicles()
         return self._observation()
 
-    def make_road(self):
+    def _make_road(self):
         """
             Make a road composed of a straight highway and a merging lane.
         :return: the road
@@ -104,11 +103,11 @@ class MergeEnv(AbstractEnv):
         net.add_lane("j", "k", ljk)
         net.add_lane("k", "b", lkb)
         net.add_lane("b", "c", lbc)
-        road = Road(network=net)
+        road = Road(network=net, np_random=self.np_random)
         road.vehicles.append(Obstacle(road, lbc.position(ends[2], 0)))
         self.road = road
 
-    def make_vehicles(self):
+    def _make_vehicles(self):
         """
             Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
         :return: the ego-vehicle

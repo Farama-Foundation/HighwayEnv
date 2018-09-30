@@ -94,11 +94,11 @@ class ControlledVehicle(Vehicle):
         """
            At the end of a lane, automatically switch to a next one.
         """
-        # TODO: use np_random argument
         if self.road.network.get_lane(self.target_lane_index).after_end(self.position):
             self.target_lane_index = self.road.network.next_lane(self.target_lane_index,
                                                                  route=self.route,
-                                                                 position=self.position)
+                                                                 position=self.position,
+                                                                 np_random=self.road.np_random)
 
     def steering_control(self, target_lane_index):
         """

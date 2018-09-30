@@ -211,45 +211,17 @@ class Road(Loggable):
         A road is a set of lanes, and a set of vehicles driving on these lanes
     """
 
-    def __init__(self, network=None, vehicles=None):
+    def __init__(self, network=None, vehicles=None, np_random=None):
         """
             New road.
 
         :param network: the road network describing the lanes
         :param vehicles: the vehicles driving on the road
+        :param np.random.RandomState np_random: a random number generator for vehicle behaviour
         """
         self.network = network or []
         self.vehicles = vehicles or []
-
-    @classmethod
-    def create_random_road(cls,
-                           lanes_count,
-                           vehicles_count=50,
-                           vehicles_type=ControlledVehicle,
-                           np_random=None):
-        """
-            Create a road composed of straight adjacent lanes with randomly located vehicles on it.
-
-        :param lanes_count: number of lanes
-        :param vehicles_count: number of vehicles on the road
-        :param vehicles_type: type of vehicles on the road
-        :param np.random.RandomState np_random: a random number generator
-        :return: the created road
-        """
-        r = Road(network=RoadNetwork.straight_road_network(lanes_count))
-        r.add_random_vehicles(vehicles_count, vehicles_type, np_random)
-        return r
-
-    def add_random_vehicles(self, vehicles_count=50, vehicles_type=ControlledVehicle, np_random=None):
-        """
-            Create some new random vehicles of a given type, and add them on the road.
-
-        :param vehicles_count: number of vehicles to create
-        :param vehicles_type: type of vehicles to create
-        :param np.random.RandomState np_random: a random number generator
-        """
-        for _ in range(vehicles_count):
-            self.vehicles.append(vehicles_type.create_random(self, np_random=np_random))
+        self.np_random = np_random if np_random else np.random.RandomState()
 
     def close_vehicles_to(self, vehicle, distances):
         return [v for v in self.vehicles if (distances[0] < vehicle.lane_distance_to(v) < distances[1]
