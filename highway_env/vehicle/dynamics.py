@@ -35,7 +35,21 @@ class Vehicle(Loggable):
         self.log = []
 
     @classmethod
-    def create_random(cls, road, velocity=None, spacing=1, np_random=None, prepend=False):
+    def make_on_lane(cls, road, lane_index, longitudinal, velocity=0):
+        """
+            Create a vehicle on a given lane at a longitudinal position.
+
+        :param road: the road where the vehicle is driving
+        :param lane_index: index of the lane where the vehicle is located
+        :param longitudinal: longitudinal position along the lane
+        :param velocity: initial velocity in [m/s]
+        :return: A vehicle with at the specified position
+        """
+        lane = road.network.get_lane(lane_index)
+        return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), velocity)
+
+    @classmethod
+    def create_random(cls, road, velocity=None, spacing=1):
         """
             Create a random vehicle on the road.
 
