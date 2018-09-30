@@ -34,5 +34,4 @@ def test_network():
         if lane_index != v.target_lane_index:
             lane_index = v.target_lane_index
             lane_changes += 1
-    assert lane_changes in [3, 4]
-
+    assert lane_changes >= 3
