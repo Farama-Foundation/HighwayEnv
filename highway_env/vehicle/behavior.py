@@ -340,7 +340,7 @@ class LinearVehicle(IDMVehicle):
         """
         lane = self.road.network.get_lane(target_lane_index)
         lane_coords = lane.local_coordinates(self.position)
-        lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + self.STEERING_TAU)
+        lane_next_coords = lane_coords[0] + self.velocity * (self.TAU_DS + self.PURSUIT_TAU)
         lane_future_heading = lane.heading_at(lane_next_coords)
         features = np.array([(lane_future_heading - self.heading) * self.LENGTH / utils.not_zero(self.velocity),
                              -lane_coords[1] * self.LENGTH / (utils.not_zero(self.velocity) ** 2)])
