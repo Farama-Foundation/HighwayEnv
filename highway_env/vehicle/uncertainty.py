@@ -21,6 +21,7 @@ class IntervalVehicle(LinearVehicle):
                  velocity=0,
                  target_lane_index=None,
                  target_velocity=None,
+                 route=None,
                  enable_lane_change=True,
                  timer=None,
                  theta_a_i=None,
@@ -35,10 +36,11 @@ class IntervalVehicle(LinearVehicle):
                                               velocity,
                                               target_lane_index,
                                               target_velocity,
+                                              route,
                                               enable_lane_change,
                                               timer)
         theta_a = np.array(LinearVehicle.ACCELERATION_PARAMETERS)
-        theta_b = np.array(LinearVehicle.STEERING_GAIN)
+        theta_b = np.array(LinearVehicle.STEERING_PARAMETERS)
         self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([0.5*theta_a, 2*theta_a])
         self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([0.5*theta_b, 2*theta_b])
 
@@ -65,7 +67,7 @@ class IntervalVehicle(LinearVehicle):
         super(IntervalVehicle, self).step(dt)
         self.store_trajectories()
 
-    def observer_step(self, dt, lane_change_model="model"):
+    def observer_step(self, dt, lane_change_model="right"):
         """
             Step the interval observer dynamics
         :param dt: timestep [s]
@@ -102,8 +104,12 @@ class IntervalVehicle(LinearVehicle):
         if front_observer:
             phi_a_i[:, 1] = IntervalVehicle.interval_negative_part(
                 IntervalVehicle.intervals_diff(front_observer.velocity, v_i))
-            # TODO: Use proper lane distance instead of X difference
-            d_i = IntervalVehicle.intervals_diff(front_observer.position[:, 0], position_i[:, 0])
+            # Lane distance interval
+            lane_psi = self.lane.heading_at(self.lane.local_coordinates(self.position)[0])
+            lane_direction = [np.cos(lane_psi), np.sin(lane_psi)]
+            diff_i = IntervalVehicle.intervals_diff(front_observer.position, position_i)
+            d_i = IntervalVehicle.vector_interval_section(diff_i, lane_direction)
+
             d_safe_i = self.DISTANCE_WANTED + self.LENGTH + self.TIME_WANTED * v_i
             phi_a_i[:, 2] = IntervalVehicle.interval_negative_part(IntervalVehicle.intervals_diff(d_i, d_safe_i))
 
@@ -116,17 +122,22 @@ class IntervalVehicle(LinearVehicle):
         elif lane_change_model == "right":
             lanes = [self.target_lane_index]
             _from, _to, _id = self.target_lane_index
-            if _id < len(self.road.network.graph[_from][_to]) \
+            if _id < len(self.road.network.graph[_from][_to]) - 1 \
                     and self.road.network.get_lane((_from, _to, _id + 1)).is_reachable_from(self.position):
-                lanes += [self.target_lane_index+1]
+                lanes += [(_from, _to, _id + 1)]
         for lane_index in lanes:
-            lane_coords = self.road.get_lane(lane_index).local_coordinates(self.position)
-            lane_y = self.position[1] - lane_coords[1]
-            lane_psi = self.road.get_lane(lane_index).heading_at(lane_coords[0])
+            lane = self.road.network.get_lane(lane_index)
+            lane_psi = lane.heading_at(lane.local_coordinates(self.position)[0])
+            position_corners = [[position_i[0, 0], position_i[0, 1]],
+                                [position_i[0, 0], position_i[1, 1]],
+                                [position_i[1, 0], position_i[0, 1]],
+                                [position_i[1, 0], position_i[1, 1]]]
+            corners_lateral = [-lane.local_coordinates(c)[1] for c in position_corners]
+            lateral_i = np.array([min(corners_lateral), max(corners_lateral)])
             i_v_i = 1/np.flip(v_i, 0)
             phi_b_i_lane = np.transpose(np.array([
                 [0, 0],
-                IntervalVehicle.intervals_product((lane_y - np.flip(position_i[:, 1], 0)), i_v_i)]))
+                IntervalVehicle.intervals_product(lateral_i, i_v_i)]))
             # Union of candidate feature intervals
             if phi_b_i is None:
                 phi_b_i = phi_b_i_lane
@@ -256,6 +267,15 @@ class IntervalVehicle(LinearVehicle):
         else:
             interval_gain = -np.array([k[0], k[0]])
         return interval_gain*x  # Note: no flip of x, contrary to using intervals_product(k,interval_minus(x))
+
+    @staticmethod
+    def vector_interval_section(v_i, direction):
+        corners = [[v_i[0, 0], v_i[0, 1]],
+                   [v_i[0, 0], v_i[1, 1]],
+                   [v_i[1, 0], v_i[0, 1]],
+                   [v_i[1, 0], v_i[1, 1]]]
+        corners_dist = [np.dot(corner, direction) for corner in corners]
+        return np.array([min(corners_dist), max(corners_dist)])
 
     def check_collision(self, other):
         """
