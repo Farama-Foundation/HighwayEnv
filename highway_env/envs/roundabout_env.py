@@ -16,7 +16,7 @@ class RoundaboutEnv(AbstractEnv):
     RIGHT_LANE_REWARD = 0
     LANE_CHANGE_REWARD = -0.05
 
-    DURATION = 6
+    DURATION = 10
 
     DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
                       "incoming_vehicle_destination": None,
@@ -137,11 +137,13 @@ class RoundaboutEnv(AbstractEnv):
                                              ).plan_route_to(destination))
 
         # Other vehicles
-        for i in list(range(2, 4)) + list(range(-1, 0)):
+        destinations = ["exr", "sxr", "nxr"]
+        for i in list(range(2, 2)) + list(range(-1, 0)):
             self.road.vehicles.append(
                 other_vehicles_type.make_on_lane(self.road, ("we", "sx", 0),
                                                  longitudinal=20*i + self.np_random.randn()*position_deviation,
-                                                 velocity=16 + self.np_random.randn()*velocity_deviation))
+                                                 velocity=16 + self.np_random.randn()*velocity_deviation
+                                                 ).plan_route_to(self.np_random.choice(destinations)))
 
 
 def rad(deg):
