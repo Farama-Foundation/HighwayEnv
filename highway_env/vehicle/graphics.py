@@ -56,7 +56,7 @@ class VehicleGraphics(object):
             color = cls.RED
 
         elif isinstance(vehicle, LinearVehicle):
-            color = cls.PURPLE
+            color = cls.YELLOW
         elif isinstance(vehicle, IDMVehicle):
             color = cls.BLUE
         elif isinstance(vehicle, MDPVehicle):
