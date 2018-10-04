@@ -41,8 +41,8 @@ class IntervalVehicle(LinearVehicle):
                                               timer)
         theta_a = np.array(LinearVehicle.ACCELERATION_PARAMETERS)
         theta_b = np.array(LinearVehicle.STEERING_PARAMETERS)
-        self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([0.5*theta_a, 2*theta_a])
-        self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([0.5*theta_b, 2*theta_b])
+        self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([0.5*theta_a, 1.5*theta_a])
+        self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([0.5*theta_b, 1.5*theta_b])
 
         self.interval_observer = VehicleInterval(self)
         self.trajectory = []
@@ -56,6 +56,7 @@ class IntervalVehicle(LinearVehicle):
                 velocity=vehicle.velocity,
                 target_lane_index=getattr(vehicle, 'target_lane_index', None),
                 target_velocity=getattr(vehicle, 'target_velocity', None),
+                route=getattr(vehicle, 'route', None),
                 timer=getattr(vehicle, 'timer', None),
                 theta_a_i=getattr(vehicle, 'theta_a_i', None),
                 theta_b_i=getattr(vehicle, 'theta_b_i', None))
@@ -67,7 +68,7 @@ class IntervalVehicle(LinearVehicle):
         super(IntervalVehicle, self).step(dt)
         self.store_trajectories()
 
-    def observer_step(self, dt, lane_change_model="right"):
+    def observer_step(self, dt, lane_change_model="model"):
         """
             Step the interval observer dynamics
         :param dt: timestep [s]
@@ -127,7 +128,9 @@ class IntervalVehicle(LinearVehicle):
                 lanes += [(_from, _to, _id + 1)]
         for lane_index in lanes:
             lane = self.road.network.get_lane(lane_index)
-            lane_psi = lane.heading_at(lane.local_coordinates(self.position)[0])
+            longitudinal_pursuit = lane.local_coordinates(self.position)[0] + \
+                                   self.velocity * (self.TAU_DS + self.PURSUIT_TAU)
+            lane_psi = lane.heading_at(longitudinal_pursuit)
             position_corners = [[position_i[0, 0], position_i[0, 1]],
                                 [position_i[0, 0], position_i[1, 1]],
                                 [position_i[1, 0], position_i[0, 1]],
@@ -158,7 +161,8 @@ class IntervalVehicle(LinearVehicle):
         dv_i += a_i
         dv_i = np.clip(dv_i, -self.ACC_MAX, self.ACC_MAX)
         if keep_stability:
-            d_psi_i = IntervalVehicle.integrator_interval(psi_i - lane_psi, self.theta_b_i[:, 1])
+            delta_psi = list(map(utils.wrap_to_pi, psi_i - lane_psi))
+            d_psi_i = IntervalVehicle.integrator_interval(delta_psi, self.theta_b_i[:, 0])
         else:
             d_psi_i = IntervalVehicle.intervals_product(self.theta_b_i[:, 0], lane_psi - np.flip(psi_i, 0))
         d_psi_i += b_i
@@ -300,8 +304,9 @@ class IntervalVehicle(LinearVehicle):
         # the most likely to collide with other vehicle
         projection = np.minimum(np.maximum(other.position, self.interval_observer.position[0]),
                                 self.interval_observer.position[1])
-        # Accurate elliptic check
-        if utils.point_in_ellipse(other.position, projection, self.heading, self.LENGTH, self.WIDTH):
+        # Accurate rectangular check
+        if utils.rotated_rectangles_intersect((projection, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
+                                              (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading)):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
 
