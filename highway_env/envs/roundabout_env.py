@@ -19,7 +19,8 @@ class RoundaboutEnv(AbstractEnv):
     DURATION = 6
 
     DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-                      "incoming_vehicle_destination": 0}
+                      "incoming_vehicle_destination": None,
+                      "centering_position": [0.5, 0.6]}
 
     def __init__(self):
         super(RoundaboutEnv, self).__init__()

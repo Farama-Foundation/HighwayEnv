@@ -32,7 +32,7 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 5,
             "duration": 20,
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": 0.3
+            "centering_position": [0.3, 0.5]
         },
         "MEDIUM": {
             "lanes_count": 3,
@@ -40,7 +40,7 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 10,
             "duration": 30,
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": 0.3
+            "centering_position": [0.3, 0.5]
         },
         "HARD": {
             "lanes_count": 4,
@@ -48,7 +48,7 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 50,
             "duration": 40,
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": 0.3
+            "centering_position": [0.3, 0.5]
         },
     }
 

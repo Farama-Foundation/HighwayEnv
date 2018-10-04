@@ -147,7 +147,7 @@ class WorldSurface(pygame.Surface):
     YELLOW = (200, 200, 0)
     WHITE = (255, 255, 255)
     INITIAL_SCALING = 5.5
-    INITIAL_CENTERING = 0.5
+    INITIAL_CENTERING = [0.5, 0.5]
     SCALING_FACTOR = 1.3
     MOVING_FACTOR = 0.1
 
@@ -190,7 +190,8 @@ class WorldSurface(pygame.Surface):
         :param position: a world position [m]
         """
         self.origin = position - np.array(
-            [self.centering_position * self.get_width() / self.scaling, self.get_height() / (2 * self.scaling)])
+            [self.centering_position[0] * self.get_width() / self.scaling,
+             self.centering_position[1] * self.get_height() / self.scaling])
 
     def handle_event(self, event):
         """
