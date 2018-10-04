@@ -25,7 +25,7 @@ class MergeEnv(AbstractEnv):
     LANE_CHANGE_REWARD = -0.05
 
     DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-                      "centering_position": 0.3}
+                      "centering_position": [0.3, 0.5]}
 
     def __init__(self):
         super(MergeEnv, self).__init__()
