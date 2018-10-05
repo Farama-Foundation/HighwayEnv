@@ -57,8 +57,8 @@ class ControlledVehicle(Vehicle):
 
         :param destination: a node in the road network
         """
-        path = self.road.network.shortest_path(self.lane_index[0], destination)
-        self.route = [(path[i], path[i + 1], None) for i in range(len(path) - 1)]
+        path = self.road.network.shortest_path(self.lane_index[1], destination)
+        self.route = [self.lane_index] + [(path[i], path[i + 1], None) for i in range(len(path) - 1)]
         return self
 
     def act(self, action=None):
