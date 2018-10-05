@@ -173,17 +173,18 @@ class IDMVehicle(ControlledVehicle):
         """
         # If a lane change already ongoing
         if self.lane_index != self.target_lane_index:
-            # abort it if someone else is already changing into the same lane
-            for v in self.road.vehicles:
-                if v is not self \
-                        and v.lane_index != self.target_lane_index \
-                        and isinstance(v, ControlledVehicle) \
-                        and v.target_lane_index == self.target_lane_index:
-                    d = self.lane_distance_to(v)
-                    d_star = self.desired_gap(self, v)
-                    if 0 < d < d_star:
-                        self.target_lane_index = self.lane_index
-                        break
+            # If we are on correct route but bad lane: abort it if someone else is already changing into the same lane
+            if self.lane_index[:2] == self.target_lane_index[:2]:
+                for v in self.road.vehicles:
+                    if v is not self \
+                            and v.lane_index != self.target_lane_index \
+                            and isinstance(v, ControlledVehicle) \
+                            and v.target_lane_index == self.target_lane_index:
+                        d = self.lane_distance_to(v)
+                        d_star = self.desired_gap(self, v)
+                        if 0 < d < d_star:
+                            self.target_lane_index = self.lane_index
+                            break
             return
 
         # else, at a given frequency,
