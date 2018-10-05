@@ -128,8 +128,7 @@ class IntervalVehicle(LinearVehicle):
                 lanes += [(_from, _to, _id + 1)]
         for lane_index in lanes:
             lane = self.road.network.get_lane(lane_index)
-            longitudinal_pursuit = lane.local_coordinates(self.position)[0] + \
-                                   self.velocity * (self.TAU_DS + self.PURSUIT_TAU)
+            longitudinal_pursuit = lane.local_coordinates(self.position)[0] + self.velocity * self.PURSUIT_TAU
             lane_psi = lane.heading_at(longitudinal_pursuit)
             position_corners = [[position_i[0, 0], position_i[0, 1]],
                                 [position_i[0, 0], position_i[1, 1]],
