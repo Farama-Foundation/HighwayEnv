@@ -205,6 +205,6 @@ class WorldSurface(pygame.Surface):
             if event.key == pygame.K_o:
                 self.scaling *= self.SCALING_FACTOR
             if event.key == pygame.K_m:
-                self.centering_position -= self.MOVING_FACTOR
+                self.centering_position[0] -= self.MOVING_FACTOR
             if event.key == pygame.K_k:
-                self.centering_position += self.MOVING_FACTOR
+                self.centering_position[0] += self.MOVING_FACTOR
