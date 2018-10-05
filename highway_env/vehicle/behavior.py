@@ -39,6 +39,9 @@ class IDMVehicle(ControlledVehicle):
         self.enable_lane_change = enable_lane_change
         self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
 
+    def randomize_behavior(self):
+        pass
+
     @classmethod
     def create_from(cls, vehicle):
         """
@@ -269,6 +272,9 @@ class LinearVehicle(IDMVehicle):
     ACCELERATION_PARAMETERS = [0.3, 0.14, 0.8]
     STEERING_PARAMETERS = [ControlledVehicle.KP_HEADING, ControlledVehicle.KP_HEADING * ControlledVehicle.KP_LATERAL]
 
+    ACCELERATION_RANGE = np.array([0.5*np.array(ACCELERATION_PARAMETERS), 1.5*np.array(ACCELERATION_PARAMETERS)])
+    STEERING_RANGE = np.array([0.5*np.array(STEERING_PARAMETERS), 1.5*np.array(STEERING_PARAMETERS)])
+
     TIME_WANTED = 2.0
 
     def __init__(self, road, position,
@@ -288,6 +294,13 @@ class LinearVehicle(IDMVehicle):
                                             route,
                                             enable_lane_change,
                                             timer)
+
+    def randomize_behavior(self):
+        ua = self.road.np_random.uniform(size=np.shape(self.ACCELERATION_PARAMETERS))
+        self.ACCELERATION_PARAMETERS = self.ACCELERATION_RANGE[0] + ua*(self.ACCELERATION_RANGE[1] -
+                                                                        self.ACCELERATION_RANGE[0])
+        ub = self.road.np_random.uniform(size=np.shape(self.STEERING_PARAMETERS))
+        self.STEERING_PARAMETERS = self.STEERING_RANGE[0] + ub*(self.STEERING_RANGE[1] - self.STEERING_RANGE[0])
 
     def acceleration(self, ego_vehicle, front_vehicle=None, rear_vehicle=None):
         """
