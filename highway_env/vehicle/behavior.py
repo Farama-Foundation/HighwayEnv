@@ -92,8 +92,7 @@ class IDMVehicle(ControlledVehicle):
         self.timer += dt
         super(IDMVehicle, self).step(dt)
 
-    @classmethod
-    def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
+    def acceleration(self, ego_vehicle, front_vehicle=None, rear_vehicle=None):
         """
             Compute an acceleration command with the Intelligent Driver Model.
 
@@ -110,16 +109,15 @@ class IDMVehicle(ControlledVehicle):
         """
         if not ego_vehicle:
             return 0
-        acceleration = cls.COMFORT_ACC_MAX * (
-                1 - np.power(ego_vehicle.velocity / utils.not_zero(ego_vehicle.target_velocity), cls.DELTA))
+        acceleration = self.COMFORT_ACC_MAX * (
+                1 - np.power(ego_vehicle.velocity / utils.not_zero(ego_vehicle.target_velocity), self.DELTA))
         if front_vehicle:
             d = ego_vehicle.lane_distance_to(front_vehicle)
-            acceleration -= cls.COMFORT_ACC_MAX * \
-                np.power(cls.desired_gap(ego_vehicle, front_vehicle) / utils.not_zero(d), 2)
+            acceleration -= self.COMFORT_ACC_MAX * \
+                np.power(self.desired_gap(ego_vehicle, front_vehicle) / utils.not_zero(d), 2)
         return acceleration
 
-    @classmethod
-    def desired_gap(cls, ego_vehicle, front_vehicle=None):
+    def desired_gap(self, ego_vehicle, front_vehicle=None):
         """
             Compute the desired distance between a vehicle and its leading vehicle.
 
@@ -127,9 +125,9 @@ class IDMVehicle(ControlledVehicle):
         :param front_vehicle: its leading vehicle
         :return: the desired distance between the two [m]
         """
-        d0 = cls.DISTANCE_WANTED + ego_vehicle.LENGTH / 2 + front_vehicle.LENGTH / 2
-        tau = cls.TIME_WANTED
-        ab = -cls.COMFORT_ACC_MAX * cls.COMFORT_ACC_MIN
+        d0 = self.DISTANCE_WANTED + ego_vehicle.LENGTH / 2 + front_vehicle.LENGTH / 2
+        tau = self.TIME_WANTED
+        ab = -self.COMFORT_ACC_MAX * self.COMFORT_ACC_MIN
         dv = ego_vehicle.velocity - front_vehicle.velocity
         d_star = d0 + ego_vehicle.velocity * tau + ego_vehicle.velocity * dv / (2 * np.sqrt(ab))
         return d_star
@@ -214,8 +212,8 @@ class IDMVehicle(ControlledVehicle):
         """
         # Is the maneuver unsafe for the new following vehicle?
         new_preceding, new_following = self.road.neighbour_vehicles(self, lane_index)
-        new_following_a = IDMVehicle.acceleration(ego_vehicle=new_following, front_vehicle=new_preceding)
-        new_following_pred_a = IDMVehicle.acceleration(ego_vehicle=new_following, front_vehicle=self)
+        new_following_a = self.acceleration(ego_vehicle=new_following, front_vehicle=new_preceding)
+        new_following_pred_a = self.acceleration(ego_vehicle=new_following, front_vehicle=self)
         if new_following_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
             return False
 
@@ -291,8 +289,7 @@ class LinearVehicle(IDMVehicle):
                                             enable_lane_change,
                                             timer)
 
-    @classmethod
-    def acceleration(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
+    def acceleration(self, ego_vehicle, front_vehicle=None, rear_vehicle=None):
         """
             Compute an acceleration command with a Linear Model.
 
@@ -308,14 +305,13 @@ class LinearVehicle(IDMVehicle):
         :param rear_vehicle: the vehicle following the ego-vehicle
         :return: the acceleration command for the ego-vehicle [m/s2]
         """
-        return np.dot(cls.ACCELERATION_PARAMETERS, cls.acceleration_features(ego_vehicle, front_vehicle, rear_vehicle))
+        return np.dot(self.ACCELERATION_PARAMETERS, self.acceleration_features(ego_vehicle, front_vehicle, rear_vehicle))
 
-    @classmethod
-    def acceleration_features(cls, ego_vehicle, front_vehicle=None, rear_vehicle=None):
+    def acceleration_features(self, ego_vehicle, front_vehicle=None, rear_vehicle=None):
         vt, dv, dp = 0, 0, 0
         if ego_vehicle:
             vt = ego_vehicle.target_velocity - ego_vehicle.velocity
-            d_safe = cls.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * cls.TIME_WANTED + ego_vehicle.LENGTH
+            d_safe = self.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * self.TIME_WANTED + ego_vehicle.LENGTH
             if front_vehicle:
                 d = ego_vehicle.lane_distance_to(front_vehicle)
                 dv = min(front_vehicle.velocity - ego_vehicle.velocity, 0)
