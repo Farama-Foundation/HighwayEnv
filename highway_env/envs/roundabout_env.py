@@ -16,7 +16,7 @@ class RoundaboutEnv(AbstractEnv):
     RIGHT_LANE_REWARD = 0
     LANE_CHANGE_REWARD = -0.05
 
-    DURATION = 10
+    DURATION = 11
 
     DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
                       "incoming_vehicle_destination": None,
@@ -45,7 +45,7 @@ class RoundaboutEnv(AbstractEnv):
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
-        return self.vehicle.crashed or self.steps > self.DURATION
+        return self.vehicle.crashed or self.steps >= self.DURATION
 
     def reset(self):
         self._make_road()
