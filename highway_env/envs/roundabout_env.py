@@ -124,26 +124,39 @@ class RoundaboutEnv(AbstractEnv):
         self.vehicle = ego_vehicle
 
         # Incoming vehicle
+        destinations = ["exr", "sxr", "nxr"]
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        incoming_vehicle_destinations = ["exr", "sxr"]
+        vehicle = other_vehicles_type.make_on_lane(self.road,
+                                                   ("we", "sx", 1),
+                                                   longitudinal=5 + self.np_random.randn()*position_deviation,
+                                                   velocity=16 + self.np_random.randn()*velocity_deviation)
+
         if self.config["incoming_vehicle_destination"] is not None:
-            destination = incoming_vehicle_destinations[self.config["incoming_vehicle_destination"]]
+            destination = destinations[self.config["incoming_vehicle_destination"]]
         else:
-            destination = self.np_random.choice(incoming_vehicle_destinations)
-        self.road.vehicles.append(
-            other_vehicles_type.make_on_lane(self.road, ("we", "sx", 1),
-                                             longitudinal=5 + self.np_random.randn()*position_deviation,
-                                             velocity=16 + self.np_random.randn()*velocity_deviation
-                                             ).plan_route_to(destination))
+            destination = self.np_random.choice(destinations)
+        vehicle.plan_route_to(destination)
+        vehicle.randomize_behavior()
+        self.road.vehicles.append(vehicle)
 
         # Other vehicles
-        destinations = ["exr", "sxr", "nxr"]
-        for i in list(range(2, 2)) + list(range(-1, 0)):
-            self.road.vehicles.append(
-                other_vehicles_type.make_on_lane(self.road, ("we", "sx", 0),
-                                                 longitudinal=20*i + self.np_random.randn()*position_deviation,
-                                                 velocity=16 + self.np_random.randn()*velocity_deviation
-                                                 ).plan_route_to(self.np_random.choice(destinations)))
+        for i in list(range(1, 2)) + list(range(-1, 0)):
+            vehicle = other_vehicles_type.make_on_lane(self.road,
+                                                       ("we", "sx", 0),
+                                                       longitudinal=20*i + self.np_random.randn()*position_deviation,
+                                                       velocity=16 + self.np_random.randn()*velocity_deviation)
+            vehicle.plan_route_to(self.np_random.choice(destinations))
+            vehicle.randomize_behavior()
+            self.road.vehicles.append(vehicle)
+
+        # Entering vehicle
+        vehicle = other_vehicles_type.make_on_lane(self.road,
+                                                   ("eer", "ees", 0),
+                                                   longitudinal=50 + self.np_random.randn() * position_deviation,
+                                                   velocity=16 + self.np_random.randn() * velocity_deviation)
+        vehicle.plan_route_to(self.np_random.choice(destinations))
+        vehicle.randomize_behavior()
+        self.road.vehicles.append(vehicle)
 
 
 def rad(deg):
