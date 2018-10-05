@@ -304,7 +304,7 @@ class IntervalVehicle(LinearVehicle):
         projection = np.minimum(np.maximum(other.position, self.interval_observer.position[0]),
                                 self.interval_observer.position[1])
         # Accurate rectangular check
-        if utils.rotated_rectangles_intersect((projection, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
+        if utils.rotated_rectangles_intersect((projection, self.LENGTH, self.WIDTH, self.heading),
                                               (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading)):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
