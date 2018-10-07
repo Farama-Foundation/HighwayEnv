@@ -15,6 +15,7 @@ class EnvViewer(object):
     """
     SCREEN_WIDTH = 600
     SCREEN_HEIGHT = 150
+    SAVE_IMAGES = False
 
     def __init__(self, env):
         self.env = env
@@ -33,6 +34,7 @@ class EnvViewer(object):
 
         self.agent_display = None
         self.agent_surface = None
+        self.frame = 0
 
     def set_agent_display(self, agent_display):
         if self.agent_display is None:
@@ -75,6 +77,10 @@ class EnvViewer(object):
         self.screen.blit(self.sim_surface, (0, 0))
         self.clock.tick(self.env.SIMULATION_FREQUENCY)
         pygame.display.flip()
+
+        if self.SAVE_IMAGES:
+            pygame.image.save(self.screen, "highway-env_{}.png".format(self.frame))
+            self.frame += 1
 
     def get_image(self):
         """
