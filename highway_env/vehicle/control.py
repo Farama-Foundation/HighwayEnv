@@ -146,11 +146,24 @@ class ControlledVehicle(Vehicle):
             Erase current planned route.
         :param _to: index of the road to follow at next intersection, in the road network
         """
-        if self.route and len(self.route) > 1:
-            next_destinations = self.road.network.graph[self.route[1][0]]
-            next_destinations_from = list(next_destinations.keys())
-            next_index = _to % len(next_destinations_from)
-            self.route = [self.route[0], (self.route[1][0], next_destinations_from[next_index], self.route[1][2])]
+
+        if not self.route:
+            return
+        for index in range(min(len(self.route), 3)):
+            try:
+                next_destinations = self.road.network.graph[self.route[index][1]]
+            except KeyError:
+                continue
+            if len(next_destinations) >= 2:
+                break
+        else:
+            return
+        next_destinations_from = list(next_destinations.keys())
+        if _to == "random":
+            _to = self.road.np_random.randint(0, len(next_destinations_from))
+        next_index = _to % len(next_destinations_from)
+        self.route = self.route[0:index+1] + \
+                     [(self.route[index][1], next_destinations_from[next_index], self.route[index][2])]
 
 
 class MDPVehicle(ControlledVehicle):
