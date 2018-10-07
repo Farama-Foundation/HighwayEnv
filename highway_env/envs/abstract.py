@@ -303,6 +303,13 @@ class AbstractEnv(gym.Env):
                 v.set_route_at_intersection(_to)
         return env_copy
 
+    def randomize_behaviour(self):
+        env_copy = copy.deepcopy(self)
+        for v in env_copy.road.vehicles:
+            if isinstance(v, IDMVehicle):
+                v.randomize_behavior()
+        return env_copy
+
     def to_finite_mdp(self):
         return finite_mdp(self, time_quantization=1/self.POLICY_FREQUENCY)
 
