@@ -39,10 +39,8 @@ class IntervalVehicle(LinearVehicle):
                                               route,
                                               enable_lane_change,
                                               timer)
-        theta_a = np.array(LinearVehicle.ACCELERATION_PARAMETERS)
-        theta_b = np.array(LinearVehicle.STEERING_PARAMETERS)
-        self.theta_a_i = theta_a_i if theta_a_i is not None else np.array([0.5*theta_a, 1.5*theta_a])
-        self.theta_b_i = theta_b_i if theta_b_i is not None else np.array([0.5*theta_b, 1.5*theta_b])
+        self.theta_a_i = theta_a_i if theta_a_i is not None else LinearVehicle.ACCELERATION_RANGE
+        self.theta_b_i = theta_b_i if theta_b_i is not None else LinearVehicle.STEERING_RANGE
 
         self.interval_observer = VehicleInterval(self)
         self.trajectory = []
