@@ -14,18 +14,18 @@ def test_highway_step():
     env.close()
 
     assert env.observation_space.contains(obs)
-    assert reward
-    assert not done
+    assert 0 <= reward <= 1
 
 
 def test_merge_step():
     env = gym.make('highway-merge-v0')
 
     env.reset()
-    for action in [1, 1, 1]:
+    for i in range(3):
+        action = env.action_space.sample()
         obs, reward, done, info = env.step(action)
     env.close()
 
     assert env.observation_space.contains(obs)
-    assert reward
-    assert not done
+    assert 0 <= reward <= 1
+
