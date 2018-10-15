@@ -51,13 +51,25 @@ The agent's objective is to reach a high velocity while avoiding collisions with
 env = gym.make("highway-merge-v0")
 ```
 
-On this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high velocity while making room for the vehicles so that they can safely merge in the traffic.
+In this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high velocity while making room for the vehicles so that they can safely merge in the traffic.
 
 <p align="center">
     <img src="docs/media/merge.gif"><br/>
     <em>The highway-merge-v0 environment.</em>
 </p>
 
+### Roundabout
+
+```python
+env = gym.make("highway-roundabout-v0")
+```
+
+In this task, the ego-vehicle if approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.
+
+<p align="center">
+    <img src="docs/media/roundabout-env.gif"><br/>
+    <em>The highway-roundabout-v0 environment.</em>
+</p>
 
 ## The framework
 
@@ -67,16 +79,15 @@ New highway driving environments can easily be made from a set of building block
 
 A `Road` is composed of several `Lanes` and a list of `Vehicles`. The Lanes are described by their center line curve and local coordinate system.
 
-### Vehicle physics
+### Vehicle kinematics
 
-The vehicles dynamics are represented in the `Vehicle` class by a bicycle model.
+The vehicles kinematics are represented in the `Vehicle` class by a bicycle model.
 
-```python
-dx = v*cos(psi)
-dy = v*sin(psi)
-dv = a
-dpsi = v/l*tan(beta)
-```
+<a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;x=v\cos\psi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;x=v\cos\psi" title="\dot x=v\cos\psi" /></a><br>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;y=v\sin\psi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;y=v\sin\psi" title="\dot y=v\sin\psi" /></a><br>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;v=a" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;v=a" title="\dot v=a" /></a><br>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\dot\psi=\frac{v}{l}\tan\beta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot\psi=\frac{v}{l}\tan\beta" title="\dot\psi=\frac{v}{l}\tan\beta" /></a>
+
 Where *(x, y)* is the vehicle position, *v* its forward velocity and *psi* its heading.
 *a* is the acceleration command and *beta* is the slip angle at the center of gravity, used as a steering command.
 
@@ -92,7 +103,7 @@ In the `IDMVehicle` class,
 * Longitudinal Model: the acceleration of the vehicle is given by the Intelligent Driver Model (IDM) from [(Treiber et al, 2000)](https://arxiv.org/abs/cond-mat/0002177).
 * Lateral Model: the discrete lane change decisions are given by the MOBIL model from [(Kesting et al, 2007)](https://www.researchgate.net/publication/239439179_General_Lane-Changing_Model_MOBIL_for_Car-Following_Models).
 
-In the `LinearVehicle` class, the longitudinal behavior is defined as a linear weighting of several features, such as the distance and velocity difference to the leading vehicle.
+In the `LinearVehicle` class, the longitudinal and lateral behaviours are defined as linear weightings of several features, such as the distance and velocity difference to the leading vehicle.
 
 ## The agents
 
