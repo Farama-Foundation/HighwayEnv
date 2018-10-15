@@ -29,3 +29,15 @@ def test_merge_step():
     assert env.observation_space.contains(obs)
     assert 0 <= reward <= 1
 
+
+def test_roundabout_step():
+    env = gym.make('highway-roundabout-v0')
+
+    env.reset()
+    for i in range(3):
+        action = env.action_space.sample()
+        obs, reward, done, info = env.step(action)
+    env.close()
+
+    assert env.observation_space.contains(obs)
+    assert 0 <= reward <= 1
