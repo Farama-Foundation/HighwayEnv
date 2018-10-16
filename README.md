@@ -77,11 +77,11 @@ New highway driving environments can easily be made from a set of building block
 
 ### Roads
 
-A `Road` is composed of several `Lanes` and a list of `Vehicles`. The Lanes are described by their center line curve and local coordinate system.
+A `Road` is composed of a `RoadNetwork` and a list of `Vehicles`. The `RoadNetwork` describes the topology of the road infrastructure as a graph, where edges represent lanes and nodes represent intersections. For every edge, the corresponding lane geometry is stored in a `Lane` object as a parametrized center line curve, providing a local coordinate system.
 
 ### Vehicle kinematics
 
-The vehicles kinematics are represented in the `Vehicle` class by a bicycle model.
+The vehicles kinematics are represented in the `Vehicle` class by a _Kinematic Bicycle Model_.
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;x=v\cos\psi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;x=v\cos\psi" title="\dot x=v\cos\psi" /></a><br>
 <a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;y=v\sin\psi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;y=v\sin\psi" title="\dot y=v\sin\psi" /></a><br>
