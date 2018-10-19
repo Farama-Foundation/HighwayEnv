@@ -112,6 +112,8 @@ class RoadNetwork(object):
         queue = [(start, [start])]
         while queue:
             (node, path) = queue.pop(0)
+            if node not in self.graph:
+                yield []
             for _next in set(self.graph[node].keys()) - set(path):
                 if _next == goal:
                     yield path + [_next]
