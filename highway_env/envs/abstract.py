@@ -88,7 +88,7 @@ class AbstractEnv(gym.Env):
         :return: the observation
         """
         # Add ego-vehicle
-        df = pandas.DataFrame.from_records([self.vehicle.to_dict()])
+        df = pandas.DataFrame.from_records([self.vehicle.to_dict()])[self.OBSERVATION_FEATURES]
         # Normalize values
         MAX_ROAD_LANES = 4
         road_width = AbstractLane.DEFAULT_WIDTH * MAX_ROAD_LANES
@@ -99,8 +99,9 @@ class AbstractEnv(gym.Env):
 
         # Add nearby traffic
         close_vehicles = self.road.closest_vehicles_to(self.vehicle, self.OBSERVATION_VEHICLES)
-        df = df.append(pandas.DataFrame.from_records([v.to_dict(self.vehicle)
-                                                      for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]]),
+        df = df.append(pandas.DataFrame.from_records(
+            [v.to_dict(self.vehicle)
+             for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]])[self.OBSERVATION_FEATURES],
                        ignore_index=True)
         # Normalize values
         delta_v = 2*(MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN)
