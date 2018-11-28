@@ -190,7 +190,7 @@ class AbstractEnv(gym.Env):
         reward = self._reward(action)
         terminal = self._is_terminal()
 
-        constraint, alt_reward = self._constraint()
+        constraint, alt_reward = self._constraint(action)
         info = {'constraint': constraint, 'alt_reward': alt_reward}
 
         return obs, reward, terminal, info
