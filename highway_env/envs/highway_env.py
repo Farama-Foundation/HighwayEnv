@@ -121,3 +121,9 @@ class HighwayEnv(AbstractEnv):
             The episode is over if the ego vehicle crashed or the time is out.
         """
         return self.vehicle.crashed or self.steps > self.config["duration"]
+
+    def _constraint(self):
+        """
+            The constraint signal is the occurrence of collision
+        """
+        return float(self.vehicle.crashed)

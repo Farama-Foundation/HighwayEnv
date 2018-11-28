@@ -139,6 +139,13 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError()
 
+    def _constraint(self):
+        """
+            A constraint metric, for budgeted MDP
+        :return: the constraint signal
+        """
+        return None
+
     def reset(self):
         """
             Reset the environment to it's initial configuration
@@ -178,7 +185,7 @@ class AbstractEnv(gym.Env):
         obs = self._observation()
         reward = self._reward(action)
         terminal = self._is_terminal()
-        info = {}
+        info = {'constraint': self._constraint()}
 
         return obs, reward, terminal, info
 
