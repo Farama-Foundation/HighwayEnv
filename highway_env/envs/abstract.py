@@ -139,12 +139,16 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError()
 
-    def _constraint(self):
+    def _constraint(self, action):
         """
-            A constraint metric, for budgeted MDP
-        :return: the constraint signal
+            A constraint metric, for budgeted MDP.
+
+            If a constraint is defined, it must be used with an alternate reward that doesn't contain it
+            as a penalty.
+        :param action: the last action performed
+        :return: the constraint signal, the alternate (constraint-free) reward
         """
-        return None
+        return None, self._reward(action)
 
     def reset(self):
         """
@@ -185,7 +189,9 @@ class AbstractEnv(gym.Env):
         obs = self._observation()
         reward = self._reward(action)
         terminal = self._is_terminal()
-        info = {'constraint': self._constraint()}
+
+        constraint, alt_reward = self._constraint()
+        info = {'constraint': constraint, 'alt_reward': alt_reward}
 
         return obs, reward, terminal, info
 
