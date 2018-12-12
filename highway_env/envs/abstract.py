@@ -2,7 +2,7 @@ from __future__ import division, print_function, absolute_import
 import copy
 import gym
 import pandas
-from gym import spaces
+from gym import spaces, logger
 from gym.utils import seeding
 import numpy as np
 
@@ -99,16 +99,18 @@ class AbstractEnv(gym.Env):
 
         # Add nearby traffic
         close_vehicles = self.road.closest_vehicles_to(self.vehicle, self.OBSERVATION_VEHICLES)
-        df = df.append(pandas.DataFrame.from_records(
-            [v.to_dict(self.vehicle)
-             for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]])[self.OBSERVATION_FEATURES],
-                       ignore_index=True)
-        # Normalize values
-        delta_v = 2*(MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN)
-        df.loc[1:, 'x'] = utils.remap(df.loc[1:, 'x'], [-self.PERCEPTION_DISTANCE, self.PERCEPTION_DISTANCE], [-1, 1])
-        df.loc[1:, 'y'] = utils.remap(df.loc[1:, 'y'], [-road_width, road_width], [-1, 1])
-        df.loc[1:, 'vx'] = utils.remap(df.loc[1:, 'vx'], [-delta_v, delta_v], [-1, 1])
-        df.loc[1:, 'vy'] = utils.remap(df.loc[1:, 'vy'], [-delta_v, delta_v], [-1, 1])
+        if close_vehicles:
+            df = df.append(pandas.DataFrame.from_records(
+                [v.to_dict(self.vehicle)
+                 for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]])[self.OBSERVATION_FEATURES],
+                           ignore_index=True)
+
+            # Normalize values
+            delta_v = 2*(MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN)
+            df.loc[1:, 'x'] = utils.remap(df.loc[1:, 'x'], [-self.PERCEPTION_DISTANCE, self.PERCEPTION_DISTANCE], [-1, 1])
+            df.loc[1:, 'y'] = utils.remap(df.loc[1:, 'y'], [-road_width, road_width], [-1, 1])
+            df.loc[1:, 'vx'] = utils.remap(df.loc[1:, 'vx'], [-delta_v, delta_v], [-1, 1])
+            df.loc[1:, 'vy'] = utils.remap(df.loc[1:, 'vy'], [-delta_v, delta_v], [-1, 1])
 
         # Fill missing rows
         if df.shape[0] < self.OBSERVATION_VEHICLES:
@@ -280,8 +282,9 @@ class AbstractEnv(gym.Env):
         :return: a simplified environment state
         """
         state_copy = copy.deepcopy(self)
-        state_copy.road.vehicles = state_copy.road.close_vehicles_to(
-            state_copy.vehicle, [-self.PERCEPTION_DISTANCE/2, self.PERCEPTION_DISTANCE]) + [state_copy.vehicle]
+        state_copy.road.vehicles = [state_copy.vehicle] + state_copy.road.close_vehicles_to(
+            state_copy.vehicle, [-self.PERCEPTION_DISTANCE / 2, self.PERCEPTION_DISTANCE])
+
         return state_copy
 
     def change_vehicles(self, vehicle_class_path):
