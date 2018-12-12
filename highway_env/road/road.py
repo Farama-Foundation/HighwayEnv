@@ -251,6 +251,8 @@ class Road(Loggable):
         """
         for vehicle in self.vehicles:
             vehicle.step(dt)
+
+        for vehicle in self.vehicles:
             for other in self.vehicles:
                 vehicle.check_collision(other)
 
