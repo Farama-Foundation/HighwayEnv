@@ -111,7 +111,7 @@ class HighwayEnv(AbstractEnv):
             + self.RIGHT_LANE_REWARD * self.vehicle.target_lane_index[2] / (len(neighbours) - 1) \
             + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
         return utils.remap(action_reward[action] + state_reward,
-                           [self.COLLISION_REWARD, self.HIGH_VELOCITY_REWARD+self.RIGHT_LANE_REWARD],
+                           [self.COLLISION_REWARD * include_collisions, self.HIGH_VELOCITY_REWARD+self.RIGHT_LANE_REWARD],
                            [0, 1])
 
     def _observation(self):
