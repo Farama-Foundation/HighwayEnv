@@ -20,7 +20,7 @@ class Vehicle(Loggable):
     """ Vehicle length [m] """
     WIDTH = 2.0
     """ Vehicle width [m] """
-    DEFAULT_VELOCITIES = [20, 21]
+    DEFAULT_VELOCITIES = [23, 24]
     """ Range for random initial velocities [m/s] """
 
     def __init__(self, road, position, heading=0, velocity=0):
@@ -61,14 +61,14 @@ class Vehicle(Loggable):
         :param spacing: ratio of spacing to the front vehicle, 1 being the default
         :return: A vehicle with random position and/or velocity
         """
-        default_spacing = 30
+        velocity = velocity or road.np_random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
+        default_spacing = 1.5*velocity
         _from = road.np_random.choice(list(road.network.graph.keys()))
         _to = road.np_random.choice(list(road.network.graph[_from].keys()))
         _id = road.np_random.choice(len(road.network.graph[_from][_to]))
         offset = spacing * default_spacing * np.exp(-5 / 30 * len(road.network.graph[_from][_to]))
         x0 = np.max([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 3*offset
         x0 += offset
-        velocity = velocity or road.np_random.randint(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
         v = cls(road, road.network.get_lane((_from, _to, _id)).position(x0, 0), 0, velocity)
         return v
 

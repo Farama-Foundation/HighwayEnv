@@ -16,7 +16,6 @@ class IDMVehicle(ControlledVehicle):
     ACC_MAX = 6.0  # [m/s2]
     COMFORT_ACC_MAX = 3.0  # [m/s2]
     COMFORT_ACC_MIN = -5.0  # [m/s2]
-    VELOCITY_WANTED = 20.0  # [m/s]
     DISTANCE_WANTED = 5.0  # [m]
     TIME_WANTED = 1.5  # [s]
     DELTA = 4.0  # []
