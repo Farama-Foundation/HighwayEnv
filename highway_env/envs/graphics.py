@@ -34,9 +34,15 @@ class EnvViewer(object):
 
         self.agent_display = None
         self.agent_surface = None
+        self.vehicle_trajectory = None
         self.frame = 0
 
     def set_agent_display(self, agent_display):
+        """
+            Set a display callback provided by an agent, so that they can render their behaviour on a dedicated
+            agent surface, or even on the simulation surface.
+        :param agent_display: a callback provided by the agent to display on surfaces
+        """
         if self.agent_display is None:
             if self.SCREEN_WIDTH > self.SCREEN_HEIGHT:
                 self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, 2 * self.SCREEN_HEIGHT))
@@ -44,6 +50,17 @@ class EnvViewer(object):
                 self.screen = pygame.display.set_mode((2 * self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
             self.agent_surface = pygame.Surface((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.agent_display = agent_display
+
+    def set_agent_action_sequence(self, actions):
+        """
+            Set the sequence of actions chosen by the agent, so that it can be displayed
+        :param actions: list of action, following the env's action space specification
+        """
+        agent_action_sequence = [self.env.ACTIONS[a] for a in actions]
+        self.vehicle_trajectory = self.env.vehicle.predict_trajectory(agent_action_sequence,
+                                                                      1 / self.env.POLICY_FREQUENCY,
+                                                                      1 / 3 / self.env.POLICY_FREQUENCY,
+                                                                      1 / self.env.SIMULATION_FREQUENCY)
 
     def handle_events(self):
         """
@@ -65,6 +82,10 @@ class EnvViewer(object):
 
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
+        if self.vehicle_trajectory:
+            VehicleGraphics.display_trajectory(
+                self.vehicle_trajectory,
+                self.sim_surface)
         RoadGraphics.display_traffic(self.env.road, self.sim_surface)
 
         if self.agent_display:
