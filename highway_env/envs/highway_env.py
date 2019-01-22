@@ -32,7 +32,8 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 5,
             "duration": 20,
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": [0.3, 0.5]
+            "centering_position": [0.3, 0.5],
+            "collision_reward": COLLISION_REWARD
         },
         "MEDIUM": {
             "lanes_count": 3,
@@ -40,7 +41,8 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 10,
             "duration": 30,
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": [0.3, 0.5]
+            "centering_position": [0.3, 0.5],
+            "collision_reward": COLLISION_REWARD
         },
         "HARD": {
             "lanes_count": 4,
@@ -48,7 +50,8 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 50,
             "duration": 40,
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": [0.3, 0.5]
+            "centering_position": [0.3, 0.5],
+            "collision_reward": COLLISION_REWARD
         },
     }
 
@@ -97,21 +100,20 @@ class HighwayEnv(AbstractEnv):
         for _ in range(self.config["vehicles_count"]):
             self.road.vehicles.append(vehicles_type.create_random(self.road))
 
-    def _reward(self, action, include_collisions=True):
+    def _reward(self, action):
         """
         The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
         :param action: the last action performed
-        :param include_collisions: whether collisions must be penalized in the reward signal
         :return: the corresponding reward
         """
         action_reward = {0: self.LANE_CHANGE_REWARD, 1: 0, 2: self.LANE_CHANGE_REWARD, 3: 0, 4: 0}
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
         state_reward = \
-            + self.COLLISION_REWARD * (self.vehicle.crashed and include_collisions) \
+            + self.config["collision_reward"] * self.vehicle.crashed \
             + self.RIGHT_LANE_REWARD * self.vehicle.target_lane_index[2] / (len(neighbours) - 1) \
             + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
         return utils.remap(action_reward[action] + state_reward,
-                           [self.COLLISION_REWARD * include_collisions, self.HIGH_VELOCITY_REWARD+self.RIGHT_LANE_REWARD],
+                           [self.config["collision_reward"], self.HIGH_VELOCITY_REWARD+self.RIGHT_LANE_REWARD],
                            [0, 1])
 
     def _observation(self):
@@ -127,4 +129,4 @@ class HighwayEnv(AbstractEnv):
         """
             The constraint signal is the occurrence of collision
         """
-        return float(self.vehicle.crashed), self._reward(action, include_collisions=False)
+        return float(self.vehicle.crashed)
