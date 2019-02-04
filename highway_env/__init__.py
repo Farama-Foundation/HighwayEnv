@@ -14,3 +14,9 @@ register(
     id='highway-roundabout-v0',
     entry_point='highway_env.envs:RoundaboutEnv',
 )
+
+register(
+    id='highway-continuous-v0',
+    entry_point='highway_env.envs:ContinuousEnv',
+    tags={'wrapper_config.TimeLimit.max_episode_steps': 20}
+)
