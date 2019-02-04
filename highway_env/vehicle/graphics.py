@@ -2,7 +2,7 @@ from __future__ import division, print_function
 import numpy as np
 import pygame
 
-from highway_env.vehicle.dynamics import Vehicle
+from highway_env.vehicle.dynamics import Vehicle, Obstacle
 from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 
@@ -61,6 +61,8 @@ class VehicleGraphics(object):
             color = cls.BLUE
         elif isinstance(vehicle, MDPVehicle):
             color = cls.EGO_COLOR
+        elif isinstance(vehicle, Obstacle):
+            color = cls.GREEN
         if transparent:
             color = (color[0], color[1], color[2], 50)
         return color

@@ -98,7 +98,7 @@ class AbstractEnv(gym.Env):
         df.loc[0, 'vy'] = utils.remap(df.loc[0, 'vy'], [-MDPVehicle.SPEED_MAX, MDPVehicle.SPEED_MAX], [-1, 1])
 
         # Add nearby traffic
-        close_vehicles = self.road.closest_vehicles_to(self.vehicle, self.OBSERVATION_VEHICLES)
+        close_vehicles = self.road.closest_vehicles_to(self.vehicle, self.OBSERVATION_VEHICLES - 1)
         if close_vehicles:
             df = df.append(pandas.DataFrame.from_records(
                 [v.to_dict(self.vehicle)
@@ -173,8 +173,21 @@ class AbstractEnv(gym.Env):
 
         # Forward action to the vehicle
         self.vehicle.act(self.ACTIONS[action])
+        self._simulate()
 
-        # Simulate
+        obs = self._observation()
+        reward = self._reward(action)
+        terminal = self._is_terminal()
+
+        constraint = self._constraint(action)
+        info = {'constraint': constraint, "c_": constraint}
+
+        return obs, reward, terminal, info
+
+    def _simulate(self):
+        """
+            Perform several steps of simulation with constant action
+        """
         for k in range(int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY)):
             self.road.act()
             self.road.step(1 / self.SIMULATION_FREQUENCY)
@@ -185,17 +198,7 @@ class AbstractEnv(gym.Env):
             # Stop at terminal states
             if self.done or self._is_terminal():
                 break
-
         self.enable_auto_render = False
-
-        obs = self._observation()
-        reward = self._reward(action)
-        terminal = self._is_terminal()
-
-        constraint = self._constraint(action)
-        info = {'constraint': constraint, "c_": constraint}
-
-        return obs, reward, terminal, info
 
     def render(self, mode='human'):
         """

@@ -41,3 +41,16 @@ def test_roundabout_step():
 
     assert env.observation_space.contains(obs)
     assert 0 <= reward <= 1
+
+
+def test_continuous_step():
+    env = gym.make('highway-continuous-v0')
+
+    env.reset()
+    for i in range(10):
+        action = env.action_space.sample()
+        obs, reward, done, info = env.step(action)
+        env.render()
+    env.close()
+
+    assert action.size == 2

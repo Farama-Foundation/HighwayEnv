@@ -22,6 +22,8 @@ class Vehicle(Loggable):
     """ Vehicle width [m] """
     DEFAULT_VELOCITIES = [23, 25]
     """ Range for random initial velocities [m/s] """
+    MAX_VELOCITY = 40
+    """ Maximum reachable velocity [m/s] """
 
     def __init__(self, road, position, heading=0, velocity=0):
         self.road = road
@@ -61,7 +63,8 @@ class Vehicle(Loggable):
         :param spacing: ratio of spacing to the front vehicle, 1 being the default
         :return: A vehicle with random position and/or velocity
         """
-        velocity = velocity or road.np_random.uniform(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
+        if velocity is None:
+            velocity = road.np_random.uniform(Vehicle.DEFAULT_VELOCITIES[0], Vehicle.DEFAULT_VELOCITIES[1])
         default_spacing = 1.5*velocity
         _from = road.np_random.choice(list(road.network.graph.keys()))
         _to = road.np_random.choice(list(road.network.graph[_from].keys()))
@@ -105,7 +108,11 @@ class Vehicle(Loggable):
         """
         if self.crashed:
             self.action['steering'] = 0
-            self.action['acceleration'] = -self.velocity
+            self.action['acceleration'] = -1.0*self.velocity
+        if self.velocity > self.MAX_VELOCITY:
+            self.action['acceleration'] = min(self.action['acceleration'], -1.0*self.velocity)
+        elif self.velocity < -self.MAX_VELOCITY:
+            self.action['acceleration'] = max(self.action['acceleration'], -1.0*self.velocity)
 
         v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v * dt
@@ -133,7 +140,7 @@ class Vehicle(Loggable):
 
         :param other: the other vehicle
         """
-        if not self.COLLISIONS_ENABLED or self.crashed or other is self:
+        if not self.COLLISIONS_ENABLED or not other.COLLISIONS_ENABLED or self.crashed or other is self:
             return
 
         # Fast spherical pre-check
@@ -146,13 +153,19 @@ class Vehicle(Loggable):
             self.velocity = other.velocity = min(self.velocity, other.velocity)
             self.crashed = other.crashed = True
 
+    @property
+    def direction(self):
+        return np.array([np.cos(self.heading), np.sin(self.heading)])
+
     def to_dict(self, origin_vehicle=None):
         d = {
             'presence': 1,
             'x': self.position[0],
             'y': self.position[1],
-            'vx': self.velocity * np.cos(self.heading),
-            'vy': self.velocity * np.sin(self.heading)
+            'vx': self.velocity * self.direction[0],
+            'vy': self.velocity * self.direction[1],
+            'cos_h': self.direction[0],
+            'sin_h': self.direction[1]
         }
         if origin_vehicle:
             origin_dict = origin_vehicle.to_dict()
