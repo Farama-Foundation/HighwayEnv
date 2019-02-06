@@ -110,9 +110,9 @@ class Vehicle(Loggable):
             self.action['steering'] = 0
             self.action['acceleration'] = -1.0*self.velocity
         if self.velocity > self.MAX_VELOCITY:
-            self.action['acceleration'] = min(self.action['acceleration'], -1.0*self.velocity)
+            self.action['acceleration'] = min(self.action['acceleration'], 1.0*(self.MAX_VELOCITY - self.velocity))
         elif self.velocity < -self.MAX_VELOCITY:
-            self.action['acceleration'] = max(self.action['acceleration'], -1.0*self.velocity)
+            self.action['acceleration'] = max(self.action['acceleration'], 1.0*(self.MAX_VELOCITY - self.velocity))
 
         v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v * dt
