@@ -16,7 +16,7 @@ register(
 )
 
 register(
-    id='highway-continuous-v0',
-    entry_point='highway_env.envs:ContinuousEnv',
+    id='highway-parking-v0',
+    entry_point='highway_env.envs:ParkingEnv',
     tags={'wrapper_config.TimeLimit.max_episode_steps': 20}
 )

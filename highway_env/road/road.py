@@ -196,6 +196,9 @@ class RoadNetwork(object):
                             for l1_to in self.graph.get(_to, {}).keys()])
         return False
 
+    def lanes_list(self):
+        return [lane for tos in self.graph.values() for ids in tos.values() for lane in ids]
+
     @staticmethod
     def straight_road_network(lanes=4, length=10000):
         net = RoadNetwork()
