@@ -25,7 +25,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     OBS_SCALE = 100
     REWARD_WEIGHTS = [1 / 100, 1 / 100, 1 / 100, 1 / 100, 1 / 10, 1/10]
-    SUCCESS_GOAL_REWARD = 0.2
+    SUCCESS_GOAL_REWARD = 0.15
 
     DEFAULT_CONFIG = {
         "centering_position": [0.5, 0.5]
@@ -38,7 +38,6 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     def __init__(self):
         super(ParkingEnv, self).__init__()
         self.config = self.DEFAULT_CONFIG.copy()
-        # self._max_episode_steps = 50
         obs = self.reset()
         self.observation_space = spaces.Dict(dict(
             desired_goal=spaces.Box(-np.inf, np.inf, shape=obs["desired_goal"].shape, dtype=np.float32),
@@ -47,7 +46,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         ))
         self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
         self.REWARD_WEIGHTS = np.array(self.REWARD_WEIGHTS)
-        EnvViewer.SCREEN_HEIGHT = EnvViewer.SCREEN_WIDTH
+        EnvViewer.SCREEN_HEIGHT = EnvViewer.SCREEN_WIDTH // 2
 
     def step(self, action):
         # Forward action to the vehicle

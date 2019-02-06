@@ -4,13 +4,14 @@ import baselines.run as run
 import highway_env
 
 DEFAULT_ARGUMENTS = [
-    "--env=highway-continuous-v0",
+    "--env=highway-parking-v0",
     "--alg=her",
     "--num_timesteps=1e4",
     "--network=default",
     "--num_env=0",
     "--save_path=~/models/latest",
     "--load_path=~/models/latest",
+    "--save_video_interval=0",
     "--play"
 ]
 
