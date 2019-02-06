@@ -43,8 +43,8 @@ def test_roundabout_step():
     assert 0 <= reward <= 1
 
 
-def test_continuous_step():
-    env = gym.make('highway-continuous-v0')
+def test_parking_step():
+    env = gym.make('highway-parking-v0')
 
     env.reset()
     for i in range(10):
