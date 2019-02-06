@@ -230,7 +230,7 @@ class Obstacle(Vehicle):
         A motionless obstacle at a given position.
     """
 
-    def __init__(self, road, position):
-        super(Obstacle, self).__init__(road, position, velocity=0)
+    def __init__(self, road, position, heading=0):
+        super(Obstacle, self).__init__(road, position, velocity=0, heading=heading)
         self.target_velocity = 0
         self.LENGTH = self.WIDTH

@@ -56,8 +56,9 @@ class EnvViewer(object):
             Set the sequence of actions chosen by the agent, so that it can be displayed
         :param actions: list of action, following the env's action space specification
         """
-        agent_action_sequence = [self.env.ACTIONS[a] for a in actions]
-        self.vehicle_trajectory = self.env.vehicle.predict_trajectory(agent_action_sequence,
+        if hasattr(self.env.action_space, 'n'):
+            actions = [self.env.ACTIONS[a] for a in actions]
+        self.vehicle_trajectory = self.env.vehicle.predict_trajectory(actions,
                                                                       1 / self.env.POLICY_FREQUENCY,
                                                                       1 / 3 / self.env.POLICY_FREQUENCY,
                                                                       1 / self.env.SIMULATION_FREQUENCY)

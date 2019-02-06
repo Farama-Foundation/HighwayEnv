@@ -106,24 +106,24 @@ class VehicleGraphics(object):
         :param vehicle: the vehicle receiving the event
         :param event: the pygame event
         """
-        action = vehicle.action
+        action = vehicle.action.copy()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                action['acceleration'] = 4
+                action['steering'] = 45 * np.pi / 180
             if event.key == pygame.K_LEFT:
-                action['acceleration'] = -6
+                action['steering'] = -45 * np.pi / 180
             if event.key == pygame.K_DOWN:
-                action['steering'] = 20 * np.pi / 180
+                action['acceleration'] = -6
             if event.key == pygame.K_UP:
-                action['steering'] = -20 * np.pi / 180
+                action['acceleration'] = 5
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT:
-                action['acceleration'] = 0
+                action['steering'] = 0
             if event.key == pygame.K_LEFT:
-                action['acceleration'] = 0
+                action['steering'] = 0
             if event.key == pygame.K_DOWN:
-                action['steering'] = 0
+                action['acceleration'] = 0
             if event.key == pygame.K_UP:
-                action['steering'] = 0
+                action['acceleration'] = 0
         if action != vehicle.action:
             vehicle.act(action)
