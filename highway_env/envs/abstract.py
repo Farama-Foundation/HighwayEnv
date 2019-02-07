@@ -66,7 +66,7 @@ class AbstractEnv(gym.Env):
         # Spaces
         self.action_space = spaces.Discrete(len(self.ACTIONS))
         self.observation_space = spaces.Box(shape=(len(self.OBSERVATION_FEATURES)*self.OBSERVATION_VEHICLES,),
-                                            low=-1, high=1)
+                                            low=-1, high=1, dtype=np.float32)
 
         # Running
         self.done = False
