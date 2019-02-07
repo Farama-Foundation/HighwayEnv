@@ -121,7 +121,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         :param p: the Lp^p norm used in the reward. Use p<1 to have high kurtosis for rewards in [0, 1]
         :return: the corresponding reward
         """
-        return - np.power(self.OBS_SCALE * np.abs(achieved_goal - desired_goal) @ self.REWARD_WEIGHTS, p)
+        return - np.power(np.dot(self.OBS_SCALE * np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
 
     def _reward(self, action):
         raise NotImplementedError
