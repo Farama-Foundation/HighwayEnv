@@ -50,7 +50,6 @@ def test_parking_step():
     for i in range(10):
         action = env.action_space.sample()
         obs, reward, done, info = env.step(action)
-        env.render()
     env.close()
 
     assert action.size == 2
