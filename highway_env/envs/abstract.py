@@ -7,7 +7,7 @@ from gym.utils import seeding
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.finite_mdp import finite_mdp
+from highway_env.envs.finite_mdp import finite_mdp, compute_ttc_grid
 from highway_env.envs.graphics import EnvViewer
 from highway_env.road.lane import AbstractLane
 from highway_env.vehicle.behavior import IDMVehicle
@@ -51,8 +51,10 @@ class AbstractEnv(gym.Env):
         The maximum distance of any vehicle present in the observation [m]
     """
 
-    OBSERVATION_FEATURES = ['presence', 'x', 'y', 'vx', 'vy']
-    OBSERVATION_VEHICLES = 5
+    OBSERVATION_TYPES = ["kinematics", "time_to_collision"]
+    KIN_OBS_FEATURES = ['presence', 'x', 'y', 'vx', 'vy']
+    KIN_OBS_VEHICLES = 5
+    TTC_OBS_HORIZON = 10
 
     def __init__(self):
         # Seeding
@@ -64,9 +66,8 @@ class AbstractEnv(gym.Env):
         self.vehicle = None
 
         # Spaces
-        self.action_space = spaces.Discrete(len(self.ACTIONS))
-        self.observation_space = spaces.Box(shape=(len(self.OBSERVATION_FEATURES)*self.OBSERVATION_VEHICLES,),
-                                            low=-1, high=1, dtype=np.float32)
+        self.observation_type = "time_to_collision"
+        self.make_spaces()
 
         # Running
         self.done = False
@@ -82,13 +83,52 @@ class AbstractEnv(gym.Env):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
+    def make_spaces(self):
+        self.action_space = spaces.Discrete(len(self.ACTIONS))
+        if self.observation_type == "kinematics":
+            self.observation_space = spaces.Box(shape=(len(self.KIN_OBS_FEATURES) * self.KIN_OBS_VEHICLES,),
+                                                low=-1, high=1, dtype=np.float32)
+        elif self.observation_type == "time_to_collision":
+            self.observation_space = spaces.Box(shape=self._observation().shape,
+                                                low=0, high=1, dtype=np.float32)
+        else:
+            raise ValueError("Unknown observation type")
+
     def _observation(self):
         """
             Return the observation of the current state, which must be consistent with self.observation_space.
         :return: the observation
         """
+        if self.observation_type == "kinematics":
+            return self._observation_kinematic()
+        elif self.observation_type == "time_to_collision":
+            return self._observation_ttc()
+        else:
+            raise ValueError("Unknown observation type")
+
+    def _observation_ttc(self):
+        try:
+            grid = compute_ttc_grid(self, time_quantization=1/self.POLICY_FREQUENCY, horizon=self.TTC_OBS_HORIZON)
+            padding = np.ones(np.shape(grid))
+            padded_grid = np.concatenate([padding, grid, padding], axis=1)
+            obs_lanes = 3
+            l0 = grid.shape[1] + self.vehicle.lane_index[2] - obs_lanes // 2
+            lf = grid.shape[1] + self.vehicle.lane_index[2] + obs_lanes // 2
+            clamped_grid = padded_grid[:, l0:lf+1, :]
+            repeats = np.ones(clamped_grid.shape[0])
+            repeats[np.array([0, -1])] += clamped_grid.shape[0]
+            padded_grid = np.repeat(clamped_grid, repeats.astype(int), axis=0)
+            obs_velocities = 3
+            v0 = grid.shape[0] + self.vehicle.velocity_index - obs_velocities // 2
+            vf = grid.shape[0] + self.vehicle.velocity_index + obs_velocities // 2
+            clamped_grid = padded_grid[v0:vf + 1, :, :]
+            return clamped_grid
+        except AttributeError:
+            return np.array([[[0]]])
+
+    def _observation_kinematic(self):
         # Add ego-vehicle
-        df = pandas.DataFrame.from_records([self.vehicle.to_dict()])[self.OBSERVATION_FEATURES]
+        df = pandas.DataFrame.from_records([self.vehicle.to_dict()])[self.KIN_OBS_FEATURES]
         # Normalize values
         MAX_ROAD_LANES = 4
         road_width = AbstractLane.DEFAULT_WIDTH * MAX_ROAD_LANES
@@ -98,11 +138,11 @@ class AbstractEnv(gym.Env):
         df.loc[0, 'vy'] = utils.remap(df.loc[0, 'vy'], [-MDPVehicle.SPEED_MAX, MDPVehicle.SPEED_MAX], [-1, 1])
 
         # Add nearby traffic
-        close_vehicles = self.road.closest_vehicles_to(self.vehicle, self.OBSERVATION_VEHICLES - 1)
+        close_vehicles = self.road.closest_vehicles_to(self.vehicle, self.KIN_OBS_VEHICLES - 1)
         if close_vehicles:
             df = df.append(pandas.DataFrame.from_records(
                 [v.to_dict(self.vehicle)
-                 for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]])[self.OBSERVATION_FEATURES],
+                 for v in close_vehicles[-self.KIN_OBS_VEHICLES + 1:]])[self.KIN_OBS_FEATURES],
                            ignore_index=True)
 
             # Normalize values
@@ -113,12 +153,12 @@ class AbstractEnv(gym.Env):
             df.loc[1:, 'vy'] = utils.remap(df.loc[1:, 'vy'], [-delta_v, delta_v], [-1, 1])
 
         # Fill missing rows
-        if df.shape[0] < self.OBSERVATION_VEHICLES:
-            rows = -np.ones((self.OBSERVATION_VEHICLES - df.shape[0], len(self.OBSERVATION_FEATURES)))
-            df = df.append(pandas.DataFrame(data=rows, columns=self.OBSERVATION_FEATURES), ignore_index=True)
+        if df.shape[0] < self.KIN_OBS_VEHICLES:
+            rows = -np.ones((self.KIN_OBS_VEHICLES - df.shape[0], len(self.KIN_OBS_FEATURES)))
+            df = df.append(pandas.DataFrame(data=rows, columns=self.KIN_OBS_FEATURES), ignore_index=True)
 
         # Reorder
-        df = df[self.OBSERVATION_FEATURES]
+        df = df[self.KIN_OBS_FEATURES]
         # Clip
         obs = np.clip(df.values, -1, 1)
         # Flatten
@@ -157,7 +197,8 @@ class AbstractEnv(gym.Env):
             Reset the environment to it's initial configuration
         :return: the observation of the reset state
         """
-        raise NotImplementedError()
+        self.make_spaces()
+        return self._observation()
 
     def step(self, action):
         """
