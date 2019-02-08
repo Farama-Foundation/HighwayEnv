@@ -56,8 +56,8 @@ class HighwayEnv(AbstractEnv):
     }
 
     def __init__(self):
-        super(HighwayEnv, self).__init__()
         self.config = self.DIFFICULTY_LEVELS["HARD"].copy()
+        super(HighwayEnv, self).__init__()
         self.steps = 0
         self.reset()
 
@@ -65,7 +65,7 @@ class HighwayEnv(AbstractEnv):
         self._create_road()
         self._create_vehicles()
         self.steps = 0
-        return self._observation()
+        return super(HighwayEnv, self).reset()
 
     def step(self, action):
         self.steps += 1

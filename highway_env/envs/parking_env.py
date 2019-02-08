@@ -31,8 +31,8 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         "centering_position": [0.5, 0.5]
     }
 
-    OBSERVATION_FEATURES = ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h']
-    OBSERVATION_VEHICLES = 1
+    KIN_OBS_FEATURES = ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h']
+    KIN_OBS_VEHICLES = 1
     NORMALIZE_OBS = False
 
     def __init__(self):
