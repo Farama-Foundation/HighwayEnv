@@ -137,7 +137,7 @@ This model-free value-based reinforcement learning agent performs Q-learning wit
 ### [Deep Deterministic Policy Gradient](https://github.com/openai/baselines/tree/master/baselines/her)
 
 <p align="center">
-    <img src="docs/media/parking-env.gif"><br/>
+    <img src="docs/media/ddpg.gif"><br/>
     <em>The DDPG agent solving highway-roundabout-v0.</em>
 </p>
 
