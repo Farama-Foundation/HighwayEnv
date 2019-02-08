@@ -54,7 +54,7 @@ env = gym.make("highway-merge-v0")
 In this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high velocity while making room for the vehicles so that they can safely merge in the traffic.
 
 <p align="center">
-    <img src="docs/media/merge.gif"><br/>
+    <img src="docs/media/merge-env.gif"><br/>
     <em>The highway-merge-v0 environment.</em>
 </p>
 
@@ -68,6 +68,19 @@ In this task, the ego-vehicle if approaching a roundabout with flowing traffic. 
 
 <p align="center">
     <img src="docs/media/roundabout-env.gif"><br/>
+    <em>The highway-roundabout-v0 environment.</em>
+</p>
+
+### Parking
+
+```python
+env = gym.make("highway-parking-v0")
+```
+
+A goal-conditioned continuous control task where the ego-vehicle must park in a given space with the appropriate heading.
+
+<p align="center">
+    <img src="docs/media/parking-env.gif"><br/>
     <em>The highway-roundabout-v0 environment.</em>
 </p>
 
@@ -119,8 +132,16 @@ Agents solving the `highway-env` environments are available in the [RL-Agents](h
     <em>The DQN agent solving highway-v0.</em>
 </p>
 
-This model-free reinforcement learning agent performs Q-learning with function approximation, using a neural network to represent the state-action value function Q.
+This model-free value-based reinforcement learning agent performs Q-learning with function approximation, using a neural network to represent the state-action value function Q.
 
+### [Deep Deterministic Policy Gradient](https://github.com/openai/baselines/tree/master/baselines/her)
+
+<p align="center">
+    <img src="docs/media/parking-env.gif"><br/>
+    <em>The DDPG agent solving highway-roundabout-v0.</em>
+</p>
+
+This model-free policy-based reinforcement learning agent is optimized directly by gradient ascent. It uses Hindsight Experience Replay to efficiently learn how to solve a goal-conditioned task.
 
 ### [Value Iteration](https://github.com/eleurent/rl-agents/blob/master/rl_agents/agents/dynamic_programming/value_iteration.py)
 
