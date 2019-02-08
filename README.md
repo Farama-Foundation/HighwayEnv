@@ -128,7 +128,7 @@ Agents solving the `highway-env` environments are available in the [RL-Agents](h
 
 
 <p align="center">
-    <img src="docs/media/dqn.gif"><br/>
+    <img src="../gh-media/docs/media/dqn.gif?raw=true"><br/>
     <em>The DQN agent solving highway-v0.</em>
 </p>
 
