@@ -77,7 +77,7 @@ In this task, the ego-vehicle if approaching a roundabout with flowing traffic. 
 env = gym.make("highway-parking-v0")
 ```
 
-A goal-conditioned continuous control task where the ego-vehicle must park in a given space with the appropriate heading.
+A goal-conditioned continuous control task in which the ego-vehicle must park in a given space with the appropriate heading.
 
 <p align="center">
     <img src="../gh-media/docs/media/parking-env.gif?raw=true"><br/>
