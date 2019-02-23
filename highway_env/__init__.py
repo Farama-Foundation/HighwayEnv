@@ -16,6 +16,12 @@ register(
 )
 
 register(
+    id='highway-continuous-line-v0',
+    entry_point='highway_env.envs:ContinuousLineEnv',
+    tags={'wrapper_config.TimeLimit.max_episode_steps': 15}
+)
+
+register(
     id='highway-parking-v0',
     entry_point='highway_env.envs:ParkingEnv',
     tags={'wrapper_config.TimeLimit.max_episode_steps': 20}

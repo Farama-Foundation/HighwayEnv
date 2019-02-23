@@ -130,7 +130,7 @@ class AbstractEnv(gym.Env):
         # Add ego-vehicle
         df = pandas.DataFrame.from_records([self.vehicle.to_dict()])[self.KIN_OBS_FEATURES]
         # Normalize values
-        MAX_ROAD_LANES = 4
+        MAX_ROAD_LANES = 1
         road_width = AbstractLane.DEFAULT_WIDTH * MAX_ROAD_LANES
         df.loc[0, 'x'] = 0
         df.loc[0, 'y'] = utils.remap(df.loc[0, 'y'], [0, road_width], [0, 1])
@@ -146,7 +146,7 @@ class AbstractEnv(gym.Env):
                            ignore_index=True)
 
             # Normalize values
-            delta_v = 2*(MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN)
+            delta_v = 2*MDPVehicle.SPEED_MAX
             df.loc[1:, 'x'] = utils.remap(df.loc[1:, 'x'], [-self.PERCEPTION_DISTANCE, self.PERCEPTION_DISTANCE], [-1, 1])
             df.loc[1:, 'y'] = utils.remap(df.loc[1:, 'y'], [-road_width, road_width], [-1, 1])
             df.loc[1:, 'vx'] = utils.remap(df.loc[1:, 'vx'], [-delta_v, delta_v], [-1, 1])
