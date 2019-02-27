@@ -23,28 +23,24 @@ class TwoWayEnv(AbstractEnv):
     LEFT_LANE_REWARD = 0.2
     HIGH_VELOCITY_REWARD = 0.8
 
-    KIN_OBS_FEATURES = ['x', 'y', 'vx', 'vy']
-    KIN_OBS_VEHICLES = 6
-
-    DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-                      "centering_position": [0.3, 0.5]}
+    DEFAULT_CONFIG = {
+        "observation": {
+            "type": "Kinematics",
+            "features": ['x', 'y', 'vx', 'vy'],
+            "vehicles_count": 6
+        },
+        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+        "centering_position": [0.3, 0.5]
+    }
 
     def __init__(self):
         super(TwoWayEnv, self).__init__()
-        self.config = self.DEFAULT_CONFIG.copy()
-        self.observation_type = "time_to_collision"
         self.steps = 0
         self.reset()
-
-    def configure(self, config):
-        self.config.update(config)
 
     def step(self, action):
         self.steps += 1
         return super(TwoWayEnv, self).step(action)
-
-    def _observation(self):
-        return super(TwoWayEnv, self)._observation()
 
     def _reward(self, action):
         """
@@ -74,7 +70,7 @@ class TwoWayEnv(AbstractEnv):
         self.steps = 0
         self._make_road()
         self._make_vehicles()
-        return self._observation()
+        return super(TwoWayEnv, self).reset()
 
     def _make_road(self, length = 800):
         """
