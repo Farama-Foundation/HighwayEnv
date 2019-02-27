@@ -16,8 +16,8 @@ register(
 )
 
 register(
-    id='highway-continuous-line-v0',
-    entry_point='highway_env.envs:ContinuousLineEnv',
+    id='highway-two-way-v0',
+    entry_point='highway_env.envs:TwoWayEnv',
     tags={'wrapper_config.TimeLimit.max_episode_steps': 15}
 )
 
