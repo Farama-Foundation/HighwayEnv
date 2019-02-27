@@ -18,22 +18,20 @@ class RoundaboutEnv(AbstractEnv):
 
     DURATION = 11
 
-    DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-                      "incoming_vehicle_destination": None,
-                      "centering_position": [0.5, 0.6]}
+    DEFAULT_CONFIG = {
+        "observation": {
+            "type": "Kinematics"
+        },
+        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+        "incoming_vehicle_destination": None,
+        "centering_position": [0.5, 0.6]
+    }
 
     def __init__(self):
         super(RoundaboutEnv, self).__init__()
-        self.config = self.DEFAULT_CONFIG.copy()
         self.steps = 0
         self.reset()
         EnvViewer.SCREEN_HEIGHT = 600
-
-    def configure(self, config):
-        self.config.update(config)
-
-    def _observation(self):
-        return super(RoundaboutEnv, self)._observation()
 
     def _reward(self, action):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
@@ -51,7 +49,7 @@ class RoundaboutEnv(AbstractEnv):
         self._make_road()
         self._make_vehicles()
         self.steps = 0
-        return self._observation()
+        return super(RoundaboutEnv, self).reset()
 
     def step(self, action):
         self.steps += 1

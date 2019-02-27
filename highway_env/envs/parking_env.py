@@ -23,27 +23,22 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     STEERING_RANGE = np.pi / 4
     ACCELERATION_RANGE = 5.0
 
-    OBS_SCALE = 100
     REWARD_WEIGHTS = [1 / 100, 1 / 100, 1 / 100, 1 / 100, 1 / 10, 1/10]
     SUCCESS_GOAL_REWARD = 0.15
 
     DEFAULT_CONFIG = {
+        "observation": {
+            "type": "KinematicsGoal",
+            "features": ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h'],
+            "scale": 100,
+            "normalize": False
+        },
         "centering_position": [0.5, 0.5]
     }
 
-    KIN_OBS_FEATURES = ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h']
-    KIN_OBS_VEHICLES = 1
-    NORMALIZE_OBS = False
-
     def __init__(self):
         super(ParkingEnv, self).__init__()
-        self.config = self.DEFAULT_CONFIG.copy()
-        obs = self.reset()
-        self.observation_space = spaces.Dict(dict(
-            desired_goal=spaces.Box(-np.inf, np.inf, shape=obs["desired_goal"].shape, dtype=np.float32),
-            achieved_goal=spaces.Box(-np.inf, np.inf, shape=obs["achieved_goal"].shape, dtype=np.float32),
-            observation=spaces.Box(-np.inf, np.inf, shape=obs["observation"].shape, dtype=np.float32),
-        ))
+        self.reset()
         self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
         self.REWARD_WEIGHTS = np.array(self.REWARD_WEIGHTS)
         EnvViewer.SCREEN_HEIGHT = EnvViewer.SCREEN_WIDTH // 2
@@ -56,7 +51,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         })
         self._simulate()
 
-        obs = self._observation()
+        obs = self.observation.observe()
         info = {"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])}
         reward = self.compute_reward(obs['achieved_goal'], obs['desired_goal'], info)
         terminal = self._is_terminal()
@@ -65,10 +60,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     def reset(self):
         self._create_road()
         self._create_vehicles()
-        return self._observation()
-
-    def configure(self, config):
-        self.config.update(config)
+        return super(ParkingEnv, self).reset()
 
     def _create_road(self, spots=15):
         """
@@ -100,15 +92,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         self.goal.COLLISIONS_ENABLED = False
         self.road.vehicles.insert(0, self.goal)
 
-    def _observation(self):
-        obs = np.ravel(pandas.DataFrame.from_records([self.vehicle.to_dict()])[self.OBSERVATION_FEATURES])
-        goal = np.ravel(pandas.DataFrame.from_records([self.goal.to_dict()])[self.OBSERVATION_FEATURES])
-        obs = {
-            "observation": obs / self.OBS_SCALE,
-            "achieved_goal": obs / self.OBS_SCALE,
-            "desired_goal": goal / self.OBS_SCALE
-        }
-        return obs
+
 
     def compute_reward(self, achieved_goal, desired_goal, info, p=0.5):
         """
@@ -121,7 +105,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         :param p: the Lp^p norm used in the reward. Use p<1 to have high kurtosis for rewards in [0, 1]
         :return: the corresponding reward
         """
-        return - np.power(np.dot(self.OBS_SCALE * np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
+        return - np.power(np.dot(self.observation.scale * np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
 
     def _reward(self, action):
         raise NotImplementedError
@@ -133,5 +117,4 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         """
             The episode is over if the ego vehicle crashed or the goal is reached.
         """
-        obs = self._observation()
         return self.vehicle.crashed  # or self._is_success(obs['achieved_goal'], obs['desired_goal'])
