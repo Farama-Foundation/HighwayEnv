@@ -9,13 +9,13 @@ from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle
 
 
-class ContinuousLineEnv(AbstractEnv):
+class TwoWayEnv(AbstractEnv):
     """
-        A highway merge negotiation environment.
+        A risk management task: the agent is driving on a two-way lane with icoming traffic.
+        It must balance making progress by overtaking and ensuring safety.
 
-        The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.
-        It is rewarded for maintaining a high velocity and avoiding collisions, but also making room for merging
-        vehicles.
+        These conflicting objectives are implemented by a reward signal and a constraint signal,
+        in the CMDP/BMDP framework.
     """
 
     COLLISION_REWARD = 0
@@ -30,7 +30,7 @@ class ContinuousLineEnv(AbstractEnv):
                       "centering_position": [0.3, 0.5]}
 
     def __init__(self):
-        super(ContinuousLineEnv, self).__init__()
+        super(TwoWayEnv, self).__init__()
         self.config = self.DEFAULT_CONFIG.copy()
         self.observation_type = "time_to_collision"
         self.steps = 0
@@ -41,15 +41,14 @@ class ContinuousLineEnv(AbstractEnv):
 
     def step(self, action):
         self.steps += 1
-        return super(ContinuousLineEnv, self).step(action)
+        return super(TwoWayEnv, self).step(action)
 
     def _observation(self):
-        return super(ContinuousLineEnv, self)._observation()
+        return super(TwoWayEnv, self)._observation()
 
     def _reward(self, action):
         """
-            The vehicle is rewarded for driving with high velocity on lanes to the right and avoiding collisions, but
-            an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low velocity.
+            The vehicle is rewarded for driving with high velocity
         :param action: the action performed
         :return: the reward of the state-action transition
         """
@@ -57,13 +56,6 @@ class ContinuousLineEnv(AbstractEnv):
 
         reward = self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1) \
             + self.LEFT_LANE_REWARD * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
-        lambda_ = 0
-        reward -= lambda_ * self._constraint(action)
-        if lambda_ > 1:
-            reward /= lambda_
-        # return utils.remap(reward,
-        #                    [-lambda_, self.HIGH_VELOCITY_REWARD],
-        #
         return reward
 
     def _is_terminal(self):
@@ -74,7 +66,7 @@ class ContinuousLineEnv(AbstractEnv):
 
     def _constraint(self, action):
         """
-            The constraint signal is the occurrence of collision
+            The constraint signal is the time spent driving on the opposite lane, and occurence of collisions.
         """
         return float(self.vehicle.crashed) + float(self.vehicle.lane_index[2] == 0)/15
 
@@ -84,15 +76,14 @@ class ContinuousLineEnv(AbstractEnv):
         self._make_vehicles()
         return self._observation()
 
-    def _make_road(self):
+    def _make_road(self, length = 800):
         """
-            Make a road composed of a straight highway and a merging lane.
+            Make a road composed of a two-way road.
         :return: the road
         """
         net = RoadNetwork()
 
-        # Highway lanes
-        length = 800
+        # Lanes
         net.add_lane("a", "b", StraightLane([0, 0], [length, 0],
                                             line_types=[LineType.CONTINUOUS_LINE, LineType.STRIPED]))
         net.add_lane("a", "b", StraightLane([0, StraightLane.DEFAULT_WIDTH], [length, StraightLane.DEFAULT_WIDTH],
@@ -105,7 +96,7 @@ class ContinuousLineEnv(AbstractEnv):
 
     def _make_vehicles(self):
         """
-            Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+            Populate a road with several vehicles on the road
         :return: the ego-vehicle
         """
         road = self.road
