@@ -24,19 +24,17 @@ class MergeEnv(AbstractEnv):
     MERGING_VELOCITY_REWARD = -0.5
     LANE_CHANGE_REWARD = -0.05
 
-    DEFAULT_CONFIG = {"other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-                      "centering_position": [0.3, 0.5]}
+    DEFAULT_CONFIG = {
+        "observation": {
+            "type": "Kinematics"
+        },
+        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+        "centering_position": [0.3, 0.5]
+    }
 
     def __init__(self):
         super(MergeEnv, self).__init__()
-        self.config = self.DEFAULT_CONFIG.copy()
         self.reset()
-
-    def configure(self, config):
-        self.config.update(config)
-
-    def _observation(self):
-        return super(MergeEnv, self)._observation()
 
     def _reward(self, action):
         """
@@ -73,7 +71,7 @@ class MergeEnv(AbstractEnv):
     def reset(self):
         self._make_road()
         self._make_vehicles()
-        return self._observation()
+        return super(MergeEnv, self).reset()
 
     def _make_road(self):
         """

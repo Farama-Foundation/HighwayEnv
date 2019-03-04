@@ -7,7 +7,8 @@ from gym.utils import seeding
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.finite_mdp import finite_mdp
+from highway_env.envs.observation import observation_factory
+from highway_env.envs.finite_mdp import finite_mdp, compute_ttc_grid
 from highway_env.envs.graphics import EnvViewer
 from highway_env.road.lane import AbstractLane
 from highway_env.vehicle.behavior import IDMVehicle
@@ -51,10 +52,18 @@ class AbstractEnv(gym.Env):
         The maximum distance of any vehicle present in the observation [m]
     """
 
-    OBSERVATION_FEATURES = ['presence', 'x', 'y', 'vx', 'vy']
-    OBSERVATION_VEHICLES = 5
+    DEFAULT_CONFIG = {
+        "observation": {
+            "type": "TimeToCollision"
+        }
+    }
 
-    def __init__(self):
+    def __init__(self, config=None):
+        # Configuration
+        self.config = config
+        if not self.config:
+            self.config = self.DEFAULT_CONFIG.copy()
+
         # Seeding
         self.np_random = None
         self.seed()
@@ -64,9 +73,8 @@ class AbstractEnv(gym.Env):
         self.vehicle = None
 
         # Spaces
-        self.action_space = spaces.Discrete(len(self.ACTIONS))
-        self.observation_space = spaces.Box(shape=(len(self.OBSERVATION_FEATURES)*self.OBSERVATION_VEHICLES,),
-                                            low=-1, high=1, dtype=np.float32)
+        self.observation = None
+        self.define_spaces()
 
         # Running
         self.done = False
@@ -82,48 +90,16 @@ class AbstractEnv(gym.Env):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def _observation(self):
-        """
-            Return the observation of the current state, which must be consistent with self.observation_space.
-        :return: the observation
-        """
-        # Add ego-vehicle
-        df = pandas.DataFrame.from_records([self.vehicle.to_dict()])[self.OBSERVATION_FEATURES]
-        # Normalize values
-        MAX_ROAD_LANES = 4
-        road_width = AbstractLane.DEFAULT_WIDTH * MAX_ROAD_LANES
-        df.loc[0, 'x'] = 0
-        df.loc[0, 'y'] = utils.remap(df.loc[0, 'y'], [0, road_width], [0, 1])
-        df.loc[0, 'vx'] = utils.remap(df.loc[0, 'vx'], [MDPVehicle.SPEED_MIN, MDPVehicle.SPEED_MAX], [0, 1])
-        df.loc[0, 'vy'] = utils.remap(df.loc[0, 'vy'], [-MDPVehicle.SPEED_MAX, MDPVehicle.SPEED_MAX], [-1, 1])
+    def configure(self, config):
+        self.config.update(config)
 
-        # Add nearby traffic
-        close_vehicles = self.road.closest_vehicles_to(self.vehicle, self.OBSERVATION_VEHICLES - 1)
-        if close_vehicles:
-            df = df.append(pandas.DataFrame.from_records(
-                [v.to_dict(self.vehicle)
-                 for v in close_vehicles[-self.OBSERVATION_VEHICLES+1:]])[self.OBSERVATION_FEATURES],
-                           ignore_index=True)
+    def define_spaces(self):
+        self.action_space = spaces.Discrete(len(self.ACTIONS))
 
-            # Normalize values
-            delta_v = 2*(MDPVehicle.SPEED_MAX - MDPVehicle.SPEED_MIN)
-            df.loc[1:, 'x'] = utils.remap(df.loc[1:, 'x'], [-self.PERCEPTION_DISTANCE, self.PERCEPTION_DISTANCE], [-1, 1])
-            df.loc[1:, 'y'] = utils.remap(df.loc[1:, 'y'], [-road_width, road_width], [-1, 1])
-            df.loc[1:, 'vx'] = utils.remap(df.loc[1:, 'vx'], [-delta_v, delta_v], [-1, 1])
-            df.loc[1:, 'vy'] = utils.remap(df.loc[1:, 'vy'], [-delta_v, delta_v], [-1, 1])
-
-        # Fill missing rows
-        if df.shape[0] < self.OBSERVATION_VEHICLES:
-            rows = -np.ones((self.OBSERVATION_VEHICLES - df.shape[0], len(self.OBSERVATION_FEATURES)))
-            df = df.append(pandas.DataFrame(data=rows, columns=self.OBSERVATION_FEATURES), ignore_index=True)
-
-        # Reorder
-        df = df[self.OBSERVATION_FEATURES]
-        # Clip
-        obs = np.clip(df.values, -1, 1)
-        # Flatten
-        obs = np.ravel(obs)
-        return obs
+        if "observation" not in self.config:
+            raise ValueError("The observation configuration must be defined")
+        self.observation = observation_factory(self, self.config["observation"])
+        self.observation_space = self.observation.space()
 
     def _reward(self, action):
         """
@@ -157,7 +133,8 @@ class AbstractEnv(gym.Env):
             Reset the environment to it's initial configuration
         :return: the observation of the reset state
         """
-        raise NotImplementedError()
+        self.define_spaces()
+        return self.observation.observe()
 
     def step(self, action):
         """
@@ -175,7 +152,7 @@ class AbstractEnv(gym.Env):
         self.vehicle.act(self.ACTIONS[action])
         self._simulate()
 
-        obs = self._observation()
+        obs = self.observation.observe()
         reward = self._reward(action)
         terminal = self._is_terminal()
 

@@ -90,7 +90,7 @@ def compute_ttc_grid(env, time_quantization, horizon, considered_lanes="all"):
             collision_points = [(0, 1), (-margin, 0.5), (margin, 0.5)]
             for m, cost in collision_points:
                 distance = env.vehicle.lane_distance_to(other) + m
-                other_projected_velocity = other.velocity
+                other_projected_velocity = other.velocity * np.dot(other.direction, env.vehicle.direction)
                 time_to_collision = distance / utils.not_zero(ego_velocity - other_projected_velocity)
                 if time_to_collision < 0:
                     continue
