@@ -25,39 +25,38 @@ class HighwayEnv(AbstractEnv):
     LANE_CHANGE_REWARD = -0
     """ The reward received at each lane change action."""
 
+    DEFAULT_CONFIG = {
+        "observation": {
+            "type": "Kinematics"
+        },
+        "initial_spacing": 2,
+        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+        "centering_position": [0.3, 0.5],
+        "collision_reward": COLLISION_REWARD
+    }
+
     DIFFICULTY_LEVELS = {
         "EASY": {
             "lanes_count": 2,
-            "initial_spacing": 2,
             "vehicles_count": 5,
-            "duration": 20,
-            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": [0.3, 0.5],
-            "collision_reward": COLLISION_REWARD
+            "duration": 20
         },
         "MEDIUM": {
             "lanes_count": 3,
-            "initial_spacing": 2,
             "vehicles_count": 10,
-            "duration": 30,
-            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": [0.3, 0.5],
-            "collision_reward": COLLISION_REWARD
+            "duration": 30
         },
         "HARD": {
             "lanes_count": 4,
-            "initial_spacing": 3,
             "vehicles_count": 50,
-            "duration": 40,
-            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "centering_position": [0.3, 0.5],
-            "collision_reward": COLLISION_REWARD
+            "duration": 40
         },
     }
 
     def __init__(self):
-        super(HighwayEnv, self).__init__()
-        self.config = self.DIFFICULTY_LEVELS["HARD"].copy()
+        config = self.DEFAULT_CONFIG.copy()
+        config.update(self.DIFFICULTY_LEVELS["HARD"])
+        super(HighwayEnv, self).__init__(config)
         self.steps = 0
         self.reset()
 
@@ -65,22 +64,11 @@ class HighwayEnv(AbstractEnv):
         self._create_road()
         self._create_vehicles()
         self.steps = 0
-        return self._observation()
+        return super(HighwayEnv, self).reset()
 
     def step(self, action):
         self.steps += 1
         return super(HighwayEnv, self).step(action)
-
-    def set_difficulty_level(self, level):
-        if level in self.DIFFICULTY_LEVELS:
-            logger.info("Set difficulty level to: {}".format(level))
-            self.config.update(self.DIFFICULTY_LEVELS[level])
-            self.reset()
-        else:
-            raise ValueError("Invalid difficulty level, choose among {}".format(str(self.DIFFICULTY_LEVELS.keys())))
-
-    def configure(self, config):
-        self.config.update(config)
 
     def _create_road(self):
         """
@@ -115,9 +103,6 @@ class HighwayEnv(AbstractEnv):
         return utils.remap(action_reward[action] + state_reward,
                            [self.config["collision_reward"], self.HIGH_VELOCITY_REWARD+self.RIGHT_LANE_REWARD],
                            [0, 1])
-
-    def _observation(self):
-        return super(HighwayEnv, self)._observation()
 
     def _is_terminal(self):
         """
