@@ -77,6 +77,7 @@ class AbstractEnv(gym.Env):
         self.define_spaces()
 
         # Running
+        self.time = 0
         self.done = False
 
         # Rendering
@@ -148,9 +149,7 @@ class AbstractEnv(gym.Env):
         if self.road is None or self.vehicle is None:
             raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
 
-        # Forward action to the vehicle
-        self.vehicle.act(self.ACTIONS[action])
-        self._simulate()
+        self._simulate(action)
 
         obs = self.observation.observe()
         reward = self._reward(action)
@@ -161,13 +160,18 @@ class AbstractEnv(gym.Env):
 
         return obs, reward, terminal, info
 
-    def _simulate(self):
+    def _simulate(self, action):
         """
             Perform several steps of simulation with constant action
         """
         for k in range(int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY)):
+            if self.time % int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY) == 0:
+                # Forward action to the vehicle
+                self.vehicle.act(self.ACTIONS[action])
+
             self.road.act()
             self.road.step(1 / self.SIMULATION_FREQUENCY)
+            self.time += 1
 
             # Automatically render intermediate simulation steps if a viewer has been launched
             self._automatic_rendering()
