@@ -1,18 +1,17 @@
 import copy
-import itertools
 
 import numpy as np
 
 from highway_env import utils
-from highway_env.utils import intervals_product, integrator_interval, interval_negative_part, intervals_diff, \
-    vector_interval_section, is_metzler, polytope
+from highway_env.interval import polytope, vector_interval_section, integrator_interval, \
+    interval_negative_part, intervals_diff, intervals_product, LPV
 from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.control import MDPVehicle
 
 
 class IntervalVehicle(LinearVehicle):
     """
-        Observer for the interval-membership of a LinearVehicle under parameter uncertainty.
+        Estimator for the interval-membership of a LinearVehicle under parameter uncertainty.
 
         The model trajectory is stored in a model_vehicle, and the lower and upper bounds of the states are stored
         in a min_vehicle and max_vehicle. Note that these vehicles do not follow a proper Vehicle dynamics, and
@@ -66,10 +65,13 @@ class IntervalVehicle(LinearVehicle):
         return v
 
     def step(self, dt):
-        # self.observer_step(dt)
-        # self.partial_step(dt)
+        if self.crashed:
+            self.interval = VehicleInterval(self)
+        else:
+            # self.observer_step(dt)
+            # self.partial_observer_step(dt)
+            self.predictor_step(dt)
         self.store_trajectories()
-        self.predictor_step(dt)
         super(IntervalVehicle, self).step(dt)
 
     def observer_step(self, dt, lane_change_model="model"):
@@ -80,10 +82,6 @@ class IntervalVehicle(LinearVehicle):
                                   - all: assume that any lane change decision is possible at any timestep
                                   - right: assume that a right lane change decision is possible at any timestep
         """
-        if self.crashed:
-            self.interval = VehicleInterval(self)
-            return
-
         # Input state intervals
         position_i = self.interval.position
         position_i[0, 1] -= 0.1  # TODO: Add noise on y
@@ -91,33 +89,22 @@ class IntervalVehicle(LinearVehicle):
         psi_i = self.interval.heading
 
         # Features interval
-        # TODO: For now, we assume the front vehicle follows the models' front vehicle
-        front_vehicle, _ = self.road.neighbour_vehicles(self)
-        if front_vehicle:
-            if isinstance(front_vehicle, IntervalVehicle):
-                # Use interval from the observer estimate of the front vehicle
-                front_interval = front_vehicle.interval
-            else:
-                # The front vehicle trajectory interval is not being estimated, so it should be considered as certain.
-                # We use a new observer created from that current vehicle state, which will have full certainty.
-                front_interval = IntervalVehicle.create_from(front_vehicle).interval
-        else:
-            front_interval = None
+        front_interval = self.get_front_interval()
 
         # Acceleration features
         phi_a_i = np.zeros((2, 3))
         phi_a_i[:, 0] = [0, 0]
         if front_interval:
-            phi_a_i[:, 1] = IntervalVehicle.interval_negative_part(
-                IntervalVehicle.intervals_diff(front_interval.velocity, v_i))
+            phi_a_i[:, 1] = interval_negative_part(
+                intervals_diff(front_interval.velocity, v_i))
             # Lane distance interval
             lane_psi = self.lane.heading_at(self.lane.local_coordinates(self.position)[0])
             lane_direction = [np.cos(lane_psi), np.sin(lane_psi)]
-            diff_i = IntervalVehicle.intervals_diff(front_interval.position, position_i)
-            d_i = IntervalVehicle.vector_interval_section(diff_i, lane_direction)
+            diff_i = intervals_diff(front_interval.position, position_i)
+            d_i = vector_interval_section(diff_i, lane_direction)
 
             d_safe_i = self.DISTANCE_WANTED + self.LENGTH + self.TIME_WANTED * v_i
-            phi_a_i[:, 2] = IntervalVehicle.interval_negative_part(IntervalVehicle.intervals_diff(d_i, d_safe_i))
+            phi_a_i[:, 2] = interval_negative_part(IntervalVehicle.intervals_diff(d_i, d_safe_i))
 
         # Steering features
         phi_b_i = None
@@ -144,7 +131,7 @@ class IntervalVehicle(LinearVehicle):
             i_v_i = 1/np.flip(v_i, 0)
             phi_b_i_lane = np.transpose(np.array([
                 [0, 0],
-                IntervalVehicle.intervals_product(lateral_i, i_v_i)]))
+                intervals_product(lateral_i, i_v_i)]))
             # Union of candidate feature intervals
             if phi_b_i is None:
                 phi_b_i = phi_b_i_lane
@@ -153,22 +140,22 @@ class IntervalVehicle(LinearVehicle):
                 phi_b_i[1] = np.maximum(phi_b_i[1], phi_b_i_lane[1])
 
         # Commands interval
-        a_i = IntervalVehicle.intervals_product(self.theta_a_i, phi_a_i)
-        b_i = IntervalVehicle.intervals_product(self.theta_b_i, phi_b_i)
+        a_i = intervals_product(self.theta_a_i, phi_a_i)
+        b_i = intervals_product(self.theta_b_i, phi_b_i)
 
         # Velocities interval
         keep_stability = False
         if keep_stability:
-            dv_i = IntervalVehicle.integrator_interval(v_i - self.target_velocity, self.theta_a_i[:, 0])
+            dv_i = integrator_interval(v_i - self.target_velocity, self.theta_a_i[:, 0])
         else:
-            dv_i = IntervalVehicle.intervals_product(self.theta_a_i[:, 0], self.target_velocity - np.flip(v_i, 0))
+            dv_i = intervals_product(self.theta_a_i[:, 0], self.target_velocity - np.flip(v_i, 0))
         dv_i += a_i
         dv_i = np.clip(dv_i, -self.ACC_MAX, self.ACC_MAX)
         if keep_stability:
             delta_psi = list(map(utils.wrap_to_pi, psi_i - lane_psi))
-            d_psi_i = IntervalVehicle.integrator_interval(delta_psi, self.theta_b_i[:, 0])
+            d_psi_i = integrator_interval(delta_psi, self.theta_b_i[:, 0])
         else:
-            d_psi_i = IntervalVehicle.intervals_product(self.theta_b_i[:, 0], lane_psi - np.flip(psi_i, 0))
+            d_psi_i = intervals_product(self.theta_b_i[:, 0], lane_psi - np.flip(psi_i, 0))
         d_psi_i += b_i
 
         # Position interval
@@ -176,8 +163,8 @@ class IntervalVehicle(LinearVehicle):
                  1 if psi_i[0] <= 0 <= psi_i[1] else max(map(np.cos, psi_i))]
         sin_i = [-1 if psi_i[0] <= -np.pi/2 <= psi_i[1] else min(map(np.sin, psi_i)),
                  1 if psi_i[0] <= np.pi/2 <= psi_i[1] else max(map(np.sin, psi_i))]
-        dx_i = IntervalVehicle.intervals_product(v_i, cos_i)
-        dy_i = IntervalVehicle.intervals_product(v_i, sin_i)
+        dx_i = intervals_product(v_i, cos_i)
+        dy_i = intervals_product(v_i, sin_i)
 
         # Interval dynamics integration
         self.interval.velocity += dv_i * dt
@@ -185,39 +172,49 @@ class IntervalVehicle(LinearVehicle):
         self.interval.position[:, 0] += dx_i * dt
         self.interval.position[:, 1] += dy_i * dt
 
-    def predictor_step(self, dt, lane_change_model="model"):
+    def predictor_step(self, dt):
         """
-                    Step the interval predictor dynamics
-                :param dt: timestep [s]
-                :param lane_change_model: - model: assume that the vehicle will follow the lane of its model behaviour.
-                                          - all: assume that any lane change decision is possible at any timestep
-                                          - right: assume that a right lane change decision is possible at any timestep
-                """
-        if self.crashed:
-            self.interval = VehicleInterval(self)
-            return
+            Step the interval predictor dynamics
+        :param dt: timestep [s]
+        """
+        # Create longitudinal and lateral LPVs
+        self.predictor_init()
 
-        # Input state intervals
+        # Update lateral LPV center to track target lane
+        lane = self.road.network.get_lane(self.target_lane_index)
+        center = np.array([lane.position(0, 0)[1], 0])
+        if (center != self.lateral_lpv.center).any():
+            self.lateral_lpv.x_i_t[0, :] -= self.lateral_lpv.change_coordinates(center, offset=False) - \
+                self.lateral_lpv.change_coordinates(self.lateral_lpv.center, offset=False)
+            self.lateral_lpv.x_i_t[1, :] -= self.lateral_lpv.change_coordinates(center, offset=False) - \
+                self.lateral_lpv.change_coordinates(self.lateral_lpv.center, offset=False)
+            self.lateral_lpv.center = center
+
+        # Step
+        self.longitudinal_lpv.step(dt)
+        self.lateral_lpv.step(dt)
+
+        # Backward coordinates change
+        x_i_long = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.x_i_t, back=True, interval=True)
+        x_i_lat = self.lateral_lpv.change_coordinates(self.lateral_lpv.x_i_t, back=True, interval=True)
+
+        self.interval.position[:, 0] = x_i_long[:, 0]
+        self.interval.position[:, 1] = x_i_lat[:, 0]
+        self.interval.velocity = x_i_long[:, 2]
+        self.interval.heading = x_i_lat[:, 1]
+
+    def predictor_init(self):
+        """
+            Initialize the LPV models used for interval prediction
+        """
         position_i = self.interval.position
         v_i = self.interval.velocity
         psi_i = self.interval.heading
 
-        # Features
-        # TODO: For now, we assume the front vehicle follows the models' front vehicle
-        front_vehicle, _ = self.road.neighbour_vehicles(self)
-        if front_vehicle:
-            if isinstance(front_vehicle, IntervalVehicle):
-                # Use interval from the predictor estimate of the front vehicle
-                front_interval = front_vehicle.interval
-            else:
-                # The front vehicle trajectory interval is not being estimated, so it should be considered as certain.
-                # We use a new observer created from that current vehicle state, which will have full certainty.
-                front_interval = IntervalVehicle.create_from(front_vehicle).interval
-        else:
-            front_interval = None
-
         # Longitudinal predictor
         if not self.longitudinal_lpv:
+            front_interval = self.get_front_interval()
+
             # Parameters interval
             params_i = self.theta_a_i.copy()
 
@@ -245,7 +242,7 @@ class IntervalVehicle(LinearVehicle):
             f_pos = front_interval.position[0, 0] if front_interval else 0
             f_vel = front_interval.velocity[0] if front_interval else 0
             x0 = [position_i[0, 0], f_pos, v_i[0], f_vel]
-            center = [-self.DISTANCE_WANTED-self.target_velocity*self.TIME_WANTED,
+            center = [-self.DISTANCE_WANTED - self.target_velocity * self.TIME_WANTED,
                       0,
                       self.target_velocity,
                       self.target_velocity]
@@ -256,7 +253,6 @@ class IntervalVehicle(LinearVehicle):
             if not self.lateral_lpv:
                 # Parameters interval
                 params_i = self.theta_b_i.copy()
-                # params_i[1] /= v_i.mean()
 
                 # Matrix polytope
                 a_theta = lambda params: np.array([
@@ -267,38 +263,27 @@ class IntervalVehicle(LinearVehicle):
 
                 # LPV specification
                 x0 = [position_i[0, 1], psi_i[0]]
-                # TODO: use self.target_lane_index
                 lane = self.road.network.get_lane(self.target_lane_index)
-                center = [lane.position(0, 0)[1], 0]
+                center = [lane.position(0, 0)[1] / 2, 0]
                 d = [0, 0]
                 self.lateral_lpv = LPV(x0, a0, da, d, center)
 
-        # Update LPV center to target lane
-        lane = self.road.network.get_lane(self.target_lane_index)
-        center = np.array([lane.position(0, 0)[1], 0])
-        if (center != self.lateral_lpv.center).any():
-            self.lateral_lpv.transformed_x_i[0, :] -= self.lateral_lpv.change_coordinates(center, offset=False) - \
-                self.lateral_lpv.change_coordinates(self.lateral_lpv.center, offset=False)
-            self.lateral_lpv.transformed_x_i[1, :] -= self.lateral_lpv.change_coordinates(center, offset=False) - \
-                self.lateral_lpv.change_coordinates(self.lateral_lpv.center, offset=False)
-            self.lateral_lpv.center = center
+    def get_front_interval(self):
+        # TODO: For now, we assume the front vehicle follows the models' front vehicle
+        front_vehicle, _ = self.road.neighbour_vehicles(self)
+        if front_vehicle:
+            if isinstance(front_vehicle, IntervalVehicle):
+                # Use interval from the observer estimate of the front vehicle
+                front_interval = front_vehicle.interval
+            else:
+                # The front vehicle trajectory interval is not being estimated, so it should be considered as certain.
+                # We use a new observer created from that current vehicle state, which will have full certainty.
+                front_interval = IntervalVehicle.create_from(front_vehicle).interval
+        else:
+            front_interval = None
+        return front_interval
 
-        # Step
-        self.longitudinal_lpv.transformed_x_i = self.longitudinal_lpv.step_interval_predictor(
-            self.longitudinal_lpv.transformed_x_i, None, dt)
-        self.lateral_lpv.transformed_x_i = self.lateral_lpv.step_interval_predictor(
-            self.lateral_lpv.transformed_x_i, None, dt)
-
-        # Backward coordinates change
-        x_i_long = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.transformed_x_i, back=True, interval=True)
-        x_i_lat = self.lateral_lpv.change_coordinates(self.lateral_lpv.transformed_x_i, back=True, interval=True)
-
-        self.interval.position[:, 0] = x_i_long[:, 0]
-        self.interval.position[:, 1] = x_i_lat[:, 0]
-        self.interval.velocity = x_i_long[:, 2]
-        self.interval.heading = x_i_lat[:, 1]
-
-    def partial_step(self, dt, alpha=0):
+    def partial_observer_step(self, dt, alpha=0):
         """
             Step the boundary parts of the current state interval
 
@@ -374,87 +359,3 @@ class VehicleInterval(object):
         self.position = np.array([vehicle.position, vehicle.position], dtype=float)
         self.velocity = np.array([vehicle.velocity, vehicle.velocity], dtype=float)
         self.heading = np.array([vehicle.heading, vehicle.heading], dtype=float)
-
-
-class LPV(object):
-    def __init__(self, x0, A0, dAs, d=None, center=None):
-        self.x0 = np.array(x0, dtype=float)
-        self.A0 = np.array(A0, dtype=float)
-        self.dAs = [np.array(dAi) for dAi in dAs]
-        self.d = np.array(d) if d is not None else np.zeros(self.x0.shape)
-        self.center = np.array(center) if center is not None else np.zeros(self.x0.shape)
-        self.coordinates = None
-
-        self.x_i = np.array([self.x0, self.x0])
-        self.transformed_x_i = None
-
-        self.update_coordinates_frame(self.A0)
-
-    def update_coordinates_frame(self, A0):
-        self.coordinates = None
-        # Rotation
-        if not is_metzler(A0):
-            v, P = np.linalg.eig(A0)
-            if np.isreal(v).all():
-                self.coordinates = (P, np.linalg.inv(P))
-            else:
-                print("Non Metzler with complex eigenvalues: ", v)
-        else:
-            self.coordinates = (np.eye(A0.shape[0]), np.eye(A0.shape[0]))
-
-        # Forward coordinates change of states and models
-        self.A0 = self.change_coordinates(self.A0, matrix=True)
-        self.dAs = self.change_coordinates(self.dAs, matrix=True)
-        self.d = self.change_coordinates(self.d, offset=False)
-        self.transformed_x_i = self.change_coordinates(self.x_i)
-
-    def change_coordinates(self, value, matrix=False, back=False, interval=False, offset=True):
-        if self.coordinates is None:
-            return value
-        P, P_inv = self.coordinates
-        if interval:
-            value = intervals_product([self.coordinates[0], self.coordinates[0]],
-                                       value[:, :, np.newaxis]).squeeze() + offset * np.array([self.center, self.center])
-            return value
-        elif matrix:  # Matrix
-            if back:
-                return P @ value @ P_inv
-            else:
-                return P_inv @ value @ P
-        elif isinstance(value, list):  # List
-            return [self.change_coordinates(v, back) for v in value]
-        elif len(value.shape) == 2:
-                for t in range(value.shape[0]):  # Array of vectors
-                    value[t, :] = self.change_coordinates(value[t, :], back=back)
-                return value
-        elif len(value.shape) == 1:  # Vector
-            if back:
-                return P @ value + offset * self.center
-            else:
-                return P_inv @ (value - offset * self.center)
-
-    def step(self, args, x):
-        A, d = args
-        dx = A @ x + d
-        return dx
-
-    def step_interval_observer(self, x_i, args, dt):
-        A0, dAs, d = args
-        A_i = A0 + sum(intervals_product([0, 1], [dA, dA]) for dA in dAs)
-        dx_i = intervals_product(A_i, x_i) + d
-        return x_i + dx_i*dt
-
-    def step_interval_predictor(self, x_i, args, dt):
-        if args:
-            A0, dAs, d = args
-        else:
-            A0, dAs, d = self.A0, self.dAs, self.d
-        p = lambda x: np.maximum(x, 0)
-        n = lambda x: np.maximum(-x, 0)
-        dAp = sum(p(dAi) for dAi in dAs)
-        dAn = sum(n(dAi) for dAi in dAs)
-        x_m, x_M = x_i[0, :, np.newaxis], x_i[1, :, np.newaxis]
-        dx_m = A0 @ x_m - dAp @ n(x_m) - dAn @ p(x_M) + d[:, np.newaxis]
-        dx_M = A0 @ x_M + dAp @ p(x_M) + dAn @ n(x_m) + d[:, np.newaxis]
-        dx_i = np.array([dx_m.squeeze(axis=-1), dx_M.squeeze(axis=-1)])
-        return x_i + dx_i * dt

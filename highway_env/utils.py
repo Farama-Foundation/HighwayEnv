@@ -1,7 +1,6 @@
 from __future__ import division, print_function
 
 import importlib
-import itertools
 
 import numpy as np
 
@@ -106,84 +105,3 @@ def class_from_path(path):
     module_name, class_name = path.rsplit(".", 1)
     class_object = getattr(importlib.import_module(module_name), class_name)
     return class_object
-
-
-def intervals_product(a, b):
-    """
-        Compute the product of two intervals
-    :param a: interval [a_min, a_max]
-    :param b: interval [b_min, b_max]
-    :return: the interval of their product ab
-    """
-    p = lambda x: np.maximum(x, 0)
-    n = lambda x: np.maximum(-x, 0)
-    return np.array(
-        [np.dot(p(a[0]), p(b[0])) - np.dot(p(a[1]), n(b[0])) - np.dot(n(a[0]), p(b[1])) + np.dot(n(a[1]), n(b[1])),
-         np.dot(p(a[1]), p(b[1])) - np.dot(p(a[0]), n(b[1])) - np.dot(n(a[1]), p(b[0])) + np.dot(n(a[0]), n(b[0]))])
-
-
-def intervals_diff(a, b):
-    """
-        Compute the difference of two intervals
-    :param a: interval [a_min, a_max]
-    :param b: interval [b_min, b_max]
-    :return: the interval of their difference a - b
-    """
-    return np.array([a[0] - b[1], a[1] - b[0]])
-
-
-def interval_negative_part(a):
-    """
-        Compute the negative part of an interval
-    :param a: interval [a_min, a_max]
-    :return: the interval of its negative part min(a, 0)
-    """
-    return np.minimum(a, 0)
-
-
-def integrator_interval(x, k):
-    """
-        Compute the interval of an integrator system: dx = -k*x
-    :param x: state interval
-    :param k: gain interval, must be positive
-    :return: interval for dx
-    """
-
-    if x[0] >= 0:
-        interval_gain = np.flip(-k, 0)
-    elif x[1] <= 0:
-        interval_gain = -k
-    else:
-        interval_gain = -np.array([k[0], k[0]])
-    return interval_gain*x  # Note: no flip of x, contrary to using intervals_product(k,interval_minus(x))
-
-
-def vector_interval_section(v_i, direction):
-    corners = [[v_i[0, 0], v_i[0, 1]],
-               [v_i[0, 0], v_i[1, 1]],
-               [v_i[1, 0], v_i[0, 1]],
-               [v_i[1, 0], v_i[1, 1]]]
-    corners_dist = [np.dot(corner, direction) for corner in corners]
-    return np.array([min(corners_dist), max(corners_dist)])
-
-
-def is_metzler(matrix):
-    return (matrix - np.diagonal(matrix) >= 0).all()
-
-
-def polytope(parametrized_f, params_intervals):
-    """
-
-    :param parametrized_f: parametrized matrix function
-    :param params_intervals: axes: [min, max], params
-    :return: a0, d_a polytope that represents the matrix interval
-    """
-    params_means = params_intervals.mean(axis=0)
-    a0 = parametrized_f(params_means)
-    vertices_id = itertools.product([0, 1], repeat=params_intervals.shape[1])
-    d_a = []
-    for vertex_id in vertices_id:
-        params_vertex = params_intervals[vertex_id, np.arange(len(vertex_id))]
-        d_a.append(parametrized_f(params_vertex) - parametrized_f(params_means))
-    d_a = list({d_a_i.tostring(): d_a_i for d_a_i in d_a}.values())
-    return a0, d_a
