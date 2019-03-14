@@ -65,22 +65,19 @@ class IntervalVehicle(LinearVehicle):
         return v
 
     def step(self, dt):
+        self.store_trajectories()
         if self.crashed:
             self.interval = VehicleInterval(self)
         else:
             # self.observer_step(dt)
             # self.partial_observer_step(dt)
             self.predictor_step(dt)
-        self.store_trajectories()
         super(IntervalVehicle, self).step(dt)
 
-    def observer_step(self, dt, lane_change_model="model"):
+    def observer_step(self, dt):
         """
             Step the interval observer dynamics
         :param dt: timestep [s]
-        :param lane_change_model: - model: assume that the vehicle will follow the lane of its model behaviour.
-                                  - all: assume that any lane change decision is possible at any timestep
-                                  - right: assume that a right lane change decision is possible at any timestep
         """
         # Input state intervals
         position_i = self.interval.position
@@ -108,16 +105,7 @@ class IntervalVehicle(LinearVehicle):
 
         # Steering features
         phi_b_i = None
-        if lane_change_model == "model":
-            lanes = [self.target_lane_index]
-        elif lane_change_model == "all":
-            lanes = self.road.network.side_lanes(self.target_lane_index) + [self.target_lane_index]
-        elif lane_change_model == "right":
-            lanes = [self.target_lane_index]
-            _from, _to, _id = self.target_lane_index
-            if _id < len(self.road.network.graph[_from][_to]) - 1 \
-                    and self.road.network.get_lane((_from, _to, _id + 1)).is_reachable_from(self.position):
-                lanes += [(_from, _to, _id + 1)]
+        lanes = self.get_followed_lanes()
         for lane_index in lanes:
             lane = self.road.network.get_lane(lane_index)
             longitudinal_pursuit = lane.local_coordinates(self.position)[0] + self.velocity * self.PURSUIT_TAU
@@ -181,22 +169,28 @@ class IntervalVehicle(LinearVehicle):
         self.predictor_init()
 
         # Update lateral LPV center to track target lane
-        lane = self.road.network.get_lane(self.target_lane_index)
-        center = np.array([lane.position(0, 0)[1], 0])
-        if (center != self.lateral_lpv.center).any():
-            self.lateral_lpv.x_i_t[0, :] -= self.lateral_lpv.change_coordinates(center, offset=False) - \
-                self.lateral_lpv.change_coordinates(self.lateral_lpv.center, offset=False)
-            self.lateral_lpv.x_i_t[1, :] -= self.lateral_lpv.change_coordinates(center, offset=False) - \
-                self.lateral_lpv.change_coordinates(self.lateral_lpv.center, offset=False)
-            self.lateral_lpv.center = center
+        for i, lane_index in enumerate(self.get_followed_lanes()):
+            lane = self.road.network.get_lane(lane_index)
+            center = np.array([lane.position(0, 0)[1], 0])
+            if (center != self.lateral_lpv[i].center).any():
+                self.lateral_lpv[i].x_i_t[0, :] -= self.lateral_lpv[i].change_coordinates(center, offset=False) - \
+                    self.lateral_lpv[i].change_coordinates(self.lateral_lpv[i].center, offset=False)
+                self.lateral_lpv[i].x_i_t[1, :] -= self.lateral_lpv[i].change_coordinates(center, offset=False) - \
+                    self.lateral_lpv[i].change_coordinates(self.lateral_lpv[i].center, offset=False)
+                self.lateral_lpv[i].center = center
 
         # Step
         self.longitudinal_lpv.step(dt)
-        self.lateral_lpv.step(dt)
+        for lpv in self.lateral_lpv:
+            lpv.step(dt)
 
         # Backward coordinates change
         x_i_long = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.x_i_t, back=True, interval=True)
-        x_i_lat = self.lateral_lpv.change_coordinates(self.lateral_lpv.x_i_t, back=True, interval=True)
+        x_i_lat = self.lateral_lpv[0].change_coordinates(self.lateral_lpv[0].x_i_t, back=True, interval=True)
+        for lpv in self.lateral_lpv[1:]:
+            x_i_lat_lane = lpv.change_coordinates(lpv.x_i_t, back=True, interval=True)
+            x_i_lat[0] = np.minimum(x_i_lat[0], x_i_lat_lane[0])
+            x_i_lat[1] = np.maximum(x_i_lat[1], x_i_lat_lane[1])
 
         self.interval.position[:, 0] = x_i_long[:, 0]
         self.interval.position[:, 1] = x_i_lat[:, 0]
@@ -251,22 +245,24 @@ class IntervalVehicle(LinearVehicle):
 
             # Lateral predictor
             if not self.lateral_lpv:
-                # Parameters interval
-                params_i = self.theta_b_i.copy()
+                self.lateral_lpv = []
+                for lane_index in self.get_followed_lanes(squeeze=False):
+                    # Parameters interval
+                    params_i = self.theta_b_i.copy()
 
-                # Matrix polytope
-                a_theta = lambda params: np.array([
-                    [0, 1],
-                    [-params[1], -params[0]]
-                ])
-                a0, da = polytope(a_theta, params_i)
+                    # Matrix polytope
+                    a_theta = lambda params: np.array([
+                        [0, 1],
+                        [-params[1], -params[0]]
+                    ])
+                    a0, da = polytope(a_theta, params_i)
 
-                # LPV specification
-                x0 = [position_i[0, 1], psi_i[0]]
-                lane = self.road.network.get_lane(self.target_lane_index)
-                center = [lane.position(0, 0)[1] / 2, 0]
-                d = [0, 0]
-                self.lateral_lpv = LPV(x0, a0, da, d, center)
+                    # LPV specification
+                    x0 = [position_i[0, 1], psi_i[0]]
+                    lane = self.road.network.get_lane(lane_index)
+                    center = [lane.position(0, 0)[1] / 2, 0]
+                    d = [0, 0]
+                    self.lateral_lpv.append(LPV(x0, a0, da, d, center))
 
     def get_front_interval(self):
         # TODO: For now, we assume the front vehicle follows the models' front vehicle
@@ -282,6 +278,29 @@ class IntervalVehicle(LinearVehicle):
         else:
             front_interval = None
         return front_interval
+
+    def get_followed_lanes(self, lane_change_model="model", squeeze=True):
+        """
+            Get the list of lanes that could be followed by this vehicle.
+        :param lane_change_model: - model: assume that the vehicle will follow the lane of its model behaviour.
+                                  - all: assume that any lane change decision is possible at any timestep
+                                  - right: assume that a right lane change decision is possible at any timestep
+        :param squeeze: if True, remove duplicate lanes (at boundaries of the road)
+        :return: the list of followed lane indexes
+        """
+        if lane_change_model == "model":
+            lanes = [self.target_lane_index]
+        elif lane_change_model == "all":
+            lanes = self.road.network.side_lanes(self.target_lane_index) + [self.target_lane_index]
+        elif lane_change_model == "right":
+            lanes = [self.target_lane_index]
+            _from, _to, _id = self.target_lane_index
+            if _id < len(self.road.network.graph[_from][_to]) - 1 \
+                    and self.road.network.get_lane((_from, _to, _id + 1)).is_reachable_from(self.position):
+                lanes += [(_from, _to, _id + 1)]
+            elif not squeeze:
+                lanes += [self.target_lane_index]  # Right lane is also current lane
+        return lanes
 
     def partial_observer_step(self, dt, alpha=0):
         """
