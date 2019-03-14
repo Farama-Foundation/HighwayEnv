@@ -169,7 +169,7 @@ class IntervalVehicle(LinearVehicle):
         self.predictor_init()
 
         # Update lateral LPV center to track target lane
-        for i, lane_index in enumerate(self.get_followed_lanes()):
+        for i, lane_index in enumerate(self.get_followed_lanes(squeeze=False)):
             lane = self.road.network.get_lane(lane_index)
             center = np.array([lane.position(0, 0)[1], 0])
             if (center != self.lateral_lpv[i].center).any():
