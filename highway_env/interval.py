@@ -85,7 +85,7 @@ def is_metzler(matrix):
 
 
 class LPV(object):
-    def __init__(self, x0, a0, da, d=None, center=None):
+    def __init__(self, x0, a0, da, d=None, center=None, x_i=None):
         self.x0 = np.array(x0, dtype=float)
         self.a0 = np.array(a0, dtype=float)
         self.da = [np.array(da_i) for da_i in da]
@@ -93,7 +93,7 @@ class LPV(object):
         self.center = np.array(center) if center is not None else np.zeros(self.x0.shape)
         self.coordinates = None
 
-        self.x_i = np.array([self.x0, self.x0])
+        self.x_i = np.array(x_i) if x_i is not None else np.array([self.x0, self.x0])
         self.x_i_t = None
 
         self.update_coordinates_frame(self.a0)

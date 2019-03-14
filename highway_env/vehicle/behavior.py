@@ -272,7 +272,8 @@ class LinearVehicle(IDMVehicle):
     STEERING_PARAMETERS = [ControlledVehicle.KP_HEADING, ControlledVehicle.KP_HEADING * ControlledVehicle.KP_LATERAL]
 
     ACCELERATION_RANGE = np.array([0.5*np.array(ACCELERATION_PARAMETERS), 1.5*np.array(ACCELERATION_PARAMETERS)])
-    STEERING_RANGE = np.array([0.5*np.array(STEERING_PARAMETERS), 1.5*np.array(STEERING_PARAMETERS)])
+    STEERING_RANGE = np.array([np.array(STEERING_PARAMETERS) - np.array([0.07, 1.5]),
+                               np.array(STEERING_PARAMETERS) + np.array([0.07, 1.5])])
 
     TIME_WANTED = 2.0
 
