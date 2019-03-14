@@ -81,7 +81,6 @@ class IntervalVehicle(LinearVehicle):
         """
         # Input state intervals
         position_i = self.interval.position
-        position_i[0, 1] -= 0.1  # TODO: Add noise on y
         v_i = self.interval.velocity
         psi_i = self.interval.heading
 
@@ -101,7 +100,7 @@ class IntervalVehicle(LinearVehicle):
             d_i = vector_interval_section(diff_i, lane_direction)
 
             d_safe_i = self.DISTANCE_WANTED + self.LENGTH + self.TIME_WANTED * v_i
-            phi_a_i[:, 2] = interval_negative_part(IntervalVehicle.intervals_diff(d_i, d_safe_i))
+            phi_a_i[:, 2] = interval_negative_part(intervals_diff(d_i, d_safe_i))
 
         # Steering features
         phi_b_i = None
@@ -260,7 +259,7 @@ class IntervalVehicle(LinearVehicle):
                     # LPV specification
                     x0 = [position_i[0, 1], psi_i[0]]
                     lane = self.road.network.get_lane(lane_index)
-                    center = [lane.position(0, 0)[1] / 2, 0]
+                    center = [lane.position(0, 0)[1], 0]
                     d = [0, 0]
                     self.lateral_lpv.append(LPV(x0, a0, da, d, center))
 
