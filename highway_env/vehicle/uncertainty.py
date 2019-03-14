@@ -48,8 +48,8 @@ class IntervalVehicle(LinearVehicle):
 
         self.interval = VehicleInterval(self)
         self.trajectory = []
-        self.observer_trajectory = []
-        self.longitudinal_lpv = None
+        self.interval_trajectory = []
+        self.longitudinal_lpv, self.lateral_lpv = None, None
 
     @classmethod
     def create_from(cls, vehicle):
@@ -239,7 +239,7 @@ class IntervalVehicle(LinearVehicle):
                 [-Kx, Kx, -params[0] - params[1] - Kx * self.TIME_WANTED, params[1]],
                 [0, 0, 0, -params[0]]
             ])
-            A0, dAs = polytope(a_theta, params_i)
+            a0, da = polytope(a_theta, params_i)
 
             # LPV specification
             f_pos = front_interval.position[0, 0] if front_interval else 0
@@ -250,17 +250,53 @@ class IntervalVehicle(LinearVehicle):
                       self.target_velocity,
                       self.target_velocity]
             d = [self.target_velocity, self.target_velocity, 0, 0]
-            self.longitudinal_lpv = LPV(x0, A0, dAs, d, center)
+            self.longitudinal_lpv = LPV(x0, a0, da, d, center)
+
+            # Lateral predictor
+            if not self.lateral_lpv:
+                # Parameters interval
+                params_i = self.theta_b_i.copy()
+                # params_i[1] /= v_i.mean()
+
+                # Matrix polytope
+                a_theta = lambda params: np.array([
+                    [0, 1],
+                    [-params[1], -params[0]]
+                ])
+                a0, da = polytope(a_theta, params_i)
+
+                # LPV specification
+                x0 = [position_i[0, 1], psi_i[0]]
+                # TODO: use self.target_lane_index
+                lane = self.road.network.get_lane(self.target_lane_index)
+                center = [lane.position(0, 0)[1], 0]
+                d = [0, 0]
+                self.lateral_lpv = LPV(x0, a0, da, d, center)
+
+        # Update LPV center to target lane
+        lane = self.road.network.get_lane(self.target_lane_index)
+        center = np.array([lane.position(0, 0)[1], 0])
+        if (center != self.lateral_lpv.center).any():
+            self.lateral_lpv.transformed_x_i[0, :] -= self.lateral_lpv.change_coordinates(center, offset=False) - \
+                self.lateral_lpv.change_coordinates(self.lateral_lpv.center, offset=False)
+            self.lateral_lpv.transformed_x_i[1, :] -= self.lateral_lpv.change_coordinates(center, offset=False) - \
+                self.lateral_lpv.change_coordinates(self.lateral_lpv.center, offset=False)
+            self.lateral_lpv.center = center
 
         # Step
         self.longitudinal_lpv.transformed_x_i = self.longitudinal_lpv.step_interval_predictor(
             self.longitudinal_lpv.transformed_x_i, None, dt)
+        self.lateral_lpv.transformed_x_i = self.lateral_lpv.step_interval_predictor(
+            self.lateral_lpv.transformed_x_i, None, dt)
 
         # Backward coordinates change
-        x_i = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.transformed_x_i, back=True, interval=True)
+        x_i_long = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.transformed_x_i, back=True, interval=True)
+        x_i_lat = self.lateral_lpv.change_coordinates(self.lateral_lpv.transformed_x_i, back=True, interval=True)
 
-        self.interval.velocity = x_i[:, 2]
-        self.interval.position[:, 0] = x_i[:, 0]
+        self.interval.position[:, 0] = x_i_long[:, 0]
+        self.interval.position[:, 1] = x_i_lat[:, 0]
+        self.interval.velocity = x_i_long[:, 2]
+        self.interval.heading = x_i_lat[:, 1]
 
     def partial_step(self, dt, alpha=0):
         """
@@ -301,7 +337,7 @@ class IntervalVehicle(LinearVehicle):
             Store the current model, min and max states to a trajectory list
         """
         self.trajectory.append(LinearVehicle.create_from(self))
-        self.observer_trajectory.append(copy.deepcopy(self.interval))
+        self.interval_trajectory.append(copy.deepcopy(self.interval))
 
     def check_collision(self, other):
         """
@@ -402,30 +438,11 @@ class LPV(object):
         dx = A @ x + d
         return dx
 
-    # def trajectory(self, args):
-    #     x = np.array(self.x0)
-    #     xx = np.zeros((np.size(time), np.size(x)))
-    #
-    #     # Forward coordinates change
-    #     A = args
-    #     self.update_coordinates_frame(A)
-    #     A = self.change_coordinates(A, matrix=True)
-    #     B = self.change_coordinates(self.B, offset=False)
-    #     x = self.change_coordinates(x)
-    #
-    #     for i in range(np.size(time)):
-    #         xx[i] = x
-    #         x = self.step((A, B), x)
-    #
-    #     # Backward coordinates change
-    #     xx = self.change_coordinates(xx, back=True)
-    #     return xx
-
-    def step_interval_observer(self, x_i, args):
+    def step_interval_observer(self, x_i, args, dt):
         A0, dAs, d = args
         A_i = A0 + sum(intervals_product([0, 1], [dA, dA]) for dA in dAs)
         dx_i = intervals_product(A_i, x_i) + d
-        return dx_i
+        return x_i + dx_i*dt
 
     def step_interval_predictor(self, x_i, args, dt):
         if args:
@@ -441,30 +458,3 @@ class LPV(object):
         dx_M = A0 @ x_M + dAp @ p(x_M) + dAn @ n(x_m) + d[:, np.newaxis]
         dx_i = np.array([dx_m.squeeze(axis=-1), dx_M.squeeze(axis=-1)])
         return x_i + dx_i * dt
-
-    # def interval_trajectory(self, args=None, predictor=False):
-    #     if args is None:
-    #         args = self.A0, self.dAs, self.B
-    #     x_i = np.array([self.x0, self.x0])
-    #     xx_i = np.zeros((np.size(time), 2, np.size(self.x0)))
-    #
-    #     # Forward coordinates change
-    #     args = [*args]
-    #     self.update_coordinates_frame(args[0])
-    #     args[0] = self.change_coordinates(args[0], matrix=True)
-    #     args[1] = self.change_coordinates(args[1], matrix=True)
-    #     args[2] = self.change_coordinates(args[2], offset=False)
-    #     x_i = self.change_coordinates(x_i)
-    #
-    #     for k in range(np.size(time)):
-    #         xx_i[k, :, :] = x_i
-    #         if predictor:
-    #             x_i = self.step_interval_predictor(x_i, args)
-    #         else:
-    #             x_i = self.step_interval(x_i, args)
-    #
-    #     # Backward coordinates change
-    #     xx_i = self.change_coordinates(xx_i, back=True, interval=True)
-    #     return xx_i
-
-
