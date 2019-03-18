@@ -160,12 +160,12 @@ class AbstractEnv(gym.Env):
 
         return obs, reward, terminal, info
 
-    def _simulate(self, action):
+    def _simulate(self, action=None):
         """
             Perform several steps of simulation with constant action
         """
         for k in range(int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY)):
-            if self.time % int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY) == 0:
+            if action is not None and self.time % int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY) == 0:
                 # Forward action to the vehicle
                 self.vehicle.act(self.ACTIONS[action])
 
