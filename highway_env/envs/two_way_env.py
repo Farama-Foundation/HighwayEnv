@@ -35,11 +35,9 @@ class TwoWayEnv(AbstractEnv):
 
     def __init__(self):
         super(TwoWayEnv, self).__init__()
-        self.steps = 0
         self.reset()
 
     def step(self, action):
-        self.steps += 1
         return super(TwoWayEnv, self).step(action)
 
     def _reward(self, action):
@@ -67,7 +65,6 @@ class TwoWayEnv(AbstractEnv):
         return float(self.vehicle.crashed) + float(self.vehicle.lane_index[2] == 0)/15
 
     def reset(self):
-        self.steps = 0
         self._make_road()
         self._make_vehicles()
         return super(TwoWayEnv, self).reset()
