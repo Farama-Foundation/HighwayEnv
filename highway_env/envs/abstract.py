@@ -118,7 +118,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError()
 
-    def _constraint(self, action):
+    def _cost(self, action):
         """
             A constraint metric, for budgeted MDP.
 
@@ -156,8 +156,8 @@ class AbstractEnv(gym.Env):
         reward = self._reward(action)
         terminal = self._is_terminal()
 
-        constraint = self._constraint(action)
-        info = {'constraint': constraint, "c_": constraint}
+        cost = self._cost(action)
+        info = {'cost': cost, "c_": cost}
 
         return obs, reward, terminal, info
 
