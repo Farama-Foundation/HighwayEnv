@@ -60,7 +60,7 @@ class TwoWayEnv(AbstractEnv):
         """
         return self.vehicle.crashed
 
-    def _constraint(self, action):
+    def _cost(self, action):
         """
             The constraint signal is the time spent driving on the opposite lane, and occurence of collisions.
         """

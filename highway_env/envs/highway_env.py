@@ -110,8 +110,8 @@ class HighwayEnv(AbstractEnv):
         """
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
-    def _constraint(self, action):
+    def _cost(self, action):
         """
-            The constraint signal is the occurrence of collision
+            The cost signal is the occurrence of collision
         """
         return float(self.vehicle.crashed)
