@@ -134,6 +134,7 @@ class AbstractEnv(gym.Env):
             Reset the environment to it's initial configuration
         :return: the observation of the reset state
         """
+        self.time = 0
         self.define_spaces()
         return self.observation.observe()
 
