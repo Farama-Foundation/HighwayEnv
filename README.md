@@ -1,6 +1,6 @@
 # highway-env
 
-A collection of environments for *highway driving* and tactical decision-making tasks
+A collection of environments for *autonomous driving* and tactical decision-making tasks
 
 <p align="center">
     <img src="../gh-media/docs/media/highway-env.gif?raw=true"><br/>
@@ -81,7 +81,7 @@ A goal-conditioned continuous control task in which the ego-vehicle must park in
 
 <p align="center">
     <img src="../gh-media/docs/media/parking-env.gif?raw=true"><br/>
-    <em>The highway-roundabout-v0 environment.</em>
+    <em>The highway-parking-v0 environment.</em>
 </p>
 
 ## The framework
