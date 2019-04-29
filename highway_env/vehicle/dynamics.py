@@ -109,6 +109,8 @@ class Vehicle(Loggable):
         if self.crashed:
             self.action['steering'] = 0
             self.action['acceleration'] = -1.0*self.velocity
+        self.action['steering'] = float(self.action['steering'])
+        self.action['acceleration'] = float(self.action['acceleration'])
         if self.velocity > self.MAX_VELOCITY:
             self.action['acceleration'] = min(self.action['acceleration'], 1.0*(self.MAX_VELOCITY - self.velocity))
         elif self.velocity < -self.MAX_VELOCITY:
