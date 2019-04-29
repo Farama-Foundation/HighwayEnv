@@ -45,6 +45,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def step(self, action):
         # Forward action to the vehicle
+
         self.vehicle.act({
             "acceleration": action[0] * self.ACCELERATION_RANGE,
             "steering": action[1] * self.STEERING_RANGE
@@ -54,7 +55,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         obs = self.observation.observe()
         info = {"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])}
         reward = self.compute_reward(obs['achieved_goal'], obs['desired_goal'], info)
-        terminal = self._is_terminal()
+        terminal = self._is_terminal(obs)
         return obs, reward, terminal, info
 
     def reset(self):
@@ -92,8 +93,6 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         self.goal.COLLISIONS_ENABLED = False
         self.road.vehicles.insert(0, self.goal)
 
-
-
     def compute_reward(self, achieved_goal, desired_goal, info, p=0.5):
         """
             Proximity to the goal is rewarded
@@ -113,8 +112,11 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     def _is_success(self, achieved_goal, desired_goal):
         return self.compute_reward(achieved_goal, desired_goal, None) > -self.SUCCESS_GOAL_REWARD
 
-    def _is_terminal(self):
+    def _is_terminal(self, obs=None):
         """
             The episode is over if the ego vehicle crashed or the goal is reached.
         """
-        return self.vehicle.crashed  # or self._is_success(obs['achieved_goal'], obs['desired_goal'])
+        done = self.vehicle.crashed
+        if obs is not None:
+            done = done or self._is_success(obs['achieved_goal'], obs['desired_goal'])
+        return done
