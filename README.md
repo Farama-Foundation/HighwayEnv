@@ -4,7 +4,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
 
 <p align="center">
     <img src="../gh-media/docs/media/highway-env.gif?raw=true"><br/>
-    <em>An episode of one of the environments available in higwhay-env.</em>
+    <em>An episode of one of the environments available in highway-env.</em>
 </p>
 
 [![Build Status](https://travis-ci.org/eleurent/highway-env.svg?branch=master)](https://travis-ci.org/eleurent/highway-env)
@@ -17,7 +17,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
 ## Usage
 
 ```python
-import higwhay_env
+import highway_env
 
 env = gym.make("highway-v0")
 
@@ -41,7 +41,7 @@ The agent's objective is to reach a high velocity while avoiding collisions with
 
 <p align="center">
     <img src="../gh-media/docs/media/highway.gif?raw=true"><br/>
-    <em>The higwhay-v0 environment.</em>
+    <em>The highway-v0 environment.</em>
 </p>
 
 
