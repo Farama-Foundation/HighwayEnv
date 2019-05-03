@@ -18,7 +18,7 @@ def test_highway_step():
 
 
 def test_merge_step():
-    env = gym.make('highway-merge-v0')
+    env = gym.make('merge-v0')
 
     env.reset()
     for i in range(3):
@@ -31,7 +31,7 @@ def test_merge_step():
 
 
 def test_roundabout_step():
-    env = gym.make('highway-roundabout-v0')
+    env = gym.make('roundabout-v0')
 
     env.reset()
     for i in range(3):
@@ -44,7 +44,7 @@ def test_roundabout_step():
 
 
 def test_parking_step():
-    env = gym.make('highway-parking-v0')
+    env = gym.make('parking-v0')
 
     env.reset()
     for i in range(10):
