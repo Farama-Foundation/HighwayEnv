@@ -13,8 +13,6 @@ class EnvViewer(object):
     """
         A viewer to render a highway driving environment.
     """
-    SCREEN_WIDTH = 600
-    SCREEN_HEIGHT = 150
     SAVE_IMAGES = False
 
     def __init__(self, env):
@@ -22,8 +20,8 @@ class EnvViewer(object):
 
         pygame.init()
         pygame.display.set_caption("Highway-env")
-        panel_size = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
+        panel_size = (self.env.config["screen_width"], self.env.config["screen_height"])
+        self.screen = pygame.display.set_mode([self.env.config["screen_width"], self.env.config["screen_height"]])
         self.sim_surface = WorldSurface(panel_size, 0, pygame.Surface(panel_size))
         self.sim_surface.centering_position = env.config.get("centering_position", self.sim_surface.INITIAL_CENTERING)
         self.clock = pygame.time.Clock()
@@ -44,11 +42,13 @@ class EnvViewer(object):
         :param agent_display: a callback provided by the agent to display on surfaces
         """
         if self.agent_display is None:
-            if self.SCREEN_WIDTH > self.SCREEN_HEIGHT:
-                self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, 2 * self.SCREEN_HEIGHT))
+            if self.env.config["screen_width"] > self.env.config["screen_height"]:
+                self.screen = pygame.display.set_mode((self.env.config["screen_width"],
+                                                       2 * self.env.config["screen_height"]))
             else:
-                self.screen = pygame.display.set_mode((2 * self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-            self.agent_surface = pygame.Surface((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+                self.screen = pygame.display.set_mode((2 * self.env.config["screen_width"],
+                                                       self.env.config["screen_height"]))
+            self.agent_surface = pygame.Surface((self.env.config["screen_width"], self.env.config["screen_height"]))
         self.agent_display = agent_display
 
     def set_agent_action_sequence(self, actions):
@@ -91,10 +91,10 @@ class EnvViewer(object):
 
         if self.agent_display:
             self.agent_display(self.agent_surface, self.sim_surface)
-            if self.SCREEN_WIDTH > self.SCREEN_HEIGHT:
-                self.screen.blit(self.agent_surface, (0, self.SCREEN_HEIGHT))
+            if self.env.config["screen_width"] > self.env.config["screen_height"]:
+                self.screen.blit(self.agent_surface, (0, self.env.config["screen_height"]))
             else:
-                self.screen.blit(self.agent_surface, (self.SCREEN_WIDTH, 0))
+                self.screen.blit(self.agent_surface, (self.env.config["screen_width"], 0))
 
         self.screen.blit(self.sim_surface, (0, 0))
         self.clock.tick(self.env.SIMULATION_FREQUENCY)
@@ -125,4 +125,3 @@ class EnvViewer(object):
             Close the pygame window.
         """
         pygame.quit()
-

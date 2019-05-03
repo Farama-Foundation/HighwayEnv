@@ -33,6 +33,8 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "scale": 100,
             "normalize": False
         },
+        "screen_width": 600,
+        "screen_height": 300,
         "centering_position": [0.5, 0.5]
     }
 
@@ -41,7 +43,6 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         self.reset()
         self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
         self.REWARD_WEIGHTS = np.array(self.REWARD_WEIGHTS)
-        EnvViewer.SCREEN_HEIGHT = EnvViewer.SCREEN_WIDTH // 2
 
     def step(self, action):
         # Forward action to the vehicle

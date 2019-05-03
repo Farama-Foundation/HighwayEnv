@@ -55,7 +55,9 @@ class AbstractEnv(gym.Env):
     DEFAULT_CONFIG = {
         "observation": {
             "type": "TimeToCollision"
-        }
+        },
+        "screen_width": 600,
+        "screen_height": 150
     }
 
     def __init__(self, config=None):
