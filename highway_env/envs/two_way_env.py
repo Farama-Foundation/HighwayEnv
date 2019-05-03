@@ -25,9 +25,8 @@ class TwoWayEnv(AbstractEnv):
 
     DEFAULT_CONFIG = {
         "observation": {
-            "type": "Kinematics",
-            "features": ['x', 'y', 'vx', 'vy'],
-            "vehicles_count": 6
+            "type": "TimeToCollision",
+            "horizon": 5
         },
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "screen_width": 600,
