@@ -6,23 +6,23 @@ register(
 )
 
 register(
-    id='highway-merge-v0',
+    id='merge-v0',
     entry_point='highway_env.envs:MergeEnv',
 )
 
 register(
-    id='highway-roundabout-v0',
+    id='roundabout-v0',
     entry_point='highway_env.envs:RoundaboutEnv',
 )
 
 register(
-    id='highway-two-way-v0',
+    id='two-way-v0',
     entry_point='highway_env.envs:TwoWayEnv',
     max_episode_steps=15
 )
 
 register(
-    id='highway-parking-v0',
+    id='parking-v0',
     entry_point='highway_env.envs:ParkingEnv',
     max_episode_steps=20
 )
