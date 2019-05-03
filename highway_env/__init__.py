@@ -18,11 +18,11 @@ register(
 register(
     id='highway-two-way-v0',
     entry_point='highway_env.envs:TwoWayEnv',
-    tags={'wrapper_config.TimeLimit.max_episode_steps': 15}
+    max_episode_steps=15
 )
 
 register(
     id='highway-parking-v0',
     entry_point='highway_env.envs:ParkingEnv',
-    tags={'wrapper_config.TimeLimit.max_episode_steps': 20}
+    max_episode_steps=20
 )
