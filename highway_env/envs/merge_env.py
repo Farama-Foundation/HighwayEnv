@@ -29,6 +29,8 @@ class MergeEnv(AbstractEnv):
             "type": "Kinematics"
         },
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+        "screen_width": 600,
+        "screen_height": 150,
         "centering_position": [0.3, 0.5]
     }
 

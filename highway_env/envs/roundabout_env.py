@@ -24,6 +24,8 @@ class RoundaboutEnv(AbstractEnv):
         },
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "incoming_vehicle_destination": None,
+        "screen_width": 600,
+        "screen_height": 600,
         "centering_position": [0.5, 0.6]
     }
 
@@ -31,7 +33,6 @@ class RoundaboutEnv(AbstractEnv):
         super(RoundaboutEnv, self).__init__()
         self.steps = 0
         self.reset()
-        EnvViewer.SCREEN_HEIGHT = 600
 
     def _reward(self, action):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
