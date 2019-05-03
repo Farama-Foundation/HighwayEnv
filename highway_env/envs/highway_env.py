@@ -1,6 +1,4 @@
 from __future__ import division, print_function, absolute_import
-import numpy as np
-from gym import logger
 
 from highway_env import utils
 from highway_env.envs.abstract import AbstractEnv

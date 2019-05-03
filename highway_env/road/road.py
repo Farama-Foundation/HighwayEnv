@@ -1,12 +1,13 @@
 from __future__ import division, print_function
 import numpy as np
 import pandas as pd
-from gym import logger
+import logging
 
 from highway_env.logger import Loggable
 from highway_env.road.lane import LineType, StraightLane
-from highway_env.vehicle.control import ControlledVehicle
 from highway_env.vehicle.dynamics import Obstacle
+
+logger = logging.getLogger(__name__)
 
 
 class RoadNetwork(object):
@@ -81,13 +82,13 @@ class RoadNetwork(object):
             if route and route[0][0] == _to:  # Next road in route is starting at the end of current road.
                 _, next_to, route_id = route[0]
             elif route:
-                logger.warn("Route {} does not start after current road {}.".format(route[0], current_index))
+                logger.warning("Route {} does not start after current road {}.".format(route[0], current_index))
         # Randomly pick next road
         if not next_to:
             try:
                 next_to = list(self.graph[_to].keys())[np_random.randint(len(self.graph[_to]))]
             except KeyError:
-                # logger.warn("End of lane reached.")
+                # logger.warning("End of lane reached.")
                 return current_index
 
         # If next road has same number of lane, stay on the same lane
