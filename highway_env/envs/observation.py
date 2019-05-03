@@ -1,18 +1,12 @@
 from __future__ import division, print_function, absolute_import
-import copy
-import gym
 import pandas
-from gym import spaces, logger
-from gym.utils import seeding
+from gym import spaces
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.finite_mdp import finite_mdp, compute_ttc_grid
-from highway_env.envs.graphics import EnvViewer
+from highway_env.envs.finite_mdp import compute_ttc_grid
 from highway_env.road.lane import AbstractLane
-from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import MDPVehicle
-from highway_env.vehicle.dynamics import Obstacle
 
 
 class ObservationType(object):
