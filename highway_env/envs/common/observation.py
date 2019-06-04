@@ -4,7 +4,7 @@ from gym import spaces
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.finite_mdp import compute_ttc_grid
+from highway_env.envs.common.finite_mdp import compute_ttc_grid
 from highway_env.road.lane import AbstractLane
 from highway_env.vehicle.control import MDPVehicle
 
@@ -29,7 +29,7 @@ class TimeToCollisionObservation(ObservationType):
             return None
 
     def observe(self):
-        grid = compute_ttc_grid(self.env, time_quantization=1/self.env.POLICY_FREQUENCY, horizon=self.horizon)
+        grid = compute_ttc_grid(self.env, time_quantization=1/self.env.config["policy_frequency"], horizon=self.horizon)
         padding = np.ones(np.shape(grid))
         padded_grid = np.concatenate([padding, grid, padding], axis=1)
         obs_lanes = 3
@@ -108,8 +108,8 @@ class KinematicObservation(ObservationType):
 
 
 class KinematicsGoalObservation(KinematicObservation):
-    def __init__(self, env, scale, **kwargs):
-        self.scale = scale
+    def __init__(self, env, scales, **kwargs):
+        self.scales = np.array(scales)
         super(KinematicsGoalObservation, self).__init__(env, **kwargs)
 
     def space(self):
@@ -127,9 +127,9 @@ class KinematicsGoalObservation(KinematicObservation):
         obs = np.ravel(pandas.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features])
         goal = np.ravel(pandas.DataFrame.from_records([self.env.goal.to_dict()])[self.features])
         obs = {
-            "observation": obs / self.scale,
-            "achieved_goal": obs / self.scale,
-            "desired_goal": goal / self.scale
+            "observation": obs / self.scales,
+            "achieved_goal": obs / self.scales,
+            "desired_goal": goal / self.scales
         }
         return obs
 
