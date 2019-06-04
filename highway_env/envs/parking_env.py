@@ -38,8 +38,9 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         "centering_position": [0.5, 0.5]
     }
 
-    def __init__(self):
+    def __init__(self, config=None):
         super(ParkingEnv, self).__init__()
+        self.configure(config)
         self.reset()
         self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
         self.REWARD_WEIGHTS = np.array(self.REWARD_WEIGHTS)
@@ -108,7 +109,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         return - np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
 
     def _reward(self, action):
-        raise NotImplementedError
+        raise Exception("Use compute_reward instead, as for GoalEnvs")
 
     def _is_success(self, achieved_goal, desired_goal):
         return self.compute_reward(achieved_goal, desired_goal, None) > -self.SUCCESS_GOAL_REWARD
@@ -123,9 +124,19 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         return done
 
 
+class ParkingEnvActionRepeat(ParkingEnv):
+    def __init__(self):
+        super().__init__({"policy_frequency": 1})
+
+
 register(
     id='parking-v0',
     entry_point='highway_env.envs:ParkingEnv',
     max_episode_steps=300
 )
 
+register(
+    id='parking-ActionRepeat-v0',
+    entry_point='highway_env.envs:ParkingEnv',
+    max_episode_steps=20
+)

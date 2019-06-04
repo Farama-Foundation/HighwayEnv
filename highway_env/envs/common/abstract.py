@@ -89,7 +89,8 @@ class AbstractEnv(gym.Env):
         return [seed]
 
     def configure(self, config):
-        self.config.update(config)
+        if config:
+            self.config.update(config)
 
     def define_spaces(self):
         self.action_space = spaces.Discrete(len(self.ACTIONS))
