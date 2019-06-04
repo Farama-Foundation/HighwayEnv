@@ -1,6 +1,7 @@
 from __future__ import division, print_function, absolute_import
-import numpy as np
+from gym.envs.registration import register
 from gym import GoalEnv, spaces
+import numpy as np
 
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import StraightLane, LineType
@@ -120,3 +121,11 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         if obs is not None:
             done = done or self._is_success(obs['achieved_goal'], obs['desired_goal'])
         return done
+
+
+register(
+    id='parking-v0',
+    entry_point='highway_env.envs:ParkingEnv',
+    max_episode_steps=300
+)
+

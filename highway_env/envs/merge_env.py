@@ -1,5 +1,6 @@
 from __future__ import division, print_function, absolute_import
 import numpy as np
+from gym.envs.registration import register
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
@@ -126,3 +127,9 @@ class MergeEnv(AbstractEnv):
         merging_v.target_velocity = 30
         road.vehicles.append(merging_v)
         self.vehicle = ego_vehicle
+
+
+register(
+    id='merge-v0',
+    entry_point='highway_env.envs:MergeEnv',
+)

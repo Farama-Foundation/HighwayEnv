@@ -1,4 +1,5 @@
 from __future__ import division, print_function, absolute_import
+from gym.envs.registration import register
 import numpy as np
 
 from highway_env import utils
@@ -160,3 +161,9 @@ class RoundaboutEnv(AbstractEnv):
 
 def rad(deg):
     return deg*np.pi/180
+
+
+register(
+    id='roundabout-v0',
+    entry_point='highway_env.envs:RoundaboutEnv',
+)

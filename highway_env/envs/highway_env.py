@@ -1,4 +1,5 @@
 from __future__ import division, print_function, absolute_import
+from gym.envs.registration import register
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
@@ -116,3 +117,9 @@ class HighwayEnv(AbstractEnv):
             The cost signal is the occurrence of collision
         """
         return float(self.vehicle.crashed)
+
+
+register(
+    id='highway-v0',
+    entry_point='highway_env.envs:HighwayEnv',
+)
