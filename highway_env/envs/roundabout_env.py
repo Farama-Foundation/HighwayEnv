@@ -21,6 +21,7 @@ class RoundaboutEnv(AbstractEnv):
         "observation": {
             "type": "Kinematics"
         },
+        "policy_frequency": 1,  # [Hz]
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "incoming_vehicle_destination": None,
         "screen_width": 600,

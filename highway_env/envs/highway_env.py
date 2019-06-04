@@ -27,6 +27,7 @@ class HighwayEnv(AbstractEnv):
         "observation": {
             "type": "Kinematics"
         },
+        "policy_frequency": 1,  # [Hz]
         "initial_spacing": 2,
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "screen_width": 600,

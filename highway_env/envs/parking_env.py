@@ -31,6 +31,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "scale": 100,
             "normalize": False
         },
+        "policy_frequency": AbstractEnv.SIMULATION_FREQUENCY,
         "screen_width": 600,
         "screen_height": 300,
         "centering_position": [0.5, 0.5]

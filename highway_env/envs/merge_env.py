@@ -28,6 +28,7 @@ class MergeEnv(AbstractEnv):
         "observation": {
             "type": "Kinematics"
         },
+        "policy_frequency": 1,  # [Hz]
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "screen_width": 600,
         "screen_height": 150,
