@@ -1,10 +1,8 @@
 from __future__ import division, print_function, absolute_import
 import numpy as np
-import pandas
 from gym import GoalEnv, spaces
 
-from highway_env.envs.abstract import AbstractEnv
-from highway_env.envs.graphics import EnvViewer
+from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import StraightLane, LineType
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.dynamics import Vehicle, Obstacle

@@ -59,8 +59,8 @@ class EnvViewer(object):
         if hasattr(self.env.action_space, 'n'):
             actions = [self.env.ACTIONS[a] for a in actions]
         self.vehicle_trajectory = self.env.vehicle.predict_trajectory(actions,
-                                                                      1 / self.env.POLICY_FREQUENCY,
-                                                                      1 / 3 / self.env.POLICY_FREQUENCY,
+                                                                      1 / self.env.config["policy_frequency"],
+                                                                      1 / 3 / self.env.config["policy_frequency"],
                                                                       1 / self.env.SIMULATION_FREQUENCY)
 
     def handle_events(self):

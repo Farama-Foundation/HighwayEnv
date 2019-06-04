@@ -1,16 +1,13 @@
 from __future__ import division, print_function, absolute_import
 import copy
 import gym
-import pandas
-from gym import spaces, logger
+from gym import spaces
 from gym.utils import seeding
-import numpy as np
 
 from highway_env import utils
-from highway_env.envs.observation import observation_factory
-from highway_env.envs.finite_mdp import finite_mdp, compute_ttc_grid
-from highway_env.envs.graphics import EnvViewer
-from highway_env.road.lane import AbstractLane
+from highway_env.envs.common.observation import observation_factory
+from highway_env.envs.common.finite_mdp import finite_mdp
+from highway_env.envs.common.graphics import EnvViewer
 from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.control import MDPVehicle
 from highway_env.vehicle.dynamics import Obstacle
@@ -43,10 +40,7 @@ class AbstractEnv(gym.Env):
     """
         The frequency at which the system dynamics are simulated [Hz]
     """
-    POLICY_FREQUENCY = 1
-    """
-        The frequency at which the agent can take actions [Hz]
-    """
+
     PERCEPTION_DISTANCE = 5.0 * MDPVehicle.SPEED_MAX
     """
         The maximum distance of any vehicle present in the observation [m]
@@ -56,6 +50,7 @@ class AbstractEnv(gym.Env):
         "observation": {
             "type": "TimeToCollision"
         },
+        "policy_frequency": 1,  # [Hz]
         "screen_width": 600,
         "screen_height": 150
     }
@@ -167,8 +162,9 @@ class AbstractEnv(gym.Env):
         """
             Perform several steps of simulation with constant action
         """
-        for k in range(int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY)):
-            if action is not None and self.time % int(self.SIMULATION_FREQUENCY // self.POLICY_FREQUENCY) == 0:
+        for k in range(int(self.SIMULATION_FREQUENCY // self.config["policy_frequency"])):
+            if action is not None and \
+                    self.time % int(self.SIMULATION_FREQUENCY // self.config["policy_frequency"]) == 0:
                 # Forward action to the vehicle
                 self.vehicle.act(self.ACTIONS[action])
 
@@ -315,7 +311,7 @@ class AbstractEnv(gym.Env):
         return env_copy
 
     def to_finite_mdp(self):
-        return finite_mdp(self, time_quantization=1/self.POLICY_FREQUENCY)
+        return finite_mdp(self, time_quantization=1/self.config["policy_frequency"])
 
     def __deepcopy__(self, memo):
         """
