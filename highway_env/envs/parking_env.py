@@ -32,7 +32,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "scales": [100, 100, 5, 5, 1, 1],
             "normalize": False
         },
-        "policy_frequency": AbstractEnv.SIMULATION_FREQUENCY,
+        "policy_frequency": 5,
         "screen_width": 600,
         "screen_height": 300,
         "centering_position": [0.5, 0.5]
@@ -132,11 +132,11 @@ class ParkingEnvActionRepeat(ParkingEnv):
 register(
     id='parking-v0',
     entry_point='highway_env.envs:ParkingEnv',
-    max_episode_steps=300
+    max_episode_steps=100
 )
 
 register(
     id='parking-ActionRepeat-v0',
-    entry_point='highway_env.envs:ParkingEnv',
+    entry_point='highway_env.envs:ParkingEnvActionRepeat',
     max_episode_steps=20
 )
