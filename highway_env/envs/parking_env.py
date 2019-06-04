@@ -21,14 +21,14 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     STEERING_RANGE = np.pi / 4
     ACCELERATION_RANGE = 5.0
 
-    REWARD_WEIGHTS = [1 / 100, 1 / 100, 1 / 100, 1 / 100, 1 / 10, 1/10]
+    REWARD_WEIGHTS = [1, 1, 1 / 20, 1 / 20, 1 / 10, 1/10]
     SUCCESS_GOAL_REWARD = 0.15
 
     DEFAULT_CONFIG = {
         "observation": {
             "type": "KinematicsGoal",
             "features": ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h'],
-            "scale": 100,
+            "scales": [100, 100, 5, 5, 1, 1],
             "normalize": False
         },
         "policy_frequency": AbstractEnv.SIMULATION_FREQUENCY,
@@ -104,7 +104,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         :param p: the Lp^p norm used in the reward. Use p<1 to have high kurtosis for rewards in [0, 1]
         :return: the corresponding reward
         """
-        return - np.power(np.dot(self.observation.scale * np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
+        return - np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
 
     def _reward(self, action):
         raise NotImplementedError
