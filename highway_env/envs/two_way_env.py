@@ -1,4 +1,5 @@
 from __future__ import division, print_function, absolute_import
+from gym.envs.registration import register
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
@@ -117,3 +118,9 @@ class TwoWayEnv(AbstractEnv):
             v.target_lane_index = ("b", "a", 0)
             self.road.vehicles.append(v)
 
+
+register(
+    id='two-way-v0',
+    entry_point='highway_env.envs:TwoWayEnv',
+    max_episode_steps=15
+)
