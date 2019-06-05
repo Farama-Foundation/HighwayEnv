@@ -22,8 +22,8 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     STEERING_RANGE = np.pi / 4
     ACCELERATION_RANGE = 5.0
 
-    REWARD_WEIGHTS = [1, 1, 1 / 20, 1 / 20, 1 / 10, 1/10]
-    SUCCESS_GOAL_REWARD = 0.15
+    REWARD_WEIGHTS = [1, 0.3, 0, 0, 0.02, 0.02]
+    SUCCESS_GOAL_REWARD = 0.12
 
     DEFAULT_CONFIG = {
         "observation": {
