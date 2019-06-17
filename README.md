@@ -30,6 +30,20 @@ while not done:
     env.render()
 ```
 
+## Citing
+
+To cite this project in your publications, please use:
+```
+@misc{highway-env,
+  author = {Leurent, Edouard},
+  title = {An environment for Autonomous Driving Decision-Making},
+  year = {2018},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/eleurent/highway-env}},
+}
+```
+
 ## The environments
 
 ### Highway
