@@ -10,6 +10,8 @@ A collection of environments for *autonomous driving* and tactical decision-maki
 [![Build Status](https://travis-ci.org/eleurent/highway-env.svg?branch=master)](https://travis-ci.org/eleurent/highway-env)
 [![Docs Status](https://img.shields.io/badge/docs-passing-green.svg)](https://eleurent.github.io/highway-env/)
 
+## [Try it on Colab :ledger:](scripts)
+
 ## Installation
 
 `pip install --user git+https://github.com/eleurent/highway-env`
