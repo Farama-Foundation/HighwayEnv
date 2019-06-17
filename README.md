@@ -32,11 +32,11 @@ while not done:
 
 ## Citing
 
-To cite this project in your publications, please use:
+If you use the project in your work, please consider citing it with:
 ```
 @misc{highway-env,
   author = {Leurent, Edouard},
-  title = {An Environment of Decision-Making Tasks for Autonomous Driving},
+  title = {An Environment for Autonomous Driving Decision-Making},
   year = {2018},
   publisher = {GitHub},
   journal = {GitHub repository},
