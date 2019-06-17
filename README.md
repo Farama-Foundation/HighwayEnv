@@ -36,7 +36,7 @@ To cite this project in your publications, please use:
 ```
 @misc{highway-env,
   author = {Leurent, Edouard},
-  title = {An environment for Autonomous Driving Decision-Making},
+  title = {An Environment of Decision-Making Tasks for Autonomous Driving},
   year = {2018},
   publisher = {GitHub},
   journal = {GitHub repository},
