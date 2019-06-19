@@ -133,6 +133,7 @@ class AbstractEnv(gym.Env):
         :return: the observation of the reset state
         """
         self.time = 0
+        self.done = False
         self.define_spaces()
         return self.observation.observe()
 
