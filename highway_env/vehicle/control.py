@@ -128,7 +128,7 @@ class ControlledVehicle(Vehicle):
         # Heading control
         heading_rate_command = self.KP_HEADING * utils.wrap_to_pi(heading_ref - self.heading)
         # Heading rate to steering angle
-        steering_angle = self.LENGTH / utils.not_zero(self.velocity) * np.arctan(heading_rate_command)
+        steering_angle = np.arctan(self.LENGTH / utils.not_zero(self.velocity) * heading_rate_command)
         steering_angle = np.clip(steering_angle, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
         return steering_angle
 
