@@ -191,7 +191,7 @@ class CircularLane(AbstractLane):
         self.radius = radius
         self.start_phase = start_phase
         self.end_phase = end_phase
-        self.direction = -1 if clockwise else 1
+        self.direction = 1 if clockwise else -1
         self.width = width
         self.line_types = line_types or [LineType.STRIPED, LineType.STRIPED]
         self.forbidden = forbidden
