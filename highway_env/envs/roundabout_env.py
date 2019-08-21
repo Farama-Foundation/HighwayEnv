@@ -68,14 +68,14 @@ class RoundaboutEnv(AbstractEnv):
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
         line = [[c, s], [n, c]]
         for lane in [0, 1]:
-            net.add_lane("se", "ex", CircularLane(center, radii[lane], rad(90-alpha), rad(alpha), line_types=line[lane]))
-            net.add_lane("ex", "ee", CircularLane(center, radii[lane], rad(alpha), rad(-alpha), line_types=line[lane]))
-            net.add_lane("ee", "nx", CircularLane(center, radii[lane], rad(-alpha), rad(-90+alpha), line_types=line[lane]))
-            net.add_lane("nx", "ne", CircularLane(center, radii[lane], rad(-90+alpha), rad(-90-alpha), line_types=line[lane]))
-            net.add_lane("ne", "wx", CircularLane(center, radii[lane], rad(-90-alpha), rad(-180+alpha), line_types=line[lane]))
-            net.add_lane("wx", "we", CircularLane(center, radii[lane], rad(-180+alpha), rad(-180-alpha), line_types=line[lane]))
-            net.add_lane("we", "sx", CircularLane(center, radii[lane], rad(180-alpha), rad(90+alpha), line_types=line[lane]))
-            net.add_lane("sx", "se", CircularLane(center, radii[lane], rad(90+alpha), rad(90-alpha), line_types=line[lane]))
+            net.add_lane("se", "ex", CircularLane(center, radii[lane], rad(90-alpha), rad(alpha), clockwise=False, line_types=line[lane]))
+            net.add_lane("ex", "ee", CircularLane(center, radii[lane], rad(alpha), rad(-alpha), clockwise=False, line_types=line[lane]))
+            net.add_lane("ee", "nx", CircularLane(center, radii[lane], rad(-alpha), rad(-90+alpha), clockwise=False, line_types=line[lane]))
+            net.add_lane("nx", "ne", CircularLane(center, radii[lane], rad(-90+alpha), rad(-90-alpha), clockwise=False, line_types=line[lane]))
+            net.add_lane("ne", "wx", CircularLane(center, radii[lane], rad(-90-alpha), rad(-180+alpha), clockwise=False, line_types=line[lane]))
+            net.add_lane("wx", "we", CircularLane(center, radii[lane], rad(-180+alpha), rad(-180-alpha), clockwise=False, line_types=line[lane]))
+            net.add_lane("we", "sx", CircularLane(center, radii[lane], rad(180-alpha), rad(90+alpha), clockwise=False, line_types=line[lane]))
+            net.add_lane("sx", "se", CircularLane(center, radii[lane], rad(90+alpha), rad(90-alpha), clockwise=False, line_types=line[lane]))
 
         # Access lanes: (r)oad/(s)ine
         access = 200  # [m]
