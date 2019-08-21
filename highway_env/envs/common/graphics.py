@@ -23,6 +23,7 @@ class EnvViewer(object):
         panel_size = (self.env.config["screen_width"], self.env.config["screen_height"])
         self.screen = pygame.display.set_mode([self.env.config["screen_width"], self.env.config["screen_height"]])
         self.sim_surface = WorldSurface(panel_size, 0, pygame.Surface(panel_size))
+        self.sim_surface.scaling = env.config.get("scaling", self.sim_surface.INITIAL_SCALING)
         self.sim_surface.centering_position = env.config.get("centering_position", self.sim_surface.INITIAL_CENTERING)
         self.clock = pygame.time.Clock()
 
