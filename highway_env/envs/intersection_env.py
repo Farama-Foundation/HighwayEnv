@@ -12,11 +12,11 @@ from highway_env.vehicle.control import MDPVehicle
 
 class IntersectionEnv(AbstractEnv):
 
-    COLLISION_REWARD = -0.1
-    HIGH_VELOCITY_REWARD = 0.7
+    COLLISION_REWARD = -0.3
+    HIGH_VELOCITY_REWARD = 1
     ARRIVED_REWARD = 1
 
-    DURATION = 12
+    DURATION = 18
 
     DEFAULT_CONFIG = {
         "observation": {
@@ -65,7 +65,6 @@ class IntersectionEnv(AbstractEnv):
         results = super(IntersectionEnv, self).step(action)
         self.steps += 1
         self._clear_vehicles()
-        self.road.enforce_road_rules()
         self._spawn_vehicles()
         return results
 
@@ -92,7 +91,7 @@ class IntersectionEnv(AbstractEnv):
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
         for corner in range(4):
             angle = rad(90 * corner)
-            is_horizontal = corner % 2
+            is_horizontal = (corner + 0) % 2
             priority = 3 if is_horizontal else 1
             rotation = np.array([[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]])
             # Incoming
@@ -135,8 +134,8 @@ class IntersectionEnv(AbstractEnv):
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         other_vehicles_type.DISTANCE_WANTED = 2  # Low jam distance
-        other_vehicles_type.COMFORT_ACC_MAX = 5
-        other_vehicles_type.COMFORT_ACC_MIN = -4
+        other_vehicles_type.COMFORT_ACC_MAX = 6
+        other_vehicles_type.COMFORT_ACC_MIN = -3
 
         vehicle = other_vehicles_type.make_on_lane(self.road,
                                                    ("o1", "ir1", 0),
