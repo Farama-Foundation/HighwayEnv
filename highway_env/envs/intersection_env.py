@@ -57,10 +57,6 @@ class IntersectionEnv(AbstractEnv):
 
     def reset(self):
         self._make_road()
-        for _ in range(5):
-            self._spawn_vehicles()
-            [(self.road.act(), self.road.step(0.1)) for _ in range(15)]
-
         self._make_vehicles()
         self.steps = 0
         return super(IntersectionEnv, self).reset()
@@ -133,11 +129,27 @@ class IntersectionEnv(AbstractEnv):
             Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
         :return: the ego-vehicle
         """
+        for _ in range(6):
+            self._spawn_vehicles()
+            [(self.road.act(), self.road.step(0.1)) for _ in range(15)]
+
+        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        other_vehicles_type.DISTANCE_WANTED = 2  # Low jam distance
+        other_vehicles_type.COMFORT_ACC_MAX = 5
+        other_vehicles_type.COMFORT_ACC_MIN = -4
+
+        vehicle = other_vehicles_type.make_on_lane(self.road,
+                                                   ("o1", "ir1", 0),
+                                                   longitudinal=0,
+                                                   velocity=None)
+        vehicle.plan_route_to("o3")
+        self.road.vehicles.append(vehicle)
+
         # Ego-vehicle
         ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
         ego_vehicle = MDPVehicle(self.road,
                                  ego_lane.position(0, 0),
-                                 velocity=9,
+                                 velocity=ego_lane.speed_limit,
                                  heading=ego_lane.heading_at(0)).plan_route_to("o"+str(self.np_random.randint(4)))
         MDPVehicle.SPEED_MIN = 0
         MDPVehicle.SPEED_MAX = 9
@@ -146,11 +158,10 @@ class IntersectionEnv(AbstractEnv):
         self.vehicle = ego_vehicle
 
     def _spawn_vehicles(self):
-        if self.np_random.rand() < 1-0.5:
+        if self.np_random.rand() < 1-0.6:
             return
         position_deviation = 1
         velocity_deviation = 1
-        n = self.np_random.randint(1, 3)
         route = self.np_random.choice(range(4), size=2, replace=False)
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         vehicle = other_vehicles_type.make_on_lane(self.road,
@@ -165,11 +176,13 @@ class IntersectionEnv(AbstractEnv):
         self.road.vehicles.append(vehicle)
 
     def _clear_vehicles(self):
-        self.road.vehicles = [vehicle for vehicle in self.road.vehicles
-                              if vehicle is self.vehicle or
-                              not("il" in vehicle.lane_index[0] and "o" in vehicle.lane_index[1] \
-                                  and vehicle.lane.local_coordinates(vehicle.position)[0] >=
-                                  vehicle.lane.length - 4*vehicle.LENGTH)]
+        self.road.vehicles = [
+            vehicle for vehicle in self.road.vehicles
+            if vehicle is self.vehicle or
+            (not("il" in vehicle.lane_index[0] and "o" in vehicle.lane_index[1] \
+                and vehicle.lane.local_coordinates(vehicle.position)[0] >=
+                vehicle.lane.length - 4*vehicle.LENGTH) and vehicle.route is not None)
+        ]
 
     @property
     def has_arrived(self):
