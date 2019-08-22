@@ -1,0 +1,59 @@
+import numpy as np
+
+from highway_env import utils
+from highway_env.road.road import Road
+from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
+
+
+class RegulatedRoad(Road):
+    YIELDING_COLOR = (200, 150, 0)
+
+    def enforce_road_rules(self):
+        """
+            Find conflicts and resolve them by assigning yielding vehicles and stopping them.
+        """
+        # Unfreeze previous yielding vehicles
+        for v in self.vehicles:
+            if getattr(v, "is_yielding", False):
+                v.target_velocity = v.lane.speed_limit
+                delattr(v, "color")
+                v.is_yielding = False
+        # Find new conflicts and resolve them
+        for i in range(len(self.vehicles) - 1):
+            for j in range(i+1, len(self.vehicles)):
+                if self.is_conflict_possible(self.vehicles[i], self.vehicles[j]):
+                    yielding_vehicle = self.respect_priorities(self.vehicles[i], self.vehicles[j])
+                    if yielding_vehicle is not None and \
+                            isinstance(yielding_vehicle, ControlledVehicle) and \
+                            not isinstance(yielding_vehicle, MDPVehicle):
+                        yielding_vehicle.color = self.YIELDING_COLOR
+                        yielding_vehicle.target_velocity = 0
+                        yielding_vehicle.is_yielding = True
+
+    def respect_priorities(self, v1, v2):
+        """
+            Resolve a conflict between two vehicles by determining who should yield
+        :return:
+        """
+        if v1.lane.priority > v2.lane.priority:
+            return v2
+        elif v1.lane.priority < v2.lane.priority:
+            return v1
+        else:
+            return self.np_random.choice([v1, v2])
+
+    @staticmethod
+    def is_conflict_possible(v1, v2):
+        times = np.arange(0.5, 3, 0.25)
+        positions_1, headings_1 = v1.predict_trajectory_constant_velocity(times)
+        positions_2, headings_2 = v2.predict_trajectory_constant_velocity(times)
+
+        for position_1, heading_1, position_2, heading_2 in zip(positions_1, headings_1, positions_2, headings_2):
+            # Fast spherical pre-check
+            if np.linalg.norm(position_2 - position_1) > v1.LENGTH:
+                continue
+
+            # Accurate rectangular check
+            if utils.rotated_rectangles_intersect((position_1, 0.9*v1.LENGTH, 0.9*v1.WIDTH, heading_1),
+                                                  (position_2, 0.9*v2.LENGTH, 0.9*v2.WIDTH, heading_2)):
+                return True

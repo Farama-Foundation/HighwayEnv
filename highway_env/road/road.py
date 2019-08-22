@@ -42,6 +42,8 @@ class RoadNetwork(object):
         :return: the corresponding lane geometry.
         """
         _from, _to, _id = index
+        if _id is None and len(self.graph[_from][_to]) == 1:
+            _id = 0
         return self.graph[_from][_to][_id]
 
     def get_closest_lane_index(self, position):
@@ -210,6 +212,19 @@ class RoadNetwork(object):
                           LineType.CONTINUOUS_LINE if lane == lanes - 1 else LineType.NONE]
             net.add_lane(0, 1, StraightLane(origin, end, line_types=line_types))
         return net
+
+    def position_heading_along_route(self, route, longitudinal, lateral):
+        """
+            Get the absolute position and heading along a route composed of several lanes at some local coordinates.
+        :param route: a planned route, list of lane indexes
+        :param longitudinal: longitudinal position
+        :param lateral: : lateral position
+        :return: position, heading
+        """
+        while len(route) > 1 and longitudinal > self.get_lane(route[0]).length:
+            longitudinal -= self.get_lane(route[0]).length
+            route = route[1:]
+        return self.get_lane(route[0]).position(longitudinal, lateral), self.get_lane(route[0]).heading_at(longitudinal)
 
 
 class Road(Loggable):
