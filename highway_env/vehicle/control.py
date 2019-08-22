@@ -168,6 +168,17 @@ class ControlledVehicle(Vehicle):
         self.route = self.route[0:index+1] + \
                      [(self.route[index][1], next_destinations_from[next_index], self.route[index][2])]
 
+    def predict_trajectory_constant_velocity(self, times):
+        """
+            Predict the future positions of the vehicle along its planned route, under constant velocity
+        :param times: timesteps of prediction
+        :return: positions, headings
+        """
+        coordinates = self.lane.local_coordinates(self.position)
+        route = self.route or [self.lane_index]
+        return zip(*[self.road.network.position_heading_along_route(route, coordinates[0] + self.velocity * t, 0)
+                     for t in times])
+
 
 class MDPVehicle(ControlledVehicle):
     """

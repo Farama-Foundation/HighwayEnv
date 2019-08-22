@@ -5,6 +5,7 @@ import numpy as np
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, CircularLane, SineLane, AbstractLane
+from highway_env.road.regulation import RegulatedRoad
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.control import MDPVehicle
 
@@ -60,46 +61,64 @@ class IntersectionEnv(AbstractEnv):
     def step(self, action):
         results = super(IntersectionEnv, self).step(action)
         self.steps += 1
-        self._spawn_vehicles()
         self._clear_vehicles()
+        self.road.enforce_road_rules()
+        self._spawn_vehicles()
         return results
 
     def _make_road(self):
+        """
+            Make an 4-way intersection.
+
+            The horizontal road has the right of way. More precisely, the levels of priority are:
+                - 3 for horizontal straight lanes and right-turns
+                - 1 for vertical straight lanes and right-turns
+                - 2 for horizontal left-turns
+                - 0 for vertical left-turns
+            The code for nodes in the road network is:
+            (o:outer | i:inner + [r:right, l:left]) + (0:south | 1:west | 2:north | 3:east)
+        :return: the intersection road
+        """
         lane_width = AbstractLane.DEFAULT_WIDTH
         right_turn_radius = lane_width+5  # [m}
         left_turn_radius = right_turn_radius + lane_width  # [m}
         outer_distance = right_turn_radius + lane_width / 2
-        access_length = 40  # [m]
+        access_length = 50  # [m]
 
-        # Corners: 0:south, 1:west, 2:north, 3:east. i:inner, o:outer, r:right, l:left
         net = RoadNetwork()
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
         for corner in range(4):
             angle = rad(90 * corner)
+            is_horizontal = corner % 2
+            priority = 3 if is_horizontal else 1
             rotation = np.array([[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]])
             # Incoming
             start = rotation @ np.array([lane_width / 2, access_length + outer_distance])
             end = rotation @ np.array([lane_width / 2, outer_distance])
-            net.add_lane("o" + str(corner), "ir" + str(corner), StraightLane(start, end, line_types=[s, c]))
+            net.add_lane("o" + str(corner), "ir" + str(corner),
+                         StraightLane(start, end, line_types=[s, c], priority=priority, speed_limit=10))
             # Right turn
             r_center = rotation @ (np.array([outer_distance, outer_distance]))
             net.add_lane("ir" + str(corner), "il" + str((corner - 1) % 4),
-                         CircularLane(r_center, right_turn_radius, angle+rad(180), angle+rad(270), line_types=[n, c]))
+                         CircularLane(r_center, right_turn_radius, angle+rad(180), angle+rad(270),
+                                      line_types=[n, c], priority=priority, speed_limit=10))
             # Left turn
             l_center = rotation @ (np.array([-left_turn_radius + lane_width/2, left_turn_radius - lane_width/2]))
             net.add_lane("ir" + str(corner), "il" + str((corner + 1) % 4),
                          CircularLane(l_center, left_turn_radius, angle+rad(0), angle+rad(-90), clockwise=False,
-                                      line_types=[n, n]))
+                                      line_types=[n, n], priority=priority - 1, speed_limit=10))
             # Straight
             start = rotation @ np.array([lane_width / 2, outer_distance])
             end = rotation @ np.array([lane_width / 2, -outer_distance])
-            net.add_lane("ir" + str(corner), "il" + str((corner + 2) % 4), StraightLane(start, end, line_types=[s, n]))
+            net.add_lane("ir" + str(corner), "il" + str((corner + 2) % 4),
+                         StraightLane(start, end, line_types=[s, n], priority=priority, speed_limit=10))
             # Exit
             start = rotation @ np.flip([lane_width / 2, access_length + outer_distance], axis=0)
             end = rotation @ np.flip([lane_width / 2, outer_distance], axis=0)
-            net.add_lane("il" + str((corner - 1) % 4), "o" + str((corner - 1) % 4), StraightLane(end, start, line_types=[n, c]))
+            net.add_lane("il" + str((corner - 1) % 4), "o" + str((corner - 1) % 4),
+                         StraightLane(end, start, line_types=[n, c], priority=priority, speed_limit=10))
 
-        road = Road(network=net, np_random=self.np_random)
+        road = RegulatedRoad(network=net, np_random=self.np_random)
         self.road = road
 
     def _make_vehicles(self):

@@ -48,6 +48,8 @@ class Vehicle(Loggable):
         :return: A vehicle with at the specified position
         """
         lane = road.network.get_lane(lane_index)
+        if velocity is None:
+            velocity = lane.speed_limit
         return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), velocity)
 
     @classmethod

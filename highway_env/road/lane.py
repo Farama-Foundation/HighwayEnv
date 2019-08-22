@@ -66,7 +66,7 @@ class AbstractLane(object):
         if not longitudinal or not lateral:
             longitudinal, lateral = self.local_coordinates(position)
         is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 and \
-                -Vehicle.LENGTH <= longitudinal < self.length + Vehicle.LENGTH
+            -Vehicle.LENGTH <= longitudinal < self.length + Vehicle.LENGTH
         return is_on
 
     def is_reachable_from(self, position):
@@ -109,7 +109,7 @@ class StraightLane(AbstractLane):
     """
         A lane going in straight line.
     """
-    def __init__(self, start, end, width=AbstractLane.DEFAULT_WIDTH, line_types=None, forbidden=False):
+    def __init__(self, start, end, width=AbstractLane.DEFAULT_WIDTH, line_types=None, forbidden=False, speed_limit=20, priority=0):
         """
             New straight lane.
 
@@ -118,6 +118,7 @@ class StraightLane(AbstractLane):
         :param width: the lane width [m]
         :param line_types: the type of lines on both sides of the lane
         :param forbidden: is changing to this lane forbidden
+        :param priority: priority level of the lane, for determining who has right of way
         """
         super(StraightLane, self).__init__()
         self.start = np.array(start)
@@ -129,6 +130,8 @@ class StraightLane(AbstractLane):
         self.direction = (self.end - self.start) / self.length
         self.direction_lateral = np.array([-self.direction[1], self.direction[0]])
         self.forbidden = forbidden
+        self.priority = priority
+        self.speed_limit = speed_limit
 
     def position(self, longitudinal, lateral):
         return self.start + longitudinal * self.direction + lateral * self.direction_lateral
@@ -152,7 +155,7 @@ class SineLane(StraightLane):
     """
 
     def __init__(self, start, end, amplitude, pulsation, phase,
-                 width=StraightLane.DEFAULT_WIDTH, line_types=None, forbidden=False):
+                 width=StraightLane.DEFAULT_WIDTH, line_types=None, forbidden=False, speed_limit=20, priority=0):
         """
             New sinusoidal lane.
 
@@ -162,7 +165,7 @@ class SineLane(StraightLane):
         :param pulsation: the lane pulsation [rad/m]
         :param phase: the lane initial phase [rad]
         """
-        super(SineLane, self).__init__(start, end,  width, line_types, forbidden)
+        super(SineLane, self).__init__(start, end,  width, line_types, forbidden, speed_limit, priority)
         self.amplitude = amplitude
         self.pulsation = pulsation
         self.phase = phase
@@ -185,7 +188,7 @@ class CircularLane(AbstractLane):
         A lane going in circle arc.
     """
     def __init__(self, center, radius, start_phase, end_phase, clockwise=True,
-                 width=AbstractLane.DEFAULT_WIDTH, line_types=None, forbidden=False):
+                 width=AbstractLane.DEFAULT_WIDTH, line_types=None, forbidden=False, speed_limit=20, priority=0):
         super(CircularLane, self).__init__()
         self.center = np.array(center)
         self.radius = radius
@@ -196,6 +199,8 @@ class CircularLane(AbstractLane):
         self.line_types = line_types or [LineType.STRIPED, LineType.STRIPED]
         self.forbidden = forbidden
         self.length = radius*(end_phase - start_phase) * self.direction
+        self.priority = priority
+        self.speed_limit = speed_limit
 
     def position(self, longitudinal, lateral):
         phi = self.direction * longitudinal / self.radius + self.start_phase
