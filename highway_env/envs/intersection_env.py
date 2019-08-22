@@ -31,6 +31,13 @@ class IntersectionEnv(AbstractEnv):
         "scaling": 5.5*1.3
     }
 
+    ACTIONS = {
+        0: 'SLOWER',
+        1: 'IDLE',
+        2: 'FASTER'
+    }
+    ACTIONS_INDEXES = {v: k for k, v in ACTIONS.items()}
+
     def __init__(self):
         super(IntersectionEnv, self).__init__()
         self.steps = 0
