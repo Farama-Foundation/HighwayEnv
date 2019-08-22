@@ -292,9 +292,9 @@ class Road(Loggable):
         s_front = s_rear = None
         v_front = v_rear = None
         for v in self.vehicles:
-            if v is not vehicle and self.network.is_connected_road(v.lane_index, lane_index, same_lane=True):
+            if v is not vehicle and True :#self.network.is_connected_road(v.lane_index, lane_index, same_lane=True):
                 s_v, lat_v = lane.local_coordinates(v.position)
-                if not lane.on_lane(v.position, s_v, lat_v):
+                if not lane.on_lane(v.position, s_v, lat_v, margin=1):
                     continue
                 if s <= s_v and (s_front is None or s_v <= s_front):
                     s_front = s_v

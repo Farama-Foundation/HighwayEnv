@@ -54,18 +54,19 @@ class AbstractLane(object):
         """
         raise NotImplementedError()
 
-    def on_lane(self, position, longitudinal=None, lateral=None):
+    def on_lane(self, position, longitudinal=None, lateral=None, margin=0):
         """
             Whether a given world position is on the lane.
 
         :param position: a world position [m]
         :param longitudinal: (optional) the corresponding longitudinal lane coordinate, if known [m]
         :param lateral: (optional) the corresponding lateral lane coordinate, if known [m]
+        :param margin: (optional) a supplementary margin around the lane width
         :return: is the position on the lane?
         """
         if not longitudinal or not lateral:
             longitudinal, lateral = self.local_coordinates(position)
-        is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 and \
+        is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 + margin and \
             -Vehicle.LENGTH <= longitudinal < self.length + Vehicle.LENGTH
         return is_on
 
