@@ -112,7 +112,8 @@ class IDMVehicle(ControlledVehicle):
         if not ego_vehicle:
             return 0
         acceleration = self.COMFORT_ACC_MAX * (
-                1 - np.power(ego_vehicle.velocity / utils.not_zero(ego_vehicle.target_velocity), self.DELTA))
+                1 - np.power(max(ego_vehicle.velocity, 0) / utils.not_zero(ego_vehicle.target_velocity), self.DELTA))
+
         if front_vehicle:
             d = ego_vehicle.lane_distance_to(front_vehicle)
             acceleration -= self.COMFORT_ACC_MAX * \
