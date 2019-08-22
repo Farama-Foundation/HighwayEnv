@@ -161,6 +161,9 @@ class Vehicle(Loggable):
     def direction(self):
         return np.array([np.cos(self.heading), np.sin(self.heading)])
 
+    def front_distance_to(self, other):
+        return self.direction.dot(other.position - self.position)
+
     def to_dict(self, origin_vehicle=None):
         d = {
             'presence': 1,

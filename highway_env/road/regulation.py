@@ -7,6 +7,17 @@ from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 
 class RegulatedRoad(Road):
     YIELDING_COLOR = (200, 150, 0)
+    REGULATION_FREQUENCY = 2
+
+    def __init__(self, network=None, vehicles=None, np_random=None):
+        super(RegulatedRoad, self).__init__(network, vehicles, np_random)
+        self.steps = 0
+
+    def step(self, dt):
+        self.steps += 1
+        if self.steps % int(1 / dt / self.REGULATION_FREQUENCY) == 0:
+            self.enforce_road_rules()
+        return super().step(dt)
 
     def enforce_road_rules(self):
         """
@@ -30,17 +41,18 @@ class RegulatedRoad(Road):
                         yielding_vehicle.target_velocity = 0
                         yielding_vehicle.is_yielding = True
 
-    def respect_priorities(self, v1, v2):
+    @staticmethod
+    def respect_priorities(v1, v2):
         """
             Resolve a conflict between two vehicles by determining who should yield
-        :return:
+        :return: the yielding vehicle
         """
         if v1.lane.priority > v2.lane.priority:
             return v2
         elif v1.lane.priority < v2.lane.priority:
             return v1
-        else:
-            return self.np_random.choice([v1, v2])
+        else:  # The vehicle behind should yield
+            return v1 if v1.front_distance_to(v2) > v2.front_distance_to(v1) else v2
 
     @staticmethod
     def is_conflict_possible(v1, v2):
