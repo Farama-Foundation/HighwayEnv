@@ -6,17 +6,17 @@ from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, CircularLane, SineLane, AbstractLane
 from highway_env.road.regulation import RegulatedRoad
-from highway_env.road.road import Road, RoadNetwork
+from highway_env.road.road import RoadNetwork
 from highway_env.vehicle.control import MDPVehicle
 
 
 class IntersectionEnv(AbstractEnv):
 
-    COLLISION_REWARD = 0
-    HIGH_VELOCITY_REWARD = 0.5
+    COLLISION_REWARD = -0.1
+    HIGH_VELOCITY_REWARD = 0.7
     ARRIVED_REWARD = 1
 
-    DURATION = 50
+    DURATION = 12
 
     DEFAULT_CONFIG = {
         "observation": {
@@ -45,7 +45,7 @@ class IntersectionEnv(AbstractEnv):
 
     def _reward(self, action):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
-                 + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / max(self.vehicle.SPEED_COUNT - 1, 1)
+                 + self.HIGH_VELOCITY_REWARD * (self.vehicle.velocity_index == self.vehicle.SPEED_COUNT - 1)
         reward = self.ARRIVED_REWARD if self.has_arrived else reward
         return utils.remap(reward, [self.COLLISION_REWARD, self.ARRIVED_REWARD], [0, 1])
 
