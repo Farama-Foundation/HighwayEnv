@@ -262,7 +262,7 @@ class AbstractEnv(gym.Env):
             if self.automatic_rendering_callback:
                 self.automatic_rendering_callback()
             else:
-                self.render(self.rendering_mode, self.offscreen)
+                self.render(self.rendering_mode)
 
     def simplify(self):
         """
