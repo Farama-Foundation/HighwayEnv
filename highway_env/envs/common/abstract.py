@@ -82,10 +82,8 @@ class AbstractEnv(gym.Env):
         self.automatic_rendering_callback = None
         self.should_update_rendering = True
         self.rendering_mode = 'human'
-        if "offscreen_rendering" in self.config.keys():
-            self.offscreen = self.config["offscreen_rendering"]
-        else:
-            self.offscreen = False
+        self.offscreen = self.config.get("offscreen_rendering", False)
+
         self.enable_auto_render = False
 
     def seed(self, seed=None):
