@@ -91,7 +91,6 @@ class EnvViewer(object):
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
 
-        print("[INFO] In envs.common.graphics.EnvViewer.display(),\n   self.offscreen={}".format(self.offscreen))
         if self.vehicle_trajectory:
             VehicleGraphics.display_trajectory(
                 self.vehicle_trajectory,
