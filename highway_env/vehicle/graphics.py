@@ -18,7 +18,7 @@ class VehicleGraphics(object):
     EGO_COLOR = GREEN
 
     @classmethod
-    def display(cls, vehicle, surface, transparent=False):
+    def display(cls, vehicle, surface, transparent=False, offscreen=False):
         """
             Display a vehicle on a pygame surface.
 
@@ -27,27 +27,30 @@ class VehicleGraphics(object):
         :param vehicle: the vehicle to be drawn
         :param surface: the surface to draw the vehicle on
         :param transparent: whether the vehicle should be drawn slightly transparent
+        :param offscreen: whether the rendering should be done offscreen or not
         """
         v = vehicle
         s = pygame.Surface((surface.pix(v.LENGTH), surface.pix(v.LENGTH)), pygame.SRCALPHA)  # per-pixel alpha
         rect = (0, surface.pix(v.LENGTH) / 2 - surface.pix(v.WIDTH) / 2, surface.pix(v.LENGTH), surface.pix(v.WIDTH))
         pygame.draw.rect(s, cls.get_color(v, transparent), rect, 0)
         pygame.draw.rect(s, cls.BLACK, rect, 1)
-        s = pygame.Surface.convert_alpha(s)
+        if not offscreen:  # convert_alpha throws errors in offscreen mode TODO() Explain why
+            s = pygame.Surface.convert_alpha(s)
         h = v.heading if abs(v.heading) > 2 * np.pi / 180 else 0
         sr = pygame.transform.rotate(s, -h * 180 / np.pi)
         surface.blit(sr, (surface.pos2pix(v.position[0] - v.LENGTH / 2, v.position[1] - v.LENGTH / 2)))
 
     @classmethod
-    def display_trajectory(cls, states, surface):
+    def display_trajectory(cls, states, surface, offscreen=False):
         """
             Display the whole trajectory of a vehicle on a pygame surface.
 
         :param states: the list of vehicle states within the trajectory to be displayed
         :param surface: the surface to draw the vehicle future states on
+        :param offscreen: whether the rendering should be done offscreen or not
         """
         for vehicle in states:
-            cls.display(vehicle, surface, transparent=True)
+            cls.display(vehicle, surface, transparent=True, offscreen=offscreen)
 
     @classmethod
     def get_color(cls, vehicle, transparent=False):
