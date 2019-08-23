@@ -113,6 +113,80 @@ class KinematicObservation(ObservationType):
         return obs
 
 
+class OccupancyGridObservation(ObservationType):
+    """
+        Observe an occupancy grid of nearby vehicles.
+    """
+    FEATURES = ['presence', 'vx', 'vy']
+    GRID_SIZE = [[-5.5*5, 5.5*5], [-5.5*5, 5.5*5]]
+    GRID_STEP = [5, 5]
+
+    def __init__(self,
+                 env,
+                 features=FEATURES,
+                 grid_size=GRID_SIZE,
+                 grid_step=GRID_STEP,
+                 features_range=None,
+                 absolute=False,
+                 **kwargs):
+        """
+        :param env: The environment to observe
+        :param features: Names of features used in the observation
+        :param vehicles_count: Number of observed vehicles
+        """
+        self.env = env
+        self.features = features
+        self.grid_size = np.array(grid_size)
+        self.grid_step = np.array(grid_step)
+        grid_shape = np.asarray(np.floor((self.grid_size[:, 1] - self.grid_size[:, 0]) / grid_step), dtype=np.int)
+        self.grid = np.zeros((len(self.features), *grid_shape))
+        self.features_range = features_range
+        self.features_range.pop("x", None)
+        self.features_range.pop("y", None)
+        self.absolute = absolute
+
+    def space(self):
+        return spaces.Box(shape=self.grid.shape, low=-1, high=1, dtype=np.float32)
+
+    def normalize(self, df):
+        """
+            Normalize the observation values.
+
+            For now, assume that the road is straight along the x axis.
+        :param Dataframe df: observation data
+        """
+        if not self.features_range:
+            self.features_range = {
+                "vx": [-2*MDPVehicle.SPEED_MAX, 2*MDPVehicle.SPEED_MAX],
+                "vy": [-2*MDPVehicle.SPEED_MAX, 2*MDPVehicle.SPEED_MAX]
+            }
+        for feature, f_range in self.features_range.items():
+            if feature in df:
+                df[feature] = utils.remap(df[feature], [f_range[0], f_range[1]], [-1, 1])
+        return df
+
+    def observe(self):
+        if self.absolute:
+            raise NotImplementedError()
+        else:
+            # Add nearby traffic
+            self.grid.fill(0)
+            df = pandas.DataFrame.from_records(
+                [v.to_dict(self.env.vehicle) for v in self.env.road.vehicles if v is not self.env.vehicle])
+            # Normalize
+            df = self.normalize(df)
+            # Fill-in features
+            for layer, feature in enumerate(self.features):
+                for _, vehicle in df.iterrows():
+                    cell = (int((vehicle["x"] - self.grid_size[0, 0]) / self.grid_step[0]),
+                            int((vehicle["y"] - self.grid_size[1, 0]) / self.grid_step[1]))
+                    if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
+                        self.grid[layer, cell[1], cell[0]] = vehicle[feature]
+            # Clip
+            obs = np.clip(self.grid, -1, 1)
+            return obs
+
+
 class KinematicsGoalObservation(KinematicObservation):
     def __init__(self, env, scales, **kwargs):
         self.scales = np.array(scales)
@@ -145,7 +219,9 @@ def observation_factory(env, config):
         return TimeToCollisionObservation(env, **config)
     elif config["type"] == "Kinematics":
         return KinematicObservation(env, **config)
+    elif config["type"] == "OccupancyGrid":
+        return OccupancyGridObservation(env, **config)
     elif config["type"] == "KinematicsGoal":
         return KinematicsGoalObservation(env, **config)
     else:
-        raise ValueError("Unkown observation type")
+        raise ValueError("Unknown observation type")
