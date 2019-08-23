@@ -20,11 +20,19 @@ class IntersectionEnv(AbstractEnv):
 
     DEFAULT_CONFIG = {
         "observation": {
-            "type": "Kinematics"
+            "type": "Kinematics",
+            "vehicles_count": 10,
+            "features_range": {
+                "x": [-50, 50],
+                "y": [-50, 50],
+                "vx": [-10, 10],
+                "vy": [-10, 10],
+            },
+            "absolute": True
         },
         "policy_frequency": 1,  # [Hz]
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-        "incoming_vehicle_destination": None,
+        "destination": None,
         "screen_width": 600,
         "screen_height": 600,
         "centering_position": [0.5, 0.6],
@@ -146,10 +154,12 @@ class IntersectionEnv(AbstractEnv):
 
         # Ego-vehicle
         ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
+        destination = self.config["destination"] or "o"+str(self.np_random.randint(4))
         ego_vehicle = MDPVehicle(self.road,
                                  ego_lane.position(0, 0),
                                  velocity=ego_lane.speed_limit,
-                                 heading=ego_lane.heading_at(0)).plan_route_to("o"+str(self.np_random.randint(4)))
+                                 heading=ego_lane.heading_at(0))\
+            .plan_route_to(destination)
         MDPVehicle.SPEED_MIN = 0
         MDPVehicle.SPEED_MAX = 9
         MDPVehicle.SPEED_COUNT = 3
