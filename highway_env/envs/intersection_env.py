@@ -12,7 +12,7 @@ from highway_env.vehicle.control import MDPVehicle
 
 class IntersectionEnv(AbstractEnv):
 
-    COLLISION_REWARD = -0.3
+    COLLISION_REWARD = -1
     HIGH_VELOCITY_REWARD = 1
     ARRIVED_REWARD = 1
 
