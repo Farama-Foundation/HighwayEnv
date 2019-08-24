@@ -36,7 +36,8 @@ class IntersectionEnv(AbstractEnv):
         "screen_width": 600,
         "screen_height": 600,
         "centering_position": [0.5, 0.6],
-        "scaling": 5.5*1.3
+        "scaling": 5.5*1.3,
+        "normalize_reward": False
     }
 
     ACTIONS = {
@@ -55,7 +56,9 @@ class IntersectionEnv(AbstractEnv):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
                  + self.HIGH_VELOCITY_REWARD * (self.vehicle.velocity_index == self.vehicle.SPEED_COUNT - 1)
         reward = self.ARRIVED_REWARD if self.has_arrived else reward
-        return utils.remap(reward, [self.COLLISION_REWARD, self.ARRIVED_REWARD], [0, 1])
+        if self.config["normalize_reward"]:
+            reward = utils.remap(reward, [self.COLLISION_REWARD, self.ARRIVED_REWARD], [0, 1])
+        return reward
 
     def _is_terminal(self):
         """
