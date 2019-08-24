@@ -133,7 +133,6 @@ class RoadGraphics(object):
         :param road: the road to be displayed
         :param surface: the pygame surface
         """
-        print("[INFO] in display_traffic, offscreen={}".format(offscreen))
         for v in road.vehicles:
             VehicleGraphics.display(v, surface, offscreen=offscreen)
 

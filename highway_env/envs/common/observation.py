@@ -7,6 +7,7 @@ from highway_env import utils
 from highway_env.envs.common.finite_mdp import compute_ttc_grid
 from highway_env.road.lane import AbstractLane
 from highway_env.vehicle.control import MDPVehicle
+from highway_env.road.graphics import WorldSurface
 
 
 class ObservationType(object):
@@ -15,6 +16,51 @@ class ObservationType(object):
 
     def observe(self):
         raise NotImplementedError()
+
+
+class GrayscaleObservation(ObservationType):
+    """
+        An observation class that collects directly what the simulator renders
+        as the input, and stacks the collected frames just as in the nature DQN
+        . Specific keys are expected in the configuration dictionnary passed.
+
+        Example of observation dictionnary in the environment config:
+            observation": {
+                "type": "GrayscaleObservation",
+                "weights": [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,
+                "stack_size": 4,
+                "observation_shape": (84, 84)
+            }
+
+        Also, the screen_height and screen_width of the environment should match the
+        expected observation_shape. 
+    """
+    def __init__(self, env, **config):
+        self.env = env
+        self.config = config
+        self.observation_shape = config["observation_shape"]
+        self.shape = self.observation_shape + (config["stack_size"], )
+        self.state = np.zeros(self.shape)
+
+    def space(self):
+        try:
+            return spaces.Box(shape=self.shape,
+                              low=0, high=1,
+                              dtype=np.float32)
+        except AttributeError:
+            return None
+
+    def observe(self):
+        new_obs = self._record_to_grayscale()
+        new_obs = np.reshape(new_obs, self.observation_shape)
+        self.state = np.roll(self.state, -1, axis=-1)
+        self.state[:, :, -1] = new_obs
+        return self.state
+
+    def _record_to_grayscale(self):
+        raw_rgb = self.env.render('rgb_array')
+        return np.dot(raw_rgb[..., :3],
+                      self.config['weights'])
 
 
 class TimeToCollisionObservation(ObservationType):
@@ -223,5 +269,7 @@ def observation_factory(env, config):
         return OccupancyGridObservation(env, **config)
     elif config["type"] == "KinematicsGoal":
         return KinematicsGoalObservation(env, **config)
+    elif config["type"] == "GrayscaleObservation":
+        return GrayscaleObservation(env, **config)
     else:
         raise ValueError("Unknown observation type")
