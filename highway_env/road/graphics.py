@@ -126,15 +126,16 @@ class RoadGraphics(object):
                     LaneGraphics.display(l, surface)
 
     @classmethod
-    def display_traffic(cls, road, surface):
+    def display_traffic(cls, road, surface, offscreen=False):
         """
             Display the road vehicles on a surface.
 
         :param road: the road to be displayed
         :param surface: the pygame surface
         """
+        print("[INFO] in display_traffic, offscreen={}".format(offscreen))
         for v in road.vehicles:
-            VehicleGraphics.display(v, surface)
+            VehicleGraphics.display(v, surface, offscreen=offscreen)
 
 
 class WorldSurface(pygame.Surface):

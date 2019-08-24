@@ -15,13 +15,19 @@ class EnvViewer(object):
     """
     SAVE_IMAGES = False
 
-    def __init__(self, env):
+    def __init__(self, env, offscreen=False):
         self.env = env
+        self.offscreen = offscreen
 
         pygame.init()
         pygame.display.set_caption("Highway-env")
         panel_size = (self.env.config["screen_width"], self.env.config["screen_height"])
-        self.screen = pygame.display.set_mode([self.env.config["screen_width"], self.env.config["screen_height"]])
+
+        # A display is not mandatory to draw things. Ignoring the display.set_mode()
+        # instruction allows the drawing to be done on surfaces without
+        # handling a screen display, useful for e.g. cloud computing
+        if not self.offscreen:
+            self.screen = pygame.display.set_mode([self.env.config["screen_width"], self.env.config["screen_height"]])
         self.sim_surface = WorldSurface(panel_size, 0, pygame.Surface(panel_size))
         self.sim_surface.scaling = env.config.get("scaling", self.sim_surface.INITIAL_SCALING)
         self.sim_surface.centering_position = env.config.get("centering_position", self.sim_surface.INITIAL_CENTERING)
@@ -84,11 +90,17 @@ class EnvViewer(object):
 
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
+
+        print("[INFO] In envs.common.graphics.EnvViewer.display(),\n   self.offscreen={}".format(self.offscreen))
         if self.vehicle_trajectory:
             VehicleGraphics.display_trajectory(
                 self.vehicle_trajectory,
-                self.sim_surface)
-        RoadGraphics.display_traffic(self.env.road, self.sim_surface)
+                self.sim_surface,
+                offscreen=self.offscreen)
+        RoadGraphics.display_traffic(
+            self.env.road,
+            self.sim_surface,
+            offscreen=self.offscreen)
 
         if self.agent_display:
             self.agent_display(self.agent_surface, self.sim_surface)
@@ -97,9 +109,10 @@ class EnvViewer(object):
             else:
                 self.screen.blit(self.agent_surface, (self.env.config["screen_width"], 0))
 
-        self.screen.blit(self.sim_surface, (0, 0))
-        self.clock.tick(self.env.SIMULATION_FREQUENCY)
-        pygame.display.flip()
+        if not self.offscreen:
+            self.screen.blit(self.sim_surface, (0, 0))
+            self.clock.tick(self.env.SIMULATION_FREQUENCY)
+            pygame.display.flip()
 
         if self.SAVE_IMAGES:
             pygame.image.save(self.screen, "highway-env_{}.png".format(self.frame))
@@ -109,7 +122,7 @@ class EnvViewer(object):
         """
         :return: the rendered image as a rbg array
         """
-        data = pygame.surfarray.array3d(self.screen)
+        data = pygame.surfarray.array3d(self.sim_surface)
         return np.moveaxis(data, 0, 1)
 
     def window_position(self):

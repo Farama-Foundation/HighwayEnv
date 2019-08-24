@@ -82,6 +82,10 @@ class AbstractEnv(gym.Env):
         self.automatic_rendering_callback = None
         self.should_update_rendering = True
         self.rendering_mode = 'human'
+        if "offscreen_rendering" in self.config.keys():
+            self.offscreen = self.config["offscreen_rendering"]
+        else:
+            self.offscreen = False
         self.enable_auto_render = False
 
     def seed(self, seed=None):
@@ -175,6 +179,7 @@ class AbstractEnv(gym.Env):
             self.time += 1
 
             # Automatically render intermediate simulation steps if a viewer has been launched
+            # Ignored if the rendering is done offscreen
             self._automatic_rendering()
 
             # Stop at terminal states
@@ -192,9 +197,9 @@ class AbstractEnv(gym.Env):
         self.rendering_mode = mode
 
         if self.viewer is None:
-            self.viewer = EnvViewer(self)
+            self.viewer = EnvViewer(self, offscreen=self.offscreen)
 
-        self.enable_auto_render = True
+        self.enable_auto_render = not self.offscreen
 
         # If the frame has already been rendered, do nothing
         if self.should_update_rendering:
@@ -202,10 +207,13 @@ class AbstractEnv(gym.Env):
 
         if mode == 'rgb_array':
             image = self.viewer.get_image()
+            if not self.viewer.offscreen:
+                self.viewer.handle_events()
             self.viewer.handle_events()
             return image
         elif mode == 'human':
-            self.viewer.handle_events()
+            if not self.viewer.offscreen:
+                self.viewer.handle_events()
         self.should_update_rendering = False
 
     def close(self):
