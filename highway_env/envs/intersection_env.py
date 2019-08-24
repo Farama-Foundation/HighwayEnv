@@ -20,15 +20,15 @@ class IntersectionEnv(AbstractEnv):
 
     DEFAULT_CONFIG = {
         "observation": {
-            "type": "Kinematics",
+            "type": "OccupancyGrid",
             "vehicles_count": 10,
             "features_range": {
                 "x": [-50, 50],
                 "y": [-50, 50],
-                "vx": [-10, 10],
-                "vy": [-10, 10],
+                "vx": [-20, 20],
+                "vy": [-20, 20],
             },
-            "absolute": True
+            "absolute": False
         },
         "policy_frequency": 1,  # [Hz]
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
