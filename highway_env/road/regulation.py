@@ -55,8 +55,8 @@ class RegulatedRoad(Road):
             return v1 if v1.front_distance_to(v2) > v2.front_distance_to(v1) else v2
 
     @staticmethod
-    def is_conflict_possible(v1, v2):
-        times = np.arange(0.5, 3, 0.25)
+    def is_conflict_possible(v1, v2, horizon=3, step=0.25):
+        times = np.arange(step, horizon, step)
         positions_1, headings_1 = v1.predict_trajectory_constant_velocity(times)
         positions_2, headings_2 = v2.predict_trajectory_constant_velocity(times)
 
