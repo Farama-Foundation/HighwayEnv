@@ -11,14 +11,13 @@ from highway_env.vehicle.control import MDPVehicle
 
 
 class IntersectionEnv(AbstractEnv):
-
     COLLISION_REWARD = -1
     HIGH_VELOCITY_REWARD = 1
     ARRIVED_REWARD = 1
 
     DEFAULT_CONFIG = {
         "observation": {
-            "type": "OccupancyGrid",
+            "type": "Kinematics",
             "vehicles_count": 10,
             "features_range": {
                 "x": [-50, 50],
@@ -26,16 +25,16 @@ class IntersectionEnv(AbstractEnv):
                 "vx": [-20, 20],
                 "vy": [-20, 20],
             },
-            "absolute": False
+            "absolute": True
         },
         "policy_frequency": 2,  # [Hz]
         "duration": 13,  # [s]
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-        "destination": None,
+        "destination": "o1",
         "screen_width": 600,
         "screen_height": 600,
         "centering_position": [0.5, 0.6],
-        "scaling": 5.5*1.3,
+        "scaling": 5.5 * 1.3,
         "normalize_reward": False
     }
 
