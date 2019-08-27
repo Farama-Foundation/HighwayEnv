@@ -16,8 +16,6 @@ class IntersectionEnv(AbstractEnv):
     HIGH_VELOCITY_REWARD = 1
     ARRIVED_REWARD = 1
 
-    DURATION = 18
-
     DEFAULT_CONFIG = {
         "observation": {
             "type": "OccupancyGrid",
@@ -30,7 +28,8 @@ class IntersectionEnv(AbstractEnv):
             },
             "absolute": False
         },
-        "policy_frequency": 1,  # [Hz]
+        "policy_frequency": 2,  # [Hz]
+        "duration": 13,  # [s]
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "destination": None,
         "screen_width": 600,
@@ -64,7 +63,9 @@ class IntersectionEnv(AbstractEnv):
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
-        return self.vehicle.crashed or self.steps >= self.DURATION or self.has_arrived
+        return self.vehicle.crashed \
+               or self.steps >= self.config["duration"] * self.config["policy_frequency"] \
+               or self.has_arrived
 
     def reset(self):
         self._make_road()
