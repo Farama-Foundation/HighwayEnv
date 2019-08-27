@@ -134,7 +134,7 @@ class IntersectionEnv(AbstractEnv):
         road = RegulatedRoad(network=net, np_random=self.np_random)
         self.road = road
 
-    def _make_vehicles(self, n_vehicles=1):
+    def _make_vehicles(self, n_vehicles=10):
         """
             Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
         :return: the ego-vehicle
@@ -148,14 +148,14 @@ class IntersectionEnv(AbstractEnv):
         # Random vehicles
         simulation_steps = 3
         for t in range(n_vehicles - 1):
-            self._spawn_vehicle(40 + t * 10)
+            self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
         for _ in range(simulation_steps):
             [(self.road.act(), self.road.step(1 / self.SIMULATION_FREQUENCY)) for _ in range(self.SIMULATION_FREQUENCY)]
 
-        # Left vehicle
-        self.road.vehicles.append(vehicle_type.make_on_lane(self.road, ("o1", "ir1", 0),
-                                                            longitudinal=70,
-                                                            velocity=None).plan_route_to("o3"))
+        # Challenger vehicle
+        v = self._spawn_vehicle(60, spawn_probability=1, go_front=True, position_deviation=0.1, velocity_deviation=0)
+        if v:
+            v.color = (255, 0, 0)
 
         # Ego-vehicle
         MDPVehicle.SPEED_MIN = 0
@@ -165,7 +165,7 @@ class IntersectionEnv(AbstractEnv):
         ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
         destination = self.config["destination"] or "o" + str(self.np_random.randint(4))
         ego_vehicle = MDPVehicle(self.road,
-                                 ego_lane.position(70, 0),
+                                 ego_lane.position(60, 0),
                                  velocity=ego_lane.speed_limit,
                                  heading=ego_lane.heading_at(50)) \
             .plan_route_to(destination)
@@ -175,11 +175,17 @@ class IntersectionEnv(AbstractEnv):
             if v is not ego_vehicle and np.linalg.norm(v.position - ego_vehicle.position) < 20:
                 self.road.vehicles.remove(v)
 
-    def _spawn_vehicle(self, longitudinal=0, position_deviation=1, velocity_deviation=1, spawn_probability=0.4):
-        if self.np_random.rand() < spawn_probability:
+    def _spawn_vehicle(self,
+                       longitudinal=0,
+                       position_deviation=1.,
+                       velocity_deviation=1.,
+                       spawn_probability=0.6,
+                       go_front=False):
+        if self.np_random.rand() > spawn_probability:
             return
 
         route = self.np_random.choice(range(4), size=2, replace=False)
+        route[1] = (route[0] + 2) % 4 if go_front else route[1]
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
         vehicle = vehicle_type.make_on_lane(self.road, ("o" + str(route[0]), "ir" + str(route[0]), 0),
                                             longitudinal=longitudinal + 5 + self.np_random.randn() * position_deviation,
@@ -190,6 +196,7 @@ class IntersectionEnv(AbstractEnv):
         vehicle.plan_route_to("o" + str(route[1]))
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
+        return vehicle
 
     def _clear_vehicles(self):
         is_leaving = lambda vehicle: "il" in vehicle.lane_index[0] and "o" in vehicle.lane_index[1] \
