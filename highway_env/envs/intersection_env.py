@@ -77,7 +77,7 @@ class IntersectionEnv(AbstractEnv):
         results = super(IntersectionEnv, self).step(action)
         self.steps += 1
         self._clear_vehicles()
-        self._spawn_vehicles()
+        self._spawn_vehicle()
         return results
 
     def _make_road(self):
@@ -94,15 +94,15 @@ class IntersectionEnv(AbstractEnv):
         :return: the intersection road
         """
         lane_width = AbstractLane.DEFAULT_WIDTH
-        right_turn_radius = lane_width+5  # [m}
+        right_turn_radius = lane_width + 5  # [m}
         left_turn_radius = right_turn_radius + lane_width  # [m}
         outer_distance = right_turn_radius + lane_width / 2
-        access_length = 50  # [m]
+        access_length = 50 + 50  # [m]
 
         net = RoadNetwork()
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
         for corner in range(4):
-            angle = rad(90 * corner)
+            angle = np.radians(90 * corner)
             is_horizontal = (corner + 0) % 2
             priority = 3 if is_horizontal else 1
             rotation = np.array([[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]])
@@ -114,13 +114,13 @@ class IntersectionEnv(AbstractEnv):
             # Right turn
             r_center = rotation @ (np.array([outer_distance, outer_distance]))
             net.add_lane("ir" + str(corner), "il" + str((corner - 1) % 4),
-                         CircularLane(r_center, right_turn_radius, angle+rad(180), angle+rad(270),
+                         CircularLane(r_center, right_turn_radius, angle + np.radians(180), angle + np.radians(270),
                                       line_types=[n, c], priority=priority, speed_limit=10))
             # Left turn
-            l_center = rotation @ (np.array([-left_turn_radius + lane_width/2, left_turn_radius - lane_width/2]))
+            l_center = rotation @ (np.array([-left_turn_radius + lane_width / 2, left_turn_radius - lane_width / 2]))
             net.add_lane("ir" + str(corner), "il" + str((corner + 1) % 4),
-                         CircularLane(l_center, left_turn_radius, angle+rad(0), angle+rad(-90), clockwise=False,
-                                      line_types=[n, n], priority=priority - 1, speed_limit=10))
+                         CircularLane(l_center, left_turn_radius, angle + np.radians(0), angle + np.radians(-90),
+                                      clockwise=False, line_types=[n, n], priority=priority - 1, speed_limit=10))
             # Straight
             start = rotation @ np.array([lane_width / 2, outer_distance])
             end = rotation @ np.array([lane_width / 2, -outer_distance])
@@ -135,52 +135,56 @@ class IntersectionEnv(AbstractEnv):
         road = RegulatedRoad(network=net, np_random=self.np_random)
         self.road = road
 
-    def _make_vehicles(self):
+    def _make_vehicles(self, n_vehicles=1):
         """
             Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
         :return: the ego-vehicle
         """
-        for _ in range(6):
-            self._spawn_vehicles()
-            [(self.road.act(), self.road.step(0.1)) for _ in range(15)]
+        # Configure vehicles
+        vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
+        vehicle_type.DISTANCE_WANTED = 2  # Low jam distance
+        vehicle_type.COMFORT_ACC_MAX = 6
+        vehicle_type.COMFORT_ACC_MIN = -3
 
-        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        other_vehicles_type.DISTANCE_WANTED = 2  # Low jam distance
-        other_vehicles_type.COMFORT_ACC_MAX = 6
-        other_vehicles_type.COMFORT_ACC_MIN = -3
+        # Random vehicles
+        simulation_steps = 3
+        for t in range(n_vehicles - 1):
+            self._spawn_vehicle(40 + t * 10)
+        for _ in range(simulation_steps):
+            [(self.road.act(), self.road.step(1 / self.SIMULATION_FREQUENCY)) for _ in range(self.SIMULATION_FREQUENCY)]
 
-        vehicle = other_vehicles_type.make_on_lane(self.road,
-                                                   ("o1", "ir1", 0),
-                                                   longitudinal=0,
-                                                   velocity=None)
-        vehicle.plan_route_to("o3")
-        self.road.vehicles.append(vehicle)
+        # Left vehicle
+        self.road.vehicles.append(vehicle_type.make_on_lane(self.road, ("o1", "ir1", 0),
+                                                            longitudinal=70,
+                                                            velocity=None).plan_route_to("o3"))
 
         # Ego-vehicle
-        ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
-        destination = self.config["destination"] or "o"+str(self.np_random.randint(4))
-        ego_vehicle = MDPVehicle(self.road,
-                                 ego_lane.position(0, 0),
-                                 velocity=ego_lane.speed_limit,
-                                 heading=ego_lane.heading_at(0))\
-            .plan_route_to(destination)
         MDPVehicle.SPEED_MIN = 0
         MDPVehicle.SPEED_MAX = 9
         MDPVehicle.SPEED_COUNT = 3
+        MDPVehicle.TAU_A = 1.0
+        ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
+        destination = self.config["destination"] or "o" + str(self.np_random.randint(4))
+        ego_vehicle = MDPVehicle(self.road,
+                                 ego_lane.position(70, 0),
+                                 velocity=ego_lane.speed_limit,
+                                 heading=ego_lane.heading_at(50)) \
+            .plan_route_to(destination)
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
+        for v in self.road.vehicles:  # Prevent early collisions
+            if v is not ego_vehicle and np.linalg.norm(v.position - ego_vehicle.position) < 20:
+                self.road.vehicles.remove(v)
 
-    def _spawn_vehicles(self):
-        if self.np_random.rand() < 1-0.6:
+    def _spawn_vehicle(self, longitudinal=0, position_deviation=1, velocity_deviation=1, spawn_probability=0.4):
+        if self.np_random.rand() < spawn_probability:
             return
-        position_deviation = 1
-        velocity_deviation = 1
+
         route = self.np_random.choice(range(4), size=2, replace=False)
-        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        vehicle = other_vehicles_type.make_on_lane(self.road,
-                                                   ("o" + str(route[0]), "ir" + str(route[0]), 0),
-                                                   longitudinal=5 + self.np_random.randn()*position_deviation,
-                                                   velocity=8 + self.np_random.randn()*velocity_deviation)
+        vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
+        vehicle = vehicle_type.make_on_lane(self.road, ("o" + str(route[0]), "ir" + str(route[0]), 0),
+                                            longitudinal=longitudinal + 5 + self.np_random.randn() * position_deviation,
+                                            velocity=8 + self.np_random.randn() * velocity_deviation)
         for v in self.road.vehicles:
             if np.linalg.norm(v.position - vehicle.position) < 15:
                 return
@@ -189,24 +193,18 @@ class IntersectionEnv(AbstractEnv):
         self.road.vehicles.append(vehicle)
 
     def _clear_vehicles(self):
-        self.road.vehicles = [
-            vehicle for vehicle in self.road.vehicles
-            if vehicle is self.vehicle or
-            (not("il" in vehicle.lane_index[0] and "o" in vehicle.lane_index[1] \
-                and vehicle.lane.local_coordinates(vehicle.position)[0] >=
-                vehicle.lane.length - 4*vehicle.LENGTH) and vehicle.route is not None)
-        ]
+        is_leaving = lambda vehicle: "il" in vehicle.lane_index[0] and "o" in vehicle.lane_index[1] \
+                                     and vehicle.lane.local_coordinates(vehicle.position)[0] \
+                                     >= vehicle.lane.length - 4 * vehicle.LENGTH
+        self.road.vehicles = [vehicle for vehicle in self.road.vehicles if
+                              vehicle is self.vehicle or not (is_leaving(vehicle) or vehicle.route is None)]
 
     @property
     def has_arrived(self):
         return "il" in self.vehicle.lane_index[0] \
-                      and "o" in self.vehicle.lane_index[1] \
-                      and self.vehicle.lane.local_coordinates(self.vehicle.position)[0] >= \
-                      self.vehicle.lane.length - 3*self.vehicle.LENGTH
-
-
-def rad(deg):
-    return deg*np.pi/180
+               and "o" in self.vehicle.lane_index[1] \
+               and self.vehicle.lane.local_coordinates(self.vehicle.position)[0] >= \
+               self.vehicle.lane.length - 3 * self.vehicle.LENGTH
 
 
 register(
