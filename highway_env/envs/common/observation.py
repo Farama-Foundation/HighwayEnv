@@ -98,7 +98,13 @@ class KinematicObservation(ObservationType):
     """
     FEATURES = ['presence', 'x', 'y', 'vx', 'vy']
 
-    def __init__(self, env, features=FEATURES, vehicles_count=5, features_range=None, absolute=False, **kwargs):
+    def __init__(self, env,
+                 features=FEATURES,
+                 vehicles_count=5,
+                 features_range=None,
+                 absolute=False,
+                 flatten=False,
+                 **kwargs):
         """
         :param env: The environment to observe
         :param features: Names of features used in the observation
@@ -109,6 +115,7 @@ class KinematicObservation(ObservationType):
         self.vehicles_count = vehicles_count
         self.features_range = features_range
         self.absolute = absolute
+        self.flatten = flatten
 
     def space(self):
         return spaces.Box(shape=(len(self.features) * self.vehicles_count,), low=-1, high=1, dtype=np.float32)
@@ -137,7 +144,9 @@ class KinematicObservation(ObservationType):
         # Add ego-vehicle
         df = pandas.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features]
         # Add nearby traffic
-        close_vehicles = self.env.road.closest_vehicles_to(self.env.vehicle, self.vehicles_count - 1)
+        close_vehicles = self.env.road.close_vehicles_to(self.env.vehicle,
+                                                         self.env.PERCEPTION_DISTANCE,
+                                                         self.vehicles_count - 1)
         if close_vehicles:
             origin = self.env.vehicle if not self.absolute else None
             df = df.append(pandas.DataFrame.from_records(
@@ -148,14 +157,15 @@ class KinematicObservation(ObservationType):
         df = self.normalize(df)
         # Fill missing rows
         if df.shape[0] < self.vehicles_count:
-            rows = -np.ones((self.vehicles_count - df.shape[0], len(self.features)))
+            rows = np.zeros((self.vehicles_count - df.shape[0], len(self.features)))
             df = df.append(pandas.DataFrame(data=rows, columns=self.features), ignore_index=True)
         # Reorder
         df = df[self.features]
         # Clip
         obs = np.clip(df.values, -1, 1)
         # Flatten
-        obs = np.ravel(obs)
+        if self.flatten:
+            obs = np.ravel(obs)
         return obs
 
 

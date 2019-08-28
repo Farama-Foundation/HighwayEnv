@@ -244,9 +244,12 @@ class Road(Loggable):
         self.vehicles = vehicles or []
         self.np_random = np_random if np_random else np.random.RandomState()
 
-    def close_vehicles_to(self, vehicle, distances):
-        return [v for v in self.vehicles if (distances[0] < vehicle.lane_distance_to(v) < distances[1]
-                                             and v is not vehicle)]
+    def close_vehicles_to(self, vehicle, distance, count=None):
+        vehicles = [v for v in self.vehicles
+                    if np.linalg.norm(v.position - vehicle.position) < distance and v is not vehicle]
+        if count:
+            vehicles = vehicles[:count]
+        return vehicles
 
     def closest_vehicles_to(self, vehicle, count):
         sorted_v = sorted([v for v in self.vehicles

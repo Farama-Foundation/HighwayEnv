@@ -18,14 +18,16 @@ class IntersectionEnv(AbstractEnv):
     DEFAULT_CONFIG = {
         "observation": {
             "type": "Kinematics",
-            "vehicles_count": 10,
+            "vehicles_count": 15,
+            "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
             "features_range": {
                 "x": [-50, 50],
                 "y": [-50, 50],
                 "vx": [-20, 20],
                 "vy": [-20, 20],
             },
-            "absolute": True
+            "absolute": True,
+            "flatten": False
         },
         "policy_frequency": 2,  # [Hz]
         "duration": 13,  # [s]

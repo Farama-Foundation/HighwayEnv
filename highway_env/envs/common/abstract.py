@@ -274,7 +274,7 @@ class AbstractEnv(gym.Env):
         """
         state_copy = copy.deepcopy(self)
         state_copy.road.vehicles = [state_copy.vehicle] + state_copy.road.close_vehicles_to(
-            state_copy.vehicle, [-self.PERCEPTION_DISTANCE / 2, self.PERCEPTION_DISTANCE])
+            state_copy.vehicle, self.PERCEPTION_DISTANCE)
 
         return state_copy
 
