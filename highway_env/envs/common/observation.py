@@ -118,7 +118,9 @@ class KinematicObservation(ObservationType):
         self.flatten = flatten
 
     def space(self):
-        return spaces.Box(shape=(len(self.features) * self.vehicles_count,), low=-1, high=1, dtype=np.float32)
+        shape = (self.vehicles_count * len(self.features),) if self.flatten \
+            else (self.vehicles_count, len(self.features))
+        return spaces.Box(shape=shape, low=-1, high=1, dtype=np.float32)
 
     def normalize(self, df):
         """
