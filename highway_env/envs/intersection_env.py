@@ -11,7 +11,7 @@ from highway_env.vehicle.control import MDPVehicle
 
 
 class IntersectionEnv(AbstractEnv):
-    COLLISION_REWARD = -1
+    COLLISION_REWARD = -5
     HIGH_VELOCITY_REWARD = 1
     ARRIVED_REWARD = 1
 
@@ -21,15 +21,15 @@ class IntersectionEnv(AbstractEnv):
             "vehicles_count": 15,
             "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
             "features_range": {
-                "x": [-50, 50],
-                "y": [-50, 50],
+                "x": [-100, 100],
+                "y": [-100, 100],
                 "vx": [-20, 20],
                 "vy": [-20, 20],
             },
             "absolute": True,
             "flatten": False
         },
-        "policy_frequency": 2,  # [Hz]
+        "policy_frequency": 1,  # [Hz]
         "duration": 13,  # [s]
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "destination": "o1",
@@ -163,7 +163,7 @@ class IntersectionEnv(AbstractEnv):
         MDPVehicle.SPEED_MIN = 0
         MDPVehicle.SPEED_MAX = 9
         MDPVehicle.SPEED_COUNT = 3
-        MDPVehicle.TAU_A = 1.0
+        # MDPVehicle.TAU_A = 1.0
         ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
         destination = self.config["destination"] or "o" + str(self.np_random.randint(4))
         ego_vehicle = MDPVehicle(self.road,

@@ -165,6 +165,7 @@ class KinematicObservation(ObservationType):
         df = df[self.features]
         # Clip
         obs = np.clip(df.values, -1, 1)
+        self.env.np_random.shuffle(obs[1:])
         # Flatten
         if self.flatten:
             obs = np.ravel(obs)
