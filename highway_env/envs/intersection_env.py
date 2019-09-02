@@ -155,9 +155,7 @@ class IntersectionEnv(AbstractEnv):
             [(self.road.act(), self.road.step(1 / self.SIMULATION_FREQUENCY)) for _ in range(self.SIMULATION_FREQUENCY)]
 
         # Challenger vehicle
-        v = self._spawn_vehicle(60, spawn_probability=1, go_front=True, position_deviation=0.1, velocity_deviation=0)
-        if v:
-            v.color = (255, 0, 0)
+        self._spawn_vehicle(60, spawn_probability=1, go_front=True, position_deviation=0.1, velocity_deviation=0)
 
         # Ego-vehicle
         MDPVehicle.SPEED_MIN = 0

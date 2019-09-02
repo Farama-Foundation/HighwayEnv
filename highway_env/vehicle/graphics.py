@@ -55,7 +55,7 @@ class VehicleGraphics(object):
     @classmethod
     def get_color(cls, vehicle, transparent=False):
         color = cls.DEFAULT_COLOR
-        if hasattr(vehicle, "color"):
+        if getattr(vehicle, "color", None):
             color = vehicle.color
         elif vehicle.crashed:
             color = cls.RED

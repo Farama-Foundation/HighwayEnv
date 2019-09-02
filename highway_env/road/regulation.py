@@ -6,7 +6,7 @@ from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 
 
 class RegulatedRoad(Road):
-    YIELDING_COLOR = (200, 150, 0)
+    YIELDING_COLOR = None
     REGULATION_FREQUENCY = 2
 
     def __init__(self, network=None, vehicles=None, np_random=None):
