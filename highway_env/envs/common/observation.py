@@ -104,11 +104,15 @@ class KinematicObservation(ObservationType):
                  features_range=None,
                  absolute=False,
                  flatten=False,
+                 observe_intentions=False,
                  **kwargs):
         """
         :param env: The environment to observe
         :param features: Names of features used in the observation
         :param vehicles_count: Number of observed vehicles
+        :param absolute: Use absolute coordinates
+        :param flatten: Flatten the observation to a vector
+        :param observe_intentions: Observe the destinations of other vehicles
         """
         self.env = env
         self.features = features
@@ -116,6 +120,7 @@ class KinematicObservation(ObservationType):
         self.features_range = features_range
         self.absolute = absolute
         self.flatten = flatten
+        self.observe_intentions = observe_intentions
 
     def space(self):
         shape = (self.vehicles_count * len(self.features),) if self.flatten \
@@ -152,7 +157,7 @@ class KinematicObservation(ObservationType):
         if close_vehicles:
             origin = self.env.vehicle if not self.absolute else None
             df = df.append(pandas.DataFrame.from_records(
-                [v.to_dict(origin)
+                [v.to_dict(origin, observe_intentions=self.observe_intentions)
                  for v in close_vehicles[-self.vehicles_count + 1:]])[self.features],
                            ignore_index=True)
         # Normalize

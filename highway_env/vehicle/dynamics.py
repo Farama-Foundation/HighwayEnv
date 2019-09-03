@@ -161,10 +161,25 @@ class Vehicle(Loggable):
     def direction(self):
         return np.array([np.cos(self.heading), np.sin(self.heading)])
 
+    @property
+    def destination(self):
+        if getattr(self, "route", None):
+            last_lane = self.road.network.get_lane(self.route[-1])
+            return last_lane.position(last_lane.length, 0)
+        else:
+            return self.position
+
+    @property
+    def destination_direction(self):
+        if (self.destination != self.position).any():
+            return (self.destination - self.position) / np.linalg.norm(self.destination - self.position)
+        else:
+            return np.zeros((2,))
+
     def front_distance_to(self, other):
         return self.direction.dot(other.position - self.position)
 
-    def to_dict(self, origin_vehicle=None):
+    def to_dict(self, origin_vehicle=None, observe_intentions=True):
         d = {
             'presence': 1,
             'x': self.position[0],
@@ -172,8 +187,12 @@ class Vehicle(Loggable):
             'vx': self.velocity * self.direction[0],
             'vy': self.velocity * self.direction[1],
             'cos_h': self.direction[0],
-            'sin_h': self.direction[1]
+            'sin_h': self.direction[1],
+            'cos_d': self.destination_direction[0],
+            'sin_d': self.destination_direction[1]
         }
+        if not observe_intentions:
+            d["cos_d"] = d["sin_d"] = 0
         if origin_vehicle:
             origin_dict = origin_vehicle.to_dict()
             for key in ['x', 'y', 'vx', 'vy']:

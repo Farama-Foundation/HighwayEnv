@@ -27,7 +27,8 @@ class IntersectionEnv(AbstractEnv):
                 "vy": [-20, 20],
             },
             "absolute": True,
-            "flatten": False
+            "flatten": False,
+            "observe_intentions": False
         },
         "policy_frequency": 1,  # [Hz]
         "duration": 13,  # [s]
@@ -163,7 +164,7 @@ class IntersectionEnv(AbstractEnv):
         MDPVehicle.SPEED_COUNT = 3
         # MDPVehicle.TAU_A = 1.0
         ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
-        destination = self.config["destination"] or "o" + str(self.np_random.randint(4))
+        destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
         ego_vehicle = MDPVehicle(self.road,
                                  ego_lane.position(60, 0),
                                  velocity=ego_lane.speed_limit,
