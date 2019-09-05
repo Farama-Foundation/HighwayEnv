@@ -109,14 +109,14 @@ class AbstractEnv(gym.Env):
         :param action: the last action performed
         :return: the reward
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def _is_terminal(self):
         """
             Check whether the current state is a terminal state
         :return:is the state terminal
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def _cost(self, action):
         """
@@ -127,7 +127,7 @@ class AbstractEnv(gym.Env):
         :param action: the last action performed
         :return: the constraint signal, the alternate (constraint-free) reward
         """
-        return None, self._reward(action)
+        raise NotImplementedError
 
     def reset(self):
         """
@@ -157,8 +157,15 @@ class AbstractEnv(gym.Env):
         reward = self._reward(action)
         terminal = self._is_terminal()
 
-        cost = self._cost(action)
-        info = {'cost': cost, "c_": cost}
+        info = {
+            "velocity": self.vehicle.velocity,
+            "crashed": self.vehicle.crashed,
+            "action": action,
+        }
+        try:
+            info["cost"] = self._cost(action)
+        except NotImplementedError:
+            pass
 
         return obs, reward, terminal, info
 
@@ -299,7 +306,9 @@ class AbstractEnv(gym.Env):
         if preferred_lane:
             for v in env_copy.road.vehicles:
                 if isinstance(v, IDMVehicle):
-                    raise NotImplementedError()
+                    raise NotImplementedError
+                else:
+                    raise NotImplementedError
                     # Vehicle with lane preference are also less cautious
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
