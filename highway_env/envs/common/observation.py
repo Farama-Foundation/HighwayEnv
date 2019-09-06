@@ -246,11 +246,12 @@ class OccupancyGridObservation(ObservationType):
                             int((vehicle["y"] - self.grid_size[1, 0]) / self.grid_step[1]))
                     if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
                         self.grid[layer, cell[1], cell[0]] = vehicle[feature]
-            # Flatten
-            obs = np.stack(np.flatten(self.grid), np.array(self.env.vehicle.velocity / MDPVehicle.SPEED_MAX))
+            # Stack ego-velocity
+            # obs = np.stack(np.ravel(self.grid),
+            #                np.array(self.env.vehicle.velocity / MDPVehicle.SPEED_MAX))
 
             # Clip
-            obs = np.clip(obs, -1, 1)
+            obs = np.clip(self.grid, -1, 1)
             return obs
 
 
