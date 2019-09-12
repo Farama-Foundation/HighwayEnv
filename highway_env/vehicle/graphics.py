@@ -1,4 +1,7 @@
 from __future__ import division, print_function
+
+import itertools
+
 import numpy as np
 import pygame
 
@@ -53,6 +56,25 @@ class VehicleGraphics(object):
             cls.display(vehicle, surface, transparent=True, offscreen=offscreen)
 
     @classmethod
+    def display_history(cls, vehicle, surface, frequency=3, duration=2, simulation=15, offscreen=False):
+        """
+            Display the whole trajectory of a vehicle on a pygame surface.
+
+        :param vehicle: the vehicle states within the trajectory to be displayed
+        :param surface: the surface to draw the vehicle future states on
+        :param frequency: frequency of displayed positions in history
+        :param duration: length of displayed history
+        :param simulation: simulation frequency
+        :param offscreen: whether the rendering should be done offscreen or not
+        """
+
+        for v in itertools.islice(vehicle.history,
+                                  None,
+                                  int(simulation * duration),
+                                  int(simulation / frequency)):
+            cls.display(v, surface, transparent=True, offscreen=offscreen)
+
+    @classmethod
     def get_color(cls, vehicle, transparent=False):
         color = cls.DEFAULT_COLOR
         if getattr(vehicle, "color", None):
@@ -68,7 +90,7 @@ class VehicleGraphics(object):
         elif isinstance(vehicle, Obstacle):
             color = cls.GREEN
         if transparent:
-            color = (color[0], color[1], color[2], 50)
+            color = (color[0], color[1], color[2], 30)
         return color
 
     @classmethod

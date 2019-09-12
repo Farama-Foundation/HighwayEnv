@@ -52,7 +52,8 @@ class AbstractEnv(gym.Env):
         },
         "policy_frequency": 1,  # [Hz]
         "screen_width": 600,
-        "screen_height": 150
+        "screen_height": 150,
+        "show_history": False
     }
 
     def __init__(self, config=None):

@@ -33,6 +33,7 @@ class HighwayEnv(AbstractEnv):
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "screen_width": 600,
         "screen_height": 150,
+        "show_history": False,
         "centering_position": [0.3, 0.5],
         "collision_reward": COLLISION_REWARD
     }

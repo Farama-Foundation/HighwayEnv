@@ -38,6 +38,7 @@ class IntersectionEnv(AbstractEnv):
         "screen_height": 600,
         "centering_position": [0.5, 0.6],
         "scaling": 5.5 * 1.3,
+        "show_history": False,
         "normalize_reward": False
     }
 

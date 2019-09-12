@@ -1,6 +1,10 @@
 from __future__ import division, print_function
+
+import copy
+
 import numpy as np
 import pandas as pd
+from collections import deque
 
 from highway_env import utils
 from highway_env.logger import Loggable
@@ -35,6 +39,7 @@ class Vehicle(Loggable):
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
         self.log = []
+        self.history = deque(maxlen=30)
 
     @classmethod
     def make_on_lane(cls, road, lane_index, longitudinal, velocity=0):
@@ -122,6 +127,8 @@ class Vehicle(Loggable):
         self.position += v * dt
         self.heading += self.velocity * np.tan(self.action['steering']) / self.LENGTH * dt
         self.velocity += self.action['acceleration'] * dt
+
+        self.history.appendleft(self.create_from(self))
 
         if self.road:
             self.lane_index = self.road.network.get_closest_lane_index(self.position)
