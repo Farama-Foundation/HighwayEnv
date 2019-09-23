@@ -128,7 +128,9 @@ class Vehicle(Loggable):
         self.heading += self.velocity * np.tan(self.action['steering']) / self.LENGTH * dt
         self.velocity += self.action['acceleration'] * dt
 
-        self.history.appendleft(self.create_from(self))
+        self.save_history = False
+        if self.save_history:
+            self.history.appendleft(self.create_from(self))
 
         if self.road:
             self.lane_index = self.road.network.get_closest_lane_index(self.position)
