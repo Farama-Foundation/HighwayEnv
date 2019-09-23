@@ -7,7 +7,8 @@ from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 
 class RegulatedRoad(Road):
     YIELDING_COLOR = None
-    REGULATION_FREQUENCY = 2
+    REGULATION_FREQUENCY = 4
+    YIELD_DURATION = 0.5
 
     def __init__(self, network=None, vehicles=None, np_random=None):
         super(RegulatedRoad, self).__init__(network, vehicles, np_random)
@@ -26,9 +27,13 @@ class RegulatedRoad(Road):
         # Unfreeze previous yielding vehicles
         for v in self.vehicles:
             if getattr(v, "is_yielding", False):
-                v.target_velocity = v.lane.speed_limit
-                delattr(v, "color")
-                v.is_yielding = False
+                if v.yield_timer >= self.YIELD_DURATION * self.REGULATION_FREQUENCY:
+                    v.target_velocity = v.lane.speed_limit
+                    delattr(v, "color")
+                    v.is_yielding = False
+                else:
+                    v.yield_timer += 1
+
         # Find new conflicts and resolve them
         for i in range(len(self.vehicles) - 1):
             for j in range(i+1, len(self.vehicles)):
@@ -40,6 +45,7 @@ class RegulatedRoad(Road):
                         yielding_vehicle.color = self.YIELDING_COLOR
                         yielding_vehicle.target_velocity = 0
                         yielding_vehicle.is_yielding = True
+                        yielding_vehicle.yield_timer = 0
 
     @staticmethod
     def respect_priorities(v1, v2):
