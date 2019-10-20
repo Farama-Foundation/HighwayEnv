@@ -100,6 +100,19 @@ A goal-conditioned continuous control task in which the ego-vehicle must park in
     <em>The parking-v0 environment.</em>
 </p>
 
+### Intersection
+
+```python
+env = gym.make("intersection-v0")
+```
+
+An intersection negotiation task with dense traffic.
+
+<p align="center">
+    <img src="../gh-media/docs/media/intersection-env.gif?raw=true"><br/>
+    <em>The intersection-v0 environment.</em>
+</p>
+
 ## The framework
 
 New highway driving environments can easily be made from a set of building blocks.
