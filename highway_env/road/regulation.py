@@ -7,8 +7,8 @@ from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 
 class RegulatedRoad(Road):
     YIELDING_COLOR = None
-    REGULATION_FREQUENCY = 4
-    YIELD_DURATION = 0.5
+    REGULATION_FREQUENCY = 2
+    YIELD_DURATION = 0.
 
     def __init__(self, network=None, vehicles=None, np_random=None):
         super(RegulatedRoad, self).__init__(network, vehicles, np_random)
