@@ -65,7 +65,7 @@ class TwoWayEnv(AbstractEnv):
         self._make_vehicles()
         return super(TwoWayEnv, self).reset()
 
-    def _make_road(self, length = 800):
+    def _make_road(self, length=800):
         """
             Make a road composed of a two-way road.
         :return: the road
