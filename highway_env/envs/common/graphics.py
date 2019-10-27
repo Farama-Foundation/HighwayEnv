@@ -100,7 +100,6 @@ class EnvViewer(object):
         RoadGraphics.display_traffic(
             self.env.road,
             self.sim_surface,
-            show_history=self.env.config["show_history"],
             simulation_frequency=self.env.SIMULATION_FREQUENCY,
             offscreen=self.offscreen)
 

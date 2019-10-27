@@ -53,7 +53,7 @@ class HighwayEnv(AbstractEnv):
             Create a road composed of straight adjacent lanes.
         """
         self.road = Road(network=RoadNetwork.straight_road_network(self.config["lanes_count"]),
-                         np_random=self.np_random)
+                         np_random=self.np_random, record_history=self.config["show_trajectories"])
 
     def _create_vehicles(self):
         """

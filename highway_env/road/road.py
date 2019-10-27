@@ -232,17 +232,19 @@ class Road(Loggable):
         A road is a set of lanes, and a set of vehicles driving on these lanes
     """
 
-    def __init__(self, network=None, vehicles=None, np_random=None):
+    def __init__(self, network=None, vehicles=None, np_random=None, record_history=False):
         """
             New road.
 
         :param network: the road network describing the lanes
         :param vehicles: the vehicles driving on the road
         :param np.random.RandomState np_random: a random number generator for vehicle behaviour
+        :param record_history: whether the recent trajectories of vehicles should be recorded for display
         """
         self.network = network or []
         self.vehicles = vehicles or []
         self.np_random = np_random if np_random else np.random.RandomState()
+        self.record_history = record_history
 
     def close_vehicles_to(self, vehicle, distance, count=None):
         vehicles = [v for v in self.vehicles

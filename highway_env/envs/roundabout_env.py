@@ -93,7 +93,7 @@ class RoundaboutEnv(AbstractEnv):
         net.add_lane("nx", "nxs", SineLane([2 + a, dev / 2 - delta_en], [2 + a, -dev / 2], a, w, -np.pi / 2 + w * delta_en, line_types=[c, c]))
         net.add_lane("nxs", "nxr", StraightLane([2, -dev / 2], [2, -access], line_types=[n, c]))
 
-        road = Road(network=net, np_random=self.np_random)
+        road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         self.road = road
 
     def _make_vehicles(self):

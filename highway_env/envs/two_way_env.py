@@ -80,7 +80,7 @@ class TwoWayEnv(AbstractEnv):
         net.add_lane("b", "a", StraightLane([length, 0], [0, 0],
                                             line_types=[LineType.NONE, LineType.NONE]))
 
-        road = Road(network=net, np_random=self.np_random)
+        road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         self.road = road
 
     def _make_vehicles(self):

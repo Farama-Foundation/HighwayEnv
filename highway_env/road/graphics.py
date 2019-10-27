@@ -126,16 +126,15 @@ class RoadGraphics(object):
                     LaneGraphics.display(l, surface)
 
     @classmethod
-    def display_traffic(cls, road, surface, show_history=False, simulation_frequency=15, offscreen=False):
+    def display_traffic(cls, road, surface, simulation_frequency=15, offscreen=False):
         """
             Display the road vehicles on a surface.
 
         :param road: the road to be displayed
         :param surface: the pygame surface
-        :param show_history: whether to show the past vehicle trajectories
         :param simulation_frequency: simulation frequency
         """
-        if show_history:
+        if road.record_history:
             for v in road.vehicles:
                 VehicleGraphics.display_history(v, surface, simulation=simulation_frequency, offscreen=offscreen)
         for v in road.vehicles:

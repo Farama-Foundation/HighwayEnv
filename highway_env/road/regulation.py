@@ -10,8 +10,8 @@ class RegulatedRoad(Road):
     REGULATION_FREQUENCY = 2
     YIELD_DURATION = 0.
 
-    def __init__(self, network=None, vehicles=None, np_random=None):
-        super(RegulatedRoad, self).__init__(network, vehicles, np_random)
+    def __init__(self, network=None, vehicles=None, np_random=None, record_history=False):
+        super(RegulatedRoad, self).__init__(network, vehicles, np_random, record_history)
         self.steps = 0
 
     def step(self, dt):

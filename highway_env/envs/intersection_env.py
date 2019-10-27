@@ -131,7 +131,7 @@ class IntersectionEnv(AbstractEnv):
             net.add_lane("il" + str((corner - 1) % 4), "o" + str((corner - 1) % 4),
                          StraightLane(end, start, line_types=[n, c], priority=priority, speed_limit=10))
 
-        road = RegulatedRoad(network=net, np_random=self.np_random)
+        road = RegulatedRoad(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         self.road = road
 
     def _make_vehicles(self, n_vehicles=10):

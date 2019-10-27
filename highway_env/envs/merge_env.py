@@ -90,7 +90,7 @@ class MergeEnv(AbstractEnv):
         net.add_lane("j", "k", ljk)
         net.add_lane("k", "b", lkb)
         net.add_lane("b", "c", lbc)
-        road = Road(network=net, np_random=self.np_random)
+        road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         road.vehicles.append(Obstacle(road, lbc.position(ends[2], 0)))
         self.road = road
 

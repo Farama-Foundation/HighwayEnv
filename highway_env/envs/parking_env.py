@@ -82,7 +82,8 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             net.add_lane("b", "c", StraightLane([x, -y_offset], [x, -y_offset-length], width=width, line_types=lt))
 
         self.road = Road(network=net,
-                         np_random=self.np_random)
+                         np_random=self.np_random,
+                         record_history=self.config["show_trajectories"])
 
     def _create_vehicles(self):
         """
