@@ -15,33 +15,6 @@ class IntersectionEnv(AbstractEnv):
     HIGH_VELOCITY_REWARD = 1
     ARRIVED_REWARD = 1
 
-    DEFAULT_CONFIG = {
-        "observation": {
-            "type": "Kinematics",
-            "vehicles_count": 15,
-            "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
-            "features_range": {
-                "x": [-100, 100],
-                "y": [-100, 100],
-                "vx": [-20, 20],
-                "vy": [-20, 20],
-            },
-            "absolute": True,
-            "flatten": False,
-            "observe_intentions": False
-        },
-        "policy_frequency": 1,  # [Hz]
-        "duration": 13,  # [s]
-        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-        "destination": "o1",
-        "screen_width": 600,
-        "screen_height": 600,
-        "centering_position": [0.5, 0.6],
-        "scaling": 5.5 * 1.3,
-        "show_history": False,
-        "normalize_reward": False
-    }
-
     ACTIONS = {
         0: 'SLOWER',
         1: 'IDLE',
@@ -49,10 +22,33 @@ class IntersectionEnv(AbstractEnv):
     }
     ACTIONS_INDEXES = {v: k for k, v in ACTIONS.items()}
 
-    def __init__(self):
-        super(IntersectionEnv, self).__init__()
-        self.steps = 0
-        self.reset()
+    @classmethod
+    def default_config(cls):
+        config = super().default_config()
+        config.update({
+            "observation": {
+                "type": "Kinematics",
+                "vehicles_count": 15,
+                "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
+                "features_range": {
+                    "x": [-100, 100],
+                    "y": [-100, 100],
+                    "vx": [-20, 20],
+                    "vy": [-20, 20],
+                },
+                "absolute": True,
+                "flatten": False,
+                "observe_intentions": False
+            },
+            "duration": 13,  # [s]
+            "destination": "o1",
+            "screen_width": 600,
+            "screen_height": 600,
+            "centering_position": [0.5, 0.6],
+            "scaling": 5.5 * 1.3,
+            "normalize_reward": False
+        })
+        return config
 
     def _reward(self, action):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \

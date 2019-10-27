@@ -22,28 +22,29 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     STEERING_RANGE = np.pi / 4
     ACCELERATION_RANGE = 5.0
 
-    REWARD_WEIGHTS = [1, 0.3, 0, 0, 0.02, 0.02]
+    REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
     SUCCESS_GOAL_REWARD = 0.12
 
-    DEFAULT_CONFIG = {
-        "observation": {
-            "type": "KinematicsGoal",
-            "features": ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h'],
-            "scales": [100, 100, 5, 5, 1, 1],
-            "normalize": False
-        },
-        "policy_frequency": 5,
-        "screen_width": 600,
-        "screen_height": 300,
-        "centering_position": [0.5, 0.5]
-    }
-
-    def __init__(self, config=None):
-        super(ParkingEnv, self).__init__()
-        self.configure(config)
-        self.reset()
+    def __init__(self):
+        super().__init__()
         self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
-        self.REWARD_WEIGHTS = np.array(self.REWARD_WEIGHTS)
+
+    @classmethod
+    def default_config(cls):
+        config = super().default_config()
+        config.update({
+            "observation": {
+                "type": "KinematicsGoal",
+                "features": ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h'],
+                "scales": [100, 100, 5, 5, 1, 1],
+                "normalize": False
+            },
+            "policy_frequency": 5,
+            "screen_width": 600,
+            "screen_height": 300,
+            "centering_position": [0.5, 0.5]
+        })
+        return config
 
     def step(self, action):
         # Forward action to the vehicle

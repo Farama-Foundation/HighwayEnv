@@ -22,22 +22,16 @@ class TwoWayEnv(AbstractEnv):
     LEFT_LANE_REWARD = 0.2
     HIGH_VELOCITY_REWARD = 0.8
 
-    DEFAULT_CONFIG = {
-        "observation": {
-            "type": "TimeToCollision",
-            "horizon": 5
-        },
-        "policy_frequency": 1,  # [Hz]
-        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-        "screen_width": 600,
-        "screen_height": 150,
-        "centering_position": [0.3, 0.5],
-        "show_history": False
-    }
-
-    def __init__(self):
-        super(TwoWayEnv, self).__init__()
-        self.reset()
+    @classmethod
+    def default_config(cls):
+        config = super().default_config()
+        config.update({
+            "observation": {
+                "type": "TimeToCollision",
+                "horizon": 5
+            },
+        })
+        return config
 
     def step(self, action):
         return super(TwoWayEnv, self).step(action)

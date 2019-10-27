@@ -24,44 +24,19 @@ class HighwayEnv(AbstractEnv):
     LANE_CHANGE_REWARD = -0
     """ The reward received at each lane change action."""
 
-    DEFAULT_CONFIG = {
-        "observation": {
-            "type": "Kinematics"
-        },
-        "policy_frequency": 1,  # [Hz]
-        "initial_spacing": 2,
-        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-        "screen_width": 600,
-        "screen_height": 150,
-        "show_history": False,
-        "centering_position": [0.3, 0.5],
-        "collision_reward": COLLISION_REWARD
-    }
-
-    DIFFICULTY_LEVELS = {
-        "EASY": {
-            "lanes_count": 2,
-            "vehicles_count": 5,
-            "duration": 20
-        },
-        "MEDIUM": {
-            "lanes_count": 3,
-            "vehicles_count": 10,
-            "duration": 30
-        },
-        "HARD": {
+    def default_config(self):
+        config = super().default_config()
+        config.update({
+            "observation": {
+                "type": "Kinematics"
+            },
             "lanes_count": 4,
             "vehicles_count": 50,
-            "duration": 40
-        },
-    }
-
-    def __init__(self):
-        config = self.DEFAULT_CONFIG.copy()
-        config.update(self.DIFFICULTY_LEVELS["HARD"])
-        super(HighwayEnv, self).__init__(config)
-        self.steps = 0
-        self.reset()
+            "duration": 40,  # [s]
+            "initial_spacing": 2,
+            "collision_reward": self.COLLISION_REWARD
+        })
+        return config
 
     def reset(self):
         self._create_road()

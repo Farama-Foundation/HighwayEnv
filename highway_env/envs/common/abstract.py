@@ -46,21 +46,11 @@ class AbstractEnv(gym.Env):
         The maximum distance of any vehicle present in the observation [m]
     """
 
-    DEFAULT_CONFIG = {
-        "observation": {
-            "type": "TimeToCollision"
-        },
-        "policy_frequency": 1,  # [Hz]
-        "screen_width": 600,
-        "screen_height": 150,
-        "show_history": False
-    }
-
     def __init__(self, config=None):
         # Configuration
-        self.config = config
-        if not self.config:
-            self.config = self.DEFAULT_CONFIG.copy()
+        self.config = self.default_config()
+        if config:
+            self.config.update(config)
 
         # Seeding
         self.np_random = None
@@ -75,7 +65,8 @@ class AbstractEnv(gym.Env):
         self.define_spaces()
 
         # Running
-        self.time = 0
+        self.time = 0  # Simulation time
+        self.steps = 0  # Actions performed
         self.done = False
 
         # Rendering
@@ -84,8 +75,29 @@ class AbstractEnv(gym.Env):
         self.should_update_rendering = True
         self.rendering_mode = 'human'
         self.offscreen = self.config.get("offscreen_rendering", False)
-
         self.enable_auto_render = False
+
+        self.reset()
+
+    @classmethod
+    def default_config(cls):
+        """
+            Default environment configuration.
+
+            Can be overloaded in environment implementations, or by calling configure().
+        :return: a configuration dict
+        """
+        return {
+            "observation": {
+                "type": "TimeToCollision"
+            },
+            "policy_frequency": 1,  # [Hz]
+            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+            "screen_width": 600,  # [px]
+            "screen_height": 150,  # [px]
+            "centering_position": [0.3, 0.5],
+            "show_trajectories": False
+        }
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)

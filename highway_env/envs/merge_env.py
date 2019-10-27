@@ -25,21 +25,6 @@ class MergeEnv(AbstractEnv):
     MERGING_VELOCITY_REWARD = -0.5
     LANE_CHANGE_REWARD = -0.05
 
-    DEFAULT_CONFIG = {
-        "observation": {
-            "type": "Kinematics"
-        },
-        "policy_frequency": 1,  # [Hz]
-        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-        "screen_width": 600,
-        "screen_height": 150,
-        "centering_position": [0.3, 0.5]
-    }
-
-    def __init__(self):
-        super(MergeEnv, self).__init__()
-        self.reset()
-
     def _reward(self, action):
         """
             The vehicle is rewarded for driving with high velocity on lanes to the right and avoiding collisions, but

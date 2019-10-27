@@ -16,24 +16,17 @@ class RoundaboutEnv(AbstractEnv):
     RIGHT_LANE_REWARD = 0
     LANE_CHANGE_REWARD = -0.05
 
-    DURATION = 11
-
-    DEFAULT_CONFIG = {
-        "observation": {
-            "type": "Kinematics"
-        },
-        "policy_frequency": 1,  # [Hz]
-        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-        "incoming_vehicle_destination": None,
-        "screen_width": 600,
-        "screen_height": 600,
-        "centering_position": [0.5, 0.6]
-    }
-
-    def __init__(self):
-        super(RoundaboutEnv, self).__init__()
-        self.steps = 0
-        self.reset()
+    @classmethod
+    def default_config(cls):
+        config = super().default_config()
+        config.update({
+            "incoming_vehicle_destination": None,
+            "screen_width": 600,
+            "screen_height": 600,
+            "centering_position": [0.5, 0.6],
+            "duration": 11
+        })
+        return config
 
     def _reward(self, action):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
@@ -45,7 +38,7 @@ class RoundaboutEnv(AbstractEnv):
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
-        return self.vehicle.crashed or self.steps >= self.DURATION
+        return self.vehicle.crashed or self.steps >= self.config["duration"]
 
     def reset(self):
         self._make_road()
