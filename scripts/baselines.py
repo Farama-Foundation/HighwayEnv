@@ -50,4 +50,4 @@ if __name__ == '__main__':
                     learning_rate=cfg["--learning_rate"],
                     tensorboard_log="./logs/")
         model.learn(total_timesteps=int(cfg["--steps"]))
-        model.save("deepq_cartpole")
+        model.save("deepq_intersection")
