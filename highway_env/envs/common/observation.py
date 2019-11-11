@@ -103,7 +103,7 @@ class KinematicObservation(ObservationType):
                  vehicles_count=5,
                  features_range=None,
                  absolute=False,
-                 shuffle=False,
+                 order="sorted",
                  observe_intentions=False,
                  **kwargs):
         """
@@ -111,7 +111,7 @@ class KinematicObservation(ObservationType):
         :param features: Names of features used in the observation
         :param vehicles_count: Number of observed vehicles
         :param absolute: Use absolute coordinates
-        :param shuffle: Shuffle the order of observed vehicles
+        :param order: Order of observed vehicles. Values: sorted, shuffled
         :param observe_intentions: Observe the destinations of other vehicles
         """
         self.env = env
@@ -119,7 +119,7 @@ class KinematicObservation(ObservationType):
         self.vehicles_count = vehicles_count
         self.features_range = features_range
         self.absolute = absolute
-        self.shuffle = shuffle
+        self.order = order
         self.observe_intentions = observe_intentions
 
     def space(self):
@@ -149,9 +149,12 @@ class KinematicObservation(ObservationType):
         # Add ego-vehicle
         df = pandas.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features]
         # Add nearby traffic
+        sort, see_behind = (True, False) if self.order == "sorted" else (False, True)
         close_vehicles = self.env.road.close_vehicles_to(self.env.vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
-                                                         self.vehicles_count - 1)
+                                                         count=self.vehicles_count - 1,
+                                                         sort=sort,
+                                                         see_behind=see_behind)
         if close_vehicles:
             origin = self.env.vehicle if not self.absolute else None
             df = df.append(pandas.DataFrame.from_records(
@@ -168,7 +171,7 @@ class KinematicObservation(ObservationType):
         df = df[self.features]
         # Clip
         obs = np.clip(df.values, -1, 1)
-        if self.shuffle:
+        if self.order == "shuffled":
             self.env.np_random.shuffle(obs[1:])
         # Flatten
         return obs

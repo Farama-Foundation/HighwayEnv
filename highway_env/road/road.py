@@ -246,19 +246,16 @@ class Road(Loggable):
         self.np_random = np_random if np_random else np.random.RandomState()
         self.record_history = record_history
 
-    def close_vehicles_to(self, vehicle, distance, count=None):
+    def close_vehicles_to(self, vehicle, distance, count=None, sort=False, see_behind=True):
         vehicles = [v for v in self.vehicles
-                    if np.linalg.norm(v.position - vehicle.position) < distance and v is not vehicle]
+                    if np.linalg.norm(v.position - vehicle.position) < distance
+                    and v is not vehicle
+                    and see_behind or -2*vehicle.LENGTH < vehicle.lane_distance_to(v)]
+        if sort:
+            vehicles = sorted(vehicles, key=lambda v: abs(vehicle.lane_distance_to(v)))
         if count:
             vehicles = vehicles[:count]
         return vehicles
-
-    def closest_vehicles_to(self, vehicle, count):
-        sorted_v = sorted([v for v in self.vehicles
-                           if v is not vehicle
-                           and -2*vehicle.LENGTH < vehicle.lane_distance_to(v)],
-                          key=lambda v: abs(vehicle.lane_distance_to(v)))
-        return sorted_v[:count]
 
     def act(self):
         """
