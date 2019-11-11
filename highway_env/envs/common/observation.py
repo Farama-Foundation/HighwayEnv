@@ -103,7 +103,7 @@ class KinematicObservation(ObservationType):
                  vehicles_count=5,
                  features_range=None,
                  absolute=False,
-                 flatten=False,
+                 shuffle=False,
                  observe_intentions=False,
                  **kwargs):
         """
@@ -111,7 +111,7 @@ class KinematicObservation(ObservationType):
         :param features: Names of features used in the observation
         :param vehicles_count: Number of observed vehicles
         :param absolute: Use absolute coordinates
-        :param flatten: Flatten the observation to a vector
+        :param shuffle: Shuffle the order of observed vehicles
         :param observe_intentions: Observe the destinations of other vehicles
         """
         self.env = env
@@ -119,13 +119,11 @@ class KinematicObservation(ObservationType):
         self.vehicles_count = vehicles_count
         self.features_range = features_range
         self.absolute = absolute
-        self.flatten = flatten
+        self.shuffle = shuffle
         self.observe_intentions = observe_intentions
 
     def space(self):
-        shape = (self.vehicles_count * len(self.features),) if self.flatten \
-            else (self.vehicles_count, len(self.features))
-        return spaces.Box(shape=shape, low=-1, high=1, dtype=np.float32)
+        return spaces.Box(shape=(self.vehicles_count, len(self.features)), low=-1, high=1, dtype=np.float32)
 
     def normalize(self, df):
         """
@@ -170,10 +168,9 @@ class KinematicObservation(ObservationType):
         df = df[self.features]
         # Clip
         obs = np.clip(df.values, -1, 1)
-        self.env.np_random.shuffle(obs[1:])
+        if self.shuffle:
+            self.env.np_random.shuffle(obs[1:])
         # Flatten
-        if self.flatten:
-            obs = np.ravel(obs)
         return obs
 
 
