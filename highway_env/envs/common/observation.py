@@ -205,8 +205,6 @@ class OccupancyGridObservation(ObservationType):
         grid_shape = np.asarray(np.floor((self.grid_size[:, 1] - self.grid_size[:, 0]) / grid_step), dtype=np.int)
         self.grid = np.zeros((len(self.features), *grid_shape))
         self.features_range = features_range
-        self.features_range.pop("x", None)
-        self.features_range.pop("y", None)
         self.absolute = absolute
 
     def space(self):
@@ -242,8 +240,11 @@ class OccupancyGridObservation(ObservationType):
             # Fill-in features
             for layer, feature in enumerate(self.features):
                 for _, vehicle in df.iterrows():
-                    cell = (int((vehicle["x"] - self.grid_size[0, 0]) / self.grid_step[0]),
-                            int((vehicle["y"] - self.grid_size[1, 0]) / self.grid_step[1]))
+                    # Recover unnormalized coordinates for cell index
+                    x = utils.remap(vehicle["x"], [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
+                    y = utils.remap(vehicle["y"], [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
+                    cell = (int((x - self.grid_size[0, 0]) / self.grid_step[0]),
+                            int((y - self.grid_size[1, 0]) / self.grid_step[1]))
                     if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
                         self.grid[layer, cell[1], cell[0]] = vehicle[feature]
             # Clip
