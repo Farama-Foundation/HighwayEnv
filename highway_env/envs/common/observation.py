@@ -236,7 +236,7 @@ class OccupancyGridObservation(ObservationType):
             # Add nearby traffic
             self.grid.fill(0)
             df = pandas.DataFrame.from_records(
-                [v.to_dict(self.env.vehicle) for v in self.env.road.vehicles if v is not self.env.vehicle])
+                [v.to_dict(self.env.vehicle) for v in self.env.road.vehicles])
             # Normalize
             df = self.normalize(df)
             # Fill-in features
@@ -246,10 +246,6 @@ class OccupancyGridObservation(ObservationType):
                             int((vehicle["y"] - self.grid_size[1, 0]) / self.grid_step[1]))
                     if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
                         self.grid[layer, cell[1], cell[0]] = vehicle[feature]
-            # Stack ego-velocity
-            # obs = np.stack(np.ravel(self.grid),
-            #                np.array(self.env.vehicle.velocity / MDPVehicle.SPEED_MAX))
-
             # Clip
             obs = np.clip(self.grid, -1, 1)
             return obs
