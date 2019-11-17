@@ -45,7 +45,8 @@ class SummonEnv(AbstractEnv, GoalEnv):
                 "scales": [100, 100, 5, 5, 1, 1],
                 "normalize": False
             },
-            "incoming_vehicle_destination": None,
+            "vehicles_count" : 10,
+            "other_vehicles_type": "highway_env.vehicle.behavior.DefensiveVehicle",
             "policy_frequency": 5,
             "screen_width": 600,
             "screen_height": 300,
@@ -78,6 +79,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
             Create a road composed of straight adjacent lanes.
         """
         net = RoadNetwork()
+
         width = 4.0
         lt = (LineType.CONTINUOUS, LineType.CONTINUOUS)
         x_offset = 0
@@ -85,8 +87,11 @@ class SummonEnv(AbstractEnv, GoalEnv):
         length = 8
         for k in range(spots):
             x = (k - spots // 2) * (width + x_offset) - width / 2
-            net.add_lane("a", "b", StraightLane([x, y_offset], [x, y_offset+length], width=width, line_types=lt))
-            net.add_lane("b", "c", StraightLane([x, -y_offset], [x, -y_offset-length], width=width, line_types=lt))
+            net.add_lane("a", "b", StraightLane([x, y_offset], [x, y_offset+length], width=width, line_types=lt,speed_limit=5))
+            net.add_lane("b", "c", StraightLane([x, -y_offset], [x, -y_offset-length], width=width, line_types=lt,speed_limit=5))
+        
+        net.add_lane("d","e",StraightLane([-spots*2, 0], [+spots*2,0], width=(2*y_offset),line_types=(0,0),speed_limit=5))
+        self.middle_index = spots+1
 
         self.road = Road(network=net,
                          np_random=self.np_random,
@@ -96,8 +101,6 @@ class SummonEnv(AbstractEnv, GoalEnv):
         """
             Create some new random vehicles of a given type, and add them on the road.
         """
-        position_deviation = 2
-        velocity_deviation = 2
 
         self.vehicle = Vehicle(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)
         self.road.vehicles.append(self.vehicle)
@@ -107,41 +110,10 @@ class SummonEnv(AbstractEnv, GoalEnv):
         self.goal.COLLISIONS_ENABLED = False
         self.road.vehicles.insert(0, self.goal)
 
-         # Incoming vehicle
-        destinations = ["exr", "sxr", "nxr"]
-        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        vehicle = other_vehicles_type.make_on_lane(self.road,
-                                                   ("a", "b", 1),
-                                                   longitudinal=5 + self.np_random.randn()*position_deviation,
-                                                   velocity=16 + self.np_random.randn()*velocity_deviation)
 
-        if self.config["incoming_vehicle_destination"] is not None:
-            destination = destinations[self.config["incoming_vehicle_destination"]]
-        else:
-            destination = self.np_random.choice(destinations)
-        vehicle.plan_route_to(destination)
-        vehicle.randomize_behavior()
-        self.road.vehicles.append(vehicle)
-
-        # Other vehicles
-        for i in list(range(1, 2)) + list(range(-1, 0)):
-            vehicle = other_vehicles_type.make_on_lane(self.road,
-                                                       ("a", "b", 0),
-                                                       longitudinal=20*i + self.np_random.randn()*position_deviation,
-                                                       velocity=16 + self.np_random.randn()*velocity_deviation)
-            vehicle.plan_route_to(self.np_random.choice(destinations))
-            vehicle.randomize_behavior()
-            self.road.vehicles.append(vehicle)
-
-        # Entering vehicle
-        vehicle = other_vehicles_type.make_on_lane(self.road,
-                                                   ("b", "c", 0),
-                                                   longitudinal=50 + self.np_random.randn() * position_deviation,
-                                                   velocity=16 + self.np_random.randn() * velocity_deviation)
-        vehicle.plan_route_to(self.np_random.choice(destinations))
-        vehicle.randomize_behavior()
-        self.road.vehicles.append(vehicle)
-
+        vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        for _ in range(self.config["vehicles_count"]):
+            self.road.vehicles.append(vehicles_type.make_on_lane(self.road,("d","e",0),np.random.randint(0,self.config["vehicles_count"]*10),velocity=5))
 
     def compute_reward(self, achieved_goal, desired_goal, info, p=0.5):
         """
