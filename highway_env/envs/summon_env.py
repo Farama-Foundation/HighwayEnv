@@ -46,8 +46,8 @@ class SummonEnv(AbstractEnv, GoalEnv):
                 "normalize": False
             },
             "vehicles_count" : 10,
-            "other_vehicles_type": "highway_env.vehicle.behavior.ParkingVehicle",
             "policy_frequency": 5,
+            "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
             "screen_width": 600,
             "screen_height": 300,
             "centering_position": [0.5, 0.5]
