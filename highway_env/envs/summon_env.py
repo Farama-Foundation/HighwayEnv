@@ -133,7 +133,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
                     vehicles_type.make_on_lane(self.road, ("d", "e", idx), longitudinal, velocity=2))
             else:  # parked cars
                 lane = ("a", "b", i) if np.random.rand() >= 0.5 else ("b", "c", i)
-                self.road.vehicles.append(vehicles_type.make_on_lane(self.road, lane, 4, velocity=.1))
+                self.road.vehicles.append(Vehicle.make_on_lane(self.road, lane, 4, velocity=0))
 
         for v in self.road.vehicles:  # Prevent early collisions
             if v is not self.vehicle and np.linalg.norm(v.position - self.vehicle.position) < 20:
