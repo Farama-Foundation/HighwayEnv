@@ -110,7 +110,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
                          np_random=self.np_random,
                          record_history=self.config["show_trajectories"])
 
-    def _create_vehicles(self):
+    def _create_vehicles(self, parked_probability=0.75):
         """
             Create some new random vehicles of a given type, and add them on the road.
         """
@@ -125,8 +125,8 @@ class SummonEnv(AbstractEnv, GoalEnv):
 
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for i in range(self.config["vehicles_count"]):
-            is_not_parked = np.random.rand() >= 0.75
-            if is_not_parked:
+            is_parked = self.np_random.rand() <= parked_probability
+            if not is_parked:
                 # Just an effort to spread the vehicles out
                 idx = np.random.randint(0, self.num_middle_lanes)
                 longitudinal = (i * 5) - (self.x_range / 2) * np.random.randint(-1, 1)
