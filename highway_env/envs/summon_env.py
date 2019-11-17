@@ -168,7 +168,8 @@ class SummonEnv(AbstractEnv, GoalEnv):
 
 class SummonEnvActionRepeat(SummonEnv):
     def __init__(self):
-        super().__init__({"policy_frequency": 1})
+        super().__init__()
+        self.configure({"policy_frequency": 1})
 
 
 register(
