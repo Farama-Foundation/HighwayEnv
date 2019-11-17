@@ -85,20 +85,24 @@ class SummonEnv(AbstractEnv, GoalEnv):
         x_offset = 0
         y_offset = 10
         length = 8
+        # Parking spots
         for k in range(spots):
             x = (k - spots // 2) * (width + x_offset) - width / 2
-            net.add_lane("a", "b", StraightLane([x, y_offset], [x, y_offset+length], width=width, line_types=lt,speed_limit=5))
-            net.add_lane("b", "c", StraightLane([x, -y_offset], [x, -y_offset-length], width=width, line_types=lt,speed_limit=5))
-        
+            net.add_lane("a", "b", StraightLane([x, y_offset], [x, y_offset + length],
+                                                width=width, line_types=lt, speed_limit=5))
+            net.add_lane("b", "c", StraightLane([x, -y_offset], [x, -y_offset - length],
+                                                width=width, line_types=lt, speed_limit=5))
+
         self.spots = spots
-        self.vehicle_starting = [x,y_offset+(length/2)]
-
+        self.vehicle_starting = [x, y_offset + (length / 2)]
         self.num_middle_lanes = 0
-        self.x_range = int(spots/2)
-        self.y_width = (y_offset+1)*2
+        self.x_range = int(spots / 2)
+        self.y_width = (y_offset + 1) * 2
 
-        for i in range(-y_offset+1,y_offset-1,int(width)): #generate the middle lane for the busy parking lot
-            net.add_lane("d","e",StraightLane([-self.x_range, i], [self.x_range,i], width=width,line_types=(0,0),speed_limit=5))
+        # Generate the middle lane for the busy parking lot
+        for i in range(-y_offset + 1, y_offset - 1, int(width)):
+            net.add_lane("d", "e", StraightLane([-self.x_range, i], [self.x_range, i], width=width, line_types=(0, 0),
+                                                speed_limit=5))
             self.num_middle_lanes += 1
 
         self.road = Road(network=net,
@@ -110,33 +114,30 @@ class SummonEnv(AbstractEnv, GoalEnv):
             Create some new random vehicles of a given type, and add them on the road.
         """
 
-        self.vehicle = Vehicle(self.road, self.vehicle_starting, 2*np.pi*self.np_random.rand(), 0)
+        self.vehicle = Vehicle(self.road, self.vehicle_starting, 2 * np.pi * self.np_random.rand(), 0)
         self.road.vehicles.append(self.vehicle)
 
-        goalpos = [np.random.choice([-2*self.spots - 10 ,2*self.spots + 10]),0]
-        self.goal = Obstacle(self.road, goalpos, heading=0)
+        goal_position = [np.random.choice([-2 * self.spots - 10, 2 * self.spots + 10]), 0]
+        self.goal = Obstacle(self.road, goal_position, heading=0)
         self.goal.COLLISIONS_ENABLED = False
         self.road.vehicles.insert(0, self.goal)
 
-
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for i in range(self.config["vehicles_count"]):
-            coinflip = np.random.rand()
-            if coinflip >= 0.75 : 
-                idx = np.random.randint(0,self.num_middle_lanes)
-                longposition = (i*5) - (self.x_range/2) * np.random.randint(-1,1) #just an effort to spread the vehicles out 
-                self.road.vehicles.append(vehicles_type.make_on_lane(self.road,("d","e",idx),longposition,velocity=2))
-            else: #parked cars
-                lane = i
-                if coinflip >= 0.325:
-                    self.road.vehicles.append(vehicles_type.make_on_lane(self.road,("a","b",lane),4,velocity=.1))
-                else:
-                    self.road.vehicles.append(vehicles_type.make_on_lane(self.road,("b","c",lane),4,velocity=.1))
-        
+            is_not_parked = np.random.rand() >= 0.75
+            if is_not_parked:
+                # Just an effort to spread the vehicles out
+                idx = np.random.randint(0, self.num_middle_lanes)
+                longitudinal = (i * 5) - (self.x_range / 2) * np.random.randint(-1, 1)
+                self.road.vehicles.append(
+                    vehicles_type.make_on_lane(self.road, ("d", "e", idx), longitudinal, velocity=2))
+            else:  # parked cars
+                lane = ("a", "b", i) if np.random.rand() >= 0.5 else ("b", "c", i)
+                self.road.vehicles.append(vehicles_type.make_on_lane(self.road, lane, 4, velocity=.1))
+
         for v in self.road.vehicles:  # Prevent early collisions
             if v is not self.vehicle and np.linalg.norm(v.position - self.vehicle.position) < 20:
                 self.road.vehicles.remove(v)
-
 
     def compute_reward(self, achieved_goal, desired_goal, info, p=0.5):
         """
