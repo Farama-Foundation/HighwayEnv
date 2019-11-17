@@ -118,7 +118,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
         self.vehicle = Vehicle(self.road, self.vehicle_starting, 2 * np.pi * self.np_random.rand(), 0)
         self.road.vehicles.append(self.vehicle)
 
-        goal_position = [np.random.choice([-2 * self.spots - 10, 2 * self.spots + 10]), 0]
+        goal_position = [self.np_random.choice([-2 * self.spots - 10, 2 * self.spots + 10]), 0]
         self.goal = Obstacle(self.road, goal_position, heading=0)
         self.goal.COLLISIONS_ENABLED = False
         self.road.vehicles.insert(0, self.goal)
@@ -128,12 +128,12 @@ class SummonEnv(AbstractEnv, GoalEnv):
             is_parked = self.np_random.rand() <= parked_probability
             if not is_parked:
                 # Just an effort to spread the vehicles out
-                idx = np.random.randint(0, self.num_middle_lanes)
-                longitudinal = (i * 5) - (self.x_range / 2) * np.random.randint(-1, 1)
+                idx = self.np_random.randint(0, self.num_middle_lanes)
+                longitudinal = (i * 5) - (self.x_range / 8) * self.np_random.randint(-1, 1)
                 self.road.vehicles.append(
                     vehicles_type.make_on_lane(self.road, ("d", "e", idx), longitudinal, velocity=2))
             else:  # parked cars
-                lane = ("a", "b", i) if np.random.rand() >= 0.5 else ("b", "c", i)
+                lane = ("a", "b", i) if self.np_random.rand() >= 0.5 else ("b", "c", i)
                 self.road.vehicles.append(Vehicle.make_on_lane(self.road, lane, 4, velocity=0))
 
         for v in self.road.vehicles:  # Prevent early collisions
