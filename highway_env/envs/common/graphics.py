@@ -4,6 +4,7 @@ import os
 
 import numpy as np
 import pygame
+from gym.spaces import Discrete
 
 from highway_env.road.graphics import WorldSurface, RoadGraphics
 from highway_env.vehicle.graphics import VehicleGraphics
@@ -63,7 +64,8 @@ class EnvViewer(object):
             Set the sequence of actions chosen by the agent, so that it can be displayed
         :param actions: list of action, following the env's action space specification
         """
-        if hasattr(self.env.action_space, 'n'):
+        return
+        if isinstance(self.env.action_space, Discrete):
             actions = [self.env.ACTIONS[a] for a in actions]
         if len(actions) > 1:
             self.vehicle_trajectory = self.env.vehicle.predict_trajectory(actions,
