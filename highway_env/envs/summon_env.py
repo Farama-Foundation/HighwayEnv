@@ -83,7 +83,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
         width = 4.0
         lt = (LineType.CONTINUOUS, LineType.CONTINUOUS)
         x_offset = 0
-        y_offset = 10
+        y_offset = 12
         length = 8
         # Parking spots
         for k in range(spots):
@@ -96,12 +96,14 @@ class SummonEnv(AbstractEnv, GoalEnv):
         self.spots = spots
         self.vehicle_starting = [x, y_offset + (length / 2)]
         self.num_middle_lanes = 0
-        self.x_range = int(spots / 2)
+        self.x_range = int(spots / 2) + 1
         self.y_width = (y_offset + 1) * 2
 
         # Generate the middle lane for the busy parking lot
-        for i in range(-y_offset + 1, y_offset - 1, int(width)):
-            net.add_lane("d", "e", StraightLane([-self.x_range, i], [self.x_range, i], width=width, line_types=(0, 0),
+        for i in np.arange(-y_offset + width, y_offset, width):
+            net.add_lane("d", "e", StraightLane([-self.x_range * width, i], [self.x_range * width, i],
+                                                width=width,
+                                                line_types=(LineType.STRIPED, LineType.STRIPED),
                                                 speed_limit=5))
             self.num_middle_lanes += 1
 
