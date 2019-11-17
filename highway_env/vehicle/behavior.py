@@ -377,3 +377,7 @@ class DefensiveVehicle(LinearVehicle):
     ACCELERATION_PARAMETERS = [MERGE_ACC_GAIN / ((1 - MERGE_VEL_RATIO) * MERGE_TARGET_VEL),
                                MERGE_ACC_GAIN / (MERGE_VEL_RATIO * MERGE_TARGET_VEL),
                                2.0]
+
+class ParkingVehicle(DefensiveVehicle):
+    def acceleration(self, ego_vehicle, front_vehicle=None, rear_vehicle=None):
+        return np.random.randint(-2.0,2.0)

@@ -46,7 +46,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
                 "normalize": False
             },
             "vehicles_count" : 10,
-            "other_vehicles_type": "highway_env.vehicle.behavior.DefensiveVehicle",
+            "other_vehicles_type": "highway_env.vehicle.behavior.ParkingVehicle",
             "policy_frequency": 5,
             "screen_width": 600,
             "screen_height": 300,
@@ -90,8 +90,11 @@ class SummonEnv(AbstractEnv, GoalEnv):
             net.add_lane("a", "b", StraightLane([x, y_offset], [x, y_offset+length], width=width, line_types=lt,speed_limit=5))
             net.add_lane("b", "c", StraightLane([x, -y_offset], [x, -y_offset-length], width=width, line_types=lt,speed_limit=5))
         
-        net.add_lane("d","e",StraightLane([-spots*2, 0], [+spots*2,0], width=(2*y_offset),line_types=(0,0),speed_limit=5))
-        self.middle_index = spots+1
+        self.num_middle_lanes = 0
+        x_range = int(spots/2)
+        for i in range(-y_offset+1,y_offset-1,int(width)): #generate the middle lane for the busy parking lot
+            net.add_lane("d","e",StraightLane([-x_range, i], [x_range,i], width=width,line_types=(0,0),speed_limit=5))
+            self.num_middle_lanes += 1
 
         self.road = Road(network=net,
                          np_random=self.np_random,
@@ -113,7 +116,8 @@ class SummonEnv(AbstractEnv, GoalEnv):
 
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for _ in range(self.config["vehicles_count"]):
-            self.road.vehicles.append(vehicles_type.make_on_lane(self.road,("d","e",0),np.random.randint(0,self.config["vehicles_count"]*10),velocity=5))
+            idx = np.random.randint(0,self.num_middle_lanes)
+            self.road.vehicles.append(vehicles_type.make_on_lane(self.road,("d","e",idx),np.random.randint(0,self.config["vehicles_count"]*10),velocity=-5))
 
     def compute_reward(self, achieved_goal, desired_goal, info, p=0.5):
         """
