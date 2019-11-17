@@ -21,9 +21,6 @@ class SummonEnv(AbstractEnv, GoalEnv):
     """
     
     COLLISION_REWARD = -5
-    HIGH_VELOCITY_REWARD = 0.2
-    RIGHT_LANE_REWARD = 0
-    LANE_CHANGE_REWARD = -0.05
 
     STEERING_RANGE = np.pi / 4
     ACCELERATION_RANGE = 5.0
@@ -45,7 +42,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
                 "scales": [100, 100, 5, 5, 1, 1],
                 "normalize": False
             },
-            "vehicles_count" : 10,
+            "vehicles_count": 10,
             "policy_frequency": 5,
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
             "screen_width": 600,
@@ -132,7 +129,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
                 longitudinal = (i * 5) - (self.x_range / 8) * self.np_random.randint(-1, 1)
                 self.road.vehicles.append(
                     vehicles_type.make_on_lane(self.road, ("d", "e", idx), longitudinal, velocity=2))
-            else:  # parked cars
+            else:
                 lane = ("a", "b", i) if self.np_random.rand() >= 0.5 else ("b", "c", i)
                 self.road.vehicles.append(Vehicle.make_on_lane(self.road, lane, 4, velocity=0))
 
