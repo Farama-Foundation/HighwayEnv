@@ -31,8 +31,8 @@ class SummonEnv(AbstractEnv, GoalEnv):
     REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
     SUCCESS_GOAL_REWARD = 0.12
 
-    def __init__(self):
-        super().__init__()
+    def define_spaces(self):
+        super().define_spaces()
         self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
 
     @classmethod
