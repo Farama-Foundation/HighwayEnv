@@ -85,7 +85,7 @@ def has_corner_inside(rect1, rect2):
     l1v = np.array([l1/2, 0])
     w1v = np.array([0, w1/2])
     r1_points = np.array([[0, 0],
-                          - l1v, l1v, w1v, w1v,
+                          - l1v, l1v, -w1v, w1v,
                           - l1v - w1v, - l1v + w1v, + l1v - w1v, + l1v + w1v])
     c, s = np.cos(a1), np.sin(a1)
     r = np.array([[c, -s], [s, c]])
