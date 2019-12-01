@@ -19,6 +19,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
 ## Usage
 
 ```python
+import gym
 import highway_env
 
 env = gym.make("highway-v0")
