@@ -250,7 +250,7 @@ class Road(Loggable):
         vehicles = [v for v in self.vehicles
                     if np.linalg.norm(v.position - vehicle.position) < distance
                     and v is not vehicle
-                    and see_behind or -2*vehicle.LENGTH < vehicle.lane_distance_to(v)]
+                    and (see_behind or -2*vehicle.LENGTH < vehicle.lane_distance_to(v))]
         if sort:
             vehicles = sorted(vehicles, key=lambda v: abs(vehicle.lane_distance_to(v)))
         if count:
