@@ -41,7 +41,7 @@ class AbstractEnv(gym.Env):
         The frequency at which the system dynamics are simulated [Hz]
     """
 
-    PERCEPTION_DISTANCE = 5.0 * MDPVehicle.SPEED_MAX
+    PERCEPTION_DISTANCE = 6.0 * MDPVehicle.SPEED_MAX
     """
         The maximum distance of any vehicle present in the observation [m]
     """
