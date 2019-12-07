@@ -46,16 +46,17 @@ class IntersectionEnv(AbstractEnv):
             "screen_height": 600,
             "centering_position": [0.5, 0.6],
             "scaling": 5.5 * 1.3,
+            "collision_reward": IntersectionEnv.COLLISION_REWARD,
             "normalize_reward": False
         })
         return config
 
     def _reward(self, action):
-        reward = self.COLLISION_REWARD * self.vehicle.crashed \
+        reward = self.config["collision_reward"] * self.vehicle.crashed \
                  + self.HIGH_VELOCITY_REWARD * (self.vehicle.velocity_index == self.vehicle.SPEED_COUNT - 1)
         reward = self.ARRIVED_REWARD if self.has_arrived else reward
         if self.config["normalize_reward"]:
-            reward = utils.remap(reward, [self.COLLISION_REWARD, self.ARRIVED_REWARD], [0, 1])
+            reward = utils.remap(reward, [self.config["collision_reward"], self.ARRIVED_REWARD], [0, 1])
         return reward
 
     def _is_terminal(self):
@@ -153,7 +154,7 @@ class IntersectionEnv(AbstractEnv):
             [(self.road.act(), self.road.step(1 / self.SIMULATION_FREQUENCY)) for _ in range(self.SIMULATION_FREQUENCY)]
 
         # Challenger vehicle
-        self._spawn_vehicle(60, spawn_probability=1, go_front=True, position_deviation=0.1, velocity_deviation=0)
+        self._spawn_vehicle(60, spawn_probability=1, go_straight=True, position_deviation=0.1, velocity_deviation=0)
 
         # Ego-vehicle
         MDPVehicle.SPEED_MIN = 0
@@ -178,12 +179,12 @@ class IntersectionEnv(AbstractEnv):
                        position_deviation=1.,
                        velocity_deviation=1.,
                        spawn_probability=0.6,
-                       go_front=False):
+                       go_straight=False):
         if self.np_random.rand() > spawn_probability:
             return
 
         route = self.np_random.choice(range(4), size=2, replace=False)
-        route[1] = (route[0] + 2) % 4 if go_front else route[1]
+        route[1] = (route[0] + 2) % 4 if go_straight else route[1]
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
         vehicle = vehicle_type.make_on_lane(self.road, ("o" + str(route[0]), "ir" + str(route[0]), 0),
                                             longitudinal=longitudinal + 5 + self.np_random.randn() * position_deviation,
@@ -209,6 +210,12 @@ class IntersectionEnv(AbstractEnv):
                and "o" in self.vehicle.lane_index[1] \
                and self.vehicle.lane.local_coordinates(self.vehicle.position)[0] >= \
                self.vehicle.lane.length - 3 * self.vehicle.LENGTH
+
+    def _cost(self, action):
+        """
+            The constraint signal is the occurence of collisions.
+        """
+        return float(self.vehicle.crashed)
 
 
 register(
