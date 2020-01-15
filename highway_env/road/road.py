@@ -203,11 +203,14 @@ class RoadNetwork(object):
         return [lane for tos in self.graph.values() for ids in tos.values() for lane in ids]
 
     @staticmethod
-    def straight_road_network(lanes=4, length=10000):
+    def straight_road_network(lanes=4, length=10000, angle=0):
         net = RoadNetwork()
         for lane in range(lanes):
-            origin = [0, lane * StraightLane.DEFAULT_WIDTH]
-            end = [length, lane * StraightLane.DEFAULT_WIDTH]
+            origin = np.array([0, lane * StraightLane.DEFAULT_WIDTH])
+            end = np.array([length, lane * StraightLane.DEFAULT_WIDTH])
+            rotation = np.array([[np.cos(angle), np.sin(angle)], [-np.sin(angle), np.cos(angle)]])
+            origin = rotation @ origin
+            end = rotation @ end
             line_types = [LineType.CONTINUOUS_LINE if lane == 0 else LineType.STRIPED,
                           LineType.CONTINUOUS_LINE if lane == lanes - 1 else LineType.NONE]
             net.add_lane(0, 1, StraightLane(origin, end, line_types=line_types))
