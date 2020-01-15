@@ -170,7 +170,8 @@ class IntervalVehicle(LinearVehicle):
         # Update lateral LPV center to track target lane
         for i, lane_index in enumerate(self.get_followed_lanes(squeeze=False)):
             lane = self.road.network.get_lane(lane_index)
-            center = np.array([lane.position(0, 0)[1], 0])
+            # TODO: this assumes straight roads to detect changes of target lane
+            center = np.array([lane.position(0, 0)[1], 0])  # y, psi
             if (center != self.lateral_lpv[i].center).any():
                 self.lateral_lpv[i].x_i_t[0, :] -= self.lateral_lpv[i].change_coordinates(center, offset=False) - \
                     self.lateral_lpv[i].change_coordinates(self.lateral_lpv[i].center, offset=False)
@@ -186,13 +187,23 @@ class IntervalVehicle(LinearVehicle):
         # Backward coordinates change
         x_i_long = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.x_i_t, back=True, interval=True)
         x_i_lat = self.lateral_lpv[0].change_coordinates(self.lateral_lpv[0].x_i_t, back=True, interval=True)
+
+        # Multiple lanes followed
         for lpv in self.lateral_lpv[1:]:
             x_i_lat_lane = lpv.change_coordinates(lpv.x_i_t, back=True, interval=True)
             x_i_lat[0] = np.minimum(x_i_lat[0], x_i_lat_lane[0])
             x_i_lat[1] = np.maximum(x_i_lat[1], x_i_lat_lane[1])
 
-        self.interval.position[:, 0] = x_i_long[:, 0]
-        self.interval.position[:, 1] = x_i_lat[:, 0]
+        # Conversion from rectified to true coordinates
+        corners = [(x_i_long[a, 0], x_i_lat[b, 0]) for a in range(2) for b in range(2)]
+        positions = []
+        for i, lane_index in enumerate(self.get_followed_lanes(squeeze=False)):
+            lane = self.road.network.get_lane(lane_index)
+            p_long, p_lat = lane.local_coordinates(self.position)
+            positions = np.array([lane.position(p_long + long, lat) for long, lat in corners])
+
+        self.interval.position[:, 0] = [np.amin(positions[:, 0]), np.amax(positions[:, 0])]
+        self.interval.position[:, 1] = [np.amin(positions[:, 1]), np.amax(positions[:, 1])]
         self.interval.velocity = x_i_long[:, 2]
         self.interval.heading = x_i_lat[:, 1]
 
@@ -200,9 +211,9 @@ class IntervalVehicle(LinearVehicle):
         """
             Initialize the LPV models used for interval prediction
         """
-        position_i = self.interval.position
+        position_i = self.interval.position - np.array([self.position, self.position])
         v_i = self.interval.velocity
-        psi_i = self.interval.heading
+        psi_i = self.interval.heading - self.heading
 
         # Longitudinal predictor
         if not self.longitudinal_lpv:
