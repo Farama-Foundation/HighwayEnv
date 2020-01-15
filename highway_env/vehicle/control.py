@@ -15,11 +15,11 @@ class ControlledVehicle(Vehicle):
     """
 
     TAU_A = 0.6  # [s]
-    TAU_DS = 0.2  # [s]
+    TAU_DS = 0.1  # [s]
     PURSUIT_TAU = 1.5*TAU_DS  # [s]
     KP_A = 1 / TAU_A
     KP_HEADING = 1 / TAU_DS
-    KP_LATERAL = 1 / 0.5  # [1/s]
+    KP_LATERAL = KP_HEADING / 7  # [1/s]
     MAX_STEERING_ANGLE = np.pi / 3  # [rad]
 
     DELTA_VELOCITY = 5  # [m/s]
