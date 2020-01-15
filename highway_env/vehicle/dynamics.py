@@ -79,7 +79,10 @@ class Vehicle(Loggable):
         offset = spacing * default_spacing * np.exp(-5 / 30 * len(road.network.graph[_from][_to]))
         x0 = np.max([v.position[0] for v in road.vehicles]) if len(road.vehicles) else 3*offset
         x0 += offset * road.np_random.uniform(0.9, 1.1)
-        v = cls(road, road.network.get_lane((_from, _to, _id)).position(x0, 0), 0, velocity)
+        v = cls(road,
+                road.network.get_lane((_from, _to, _id)).position(x0, 0),
+                road.network.get_lane((_from, _to, _id)).heading(x0, 0),
+                velocity)
         return v
 
     @classmethod
