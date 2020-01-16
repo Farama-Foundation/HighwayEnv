@@ -70,8 +70,8 @@ class IntervalVehicle(LinearVehicle):
             self.interval = VehicleInterval(self)
         else:
             # self.observer_step(dt)
-            # self.partial_observer_step(dt)
-            self.predictor_step(dt)
+            self.partial_observer_step(dt)
+            # self.predictor_step(dt)
         super().step(dt)
 
     def observer_step(self, dt):
@@ -156,8 +156,8 @@ class IntervalVehicle(LinearVehicle):
         # Interval dynamics integration
         self.interval.velocity += dv_i * dt
         self.interval.heading += d_psi_i * dt
-        self.interval.position[:, 0] += dx_i * dt
-        self.interval.position[:, 1] += dy_i * dt
+        self.interval.position[:, 0] += dx_i * dt + 1 * dt * np.array([-1, 1])
+        self.interval.position[:, 1] += dy_i * dt + 1 * dt * np.array([-1, 1])
 
     def predictor_step(self, dt):
         """
