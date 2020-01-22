@@ -8,9 +8,10 @@ from highway_env.interval import polytope, vector_interval_section, integrator_i
     interval_local_to_absolute
 from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.control import MDPVehicle
+from highway_env.vehicle.uncertainty.estimation import RegressionVehicle
 
 
-class IntervalVehicle(LinearVehicle):
+class IntervalVehicle(RegressionVehicle):
     """
         Estimator for the interval-membership of a LinearVehicle under parameter uncertainty.
 
@@ -29,7 +30,8 @@ class IntervalVehicle(LinearVehicle):
                  enable_lane_change=True,
                  timer=None,
                  theta_a_i=None,
-                 theta_b_i=None):
+                 theta_b_i=None,
+                 data=None):
         """
         :param theta_a_i: The interval of possible acceleration parameters
         :param theta_b_i: The interval of possible steering parameters
@@ -42,10 +44,10 @@ class IntervalVehicle(LinearVehicle):
                          target_velocity,
                          route,
                          enable_lane_change,
-                         timer)
-        self.theta_a_i = theta_a_i if theta_a_i is not None else LinearVehicle.ACCELERATION_RANGE
-        self.theta_b_i = theta_b_i if theta_b_i is not None else LinearVehicle.STEERING_RANGE
-
+                         timer,
+                         theta_a_i,
+                         theta_b_i,
+                         data)
         self.interval = VehicleInterval(self)
         self.trajectory = []
         self.interval_trajectory = []
@@ -63,7 +65,8 @@ class IntervalVehicle(LinearVehicle):
                 route=getattr(vehicle, 'route', None),
                 timer=getattr(vehicle, 'timer', None),
                 theta_a_i=getattr(vehicle, 'theta_a_i', None),
-                theta_b_i=getattr(vehicle, 'theta_b_i', None))
+                theta_b_i=getattr(vehicle, 'theta_b_i', None),
+                data=getattr(vehicle, "data", None))
         return v
 
     def step(self, dt):
