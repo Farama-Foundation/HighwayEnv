@@ -74,6 +74,7 @@ class IDMVehicle(ControlledVehicle):
         if self.enable_lane_change:
             self.change_lane_policy()
         action['steering'] = self.steering_control(self.target_lane_index)
+        action['steering'] = np.clip(action['steering'], -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
 
         # Longitudinal: IDM
         action['acceleration'] = self.acceleration(ego_vehicle=self,
@@ -296,6 +297,20 @@ class LinearVehicle(IDMVehicle):
                                             route,
                                             enable_lane_change,
                                             timer)
+        self.data = {
+            "longitudinal": {
+                "outputs": [],
+                "features": []
+            },
+            "lateral": {
+                "outputs": [],
+                "features": []
+            }
+        }
+
+    def act(self):
+        self.collect_data()
+        super().act()
 
     def randomize_behavior(self):
         ua = self.road.np_random.uniform(size=np.shape(self.ACCELERATION_PARAMETERS))
@@ -340,9 +355,7 @@ class LinearVehicle(IDMVehicle):
         :param target_lane_index: index of the lane to follow
         :return: a steering wheel angle command [rad]
         """
-        steering_angle = np.dot(np.array(self.STEERING_PARAMETERS), self.steering_features(target_lane_index))
-        steering_angle = np.clip(steering_angle, -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
-        return steering_angle
+        return np.dot(np.array(self.STEERING_PARAMETERS), self.steering_features(target_lane_index))
 
     def steering_features(self, target_lane_index):
         """
@@ -358,6 +371,81 @@ class LinearVehicle(IDMVehicle):
                              self.LENGTH / utils.not_zero(self.velocity),
                              -lane_coords[1] * self.LENGTH / (utils.not_zero(self.velocity) ** 2)])
         return features
+
+    def longitudinal_structure(self):
+        # Nominal dynamics: integrate velocity
+        A = np.array([
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ])
+        # Target velocity dynamics
+        phi0 = np.array([
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, -1, 0],
+            [0, 0, 0, -1]
+        ])
+        # Front velocity control
+        phi1 = np.array([
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, -1, 1],
+            [0, 0, 0, 0]
+        ])
+        # Front position control
+        phi2 = np.array([
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [-1, 1, -self.TIME_WANTED, 0],
+            [0, 0, 0, 0]
+        ])
+        # Disable velocity control
+        front_vehicle, _ = self.road.neighbour_vehicles(self)
+        if not front_vehicle or self.velocity < front_vehicle.velocity:
+            phi1 *= 0
+
+        # Disable front position control
+        if front_vehicle:
+            d = self.lane_distance_to(front_vehicle)
+            if d != self.DISTANCE_WANTED + self.LENGTH + self.TIME_WANTED * self.velocity:
+                phi2 *= 0
+        else:
+            phi2 *= 0
+
+        phi = np.array([phi0, phi1, phi2])
+        return A, phi
+
+    def lateral_structure(self):
+        A = np.array([
+            [0, 1],
+            [0, 0]
+        ])
+        phi0 = np.array([
+            [0, 0],
+            [0, -1]
+        ])
+        phi1 = np.array([
+            [0, 0],
+            [-1, 0]
+        ])
+        phi = np.array([phi0, phi1])
+        return A, phi
+
+    def collect_data(self):
+        """
+            Store features and outputs for parameter regression
+        """
+        front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
+        features = self.acceleration_features(self, front_vehicle, rear_vehicle)
+        output = np.dot(self.ACCELERATION_PARAMETERS, features)
+        self.data["longitudinal"]["features"].append(features)
+        self.data["longitudinal"]["outputs"].append(output)
+        features = self.steering_features(self.target_lane_index)
+        output = np.dot(self.STEERING_PARAMETERS, features)
+        self.data["lateral"]["features"].append(features)
+        self.data["lateral"]["outputs"].append(output)
 
 
 class AggressiveVehicle(LinearVehicle):
