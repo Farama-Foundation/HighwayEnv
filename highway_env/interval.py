@@ -16,6 +16,19 @@ def intervals_product(a, b):
         [np.dot(p(a[0]), p(b[0])) - np.dot(p(a[1]), n(b[0])) - np.dot(n(a[0]), p(b[1])) + np.dot(n(a[1]), n(b[1])),
          np.dot(p(a[1]), p(b[1])) - np.dot(p(a[0]), n(b[1])) - np.dot(n(a[1]), p(b[0])) + np.dot(n(a[0]), n(b[0]))])
 
+def intervals_scaling(a, b):
+    """
+        Scale an intervals
+    :param a: matrix a
+    :param b: interval [b_min, b_max]
+    :return: the interval of their product ab
+    """
+    p = lambda x: np.maximum(x, 0)
+    n = lambda x: np.maximum(-x, 0)
+    return np.array(
+        [np.dot(p(a), b[0]) - np.dot(n(a), b[1]),
+         np.dot(p(a), b[1]) - np.dot(n(a), b[0])])
+
 
 def intervals_diff(a, b):
     """
@@ -60,6 +73,40 @@ def vector_interval_section(v_i, direction):
                [v_i[1, 0], v_i[1, 1]]]
     corners_dist = [np.dot(corner, direction) for corner in corners]
     return np.array([min(corners_dist), max(corners_dist)])
+
+
+def interval_absolute_to_local(position_i, lane):
+    """
+        Converts an interval in absolute x,y coordinates to an interval in local (longiturinal, lateral) coordinates
+    :param position_i: the position interval [x_min, x_max]
+    :param lane: the lane giving the local frame
+    :return: the corresponding local interval
+    """
+    position_corners = [[position_i[0, 0], position_i[0, 1]],
+                        [position_i[0, 0], position_i[1, 1]],
+                        [position_i[1, 0], position_i[0, 1]],
+                        [position_i[1, 0], position_i[1, 1]]]
+    corners_local = np.array([lane.local_coordinates(c) for c in position_corners])
+    longitudinal_i = np.array([min(corners_local[:, 0]), max(corners_local[:, 0])])
+    lateral_i = np.array([min(corners_local[:, 1]), max(corners_local[:, 1])])
+    return longitudinal_i, lateral_i
+
+
+def interval_local_to_absolute(longitudinal_i, lateral_i, lane):
+    """
+        Converts an interval in local (longiturinal, lateral) coordinates to an interval in absolute x,y coordinates
+    :param longitudinal_i: the longitudinal interval [L_min, L_max]
+    :param lateral_i: the lateral interval [l_min, l_max]
+    :param lane: the lane giving the local frame
+    :return: the corresponding absolute interval
+    """
+    corners_local = [[longitudinal_i[0], lateral_i[0]],
+                     [longitudinal_i[0], lateral_i[1]],
+                     [longitudinal_i[1], lateral_i[0]],
+                     [longitudinal_i[1], lateral_i[1]]]
+    corners_absolute = np.array([lane.position(*c) for c in corners_local])
+    position_i = np.array([np.amin(corners_absolute, axis=0), np.amax(corners_absolute, axis=0)])
+    return position_i
 
 
 def polytope(parametrized_f, params_intervals):
@@ -138,10 +185,14 @@ class LPV(object):
             return value
         transformation, transformation_inv = self.coordinates
         if interval:
-            value = intervals_product(
-                [self.coordinates[0], self.coordinates[0]],
-                value[:, :, np.newaxis]).squeeze() + offset * np.array([self.center, self.center])
-            return value
+            if back:
+                value = intervals_scaling(transformation,
+                    value[:, :, np.newaxis]).squeeze() + offset * np.array([self.center, self.center])
+                return value
+            else:
+                value = value - offset * np.array([self.center, self.center])
+                value = intervals_scaling(transformation_inv, value[:, :, np.newaxis]).squeeze()
+                return value
         elif matrix:  # Matrix
             if back:
                 return transformation @ value @ transformation_inv
