@@ -135,16 +135,19 @@ class Vehicle(Loggable):
             if self.road.record_history:
                 self.history.appendleft(self.create_from(self))
 
-    def lane_distance_to(self, vehicle):
+    def lane_distance_to(self, vehicle, lane=None):
         """
-            Compute the signed distance to another vehicle along current lane.
+            Compute the signed distance to another vehicle along a lane.
 
         :param vehicle: the other vehicle
+        :param lane: a lane
         :return: the distance to the other vehicle [m]
         """
         if not vehicle:
             return np.nan
-        return self.lane.local_coordinates(vehicle.position)[0] - self.lane.local_coordinates(self.position)[0]
+        if not lane:
+            lane = self.lane
+        return lane.local_coordinates(vehicle.position)[0] - lane.local_coordinates(self.position)[0]
 
     def check_collision(self, other):
         """
