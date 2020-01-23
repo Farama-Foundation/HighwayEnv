@@ -1,4 +1,5 @@
 import copy
+import itertools
 
 import numpy as np
 
@@ -11,8 +12,6 @@ from highway_env.vehicle.control import MDPVehicle
 
 
 class RegressionVehicle(LinearVehicle):
-
-    LAMBDA = 0.1
     """
         Estimator for the parameter of a LinearVehicle.
     """
@@ -46,8 +45,8 @@ class RegressionVehicle(LinearVehicle):
         self.theta_b_i = theta_b_i if theta_b_i is not None else LinearVehicle.STEERING_RANGE
         self.data = data
         if data:
-            print(self.estimate(self.data["longitudinal"]), self.ACCELERATION_PARAMETERS)
-            print(self.estimate(self.data["lateral"]), self.STEERING_PARAMETERS)
+            print(self.polytope(self.data["longitudinal"], delta=0.9, param_bound=1), self.ACCELERATION_PARAMETERS)
+            # print(self.estimate(self.data["lateral"]), self.STEERING_PARAMETERS)
 
     @classmethod
     def create_from(cls, vehicle):
@@ -64,9 +63,20 @@ class RegressionVehicle(LinearVehicle):
                 data=getattr(vehicle, "data", None))
         return v
 
-    def estimate(self, data):
+    def estimate(self, data, lambda_=1e-5, sigma=0.1):
         phi = np.array(data["features"])
         y = np.array(data["outputs"])
-        G_N_lambda = np.transpose(phi) @ phi + self.LAMBDA * np.identity(phi.shape[-1])
-        theta_N_lambda = np.linalg.inv(G_N_lambda) @ np.transpose(phi) @ y
-        return theta_N_lambda
+        G_N_lambda = 1/sigma * np.transpose(phi) @ phi + lambda_ * np.identity(phi.shape[-1])
+        theta_N_lambda = np.linalg.inv(G_N_lambda) @ np.transpose(phi) @ y / sigma
+        return theta_N_lambda, G_N_lambda
+
+    def polytope(self, data, delta, param_bound, lambda_=1e-5):
+        theta_N_lambda, G_N_lambda = self.estimate(data)
+        d = G_N_lambda.shape[0]
+        beta_n = np.sqrt(2*np.log(np.sqrt(np.linalg.det(G_N_lambda) / lambda_ ** d) / delta)) + \
+                 np.sqrt(lambda_*d) * param_bound
+        values, P = np.linalg.eig(G_N_lambda)
+        M = np.sqrt(beta_n) * np.linalg.inv(P) @ np.diag(np.sqrt(1 / values))
+        h = np.array(list(itertools.product([-1, 1], repeat=d)))
+        d_theta_k = [M @ h_k for h_k in h]
+        return theta_N_lambda, beta_n, d_theta_k
