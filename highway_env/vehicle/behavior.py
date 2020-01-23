@@ -341,7 +341,7 @@ class LinearVehicle(IDMVehicle):
         vt, dv, dp = 0, 0, 0
         if ego_vehicle:
             vt = ego_vehicle.target_velocity - ego_vehicle.velocity
-            d_safe = self.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * self.TIME_WANTED + ego_vehicle.LENGTH
+            d_safe = self.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * self.TIME_WANTED  # + ego_vehicle.LENGTH
             if front_vehicle:
                 d = ego_vehicle.lane_distance_to(front_vehicle)
                 dv = min(front_vehicle.velocity - ego_vehicle.velocity, 0)
