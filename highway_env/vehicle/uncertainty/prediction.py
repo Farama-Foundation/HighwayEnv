@@ -8,10 +8,9 @@ from highway_env.interval import polytope, vector_interval_section, integrator_i
     interval_local_to_absolute
 from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.control import MDPVehicle
-from highway_env.vehicle.uncertainty.estimation import RegressionVehicle
 
 
-class IntervalVehicle(RegressionVehicle):
+class IntervalVehicle(LinearVehicle):
     """
         Estimator for the interval-membership of a LinearVehicle under parameter uncertainty.
 
@@ -44,10 +43,10 @@ class IntervalVehicle(RegressionVehicle):
                          target_velocity,
                          route,
                          enable_lane_change,
-                         timer,
-                         theta_a_i,
-                         theta_b_i,
-                         data)
+                         timer)
+        self.theta_a_i = theta_a_i if theta_a_i is not None else LinearVehicle.ACCELERATION_RANGE
+        self.theta_b_i = theta_b_i if theta_b_i is not None else LinearVehicle.STEERING_RANGE
+        self.data = data
         self.interval = VehicleInterval(self)
         self.trajectory = []
         self.interval_trajectory = []
@@ -213,15 +212,6 @@ class IntervalVehicle(RegressionVehicle):
         # Longitudinal predictor
         if not self.longitudinal_lpv:
             front_interval = self.get_front_interval()
-            # Parameters interval
-            params_i = self.theta_a_i.copy()
-            # TODO: for now, we assume Kx is known
-            params_i[:, 2] = params_i.mean(axis=0)[2]
-            # Structure and features
-            a, phi = self.longitudinal_structure()
-            # Polytope
-            a_theta = lambda params: a + np.tensordot(phi, params, axes=[0, 0])
-            a0, da = polytope(a_theta, params_i)
 
             # LPV specification
             if front_interval:
@@ -236,23 +226,33 @@ class IntervalVehicle(RegressionVehicle):
                       self.target_velocity,
                       self.target_velocity]
             d = [self.target_velocity, self.target_velocity, 0, 0]
+            a0, da = self.longitudinal_matrix_polytope()
             self.longitudinal_lpv = LPV(x0, a0, da, d, center)
 
             # Lateral predictor
             if not self.lateral_lpv:
-                # Parameters interval
-                params_i = self.theta_b_i.copy()
-
-                # Matrix polytope
-                a, phi = self.lateral_structure()
-                a_theta = lambda params: a + np.tensordot(phi, params, axes=[0, 0])
-                a0, da = polytope(a_theta, params_i)
-
                 # LPV specification
                 x0 = [lat_i[0], psi_i[0]]
                 center = [0, 0]
                 d = [0, 0]
+                a0, da = self.lateral_matrix_polytope()
                 self.lateral_lpv = LPV(x0, a0, da, d, center)
+
+    def longitudinal_matrix_polytope(self):
+        # Parameters interval
+        theta_a_i = self.theta_a_i.copy()
+        # TODO: for now, we assume Kx is known
+        theta_a_i[:, 2] = theta_a_i.mean(axis=0)[2]
+        return IntervalVehicle.parameter_box_to_polytope(theta_a_i, self.longitudinal_structure)
+
+    def lateral_matrix_polytope(self):
+        return IntervalVehicle.parameter_box_to_polytope(self.theta_b_i, self.lateral_structure)
+
+    @staticmethod
+    def parameter_box_to_polytope(parameter_box, structure):
+        a, phi = structure()
+        a_theta = lambda params: a + np.tensordot(phi, params, axes=[0, 0])
+        return polytope(a_theta, parameter_box)
 
     def get_front_interval(self):
         # TODO: For now, we assume the front vehicle follows the models' front vehicle
