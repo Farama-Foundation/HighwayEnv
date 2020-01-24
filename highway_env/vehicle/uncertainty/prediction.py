@@ -104,7 +104,7 @@ class IntervalVehicle(RegressionVehicle):
             diff_i = intervals_diff(front_interval.position, position_i)
             d_i = vector_interval_section(diff_i, lane_direction)
 
-            d_safe_i = self.DISTANCE_WANTED + self.LENGTH + self.TIME_WANTED * v_i
+            d_safe_i = self.DISTANCE_WANTED + self.TIME_WANTED * v_i
             phi_a_i[:, 2] = interval_negative_part(intervals_diff(d_i, d_safe_i))
 
         # Steering features

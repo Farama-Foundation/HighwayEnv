@@ -142,7 +142,7 @@ class IntersectionEnv(AbstractEnv):
         """
         # Configure vehicles
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
-        vehicle_type.DISTANCE_WANTED = 2  # Low jam distance
+        vehicle_type.DISTANCE_WANTED = 7  # Low jam distance
         vehicle_type.COMFORT_ACC_MAX = 6
         vehicle_type.COMFORT_ACC_MIN = -3
 
