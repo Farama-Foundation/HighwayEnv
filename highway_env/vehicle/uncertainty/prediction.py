@@ -182,6 +182,13 @@ class IntervalVehicle(LinearVehicle):
             self.lateral_lpv.x_i_t = self.lateral_lpv.change_coordinates(x_i_local_unrotated,
                                                                          back=False,
                                                                          interval=True)
+            x_i_local_unrotated = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.x_i_t,
+                                                                         back=True,
+                                                                         interval=True)
+            x_i_local_unrotated[:, 0] = longi_i
+            self.longitudinal_lpv.x_i_t = self.longitudinal_lpv.change_coordinates(x_i_local_unrotated,
+                                                                         back=False,
+                                                                         interval=True)
             self.previous_target_lane_index = self.target_lane_index
 
         # Step
