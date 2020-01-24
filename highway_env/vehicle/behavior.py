@@ -20,7 +20,7 @@ class IDMVehicle(ControlledVehicle):
     ACC_MAX = 6.0  # [m/s2]
     COMFORT_ACC_MAX = 3.0  # [m/s2]
     COMFORT_ACC_MIN = -5.0  # [m/s2]
-    DISTANCE_WANTED = 5.0  # [m]
+    DISTANCE_WANTED = 5.0 + ControlledVehicle.LENGTH  # [m]
     TIME_WANTED = 1.5  # [s]
     DELTA = 4.0  # []
 
@@ -139,7 +139,7 @@ class IDMVehicle(ControlledVehicle):
         :param front_vehicle: its leading vehicle
         :return: the desired distance between the two [m]
         """
-        d0 = self.DISTANCE_WANTED + ego_vehicle.LENGTH / 2 + front_vehicle.LENGTH / 2
+        d0 = self.DISTANCE_WANTED
         tau = self.TIME_WANTED
         ab = -self.COMFORT_ACC_MAX * self.COMFORT_ACC_MIN
         dv = ego_vehicle.velocity - front_vehicle.velocity
@@ -352,7 +352,7 @@ class LinearVehicle(IDMVehicle):
         vt, dv, dp = 0, 0, 0
         if ego_vehicle:
             vt = ego_vehicle.target_velocity - ego_vehicle.velocity
-            d_safe = self.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * self.TIME_WANTED  # + ego_vehicle.LENGTH
+            d_safe = self.DISTANCE_WANTED + np.max(ego_vehicle.velocity, 0) * self.TIME_WANTED
             if front_vehicle:
                 d = ego_vehicle.lane_distance_to(front_vehicle)
                 dv = min(front_vehicle.velocity - ego_vehicle.velocity, 0)
@@ -420,7 +420,7 @@ class LinearVehicle(IDMVehicle):
         # Disable front position control
         if front_vehicle:
             d = self.lane_distance_to(front_vehicle)
-            if d != self.DISTANCE_WANTED + self.LENGTH + self.TIME_WANTED * self.velocity:
+            if d != self.DISTANCE_WANTED + self.TIME_WANTED * self.velocity:
                 phi2 *= 0
         else:
             phi2 *= 0
