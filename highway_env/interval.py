@@ -132,11 +132,24 @@ def is_metzler(matrix):
 
 
 class LPV(object):
-    def __init__(self, x0, a0, da, d=None, center=None, x_i=None):
+    def __init__(self, x0, a0, da, b=None, d_i=None, c=None, center=None, x_i=None):
+        """
+            dx = (a0 + sum(da))(x - center) + bd + c
+        :param x0: initial state
+        :param a0: nominal dynamics
+        :param da: list of dynamics deviations
+        :param b: perturbation matrix
+        :param d_i: perturbation bounds
+        :param c: constant known perturbation
+        :param center: asymptotic state
+        :param x_i: initial state interval
+        """
         self.x0 = np.array(x0, dtype=float)
         self.a0 = np.array(a0, dtype=float)
         self.da = [np.array(da_i) for da_i in da]
-        self.d = np.array(d) if d is not None else np.zeros(self.x0.shape)
+        self.b = np.array(b) if b is not None else np.zeros((*self.x0.shape, 1))
+        self.d_i = np.array(d_i) if d_i is not None else np.zeros((2, 1))
+        self.c = np.array(c) if c is not None else np.zeros(self.x0.shape)
         self.center = np.array(center) if center is not None else np.zeros(self.x0.shape)
         self.coordinates = None
 
@@ -166,8 +179,9 @@ class LPV(object):
         # Forward coordinates change of states and models
         self.a0 = self.change_coordinates(self.a0, matrix=True)
         self.da = self.change_coordinates(self.da, matrix=True)
-        self.d = self.change_coordinates(self.d, offset=False)
-        self.x_i_t = self.change_coordinates(self.x_i)
+        # self.b = self.change_coordinates(self.b, offset=False)
+        self.c = self.change_coordinates(self.c, offset=False)
+        self.x_i_t = np.array(self.change_coordinates([x for x in self.x_i]))
 
     def change_coordinates(self, value, matrix=False, back=False, interval=False, offset=True):
         """
@@ -200,11 +214,7 @@ class LPV(object):
                 return transformation_inv @ value @ transformation
         elif isinstance(value, list):  # List
             return [self.change_coordinates(v, back) for v in value]
-        elif len(value.shape) == 2:
-                for t in range(value.shape[0]):  # Array of vectors
-                    value[t, :] = self.change_coordinates(value[t, :], back=back)
-                return value
-        elif len(value.shape) == 1:  # Vector
+        else:
             if back:
                 return transformation @ value + offset * self.center
             else:
@@ -214,19 +224,20 @@ class LPV(object):
         self.x_i_t = self.step_interval_predictor(self.x_i_t, dt)
 
     def step_interval_observer(self, x_i, dt):
-        a0, da, d = self.a0, self.da, self.d
+        a0, da, b, d_i, c = self.a0, self.da, self.b, self.d_i, self.c
         a_i = a0 + sum(intervals_product([0, 1], [da_i, da_i]) for da_i in da)
-        dx_i = intervals_product(a_i, x_i) + d
+        dx_i = intervals_product(a_i, x_i) + intervals_product([b, b], d_i) + c
         return x_i + dx_i*dt
 
     def step_interval_predictor(self, x_i, dt):
-        a0, da, d = self.a0, self.da, self.d
+        a0, da, b, d_i, c = self.a0, self.da, self.b, self.d_i, self.c
         p = lambda x: np.maximum(x, 0)
         n = lambda x: np.maximum(-x, 0)
         da_p = sum(p(da_i) for da_i in da)
         da_n = sum(n(da_i) for da_i in da)
         x_m, x_M = x_i[0, :, np.newaxis], x_i[1, :, np.newaxis]
-        dx_m = a0 @ x_m - da_p @ n(x_m) - da_n @ p(x_M) + d[:, np.newaxis]
-        dx_M = a0 @ x_M + da_p @ p(x_M) + da_n @ n(x_m) + d[:, np.newaxis]
+        d_m, d_M = d_i[0, :, np.newaxis], d_i[1, :, np.newaxis]
+        dx_m = a0 @ x_m - da_p @ n(x_m) - da_n @ p(x_M) + p(b) @ d_m - n(b) @ d_M + c[:, np.newaxis]
+        dx_M = a0 @ x_M + da_p @ p(x_M) + da_n @ n(x_m) + p(b) @ d_M - n(b) @ d_m + c[:, np.newaxis]
         dx_i = np.array([dx_m.squeeze(axis=-1), dx_M.squeeze(axis=-1)])
         return x_i + dx_i * dt
