@@ -232,18 +232,22 @@ class IntervalVehicle(LinearVehicle):
                       0,
                       self.target_velocity,
                       self.target_velocity]
-            d = [self.target_velocity, self.target_velocity, 0, 0]
+            b = None
+            d_i = None
+            c = [self.target_velocity, self.target_velocity, 0, 0]
             a0, da = self.longitudinal_matrix_polytope()
-            self.longitudinal_lpv = LPV(x0, a0, da, d, center)
+            self.longitudinal_lpv = LPV(x0, a0, da, b, d_i, c, center)
 
             # Lateral predictor
             if not self.lateral_lpv:
                 # LPV specification
                 x0 = [lat_i[0], psi_i[0]]
                 center = [0, 0]
-                d = [0, 0]
+                b = np.identity(2)
+                d_i = [[-2, 0], [2, 0]]
+                c = [0, 0]
                 a0, da = self.lateral_matrix_polytope()
-                self.lateral_lpv = LPV(x0, a0, da, d, center)
+                self.lateral_lpv = LPV(x0, a0, da, b, d_i, c, center)
 
     def longitudinal_matrix_polytope(self):
         # Parameters interval
