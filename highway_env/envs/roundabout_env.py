@@ -54,7 +54,7 @@ class RoundaboutEnv(AbstractEnv):
         # Circle lanes: (s)outh/(e)ast/(n)orth/(w)est (e)ntry/e(x)it.
         center = [0, 0]  # [m]
         radius = 30  # [m]
-        alpha = 20  # [deg]
+        alpha = 27.5  # [deg]
 
         net = RoadNetwork()
         radii = [radius, radius+4]
@@ -72,9 +72,9 @@ class RoundaboutEnv(AbstractEnv):
 
         # Access lanes: (r)oad/(s)ine
         access = 200  # [m]
-        dev = 120  # [m]
-        a = 5  # [m]
-        delta_st = 0.20*dev  # [m]
+        dev = 115  # [m]
+        a = 10  # [m]
+        delta_st = 0.2*dev  # [m]
 
         delta_en = dev-delta_st
         w = 2*np.pi/dev
