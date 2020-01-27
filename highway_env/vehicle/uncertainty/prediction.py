@@ -179,16 +179,16 @@ class IntervalVehicle(LinearVehicle):
             longi_i, lat_i = interval_absolute_to_local(position_i, target_lane)
             psi_i = self.interval.heading - self.lane.heading_at(longi_i.mean())
             x_i_local_unrotated = np.transpose([lat_i, psi_i])
-            self.lateral_lpv.x_i_t = self.lateral_lpv.change_coordinates(x_i_local_unrotated,
-                                                                         back=False,
-                                                                         interval=True)
+            new_x_i_t = self.lateral_lpv.change_coordinates(x_i_local_unrotated, back=False, interval=True)
+            self.lateral_lpv.x_i_t += new_x_i_t.mean(axis=0) - self.lateral_lpv.x_i_t.mean(axis=0)
             x_i_local_unrotated = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.x_i_t,
                                                                          back=True,
                                                                          interval=True)
             x_i_local_unrotated[:, 0] = longi_i
-            self.longitudinal_lpv.x_i_t = self.longitudinal_lpv.change_coordinates(x_i_local_unrotated,
-                                                                         back=False,
-                                                                         interval=True)
+            new_x_i_t = self.longitudinal_lpv.change_coordinates(x_i_local_unrotated,
+                                                                 back=False,
+                                                                 interval=True)
+            self.longitudinal_lpv.x_i_t += new_x_i_t.mean(axis=0) - self.longitudinal_lpv.x_i_t.mean(axis=0)
             self.previous_target_lane_index = self.target_lane_index
 
         # Step
@@ -243,8 +243,9 @@ class IntervalVehicle(LinearVehicle):
                 # LPV specification
                 x0 = [lat_i[0], psi_i[0]]
                 center = [0, 0]
+                noise = 0.01
                 b = np.identity(2)
-                d_i = [[-2, 0], [2, 0]]
+                d_i = np.array([[-1, 0], [1, 0]]) * noise
                 c = [0, 0]
                 a0, da = self.lateral_matrix_polytope()
                 self.lateral_lpv = LPV(x0, a0, da, b, d_i, c, center)
@@ -252,8 +253,8 @@ class IntervalVehicle(LinearVehicle):
     def longitudinal_matrix_polytope(self):
         # Parameters interval
         theta_a_i = self.theta_a_i.copy()
-        # TODO: for now, we assume Kx is known
-        theta_a_i[:, 2] = theta_a_i.mean(axis=0)[2]
+        # # TODO: for now, we assume Kx is known
+        # theta_a_i[:, 2] = theta_a_i.mean(axis=0)[2]
         return IntervalVehicle.parameter_box_to_polytope(theta_a_i, self.longitudinal_structure)
 
     def lateral_matrix_polytope(self):
