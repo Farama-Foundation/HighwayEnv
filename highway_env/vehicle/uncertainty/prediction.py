@@ -243,7 +243,7 @@ class IntervalVehicle(LinearVehicle):
                 # LPV specification
                 x0 = [lat_i[0], psi_i[0]]
                 center = [0, 0]
-                noise = 0.01
+                noise = 1
                 b = np.identity(2)
                 d_i = np.array([[-1, 0], [1, 0]]) * noise
                 c = [0, 0]
