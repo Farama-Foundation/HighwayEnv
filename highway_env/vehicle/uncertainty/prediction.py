@@ -138,6 +138,7 @@ class IntervalVehicle(LinearVehicle):
             dv_i = intervals_product(self.theta_a_i[:, 0], self.target_velocity - np.flip(v_i, 0))
         dv_i += a_i
         dv_i = np.clip(dv_i, -self.ACC_MAX, self.ACC_MAX)
+        keep_stability = True
         if keep_stability:
             delta_psi = list(map(utils.wrap_to_pi, psi_i - lane_psi))
             d_psi_i = integrator_interval(delta_psi, self.theta_b_i[:, 0])
@@ -160,7 +161,7 @@ class IntervalVehicle(LinearVehicle):
         self.interval.position[:, 1] += dy_i * dt
 
         # Add noise
-        noise = 0
+        noise = 1
         self.interval.position[:, 0] += noise * dt * np.array([-1, 1])
         self.interval.position[:, 1] += noise * dt * np.array([-1, 1])
 
