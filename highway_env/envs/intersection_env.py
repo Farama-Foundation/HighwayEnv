@@ -42,6 +42,8 @@ class IntersectionEnv(AbstractEnv):
             },
             "duration": 13,  # [s]
             "destination": "o1",
+            "initial_vehicle_count": 10,
+            "spawn_probability": 0.6,
             "screen_width": 600,
             "screen_height": 600,
             "centering_position": [0.5, 0.6],
@@ -69,7 +71,7 @@ class IntersectionEnv(AbstractEnv):
 
     def reset(self):
         self._make_road()
-        self._make_vehicles()
+        self._make_vehicles(self.config["initial_vehicle_count"])
         self.steps = 0
         return super(IntersectionEnv, self).reset()
 
@@ -77,7 +79,7 @@ class IntersectionEnv(AbstractEnv):
         results = super(IntersectionEnv, self).step(action)
         self.steps += 1
         self._clear_vehicles()
-        self._spawn_vehicle()
+        self._spawn_vehicle(spawn_probability=self.config["spawn_probability"])
         return results
 
     def _make_road(self):
