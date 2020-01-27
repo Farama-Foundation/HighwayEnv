@@ -15,7 +15,7 @@ class ControlledVehicle(Vehicle):
     """
 
     TAU_A = 0.6  # [s]
-    TAU_DS = 0.1  # [s]
+    TAU_DS = 0.14  # [s]
     PURSUIT_TAU = 1.5*TAU_DS  # [s]
     KP_A = 1 / TAU_A
     KP_HEADING = 1 / TAU_DS
