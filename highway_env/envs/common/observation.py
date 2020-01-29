@@ -104,6 +104,7 @@ class KinematicObservation(ObservationType):
                  features_range=None,
                  absolute=False,
                  order="sorted",
+                 normalize=True,
                  observe_intentions=False,
                  **kwargs):
         """
@@ -112,6 +113,7 @@ class KinematicObservation(ObservationType):
         :param vehicles_count: Number of observed vehicles
         :param absolute: Use absolute coordinates
         :param order: Order of observed vehicles. Values: sorted, shuffled
+        :param normalize: Should the observation be normalized
         :param observe_intentions: Observe the destinations of other vehicles
         """
         self.env = env
@@ -120,12 +122,13 @@ class KinematicObservation(ObservationType):
         self.features_range = features_range
         self.absolute = absolute
         self.order = order
+        self.normalize = normalize
         self.observe_intentions = observe_intentions
 
     def space(self):
         return spaces.Box(shape=(self.vehicles_count, len(self.features)), low=-1, high=1, dtype=np.float32)
 
-    def normalize(self, df):
+    def normalize_obs(self, df):
         """
             Normalize the observation values.
 
@@ -162,7 +165,8 @@ class KinematicObservation(ObservationType):
                  for v in close_vehicles[-self.vehicles_count + 1:]])[self.features],
                            ignore_index=True)
         # Normalize
-        df = self.normalize(df)
+        if self.normalize:
+            df = self.normalize_obs(df)
         # Fill missing rows
         if df.shape[0] < self.vehicles_count:
             rows = np.zeros((self.vehicles_count - df.shape[0], len(self.features)))

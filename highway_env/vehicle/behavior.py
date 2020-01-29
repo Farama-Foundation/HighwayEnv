@@ -297,16 +297,7 @@ class LinearVehicle(IDMVehicle):
                                             route,
                                             enable_lane_change,
                                             timer)
-        self.data = {
-            "longitudinal": {
-                "outputs": [],
-                "features": []
-            },
-            "lateral": {
-                "outputs": [],
-                "features": []
-            }
-        }
+        self.data = {}
 
     def act(self):
         self.collect_data()
@@ -437,15 +428,23 @@ class LinearVehicle(IDMVehicle):
         """
             Store features and outputs for parameter regression
         """
+        self.add_features(self.data, self.target_lane_index)
+
+    def add_features(self, data, lane_index):
         front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
         features = self.acceleration_features(self, front_vehicle, rear_vehicle)
         output = np.dot(self.ACCELERATION_PARAMETERS, features)
-        self.data["longitudinal"]["features"].append(features)
-        self.data["longitudinal"]["outputs"].append(output)
-        features = self.steering_features(self.target_lane_index)
+        if "longitudinal" not in data:
+            data["longitudinal"] = {"features": [], "outputs": []}
+        data["longitudinal"]["features"].append(features)
+        data["longitudinal"]["outputs"].append(output)
+
+        features = self.steering_features(lane_index)
         output = np.dot(self.STEERING_PARAMETERS, features)
-        self.data["lateral"]["features"].append(features)
-        self.data["lateral"]["outputs"].append(output)
+        if "lateral" not in data:
+            data["lateral"] = {"features": [], "outputs": []}
+        data["lateral"]["features"].append(features)
+        data["lateral"]["outputs"].append(output)
 
 
 class AggressiveVehicle(LinearVehicle):
