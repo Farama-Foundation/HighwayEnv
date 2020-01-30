@@ -177,11 +177,14 @@ class IntervalVehicle(LinearVehicle):
         if self.target_lane_index != self.previous_target_lane_index:
             position_i = self.interval.position
             target_lane = self.road.network.get_lane(self.target_lane_index)
+            previous_target_lane = self.road.network.get_lane(self.previous_target_lane_index)
             longi_i, lat_i = interval_absolute_to_local(position_i, target_lane)
-            psi_i = self.interval.heading - self.lane.heading_at(longi_i.mean())
+            psi_i = self.interval.heading + \
+                    target_lane.heading_at(longi_i.mean()) - previous_target_lane.heading_at(longi_i.mean())
             x_i_local_unrotated = np.transpose([lat_i, psi_i])
             new_x_i_t = self.lateral_lpv.change_coordinates(x_i_local_unrotated, back=False, interval=True)
-            self.lateral_lpv.x_i_t += new_x_i_t.mean(axis=0) - self.lateral_lpv.x_i_t.mean(axis=0)
+            delta = new_x_i_t.mean(axis=0) - self.lateral_lpv.x_i_t.mean(axis=0)
+            self.lateral_lpv.x_i_t += delta
             x_i_local_unrotated = self.longitudinal_lpv.change_coordinates(self.longitudinal_lpv.x_i_t,
                                                                          back=True,
                                                                          interval=True)
@@ -233,8 +236,9 @@ class IntervalVehicle(LinearVehicle):
                       0,
                       self.target_velocity,
                       self.target_velocity]
-            b = None
-            d_i = None
+            noise = 1
+            b = np.array([1, 0, 0, 0])[:, np.newaxis]
+            d_i = np.array([[-1], [1]]) * noise
             c = [self.target_velocity, self.target_velocity, 0, 0]
             a0, da = self.longitudinal_matrix_polytope()
             self.longitudinal_lpv = LPV(x0, a0, da, b, d_i, c, center)
@@ -244,7 +248,7 @@ class IntervalVehicle(LinearVehicle):
                 # LPV specification
                 x0 = [lat_i[0], psi_i[0]]
                 center = [0, 0]
-                noise = 1
+                noise = 0.5
                 b = np.identity(2)
                 d_i = np.array([[-1, 0], [1, 0]]) * noise
                 c = [0, 0]
