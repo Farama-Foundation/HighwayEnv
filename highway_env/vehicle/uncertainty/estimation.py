@@ -3,12 +3,7 @@ import itertools
 
 import numpy as np
 
-from highway_env import utils
-from highway_env.interval import polytope, vector_interval_section, integrator_interval, \
-    interval_negative_part, intervals_diff, intervals_product, LPV, interval_absolute_to_local, \
-    interval_local_to_absolute
 from highway_env.vehicle.behavior import LinearVehicle
-from highway_env.vehicle.control import MDPVehicle
 from highway_env.vehicle.uncertainty.prediction import IntervalVehicle
 
 
@@ -35,10 +30,12 @@ class RegressionVehicle(IntervalVehicle):
         return theta_N_lambda, d_theta, beta_n, M
 
     def longitudinal_matrix_polytope(self):
-        return self.polytope_from_estimation(self.data["longitudinal"], self.theta_a_i, self.longitudinal_structure)
+        data = self.get_data()
+        return self.polytope_from_estimation(data["longitudinal"], self.theta_a_i, self.longitudinal_structure)
 
     def lateral_matrix_polytope(self):
-        return self.polytope_from_estimation(self.data["lateral"], self.theta_b_i, self.lateral_structure)
+        data = self.get_data()
+        return self.polytope_from_estimation(data["lateral"], self.theta_b_i, self.lateral_structure)
 
     def polytope_from_estimation(self, data, parameter_box, structure):
         if not data:
@@ -57,8 +54,7 @@ class RegressionVehicle(IntervalVehicle):
         return a0, da
 
 
-class MultipleModelVehicle(RegressionVehicle):
-
+class MultipleModelVehicle(LinearVehicle):
         def __init__(self,
                  road,
                  position,
@@ -69,19 +65,33 @@ class MultipleModelVehicle(RegressionVehicle):
                  route=None,
                  enable_lane_change=True,
                  timer=None,
-                 theta_a_i=None,
-                 theta_b_i=None,
                  data=None):
             super().__init__(road, position, heading, velocity, target_lane_index, target_velocity, route,
-                             enable_lane_change, timer, theta_a_i, theta_b_i, data)
-            self.possible_routes_data = {}
+                             enable_lane_change, timer, data)
+            if not self.data:
+                self.data = []
+
+        def act(self):
+            self.update_possible_routes()
+            super().act()
+
+        def get_data(self):
+            for route, data in self.data:
+                if route[0] == self.target_lane_index:
+                    return data
 
         def collect_data(self):
-            self.update_possible_routes()
-            for route, data in self.possible_routes_data:
-                self.add_features(data, )
-
-
+            for route, data in self.data:
+                self.add_features(data, route[0])
 
         def update_possible_routes(self):
-            pass
+            if len(self.data) <= 1:
+                self.data = [(route, {}) for route in self.get_routes_at_intersection()]
+                print(self.data)
+
+            # Step current routes
+            for route, _ in self.data:
+                if self.road.network.get_lane(route[0]).after_end(self.position):
+                    route.pop(0)
+                    print(self.data)
+
