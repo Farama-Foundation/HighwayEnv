@@ -183,6 +183,9 @@ class LPV(object):
         self.c = self.change_coordinates(self.c, offset=False)
         self.x_i_t = np.array(self.change_coordinates([x for x in self.x_i]))
 
+    def set_control(self, control):
+        self.c = self.change_coordinates(control, offset=False)
+
     def change_coordinates(self, value, matrix=False, back=False, interval=False, offset=True):
         """
             Perform a change of coordinate: rotation and centering.
