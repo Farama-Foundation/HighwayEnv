@@ -128,7 +128,7 @@ def polytope(parametrized_f, params_intervals):
 
 
 def is_metzler(matrix):
-    return (matrix - np.diagonal(matrix) >= 0).all()
+    return (matrix - np.diag(np.diag(matrix)) >= 0).all()
 
 
 class LPV(object):
