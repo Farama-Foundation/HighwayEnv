@@ -14,7 +14,7 @@ class EnvViewer(object):
     """
         A viewer to render a highway driving environment.
     """
-    SAVE_IMAGES = False
+    SAVE_IMAGES = True
 
     def __init__(self, env, offscreen=False):
         self.env = env
@@ -42,6 +42,7 @@ class EnvViewer(object):
         self.agent_surface = None
         self.vehicle_trajectory = None
         self.frame = 0
+        self.directory = None
 
     def set_agent_display(self, agent_display):
         """
@@ -117,8 +118,8 @@ class EnvViewer(object):
             self.clock.tick(self.env.SIMULATION_FREQUENCY)
             pygame.display.flip()
 
-        if self.SAVE_IMAGES:
-            pygame.image.save(self.screen, "highway-env_{}.png".format(self.frame))
+        if self.SAVE_IMAGES and self.directory:
+            pygame.image.save(self.sim_surface, str(self.directory / "highway-env_{}.png".format(self.frame)))
             self.frame += 1
 
     def get_image(self):
