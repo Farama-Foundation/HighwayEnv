@@ -14,7 +14,7 @@ class EnvViewer(object):
     """
         A viewer to render a highway driving environment.
     """
-    SAVE_IMAGES = True
+    SAVE_IMAGES = False
 
     def __init__(self, env, offscreen=False):
         self.env = env

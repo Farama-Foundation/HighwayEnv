@@ -347,6 +347,14 @@ class AbstractEnv(gym.Env):
                 setattr(v, field, value)
         return env_copy
 
+    def call_vehicle_method(self, args):
+        method, args = args
+        env_copy = copy.deepcopy(self)
+        for i, v in enumerate(env_copy.road.vehicles):
+            if hasattr(v, method):
+                env_copy.road.vehicles[i] = getattr(v, method)(*args)
+        return env_copy
+
     def randomize_behaviour(self):
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
