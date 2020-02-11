@@ -11,15 +11,17 @@ class RegressionVehicle(IntervalVehicle):
     """
         Estimator for the parameter of a LinearVehicle.
     """
-    def estimate(self, data, lambda_=1e-5, sigma=0.05):
+    @staticmethod
+    def estimate(data, lambda_=1e-5, sigma=0.05):
         phi = np.array(data["features"])
         y = np.array(data["outputs"])
         G_N_lambda = 1/sigma * np.transpose(phi) @ phi + lambda_ * np.identity(phi.shape[-1])
         theta_N_lambda = np.linalg.inv(G_N_lambda) @ np.transpose(phi) @ y / sigma
         return theta_N_lambda, G_N_lambda
 
-    def parameter_polytope(self, data, delta, param_bound, lambda_=1e-5):
-        theta_N_lambda, G_N_lambda = self.estimate(data)
+    @staticmethod
+    def parameter_polytope(data, delta, param_bound, lambda_=1e-5):
+        theta_N_lambda, G_N_lambda = RegressionVehicle.estimate(data)
         d = G_N_lambda.shape[0]
         beta_n = np.sqrt(2*np.log(np.sqrt(np.linalg.det(G_N_lambda) / lambda_ ** d) / delta)) + \
                  np.sqrt(lambda_*d) * param_bound
@@ -28,6 +30,19 @@ class RegressionVehicle(IntervalVehicle):
         h = np.array(list(itertools.product([-1, 1], repeat=d)))
         d_theta = [M @ h_k for h_k in h]
         return theta_N_lambda, d_theta, beta_n, M
+
+    @staticmethod
+    def is_valid_observation(y, phi, theta):
+        error = y - np.tensordot(theta, phi, axes=[0, 0])
+        print(theta, np.linalg.norm(error))
+
+    @staticmethod
+    def is_consistent_dataset(data):
+        train_set = copy.deepcopy(data)
+        y, phi = train_set["outputs"].pop(-1), train_set["features"].pop(-1)
+        if train_set["outputs"] and train_set["features"]:
+            theta, _ = RegressionVehicle.estimate(train_set)
+            RegressionVehicle.is_valid_observation(y, phi, theta)
 
     def longitudinal_matrix_polytope(self):
         data = self.get_data()
@@ -82,16 +97,40 @@ class MultipleModelVehicle(LinearVehicle):
 
         def collect_data(self):
             for route, data in self.data:
-                self.add_features(data, route[0])
+                self.add_features(data, route[0], output_lane=self.target_lane_index)
+                # print(route[0], "vs", self.target_lane_index, "phi", data["lateral"]["features"][-1], "out", data["lateral"]["outputs"][-1])
 
         def update_possible_routes(self):
-            if len(self.data) <= 1:
-                self.data = [(route, {}) for route in self.get_routes_at_intersection()]
-                print(self.data)
+            for route in self.get_routes_at_intersection():
+                for i in range(len(route)):
+                    route[i] = route[i] if route[i][2] is not None else (route[i][0], route[i][1], 0)
+                for known_route, _ in self.data:
+                    if known_route == route:
+                        break
+                    elif len(known_route) < len(route) and route[:len(known_route)] == known_route:
+                        self.data = [(r, d) if r != known_route else (route, d) for r, d in self.data]
+                        break
+                else:
+                    self.data.append((route.copy(), {}))
 
-            # Step current routes
+            # Step the lane in each possible route
             for route, _ in self.data:
                 if self.road.network.get_lane(route[0]).after_end(self.position):
                     route.pop(0)
-                    print(self.data)
 
+            # Reject hypotheses
+            for route, data in self.data:
+                if data:
+                    print(route)
+                    RegressionVehicle.is_consistent_dataset(data["lateral"])
+
+        def assume_model_is_valid(self, index):
+            if not self.data:
+                return self.create_from(self)
+            index = min(index, len(self.data)-1)
+            route, data = self.data[index]
+            vehicle = RegressionVehicle.create_from(self)
+            vehicle.target_lane_index = route[0]
+            vehicle.route = route
+            vehicle.data = data
+            return vehicle
