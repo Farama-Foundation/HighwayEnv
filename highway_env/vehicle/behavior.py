@@ -433,7 +433,8 @@ class LinearVehicle(IDMVehicle):
         """
         self.add_features(self.data, self.target_lane_index)
 
-    def add_features(self, data, lane_index):
+    def add_features(self, data, lane_index, output_lane=None):
+
         front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
         features = self.acceleration_features(self, front_vehicle, rear_vehicle)
         output = np.dot(self.ACCELERATION_PARAMETERS, features)
@@ -442,8 +443,11 @@ class LinearVehicle(IDMVehicle):
         data["longitudinal"]["features"].append(features)
         data["longitudinal"]["outputs"].append(output)
 
+        if output_lane is None:
+            output_lane = lane_index
         features = self.steering_features(lane_index)
-        output = np.dot(self.STEERING_PARAMETERS, features)
+        out_features = self.steering_features(output_lane)
+        output = np.dot(self.STEERING_PARAMETERS, out_features)
         if "lateral" not in data:
             data["lateral"] = {"features": [], "outputs": []}
         data["lateral"]["features"].append(features)
