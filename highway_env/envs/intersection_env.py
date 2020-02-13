@@ -46,7 +46,7 @@ class IntersectionEnv(AbstractEnv):
             "spawn_probability": 0.6,
             "screen_width": 600,
             "screen_height": 600,
-            "centering_position": [0.5, 0.7],
+            "centering_position": [0.5, 0.6],
             "scaling": 5.5 * 1.3,
             "collision_reward": IntersectionEnv.COLLISION_REWARD,
             "normalize_reward": False
