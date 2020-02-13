@@ -12,7 +12,7 @@ class RegressionVehicle(IntervalVehicle):
         Estimator for the parameter of a LinearVehicle.
     """
     @staticmethod
-    def estimate(data, lambda_=1e-5, sigma=0.05):
+    def estimate(data, lambda_=1e-5, sigma=1.0):
         phi = np.array(data["features"])
         y = np.array(data["outputs"])
         g_n_lambda = 1/sigma * np.transpose(phi) @ phi + lambda_ * np.identity(phi.shape[-1])
@@ -39,11 +39,11 @@ class RegressionVehicle(IntervalVehicle):
         return theta_n_lambda, d_theta, beta_n, M
 
     @staticmethod
-    def is_valid_observation(y, phi, theta, beta):
+    def is_valid_observation(y, phi, theta, beta, noise_sigma=1.0):
         y_hat = np.tensordot(theta, phi, axes=[0, 0])
         error = np.linalg.norm(y - y_hat)
         eig_values, _ = np.linalg.eig(phi.transpose() @ phi)
-        error_bound = np.sqrt(np.amax(eig_values)) * beta
+        error_bound = np.sqrt(np.amax(eig_values)) * beta + noise_sigma
         return error < error_bound
 
     @staticmethod
@@ -52,7 +52,7 @@ class RegressionVehicle(IntervalVehicle):
         y, phi = train_set["outputs"].pop(-1), train_set["features"].pop(-1)
         y, phi = np.array(y)[..., np.newaxis], np.array(phi)[..., np.newaxis]
         if train_set["outputs"] and train_set["features"]:
-            theta, _, beta, _ = RegressionVehicle.parameter_polytope(train_set, delta=0.1,
+            theta, _, beta, _ = RegressionVehicle.parameter_polytope(train_set, delta=0.01,
                                                                      parameter_box=parameter_box, lambda_=1e-5)
             return RegressionVehicle.is_valid_observation(y, phi, theta, beta)
         else:
@@ -96,7 +96,8 @@ class MultipleModelVehicle(LinearVehicle):
                 self.data = []
 
         def act(self):
-            self.update_possible_routes()
+            if self.collecting_data:
+                self.update_possible_routes()
             super().act()
 
         def get_data(self):
