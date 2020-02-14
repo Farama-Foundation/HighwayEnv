@@ -463,9 +463,6 @@ class LinearVehicle(IDMVehicle):
         data["lateral"]["features"].append(features)
         data["lateral"]["outputs"].append(output)
 
-    def get_data(self):
-        return self.data
-
 
 class AggressiveVehicle(LinearVehicle):
     LANE_CHANGE_MIN_ACC_GAIN = 1.0  # [m/s2]

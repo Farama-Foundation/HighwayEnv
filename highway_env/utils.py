@@ -1,20 +1,34 @@
+import copy
 import importlib
+import itertools
 import numpy as np
 
-EPSILON = 0.01
+
+def do_every(duration, timer):
+    return duration < timer
+
+
+def remap(v, x, y):
+    return y[0] + (v-x[0])*(y[1]-y[0])/(x[1]-x[0])
+
+
+def class_from_path(path):
+    module_name, class_name = path.rsplit(".", 1)
+    class_object = getattr(importlib.import_module(module_name), class_name)
+    return class_object
 
 
 def constrain(x, a, b):
     return np.minimum(np.maximum(x, a), b)
 
 
-def not_zero(x):
-    if abs(x) > EPSILON:
+def not_zero(x, eps=1e-2):
+    if abs(x) > eps:
         return x
     elif x > 0:
-        return EPSILON
+        return eps
     else:
-        return -EPSILON
+        return -eps
 
 
 def wrap_to_pi(x):
@@ -90,15 +104,85 @@ def has_corner_inside(rect1, rect2):
     return any([point_in_rotated_rectangle(c1+np.squeeze(p), c2, l2, w2, a2) for p in rotated_r1_points])
 
 
-def do_every(duration, timer):
-    return duration < timer
+def confidence_ellipsoid(data, lambda_=1e-5, delta=0.1, sigma=0.1, param_bound=1.0):
+    """
+        Compute a confidence ellipsoid over the parameter theta, where
+                                y = theta^T phi
+
+    :param data: a dictionary {"features": [phi_0,...,phi_N], "outputs": [y_0,...,y_N]}
+    :param lambda_: l2 regularization parameter
+    :param delta: confidence level
+    :param sigma: noise covariance
+    :param param_bound: an upper-bound on the parameter norm
+    :return: estimated theta, Gramian matrix G_N_lambda, radius beta_N
+    """
+    phi = np.array(data["features"])
+    y = np.array(data["outputs"])
+    g_n_lambda = 1/sigma * np.transpose(phi) @ phi + lambda_ * np.identity(phi.shape[-1])
+    theta_n_lambda = np.linalg.inv(g_n_lambda) @ np.transpose(phi) @ y / sigma
+    d = theta_n_lambda.shape[0]
+    beta_n = np.sqrt(2*np.log(np.sqrt(np.linalg.det(g_n_lambda) / lambda_ ** d) / delta)) + \
+         np.sqrt(lambda_*d) * param_bound
+    return theta_n_lambda, g_n_lambda, beta_n
 
 
-def remap(v, x, y):
-    return y[0] + (v-x[0])*(y[1]-y[0])/(x[1]-x[0])
+def confidence_polytope(data, parameter_box):
+    """
+    Compute a confidence polytope over the parameter theta, where
+                              y = theta^T phi
+
+    :param data: a dictionary {"features": [phi_0,...,phi_N], "outputs": [y_0,...,y_N]}
+    :param parameter_box: a box [theta_min, theta_max]  containing the parameter theta
+    :return: estimated theta, Gramian matrix G_N_lambda, radius beta_N
+    """
+    param_bound = np.amax(np.abs(parameter_box))
+    theta_n_lambda, g_n_lambda, beta_n = confidence_ellipsoid(data, param_bound=param_bound)
+
+    values, pp = np.linalg.eig(g_n_lambda)
+    radius_matrix = np.sqrt(beta_n) * np.linalg.inv(pp) @ np.diag(np.sqrt(1 / values))
+    h = np.array(list(itertools.product([-1, 1], repeat=theta_n_lambda.shape[0])))
+    d_theta = [radius_matrix @ h_k for h_k in h]
+
+    # Clip the parameter and confidence region within the prior parameter box.
+    theta_n_lambda = np.clip(theta_n_lambda, parameter_box[0], parameter_box[1])
+    for k in range(len(d_theta)):
+        d_theta[k] = np.clip(d_theta[k], parameter_box[0] - theta_n_lambda, parameter_box[1] - theta_n_lambda)
+    return theta_n_lambda, d_theta, g_n_lambda, beta_n
 
 
-def class_from_path(path):
-    module_name, class_name = path.rsplit(".", 1)
-    class_object = getattr(importlib.import_module(module_name), class_name)
-    return class_object
+def is_valid_observation(y, phi, theta, gramian, beta, sigma=0.1):
+    """
+        Check if a new observation (phi, y) is valid according to a confidence ellipsoid on theta.
+
+    :param y: observation
+    :param phi: feature
+    :param theta: estimated parameter
+    :param gramian: Gramian matrix
+    :param beta: ellipsoid radius
+    :param sigma: noise covariance
+    :return: validity of the observation
+    """
+    y_hat = np.tensordot(theta, phi, axes=[0, 0])
+    error = np.linalg.norm(y - y_hat)
+    eig_phi, _ = np.linalg.eig(phi.transpose() @ phi)
+    eig_g, _ = np.linalg.eig(gramian)
+    error_bound = np.sqrt(np.amax(eig_phi) / np.amin(eig_g)) * beta + sigma
+    return error < error_bound
+
+
+def is_consistent_dataset(data, parameter_box=None):
+    """
+        Check whether a dataset {phi_n, y_n} is consistent: the last observation should be in the confidence
+        ellipsoid obtained by the N-1 first observations.
+    :param data: a dictionary {"features": [phi_0,...,phi_N], "outputs": [y_0,...,y_N]}
+    :param parameter_box: a box [theta_min, theta_max]  containing the parameter theta
+    :return: consistency of the dataset
+    """
+    train_set = copy.deepcopy(data)
+    y, phi = train_set["outputs"].pop(-1), train_set["features"].pop(-1)
+    y, phi = np.array(y)[..., np.newaxis], np.array(phi)[..., np.newaxis]
+    if train_set["outputs"] and train_set["features"]:
+        theta, _, gramian, beta = confidence_polytope(train_set, parameter_box=parameter_box)
+        return is_valid_observation(y, phi, theta, gramian, beta)
+    else:
+        return True

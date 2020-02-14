@@ -256,11 +256,7 @@ class IntervalVehicle(LinearVehicle):
                 self.lateral_lpv = LPV(x0, a0, da, b, d_i, c, center)
 
     def longitudinal_matrix_polytope(self):
-        # Parameters interval
-        theta_a_i = self.theta_a_i.copy()
-        # # TODO: for now, we assume Kx is known
-        # theta_a_i[:, 2] = theta_a_i.mean(axis=0)[2]
-        return IntervalVehicle.parameter_box_to_polytope(theta_a_i, self.longitudinal_structure)
+        return IntervalVehicle.parameter_box_to_polytope(self.theta_a_i, self.longitudinal_structure)
 
     def lateral_matrix_polytope(self):
         return IntervalVehicle.parameter_box_to_polytope(self.theta_b_i, self.lateral_structure)
