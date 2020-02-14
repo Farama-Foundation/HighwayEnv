@@ -39,13 +39,25 @@ class MultipleModelVehicle(LinearVehicle):
         super().act()
 
     def collect_data(self):
+        """
+            Collect the features for each possible route, and true observed outputs.
+        """
         for route, data in self.data:
             self.add_features(data, route[0], output_lane=self.target_lane_index)
 
     def update_possible_routes(self):
-        for route in self.get_routes_at_intersection():
+        """
+            Update a list of possible routes that this vehicle could be following.
+            - Add routes at the next intersection
+            - Step the current lane in each route
+            - Reject inconsistent routes
+        """
+
+        for route in self.get_routes_at_intersection():  # Candidates
+            # Unknown lane -> first lane
             for i in range(len(route)):
                 route[i] = route[i] if route[i][2] is not None else (route[i][0], route[i][1], 0)
+            # Is this route already considered, or a suffix of a route already considered ?
             for known_route, _ in self.data:
                 if known_route == route:
                     break
@@ -53,20 +65,25 @@ class MultipleModelVehicle(LinearVehicle):
                     self.data = [(r, d) if r != known_route else (route, d) for r, d in self.data]
                     break
             else:
-                self.data.append((route.copy(), {}))
+                self.data.append((route.copy(), {}))  # Add it
 
-        # Step the lane in each possible route
+        # Step the lane being followed in each possible route
         for route, _ in self.data:
             if self.road.network.get_lane(route[0]).after_end(self.position):
                 route.pop(0)
 
-        # Reject hypotheses
+        # Reject inconsistent hypotheses
         for route, data in self.data.copy():
             if data:
                 if not is_consistent_dataset(data["lateral"], parameter_box=LinearVehicle.STEERING_RANGE):
                     self.data.remove((route, data))
 
     def assume_model_is_valid(self, index):
+        """
+            Get a copy of this vehicle behaving according to one of its possible routes.
+        :param index: index of the route to consider
+        :return: a copy of the vehicle
+        """
         if not self.data:
             return self.create_from(self)
         index = min(index, len(self.data)-1)

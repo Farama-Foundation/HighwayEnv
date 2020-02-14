@@ -16,6 +16,7 @@ def intervals_product(a, b):
         [np.dot(p(a[0]), p(b[0])) - np.dot(p(a[1]), n(b[0])) - np.dot(n(a[0]), p(b[1])) + np.dot(n(a[1]), n(b[1])),
          np.dot(p(a[1]), p(b[1])) - np.dot(p(a[0]), n(b[1])) - np.dot(n(a[1]), p(b[0])) + np.dot(n(a[0]), n(b[0]))])
 
+
 def intervals_scaling(a, b):
     """
         Scale an intervals
@@ -134,7 +135,8 @@ def is_metzler(matrix):
 class LPV(object):
     def __init__(self, x0, a0, da, b=None, d_i=None, c=None, center=None, x_i=None):
         """
-            dx = (a0 + sum(da))(x - center) + bd + c
+        A Linear Parameter-Varying system:
+                    dx = (a0 + sum(da))(x - center) + bd + c
         :param x0: initial state
         :param a0: nominal dynamics
         :param da: list of dynamics deviations
@@ -224,15 +226,32 @@ class LPV(object):
                 return transformation_inv @ (value - offset * self.center)
 
     def step(self, dt):
-        self.x_i_t = self.step_interval_predictor(self.x_i_t, dt)
+        if is_metzler(self.a0):
+            self.x_i_t = self.step_interval_predictor(self.x_i_t, dt)
+        else:
+            self.x_i_t = self.step_naive_predictor(self.x_i_t, dt)
 
-    def step_interval_observer(self, x_i, dt):
+    def step_naive_predictor(self, x_i, dt):
+        """
+            Step an interval predictor with box uncertainty.
+
+        :param x_i: state interval at time t
+        :param dt: time step
+        :return: state interval at time t+dt
+        """
         a0, da, b, d_i, c = self.a0, self.da, self.b, self.d_i, self.c
         a_i = a0 + sum(intervals_product([0, 1], [da_i, da_i]) for da_i in da)
         dx_i = intervals_product(a_i, x_i) + intervals_product([b, b], d_i) + c
         return x_i + dx_i*dt
 
     def step_interval_predictor(self, x_i, dt):
+        """
+            Step an interval predictor with polytopic uncertainty.
+
+        :param x_i: state interval at time t
+        :param dt: time step
+        :return: state interval at time t+dt
+        """
         a0, da, b, d_i, c = self.a0, self.da, self.b, self.d_i, self.c
         p = lambda x: np.maximum(x, 0)
         n = lambda x: np.maximum(-x, 0)
