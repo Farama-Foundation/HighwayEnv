@@ -155,6 +155,7 @@ class LPV(object):
         self.center = np.array(center) if center is not None else np.zeros(self.x0.shape)
         self.coordinates = None
 
+        self.x_t = self.x0
         self.x_i = np.array(x_i) if x_i is not None else np.array([self.x0, self.x0])
         self.x_i_t = None
 
@@ -230,6 +231,8 @@ class LPV(object):
             self.x_i_t = self.step_interval_predictor(self.x_i_t, dt)
         else:
             self.x_i_t = self.step_naive_predictor(self.x_i_t, dt)
+        dx = self.a0 @ self.x_t + self.c
+        self.x_t = self.x_t + dx * dt
 
     def step_naive_predictor(self, x_i, dt):
         """
