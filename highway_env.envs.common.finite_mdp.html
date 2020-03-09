@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>highway_env.envs.common.finite_mdp module &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">highway_env.envs.common.finite_mdp module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>highway_env.envs.common.finite_mdp module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/highway_env.envs.common.finite_mdp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-highway_env.envs.common.finite_mdp">
+<span id="highway-env-envs-common-finite-mdp-module"></span><h1>highway_env.envs.common.finite_mdp module<a class="headerlink" href="#module-highway_env.envs.common.finite_mdp" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="highway_env.envs.common.finite_mdp.finite_mdp">
+<code class="descclassname">highway_env.envs.common.finite_mdp.</code><code class="descname">finite_mdp</code><span class="sig-paren">(</span><em>env</em>, <em>time_quantization=1.0</em>, <em>horizon=10.0</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.finite_mdp.finite_mdp" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Time-To-Collision (TTC) representation of the state.</p>
+<p>The state reward is defined from a occupancy grid over different TTCs and lanes. The grid cells encode the
+probability that the ego-vehicle will collide with another vehicle if it is located on a given lane in a given
+duration, under the hypothesis that every vehicles observed will maintain a constant velocity (including the
+ego-vehicle) and not change lane (excluding the ego-vehicle).</p>
+<p>For instance, in a three-lane road with a vehicle on the left lane with collision predicted in 5s the grid will
+be:
+[0, 0, 0, 0, 1, 0, 0,</p>
+<blockquote>
+<div>0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0]</div></blockquote>
+<p>The TTC-state is a coordinate (lane, time) within this grid.</p>
+<p>If the ego-vehicle has the ability to change its velocity, an additional layer is added to the occupancy grid
+to iterate over the different velocity choices available.</p>
+<p>Finally, this state is flattened for compatibility with the FiniteMDPEnv environment.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<a class="reference internal" href="highway_env.envs.common.abstract.html#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><em>AbstractEnv</em></a>) – an environment</li>
+<li><strong>time_quantization</strong> – the time quantization used in the state representation [s]</li>
+<li><strong>horizon</strong> – the horizon on which the collisions are predicted [s]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="highway_env.envs.common.finite_mdp.compute_ttc_grid">
+<code class="descclassname">highway_env.envs.common.finite_mdp.</code><code class="descname">compute_ttc_grid</code><span class="sig-paren">(</span><em>env</em>, <em>time_quantization</em>, <em>horizon</em>, <em>considered_lanes='all'</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.finite_mdp.compute_ttc_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each ego-velocity and lane, compute the predicted time-to-collision to each vehicle within the lane and
+store the results in an occupancy grid.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="highway_env.envs.common.finite_mdp.transition_model">
+<code class="descclassname">highway_env.envs.common.finite_mdp.</code><code class="descname">transition_model</code><span class="sig-paren">(</span><em>h</em>, <em>i</em>, <em>j</em>, <em>a</em>, <em>grid</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.finite_mdp.transition_model" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Deterministic transition from a position in the grid to the next.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>h</strong> – velocity index</li>
+<li><strong>i</strong> – lane index</li>
+<li><strong>j</strong> – time index</li>
+<li><strong>a</strong> – action index</li>
+<li><strong>grid</strong> – ttc grid specifying the limits of velocities, lanes, time and actions</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="highway_env.envs.common.finite_mdp.clip_position">
+<code class="descclassname">highway_env.envs.common.finite_mdp.</code><code class="descname">clip_position</code><span class="sig-paren">(</span><em>h</em>, <em>i</em>, <em>j</em>, <em>grid</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.finite_mdp.clip_position" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Clip a position in the TTC grid, so that it stays within bounds.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>h</strong> – velocity index</li>
+<li><strong>i</strong> – lane index</li>
+<li><strong>j</strong> – time index</li>
+<li><strong>grid</strong> – the ttc grid</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The raveled index of the clipped position</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

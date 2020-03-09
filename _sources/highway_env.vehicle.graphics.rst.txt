@@ -1,0 +1,7 @@
+highway\_env.vehicle.graphics module
+====================================
+
+.. automodule:: highway_env.vehicle.graphics
+    :members:
+    :undoc-members:
+    :show-inheritance:

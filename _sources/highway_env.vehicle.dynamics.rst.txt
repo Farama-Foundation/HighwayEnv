@@ -1,0 +1,7 @@
+highway\_env.vehicle.dynamics module
+====================================
+
+.. automodule:: highway_env.vehicle.dynamics
+    :members:
+    :undoc-members:
+    :show-inheritance:

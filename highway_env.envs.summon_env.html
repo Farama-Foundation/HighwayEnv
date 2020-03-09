@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>highway_env.envs.summon_env module &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">highway_env.envs.summon_env module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>highway_env.envs.summon_env module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/highway_env.envs.summon_env.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-highway_env.envs.summon_env">
+<span id="highway-env-envs-summon-env-module"></span><h1>highway_env.envs.summon_env module<a class="headerlink" href="#module-highway_env.envs.summon_env" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="highway_env.envs.summon_env.SummonEnv">
+<em class="property">class </em><code class="descclassname">highway_env.envs.summon_env.</code><code class="descname">SummonEnv</code><span class="sig-paren">(</span><em>config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="highway_env.envs.common.abstract.html#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.abstract.AbstractEnv</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">gym.core.GoalEnv</span></code></p>
+<p>A continuous control environment.</p>
+<p>It implements a reach-type task, where the agent observes their position and velocity and must
+control their acceleration and steering so as to reach a given goal.</p>
+<p>Credits to Vinny Ruia for the idea and initial implementation.</p>
+<dl class="attribute">
+<dt id="highway_env.envs.summon_env.SummonEnv.COLLISION_REWARD">
+<code class="descname">COLLISION_REWARD</code><em class="property"> = -5</em><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.COLLISION_REWARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.summon_env.SummonEnv.STEERING_RANGE">
+<code class="descname">STEERING_RANGE</code><em class="property"> = 0.7853981633974483</em><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.STEERING_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.summon_env.SummonEnv.ACCELERATION_RANGE">
+<code class="descname">ACCELERATION_RANGE</code><em class="property"> = 5.0</em><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.ACCELERATION_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.summon_env.SummonEnv.REWARD_WEIGHTS">
+<code class="descname">REWARD_WEIGHTS</code><em class="property"> = array([1.  , 0.3 , 0.  , 0.  , 0.02, 0.02])</em><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.REWARD_WEIGHTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.summon_env.SummonEnv.SUCCESS_GOAL_REWARD">
+<code class="descname">SUCCESS_GOAL_REWARD</code><em class="property"> = 0.12</em><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.SUCCESS_GOAL_REWARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv.define_spaces">
+<code class="descname">define_spaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.define_spaces" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="highway_env.envs.summon_env.SummonEnv.default_config">
+<em class="property">classmethod </em><code class="descname">default_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.default_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default environment configuration.</p>
+<blockquote>
+<div>Can be overloaded in environment implementations, or by calling configure().</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a configuration dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an action and step the environment dynamics.</p>
+<blockquote>
+<div>The action is executed by the ego-vehicle, and all other vehicles on the road performs their default
+behaviour for several simulation timesteps until the next decision making step.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> (<em>int</em>) – the action performed by the ego-vehicle</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a tuple (observation, reward, terminal, info)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the environment to it’s initial configuration
+:return: the observation of the reset state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv._create_road">
+<code class="descname">_create_road</code><span class="sig-paren">(</span><em>spots=15</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv._create_road" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a road composed of straight adjacent lanes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv._create_vehicles">
+<code class="descname">_create_vehicles</code><span class="sig-paren">(</span><em>parked_probability=0.75</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv._create_vehicles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create some new random vehicles of a given type, and add them on the road.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv.compute_reward">
+<code class="descname">compute_reward</code><span class="sig-paren">(</span><em>achieved_goal</em>, <em>desired_goal</em>, <em>info</em>, <em>p=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.compute_reward" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Proximity to the goal is rewarded</p>
+<p>We use a weighted p-norm</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>achieved_goal</strong> – the goal that was achieved</li>
+<li><strong>desired_goal</strong> – the goal that was desired</li>
+<li><strong>info</strong> – any supplementary information</li>
+<li><strong>p</strong> – the Lp^p norm used in the reward. Use p&lt;1 to have high kurtosis for rewards in [0, 1]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the corresponding reward</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv._reward">
+<code class="descname">_reward</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv._reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the reward associated with performing a given action and ending up in the current state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – the last action performed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the reward</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv._is_success">
+<code class="descname">_is_success</code><span class="sig-paren">(</span><em>achieved_goal</em>, <em>desired_goal</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv._is_success" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnv._is_terminal">
+<code class="descname">_is_terminal</code><span class="sig-paren">(</span><em>obs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv._is_terminal" title="Permalink to this definition">¶</a></dt>
+<dd><p>The episode is over if the ego vehicle crashed or the goal is reached.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.summon_env.SummonEnv.__module__">
+<code class="descname">__module__</code><em class="property"> = 'highway_env.envs.summon_env'</em><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnv.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.envs.summon_env.SummonEnvActionRepeat">
+<em class="property">class </em><code class="descclassname">highway_env.envs.summon_env.</code><code class="descname">SummonEnvActionRepeat</code><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnvActionRepeat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.summon_env.SummonEnv" title="highway_env.envs.summon_env.SummonEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.summon_env.SummonEnv</span></code></a></p>
+<dl class="method">
+<dt id="highway_env.envs.summon_env.SummonEnvActionRepeat.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnvActionRepeat.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.summon_env.SummonEnvActionRepeat.__module__">
+<code class="descname">__module__</code><em class="property"> = 'highway_env.envs.summon_env'</em><a class="headerlink" href="#highway_env.envs.summon_env.SummonEnvActionRepeat.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+highway\_env.envs.roundabout\_env module
+========================================
+
+.. automodule:: highway_env.envs.roundabout_env
+    :members:
+    :undoc-members:
+    :show-inheritance:

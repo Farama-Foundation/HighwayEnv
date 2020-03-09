@@ -1,0 +1,7 @@
+highway\_env.envs.intersection\_env module
+==========================================
+
+.. automodule:: highway_env.envs.intersection_env
+    :members:
+    :undoc-members:
+    :show-inheritance:

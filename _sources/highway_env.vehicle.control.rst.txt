@@ -1,0 +1,7 @@
+highway\_env.vehicle.control module
+===================================
+
+.. automodule:: highway_env.vehicle.control
+    :members:
+    :undoc-members:
+    :show-inheritance:

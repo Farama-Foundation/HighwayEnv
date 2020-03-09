@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>highway_env.vehicle.dynamics module &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">highway_env.vehicle.dynamics module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>highway_env.vehicle.dynamics module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/highway_env.vehicle.dynamics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-highway_env.vehicle.dynamics">
+<span id="highway-env-vehicle-dynamics-module"></span><h1>highway_env.vehicle.dynamics module<a class="headerlink" href="#module-highway_env.vehicle.dynamics" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="highway_env.vehicle.dynamics.Vehicle">
+<em class="property">class </em><code class="descclassname">highway_env.vehicle.dynamics.</code><code class="descname">Vehicle</code><span class="sig-paren">(</span><em>road</em>, <em>position</em>, <em>heading=0</em>, <em>velocity=0</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="highway_env.logger.html#highway_env.logger.Loggable" title="highway_env.logger.Loggable"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.logger.Loggable</span></code></a></p>
+<p>A moving vehicle on a road, and its dynamics.</p>
+<p>The vehicle is represented by a dynamical system: a modified bicycle model.
+It’s state is propagated depending on its steering and acceleration actions.</p>
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.COLLISIONS_ENABLED">
+<code class="descname">COLLISIONS_ENABLED</code><em class="property"> = True</em><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.COLLISIONS_ENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable collision detection between vehicles</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.LENGTH">
+<code class="descname">LENGTH</code><em class="property"> = 5.0</em><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vehicle length [m]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.WIDTH">
+<code class="descname">WIDTH</code><em class="property"> = 2.0</em><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vehicle width [m]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.DEFAULT_VELOCITIES">
+<code class="descname">DEFAULT_VELOCITIES</code><em class="property"> = [23, 25]</em><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.DEFAULT_VELOCITIES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Range for random initial velocities [m/s]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.MAX_VELOCITY">
+<code class="descname">MAX_VELOCITY</code><em class="property"> = 40</em><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.MAX_VELOCITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum reachable velocity [m/s]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>road</em>, <em>position</em>, <em>heading=0</em>, <em>velocity=0</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="highway_env.vehicle.dynamics.Vehicle.make_on_lane">
+<em class="property">classmethod </em><code class="descname">make_on_lane</code><span class="sig-paren">(</span><em>road</em>, <em>lane_index</em>, <em>longitudinal</em>, <em>velocity=0</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.make_on_lane" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Create a vehicle on a given lane at a longitudinal position.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>road</strong> – the road where the vehicle is driving</li>
+<li><strong>lane_index</strong> – index of the lane where the vehicle is located</li>
+<li><strong>longitudinal</strong> – longitudinal position along the lane</li>
+<li><strong>velocity</strong> – initial velocity in [m/s]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A vehicle with at the specified position</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="highway_env.vehicle.dynamics.Vehicle.create_random">
+<em class="property">classmethod </em><code class="descname">create_random</code><span class="sig-paren">(</span><em>road</em>, <em>velocity=None</em>, <em>spacing=1</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.create_random" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Create a random vehicle on the road.</p>
+<p>The lane and /or velocity are chosen randomly, while longitudinal position is chosen behind the last
+vehicle in the road with density based on the number of lanes.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>road</strong> – the road where the vehicle is driving</li>
+<li><strong>velocity</strong> – initial velocity in [m/s]. If None, will be chosen randomly</li>
+<li><strong>spacing</strong> – ratio of spacing to the front vehicle, 1 being the default</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A vehicle with random position and/or velocity</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="highway_env.vehicle.dynamics.Vehicle.create_from">
+<em class="property">classmethod </em><code class="descname">create_from</code><span class="sig-paren">(</span><em>vehicle</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.create_from" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Create a new vehicle from an existing one.
+Only the vehicle dynamics are copied, other properties are default.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vehicle</strong> – a vehicle</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a new vehicle at the same dynamical state</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.act">
+<code class="descname">act</code><span class="sig-paren">(</span><em>action=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.act" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Store an action to be repeated.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – the input action</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>dt</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.step" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Propagate the vehicle state given its actions.</p>
+<p>Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.
+If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.
+The vehicle’s current lane is updated.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dt</strong> – timestep of integration of the model [s]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.lane_distance_to">
+<code class="descname">lane_distance_to</code><span class="sig-paren">(</span><em>vehicle</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.lane_distance_to" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Compute the signed distance to another vehicle along current lane.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vehicle</strong> – the other vehicle</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the distance to the other vehicle [m]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.check_collision">
+<code class="descname">check_collision</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.check_collision" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Check for collision with another vehicle.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> – the other vehicle</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.direction">
+<code class="descname">direction</code><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.destination">
+<code class="descname">destination</code><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.destination" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.destination_direction">
+<code class="descname">destination_direction</code><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.destination_direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.front_distance_to">
+<code class="descname">front_distance_to</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.front_distance_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><em>origin_vehicle=None</em>, <em>observe_intentions=True</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.dump">
+<code class="descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.dump" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Update the internal log of the vehicle, containing:</dt>
+<dd><ul class="first last simple">
+<li>its kinematics;</li>
+<li>some metrics relative to its neighbour vehicles.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.get_log">
+<code class="descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.get_log" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Cast the internal log as a DataFrame.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the DataFrame of the Vehicle’s log.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.__str__">
+<code class="descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Vehicle.__module__">
+<code class="descname">__module__</code><em class="property"> = 'highway_env.vehicle.dynamics'</em><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Vehicle.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Vehicle.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.vehicle.dynamics.Obstacle">
+<em class="property">class </em><code class="descclassname">highway_env.vehicle.dynamics.</code><code class="descname">Obstacle</code><span class="sig-paren">(</span><em>road</em>, <em>position</em>, <em>heading=0</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Obstacle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.vehicle.dynamics.Vehicle" title="highway_env.vehicle.dynamics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.dynamics.Vehicle</span></code></a></p>
+<p>A motionless obstacle at a given position.</p>
+<dl class="attribute">
+<dt id="highway_env.vehicle.dynamics.Obstacle.__module__">
+<code class="descname">__module__</code><em class="property"> = 'highway_env.vehicle.dynamics'</em><a class="headerlink" href="#highway_env.vehicle.dynamics.Obstacle.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.dynamics.Obstacle.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>road</em>, <em>position</em>, <em>heading=0</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.dynamics.Obstacle.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

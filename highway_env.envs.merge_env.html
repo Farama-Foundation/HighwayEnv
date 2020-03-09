@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>highway_env.envs.merge_env module &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">highway_env.envs.merge_env module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>highway_env.envs.merge_env module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/highway_env.envs.merge_env.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-highway_env.envs.merge_env">
+<span id="highway-env-envs-merge-env-module"></span><h1>highway_env.envs.merge_env module<a class="headerlink" href="#module-highway_env.envs.merge_env" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="highway_env.envs.merge_env.MergeEnv">
+<em class="property">class </em><code class="descclassname">highway_env.envs.merge_env.</code><code class="descname">MergeEnv</code><span class="sig-paren">(</span><em>config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="highway_env.envs.common.abstract.html#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.abstract.AbstractEnv</span></code></a></p>
+<p>A highway merge negotiation environment.</p>
+<p>The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.
+It is rewarded for maintaining a high velocity and avoiding collisions, but also making room for merging
+vehicles.</p>
+<dl class="attribute">
+<dt id="highway_env.envs.merge_env.MergeEnv.COLLISION_REWARD">
+<code class="descname">COLLISION_REWARD</code><em class="property"> = -1</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.COLLISION_REWARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.merge_env.MergeEnv.RIGHT_LANE_REWARD">
+<code class="descname">RIGHT_LANE_REWARD</code><em class="property"> = 0.1</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.RIGHT_LANE_REWARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.merge_env.MergeEnv.HIGH_VELOCITY_REWARD">
+<code class="descname">HIGH_VELOCITY_REWARD</code><em class="property"> = 0.2</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.HIGH_VELOCITY_REWARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.merge_env.MergeEnv.MERGING_VELOCITY_REWARD">
+<code class="descname">MERGING_VELOCITY_REWARD</code><em class="property"> = -0.5</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.MERGING_VELOCITY_REWARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.merge_env.MergeEnv.LANE_CHANGE_REWARD">
+<code class="descname">LANE_CHANGE_REWARD</code><em class="property"> = -0.05</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.LANE_CHANGE_REWARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.merge_env.MergeEnv._reward">
+<code class="descname">_reward</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv._reward" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>The vehicle is rewarded for driving with high velocity on lanes to the right and avoiding collisions, but
+an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low velocity.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – the action performed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the reward of the state-action transition</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.merge_env.MergeEnv._is_terminal">
+<code class="descname">_is_terminal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv._is_terminal" title="Permalink to this definition">¶</a></dt>
+<dd><p>The episode is over when a collision occurs or when the access ramp has been passed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.merge_env.MergeEnv.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the environment to it’s initial configuration
+:return: the observation of the reset state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.merge_env.MergeEnv._make_road">
+<code class="descname">_make_road</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv._make_road" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Make a road composed of a straight highway and a merging lane.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the road</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.merge_env.MergeEnv._make_vehicles">
+<code class="descname">_make_vehicles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv._make_vehicles" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the ego-vehicle</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.merge_env.MergeEnv.__module__">
+<code class="descname">__module__</code><em class="property"> = 'highway_env.envs.merge_env'</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

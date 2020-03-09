@@ -1,0 +1,28 @@
+highway\_env package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    highway_env.envs
+    highway_env.road
+    highway_env.vehicle
+
+Submodules
+----------
+
+.. toctree::
+
+   highway_env.interval
+   highway_env.logger
+   highway_env.utils
+
+Module contents
+---------------
+
+.. automodule:: highway_env
+    :members:
+    :undoc-members:
+    :show-inheritance:

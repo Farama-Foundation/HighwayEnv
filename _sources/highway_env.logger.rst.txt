@@ -1,0 +1,7 @@
+highway\_env.logger module
+==========================
+
+.. automodule:: highway_env.logger
+    :members:
+    :undoc-members:
+    :show-inheritance:

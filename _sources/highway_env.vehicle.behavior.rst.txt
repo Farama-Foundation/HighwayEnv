@@ -1,0 +1,7 @@
+highway\_env.vehicle.behavior module
+====================================
+
+.. automodule:: highway_env.vehicle.behavior
+    :members:
+    :undoc-members:
+    :show-inheritance:

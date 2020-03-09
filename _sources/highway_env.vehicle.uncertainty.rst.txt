@@ -1,0 +1,7 @@
+highway\_env.vehicle.uncertainty module
+=======================================
+
+.. automodule:: highway_env.vehicle.uncertainty
+    :members:
+    :undoc-members:
+    :show-inheritance:

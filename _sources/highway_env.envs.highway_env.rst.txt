@@ -1,0 +1,7 @@
+highway\_env.envs.highway\_env module
+=====================================
+
+.. automodule:: highway_env.envs.highway_env
+    :members:
+    :undoc-members:
+    :show-inheritance:

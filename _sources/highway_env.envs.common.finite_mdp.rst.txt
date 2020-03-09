@@ -1,0 +1,7 @@
+highway\_env.envs.common.finite\_mdp module
+===========================================
+
+.. automodule:: highway_env.envs.common.finite_mdp
+    :members:
+    :undoc-members:
+    :show-inheritance:

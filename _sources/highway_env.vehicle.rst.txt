@@ -1,0 +1,21 @@
+highway\_env.vehicle package
+============================
+
+Submodules
+----------
+
+.. toctree::
+
+   highway_env.vehicle.behavior
+   highway_env.vehicle.control
+   highway_env.vehicle.dynamics
+   highway_env.vehicle.graphics
+   highway_env.vehicle.uncertainty
+
+Module contents
+---------------
+
+.. automodule:: highway_env.vehicle
+    :members:
+    :undoc-members:
+    :show-inheritance:

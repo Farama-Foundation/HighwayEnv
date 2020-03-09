@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>highway_env.vehicle.control module &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">highway_env.vehicle.control module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>highway_env.vehicle.control module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/highway_env.vehicle.control.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-highway_env.vehicle.control">
+<span id="highway-env-vehicle-control-module"></span><h1>highway_env.vehicle.control module<a class="headerlink" href="#module-highway_env.vehicle.control" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="highway_env.vehicle.control.ControlledVehicle">
+<em class="property">class </em><code class="descclassname">highway_env.vehicle.control.</code><code class="descname">ControlledVehicle</code><span class="sig-paren">(</span><em>road</em>, <em>position</em>, <em>heading=0</em>, <em>velocity=0</em>, <em>target_lane_index=None</em>, <em>target_velocity=None</em>, <em>route=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="highway_env.vehicle.dynamics.html#highway_env.vehicle.dynamics.Vehicle" title="highway_env.vehicle.dynamics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.dynamics.Vehicle</span></code></a></p>
+<p>A vehicle piloted by two low-level controller, allowing high-level actions
+such as cruise control and lane changes.</p>
+<ul class="simple">
+<li>The longitudinal controller is a velocity controller;</li>
+<li>The lateral controller is a heading controller cascaded with a lateral position controller.</li>
+</ul>
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.TAU_A">
+<code class="descname">TAU_A</code><em class="property"> = 0.6</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.TAU_A" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.TAU_DS">
+<code class="descname">TAU_DS</code><em class="property"> = 0.2</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.TAU_DS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.PURSUIT_TAU">
+<code class="descname">PURSUIT_TAU</code><em class="property"> = 0.30000000000000004</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.PURSUIT_TAU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.KP_A">
+<code class="descname">KP_A</code><em class="property"> = 1.6666666666666667</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.KP_A" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.KP_HEADING">
+<code class="descname">KP_HEADING</code><em class="property"> = 5.0</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.KP_HEADING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.KP_LATERAL">
+<code class="descname">KP_LATERAL</code><em class="property"> = 2.0</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.KP_LATERAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.MAX_STEERING_ANGLE">
+<code class="descname">MAX_STEERING_ANGLE</code><em class="property"> = 1.0471975511965976</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.MAX_STEERING_ANGLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.DELTA_VELOCITY">
+<code class="descname">DELTA_VELOCITY</code><em class="property"> = 5</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.DELTA_VELOCITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.ControlledVehicle.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>road</em>, <em>position</em>, <em>heading=0</em>, <em>velocity=0</em>, <em>target_lane_index=None</em>, <em>target_velocity=None</em>, <em>route=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="highway_env.vehicle.control.ControlledVehicle.create_from">
+<em class="property">classmethod </em><code class="descname">create_from</code><span class="sig-paren">(</span><em>vehicle</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.create_from" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Create a new vehicle from an existing one.
+The vehicle dynamics and target dynamics are copied, other properties are default.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vehicle</strong> – a vehicle</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a new vehicle at the same dynamical state</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.ControlledVehicle.plan_route_to">
+<code class="descname">plan_route_to</code><span class="sig-paren">(</span><em>destination</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.plan_route_to" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Plan a route to a destination in the road network</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>destination</strong> – a node in the road network</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.ControlledVehicle.act">
+<code class="descname">act</code><span class="sig-paren">(</span><em>action=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.act" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Perform a high-level action to change the desired lane or velocity.</p>
+<ul class="simple">
+<li>If a high-level action is provided, update the target velocity and lane;</li>
+<li>then, perform longitudinal and lateral control.</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – a high-level action</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.ControlledVehicle.follow_road">
+<code class="descname">follow_road</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.follow_road" title="Permalink to this definition">¶</a></dt>
+<dd><p>At the end of a lane, automatically switch to a next one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.ControlledVehicle.steering_control">
+<code class="descname">steering_control</code><span class="sig-paren">(</span><em>target_lane_index</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.steering_control" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Steer the vehicle to follow the center of an given lane.</div></blockquote>
+<ol class="arabic simple">
+<li>Lateral position is controlled by a proportional controller yielding a lateral velocity command</li>
+<li>Lateral velocity command is converted to a heading reference</li>
+<li>Heading is controlled by a proportional controller yielding a heading rate command</li>
+<li>Heading rate command is converted to a steering angle</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>target_lane_index</strong> – index of the lane to follow</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a steering wheel angle command [rad]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.ControlledVehicle.velocity_control">
+<code class="descname">velocity_control</code><span class="sig-paren">(</span><em>target_velocity</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.velocity_control" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Control the velocity of the vehicle.</p>
+<p>Using a simple proportional controller.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>target_velocity</strong> – the desired velocity</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an acceleration command [m/s2]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.ControlledVehicle.set_route_at_intersection">
+<code class="descname">set_route_at_intersection</code><span class="sig-paren">(</span><em>_to</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.set_route_at_intersection" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Set the road to be followed at the next intersection.
+Erase current planned route.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>_to</strong> – index of the road to follow at next intersection, in the road network</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.ControlledVehicle.predict_trajectory_constant_velocity">
+<code class="descname">predict_trajectory_constant_velocity</code><span class="sig-paren">(</span><em>times</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.predict_trajectory_constant_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Predict the future positions of the vehicle along its planned route, under constant velocity</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>times</strong> – timesteps of prediction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">positions, headings</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.ControlledVehicle.__module__">
+<code class="descname">__module__</code><em class="property"> = 'highway_env.vehicle.control'</em><a class="headerlink" href="#highway_env.vehicle.control.ControlledVehicle.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.vehicle.control.MDPVehicle">
+<em class="property">class </em><code class="descclassname">highway_env.vehicle.control.</code><code class="descname">MDPVehicle</code><span class="sig-paren">(</span><em>road</em>, <em>position</em>, <em>heading=0</em>, <em>velocity=0</em>, <em>target_lane_index=None</em>, <em>target_velocity=None</em>, <em>route=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.vehicle.control.ControlledVehicle" title="highway_env.vehicle.control.ControlledVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.control.ControlledVehicle</span></code></a></p>
+<p>A controlled vehicle with a specified discrete range of allowed target velocities.</p>
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.MDPVehicle.SPEED_COUNT">
+<code class="descname">SPEED_COUNT</code><em class="property"> = 3</em><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.SPEED_COUNT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.MDPVehicle.SPEED_MIN">
+<code class="descname">SPEED_MIN</code><em class="property"> = 20</em><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.SPEED_MIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.MDPVehicle.SPEED_MAX">
+<code class="descname">SPEED_MAX</code><em class="property"> = 30</em><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.SPEED_MAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.MDPVehicle.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>road</em>, <em>position</em>, <em>heading=0</em>, <em>velocity=0</em>, <em>target_lane_index=None</em>, <em>target_velocity=None</em>, <em>route=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.MDPVehicle.act">
+<code class="descname">act</code><span class="sig-paren">(</span><em>action=None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.act" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Perform a high-level action.</p>
+<p>If the action is a velocity change, choose velocity from the allowed discrete range.
+Else, forward action to the ControlledVehicle handler.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – a high-level action</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="highway_env.vehicle.control.MDPVehicle.index_to_speed">
+<em class="property">classmethod </em><code class="descname">index_to_speed</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.index_to_speed" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Convert an index among allowed speeds to its corresponding speed</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – the speed index []</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the corresponding speed [m/s]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="highway_env.vehicle.control.MDPVehicle.speed_to_index">
+<em class="property">classmethod </em><code class="descname">speed_to_index</code><span class="sig-paren">(</span><em>speed</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.speed_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Find the index of the closest speed allowed to a given speed.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>speed</strong> – an input speed [m/s]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the index of the closest speed allowed []</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.MDPVehicle.speed_index">
+<code class="descname">speed_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.speed_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>The index of current velocity</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.control.MDPVehicle.predict_trajectory">
+<code class="descname">predict_trajectory</code><span class="sig-paren">(</span><em>actions</em>, <em>action_duration</em>, <em>trajectory_timestep</em>, <em>dt</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.predict_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Predict the future trajectory of the vehicle given a sequence of actions.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>actions</strong> – a sequence of future actions.</li>
+<li><strong>action_duration</strong> – the duration of each action.</li>
+<li><strong>trajectory_timestep</strong> – the duration between each save of the vehicle state.</li>
+<li><strong>dt</strong> – the timestep of the simulation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the sequence of future states</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.control.MDPVehicle.__module__">
+<code class="descname">__module__</code><em class="property"> = 'highway_env.vehicle.control'</em><a class="headerlink" href="#highway_env.vehicle.control.MDPVehicle.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

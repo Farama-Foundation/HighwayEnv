@@ -1,0 +1,7 @@
+highway\_env.interval module
+============================
+
+.. automodule:: highway_env.interval
+    :members:
+    :undoc-members:
+    :show-inheritance:

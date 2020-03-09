@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>highway_env.road.regulation module &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">highway_env.road.regulation module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>highway_env.road.regulation module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/highway_env.road.regulation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-highway_env.road.regulation">
+<span id="highway-env-road-regulation-module"></span><h1>highway_env.road.regulation module<a class="headerlink" href="#module-highway_env.road.regulation" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="highway_env.road.regulation.RegulatedRoad">
+<em class="property">class </em><code class="descclassname">highway_env.road.regulation.</code><code class="descname">RegulatedRoad</code><span class="sig-paren">(</span><em>network=None</em>, <em>vehicles=None</em>, <em>np_random=None</em>, <em>record_history=False</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="highway_env.road.road.html#highway_env.road.road.Road" title="highway_env.road.road.Road"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.road.Road</span></code></a></p>
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.YIELDING_COLOR">
+<code class="descname">YIELDING_COLOR</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.YIELDING_COLOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.REGULATION_FREQUENCY">
+<code class="descname">REGULATION_FREQUENCY</code><em class="property"> = 2</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.REGULATION_FREQUENCY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.YIELD_DURATION">
+<code class="descname">YIELD_DURATION</code><em class="property"> = 0.0</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.YIELD_DURATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>network=None</em>, <em>vehicles=None</em>, <em>np_random=None</em>, <em>record_history=False</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>New road.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>network</strong> – the road network describing the lanes</li>
+<li><strong>vehicles</strong> – the vehicles driving on the road</li>
+<li><strong>np_random</strong> (<em>np.random.RandomState</em>) – a random number generator for vehicle behaviour</li>
+<li><strong>record_history</strong> – whether the recent trajectories of vehicles should be recorded for display</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>dt</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step the dynamics of each entity on the road.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dt</strong> – timestep [s]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.enforce_road_rules">
+<code class="descname">enforce_road_rules</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.enforce_road_rules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find conflicts and resolve them by assigning yielding vehicles and stopping them.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="highway_env.road.regulation.RegulatedRoad.respect_priorities">
+<em class="property">static </em><code class="descname">respect_priorities</code><span class="sig-paren">(</span><em>v2</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.respect_priorities" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Resolve a conflict between two vehicles by determining who should yield</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the yielding vehicle</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="highway_env.road.regulation.RegulatedRoad.is_conflict_possible">
+<em class="property">static </em><code class="descname">is_conflict_possible</code><span class="sig-paren">(</span><em>v2</em>, <em>horizon=3</em>, <em>step=0.25</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.is_conflict_possible" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.__module__">
+<code class="descname">__module__</code><em class="property"> = 'highway_env.road.regulation'</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

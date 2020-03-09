@@ -1,0 +1,7 @@
+highway\_env.envs.merge\_env module
+===================================
+
+.. automodule:: highway_env.envs.merge_env
+    :members:
+    :undoc-members:
+    :show-inheritance:
