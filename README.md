@@ -8,7 +8,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
 </p>
 
 ![build](https://github.com/eleurent/highway-env/workflows/build/badge.svg)
-[![Docs Status](https://img.shields.io/badge/docs-passing-green.svg)](https://eleurent.github.io/highway-env/)
+![docs](https://github.com/eleurent/highway-env/workflows/docs/badge.svg)
 
 ## [:ledger: Try it on Google Colab!](scripts)
 
