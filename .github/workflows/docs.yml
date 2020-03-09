@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ammaraskar/sphinx-action@master
       with:
-        build-command: "make apidoc && make html"
+        pre-build-command: "make apidoc"
         docs-folder: "./docs"
     - name: Commit documentation changes
       run: |
