@@ -16,10 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - name: Set up Python 3.6
       uses: actions/setup-python@v1
       with:
-        python-version: 3.8
+        python-version: 3.6
     - name: Install dependencies
       run: |
         wget http://mirrors.kernel.org/ubuntu/pool/universe/p/pygame/python3-pygame_1.9.4.post1+dfsg-3_amd64.deb
