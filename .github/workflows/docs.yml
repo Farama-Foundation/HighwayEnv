@@ -13,7 +13,7 @@ jobs:
     - uses: ammaraskar/sphinx-action@master
       with:
         build-command: "make apidoc && make html"
-        docs-folder: "./"
+        docs-folder: "./docs"
     - name: Commit documentation changes
       run: |
         git clone https://github.com/eleurent/highway-env.git --branch gh-pages --single-branch gh-pages
