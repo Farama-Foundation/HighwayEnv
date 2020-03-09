@@ -22,7 +22,7 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        sudo apt-get install libsdl1.2-dev
+        sudo apt install python3-pygame
         python -m pip install --upgrade pip
         pip install -e .[deploy]
     - name: Lint with flake8
