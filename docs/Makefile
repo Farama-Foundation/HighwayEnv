@@ -4,9 +4,9 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = highway-env
-SOURCEDIR     = docs/source
-BUILDDIR      = docs/_build
+SPHINXPROJ    = ../highway-env
+SOURCEDIR     = source
+BUILDDIR      = _build
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -15,11 +15,11 @@ help:
 .PHONY: help Makefile
 
 apidoc:
-	sphinx-apidoc -o $(SOURCEDIR) -e highway_env
+	sphinx-apidoc -o $(SOURCEDIR) -e ../highway_env
 
 http:
 	python -mwebbrowser "http://localhost:8000/"
-	python -m SimpleHTTPServer
+	python -m http.server 8000
 
 
 # Catch-all target: route all unknown targets to Sphinx using the new
