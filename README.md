@@ -7,7 +7,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
     <em>An episode of one of the environments available in highway-env.</em>
 </p>
 
-[![Build Status](https://travis-ci.org/eleurent/highway-env.svg?branch=master)](https://travis-ci.org/eleurent/highway-env)
+![build](https://github.com/eleurent/highway-env/workflows/build/badge.svg)
 [![Docs Status](https://img.shields.io/badge/docs-passing-green.svg)](https://eleurent.github.io/highway-env/)
 
 ## [:ledger: Try it on Google Colab!](scripts)
