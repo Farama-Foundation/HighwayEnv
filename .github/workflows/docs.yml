@@ -12,8 +12,8 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "make apidoc"
-        docs-folder: "./docs"
+        pre-build-command: "pip install sphinx_rtd_theme && make apidoc"
+        docs-folder: "docs/"
     - name: Commit documentation changes
       run: |
         git clone https://github.com/eleurent/highway-env.git --branch gh-pages --single-branch gh-pages
