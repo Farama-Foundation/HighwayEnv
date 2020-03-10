@@ -1,7 +1,7 @@
 import pytest
 
 from highway_env.road.road import Road, RoadNetwork
-from highway_env.vehicle.dynamics import Vehicle
+from highway_env.vehicle.kinematics import Vehicle
 
 FPS = 15
 

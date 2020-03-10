@@ -4,7 +4,7 @@ import logging
 
 from highway_env.logger import Loggable
 from highway_env.road.lane import LineType, StraightLane
-from highway_env.vehicle.dynamics import Obstacle
+from highway_env.vehicle.kinematics import Obstacle
 
 logger = logging.getLogger(__name__)
 
