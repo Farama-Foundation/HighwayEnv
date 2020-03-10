@@ -5,7 +5,7 @@ import itertools
 import numpy as np
 import pygame
 
-from highway_env.vehicle.dynamics import Vehicle, Obstacle
+from highway_env.vehicle.kinematics import Vehicle, Obstacle
 from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 
@@ -33,16 +33,33 @@ class VehicleGraphics(object):
         :param offscreen: whether the rendering should be done offscreen or not
         """
         v = vehicle
-        s = pygame.Surface((surface.pix(v.LENGTH), surface.pix(v.LENGTH)), pygame.SRCALPHA)  # per-pixel alpha
-        rect = (0, surface.pix(v.LENGTH) / 2 - surface.pix(v.WIDTH) / 2, surface.pix(v.LENGTH), surface.pix(v.WIDTH))
-        pygame.draw.rect(s, cls.get_color(v, transparent), rect, 0)
-        pygame.draw.rect(s, cls.BLACK, rect, 1)
-        if not offscreen:  # convert_alpha throws errors in offscreen mode TODO() Explain why
-            s = pygame.Surface.convert_alpha(s)
-        h = v.heading if abs(v.heading) > 2 * np.pi / 180 else 0
+        tire_length, tire_width = 1, 0.3
+
+        # Vehicle rectangle
+        length = v.LENGTH + 2 * tire_length
+        vehicle_surface = pygame.Surface((surface.pix(length), surface.pix(length)), pygame.SRCALPHA)  # per-pixel alpha
+        rect = (surface.pix(tire_length), surface.pix(length / 2 - v.WIDTH / 2), surface.pix(v.LENGTH), surface.pix(v.WIDTH))
+        pygame.draw.rect(vehicle_surface, cls.get_color(v, transparent), rect, 0)
+        pygame.draw.rect(vehicle_surface, cls.BLACK, rect, 1)
+
+        # Tires
+        tire_positions = [[surface.pix(tire_length), surface.pix(length / 2 - v.WIDTH / 2)],
+                          [surface.pix(tire_length), surface.pix(length / 2 + v.WIDTH / 2)],
+                          [surface.pix(length - tire_length), surface.pix(length / 2 - v.WIDTH / 2)],
+                          [surface.pix(length - tire_length), surface.pix(length / 2 + v.WIDTH / 2)]]
+        tire_angles = [0, 0, v.action["steering"], v.action["steering"]]
+        for tire_position, tire_angle in zip(tire_positions, tire_angles):
+            tire_surface = pygame.Surface((surface.pix(tire_length), surface.pix(tire_length)), pygame.SRCALPHA)
+            rect = (0, surface.pix(tire_length/2-tire_width/2), surface.pix(tire_length), surface.pix(tire_width))
+            pygame.draw.rect(tire_surface, cls.BLACK, rect, 0)
+            cls.blitRotate(vehicle_surface, tire_surface, tire_position, np.rad2deg(-tire_angle))
+
         # Centered rotation
+        h = v.heading if abs(v.heading) > 2 * np.pi / 180 else 0
         position = (surface.pos2pix(v.position[0], v.position[1]))
-        cls.blitRotate(surface, s, position, np.rad2deg(-h))
+        if not offscreen:  # convert_alpha throws errors in offscreen mode TODO() Explain why
+            vehicle_surface = pygame.Surface.convert_alpha(vehicle_surface)
+        cls.blitRotate(surface, vehicle_surface, position, np.rad2deg(-h))
 
     @staticmethod
     def blitRotate(surf, image, pos, angle, origin_pos=None, show_rect=False):
