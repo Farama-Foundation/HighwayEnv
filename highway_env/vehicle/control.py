@@ -2,7 +2,7 @@ from __future__ import division, print_function
 import numpy as np
 import copy
 from highway_env import utils
-from highway_env.vehicle.dynamics import Vehicle
+from highway_env.vehicle.kinematics import Vehicle
 
 
 class ControlledVehicle(Vehicle):

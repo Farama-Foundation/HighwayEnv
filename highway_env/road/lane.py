@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 import numpy as np
 
 from highway_env import utils
-from highway_env.vehicle.dynamics import Vehicle
+from highway_env.vehicle.kinematics import Vehicle
 
 
 class AbstractLane(object):
