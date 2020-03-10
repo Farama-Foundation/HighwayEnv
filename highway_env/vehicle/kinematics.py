@@ -120,7 +120,7 @@ class Vehicle(Loggable):
         self.clip_actions()
         v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
         self.position += v * dt
-        self.heading += self.velocity * np.tan(self.action['steering']) / self.LENGTH * dt
+        self.heading += self.velocity * np.sin(self.action['steering']) / (self.LENGTH / 2) * dt
         self.velocity += self.action['acceleration'] * dt
         self.on_state_update()
 
