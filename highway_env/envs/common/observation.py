@@ -284,6 +284,27 @@ class KinematicsGoalObservation(KinematicObservation):
         return obs
 
 
+class AttributesObservation(ObservationType):
+    def __init__(self, env, attributes, **kwargs):
+        self.env = env
+        self.attributes = attributes
+
+    def space(self):
+        try:
+            obs = self.observe()
+            return spaces.Dict({
+                attribute: spaces.Box(-np.inf, np.inf, shape=obs[attribute].shape, dtype=np.float32)
+                for attribute in self.attributes
+            })
+        except AttributeError:
+            return None
+
+    def observe(self):
+        return {
+            attribute: getattr(self.env, attribute) for attribute in self.attributes
+        }
+
+
 def observation_factory(env, config):
     if config["type"] == "TimeToCollision":
         return TimeToCollisionObservation(env, **config)
@@ -295,5 +316,7 @@ def observation_factory(env, config):
         return KinematicsGoalObservation(env, **config)
     elif config["type"] == "GrayscaleObservation":
         return GrayscaleObservation(env, **config)
+    elif config["type"] == "AttributesObservation":
+        return AttributesObservation(env, **config)
     else:
         raise ValueError("Unknown observation type")
