@@ -36,11 +36,6 @@ class AbstractEnv(gym.Env):
         A mapping of action labels to action indexes
     """
 
-    SIMULATION_FREQUENCY = 15
-    """
-        The frequency at which the system dynamics are simulated [Hz]
-    """
-
     PERCEPTION_DISTANCE = 6.0 * MDPVehicle.SPEED_MAX
     """
         The maximum distance of any vehicle present in the observation [m]
@@ -83,7 +78,7 @@ class AbstractEnv(gym.Env):
 
         self.config["screen_width"] *= 2
         self.config["screen_height"] *= 2
-        self.config["scaling"] = 10
+        self.config["scaling"] *= 2
 
     @classmethod
     def default_config(cls):
@@ -97,12 +92,15 @@ class AbstractEnv(gym.Env):
             "observation": {
                 "type": "TimeToCollision"
             },
+            "simulation_frequency": 15,  # [Hz]
             "policy_frequency": 1,  # [Hz]
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
             "screen_width": 600,  # [px]
             "screen_height": 150,  # [px]
             "centering_position": [0.3, 0.5],
-            "show_trajectories": False
+            "scaling": 5.5,
+            "show_trajectories": False,
+            "render_agent": True
         }
 
     def seed(self, seed=None):
@@ -192,14 +190,14 @@ class AbstractEnv(gym.Env):
         """
             Perform several steps of simulation with constant action
         """
-        for k in range(int(self.SIMULATION_FREQUENCY // self.config["policy_frequency"])):
+        for k in range(int(self.config["simulation_frequency"] // self.config["policy_frequency"])):
             if action is not None and \
-                    self.time % int(self.SIMULATION_FREQUENCY // self.config["policy_frequency"]) == 0:
+                    self.time % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
                 # Forward action to the vehicle
                 self.vehicle.act(self.ACTIONS[action])
 
             self.road.act()
-            self.road.step(1 / self.SIMULATION_FREQUENCY)
+            self.road.step(1 / self.config["simulation_frequency"])
             self.time += 1
 
             # Automatically render intermediate simulation steps if a viewer has been launched

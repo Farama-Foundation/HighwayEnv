@@ -153,7 +153,7 @@ class IntersectionEnv(AbstractEnv):
         for t in range(n_vehicles - 1):
             self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
         for _ in range(simulation_steps):
-            [(self.road.act(), self.road.step(1 / self.SIMULATION_FREQUENCY)) for _ in range(self.SIMULATION_FREQUENCY)]
+            [(self.road.act(), self.road.step(1 / self.config["simulation_frequency"])) for _ in range(self.config["simulation_frequency"])]
 
         # Challenger vehicle
         self._spawn_vehicle(60, spawn_probability=1, go_straight=True, position_deviation=0.1, velocity_deviation=0)
