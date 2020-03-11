@@ -18,12 +18,15 @@ class LaneKeepingEnv(AbstractEnv):
         config = super().default_config()
         config.update({
             "observation": {
-                "type": "Kinematics"
+                "type": "AttributesObservation",
+                "attributes": ["state", "derivative"]
             },
             "policy_frequency": 10,
             "steering_range": np.pi / 3,
+            "state_noise": 0.01,
+            "derivative_noise": 0.01,
             "screen_width": 600,
-            "screen_height": 200,
+            "screen_height": 300,
             "centering_position": [0.4, 0.5]
         })
         return config
@@ -35,7 +38,7 @@ class LaneKeepingEnv(AbstractEnv):
     def step(self, action):
         self.vehicle.act({
             "acceleration": 0,
-            "steering": action * self.config["steering_range"]
+            "steering": action[0] * self.config["steering_range"]
         })
         self._simulate()
 
@@ -69,9 +72,29 @@ class LaneKeepingEnv(AbstractEnv):
     def _make_vehicles(self):
         road = self.road
         ego_vehicle = BicycleVehicle(road, road.network.get_lane(("a", "b", 0)).position(30, 0),
-                                     velocity=5)
+                                     velocity=8.3)
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
+        print(ego_vehicle.full_lateral_lpv_structure())
+
+    @property
+    def dynamics(self):
+        return self.vehicle
+
+    @property
+    def state(self):
+        return self.vehicle.state[[0, 2, 4, 5]] + \
+               self.np_random.uniform(low=-self.config["state_noise"],
+                                      high=self.config["state_noise"],
+                                      size=self.vehicle.state[[0, 2, 4, 5]].shape)
+
+    @property
+    def derivative(self):
+        der = self.vehicle.derivative[[0, 2, 4, 5]] + \
+               self.np_random.uniform(low=-self.config["derivative_noise"],
+                                      high=self.config["derivative_noise"],
+                                      size=self.vehicle.derivative[[0, 2, 4, 5]].shape)
+        return der
 
 
 register(
