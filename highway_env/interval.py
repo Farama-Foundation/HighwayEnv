@@ -1,6 +1,7 @@
 import itertools
 
 import numpy as np
+from numpy.linalg import LinAlgError
 
 
 def intervals_product(a, b):
@@ -173,9 +174,12 @@ class LPV(object):
         if not is_metzler(a0):
             eig_v, transformation = np.linalg.eig(a0)
             if np.isreal(eig_v).all():
-                self.coordinates = (transformation, np.linalg.inv(transformation))
-            else:
-                print("Non Metzler A0 with complex eigenvalues: ", eig_v)
+                try:
+                    self.coordinates = (transformation, np.linalg.inv(transformation))
+                except LinAlgError:
+                    pass
+            if not self.coordinates:
+                print("Non Metzler A0 with eigenvalues: ", eig_v)
         else:
             self.coordinates = (np.eye(a0.shape[0]), np.eye(a0.shape[0]))
 
