@@ -19,30 +19,32 @@ class LaneKeepingEnv(AbstractEnv):
         config.update({
             "observation": {
                 "type": "AttributesObservation",
-                "attributes": ["state", "derivative"]
+                "attributes": ["state", "derivative", "reference_state"]
             },
+            "simulation_frequency": 10,
             "policy_frequency": 10,
             "steering_range": np.pi / 3,
-            "state_noise": 0.01,
-            "derivative_noise": 0.01,
+            "state_noise": 0.1,
+            "derivative_noise": 0.1,
             "screen_width": 600,
             "screen_height": 300,
+            "scaling": 7,
             "centering_position": [0.4, 0.5]
         })
         return config
 
     def define_spaces(self):
         super().define_spaces()
-        self.action_space = spaces.Box(-1., 1., shape=(1,), dtype=np.float32)
+        self.action_space = spaces.Box(-self.config["steering_range"], self.config["steering_range"], shape=(1,), dtype=np.float32)
 
     def step(self, action):
         self.vehicle.act({
             "acceleration": 0,
-            "steering": action[0] * self.config["steering_range"]
+            "steering": action[0]
         })
+        obs = self.observation.observe()
         self._simulate()
 
-        obs = self.observation.observe()
         info = {}
         reward = self._reward(action)
         terminal = self._is_terminal()
@@ -71,7 +73,7 @@ class LaneKeepingEnv(AbstractEnv):
 
     def _make_vehicles(self):
         road = self.road
-        ego_vehicle = BicycleVehicle(road, road.network.get_lane(("a", "b", 0)).position(30, 0),
+        ego_vehicle = BicycleVehicle(road, road.network.get_lane(("a", "b", 0)).position(30, 10),
                                      velocity=8.3)
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
@@ -83,21 +85,28 @@ class LaneKeepingEnv(AbstractEnv):
 
     @property
     def state(self):
-        return self.vehicle.state[[0, 2, 4, 5]] + \
+        return self.vehicle.state[[1, 2, 4, 5]] + \
                self.np_random.uniform(low=-self.config["state_noise"],
                                       high=self.config["state_noise"],
                                       size=self.vehicle.state[[0, 2, 4, 5]].shape)
 
     @property
     def derivative(self):
-        der = self.vehicle.derivative[[0, 2, 4, 5]] + \
+        return self.vehicle.derivative[[1, 2, 4, 5]] + \
                self.np_random.uniform(low=-self.config["derivative_noise"],
                                       high=self.config["derivative_noise"],
                                       size=self.vehicle.derivative[[0, 2, 4, 5]].shape)
-        return der
+
+    @property
+    def reference_state(self):
+        longi, lat = self.vehicle.lane.local_coordinates(self.vehicle.position)
+        psi_l = self.vehicle.lane.heading_at(longi)
+        state = self.vehicle.state[[1, 2, 4, 5]]
+        return np.array([[lat - state[0, 0]], [psi_l], [0], [0]])
 
 
 register(
     id='lane-keeping-v0',
     entry_point='highway_env.envs:LaneKeepingEnv',
+    max_episode_steps=200
 )
