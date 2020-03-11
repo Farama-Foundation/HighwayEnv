@@ -25,7 +25,6 @@ class BicycleVehicle(Vehicle):
         self.lateral_velocity = 0
         self.yaw_rate = 0
         self.theta = None
-        self.derivative = np.zeros(self.state.shape)
         self.A_lat, self.B_lat = self.lateral_lpv_dynamics()
 
     @property
@@ -37,23 +36,25 @@ class BicycleVehicle(Vehicle):
                          [self.lateral_velocity],
                          [self.yaw_rate]])
 
-    def step(self, dt):
-        self.clip_actions()
-
+    @property
+    def derivative(self):
         x = np.array([[self.lateral_velocity], [self.yaw_rate]])
         u = np.array([[self.action['steering']]])
         dx = self.A_lat @ x + self.B_lat @ u
         c, s = np.cos(self.heading), np.sin(self.heading)
         R = np.array(((c, -s), (s, c)))
         velocity = R @ np.array([self.velocity, self.lateral_velocity])
-        self.derivative = np.array([[velocity[0]], [velocity[1]], [self.yaw_rate],
+        return np.array([[velocity[0]], [velocity[1]], [self.yaw_rate],
                                     [self.action['acceleration']], dx[0], dx[1]])
 
-        self.position += velocity * dt
+    def step(self, dt):
+        self.clip_actions()
+        derivative = self.derivative
+        self.position += derivative[0:2, 0] * dt
         self.heading += self.yaw_rate * dt
         self.velocity += self.action['acceleration'] * dt
-        self.lateral_velocity += dx[0, 0] * dt
-        self.yaw_rate += dx[1, 0] * dt
+        self.lateral_velocity += derivative[4, 0] * dt
+        self.yaw_rate += derivative[5, 0] * dt
 
         self.on_state_update()
 
@@ -80,8 +81,6 @@ class BicycleVehicle(Vehicle):
                 [2*self.LENGTH_B / (self.INERTIA_Z*speed_body_x), -2*self.LENGTH_B**2 / (self.INERTIA_Z*speed_body_x)]
             ],
         ])
-        theta0 = [self.FRICTION_FRONT, self.FRICTION_REAR]
-        A0 += np.tensordot(theta0, phi, axes=[0, 0])
         B = np.array([
             [2*self.FRICTION_FRONT / self.MASS],
             [self.FRICTION_FRONT * self.LENGTH_A / self.INERTIA_Z]
@@ -94,7 +93,7 @@ class BicycleVehicle(Vehicle):
         :return: lateral dynamics A, B
         """
         A0, phi, B = self.lateral_lpv_structure()
-        self.theta = np.array([0, 0])
+        self.theta = np.array([self.FRICTION_FRONT, self.FRICTION_REAR])
         A = A0 + np.tensordot(self.theta, phi, axes=[0, 0])
         return A, B
 
@@ -124,9 +123,9 @@ class BicycleVehicle(Vehicle):
         :return: lateral dynamics A, B
         """
         A0, phi, B = self.full_lateral_lpv_structure()
-        theta = [self.FRICTION_FRONT, self.FRICTION_REAR]
-        A = A0 + np.tensordot(theta, phi, axes=[0, 0])
-        return A, np.array(B)
+        self.theta = [self.FRICTION_FRONT, self.FRICTION_REAR]
+        A = A0 + np.tensordot(self.theta, phi, axes=[0, 0])
+        return A, B
 
 
 def simulate(dt=0.1):
