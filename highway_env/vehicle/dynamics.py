@@ -129,13 +129,13 @@ class BicycleVehicle(Vehicle):
 
 
 def simulate(dt=0.1):
-    time = np.arange(0, 30, dt)
-    vehicle = BicycleVehicle(road=None, position=[0, 5], velocity=5)
+    time = np.arange(0, 20, dt)
+    vehicle = BicycleVehicle(road=None, position=[0, 5], velocity=8.3)
     xx, uu = [], []
     K = np.array([[1e-1, 2, 0, 1]])
     for t in time:
         # Act
-        u = - K @ vehicle.state
+        u = - K @ vehicle.state[[1, 2, 4, 5]]
         omega = 2*np.pi/20
         u += np.array([[-20*omega*np.sin(omega*t) * dt]])
         # Record
@@ -149,14 +149,11 @@ def simulate(dt=0.1):
 
 
 def plot(time, xx, uu):
-    pos_x = xx[:, 0, 0]
-    pos_y = xx[:, 1, 0]
-    psi_x = np.cos(xx[:, 2, 0])
-    psi_y = np.sin(xx[:, 2, 0])
-    dir_x = np.cos(xx[:, 2, 0] + uu[:, 0, 0])
-    dir_y = np.sin(xx[:, 2, 0] + uu[:, 0, 0])
+    pos_x, pos_y = xx[:, 0, 0], xx[:, 1, 0]
+    psi_x, psi_y = np.cos(xx[:, 2, 0]), np.sin(xx[:, 2, 0])
+    dir_x, dir_y = np.cos(xx[:, 2, 0] + uu[:, 0, 0]), np.sin(xx[:, 2, 0] + uu[:, 0, 0])
     fig, ax = plt.subplots(1, 1)
-    # ax.plot(pos_x, pos_y)
+    ax.plot(pos_x, pos_y, linewidth=0.5)
     dir_scale = 1/5
     ax.quiver(pos_x[::20]-0.5/dir_scale*psi_x[::20],
               pos_y[::20]-0.5/dir_scale*psi_y[::20],
@@ -166,7 +163,6 @@ def plot(time, xx, uu):
               angles='xy', scale_units='xy', scale=0.25, width=0.005, color='r')
     ax.axis("equal")
     ax.grid()
-    # ax1.plot(pos_x, xx[:, 3, 0])
     plt.show()
     plt.close()
 
