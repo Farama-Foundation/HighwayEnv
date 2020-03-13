@@ -1,4 +1,6 @@
 # highway-env
+![build](https://github.com/eleurent/highway-env/workflows/build/badge.svg)
+![docs](https://github.com/eleurent/highway-env/workflows/docs/badge.svg)
 
 A collection of environments for *autonomous driving* and tactical decision-making tasks
 
@@ -6,9 +8,6 @@ A collection of environments for *autonomous driving* and tactical decision-maki
     <img src="../gh-media/docs/media/highway-env.gif?raw=true"><br/>
     <em>An episode of one of the environments available in highway-env.</em>
 </p>
-
-![build](https://github.com/eleurent/highway-env/workflows/build/badge.svg)
-![docs](https://github.com/eleurent/highway-env/workflows/docs/badge.svg)
 
 ## [:ledger: Try it on Google Colab!](scripts)
 
