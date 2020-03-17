@@ -60,6 +60,8 @@ class BicycleVehicle(Vehicle):
 
     def clip_actions(self):
         super().clip_actions()
+        # Required because of the linearisation
+        self.action["steering"] = np.clip(self.action["steering"], -np.pi/2, np.pi/2)
         self.yaw_rate = np.clip(self.yaw_rate, -self.MAX_ANGULAR_VELOCITY, self.MAX_ANGULAR_VELOCITY)
 
     def lateral_lpv_structure(self):
