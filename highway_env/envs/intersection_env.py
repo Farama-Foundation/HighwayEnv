@@ -7,7 +7,7 @@ from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, CircularLane, SineLane, AbstractLane
 from highway_env.road.regulation import RegulatedRoad
 from highway_env.road.road import RoadNetwork
-from highway_env.vehicle.control import MDPVehicle
+from highway_env.vehicle.controller import MDPVehicle
 
 
 class IntersectionEnv(AbstractEnv):

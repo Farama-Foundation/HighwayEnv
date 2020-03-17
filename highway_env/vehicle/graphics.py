@@ -6,7 +6,7 @@ import numpy as np
 import pygame
 
 from highway_env.vehicle.kinematics import Vehicle, Obstacle
-from highway_env.vehicle.control import ControlledVehicle, MDPVehicle
+from highway_env.vehicle.controller import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 
 

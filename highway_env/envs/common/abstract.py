@@ -9,7 +9,7 @@ from highway_env.envs.common.observation import observation_factory
 from highway_env.envs.common.finite_mdp import finite_mdp
 from highway_env.envs.common.graphics import EnvViewer
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
-from highway_env.vehicle.control import MDPVehicle
+from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.kinematics import Obstacle
 
 
