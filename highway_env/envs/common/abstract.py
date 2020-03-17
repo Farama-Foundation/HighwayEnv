@@ -76,9 +76,9 @@ class AbstractEnv(gym.Env):
 
         self.reset()
 
-        self.config["screen_width"] *= 2
-        self.config["screen_height"] *= 2
-        self.config["scaling"] *= 2
+        # self.config["screen_width"] *= 2
+        # self.config["screen_height"] *= 2
+        # self.config["scaling"] *= 2
 
     @classmethod
     def default_config(cls):
