@@ -65,7 +65,7 @@ class LaneKeepingEnv(AbstractEnv):
     def _make_road(self):
         net = RoadNetwork()
 
-        lane = SineLane([0, 0], [500, 0], amplitude=5, pulsation=2*np.pi / 50, phase=0,
+        lane = SineLane([0, 0], [500, 0], amplitude=5, pulsation=2*np.pi / 100, phase=0,
                         width=10, line_types=[LineType.STRIPED, LineType.STRIPED])
         net.add_lane("a", "b", lane)
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
@@ -77,7 +77,6 @@ class LaneKeepingEnv(AbstractEnv):
                                      velocity=8.3)
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
-        print(ego_vehicle.full_lateral_lpv_structure())
 
     @property
     def dynamics(self):
@@ -102,7 +101,7 @@ class LaneKeepingEnv(AbstractEnv):
         longi, lat = self.vehicle.lane.local_coordinates(self.vehicle.position)
         psi_l = self.vehicle.lane.heading_at(longi)
         state = self.vehicle.state[[1, 2, 4, 5]]
-        return np.array([[lat - state[0, 0]], [psi_l], [0], [0]])
+        return np.array([[state[0, 0] - lat], [psi_l], [0], [0]])
 
 
 register(
