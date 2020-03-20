@@ -240,9 +240,12 @@ class OccupancyGridObservation(ObservationType):
             # Fill-in features
             for layer, feature in enumerate(self.features):
                 for _, vehicle in df.iterrows():
+                    x, y = vehicle["x"], vehicle["y"]
                     # Recover unnormalized coordinates for cell index
-                    x = utils.remap(vehicle["x"], [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
-                    y = utils.remap(vehicle["y"], [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
+                    if "x" in self.features_range:
+                        x = utils.remap(x, [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
+                    if "y" in self.features_range:
+                        y = utils.remap(y, [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
                     cell = (int((x - self.grid_size[0, 0]) / self.grid_step[0]),
                             int((y - self.grid_size[1, 0]) / self.grid_step[1]))
                     if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
