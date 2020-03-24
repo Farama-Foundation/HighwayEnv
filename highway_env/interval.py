@@ -129,21 +129,23 @@ def polytope(parametrized_f, params_intervals):
     return a0, d_a
 
 
-def is_metzler(matrix):
-    return (matrix - np.diag(np.diag(matrix)) >= 0).all()
+def is_metzler(matrix, eps=1e-9):
+    return (matrix - np.diag(np.diag(matrix)) >= -eps).all()
 
 
 class LPV(object):
-    def __init__(self, x0, a0, da, b=None, d_i=None, c=None, center=None, x_i=None):
+    def __init__(self, x0, a0, da, b=None, d=None, omega_i=None, u=None, k=None, center=None, x_i=None):
         """
         A Linear Parameter-Varying system:
                     dx = (a0 + sum(da))(x - center) + bd + c
         :param x0: initial state
         :param a0: nominal dynamics
         :param da: list of dynamics deviations
-        :param b: perturbation matrix
-        :param d_i: perturbation bounds
-        :param c: constant known perturbation
+        :param b: control matrix
+        :param d: perturbation matrix
+        :param omega_i: perturbation bounds
+        :param u: constant known control
+        :param k: linear feedback: a0 x + bu -> (a0+bk)x + b(u-kx), where a0+bk is stable
         :param center: asymptotic state
         :param x_i: initial state interval
         """
@@ -151,9 +153,15 @@ class LPV(object):
         self.a0 = np.array(a0, dtype=float)
         self.da = [np.array(da_i) for da_i in da]
         self.b = np.array(b) if b is not None else np.zeros((*self.x0.shape, 1))
-        self.d_i = np.array(d_i) if d_i is not None else np.zeros((2, 1))
-        self.c = np.array(c) if c is not None else np.zeros(self.x0.shape)
+        self.d = np.array(d) if d is not None else np.zeros((*self.x0.shape, 1))
+        self.omega_i = np.array(omega_i) if omega_i is not None else np.zeros((2, 1))
+        self.u = np.array(u) if u is not None else np.zeros((1,))
+        self.k = np.array(k) if k is not None else np.zeros((self.b.shape[1], self.b.shape[0]))
         self.center = np.array(center) if center is not None else np.zeros(self.x0.shape)
+
+        # Closed-loop dynamics
+        self.a0 += self.b @ self.k
+
         self.coordinates = None
 
         self.x_t = self.x0
@@ -186,12 +194,13 @@ class LPV(object):
         # Forward coordinates change of states and models
         self.a0 = self.change_coordinates(self.a0, matrix=True)
         self.da = self.change_coordinates(self.da, matrix=True)
-        # self.b = self.change_coordinates(self.b, offset=False)
-        self.c = self.change_coordinates(self.c, offset=False)
+        self.b = self.change_coordinates(self.b, offset=False)
         self.x_i_t = np.array(self.change_coordinates([x for x in self.x_i]))
 
-    def set_control(self, control):
-        self.c = self.change_coordinates(control, offset=False)
+    def set_control(self, control, state=None):
+        if state is not None:
+            control = control - self.k @ state  # the Kx part of the control is already present in A0.
+        self.u = control
 
     def change_coordinates(self, value, matrix=False, back=False, interval=False, offset=True):
         """
@@ -226,16 +235,22 @@ class LPV(object):
             return [self.change_coordinates(v, back) for v in value]
         else:
             if back:
-                return transformation @ value + offset * self.center
+                value = transformation @ value
+                if offset:
+                    value += self.center
+                return value
             else:
-                return transformation_inv @ (value - offset * self.center)
+                if offset:
+                    value -= self.center
+                return transformation_inv @ value
 
     def step(self, dt):
         if is_metzler(self.a0):
             self.x_i_t = self.step_interval_predictor(self.x_i_t, dt)
         else:
+            raise ValueError()
             self.x_i_t = self.step_naive_predictor(self.x_i_t, dt)
-        dx = self.a0 @ self.x_t + self.c
+        dx = self.a0 @ self.x_t + self.b @ self.u.squeeze(-1)
         self.x_t = self.x_t + dx * dt
 
     def step_naive_predictor(self, x_i, dt):
@@ -246,9 +261,10 @@ class LPV(object):
         :param dt: time step
         :return: state interval at time t+dt
         """
-        a0, da, b, d_i, c = self.a0, self.da, self.b, self.d_i, self.c
+        a0, da, d, omega_i, b, u = self.a0, self.da, self.d, self.omega_i, self.b, self.u
         a_i = a0 + sum(intervals_product([0, 1], [da_i, da_i]) for da_i in da)
-        dx_i = intervals_product(a_i, x_i) + intervals_product([b, b], d_i) + c
+        bu = (b @ u).squeeze(-1)
+        dx_i = intervals_product(a_i, x_i) + intervals_product([d, d], omega_i) + np.array([bu, bu])
         return x_i + dx_i*dt
 
     def step_interval_predictor(self, x_i, dt):
@@ -259,14 +275,14 @@ class LPV(object):
         :param dt: time step
         :return: state interval at time t+dt
         """
-        a0, da, b, d_i, c = self.a0, self.da, self.b, self.d_i, self.c
+        a0, da, d, omega_i, b, u = self.a0, self.da, self.d, self.omega_i, self.b, self.u
         p = lambda x: np.maximum(x, 0)
         n = lambda x: np.maximum(-x, 0)
         da_p = sum(p(da_i) for da_i in da)
         da_n = sum(n(da_i) for da_i in da)
         x_m, x_M = x_i[0, :, np.newaxis], x_i[1, :, np.newaxis]
-        d_m, d_M = d_i[0, :, np.newaxis], d_i[1, :, np.newaxis]
-        dx_m = a0 @ x_m - da_p @ n(x_m) - da_n @ p(x_M) + p(b) @ d_m - n(b) @ d_M + c[:, np.newaxis]
-        dx_M = a0 @ x_M + da_p @ p(x_M) + da_n @ n(x_m) + p(b) @ d_M - n(b) @ d_m + c[:, np.newaxis]
+        o_m, o_M = omega_i[0, :, np.newaxis], omega_i[1, :, np.newaxis]
+        dx_m = a0 @ x_m - da_p @ n(x_m) - da_n @ p(x_M) + p(d) @ o_m - n(d) @ o_M + b @ u
+        dx_M = a0 @ x_M + da_p @ p(x_M) + da_n @ n(x_m) + p(d) @ o_M - n(d) @ o_m + b @ u
         dx_i = np.array([dx_m.squeeze(axis=-1), dx_M.squeeze(axis=-1)])
         return x_i + dx_i * dt
