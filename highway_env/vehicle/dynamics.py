@@ -16,7 +16,7 @@ class BicycleVehicle(Vehicle):
     LENGTH_B = Vehicle.LENGTH / 2  # [m]
     INERTIA_Z = 1/12 * MASS * (Vehicle.LENGTH ** 2 + 3 * Vehicle.WIDTH ** 2)  # [kg.m2]
     FRICTION_FRONT = 10.0 * MASS  # [N]
-    FRICTION_REAR = 10.0 * MASS  # [N]
+    FRICTION_REAR = 7.0 * MASS  # [N]
 
     MAX_ANGULAR_VELOCITY = 2 * np.pi  # [rad/s]
 
@@ -131,21 +131,33 @@ class BicycleVehicle(Vehicle):
 
 
 def simulate(dt=0.1):
+    import control
     time = np.arange(0, 20, dt)
     vehicle = BicycleVehicle(road=None, position=[0, 5], velocity=8.3)
     xx, uu = [], []
-    K = np.array([[1e-1, 2, 0, 1]])
+    from highway_env.interval import LPV
+    A, B = vehicle.full_lateral_lpv_dynamics()
+    K = -np.asarray(control.place(A, B, -np.arange(1, 5)))
+    lpv = LPV(x0=vehicle.state[[1, 2, 4, 5]].squeeze(), a0=A, da=[np.zeros(A.shape)], b=B,
+              d=[[0], [0], [0], [1]], omega_i=[[0], [0]], u=None, k=K, center=None, x_i=None)
+
     for t in time:
         # Act
-        u = - K @ vehicle.state[[1, 2, 4, 5]]
+        u = K @ vehicle.state[[1, 2, 4, 5]]
         omega = 2*np.pi/20
-        u += np.array([[-20*omega*np.sin(omega*t) * dt]])
+        u_p = 0*np.array([[-20*omega*np.sin(omega*t) * dt]])
+        u += u_p
         # Record
         xx.append(np.array([vehicle.position[0], vehicle.position[1], vehicle.heading])[:, np.newaxis])
-        uu.append(u.copy())
+        uu.append(u)
+        # Interval
+        lpv.set_control(u, state=vehicle.state[[1, 2, 4, 5]])
+        lpv.step(dt)
+        x_i_t = lpv.change_coordinates(lpv.x_i_t, back=True, interval=True)
         # Step
         vehicle.act({"acceleration": 0, "steering": u})
         vehicle.step(dt)
+
     xx, uu = np.array(xx), np.array(uu)
     plot(time, xx, uu)
 
