@@ -106,6 +106,21 @@ class LaneGraphics(object):
                                  (surface.vec2pix(lane.position(ends[k], lats[k]))),
                                  max(surface.pix(cls.STRIPE_WIDTH), 1))
 
+    @classmethod
+    def draw_ground(cls, lane, surface, color, width, draw_surface=None):
+        draw_surface = draw_surface or surface
+        stripes_count = int(2 * (surface.get_height() + surface.get_width()) / (cls.STRIPE_SPACING * surface.scaling))
+        s_origin, _ = lane.local_coordinates(surface.origin)
+        s0 = (int(s_origin) // cls.STRIPE_SPACING - stripes_count // 2) * cls.STRIPE_SPACING
+        dots = []
+        for side in range(2):
+            longis = np.clip(s0 + np.arange(stripes_count) * cls.STRIPE_SPACING, 0, lane.length)
+            lats = [2 * (side - 0.5) * width for _ in longis]
+            new_dots = [surface.vec2pix(lane.position(longi, lat)) for longi, lat in zip(longis, lats)]
+            new_dots = reversed(new_dots) if side else new_dots
+            dots.extend(new_dots)
+        pygame.draw.polygon(draw_surface, color, dots, 0)
+
 
 class RoadGraphics(object):
     """
