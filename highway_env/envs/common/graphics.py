@@ -96,11 +96,6 @@ class EnvViewer(object):
                 self.vehicle_trajectory,
                 self.sim_surface,
                 offscreen=self.offscreen)
-        RoadGraphics.display_traffic(
-            self.env.road,
-            self.sim_surface,
-            simulation_frequency=self.env.config["simulation_frequency"],
-            offscreen=self.offscreen)
 
         RoadGraphics.display_obstacles(
             self.env.road,
@@ -114,6 +109,12 @@ class EnvViewer(object):
                 self.screen.blit(self.agent_surface, (0, self.env.config["screen_height"]))
             else:
                 self.screen.blit(self.agent_surface, (self.env.config["screen_width"], 0))
+
+        RoadGraphics.display_traffic(
+            self.env.road,
+            self.sim_surface,
+            simulation_frequency=self.env.config["simulation_frequency"],
+            offscreen=self.offscreen)
 
         if not self.offscreen:
             self.screen.blit(self.sim_surface, (0, 0))
