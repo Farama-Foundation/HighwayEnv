@@ -20,6 +20,7 @@ class LaneKeepingEnv(AbstractEnv):
     def __init__(self, config=None):
         super().__init__(config)
         self.lane = None
+        self.lanes = []
         self.trajectory = []
         self.interval_trajectory = []
         self.lpv = None
@@ -38,7 +39,7 @@ class LaneKeepingEnv(AbstractEnv):
             "state_noise": 0.05,
             "derivative_noise": 0.05,
             "screen_width": 600,
-            "screen_height": 300,
+            "screen_height": 250,
             "scaling": 7,
             "centering_position": [0.4, 0.5]
         })
@@ -49,6 +50,8 @@ class LaneKeepingEnv(AbstractEnv):
         self.action_space = spaces.Box(-self.config["steering_range"], self.config["steering_range"], shape=(1,), dtype=np.float32)
 
     def step(self, action):
+        if self.lanes and not self.lane.on_lane(self.vehicle.position):
+            self.lane = self.lanes.pop(0)
         self.store_data()
         if self.lpv:
             self.lpv.set_control(control=action.squeeze(-1),
@@ -81,22 +84,21 @@ class LaneKeepingEnv(AbstractEnv):
 
     def _make_road(self):
         net = RoadNetwork()
-
-        self.lane = SineLane([0, 0], [500, 0], amplitude=5, pulsation=2*np.pi / 100, phase=0,
+        lane = SineLane([0, 0], [500, 0], amplitude=5, pulsation=2*np.pi / 100, phase=0,
                         width=10, line_types=[LineType.STRIPED, LineType.STRIPED])
-        # self.lane = StraightLane([0, 0], [500, 0], line_types=[LineType.STRIPED, LineType.STRIPED], width=10)
-        net.add_lane("a", "b", self.lane)
-        other_lane = StraightLane([50, 50], [120, 15], line_types=[LineType.STRIPED, LineType.STRIPED], width=10)
-        # other_lane = StraightLane([0, 5], [500, 5], line_types=[LineType.STRIPED, LineType.STRIPED], width=10)
+        net.add_lane("a", "b", lane)
+        other_lane = StraightLane([50, 50], [115, 15], line_types=[LineType.STRIPED, LineType.STRIPED], width=10)
         net.add_lane("c", "d", other_lane)
-        net.add_lane("d", "a", StraightLane([120, 15], [120+20, 15+20*(15-50)/(120-50)], line_types=[LineType.NONE, LineType.STRIPED], width=10))
+        self.lanes = [other_lane, lane]
+        self.lane = self.lanes.pop(0)
+        net.add_lane("d", "a", StraightLane([115, 15], [115+20, 15+20*(15-50)/(115-50)], line_types=[LineType.NONE, LineType.STRIPED], width=10))
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         self.road = road
 
     def _make_vehicles(self):
         road = self.road
-        ego_vehicle = BicycleVehicle(road, road.network.get_lane(("c", "d", 0)).position(80, 0),
-                                     heading=road.network.get_lane(("c", "d", 0)).heading_at(30),
+        ego_vehicle = BicycleVehicle(road, road.network.get_lane(("c", "d", 0)).position(50, -4),
+                                     heading=road.network.get_lane(("c", "d", 0)).heading_at(0),
                                      velocity=8.3)
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
