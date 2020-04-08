@@ -1,6 +1,7 @@
 from __future__ import division, print_function, absolute_import
 from gym.envs.registration import register
 import numpy as np
+from gym import spaces
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
@@ -8,6 +9,7 @@ from highway_env.road.lane import LineType, StraightLane, CircularLane, SineLane
 from highway_env.road.regulation import RegulatedRoad
 from highway_env.road.road import RoadNetwork
 from highway_env.vehicle.control import MDPVehicle
+from highway_env.vehicle.dynamics import Vehicle, Obstacle
 
 
 class IntersectionEnv(AbstractEnv):
@@ -218,7 +220,128 @@ class IntersectionEnv(AbstractEnv):
         return float(self.vehicle.crashed)
 
 
+
+
+class MyVehicle(MDPVehicle):
+    """MDPVehicle with low-level actions."""
+
+    def act(self, action=None):
+        Vehicle.act(self, action)
+
+
+class IntersectionEnvContinuous(IntersectionEnv):
+
+    STEERING_RANGE = np.pi / 4
+    ACCELERATION_RANGE = 5.0
+
+    REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
+    SUCCESS_GOAL_REWARD = 0.12
+
+    @classmethod
+    def default_config(cls):
+        config = super().default_config()
+        config.update({
+            "observation": {
+                "type": "GrayscaleObservation",
+                "weights": [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,
+                "stack_size": 4,
+                "observation_shape": (84, 84)
+            } ,
+            "duration": 13,  # [s]
+            "destination": "o1",
+            "screen_width": 600,
+            "screen_height": 600,
+            "centering_position": [0.5, 0.6],
+            "scaling": 5.5 * 1.3,
+            "collision_reward": IntersectionEnv.COLLISION_REWARD,
+            "normalize_reward": False
+        })
+        return config
+
+    def _make_vehicles(self, n_vehicles=10):
+        """
+            Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+        :return: the ego-vehicle
+        """
+        # Configure vehicles
+        vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
+        vehicle_type.DISTANCE_WANTED = 2  # Low jam distance
+        vehicle_type.COMFORT_ACC_MAX = 6
+        vehicle_type.COMFORT_ACC_MIN = -3
+
+        # Random vehicles
+        simulation_steps = 3
+        for t in range(n_vehicles - 1):
+            self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
+        for _ in range(simulation_steps):
+            [(self.road.act(), self.road.step(1 / self.SIMULATION_FREQUENCY)) for _ in range(self.SIMULATION_FREQUENCY)]
+
+        # Challenger vehicle
+        self._spawn_vehicle(60, spawn_probability=1, go_straight=True, position_deviation=0.1, velocity_deviation=0)
+
+        # Ego-vehicle
+        MDPVehicle.SPEED_MIN = 0
+        MDPVehicle.SPEED_MAX = 9
+        MDPVehicle.SPEED_COUNT = 3
+        # MDPVehicle.TAU_A = 1.0
+        ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
+        # destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
+        # ego_vehicle = Vehicle(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)#.plan_route_to(destination)
+        ego_vehicle = MyVehicle(self.road,
+                                 ego_lane.position(60, 0),
+                                 velocity=ego_lane.speed_limit,
+                                 heading=ego_lane.heading_at(0))
+
+        self.road.vehicles.append(ego_vehicle)
+        self.vehicle = ego_vehicle
+        for v in self.road.vehicles:  # Prevent early collisions
+            if v is not ego_vehicle and np.linalg.norm(v.position - ego_vehicle.position) < 20:
+                self.road.vehicles.remove(v)
+
+    def define_spaces(self):
+        super().define_spaces()
+        self.action_space = spaces.Box(-1.0, 1.0, shape=(2,), dtype=np.float32)
+
+    def _is_terminal(self):
+        vehicle = self.vehicle
+        return super()._is_terminal() or not vehicle.lane.on_lane(vehicle.position)
+
+    def step(self, action):
+        # Forward action to the vehicle
+
+        self.vehicle.act({
+            "acceleration": action[0] * self.ACCELERATION_RANGE,
+            "steering": action[1] * self.STEERING_RANGE
+        })
+        self._simulate()
+
+        obs = self.observation.observe()
+        # info = {"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])}
+        info = {
+            "velocity": self.vehicle.velocity,
+            "crashed": self.vehicle.crashed,
+            "action": action,
+        }
+        try:
+            info["cost"] = self._cost(action)
+        except NotImplementedError:
+            pass
+
+        # reward = self.compute_reward(obs['achieved_goal'], obs['desired_goal'], info)
+        reward = self._reward(action)
+        terminal = self._is_terminal()
+        return obs, reward, terminal, info
+
+
+
+
+
 register(
     id='intersection-v0',
     entry_point='highway_env.envs:IntersectionEnv',
+)
+
+register(
+    id='intersection-v1',
+    entry_point='highway_env.envs:IntersectionEnvContinuous',
 )

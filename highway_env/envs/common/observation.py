@@ -9,6 +9,8 @@ from highway_env.road.lane import AbstractLane
 from highway_env.vehicle.control import MDPVehicle
 from highway_env.road.graphics import WorldSurface
 
+import cv2
+
 
 class ObservationType(object):
     def space(self):
@@ -52,7 +54,8 @@ class GrayscaleObservation(ObservationType):
 
     def observe(self):
         new_obs = self._record_to_grayscale()
-        new_obs = np.reshape(new_obs, self.observation_shape)
+        new_obs = cv2.resize(new_obs, self.observation_shape)
+        # new_obs = np.reshape(new_obs, self.observation_shape)
         self.state = np.roll(self.state, -1, axis=-1)
         self.state[:, :, -1] = new_obs
         return self.state
