@@ -220,22 +220,10 @@ class IntersectionEnv(AbstractEnv):
         return float(self.vehicle.crashed)
 
 
-
-
-class MyVehicle(MDPVehicle):
-    """MDPVehicle with low-level actions."""
-
-    def act(self, action=None):
-        Vehicle.act(self, action)
-
-
-class IntersectionEnvContinuous(IntersectionEnv):
-
-    STEERING_RANGE = np.pi / 4
-    ACCELERATION_RANGE = 5.0
-
-    REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
-    SUCCESS_GOAL_REWARD = 0.12
+class IntersectionEnvObsFrameActHighLevel(IntersectionEnv):
+    """
+    This class is for intersection env with frame observation and high-level action commands
+    """
 
     @classmethod
     def default_config(cls):
@@ -257,6 +245,32 @@ class IntersectionEnvContinuous(IntersectionEnv):
             "normalize_reward": False
         })
         return config
+
+    def _is_terminal(self):
+        vehicle = self.vehicle
+        return super()._is_terminal() or not vehicle.lane.on_lane(vehicle.position)
+
+
+
+
+
+# class MyVehicle(MDPVehicle):
+#     """MDPVehicle with low-level actions."""
+#
+#     def act(self, action=None):
+#         Vehicle.act(self, action)
+
+
+class IntersectionEnvObsFrameActContinuous(IntersectionEnvObsFrameActHighLevel):
+    """
+    This class is for intersection env with frame observation and low-level action commands
+    """
+
+    STEERING_RANGE = np.pi / 4
+    ACCELERATION_RANGE = 5.0
+
+    REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
+    SUCCESS_GOAL_REWARD = 0.12
 
     def _make_vehicles(self, n_vehicles=10):
         """
@@ -287,11 +301,11 @@ class IntersectionEnvContinuous(IntersectionEnv):
         ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
         # destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
         # ego_vehicle = Vehicle(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)#.plan_route_to(destination)
-        ego_vehicle = MyVehicle(self.road,
+        ego_vehicle = MDPVehicle(self.road,
                                  ego_lane.position(60, 0),
                                  velocity=ego_lane.speed_limit,
                                  heading=ego_lane.heading_at(0))
-
+        ego_vehicle.plan_route_to("o1")
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
         for v in self.road.vehicles:  # Prevent early collisions
@@ -301,10 +315,6 @@ class IntersectionEnvContinuous(IntersectionEnv):
     def define_spaces(self):
         super().define_spaces()
         self.action_space = spaces.Box(-1.0, 1.0, shape=(2,), dtype=np.float32)
-
-    def _is_terminal(self):
-        vehicle = self.vehicle
-        return super()._is_terminal() or not vehicle.lane.on_lane(vehicle.position)
 
     def step(self, action):
         # Forward action to the vehicle
@@ -334,8 +344,6 @@ class IntersectionEnvContinuous(IntersectionEnv):
 
 
 
-
-
 register(
     id='intersection-v0',
     entry_point='highway_env.envs:IntersectionEnv',
@@ -343,5 +351,10 @@ register(
 
 register(
     id='intersection-v1',
-    entry_point='highway_env.envs:IntersectionEnvContinuous',
+    entry_point='highway_env.envs:IntersectionEnvObsFrameActHighLevel',
+)
+
+register(
+    id='intersection-v2',
+    entry_point='highway_env.envs:IntersectionEnvObsFrameActContinuous',
 )
