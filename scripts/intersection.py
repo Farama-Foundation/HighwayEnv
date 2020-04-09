@@ -25,6 +25,7 @@ if __name__ == '__main__':
 
     env = gym.make("intersection-v2")
     done = False
+    env.reset()
     while not done:
         # action = np.array([0, 0]) #acc, steer
         action = env.action_space.sample()
