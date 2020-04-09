@@ -19,3 +19,5 @@ _build
 
 # Outputs
 **/out/*
+
+scripts/logs/*

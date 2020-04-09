@@ -235,7 +235,7 @@ class IntersectionEnvObsFrameActHighLevel(IntersectionEnv):
                 "stack_size": 4,
                 "observation_shape": (84, 84)
             } ,
-            "n_vehicles": 10,
+            "vehicles_count": 10,
             "duration": 13,  # [s]
             "destination": "o1",
             "screen_width": 600,
@@ -253,15 +253,9 @@ class IntersectionEnvObsFrameActHighLevel(IntersectionEnv):
 
     def reset(self):
         self._make_road()
-        self._make_vehicles(self.config['n_vehicles'])
+        self._make_vehicles(self.config['vehicles_count'])
         self.steps = 0
         return super(IntersectionEnv, self).reset()
-
-# class MyVehicle(MDPVehicle):
-#     """MDPVehicle with low-level actions."""
-#
-#     def act(self, action=None):
-#         Vehicle.act(self, action)
 
 
 class IntersectionEnvObsFrameActContinuous(IntersectionEnvObsFrameActHighLevel):
