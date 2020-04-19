@@ -1,4 +1,3 @@
-from __future__ import division, print_function
 import numpy as np
 from highway_env.vehicle.control import ControlledVehicle
 from highway_env import utils
@@ -34,7 +33,7 @@ class IDMVehicle(ControlledVehicle):
                  route=None,
                  enable_lane_change=True,
                  timer=None):
-        super(IDMVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity, route)
+        super().__init__(road, position, heading, velocity, target_lane_index, target_velocity, route)
         self.enable_lane_change = enable_lane_change
         self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
 
@@ -81,7 +80,7 @@ class IDMVehicle(ControlledVehicle):
                                                    rear_vehicle=rear_vehicle)
         # action['acceleration'] = self.recover_from_stop(action['acceleration'])
         action['acceleration'] = np.clip(action['acceleration'], -self.ACC_MAX, self.ACC_MAX)
-        super(ControlledVehicle, self).act(action)
+        super().act(action)
 
     def step(self, dt):
         """
@@ -92,7 +91,7 @@ class IDMVehicle(ControlledVehicle):
         :param dt: timestep
         """
         self.timer += dt
-        super(IDMVehicle, self).step(dt)
+        super().step(dt)
 
     def acceleration(self, ego_vehicle, front_vehicle=None, rear_vehicle=None):
         """
@@ -287,7 +286,7 @@ class LinearVehicle(IDMVehicle):
                  route=None,
                  enable_lane_change=True,
                  timer=None):
-        super(LinearVehicle, self).__init__(road,
+        super().__init__(road,
                                             position,
                                             heading,
                                             velocity,

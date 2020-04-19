@@ -1,4 +1,3 @@
-from __future__ import division, print_function
 from abc import ABCMeta, abstractmethod
 import numpy as np
 
@@ -121,7 +120,7 @@ class StraightLane(AbstractLane):
         :param forbidden: is changing to this lane forbidden
         :param priority: priority level of the lane, for determining who has right of way
         """
-        super(StraightLane, self).__init__()
+        super().__init__()
         self.start = np.array(start)
         self.end = np.array(end)
         self.width = width
@@ -166,21 +165,21 @@ class SineLane(StraightLane):
         :param pulsation: the lane pulsation [rad/m]
         :param phase: the lane initial phase [rad]
         """
-        super(SineLane, self).__init__(start, end,  width, line_types, forbidden, speed_limit, priority)
+        super().__init__(start, end,  width, line_types, forbidden, speed_limit, priority)
         self.amplitude = amplitude
         self.pulsation = pulsation
         self.phase = phase
 
     def position(self, longitudinal, lateral):
-        return super(SineLane, self).position(longitudinal, lateral
-                                              + self.amplitude * np.sin(self.pulsation * longitudinal + self.phase))
+        return super().position(longitudinal,
+                                lateral + self.amplitude * np.sin(self.pulsation * longitudinal + self.phase))
 
     def heading_at(self, s):
-        return super(SineLane, self).heading_at(s) + np.arctan(
+        return super().heading_at(s) + np.arctan(
             self.amplitude * self.pulsation * np.cos(self.pulsation * s + self.phase))
 
     def local_coordinates(self, position):
-        longitudinal, lateral = super(SineLane, self).local_coordinates(position)
+        longitudinal, lateral = super().local_coordinates(position)
         return longitudinal, lateral - self.amplitude * np.sin(self.pulsation * longitudinal + self.phase)
 
 
@@ -190,7 +189,7 @@ class CircularLane(AbstractLane):
     """
     def __init__(self, center, radius, start_phase, end_phase, clockwise=True,
                  width=AbstractLane.DEFAULT_WIDTH, line_types=None, forbidden=False, speed_limit=20, priority=0):
-        super(CircularLane, self).__init__()
+        super().__init__()
         self.center = np.array(center)
         self.radius = radius
         self.start_phase = start_phase

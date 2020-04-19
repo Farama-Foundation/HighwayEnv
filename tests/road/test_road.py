@@ -1,11 +1,8 @@
-from __future__ import division, print_function
-import numpy as np
 import pytest
 
 from highway_env.road.lane import StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.control import ControlledVehicle
-from highway_env.vehicle.dynamics import Vehicle
 
 
 def test_network():

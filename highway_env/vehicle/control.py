@@ -1,4 +1,3 @@
-from __future__ import division, print_function
 import numpy as np
 import copy
 from highway_env import utils
@@ -32,7 +31,7 @@ class ControlledVehicle(Vehicle):
                  target_lane_index=None,
                  target_velocity=None,
                  route=None):
-        super(ControlledVehicle, self).__init__(road, position, heading, velocity)
+        super().__init__(road, position, heading, velocity)
         self.target_lane_index = target_lane_index or self.lane_index
         self.target_velocity = target_velocity or self.velocity
         self.route = route
@@ -91,7 +90,7 @@ class ControlledVehicle(Vehicle):
 
         action = {'steering': self.steering_control(self.target_lane_index),
                   'acceleration': self.velocity_control(self.target_velocity)}
-        super(ControlledVehicle, self).act(action)
+        super().act(action)
 
     def follow_road(self):
         """
@@ -197,7 +196,7 @@ class MDPVehicle(ControlledVehicle):
                  target_lane_index=None,
                  target_velocity=None,
                  route=None):
-        super(MDPVehicle, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity, route)
+        super().__init__(road, position, heading, velocity, target_lane_index, target_velocity, route)
         self.velocity_index = self.speed_to_index(self.target_velocity)
         self.target_velocity = self.index_to_speed(self.velocity_index)
 
@@ -215,11 +214,11 @@ class MDPVehicle(ControlledVehicle):
         elif action == "SLOWER":
             self.velocity_index = self.speed_to_index(self.velocity) - 1
         else:
-            super(MDPVehicle, self).act(action)
+            super().act(action)
             return
         self.velocity_index = np.clip(self.velocity_index, 0, self.SPEED_COUNT - 1)
         self.target_velocity = self.index_to_speed(self.velocity_index)
-        super(MDPVehicle, self).act()
+        super().act()
 
     @classmethod
     def index_to_speed(cls, index):

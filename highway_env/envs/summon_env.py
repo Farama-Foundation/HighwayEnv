@@ -1,4 +1,3 @@
-from __future__ import division, print_function, absolute_import
 from gym.envs.registration import register
 from gym import GoalEnv, spaces
 import numpy as np
@@ -69,7 +68,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
     def reset(self):
         self._create_road()
         self._create_vehicles()
-        return super(SummonEnv, self).reset()
+        return super().reset()
 
     def _create_road(self, spots=15):
         """

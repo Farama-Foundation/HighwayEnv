@@ -1,4 +1,3 @@
-from __future__ import division, print_function, absolute_import
 from gym.envs.registration import register
 
 from highway_env import utils
@@ -42,11 +41,11 @@ class HighwayEnv(AbstractEnv):
         self._create_road()
         self._create_vehicles()
         self.steps = 0
-        return super(HighwayEnv, self).reset()
+        return super().reset()
 
     def step(self, action):
         self.steps += 1
-        return super(HighwayEnv, self).step(action)
+        return super().step(action)
 
     def _create_road(self):
         """

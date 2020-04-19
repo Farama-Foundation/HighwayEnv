@@ -33,15 +33,15 @@ class IntervalVehicle(LinearVehicle):
         :param theta_a_i: The interval of possible acceleration parameters
         :param theta_b_i: The interval of possible steering parameters
         """
-        super(IntervalVehicle, self).__init__(road,
-                                              position,
-                                              heading,
-                                              velocity,
-                                              target_lane_index,
-                                              target_velocity,
-                                              route,
-                                              enable_lane_change,
-                                              timer)
+        super().__init__(road,
+                         position,
+                         heading,
+                         velocity,
+                         target_lane_index,
+                         target_velocity,
+                         route,
+                         enable_lane_change,
+                         timer)
         self.theta_a_i = theta_a_i if theta_a_i is not None else LinearVehicle.ACCELERATION_RANGE
         self.theta_b_i = theta_b_i if theta_b_i is not None else LinearVehicle.STEERING_RANGE
 
@@ -72,7 +72,7 @@ class IntervalVehicle(LinearVehicle):
             # self.observer_step(dt)
             # self.partial_observer_step(dt)
             self.predictor_step(dt)
-        super(IntervalVehicle, self).step(dt)
+        super().step(dt)
 
     def observer_step(self, dt):
         """
@@ -350,7 +350,7 @@ class IntervalVehicle(LinearVehicle):
         :param other: the other vehicle
         """
         if not isinstance(other, MDPVehicle):
-            return super(IntervalVehicle, self).check_collision(other)
+            return super().check_collision(other)
 
         if not self.COLLISIONS_ENABLED or self.crashed or other is self:
             return

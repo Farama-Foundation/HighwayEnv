@@ -1,4 +1,3 @@
-from __future__ import division, print_function, absolute_import
 from gym.envs.registration import register
 
 from highway_env import utils
@@ -34,7 +33,7 @@ class TwoWayEnv(AbstractEnv):
         return config
 
     def step(self, action):
-        return super(TwoWayEnv, self).step(action)
+        return super().step(action)
 
     def _reward(self, action):
         """
@@ -63,7 +62,7 @@ class TwoWayEnv(AbstractEnv):
     def reset(self):
         self._make_road()
         self._make_vehicles()
-        return super(TwoWayEnv, self).reset()
+        return super().reset()
 
     def _make_road(self, length=800):
         """

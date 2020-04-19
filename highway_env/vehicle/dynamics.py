@@ -1,5 +1,3 @@
-from __future__ import division, print_function
-
 import copy
 
 import numpy as np
@@ -267,6 +265,6 @@ class Obstacle(Vehicle):
     """
 
     def __init__(self, road, position, heading=0):
-        super(Obstacle, self).__init__(road, position, velocity=0, heading=heading)
+        super().__init__(road, position, velocity=0, heading=heading)
         self.target_velocity = 0
         self.LENGTH = self.WIDTH

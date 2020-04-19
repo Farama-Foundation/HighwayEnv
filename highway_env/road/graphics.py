@@ -1,4 +1,3 @@
-from __future__ import division, print_function
 import numpy as np
 import pygame
 
@@ -156,7 +155,7 @@ class WorldSurface(pygame.Surface):
     MOVING_FACTOR = 0.1
 
     def __init__(self, size, flags, surf):
-        super(WorldSurface, self).__init__(size, flags, surf)
+        super().__init__(size, flags, surf)
         self.origin = np.array([0, 0])
         self.scaling = self.INITIAL_SCALING
         self.centering_position = self.INITIAL_CENTERING

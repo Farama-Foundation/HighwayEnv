@@ -1,4 +1,3 @@
-from __future__ import division, print_function, absolute_import
 import pandas
 from gym import spaces
 import numpy as np
@@ -7,7 +6,6 @@ from highway_env import utils
 from highway_env.envs.common.finite_mdp import compute_ttc_grid
 from highway_env.road.lane import AbstractLane
 from highway_env.vehicle.control import MDPVehicle
-from highway_env.road.graphics import WorldSurface
 
 
 class ObservationType(object):
@@ -258,7 +256,7 @@ class OccupancyGridObservation(ObservationType):
 class KinematicsGoalObservation(KinematicObservation):
     def __init__(self, env, scales, **kwargs):
         self.scales = np.array(scales)
-        super(KinematicsGoalObservation, self).__init__(env, **kwargs)
+        super().__init__(env, **kwargs)
 
     def space(self):
         try:

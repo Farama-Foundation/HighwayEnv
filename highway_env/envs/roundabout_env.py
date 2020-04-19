@@ -1,4 +1,3 @@
-from __future__ import division, print_function, absolute_import
 from gym.envs.registration import register
 import numpy as np
 
@@ -44,11 +43,11 @@ class RoundaboutEnv(AbstractEnv):
         self._make_road()
         self._make_vehicles()
         self.steps = 0
-        return super(RoundaboutEnv, self).reset()
+        return super().reset()
 
     def step(self, action):
         self.steps += 1
-        return super(RoundaboutEnv, self).step(action)
+        return super().step(action)
 
     def _make_road(self):
         # Circle lanes: (s)outh/(e)ast/(n)orth/(w)est (e)ntry/e(x)it.

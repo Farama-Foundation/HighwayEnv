@@ -1,4 +1,3 @@
-from __future__ import division, print_function, absolute_import
 import numpy as np
 from gym.envs.registration import register
 
@@ -60,7 +59,7 @@ class MergeEnv(AbstractEnv):
     def reset(self):
         self._make_road()
         self._make_vehicles()
-        return super(MergeEnv, self).reset()
+        return super().reset()
 
     def _make_road(self):
         """

@@ -1,6 +1,3 @@
-from __future__ import division, print_function
-
-
 class Loggable(object):
     """
         Implements an object whose metrics can be logged through

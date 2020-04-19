@@ -1,4 +1,3 @@
-from __future__ import division, print_function, absolute_import
 from gym.envs.registration import register
 import numpy as np
 
@@ -71,10 +70,10 @@ class IntersectionEnv(AbstractEnv):
         self._make_road()
         self._make_vehicles()
         self.steps = 0
-        return super(IntersectionEnv, self).reset()
+        return super().reset()
 
     def step(self, action):
-        results = super(IntersectionEnv, self).step(action)
+        results = super().step(action)
         self.steps += 1
         self._clear_vehicles()
         self._spawn_vehicle()

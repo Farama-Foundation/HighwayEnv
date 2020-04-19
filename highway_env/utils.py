@@ -1,7 +1,4 @@
-from __future__ import division, print_function
-
 import importlib
-
 import numpy as np
 
 EPSILON = 0.01
