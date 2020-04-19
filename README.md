@@ -125,7 +125,7 @@ An intersection negotiation task with dense traffic.
 
 ## The framework
 
-New highway driving environments can easily be made from a set of building blocks.
+New driving environments can easily be made from a set of building blocks.
 
 ### Roads
 
