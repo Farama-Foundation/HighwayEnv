@@ -136,12 +136,12 @@ A `Road` is composed of a `RoadNetwork` and a list of `Vehicles`. The `RoadNetwo
 The vehicles kinematics are represented in the `Vehicle` class by a _Kinematic Bicycle Model_.
 
 ![\dot{x}=v\cos\psi](https://render.githubusercontent.com/render/math?math=\dot{x}=v\cos\psi)
-![\dot{y}=v\sin\psi](https://render.githubusercontent.com/render/math?math=\dot{y}=v\sin\psi)
-![\dot{v}=a](https://render.githubusercontent.com/render/math?math=\dot{v}=a)
-![\dot{\psi}=\frac{v}{l}\sin\beta](https://render.githubusercontent.com/render/math?math=\dot{\psi}=\frac{v}{l}\sin\beta)
 
-<a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;v=a" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;v=a" title="\dot v=a" /></a><br>
-<a href="https://www.codecogs.com/eqnedit.php?latex=\dot\psi=\frac{v}{l}\sin\beta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot\psi=\frac{v}{l}\sin\beta" title="\dot\psi=\frac{v}{l}\sin\beta" /></a>
+![\dot{y}=v\sin\psi](https://render.githubusercontent.com/render/math?math=\dot{y}=v\sin\psi)
+
+![\dot{v}=a](https://render.githubusercontent.com/render/math?math=\dot{v}=a)
+
+![\dot{\psi}=\frac{v}{l}\sin\beta](https://render.githubusercontent.com/render/math?math=\dot{\psi}=\frac{v}{l}\sin\beta)
 
 Where *(x, y)* is the vehicle position, *v* its forward velocity and *psi* its heading.
 *a* is the acceleration command and *beta* is the slip angle at the center of gravity, used as a steering command.
