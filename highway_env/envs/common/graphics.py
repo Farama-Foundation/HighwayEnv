@@ -61,7 +61,6 @@ class EnvViewer(object):
             Set the sequence of actions chosen by the agent, so that it can be displayed
         :param actions: list of action, following the env's action space specification
         """
-        return
         if isinstance(self.env.action_space, Discrete):
             actions = [self.env.ACTIONS[a] for a in actions]
         if len(actions) > 1:

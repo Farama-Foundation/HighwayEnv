@@ -320,9 +320,7 @@ class AbstractEnv(gym.Env):
         if preferred_lane:
             for v in env_copy.road.vehicles:
                 if isinstance(v, IDMVehicle):
-                    raise NotImplementedError
-                else:
-                    raise NotImplementedError
+                    v.route = [(lane[0], lane[1], preferred_lane) for lane in v.route]
                     # Vehicle with lane preference are also less cautious
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
