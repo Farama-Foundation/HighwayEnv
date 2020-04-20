@@ -138,7 +138,7 @@ The vehicles kinematics are represented in the `Vehicle` class by a _Kinematic B
 <a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;x=v\cos\psi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;x=v\cos\psi" title="\dot x=v\cos\psi" /></a><br>
 <a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;y=v\sin\psi" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;y=v\sin\psi" title="\dot y=v\sin\psi" /></a><br>
 <a href="https://www.codecogs.com/eqnedit.php?latex=\dot&space;v=a" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot&space;v=a" title="\dot v=a" /></a><br>
-<a href="https://www.codecogs.com/eqnedit.php?latex=\dot\psi=\frac{v}{l}\tan\beta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot\psi=\frac{v}{l}\sin\beta" title="\dot\psi=\frac{v}{l}\sin\beta" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\dot\psi=\frac{v}{l}\sin\beta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot\psi=\frac{v}{l}\sin\beta" title="\dot\psi=\frac{v}{l}\sin\beta" /></a>
 
 Where *(x, y)* is the vehicle position, *v* its forward velocity and *psi* its heading.
 *a* is the acceleration command and *beta* is the slip angle at the center of gravity, used as a steering command.
