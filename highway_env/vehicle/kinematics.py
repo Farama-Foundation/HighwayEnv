@@ -118,7 +118,8 @@ class Vehicle(Loggable):
         :param dt: timestep of integration of the model [s]
         """
         self.clip_actions()
-        v = self.velocity * np.array([np.cos(self.heading), np.sin(self.heading)])
+        v = self.velocity * np.array([np.cos(self.heading + self.action['steering']),
+                                      np.sin(self.heading + self.action['steering'])])
         self.position += v * dt
         self.heading += self.velocity * np.sin(self.action['steering']) / (self.LENGTH / 2) * dt
         self.velocity += self.action['acceleration'] * dt

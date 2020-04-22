@@ -135,16 +135,16 @@ A `Road` is composed of a `RoadNetwork` and a list of `Vehicles`. The `RoadNetwo
 
 The vehicles kinematics are represented in the `Vehicle` class by a _Kinematic Bicycle Model_.
 
-![\dot{x}=v\cos\psi](https://render.githubusercontent.com/render/math?math=\dot{x}=v\cos\psi)
+![\dot{x}=v\cos(\psi+\beta)](https://render.githubusercontent.com/render/math?math=\dot{x}=v\cos(\psi+\beta))
 
-![\dot{y}=v\sin\psi](https://render.githubusercontent.com/render/math?math=\dot{y}=v\sin\psi)
+![\dot{y}=v\sin(\psi+\beta)](https://render.githubusercontent.com/render/math?math=\dot{y}=v\sin(\psi+\beta))
 
 ![\dot{v}=a](https://render.githubusercontent.com/render/math?math=\dot{v}=a)
 
 ![\dot{\psi}=\frac{v}{l}\sin\beta](https://render.githubusercontent.com/render/math?math=\dot{\psi}=\frac{v}{l}\sin\beta)
 
 Where *(x, y)* is the vehicle position, *v* its forward velocity and *psi* its heading.
-*a* is the acceleration command and *beta* is the slip angle at the center of gravity, used as a steering command.
+*a* is the acceleration command and *β* is the slip angle at the center of gravity, used as a steering command.
 
 ### Control
 
