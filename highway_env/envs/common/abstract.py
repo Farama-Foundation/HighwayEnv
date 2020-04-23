@@ -2,6 +2,7 @@ import copy
 import gym
 from gym import spaces
 from gym.utils import seeding
+import numpy as np
 
 from highway_env import utils
 from highway_env.envs.common.observation import observation_factory
@@ -44,6 +45,9 @@ class AbstractEnv(gym.Env):
     """
         The maximum distance of any vehicle present in the observation [m]
     """
+
+    STEERING_RANGE = np.pi / 4
+    ACCELERATION_RANGE = 5.0
 
     def __init__(self, config=None):
         # Configuration
@@ -92,6 +96,9 @@ class AbstractEnv(gym.Env):
             "observation": {
                 "type": "TimeToCollision"
             },
+            "action": {
+                "type": "Discrete"
+            },
             "policy_frequency": 1,  # [Hz]
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
             "screen_width": 600,  # [px]
@@ -109,12 +116,13 @@ class AbstractEnv(gym.Env):
             self.config.update(config)
 
     def define_spaces(self):
-        self.action_space = spaces.Discrete(len(self.ACTIONS))
-
-        if "observation" not in self.config:
-            raise ValueError("The observation configuration must be defined")
         self.observation = observation_factory(self, self.config["observation"])
         self.observation_space = self.observation.space()
+
+        if self.config["action"]["type"] == "Discrete":
+            self.action_space = spaces.Discrete(len(self.ACTIONS))
+        elif self.config["action"]["type"] == "Continuous":
+            self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
 
     def _reward(self, action):
         """
@@ -191,7 +199,13 @@ class AbstractEnv(gym.Env):
             if action is not None and \
                     self.time % int(self.SIMULATION_FREQUENCY // self.config["policy_frequency"]) == 0:
                 # Forward action to the vehicle
-                self.vehicle.act(self.ACTIONS[action])
+                if self.config["action"]["type"] == "Discrete":
+                    self.vehicle.act(self.ACTIONS[action])
+                elif self.config["action"]["type"] == "Continuous":
+                    self.vehicle.act({
+                        "acceleration": action[0] * self.ACCELERATION_RANGE,
+                        "steering": action[1] * self.STEERING_RANGE
+                    })
 
             self.road.act()
             self.road.step(1 / self.SIMULATION_FREQUENCY)

@@ -1,5 +1,5 @@
 from gym.envs.registration import register
-from gym import GoalEnv, spaces
+from gym import GoalEnv
 import numpy as np
 
 from highway_env.envs.common.abstract import AbstractEnv
@@ -17,10 +17,6 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
         Credits to Munir Jojo-Verge for the idea and initial implementation.
     """
-
-    STEERING_RANGE = np.pi / 4
-    ACCELERATION_RANGE = 5.0
-
     REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
     SUCCESS_GOAL_REWARD = 0.12
 
@@ -34,6 +30,9 @@ class ParkingEnv(AbstractEnv, GoalEnv):
                 "scales": [100, 100, 5, 5, 1, 1],
                 "normalize": False
             },
+            "action": {
+                "type": "Continuous"
+            },
             "policy_frequency": 5,
             "screen_width": 600,
             "screen_height": 300,
@@ -41,23 +40,9 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         })
         return config
 
-    def define_spaces(self):
-        super().define_spaces()
-        self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
-
     def step(self, action):
-        # Forward action to the vehicle
-
-        self.vehicle.act({
-            "acceleration": action[0] * self.ACCELERATION_RANGE,
-            "steering": action[1] * self.STEERING_RANGE
-        })
-        self._simulate()
-
-        obs = self.observation.observe()
-        info = {"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])}
-        reward = self.compute_reward(obs['achieved_goal'], obs['desired_goal'], info)
-        terminal = self._is_terminal(obs)
+        obs, reward, terminal, info = super().step(action)
+        info.update({"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])})
         return obs, reward, terminal, info
 
     def reset(self):
@@ -103,26 +88,25 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             We use a weighted p-norm
         :param achieved_goal: the goal that was achieved
         :param desired_goal: the goal that was desired
-        :param info: any supplementary information
+        :param dict info: any supplementary information
         :param p: the Lp^p norm used in the reward. Use p<1 to have high kurtosis for rewards in [0, 1]
         :return: the corresponding reward
         """
-        return - np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
+        return -np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
 
     def _reward(self, action):
-        raise Exception("Use compute_reward instead, as for GoalEnvs")
+        obs = self.observation.observe()
+        return self.compute_reward(obs['achieved_goal'], obs['desired_goal'], {})
 
     def _is_success(self, achieved_goal, desired_goal):
-        return self.compute_reward(achieved_goal, desired_goal, None) > -self.SUCCESS_GOAL_REWARD
+        return self.compute_reward(achieved_goal, desired_goal, {}) > -self.SUCCESS_GOAL_REWARD
 
-    def _is_terminal(self, obs=None):
+    def _is_terminal(self):
         """
             The episode is over if the ego vehicle crashed or the goal is reached.
         """
-        done = self.vehicle.crashed
-        if obs is not None:
-            done = done or self._is_success(obs['achieved_goal'], obs['desired_goal'])
-        return done
+        obs = self.observation.observe()
+        return self.vehicle.crashed or self._is_success(obs['achieved_goal'], obs['desired_goal'])
 
 
 class ParkingEnvActionRepeat(ParkingEnv):
