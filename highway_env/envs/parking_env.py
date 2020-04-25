@@ -79,7 +79,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         lane = self.np_random.choice(self.road.network.lanes_list())
         self.goal = Obstacle(self.road, lane.position(lane.length/2, 0), heading=lane.heading)
         self.goal.COLLISIONS_ENABLED = False
-        self.road.vehicles.insert(0, self.goal)
+        self.road.obstacles.append(self.goal)
 
     def compute_reward(self, achieved_goal, desired_goal, info, p=0.5):
         """
