@@ -110,8 +110,8 @@ class RoadGraphics(object):
     """
         A visualization of a road lanes and vehicles.
     """
-    @classmethod
-    def display(cls, road, surface):
+    @staticmethod
+    def display(road, surface):
         """
             Display the road lanes on a surface.
 
@@ -124,8 +124,8 @@ class RoadGraphics(object):
                 for l in road.network.graph[_from][_to]:
                     LaneGraphics.display(l, surface)
 
-    @classmethod
-    def display_traffic(cls, road, surface, simulation_frequency=15, offscreen=False):
+    @staticmethod
+    def display_traffic(road, surface, simulation_frequency=15, offscreen=False):
         """
             Display the road vehicles on a surface.
 
@@ -138,6 +138,18 @@ class RoadGraphics(object):
                 VehicleGraphics.display_history(v, surface, simulation=simulation_frequency, offscreen=offscreen)
         for v in road.vehicles:
             VehicleGraphics.display(v, surface, offscreen=offscreen)
+
+    @staticmethod
+    def display_obstacles(road, surface, offscreen=False):
+        """
+            Display the obstacles on a surface.
+
+        :param road: the road to be displayed
+        :param surface: the pygame surface
+        :param offscreen: whether the rendering should be done offscreen or not
+        """
+        for o in road.obstacles:
+            VehicleGraphics.display(o, surface, offscreen=offscreen)
 
 
 class WorldSurface(pygame.Surface):

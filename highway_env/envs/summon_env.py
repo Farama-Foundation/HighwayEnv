@@ -117,7 +117,7 @@ class SummonEnv(AbstractEnv, GoalEnv):
         goal_position = [self.np_random.choice([-2 * self.spots - 10, 2 * self.spots + 10]), 0]
         self.goal = Obstacle(self.road, goal_position, heading=0)
         self.goal.COLLISIONS_ENABLED = False
-        self.road.vehicles.insert(0, self.goal)
+        self.road.obstacles.append(self.goal)
 
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for i in range(self.config["vehicles_count"]):
@@ -147,7 +147,8 @@ class SummonEnv(AbstractEnv, GoalEnv):
         :param p: the Lp^p norm used in the reward. Use p<1 to have high kurtosis for rewards in [0, 1]
         :return: the corresponding reward
         """
-        return - np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p) + (self.COLLISION_REWARD * self.vehicle.crashed)
+        return - np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p) + \
+               (self.COLLISION_REWARD * self.vehicle.crashed)
 
     def _reward(self, action):
         raise Exception("Use compute_reward instead, as for GoalEnvs")

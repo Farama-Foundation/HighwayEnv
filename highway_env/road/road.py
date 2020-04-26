@@ -182,7 +182,7 @@ class RoadNetwork(object):
         :return: whether the roads are connected
         """
         if RoadNetwork.is_same_road(lane_index_2, lane_index_1, same_lane) \
-           or RoadNetwork.is_leading_to_road(lane_index_2, lane_index_1, same_lane):
+                or RoadNetwork.is_leading_to_road(lane_index_2, lane_index_1, same_lane):
             return True
         if depth > 0:
             if route and route[0][:2] == lane_index_1[:2]:
@@ -234,7 +234,7 @@ class Road(Loggable):
         A road is a set of lanes, and a set of vehicles driving on these lanes
     """
 
-    def __init__(self, network=None, vehicles=None, np_random=None, record_history=False):
+    def __init__(self, network=None, vehicles=None, obstacles=None, np_random=None, record_history=False):
         """
             New road.
 
@@ -245,6 +245,7 @@ class Road(Loggable):
         """
         self.network = network or []
         self.vehicles = vehicles or []
+        self.obstacles = obstacles or []
         self.np_random = np_random if np_random else np.random.RandomState()
         self.record_history = record_history
 
@@ -252,7 +253,7 @@ class Road(Loggable):
         vehicles = [v for v in self.vehicles
                     if np.linalg.norm(v.position - vehicle.position) < distance
                     and v is not vehicle
-                    and (see_behind or -2*vehicle.LENGTH < vehicle.lane_distance_to(v))]
+                    and (see_behind or -2 * vehicle.LENGTH < vehicle.lane_distance_to(v))]
         if sort:
             vehicles = sorted(vehicles, key=lambda v: abs(vehicle.lane_distance_to(v)))
         if count:
@@ -274,9 +275,12 @@ class Road(Loggable):
         """
         for vehicle in self.vehicles:
             vehicle.step(dt)
-
+        # TODO: create a shallow copy of vehicles list(vehicle.copy()) and pop crashed vehicles from it to reduce
+        #  complexity and prevent multiple checks
         for vehicle in self.vehicles:
             for other in self.vehicles:
+                vehicle.check_collision(other)
+            for other in self.obstacles:
                 vehicle.check_collision(other)
 
     def neighbour_vehicles(self, vehicle, lane_index=None):
@@ -296,7 +300,7 @@ class Road(Loggable):
         s_front = s_rear = None
         v_front = v_rear = None
         for v in self.vehicles:
-            if v is not vehicle and True :#self.network.is_connected_road(v.lane_index, lane_index, same_lane=True):
+            if v is not vehicle and True:  # self.network.is_connected_road(v.lane_index, lane_index, same_lane=True):
                 s_v, lat_v = lane.local_coordinates(v.position)
                 if not lane.on_lane(v.position, s_v, lat_v, margin=1):
                     continue

@@ -101,6 +101,12 @@ class EnvViewer(object):
             simulation_frequency=self.env.SIMULATION_FREQUENCY,
             offscreen=self.offscreen)
 
+        RoadGraphics.display_obstacles(
+            self.env.road,
+            self.sim_surface,
+            offscreen=self.offscreen
+        )
+
         if self.agent_display:
             self.agent_display(self.agent_surface, self.sim_surface)
             if self.env.config["screen_width"] > self.env.config["screen_height"]:

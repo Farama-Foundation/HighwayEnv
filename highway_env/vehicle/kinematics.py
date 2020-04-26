@@ -35,6 +35,7 @@ class Vehicle(Loggable):
         self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
+        self.crashed_with_obstacle = False
         self.log = []
         self.history = deque(maxlen=30)
 
@@ -171,7 +172,10 @@ class Vehicle(Loggable):
         if utils.rotated_rectangles_intersect((self.position, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
                                               (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading)):
             self.velocity = other.velocity = min([self.velocity, other.velocity], key=abs)
-            self.crashed = other.crashed = True
+            if isinstance(other, Obstacle):
+                self.crashed_with_obstacle = other.crashed_with_obstacle = True
+            elif isinstance(other, Vehicle):
+                self.crashed = other.crashed = True
 
     @property
     def direction(self):
