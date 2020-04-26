@@ -1,15 +1,14 @@
 from gym.envs.registration import register
-from gym import GoalEnv, spaces
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs import ParkingEnv
 from highway_env.road.lane import StraightLane, LineType
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.kinematics import Vehicle, Obstacle
 
 
-class SummonEnv(AbstractEnv, GoalEnv):
+class SummonEnv(ParkingEnv):
     """
         A continuous control environment.
 
@@ -21,54 +20,14 @@ class SummonEnv(AbstractEnv, GoalEnv):
     
     COLLISION_REWARD = -5
 
-    STEERING_RANGE = np.pi / 4
-    ACCELERATION_RANGE = 5.0
-
-    REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
-    SUCCESS_GOAL_REWARD = 0.12
-
-    def define_spaces(self):
-        super().define_spaces()
-        self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
-
     @classmethod
     def default_config(cls):
         config = super().default_config()
         config.update({
-            "observation": {
-                "type": "KinematicsGoal",
-                "features": ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h'],
-                "scales": [100, 100, 5, 5, 1, 1],
-                "normalize": False
-            },
             "vehicles_count": 10,
-            "policy_frequency": 5,
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-            "screen_width": 600,
-            "screen_height": 300,
-            "centering_position": [0.5, 0.5]
         })
         return config
-
-    def step(self, action):
-        # Forward action to the vehicle
-
-        self.vehicle.act({
-            "acceleration": action[0] * self.ACCELERATION_RANGE,
-            "steering": action[1] * self.STEERING_RANGE
-        })
-        self._simulate()
-
-        obs = self.observation.observe()
-        info = {"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])}
-        reward = self.compute_reward(obs['achieved_goal'], obs['desired_goal'], info)
-        terminal = self._is_terminal(obs)
-        return obs, reward, terminal, info
-
-    def reset(self):
-        self._create_road()
-        self._create_vehicles()
-        return super().reset()
 
     def _create_road(self, spots=15):
         """
@@ -147,23 +106,8 @@ class SummonEnv(AbstractEnv, GoalEnv):
         :param p: the Lp^p norm used in the reward. Use p<1 to have high kurtosis for rewards in [0, 1]
         :return: the corresponding reward
         """
-        return - np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p) + \
-               (self.COLLISION_REWARD * self.vehicle.crashed)
-
-    def _reward(self, action):
-        raise Exception("Use compute_reward instead, as for GoalEnvs")
-
-    def _is_success(self, achieved_goal, desired_goal):
-        return self.compute_reward(achieved_goal, desired_goal, None) > -self.SUCCESS_GOAL_REWARD
-
-    def _is_terminal(self, obs=None):
-        """
-            The episode is over if the ego vehicle crashed or the goal is reached.
-        """
-        done = self.vehicle.crashed
-        if obs is not None:
-            done = done or self._is_success(obs['achieved_goal'], obs['desired_goal'])
-        return done
+        return super().compute_reward(achieved_goal, desired_goal, info, p) + \
+            self.COLLISION_REWARD * self.vehicle.crashed
 
 
 class SummonEnvActionRepeat(SummonEnv):
