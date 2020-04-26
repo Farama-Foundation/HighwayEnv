@@ -135,9 +135,9 @@ A `Road` is composed of a `RoadNetwork` and a list of `Vehicles`. The `RoadNetwo
 
 The vehicles kinematics are represented in the `Vehicle` class by a _Kinematic Bicycle Model_.
 
-![\dot{x}=v\cos(\psi+\beta)](https://render.githubusercontent.com/render/math?math=\dot{x}=v\cos(\psi+\beta))
+![\dot{x}=v\cos(\psi+\beta)](https://render.githubusercontent.com/render/math?math=\dot{x}=v\cos(\psi%2B\beta))
 
-![\dot{y}=v\sin(\psi+\beta)](https://render.githubusercontent.com/render/math?math=\dot{y}=v\sin(\psi+\beta))
+![\dot{y}=v\sin(\psi+\beta)](https://render.githubusercontent.com/render/math?math=\dot{y}=v\sin(\psi%2B\beta))
 
 ![\dot{v}=a](https://render.githubusercontent.com/render/math?math=\dot{v}=a)
 
