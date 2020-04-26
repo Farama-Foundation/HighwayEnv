@@ -6,7 +6,7 @@ import highway_env
 DEFAULT_ARGUMENTS = [
     "--env=parking-ActionRepeat-v0",
     "--alg=her",
-    "--num_timesteps=1e4",
+    "--num_timesteps=0",
     "--network=default",
     "--num_env=0",
     "--save_path=~/models/latest",
