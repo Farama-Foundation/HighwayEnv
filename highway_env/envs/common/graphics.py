@@ -68,7 +68,7 @@ class EnvViewer(object):
             self.vehicle_trajectory = self.env.vehicle.predict_trajectory(actions,
                                                                           1 / self.env.config["policy_frequency"],
                                                                           1 / 3 / self.env.config["policy_frequency"],
-                                                                          1 / self.env.SIMULATION_FREQUENCY)
+                                                                          1 / self.env.config["simulation_frequency"])
 
     def handle_events(self):
         """
@@ -99,7 +99,7 @@ class EnvViewer(object):
         RoadGraphics.display_traffic(
             self.env.road,
             self.sim_surface,
-            simulation_frequency=self.env.SIMULATION_FREQUENCY,
+            simulation_frequency=self.env.config["simulation_frequency"],
             offscreen=self.offscreen)
 
         RoadGraphics.display_obstacles(
@@ -117,7 +117,7 @@ class EnvViewer(object):
 
         if not self.offscreen:
             self.screen.blit(self.sim_surface, (0, 0))
-            self.clock.tick(self.env.SIMULATION_FREQUENCY)
+            self.clock.tick(self.env.config["simulation_frequency"])
             pygame.display.flip()
 
         if self.SAVE_IMAGES and self.directory:
@@ -128,7 +128,8 @@ class EnvViewer(object):
         """
         :return: the rendered image as a rbg array
         """
-        data = pygame.surfarray.array3d(self.sim_surface)
+        surface = self.screen if self.env.config["render_agent"] else self.sim_surface
+        data = pygame.surfarray.array3d(surface)
         return np.moveaxis(data, 0, 1)
 
     def window_position(self):
