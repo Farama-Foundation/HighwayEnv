@@ -6,6 +6,7 @@ import pygame
 from highway_env.road.lane import LineType, AbstractLane
 from highway_env.road.road import Road
 from highway_env.vehicle.graphics import VehicleGraphics
+from highway_env.road.objects import RoadObject, Obstacle, Landmark
 
 PositionType = Union[Tuple[float, float], np.ndarray]
 
@@ -240,13 +241,16 @@ class RoadGraphics(object):
             VehicleGraphics.display(v, surface, offscreen=offscreen)
 
     @staticmethod
-    def display_obstacles(road: Road, surface: WorldSurface, offscreen: bool = False) -> None:
+    def display_road_objects(road, surface, offscreen=False):
         """
-            Display the obstacles on a surface.
+            Display the road objects on a surface.
 
         :param road: the road to be displayed
         :param surface: the pygame surface
         :param offscreen: whether the rendering should be done offscreen or not
         """
-        for o in road.obstacles:
-            VehicleGraphics.display(o, surface, offscreen=offscreen)
+        for o in road.objects:
+            if isinstance(o, Landmark):
+                RoadObjectGraphics.display(o, surface, transparent=True, offscreen=offscreen)
+            else:
+                RoadObjectGraphics.display(o, surface, offscreen=offscreen)
