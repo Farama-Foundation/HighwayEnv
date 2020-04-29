@@ -2,6 +2,7 @@ import itertools
 import numpy as np
 import pygame
 
+from highway_env.vehicle.dynamics import BicycleVehicle
 from highway_env.vehicle.kinematics import Vehicle, Obstacle
 from highway_env.vehicle.controller import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
@@ -40,16 +41,17 @@ class VehicleGraphics(object):
         pygame.draw.rect(vehicle_surface, cls.BLACK, rect, 1)
 
         # Tires
-        tire_positions = [[surface.pix(tire_length), surface.pix(length / 2 - v.WIDTH / 2)],
-                          [surface.pix(tire_length), surface.pix(length / 2 + v.WIDTH / 2)],
-                          [surface.pix(length - tire_length), surface.pix(length / 2 - v.WIDTH / 2)],
-                          [surface.pix(length - tire_length), surface.pix(length / 2 + v.WIDTH / 2)]]
-        tire_angles = [0, 0, v.action["steering"], v.action["steering"]]
-        for tire_position, tire_angle in zip(tire_positions, tire_angles):
-            tire_surface = pygame.Surface((surface.pix(tire_length), surface.pix(tire_length)), pygame.SRCALPHA)
-            rect = (0, surface.pix(tire_length/2-tire_width/2), surface.pix(tire_length), surface.pix(tire_width))
-            pygame.draw.rect(tire_surface, cls.BLACK, rect, 0)
-            cls.blitRotate(vehicle_surface, tire_surface, tire_position, np.rad2deg(-tire_angle))
+        if isinstance(vehicle, BicycleVehicle):
+            tire_positions = [[surface.pix(tire_length), surface.pix(length / 2 - v.WIDTH / 2)],
+                              [surface.pix(tire_length), surface.pix(length / 2 + v.WIDTH / 2)],
+                              [surface.pix(length - tire_length), surface.pix(length / 2 - v.WIDTH / 2)],
+                              [surface.pix(length - tire_length), surface.pix(length / 2 + v.WIDTH / 2)]]
+            tire_angles = [0, 0, v.action["steering"], v.action["steering"]]
+            for tire_position, tire_angle in zip(tire_positions, tire_angles):
+                tire_surface = pygame.Surface((surface.pix(tire_length), surface.pix(tire_length)), pygame.SRCALPHA)
+                rect = (0, surface.pix(tire_length/2-tire_width/2), surface.pix(tire_length), surface.pix(tire_width))
+                pygame.draw.rect(tire_surface, cls.BLACK, rect, 0)
+                cls.blitRotate(vehicle_surface, tire_surface, tire_position, np.rad2deg(-tire_angle))
 
         # Centered rotation
         h = v.heading if abs(v.heading) > 2 * np.pi / 180 else 0
@@ -83,7 +85,7 @@ class VehicleGraphics(object):
         surf.blit(rotated_image, origin)
         # draw rectangle around the image
         if show_rect:
-            pygame.draw.rect (surf, (255, 0, 0), (*origin, *rotated_image.get_size()), 2)
+            pygame.draw.rect(surf, (255, 0, 0), (*origin, *rotated_image.get_size()), 2)
 
     @classmethod
     def display_trajectory(cls, states, surface, offscreen=False):
@@ -109,7 +111,6 @@ class VehicleGraphics(object):
         :param simulation: simulation frequency
         :param offscreen: whether the rendering should be done offscreen or not
         """
-
         for v in itertools.islice(vehicle.history,
                                   None,
                                   int(simulation * duration),
