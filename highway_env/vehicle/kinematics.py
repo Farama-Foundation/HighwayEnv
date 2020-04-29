@@ -1,10 +1,15 @@
 import copy
+from typing import List, Union
 import numpy as np
 import pandas as pd
 from collections import deque
 
 from highway_env import utils
 from highway_env.logger import Loggable
+from highway_env.road.road import Road, LaneIndex
+from highway_env.road.lane import AbstractLane
+
+Vector = Union[np.ndarray, List[float]]
 
 
 class Vehicle(Loggable):
@@ -26,7 +31,11 @@ class Vehicle(Loggable):
     MAX_VELOCITY = 40.
     """ Maximum reachable velocity [m/s] """
 
-    def __init__(self, road, position, heading=0, velocity=0):
+    def __init__(self,
+                 road: Road,
+                 position: Vector,
+                 heading: float = 0,
+                 velocity: float = 0):
         self.road = road
         self.position = np.array(position).astype('float')
         self.heading = heading
@@ -40,7 +49,7 @@ class Vehicle(Loggable):
         self.history = deque(maxlen=30)
 
     @classmethod
-    def make_on_lane(cls, road, lane_index, longitudinal, velocity=0):
+    def make_on_lane(cls, road: Road, lane_index: LaneIndex, longitudinal: float, velocity: float = 0) -> "Vehicle":
         """
             Create a vehicle on a given lane at a longitudinal position.
 
@@ -56,7 +65,7 @@ class Vehicle(Loggable):
         return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), velocity)
 
     @classmethod
-    def create_random(cls, road, velocity=None, spacing=1):
+    def create_random(cls, road: Road, velocity: float = None, spacing: float = 1) -> "Vehicle":
         """
             Create a random vehicle on the road.
 
@@ -85,7 +94,7 @@ class Vehicle(Loggable):
         return v
 
     @classmethod
-    def create_from(cls, vehicle):
+    def create_from(cls, vehicle: "Vehicle") -> "Vehicle":
         """
             Create a new vehicle from an existing one.
             Only the vehicle dynamics are copied, other properties are default.
@@ -96,7 +105,7 @@ class Vehicle(Loggable):
         v = cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.velocity)
         return v
 
-    def act(self, action=None):
+    def act(self, action: dict = None) -> None:
         """
             Store an action to be repeated.
 
@@ -105,7 +114,7 @@ class Vehicle(Loggable):
         if action:
             self.action = action
 
-    def step(self, dt):
+    def step(self, dt: float) -> None:
         """
             Propagate the vehicle state given its actions.
 
@@ -125,7 +134,7 @@ class Vehicle(Loggable):
         self.velocity += self.action['acceleration'] * dt
         self.on_state_update()
 
-    def clip_actions(self):
+    def clip_actions(self) -> None:
         if self.crashed:
             self.action['steering'] = 0
             self.action['acceleration'] = -1.0*self.velocity
@@ -136,14 +145,14 @@ class Vehicle(Loggable):
         elif self.velocity < -self.MAX_VELOCITY:
             self.action['acceleration'] = max(self.action['acceleration'], 1.0*(self.MAX_VELOCITY - self.velocity))
 
-    def on_state_update(self):
+    def on_state_update(self) -> None:
         if self.road:
             self.lane_index = self.road.network.get_closest_lane_index(self.position)
             self.lane = self.road.network.get_lane(self.lane_index)
             if self.road.record_history:
                 self.history.appendleft(self.create_from(self))
 
-    def lane_distance_to(self, vehicle, lane=None):
+    def lane_distance_to(self, vehicle: "Vehicle", lane: AbstractLane = None) -> float:
         """
             Compute the signed distance to another vehicle along a lane.
 
@@ -157,7 +166,7 @@ class Vehicle(Loggable):
             lane = self.lane
         return lane.local_coordinates(vehicle.position)[0] - lane.local_coordinates(self.position)[0]
 
-    def check_collision(self, other):
+    def check_collision(self, other: "Vehicle") -> None:
         """
             Check for collision with another vehicle.
 
@@ -180,11 +189,11 @@ class Vehicle(Loggable):
                 self.crashed = other.crashed = True
 
     @property
-    def direction(self):
+    def direction(self) -> np.ndarray:
         return np.array([np.cos(self.heading), np.sin(self.heading)])
 
     @property
-    def destination(self):
+    def destination(self) -> np.ndarray:
         if getattr(self, "route", None):
             last_lane = self.road.network.get_lane(self.route[-1])
             return last_lane.position(last_lane.length, 0)
@@ -192,16 +201,16 @@ class Vehicle(Loggable):
             return self.position
 
     @property
-    def destination_direction(self):
+    def destination_direction(self) -> np.ndarray:
         if (self.destination != self.position).any():
             return (self.destination - self.position) / np.linalg.norm(self.destination - self.position)
         else:
             return np.zeros((2,))
 
-    def front_distance_to(self, other):
+    def front_distance_to(self, other: "Vehicle") -> float:
         return self.direction.dot(other.position - self.position)
 
-    def to_dict(self, origin_vehicle=None, observe_intentions=True):
+    def to_dict(self, origin_vehicle: "Vehicle" = None, observe_intentions: bool = True) -> dict:
         d = {
             'presence': 1,
             'x': self.position[0],
@@ -221,7 +230,7 @@ class Vehicle(Loggable):
                 d[key] -= origin_dict[key]
         return d
 
-    def dump(self):
+    def dump(self) -> None:
         """
             Update the internal log of the vehicle, containing:
                 - its kinematics;
@@ -258,7 +267,7 @@ class Vehicle(Loggable):
 
         self.log.append(data)
 
-    def get_log(self):
+    def get_log(self) -> pd.DataFrame:
         """
             Cast the internal log as a DataFrame.
 
@@ -278,7 +287,7 @@ class Obstacle(Vehicle):
         A motionless obstacle at a given position.
     """
 
-    def __init__(self, road, position, heading=0):
+    def __init__(self, road: Road, position: Vector, heading: float = 0) -> None:
         super(Obstacle, self).__init__(road, position, velocity=0, heading=heading)
         self.target_velocity = 0
         self.LENGTH = self.WIDTH
