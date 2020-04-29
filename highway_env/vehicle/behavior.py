@@ -48,7 +48,7 @@ class IDMVehicle(ControlledVehicle):
         pass
 
     @classmethod
-    def create_from(cls, vehicle: ControlledVehicle) -> ControlledVehicle:
+    def create_from(cls, vehicle: ControlledVehicle) -> "IDMVehicle":
         """
             Create a new vehicle from an existing one.
             The vehicle dynamics and target dynamics are copied, other properties are default.
