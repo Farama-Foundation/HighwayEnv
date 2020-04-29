@@ -41,7 +41,7 @@ class VehicleGraphics(object):
         pygame.draw.rect(vehicle_surface, cls.BLACK, rect, 1)
 
         # Tires
-        if isinstance(vehicle, BicycleVehicle):
+        if type(vehicle) in [Vehicle, BicycleVehicle]:
             tire_positions = [[surface.pix(tire_length), surface.pix(length / 2 - v.WIDTH / 2)],
                               [surface.pix(tire_length), surface.pix(length / 2 + v.WIDTH / 2)],
                               [surface.pix(length - tire_length), surface.pix(length / 2 - v.WIDTH / 2)],

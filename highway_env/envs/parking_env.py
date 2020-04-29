@@ -19,6 +19,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     """
     REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
     SUCCESS_GOAL_REWARD = 0.12
+    STEERING_RANGE = np.deg2rad(45)
 
     @classmethod
     def default_config(cls):
@@ -33,10 +34,12 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "action": {
                 "type": "Continuous"
             },
+            "simulation_frequency": 15,
             "policy_frequency": 5,
             "screen_width": 600,
             "screen_height": 300,
-            "centering_position": [0.5, 0.5]
+            "centering_position": [0.5, 0.5],
+            "scaling": 7
         })
         return config
 
