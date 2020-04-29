@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from highway_env.utils import not_zero
 from highway_env.vehicle.kinematics import Vehicle
 
 
@@ -15,10 +16,11 @@ class BicycleVehicle(Vehicle):
     LENGTH_A = Vehicle.LENGTH / 2  # [m]
     LENGTH_B = Vehicle.LENGTH / 2  # [m]
     INERTIA_Z = 1/12 * MASS * (Vehicle.LENGTH ** 2 + 3 * Vehicle.WIDTH ** 2)  # [kg.m2]
-    FRICTION_FRONT = 10.0 * MASS  # [N]
-    FRICTION_REAR = 7.0 * MASS  # [N]
+    FRICTION_FRONT = 15.0 * MASS  # [N]
+    FRICTION_REAR = 15.0 * MASS  # [N]
 
     MAX_ANGULAR_VELOCITY = 2 * np.pi  # [rad/s]
+    MAX_VELOCITY = 15  # [m/s]
 
     def __init__(self, road, position, heading=0, velocity=0):
         super().__init__(road, position, heading, velocity)
@@ -38,14 +40,38 @@ class BicycleVehicle(Vehicle):
 
     @property
     def derivative(self):
+        """
+            See Chapter 2 of Lateral Vehicle Dynamics. Vehicle Dynamics and Control. Rajamani, R. (2011)
+        :return: the state derivative
+        """
+        delta_f = self.action["steering"]
+        delta_r = 0
+        theta_vf = np.arctan2(self.lateral_velocity + self.LENGTH_A * self.yaw_rate, self.velocity)  # (2.27)
+        theta_vr = np.arctan2(self.lateral_velocity - self.LENGTH_B * self.yaw_rate, self.velocity)  # (2.28)
+        f_yf = 2*self.FRICTION_FRONT * (delta_f - theta_vf)  # (2.25)
+        f_yr = 2*self.FRICTION_REAR * (delta_r - theta_vr)  # (2.26)
+        d_lateral_velocity = 1/self.MASS * (f_yf + f_yr) - self.yaw_rate * self.velocity  # (2.21)
+        d_yaw_rate = 1/self.INERTIA_Z * (self.LENGTH_A * f_yf - self.LENGTH_B * f_yr)  # (2.22)
+        c, s = np.cos(self.heading), np.sin(self.heading)
+        R = np.array(((c, -s), (s, c)))
+        velocity = R @ np.array([self.velocity, self.lateral_velocity])
+        return np.array([[velocity[0]],
+                         [velocity[1]],
+                         [self.yaw_rate],
+                         [self.action['acceleration']],
+                         [d_lateral_velocity],
+                         [d_yaw_rate]])
+
+    @property
+    def derivative_linear(self):
         x = np.array([[self.lateral_velocity], [self.yaw_rate]])
         u = np.array([[self.action['steering']]])
+        self.A_lat, self.B_lat = self.lateral_lpv_dynamics()
         dx = self.A_lat @ x + self.B_lat @ u
         c, s = np.cos(self.heading), np.sin(self.heading)
         R = np.array(((c, -s), (s, c)))
         velocity = R @ np.array([self.velocity, self.lateral_velocity])
-        return np.array([[velocity[0]], [velocity[1]], [self.yaw_rate],
-                                    [self.action['acceleration']], dx[0], dx[1]])
+        return np.array([[velocity[0]], [velocity[1]], [self.yaw_rate], [self.action['acceleration']], dx[0], dx[1]])
 
     def step(self, dt):
         self.clip_actions()
@@ -69,11 +95,20 @@ class BicycleVehicle(Vehicle):
             State: [lateral velocity v, yaw rate r]
         :return: lateral dynamics dx = (A0 + theta^T phi)x + B u
         """
+        B = np.array([
+            [2*self.FRICTION_FRONT / self.MASS],
+            [self.FRICTION_FRONT * self.LENGTH_A / self.INERTIA_Z]
+        ])
+
         speed_body_x = self.velocity
         A0 = np.array([
             [0, -speed_body_x],
             [0, 0]
         ])
+
+        if abs(speed_body_x) < 1:
+            return A0, np.zeros((2, 2, 2)), B*0
+
         phi = np.array([
             [
                 [-2 / (self.MASS*speed_body_x), -2*self.LENGTH_A / (self.MASS*speed_body_x)],
@@ -82,10 +117,6 @@ class BicycleVehicle(Vehicle):
                 [-2 / (self.MASS*speed_body_x), 2*self.LENGTH_B / (self.MASS*speed_body_x)],
                 [2*self.LENGTH_B / (self.INERTIA_Z*speed_body_x), -2*self.LENGTH_B**2 / (self.INERTIA_Z*speed_body_x)]
             ],
-        ])
-        B = np.array([
-            [2*self.FRICTION_FRONT / self.MASS],
-            [self.FRICTION_FRONT * self.LENGTH_A / self.INERTIA_Z]
         ])
         return A0, phi, B
 
