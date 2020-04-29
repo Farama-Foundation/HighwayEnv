@@ -50,10 +50,38 @@ class RegressionVehicle(IntervalVehicle):
         for k in range(len(d_theta)):
             d_theta[k] = np.clip(d_theta[k], parameter_box[0] - theta_clipped, parameter_box[1] - theta_clipped)
 
-        print(theta_N_lambda, theta_clipped, np.amax(d_theta, axis=0))
         # Structure
         a, phi = structure()
         a0 = a + np.tensordot(theta_clipped, phi, axes=[0, 0])
         da = [np.tensordot(d_theta_k, phi, axes=[0, 0]) for d_theta_k in d_theta]
         return a0, da
 
+
+class MultipleModelVehicle(RegressionVehicle):
+
+        def __init__(self,
+                 road,
+                 position,
+                 heading=0,
+                 velocity=0,
+                 target_lane_index=None,
+                 target_velocity=None,
+                 route=None,
+                 enable_lane_change=True,
+                 timer=None,
+                 theta_a_i=None,
+                 theta_b_i=None,
+                 data=None):
+            super().__init__(road, position, heading, velocity, target_lane_index, target_velocity, route,
+                             enable_lane_change, timer, theta_a_i, theta_b_i, data)
+            self.possible_routes_data = {}
+
+        def collect_data(self):
+            self.update_possible_routes()
+            for route, data in self.possible_routes_data:
+                self.add_features(data, )
+
+
+
+        def update_possible_routes(self):
+            pass
