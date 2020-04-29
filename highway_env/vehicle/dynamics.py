@@ -50,6 +50,9 @@ class BicycleVehicle(Vehicle):
         theta_vr = np.arctan2(self.lateral_velocity - self.LENGTH_B * self.yaw_rate, self.velocity)  # (2.28)
         f_yf = 2*self.FRICTION_FRONT * (delta_f - theta_vf)  # (2.25)
         f_yr = 2*self.FRICTION_REAR * (delta_r - theta_vr)  # (2.26)
+        if abs(self.velocity) < 1:  # Low velocity dynamics: damping of lateral velocity and yaw rate
+            f_yf = - self.MASS * self.lateral_velocity - self.INERTIA_Z/self.LENGTH_A * self.yaw_rate
+            f_yr = - self.MASS * self.lateral_velocity + self.INERTIA_Z/self.LENGTH_A * self.yaw_rate
         d_lateral_velocity = 1/self.MASS * (f_yf + f_yr) - self.yaw_rate * self.velocity  # (2.21)
         d_yaw_rate = 1/self.INERTIA_Z * (self.LENGTH_A * f_yf - self.LENGTH_B * f_yr)  # (2.22)
         c, s = np.cos(self.heading), np.sin(self.heading)
