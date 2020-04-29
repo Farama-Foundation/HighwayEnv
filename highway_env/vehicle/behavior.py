@@ -298,13 +298,16 @@ class LinearVehicle(IDMVehicle):
                  target_velocity: float = None,
                  route: Route = None,
                  enable_lane_change: bool = True,
-                 timer: float = None):
+                 timer: float = None,
+                 data: dict = None):
         super().__init__(road, position, heading, velocity, target_lane_index, target_velocity, route,
                          enable_lane_change, timer)
-        self.data = {}
+        self.data = data if data is not None else {}
+        self.collecting_data = True
 
     def act(self):
-        self.collect_data()
+        if self.collecting_data:
+            self.collect_data()
         super().act()
 
     def randomize_behavior(self):
@@ -455,6 +458,9 @@ class LinearVehicle(IDMVehicle):
             data["lateral"] = {"features": [], "outputs": []}
         data["lateral"]["features"].append(features)
         data["lateral"]["outputs"].append(output)
+
+    def get_data(self):
+        return self.data
 
 
 class AggressiveVehicle(LinearVehicle):

@@ -74,8 +74,8 @@ class IntervalVehicle(LinearVehicle):
             self.interval = VehicleInterval(self)
         else:
             # self.observer_step(dt)
-            self.partial_observer_step(dt)
-            # self.predictor_step(dt)
+            # self.partial_observer_step(dt)
+            self.predictor_step(dt)
         super().step(dt)
 
     def observer_step(self, dt):

@@ -144,15 +144,12 @@ class ControlledVehicle(Vehicle):
         """
         return self.KP_A * (target_velocity - self.velocity)
 
-    def set_route_at_intersection(self, _to):
+    def get_routes_at_intersection(self):
         """
-            Set the road to be followed at the next intersection.
-            Erase current planned route.
-        :param _to: index of the road to follow at next intersection, in the road network
+            Get the list of routes that can be followed at the next intersection.
         """
-
         if not self.route:
-            return
+            return []
         for index in range(min(len(self.route), 3)):
             try:
                 next_destinations = self.road.network.graph[self.route[index][1]]
@@ -161,13 +158,23 @@ class ControlledVehicle(Vehicle):
             if len(next_destinations) >= 2:
                 break
         else:
-            return
+            return [self.route]
         next_destinations_from = list(next_destinations.keys())
+        routes = [self.route[0:index+1] + [(self.route[index][1], destination, self.route[index][2])]
+                  for destination in next_destinations_from]
+        return routes
+
+    def set_route_at_intersection(self, _to):
+        """
+            Set the road to be followed at the next intersection.
+            Erase current planned route.
+        :param _to: index of the road to follow at next intersection, in the road network
+        """
+
+        routes = self.get_routes_at_intersection()
         if _to == "random":
-            _to = self.road.np_random.randint(0, len(next_destinations_from))
-        next_index = _to % len(next_destinations_from)
-        self.route = self.route[0:index+1] + \
-                     [(self.route[index][1], next_destinations_from[next_index], self.route[index][2])]
+            _to = self.road.np_random.randint(len(routes))
+        self.route = routes[_to % len(routes)]
 
     def predict_trajectory_constant_velocity(self, times):
         """

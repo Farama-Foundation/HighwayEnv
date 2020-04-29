@@ -8,7 +8,7 @@ from highway_env import utils
 from highway_env.envs.common.observation import observation_factory
 from highway_env.envs.common.finite_mdp import finite_mdp
 from highway_env.envs.common.graphics import EnvViewer
-from highway_env.vehicle.behavior import IDMVehicle
+from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.control import MDPVehicle
 from highway_env.vehicle.kinematics import Obstacle
 
@@ -83,6 +83,10 @@ class AbstractEnv(gym.Env):
         self.enable_auto_render = False
 
         self.reset()
+
+        self.config["screen_width"] = 800
+        self.config["screen_height"] = 800
+        self.config["scaling"] = 10
 
     @classmethod
     def default_config(cls):
@@ -344,6 +348,14 @@ class AbstractEnv(gym.Env):
         for v in env_copy.road.vehicles:
             if isinstance(v, IDMVehicle):
                 v.set_route_at_intersection(_to)
+        return env_copy
+
+    def set_vehicle_field(self, args):
+        field, value = args
+        env_copy = copy.deepcopy(self)
+        for v in env_copy.road.vehicles:
+            if isinstance(v, LinearVehicle):
+                setattr(v, field, value)
         return env_copy
 
     def randomize_behaviour(self):
