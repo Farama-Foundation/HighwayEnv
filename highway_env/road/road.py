@@ -1,12 +1,16 @@
 import numpy as np
 import pandas as pd
 import logging
+from typing import List, Tuple
 
 from highway_env.logger import Loggable
 from highway_env.road.lane import LineType, StraightLane
 from highway_env.vehicle.kinematics import Obstacle
 
 logger = logging.getLogger(__name__)
+
+LaneIndex = Tuple[str, str, int]
+Route = List[LaneIndex]
 
 
 class RoadNetwork(object):
