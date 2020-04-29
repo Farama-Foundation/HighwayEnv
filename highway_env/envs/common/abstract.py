@@ -79,10 +79,6 @@ class AbstractEnv(gym.Env):
 
         self.reset()
 
-        self.config["screen_width"] = 800
-        self.config["screen_height"] = 800
-        self.config["scaling"] = 10
-
     @classmethod
     def default_config(cls):
         """
