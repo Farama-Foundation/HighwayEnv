@@ -215,7 +215,7 @@ class IntervalVehicle(LinearVehicle):
             # TODO: for now, we assume Kx is known
             params_i[:, 2] = params_i.mean(axis=0)[2]
             # Structure and features
-            a, phi = self.get_longitudinal_features()
+            a, phi = self.longitudinal_structure()
             # Polytope
             a_theta = lambda params: a + np.tensordot(phi, params, axes=[0, 0])
             a0, da = polytope(a_theta, params_i)
@@ -241,7 +241,7 @@ class IntervalVehicle(LinearVehicle):
                 params_i = self.theta_b_i.copy()
 
                 # Matrix polytope
-                a, phi = self.get_lateral_features()
+                a, phi = self.lateral_structure()
                 a_theta = lambda params: a + np.tensordot(phi, params, axes=[0, 0])
                 a0, da = polytope(a_theta, params_i)
 
@@ -250,66 +250,6 @@ class IntervalVehicle(LinearVehicle):
                 center = [0, 0]
                 d = [0, 0]
                 self.lateral_lpv = LPV(x0, a0, da, d, center)
-
-    def get_longitudinal_features(self):
-        # State intervals
-        position_i = self.interval.position - np.array([self.position, self.position])
-        v_i = self.interval.velocity
-        front_interval = self.get_front_interval()
-
-        # Nominal dynamics: integrate velocity
-        A = np.array([
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
-        ])
-        # Target velocity dynamics
-        phi0 = np.array([
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, -1, 0],
-            [0, 0, 0, -1]
-        ])
-        # Front velocity control
-        phi1 = np.array([
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, -1, 1],
-            [0, 0, 0, 0]
-        ])
-        # Front position control
-        phi2 = np.array([
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [-1, 1, -self.TIME_WANTED, 0],
-            [0, 0, 0, 0]
-        ])
-        # Disable velocity control
-        if not front_interval or v_i.mean() < front_interval.velocity.mean():
-            phi1 *= 0
-        # Disable front position control
-        if not front_interval or position_i[:, 0].mean() < front_interval.position[:, 0].mean():
-            phi2 *= 0
-
-        phi = np.array([phi0, phi1, phi2])
-        return A, phi
-
-    def get_lateral_features(self):
-        A = np.array([
-            [0, 1],
-            [0, 0]
-        ])
-        phi0 = np.array([
-            [0, 0],
-            [0, -1]
-        ])
-        phi1 = np.array([
-            [0, 0],
-            [-1, 0]
-        ])
-        phi = np.array([phi0, phi1])
-        return A, phi
 
     def get_front_interval(self):
         # TODO: For now, we assume the front vehicle follows the models' front vehicle
@@ -335,6 +275,7 @@ class IntervalVehicle(LinearVehicle):
         :param squeeze: if True, remove duplicate lanes (at boundaries of the road)
         :return: the list of followed lane indexes
         """
+        lanes = []
         if lane_change_model == "model":
             lanes = [self.target_lane_index]
         elif lane_change_model == "all":
