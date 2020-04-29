@@ -144,8 +144,10 @@ The vehicles kinematics are represented in the `Vehicle` class by a _Kinematic B
 
 ![\dot{\psi}=\frac{v}{l}\sin\beta](https://render.githubusercontent.com/render/math?math=\dot{\psi}=\frac{v}{l}\sin\beta)
 
+![\beta=\tan^{-1}(1/2\tan\delta)](https://render.githubusercontent.com/render/math?math=\beta=\tan^{-1}(\frac{1}{2}\tan\delta))
+
 Where *(x, y)* is the vehicle position, *v* its forward velocity and *psi* its heading.
-*a* is the acceleration command and *β* is the slip angle at the center of gravity, used as a steering command.
+*a* is the acceleration command, *β* is the slip angle at the center of gravity, and δ is the front wheel angle used as a steering command.
 
 ### Control
 
