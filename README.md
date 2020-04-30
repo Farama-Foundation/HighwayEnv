@@ -12,7 +12,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
     <em>An episode of one of the environments available in highway-env.</em>
 </p>
 
-## [:ledger: Try it on Google Colab!](scripts)
+## [Try it on Google Colab! ![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](scripts)
 
 ## Installation
 
