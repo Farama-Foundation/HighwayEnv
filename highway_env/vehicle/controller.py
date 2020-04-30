@@ -179,7 +179,7 @@ class ControlledVehicle(Vehicle):
             _to = self.road.np_random.randint(len(routes))
         self.route = routes[_to % len(routes)]
 
-    def predict_trajectory_constant_velocity(self, times: List[float]) -> Tuple[List[np.ndarray], List[float]]:
+    def predict_trajectory_constant_velocity(self, times: np.ndarray) -> Tuple[List[np.ndarray], List[float]]:
         """
             Predict the future positions of the vehicle along its planned route, under constant velocity
         :param times: timesteps of prediction
