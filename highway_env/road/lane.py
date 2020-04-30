@@ -2,7 +2,6 @@ from abc import ABCMeta, abstractmethod
 import numpy as np
 
 from highway_env import utils
-from highway_env.vehicle.kinematics import Vehicle
 
 
 class AbstractLane(object):
@@ -10,7 +9,8 @@ class AbstractLane(object):
         A lane on the road, described by its central curve.
     """
     metaclass__ = ABCMeta
-    DEFAULT_WIDTH = 4.0
+    DEFAULT_WIDTH: float = 4
+    VEHICLE_LENGTH: float = 5
 
     @abstractmethod
     def position(self, longitudinal, lateral):
@@ -66,7 +66,7 @@ class AbstractLane(object):
         if not longitudinal or not lateral:
             longitudinal, lateral = self.local_coordinates(position)
         is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 + margin and \
-            -Vehicle.LENGTH <= longitudinal < self.length + Vehicle.LENGTH
+            -self.VEHICLE_LENGTH <= longitudinal < self.length + self.VEHICLE_LENGTH
         return is_on
 
     def is_reachable_from(self, position):
@@ -79,13 +79,14 @@ class AbstractLane(object):
         if self.forbidden:
             return False
         longitudinal, lateral = self.local_coordinates(position)
-        is_close = np.abs(lateral) <= 2 * self.width_at(longitudinal) and 0 <= longitudinal < self.length + Vehicle.LENGTH
+        is_close = np.abs(lateral) <= 2 * self.width_at(longitudinal) and \
+            0 <= longitudinal < self.length + self.VEHICLE_LENGTH
         return is_close
 
     def after_end(self, position, longitudinal=None, lateral=None):
         if not longitudinal:
             longitudinal, _ = self.local_coordinates(position)
-        return longitudinal > self.length - Vehicle.LENGTH / 2
+        return longitudinal > self.length - self.VEHICLE_LENGTH / 2
 
     def distance(self, position):
         """

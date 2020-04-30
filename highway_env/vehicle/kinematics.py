@@ -6,6 +6,7 @@ from collections import deque
 
 from highway_env import utils
 from highway_env.logger import Loggable
+from highway_env.road.lane import AbstractLane
 from highway_env.road.road import Road, LaneIndex
 
 Vector = Union[np.ndarray, List[float]]
@@ -151,7 +152,7 @@ class Vehicle(Loggable):
             if self.road.record_history:
                 self.history.appendleft(self.create_from(self))
 
-    def lane_distance_to(self, vehicle: "Vehicle", lane: "AbstractLane" = None) -> float:
+    def lane_distance_to(self, vehicle: "Vehicle", lane: AbstractLane = None) -> float:
         """
             Compute the signed distance to another vehicle along a lane.
 
