@@ -13,8 +13,8 @@ from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.kinematics import Obstacle
 
-ActionType = Union[int, np.ndarray]
-ObservationType = np.ndarray
+Action = Union[int, np.ndarray]
+Observation = np.ndarray
 
 
 class AbstractEnv(gym.Env):
@@ -126,7 +126,7 @@ class AbstractEnv(gym.Env):
         elif self.config["action"]["type"] == "Continuous":
             self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
 
-    def _reward(self, action: ActionType) -> float:
+    def _reward(self, action: Action) -> float:
         """
             Return the reward associated with performing a given action and ending up in the current state.
 
@@ -142,7 +142,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def _cost(self, action: ActionType) -> float:
+    def _cost(self, action: Action) -> float:
         """
             A constraint metric, for budgeted MDP.
 
@@ -153,7 +153,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def reset(self) -> ObservationType:
+    def reset(self) -> Observation:
         """
             Reset the environment to it's initial configuration
         :return: the observation of the reset state
@@ -163,7 +163,7 @@ class AbstractEnv(gym.Env):
         self.define_spaces()
         return self.observation.observe()
 
-    def step(self, action: ActionType) -> Tuple[ObservationType, float, bool, dict]:
+    def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
         """
             Perform an action and step the environment dynamics.
 
@@ -193,7 +193,7 @@ class AbstractEnv(gym.Env):
 
         return obs, reward, terminal, info
 
-    def _simulate(self, action: Optional[ActionType] = None) -> None:
+    def _simulate(self, action: Optional[Action] = None) -> None:
         """
             Perform several steps of simulation with constant action
         """
