@@ -18,9 +18,10 @@ def test_render(env_spec):
 
 
 @pytest.mark.parametrize("env_spec", envs)
-def test_obs_image(env_spec):
+def test_obs_grayscale(env_spec):
     env = gym.make(env_spec)
     env.configure({
+        "offscreen_rendering": True,
         "observation": {
             "type": "GrayscaleObservation",
             "weights": [0.2989, 0.5870, 0.1140],
