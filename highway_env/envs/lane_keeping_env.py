@@ -1,6 +1,7 @@
 from __future__ import division, print_function, absolute_import
 
 import copy
+from typing import Tuple
 
 import numpy as np
 from gym import spaces
@@ -17,7 +18,7 @@ class LaneKeepingEnv(AbstractEnv):
         A lane keeping control task.
     """
 
-    def __init__(self, config=None):
+    def __init__(self, config: dict = None) -> None:
         super().__init__(config)
         self.lane = None
         self.lanes = []
@@ -26,7 +27,7 @@ class LaneKeepingEnv(AbstractEnv):
         self.lpv = None
 
     @classmethod
-    def default_config(cls):
+    def default_config(cls) -> dict:
         config = super().default_config()
         config.update({
             "observation": {
@@ -45,11 +46,11 @@ class LaneKeepingEnv(AbstractEnv):
         })
         return config
 
-    def define_spaces(self):
+    def define_spaces(self) -> None:
         super().define_spaces()
         self.action_space = spaces.Box(-self.config["steering_range"], self.config["steering_range"], shape=(1,), dtype=np.float32)
 
-    def step(self, action):
+    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
         if self.lanes and not self.lane.on_lane(self.vehicle.position):
             self.lane = self.lanes.pop(0)
         self.store_data()
@@ -70,19 +71,19 @@ class LaneKeepingEnv(AbstractEnv):
         terminal = self._is_terminal()
         return obs, reward, terminal, info
 
-    def _reward(self, action):
+    def _reward(self, action: np.ndarray) -> float:
         _, lat = self.lane.local_coordinates(self.vehicle.position)
         return 1 - (lat/self.lane.width)**2
 
-    def _is_terminal(self):
+    def _is_terminal(self) -> bool:
         return False  # not self.lane.on_lane(self.vehicle.position)
 
-    def reset(self):
+    def reset(self) -> np.ndarray:
         self._make_road()
         self._make_vehicles()
         return super().reset()
 
-    def _make_road(self):
+    def _make_road(self) -> None:
         net = RoadNetwork()
         lane = SineLane([0, 0], [500, 0], amplitude=5, pulsation=2*np.pi / 100, phase=0,
                         width=10, line_types=[LineType.STRIPED, LineType.STRIPED])
@@ -95,7 +96,7 @@ class LaneKeepingEnv(AbstractEnv):
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         self.road = road
 
-    def _make_vehicles(self):
+    def _make_vehicles(self) -> None:
         road = self.road
         ego_vehicle = BicycleVehicle(road, road.network.get_lane(("c", "d", 0)).position(50, -4),
                                      heading=road.network.get_lane(("c", "d", 0)).heading_at(0),
@@ -104,31 +105,31 @@ class LaneKeepingEnv(AbstractEnv):
         self.vehicle = ego_vehicle
 
     @property
-    def dynamics(self):
+    def dynamics(self) -> BicycleVehicle:
         return self.vehicle
 
     @property
-    def state(self):
+    def state(self) -> np.ndarray:
         return self.vehicle.state[[1, 2, 4, 5]] + \
                self.np_random.uniform(low=-self.config["state_noise"],
                                       high=self.config["state_noise"],
                                       size=self.vehicle.state[[0, 2, 4, 5]].shape)
 
     @property
-    def derivative(self):
+    def derivative(self) -> np.ndarray:
         return self.vehicle.derivative[[1, 2, 4, 5]] + \
                self.np_random.uniform(low=-self.config["derivative_noise"],
                                       high=self.config["derivative_noise"],
                                       size=self.vehicle.derivative[[0, 2, 4, 5]].shape)
 
     @property
-    def reference_state(self):
+    def reference_state(self) -> np.ndarray:
         longi, lat = self.lane.local_coordinates(self.vehicle.position)
         psi_l = self.lane.heading_at(longi)
         state = self.vehicle.state[[1, 2, 4, 5]]
         return np.array([[state[0, 0] - lat], [psi_l], [0], [0]])
 
-    def store_data(self):
+    def store_data(self) -> None:
         if self.lpv:
             state = self.vehicle.state.copy()
             interval = []
