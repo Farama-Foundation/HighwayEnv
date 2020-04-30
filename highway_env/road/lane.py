@@ -14,6 +14,7 @@ class AbstractLane(object):
     DEFAULT_WIDTH: float = 4
     VEHICLE_LENGTH: float = 5
     length: float = 0
+    line_types: List["LineType"]
 
     @abstractmethod
     def position(self, longitudinal: float, lateral: float) -> np.ndarray:
