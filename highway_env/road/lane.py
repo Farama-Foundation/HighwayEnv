@@ -1,4 +1,6 @@
 from abc import ABCMeta, abstractmethod
+from typing import Tuple, List
+
 import numpy as np
 
 from highway_env import utils
@@ -11,9 +13,10 @@ class AbstractLane(object):
     metaclass__ = ABCMeta
     DEFAULT_WIDTH: float = 4
     VEHICLE_LENGTH: float = 5
+    length: float = 0
 
     @abstractmethod
-    def position(self, longitudinal, lateral):
+    def position(self, longitudinal: float, lateral: float) -> np.ndarray:
         """
             Convert local lane coordinates to a world position.
 
@@ -24,7 +27,7 @@ class AbstractLane(object):
         raise NotImplementedError()
 
     @abstractmethod
-    def local_coordinates(self, position):
+    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
         """
             Convert a world position to local lane coordinates.
 
@@ -34,7 +37,7 @@ class AbstractLane(object):
         raise NotImplementedError()
 
     @abstractmethod
-    def heading_at(self, longitudinal):
+    def heading_at(self, longitudinal: float) -> float:
         """
             Get the lane heading at a given longitudinal lane coordinate.
 
@@ -44,7 +47,7 @@ class AbstractLane(object):
         raise NotImplementedError()
 
     @abstractmethod
-    def width_at(self, longitudinal):
+    def width_at(self, longitudinal: float) -> float:
         """
             Get the lane width at a given longitudinal lane coordinate.
 
@@ -53,7 +56,8 @@ class AbstractLane(object):
         """
         raise NotImplementedError()
 
-    def on_lane(self, position, longitudinal=None, lateral=None, margin=0):
+    def on_lane(self, position: np.ndarray, longitudinal: float = None, lateral: float = None, margin: float = 0) \
+            -> bool:
         """
             Whether a given world position is on the lane.
 
@@ -69,7 +73,7 @@ class AbstractLane(object):
             -self.VEHICLE_LENGTH <= longitudinal < self.length + self.VEHICLE_LENGTH
         return is_on
 
-    def is_reachable_from(self, position):
+    def is_reachable_from(self, position: np.ndarray) -> bool:
         """
             Whether the lane is reachable from a given world position
 
@@ -83,7 +87,7 @@ class AbstractLane(object):
             0 <= longitudinal < self.length + self.VEHICLE_LENGTH
         return is_close
 
-    def after_end(self, position, longitudinal=None, lateral=None):
+    def after_end(self, position: np.ndarray, longitudinal: float = None, lateral: float = None) -> bool:
         if not longitudinal:
             longitudinal, _ = self.local_coordinates(position)
         return longitudinal > self.length - self.VEHICLE_LENGTH / 2
@@ -110,7 +114,14 @@ class StraightLane(AbstractLane):
     """
         A lane going in straight line.
     """
-    def __init__(self, start, end, width=AbstractLane.DEFAULT_WIDTH, line_types=None, forbidden=False, speed_limit=20, priority=0):
+    def __init__(self,
+                 start: np.ndarray,
+                 end: np.ndarray,
+                 width: float = AbstractLane.DEFAULT_WIDTH,
+                 line_types: List[LineType] = None,
+                 forbidden: bool = False,
+                 speed_limit: float = 20,
+                 priority: int = 0) -> None:
         """
             New straight lane.
 
@@ -121,7 +132,6 @@ class StraightLane(AbstractLane):
         :param forbidden: is changing to this lane forbidden
         :param priority: priority level of the lane, for determining who has right of way
         """
-        super().__init__()
         self.start = np.array(start)
         self.end = np.array(end)
         self.width = width
@@ -134,20 +144,20 @@ class StraightLane(AbstractLane):
         self.priority = priority
         self.speed_limit = speed_limit
 
-    def position(self, longitudinal, lateral):
+    def position(self, longitudinal: float, lateral: float) -> np.ndarray:
         return self.start + longitudinal * self.direction + lateral * self.direction_lateral
 
-    def heading_at(self, s):
+    def heading_at(self, longitudinal: float) -> float:
         return self.heading
 
-    def width_at(self, s):
+    def width_at(self, longitudinal: float) -> float:
         return self.width
 
-    def local_coordinates(self, position):
+    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
         delta = position - self.start
         longitudinal = np.dot(delta, self.direction)
         lateral = np.dot(delta, self.direction_lateral)
-        return longitudinal, lateral
+        return float(longitudinal), float(lateral)
 
 
 class SineLane(StraightLane):
@@ -155,8 +165,17 @@ class SineLane(StraightLane):
         A sinusoidal lane
     """
 
-    def __init__(self, start, end, amplitude, pulsation, phase,
-                 width=StraightLane.DEFAULT_WIDTH, line_types=None, forbidden=False, speed_limit=20, priority=0):
+    def __init__(self,
+                 start: np.ndarray,
+                 end: np.ndarray,
+                 amplitude: float,
+                 pulsation: float,
+                 phase: float,
+                 width: float = StraightLane.DEFAULT_WIDTH,
+                 line_types: List[LineType] = None,
+                 forbidden: bool = False,
+                 speed_limit: float = 20,
+                 priority: int = 0) -> None:
         """
             New sinusoidal lane.
 
@@ -171,15 +190,15 @@ class SineLane(StraightLane):
         self.pulsation = pulsation
         self.phase = phase
 
-    def position(self, longitudinal, lateral):
+    def position(self, longitudinal: float, lateral: float) -> np.ndarray:
         return super().position(longitudinal,
                                 lateral + self.amplitude * np.sin(self.pulsation * longitudinal + self.phase))
 
-    def heading_at(self, s):
-        return super().heading_at(s) + np.arctan(
-            self.amplitude * self.pulsation * np.cos(self.pulsation * s + self.phase))
+    def heading_at(self, longitudinal: float) -> float:
+        return super().heading_at(longitudinal) + np.arctan(
+            self.amplitude * self.pulsation * np.cos(self.pulsation * longitudinal + self.phase))
 
-    def local_coordinates(self, position):
+    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
         longitudinal, lateral = super().local_coordinates(position)
         return longitudinal, lateral - self.amplitude * np.sin(self.pulsation * longitudinal + self.phase)
 
@@ -188,8 +207,17 @@ class CircularLane(AbstractLane):
     """
         A lane going in circle arc.
     """
-    def __init__(self, center, radius, start_phase, end_phase, clockwise=True,
-                 width=AbstractLane.DEFAULT_WIDTH, line_types=None, forbidden=False, speed_limit=20, priority=0):
+    def __init__(self,
+                 center: Tuple[float],
+                 radius: float,
+                 start_phase: float,
+                 end_phase: float,
+                 clockwise: bool = True,
+                 width: float = AbstractLane.DEFAULT_WIDTH,
+                 line_types: List[LineType] = None,
+                 forbidden: bool = False,
+                 speed_limit: float = 20,
+                 priority: int = 0) -> None:
         super().__init__()
         self.center = np.array(center)
         self.radius = radius
@@ -203,19 +231,19 @@ class CircularLane(AbstractLane):
         self.priority = priority
         self.speed_limit = speed_limit
 
-    def position(self, longitudinal, lateral):
+    def position(self, longitudinal: float, lateral: float) -> np.ndarray:
         phi = self.direction * longitudinal / self.radius + self.start_phase
         return self.center + (self.radius - lateral * self.direction)*np.array([np.cos(phi), np.sin(phi)])
 
-    def heading_at(self, s):
-        phi = self.direction * s / self.radius + self.start_phase
+    def heading_at(self, longitudinal: float) -> float:
+        phi = self.direction * longitudinal / self.radius + self.start_phase
         psi = phi + np.pi/2 * self.direction
         return psi
 
-    def width_at(self, s):
+    def width_at(self, longitudinal: float) -> float:
         return self.width
 
-    def local_coordinates(self, position):
+    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
         delta = position - self.center
         phi = np.arctan2(delta[1], delta[0])
         phi = self.start_phase + utils.wrap_to_pi(phi - self.start_phase)
