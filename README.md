@@ -2,6 +2,8 @@
 ![build](https://github.com/eleurent/highway-env/workflows/build/badge.svg)
 ![docs](https://github.com/eleurent/highway-env/workflows/docs/badge.svg)
 ![GitHub contributors](https://img.shields.io/github/contributors/eleurent/highway-env)
+[![Coverage](https://codecov.io/gh/eleurent/highway-env/branch/master/graph/badge.svg)](https://codecov.io/gh/eleurent/highway-env)
+
 
 A collection of environments for *autonomous driving* and tactical decision-making tasks
 
