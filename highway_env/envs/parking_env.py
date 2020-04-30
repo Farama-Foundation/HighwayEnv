@@ -1,6 +1,9 @@
+from typing import Tuple
+
 from gym.envs.registration import register
 from gym import GoalEnv
 import numpy as np
+from numpy.core._multiarray_umath import ndarray
 
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import StraightLane, LineType
@@ -17,12 +20,12 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
         Credits to Munir Jojo-Verge for the idea and initial implementation.
     """
-    REWARD_WEIGHTS = np.array([1, 0.3, 0, 0, 0.02, 0.02])
-    SUCCESS_GOAL_REWARD = 0.12
-    STEERING_RANGE = np.deg2rad(45)
+    REWARD_WEIGHTS: ndarray = np.array([1, 0.3, 0, 0, 0.02, 0.02])
+    SUCCESS_GOAL_REWARD: float = 0.12
+    STEERING_RANGE: float = np.deg2rad(45)
 
     @classmethod
-    def default_config(cls):
+    def default_config(cls) -> dict:
         config = super().default_config()
         config.update({
             "observation": {
@@ -43,19 +46,20 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         })
         return config
 
-    def step(self, action):
+    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
         obs, reward, terminal, info = super().step(action)
         info.update({"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])})
         return obs, reward, terminal, info
 
-    def reset(self):
+    def reset(self) -> np.ndarray:
         self._create_road()
         self._create_vehicles()
         return super().reset()
 
-    def _create_road(self, spots=15):
+    def _create_road(self, spots: int = 15) -> None:
         """
             Create a road composed of straight adjacent lanes.
+            :param spots: number of spots in the parking
         """
         net = RoadNetwork()
         width = 4.0
@@ -72,7 +76,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
                          np_random=self.np_random,
                          record_history=self.config["show_trajectories"])
 
-    def _create_vehicles(self):
+    def _create_vehicles(self) -> None:
         """
             Create some new random vehicles of a given type, and add them on the road.
         """
@@ -84,7 +88,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         self.goal.COLLISIONS_ENABLED = False
         self.road.obstacles.append(self.goal)
 
-    def compute_reward(self, achieved_goal, desired_goal, info, p=0.5):
+    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict, p: float = 0.5) -> float:
         """
             Proximity to the goal is rewarded
 
@@ -97,14 +101,14 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         """
         return -np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
 
-    def _reward(self, action):
+    def _reward(self, action: np.ndarray) -> float:
         obs = self.observation.observe()
         return self.compute_reward(obs['achieved_goal'], obs['desired_goal'], {})
 
-    def _is_success(self, achieved_goal, desired_goal):
+    def _is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> bool:
         return self.compute_reward(achieved_goal, desired_goal, {}) > -self.SUCCESS_GOAL_REWARD
 
-    def _is_terminal(self):
+    def _is_terminal(self) -> bool:
         """
             The episode is over if the ego vehicle crashed or the goal is reached.
         """

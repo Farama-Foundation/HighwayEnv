@@ -120,7 +120,7 @@ class StraightLane(AbstractLane):
                  start: Vector,
                  end: Vector,
                  width: float = AbstractLane.DEFAULT_WIDTH,
-                 line_types: List[LineType] = None,
+                 line_types: Tuple[LineType, LineType] = None,
                  forbidden: bool = False,
                  speed_limit: float = 20,
                  priority: int = 0) -> None:
