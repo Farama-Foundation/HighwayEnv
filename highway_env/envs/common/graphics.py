@@ -13,9 +13,9 @@ class EnvViewer(object):
     """
     SAVE_IMAGES = False
 
-    def __init__(self, env, offscreen=False):
+    def __init__(self, env):
         self.env = env
-        self.offscreen = offscreen
+        self.offscreen = env.config["offscreen_rendering"]
 
         pygame.init()
         pygame.display.set_caption("Highway-env")
@@ -32,7 +32,7 @@ class EnvViewer(object):
         self.clock = pygame.time.Clock()
 
         self.enabled = True
-        if "SDL_VIDEODRIVER" in os.environ and os.environ["SDL_VIDEODRIVER"] == "dummy":
+        if os.environ.get("SDL_VIDEODRIVER", None) == "dummy":
             self.enabled = False
 
         self.agent_display = None
@@ -129,7 +129,7 @@ class EnvViewer(object):
         """
         :return: the rendered image as a rbg array
         """
-        surface = self.screen if self.env.config["render_agent"] else self.sim_surface
+        surface = self.screen if self.env.config["render_agent"] and not self.offscreen else self.sim_surface
         data = pygame.surfarray.array3d(surface)
         return np.moveaxis(data, 0, 1)
 

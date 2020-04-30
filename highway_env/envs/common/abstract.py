@@ -78,7 +78,6 @@ class AbstractEnv(gym.Env):
         self.automatic_rendering_callback = None
         self.should_update_rendering = True
         self.rendering_mode = 'human'
-        self.offscreen = self.config.get("offscreen_rendering", False)
         self.enable_auto_render = False
 
         self.reset()
@@ -106,7 +105,8 @@ class AbstractEnv(gym.Env):
             "centering_position": [0.3, 0.5],
             "scaling": 5.5,
             "show_trajectories": False,
-            "render_agent": True
+            "render_agent": True,
+            "offscreen_rendering": False
         }
 
     def seed(self, seed: int = None) -> List[int]:
@@ -232,23 +232,19 @@ class AbstractEnv(gym.Env):
         self.rendering_mode = mode
 
         if self.viewer is None:
-            self.viewer = EnvViewer(self, offscreen=self.offscreen)
+            self.viewer = EnvViewer(self)
 
-        self.enable_auto_render = not self.offscreen
+        self.enable_auto_render = not self.viewer.offscreen
 
         # If the frame has already been rendered, do nothing
         if self.should_update_rendering:
             self.viewer.display()
 
+        if not self.viewer.offscreen:
+            self.viewer.handle_events()
         if mode == 'rgb_array':
             image = self.viewer.get_image()
-            if not self.viewer.offscreen:
-                self.viewer.handle_events()
-            self.viewer.handle_events()
             return image
-        elif mode == 'human':
-            if not self.viewer.offscreen:
-                self.viewer.handle_events()
         self.should_update_rendering = False
 
     def close(self) -> None:

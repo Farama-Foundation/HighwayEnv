@@ -1,5 +1,4 @@
 import gym
-import os, sys
 import numpy as np
 import pytest
 
@@ -10,11 +9,8 @@ envs = ["highway-v0", "merge-v0"]
 
 @pytest.mark.parametrize("env_spec", envs)
 def test_render(env_spec):
-    # set SDL to use the dummy NULL video driver,
-    # so it doesn't need a windowing system.
-    os.environ["SDL_VIDEODRIVER"] = "dummy"
-
     env = gym.make(env_spec)
+    env.configure({"offscreen_rendering": True})
     img = env.render(mode="rgb_array")
     env.close()
     assert isinstance(img, np.ndarray)
@@ -23,10 +19,6 @@ def test_render(env_spec):
 
 @pytest.mark.parametrize("env_spec", envs)
 def test_obs_image(env_spec):
-    # set SDL to use the dummy NULL video driver,
-    # so it doesn't need a windowing system.
-    os.environ["SDL_VIDEODRIVER"] = "dummy"
-
     env = gym.make(env_spec)
     env.configure({
         "observation": {
