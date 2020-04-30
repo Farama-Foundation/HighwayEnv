@@ -1,7 +1,9 @@
+from typing import Dict, Tuple
+
 from gym.envs.registration import register
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs.common.abstract import AbstractEnv, Observation, Action
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import MDPVehicle
 
@@ -14,16 +16,16 @@ class HighwayEnv(AbstractEnv):
         staying on the rightmost lanes and avoiding collisions.
     """
 
-    COLLISION_REWARD = -1
+    COLLISION_REWARD: float = -1
     """ The reward received when colliding with a vehicle."""
-    RIGHT_LANE_REWARD = 0.1
+    RIGHT_LANE_REWARD: float = 0.1
     """ The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes."""
-    HIGH_VELOCITY_REWARD = 0.4
+    HIGH_VELOCITY_REWARD: float = 0.4
     """ The reward received when driving at full speed, linearly mapped to zero for lower speeds."""
-    LANE_CHANGE_REWARD = -0
+    LANE_CHANGE_REWARD: float = -0
     """ The reward received at each lane change action."""
 
-    def default_config(self):
+    def default_config(self) -> dict:
         config = super().default_config()
         config.update({
             "observation": {
@@ -37,24 +39,24 @@ class HighwayEnv(AbstractEnv):
         })
         return config
 
-    def reset(self):
+    def reset(self) -> Observation:
         self._create_road()
         self._create_vehicles()
         self.steps = 0
         return super().reset()
 
-    def step(self, action):
+    def step(self, action: int) -> Tuple[Observation, float, bool, dict]:
         self.steps += 1
         return super().step(action)
 
-    def _create_road(self):
+    def _create_road(self) -> None:
         """
             Create a road composed of straight adjacent lanes.
         """
         self.road = Road(network=RoadNetwork.straight_road_network(self.config["lanes_count"]),
                          np_random=self.np_random, record_history=self.config["show_trajectories"])
 
-    def _create_vehicles(self):
+    def _create_vehicles(self) -> None:
         """
             Create some new random vehicles of a given type, and add them on the road.
         """
@@ -65,7 +67,7 @@ class HighwayEnv(AbstractEnv):
         for _ in range(self.config["vehicles_count"]):
             self.road.vehicles.append(vehicles_type.create_random(self.road))
 
-    def _reward(self, action):
+    def _reward(self, action: int) -> float:
         """
         The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
         :param action: the last action performed
@@ -81,13 +83,13 @@ class HighwayEnv(AbstractEnv):
                            [self.config["collision_reward"], self.HIGH_VELOCITY_REWARD+self.RIGHT_LANE_REWARD],
                            [0, 1])
 
-    def _is_terminal(self):
+    def _is_terminal(self) -> bool:
         """
             The episode is over if the ego vehicle crashed or the time is out.
         """
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
-    def _cost(self, action):
+    def _cost(self, action: Action) -> float:
         """
             The cost signal is the occurrence of collision
         """
