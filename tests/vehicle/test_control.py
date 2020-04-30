@@ -19,7 +19,7 @@ def test_step():
 
 def test_lane_change():
     road = Road(RoadNetwork.straight_road_network(2))
-    v = ControlledVehicle(road=road, position=road.network.get_lane((0, 1, 0)).position(0, 0), velocity=20, heading=0)
+    v = ControlledVehicle(road=road, position=road.network.get_lane(("0", "1", 0)).position(0, 0), velocity=20, heading=0)
     v.act('LANE_RIGHT')
     for _ in range(3 * FPS):
         v.act()
@@ -31,7 +31,7 @@ def test_lane_change():
 
 def test_velocity_control():
     road = Road(RoadNetwork.straight_road_network(1))
-    v = ControlledVehicle(road=road, position=road.network.get_lane((0, 1, 0)).position(0, 0), velocity=20, heading=0)
+    v = ControlledVehicle(road=road, position=road.network.get_lane(("0", "1", 0)).position(0, 0), velocity=20, heading=0)
     v.act('FASTER')
     for _ in range(int(3 * v.TAU_A * FPS)):
         v.act()

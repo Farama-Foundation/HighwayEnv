@@ -1,10 +1,13 @@
 import numpy as np
 import pandas as pd
 import logging
-from typing import List, Tuple
+from typing import List, Tuple, Dict, TYPE_CHECKING, Optional
 
 from highway_env.logger import Loggable
-from highway_env.road.lane import LineType, StraightLane
+from highway_env.road.lane import LineType, StraightLane, AbstractLane
+
+if TYPE_CHECKING:
+    from highway_env.vehicle import kinematics
 
 logger = logging.getLogger(__name__)
 
@@ -13,18 +16,12 @@ Route = List[LaneIndex]
 
 
 class RoadNetwork(object):
+    graph: Dict[str, Dict[str, List[AbstractLane]]]
+
     def __init__(self):
         self.graph = {}
 
-    def add_node(self, node):
-        """
-            A node represents an symbolic intersection in the road network.
-        :param node: the node label.
-        """
-        if node not in self.graph:
-            self.graph[node] = []
-
-    def add_lane(self, _from, _to, lane):
+    def add_lane(self, _from: str, _to: str, lane: AbstractLane) -> None:
         """
             A lane is encoded as an edge in the road network.
         :param _from: the node at which the lane starts.
@@ -37,7 +34,7 @@ class RoadNetwork(object):
             self.graph[_from][_to] = []
         self.graph[_from][_to].append(lane)
 
-    def get_lane(self, index):
+    def get_lane(self, index: LaneIndex) -> AbstractLane:
         """
             Get the lane geometry corresponding to a given index in the road network.
         :param index: a tuple (origin node, destination node, lane id on the road).
@@ -48,7 +45,7 @@ class RoadNetwork(object):
             _id = 0
         return self.graph[_from][_to][_id]
 
-    def get_closest_lane_index(self, position):
+    def get_closest_lane_index(self, position: np.ndarray) -> LaneIndex:
         """
             Get the index of the lane closest to a world position.
 
@@ -63,7 +60,8 @@ class RoadNetwork(object):
                     indexes.append((_from, _to, _id))
         return indexes[int(np.argmin(distances))]
 
-    def next_lane(self, current_index, route=None, position=None, np_random=np.random):
+    def next_lane(self, current_index: LaneIndex, route: Route = None, position: np.ndarray = None,
+                  np_random: np.random.RandomState = np.random) -> LaneIndex:
         """
             Get the index of the next lane that should be followed after finishing the current lane.
 
@@ -106,7 +104,7 @@ class RoadNetwork(object):
 
         return _to, next_to, next_id
 
-    def bfs_paths(self, start, goal):
+    def bfs_paths(self, start: str, goal: str) -> List[str]:
         """
             Breadth-first search of all routes from start to goal.
 
@@ -125,7 +123,7 @@ class RoadNetwork(object):
                 elif _next in self.graph:
                     queue.append((_next, path + [_next]))
 
-    def shortest_path(self, start, goal):
+    def shortest_path(self, start: str, goal: str) -> List[str]:
         """
             Breadth-first search of shortest path from start to goal.
 
@@ -133,19 +131,16 @@ class RoadNetwork(object):
         :param goal: goal node
         :return: shortest path from start to goal.
         """
-        try:
-            return next(self.bfs_paths(start, goal))
-        except StopIteration:
-            return None
+        return list(self.bfs_paths(start, goal))
 
-    def all_side_lanes(self, lane_index):
+    def all_side_lanes(self, lane_index: LaneIndex) -> List[LaneIndex]:
         """
         :param lane_index: the index of a lane.
-        :return: all indexes of lanes belonging to the same road.
+        :return: all lanes belonging to the same road.
         """
-        return self.graph[lane_index[0]][lane_index[1]]
+        return [(lane_index[0], lane_index[1], i) for i in range(len(self.graph[lane_index[0]][lane_index[1]]))]
 
-    def side_lanes(self, lane_index):
+    def side_lanes(self, lane_index: LaneIndex) -> List[LaneIndex]:
         """
                 :param lane_index: the index of a lane.
                 :return: indexes of lanes next to a an input lane, to its right or left.
@@ -159,20 +154,21 @@ class RoadNetwork(object):
         return lanes
 
     @staticmethod
-    def is_same_road(lane_index_1, lane_index_2, same_lane=False):
+    def is_same_road(lane_index_1: LaneIndex, lane_index_2: LaneIndex, same_lane: bool = False) -> bool:
         """
             Is lane 1 in the same road as lane 2?
         """
         return lane_index_1[:2] == lane_index_2[:2] and (not same_lane or lane_index_1[2] == lane_index_2[2])
 
     @staticmethod
-    def is_leading_to_road(lane_index_1, lane_index_2, same_lane=False):
+    def is_leading_to_road(lane_index_1: LaneIndex, lane_index_2: LaneIndex, same_lane: bool = False) -> bool:
         """
             Is lane 1 leading to of lane 2?
         """
         return lane_index_1[1] == lane_index_2[0] and (not same_lane or lane_index_1[2] == lane_index_2[2])
 
-    def is_connected_road(self, lane_index_1, lane_index_2, route=None, same_lane=False, depth=0):
+    def is_connected_road(self, lane_index_1: LaneIndex, lane_index_2: LaneIndex, route: Route = None,
+                          same_lane: bool = False, depth: int = 0) -> bool:
         """
             Is the lane 2 leading to a road within lane 1's route?
 
@@ -201,11 +197,11 @@ class RoadNetwork(object):
                             for l1_to in self.graph.get(_to, {}).keys()])
         return False
 
-    def lanes_list(self):
-        return [lane for tos in self.graph.values() for ids in tos.values() for lane in ids]
+    def lanes_list(self) -> List[AbstractLane]:
+        return [lane for to in self.graph.values() for ids in to.values() for lane in ids]
 
     @staticmethod
-    def straight_road_network(lanes=4, length=10000, angle=0):
+    def straight_road_network(lanes: int = 4, length: float = 10000, angle: float = 0) -> 'RoadNetwork':
         net = RoadNetwork()
         for lane in range(lanes):
             origin = np.array([0, lane * StraightLane.DEFAULT_WIDTH])
@@ -215,10 +211,11 @@ class RoadNetwork(object):
             end = rotation @ end
             line_types = [LineType.CONTINUOUS_LINE if lane == 0 else LineType.STRIPED,
                           LineType.CONTINUOUS_LINE if lane == lanes - 1 else LineType.NONE]
-            net.add_lane(0, 1, StraightLane(origin, end, line_types=line_types))
+            net.add_lane("0", "1", StraightLane(origin, end, line_types=line_types))
         return net
 
-    def position_heading_along_route(self, route, longitudinal, lateral):
+    def position_heading_along_route(self, route: Route, longitudinal: float, lateral: float) \
+            -> Tuple[np.ndarray, float]:
         """
             Get the absolute position and heading along a route composed of several lanes at some local coordinates.
         :param route: a planned route, list of lane indexes
@@ -237,7 +234,12 @@ class Road(Loggable):
         A road is a set of lanes, and a set of vehicles driving on these lanes
     """
 
-    def __init__(self, network=None, vehicles=None, obstacles=None, np_random=None, record_history=False):
+    def __init__(self,
+                 network: RoadNetwork = None,
+                 vehicles: List['kinematics.Vehicle'] = None,
+                 obstacles: List['kinematics.Obstacle'] = None,
+                 np_random: np.random.RandomState = None,
+                 record_history: bool = False) -> None:
         """
             New road.
 
@@ -252,7 +254,8 @@ class Road(Loggable):
         self.np_random = np_random if np_random else np.random.RandomState()
         self.record_history = record_history
 
-    def close_vehicles_to(self, vehicle, distance, count=None, sort=False, see_behind=True):
+    def close_vehicles_to(self, vehicle: 'kinematics.Vehicle', distance: float, count: int = None, sort: bool = False,
+                          see_behind: bool = True) -> object:
         vehicles = [v for v in self.vehicles
                     if np.linalg.norm(v.position - vehicle.position) < distance
                     and v is not vehicle
@@ -263,14 +266,14 @@ class Road(Loggable):
             vehicles = vehicles[:count]
         return vehicles
 
-    def act(self):
+    def act(self) -> None:
         """
             Decide the actions of each entity on the road.
         """
         for vehicle in self.vehicles:
             vehicle.act()
 
-    def step(self, dt):
+    def step(self, dt: float) -> None:
         """
             Step the dynamics of each entity on the road.
 
@@ -286,7 +289,8 @@ class Road(Loggable):
             for other in self.obstacles:
                 vehicle.check_collision(other)
 
-    def neighbour_vehicles(self, vehicle, lane_index=None):
+    def neighbour_vehicles(self, vehicle: 'kinematics.Vehicle', lane_index: LaneIndex = None) \
+            -> Tuple[Optional['kinematics.Vehicle'], Optional['kinematics.Vehicle']]:
         """
             Find the preceding and following vehicles of a given vehicle.
         :param vehicle: the vehicle whose neighbours must be found
@@ -315,14 +319,14 @@ class Road(Loggable):
                     v_rear = v
         return v_front, v_rear
 
-    def dump(self):
+    def dump(self) -> None:
         """
             Dump the data of all entities on the road
         """
         for v in self.vehicles:
             v.dump()
 
-    def get_log(self):
+    def get_log(self) -> pd.DataFrame:
         """
             Concatenate the logs of all entities on the road.
         :return: the concatenated log.
