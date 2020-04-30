@@ -5,7 +5,6 @@ from typing import List, Tuple
 
 from highway_env.logger import Loggable
 from highway_env.road.lane import LineType, StraightLane
-from highway_env.vehicle.kinematics import Obstacle
 
 logger = logging.getLogger(__name__)
 
@@ -321,8 +320,7 @@ class Road(Loggable):
             Dump the data of all entities on the road
         """
         for v in self.vehicles:
-            if not isinstance(v, Obstacle):
-                v.dump()
+            v.dump()
 
     def get_log(self):
         """
