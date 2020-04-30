@@ -62,7 +62,7 @@ class EnvViewer(object):
             self.agent_surface = pygame.Surface((self.env.config["screen_width"], self.env.config["screen_height"]))
         self.agent_display = agent_display
 
-    def set_agent_action_sequence(self, actions: List[Action]) -> None:
+    def set_agent_action_sequence(self, actions: List['Action']) -> None:
         """
             Set the sequence of actions chosen by the agent, so that it can be displayed
         :param actions: list of action, following the env's action space specification

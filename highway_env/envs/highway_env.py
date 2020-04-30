@@ -1,9 +1,9 @@
+import numpy as np
 from typing import Dict, Tuple
-
 from gym.envs.registration import register
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv, Observation, Action
+from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import MDPVehicle
 
@@ -39,13 +39,13 @@ class HighwayEnv(AbstractEnv):
         })
         return config
 
-    def reset(self) -> Observation:
+    def reset(self) -> np.ndarray:
         self._create_road()
         self._create_vehicles()
         self.steps = 0
         return super().reset()
 
-    def step(self, action: int) -> Tuple[Observation, float, bool, dict]:
+    def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
         self.steps += 1
         return super().step(action)
 
@@ -89,7 +89,7 @@ class HighwayEnv(AbstractEnv):
         """
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
-    def _cost(self, action: Action) -> float:
+    def _cost(self, action: int) -> float:
         """
             The cost signal is the occurrence of collision
         """
