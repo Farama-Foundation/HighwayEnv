@@ -1,10 +1,15 @@
 import os
+from typing import TYPE_CHECKING, Callable, List
 import numpy as np
 import pygame
 from gym.spaces import Discrete
 
 from highway_env.road.graphics import WorldSurface, RoadGraphics
 from highway_env.vehicle.graphics import VehicleGraphics
+
+if TYPE_CHECKING:
+    from highway_env.envs import AbstractEnv
+    from highway_env.envs.common.abstract import Action
 
 
 class EnvViewer(object):
@@ -13,7 +18,7 @@ class EnvViewer(object):
     """
     SAVE_IMAGES = False
 
-    def __init__(self, env):
+    def __init__(self, env: 'AbstractEnv') -> None:
         self.env = env
         self.offscreen = env.config["offscreen_rendering"]
 
@@ -41,7 +46,7 @@ class EnvViewer(object):
         self.frame = 0
         self.directory = None
 
-    def set_agent_display(self, agent_display):
+    def set_agent_display(self, agent_display: Callable) -> None:
         """
             Set a display callback provided by an agent, so that they can render their behaviour on a dedicated
             agent surface, or even on the simulation surface.
@@ -57,7 +62,7 @@ class EnvViewer(object):
             self.agent_surface = pygame.Surface((self.env.config["screen_width"], self.env.config["screen_height"]))
         self.agent_display = agent_display
 
-    def set_agent_action_sequence(self, actions):
+    def set_agent_action_sequence(self, actions: List[Action]) -> None:
         """
             Set the sequence of actions chosen by the agent, so that it can be displayed
         :param actions: list of action, following the env's action space specification
@@ -70,7 +75,7 @@ class EnvViewer(object):
                                                                           1 / 3 / self.env.config["policy_frequency"],
                                                                           1 / self.env.config["simulation_frequency"])
 
-    def handle_events(self):
+    def handle_events(self) -> None:
         """
             Handle pygame events by forwarding them to the display and environment vehicle.
         """
@@ -81,7 +86,7 @@ class EnvViewer(object):
             if self.env.vehicle:
                 VehicleGraphics.handle_event(self.env.vehicle, event)
 
-    def display(self):
+    def display(self) -> None:
         """
             Display the road and vehicles on a pygame window.
         """
@@ -125,7 +130,7 @@ class EnvViewer(object):
             pygame.image.save(self.sim_surface, str(self.directory / "highway-env_{}.png".format(self.frame)))
             self.frame += 1
 
-    def get_image(self):
+    def get_image(self) -> np.ndarray:
         """
         :return: the rendered image as a rbg array
         """
@@ -133,7 +138,7 @@ class EnvViewer(object):
         data = pygame.surfarray.array3d(surface)
         return np.moveaxis(data, 0, 1)
 
-    def window_position(self):
+    def window_position(self) -> np.ndarray:
         """
         :return: the world position of the center of the displayed window.
         """
@@ -142,7 +147,7 @@ class EnvViewer(object):
         else:
             return np.array([0, 0])
 
-    def close(self):
+    def close(self) -> None:
         """
             Close the pygame window.
         """
