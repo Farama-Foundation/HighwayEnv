@@ -59,7 +59,10 @@ class ControlledVehicle(Vehicle):
 
         :param destination: a node in the road network
         """
-        path = self.road.network.shortest_path(self.lane_index[1], destination)
+        try:
+            path = self.road.network.shortest_path(self.lane_index[1], destination)
+        except KeyError:
+            path = []
         if path:
             self.route = [self.lane_index] + [(path[i], path[i + 1], None) for i in range(len(path) - 1)]
         else:
@@ -175,9 +178,10 @@ class ControlledVehicle(Vehicle):
         """
 
         routes = self.get_routes_at_intersection()
-        if _to == "random":
-            _to = self.road.np_random.randint(len(routes))
-        self.route = routes[_to % len(routes)]
+        if routes:
+            if _to == "random":
+                _to = self.road.np_random.randint(len(routes))
+            self.route = routes[_to % len(routes)]
 
     def predict_trajectory_constant_velocity(self, times: np.ndarray) -> Tuple[List[np.ndarray], List[float]]:
         """
