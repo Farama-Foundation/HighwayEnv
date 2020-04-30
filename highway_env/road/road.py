@@ -104,7 +104,7 @@ class RoadNetwork(object):
 
         return _to, next_to, next_id
 
-    def bfs_paths(self, start: str, goal: str) -> List[str]:
+    def bfs_paths(self, start: str, goal: str) -> List[List[str]]:
         """
             Breadth-first search of all routes from start to goal.
 
@@ -131,7 +131,7 @@ class RoadNetwork(object):
         :param goal: goal node
         :return: shortest path from start to goal.
         """
-        return list(self.bfs_paths(start, goal))
+        return next(self.bfs_paths(start, goal), [])
 
     def all_side_lanes(self, lane_index: LaneIndex) -> List[LaneIndex]:
         """
