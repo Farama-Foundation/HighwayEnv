@@ -1,9 +1,10 @@
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, List
-
+from typing import Tuple, List, Union
 import numpy as np
 
 from highway_env import utils
+
+Vector = Union[np.ndarray, List[float]]
 
 
 class AbstractLane(object):
@@ -116,8 +117,8 @@ class StraightLane(AbstractLane):
         A lane going in straight line.
     """
     def __init__(self,
-                 start: np.ndarray,
-                 end: np.ndarray,
+                 start: Vector,
+                 end: Vector,
                  width: float = AbstractLane.DEFAULT_WIDTH,
                  line_types: List[LineType] = None,
                  forbidden: bool = False,
@@ -167,8 +168,8 @@ class SineLane(StraightLane):
     """
 
     def __init__(self,
-                 start: np.ndarray,
-                 end: np.ndarray,
+                 start: Vector,
+                 end: Vector,
                  amplitude: float,
                  pulsation: float,
                  phase: float,

@@ -18,13 +18,13 @@ class MergeEnv(AbstractEnv):
         vehicles.
     """
 
-    COLLISION_REWARD = -1
-    RIGHT_LANE_REWARD = 0.1
-    HIGH_VELOCITY_REWARD = 0.2
-    MERGING_VELOCITY_REWARD = -0.5
-    LANE_CHANGE_REWARD = -0.05
+    COLLISION_REWARD: float = -1
+    RIGHT_LANE_REWARD: float = 0.1
+    HIGH_VELOCITY_REWARD: float = 0.2
+    MERGING_VELOCITY_REWARD: float = -0.5
+    LANE_CHANGE_REWARD: float = -0.05
 
-    def _reward(self, action):
+    def _reward(self, action: int) -> float:
         """
             The vehicle is rewarded for driving with high velocity on lanes to the right and avoiding collisions, but
             an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low velocity.
@@ -51,18 +51,18 @@ class MergeEnv(AbstractEnv):
                             self.HIGH_VELOCITY_REWARD + self.RIGHT_LANE_REWARD],
                            [0, 1])
 
-    def _is_terminal(self):
+    def _is_terminal(self) -> bool:
         """
             The episode is over when a collision occurs or when the access ramp has been passed.
         """
         return self.vehicle.crashed or self.vehicle.position[0] > 370
 
-    def reset(self):
+    def reset(self) -> np.ndarray:
         self._make_road()
         self._make_vehicles()
         return super().reset()
 
-    def _make_road(self):
+    def _make_road(self) -> None:
         """
             Make a road composed of a straight highway and a merging lane.
         :return: the road
@@ -94,7 +94,7 @@ class MergeEnv(AbstractEnv):
         road.obstacles.append(Obstacle(road, lbc.position(ends[2], 0)))
         self.road = road
 
-    def _make_vehicles(self):
+    def _make_vehicles(self) -> None:
         """
             Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
         :return: the ego-vehicle
