@@ -3,33 +3,31 @@ from typing import Sequence
 
 import numpy as np
 
-from highway_env.road.road import Road
-
 
 class RoadObject(ABC):
     """
         Common interface for objects that appear on the road, beside vehicles.
         For now we assume all objects are rectangular.
     """
-    def __init__(self, road: Road, position: Sequence[float], rotation_angle: float = 0.,
-                 length: float = 2., width: float = 2.):
+    LENGTH = 2.0  # Object length [m]
+    WIDTH = 2.0  # Object width [m]
+
+    def __init__(self, road, position: Sequence[float], heading: float = 0.):
         """
         :param road: the road instance where the object is placed in
         :param position: cartesian position of object in the surface
-        :param rotation_angle: the angle from positive direction of horizontal axis
+        :param heading: the angle from positive direction of horizontal axis
         :param length: length of the object
         :param width: width of the object
         """
         self.road = road
         self.position = np.array(position, dtype=np.float)
-        self.rotation_angle = rotation_angle
-        self.length = length
-        self.width = width
+        self.heading = heading
         # store whether object is hit by any vehicle
         self.hit = False
 
     @classmethod
-    def make_on_lane(cls, road: Road, lane_index: tuple, longitudinal: int):
+    def make_on_lane(cls, road, lane_index: tuple, longitudinal: int):
         """
             Create an object on a given lane at a longitudinal position.
 
@@ -49,8 +47,8 @@ class RoadObject(ABC):
             'y': self.position[1],
             'vx': 0.,
             'vy': 0.,
-            'cos_h': np.cos(self.rotation_angle),
-            'sin_h': np.sin(self.rotation_angle),
+            'cos_h': np.cos(self.heading),
+            'sin_h': np.sin(self.heading),
             'cos_d': 0.,
             'sin_d': 0.
         }

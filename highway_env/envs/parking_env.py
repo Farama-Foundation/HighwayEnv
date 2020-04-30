@@ -85,7 +85,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         self.road.vehicles.append(self.vehicle)
 
         lane = self.np_random.choice(self.road.network.lanes_list())
-        self.goal = Landmark(self.road, lane.position(lane.length/2, 0), rotation_angle=lane.heading)
+        self.goal = Landmark(self.road, lane.position(lane.length/2, 0), heading=lane.heading)
         self.road.objects.append(self.goal)
 
     def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict, p: float = 0.5) -> float:

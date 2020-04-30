@@ -286,8 +286,8 @@ class Road(Loggable):
         for vehicle in self.vehicles:
             for other in self.vehicles:
                 vehicle.check_collision(other)
-            # for other in self.objects:
-            #     vehicle.check_collision(other)
+            for other in self.objects:
+                vehicle.check_collision(other)
 
     def neighbour_vehicles(self, vehicle: 'kinematics.Vehicle', lane_index: LaneIndex = None) \
             -> Tuple[Optional['kinematics.Vehicle'], Optional['kinematics.Vehicle']]:

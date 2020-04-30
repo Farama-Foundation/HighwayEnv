@@ -10,6 +10,7 @@ from highway_env.road.lane import AbstractLane
 from highway_env.road.road import Road, LaneIndex
 
 Vector = Union[np.ndarray, List[float]]
+from highway_env.road.objects import Obstacle, Landmark
 
 
 class Vehicle(Loggable):
@@ -169,21 +170,36 @@ class Vehicle(Loggable):
         """
             Check for collision with another vehicle.
 
-        :param other: the other vehicle
+        :param other: the other vehicle or object
         """
-        if not self.COLLISIONS_ENABLED or not other.COLLISIONS_ENABLED or self.crashed or other is self:
+        if self.crashed or other is self:
             return
 
+        if isinstance(other, Vehicle):
+            if not self.COLLISIONS_ENABLED or not other.COLLISIONS_ENABLED:
+                return
+
+            if self._is_colliding(other):
+                self.velocity = other.velocity = min([self.velocity, other.velocity], key=abs)
+                self.crashed = other.crashed = True
+        elif isinstance(other, Obstacle):
+            if not self.COLLISIONS_ENABLED:
+                return
+
+            if self._is_colliding(other):
+                self.velocity = min([self.velocity, 0], key=abs)
+                self.crashed = other.hit = True
+        elif isinstance(other, Landmark):
+            if self._is_colliding(other):
+                other.hit = True
+
+    def _is_colliding(self, other):
         # Fast spherical pre-check
         if np.linalg.norm(other.position - self.position) > self.LENGTH:
-            return
-
+            return False
         # Accurate rectangular check
-        if utils.rotated_rectangles_intersect((self.position, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
-                                              (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading)):
-            self.velocity = other.velocity = min([self.velocity, other.velocity], key=abs)
-            if isinstance(other, Vehicle):
-                self.crashed = other.crashed = True
+        return utils.rotated_rectangles_intersect((self.position, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
+                                                  (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading))
 
     @property
     def direction(self) -> np.ndarray:

@@ -250,7 +250,90 @@ class RoadGraphics(object):
         :param offscreen: whether the rendering should be done offscreen or not
         """
         for o in road.objects:
-            if isinstance(o, Landmark):
-                RoadObjectGraphics.display(o, surface, transparent=True, offscreen=offscreen)
+            RoadObjectGraphics.display(o, surface, offscreen=offscreen)
+
+
+class RoadObjectGraphics:
+    """
+        A visualization of objects on the road
+    """
+    YELLOW = (200, 200, 0)
+    BLUE = (100, 200, 255)
+    RED = (255, 100, 100)
+    GREEN = (50, 200, 0)
+    BLACK = (60, 60, 60)
+    DEFAULT_COLOR = YELLOW
+
+    @classmethod
+    def display(cls, object_: RoadObject, surface: WorldSurface, transparent: bool = False, offscreen: bool = False):
+        """
+            Display a road objects on a pygame surface
+
+            The objects is represented as a colored rotated rectangle
+
+        :param object_: the vehicle to be drawn
+        :param surface: the surface to draw the object on
+        :param transparent: whether the object should be drawn slightly transparent
+        :param offscreen: whether the rendering should be done offscreen or not
+        """
+        o = object_
+        s = pygame.Surface((surface.pix(o.LENGTH), surface.pix(o.LENGTH)), pygame.SRCALPHA)  # per-pixel alpha
+        rect = (0, surface.pix(o.WIDTH) / 2 - surface.pix(o.WIDTH) / 2, surface.pix(o.LENGTH), surface.pix(o.WIDTH))
+        pygame.draw.rect(s, cls.get_color(o, transparent), rect, 0)
+        pygame.draw.rect(s, cls.BLACK, rect, 1)
+        if not offscreen:  # convert_alpha throws errors in offscreen mode TODO() Explain why
+            s = pygame.Surface.convert_alpha(s)
+        h = o.heading if abs(o.heading) > 2 * np.pi / 180 else 0
+        # Centered rotation
+        position = (surface.pos2pix(o.position[0], o.position[1]))
+        cls.blit_rotate(surface, s, position, np.rad2deg(-h))
+
+    @staticmethod
+    def blit_rotate(surf, image, pos, angle, origin_pos=None, show_rect=False):
+        """Many thanks to https://stackoverflow.com/a/54714144 """
+        # calculate the axis aligned bounding box of the rotated image
+        w, h = image.get_size()
+        box = [pygame.math.Vector2(p) for p in [(0, 0), (w, 0), (w, -h), (0, -h)]]
+        box_rotate = [p.rotate(angle) for p in box]
+        min_box = (min(box_rotate, key=lambda p: p[0])[0], min(box_rotate, key=lambda p: p[1])[1])
+        max_box = (max(box_rotate, key=lambda p: p[0])[0], max(box_rotate, key=lambda p: p[1])[1])
+
+        # calculate the translation of the pivot
+        if origin_pos is None:
+            origin_pos = w / 2, h / 2
+        pivot = pygame.math.Vector2(origin_pos[0], -origin_pos[1])
+        pivot_rotate = pivot.rotate(angle)
+        pivot_move = pivot_rotate - pivot
+
+        # calculate the upper left origin of the rotated image
+        origin = (pos[0] - origin_pos[0] + min_box[0] - pivot_move[0],
+                  pos[1] - origin_pos[1] - max_box[1] + pivot_move[1])
+        # get a rotated image
+        rotated_image = pygame.transform.rotate(image, angle)
+        # rotate and blit the image
+        surf.blit(rotated_image, origin)
+        # draw rectangle around the image
+        if show_rect:
+            pygame.draw.rect(surf, (255, 0, 0), (*origin, *rotated_image.get_size()), 2)
+
+    @classmethod
+    def get_color(cls, object_: RoadObject, transparent: bool = False):
+        color = cls.DEFAULT_COLOR
+
+        if isinstance(object_, Obstacle):
+            if object_.hit:
+                # indicates failure
+                color = cls.RED
             else:
-                RoadObjectGraphics.display(o, surface, offscreen=offscreen)
+                color = cls.YELLOW
+        elif isinstance(object_, Landmark):
+            if object_.hit:
+                # indicates success
+                color = cls.GREEN
+            else:
+                color = cls.BLUE
+
+        if transparent:
+            color = (color[0], color[1], color[2], 30)
+
+        return color
