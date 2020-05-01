@@ -17,8 +17,6 @@ class RoadObject(ABC):
         :param road: the road instance where the object is placed in
         :param position: cartesian position of object in the surface
         :param heading: the angle from positive direction of horizontal axis
-        :param length: length of the object
-        :param width: width of the object
         """
         self.road = road
         self.position = np.array(position, dtype=np.float)

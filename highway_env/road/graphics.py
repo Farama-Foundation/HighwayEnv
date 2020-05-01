@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, TYPE_CHECKING
 
 import numpy as np
 import pygame
@@ -6,7 +6,10 @@ import pygame
 from highway_env.road.lane import LineType, AbstractLane
 from highway_env.road.road import Road
 from highway_env.vehicle.graphics import VehicleGraphics
-from highway_env.road.objects import RoadObject, Obstacle, Landmark
+from highway_env.road.objects import Obstacle, Landmark
+
+if TYPE_CHECKING:
+    from highway_env.road.objects import RoadObject
 
 PositionType = Union[Tuple[float, float], np.ndarray]
 
@@ -265,7 +268,8 @@ class RoadObjectGraphics:
     DEFAULT_COLOR = YELLOW
 
     @classmethod
-    def display(cls, object_: RoadObject, surface: WorldSurface, transparent: bool = False, offscreen: bool = False):
+    def display(cls, object_: 'RoadObject', surface: WorldSurface, transparent: bool = False,
+                offscreen: bool = False):
         """
             Display a road objects on a pygame surface
 
@@ -317,7 +321,7 @@ class RoadObjectGraphics:
             pygame.draw.rect(surf, (255, 0, 0), (*origin, *rotated_image.get_size()), 2)
 
     @classmethod
-    def get_color(cls, object_: RoadObject, transparent: bool = False):
+    def get_color(cls, object_: 'RoadObject', transparent: bool = False):
         color = cls.DEFAULT_COLOR
 
         if isinstance(object_, Obstacle):

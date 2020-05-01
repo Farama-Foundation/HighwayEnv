@@ -1,5 +1,5 @@
 import copy
-from typing import List, Union
+from typing import List, Union, TYPE_CHECKING
 import numpy as np
 import pandas as pd
 from collections import deque
@@ -8,9 +8,12 @@ from highway_env import utils
 from highway_env.logger import Loggable
 from highway_env.road.lane import AbstractLane
 from highway_env.road.road import Road, LaneIndex
+from highway_env.road.objects import Obstacle, Landmark
+
+if TYPE_CHECKING:
+    from highway_env.road.objects import RoadObject
 
 Vector = Union[np.ndarray, List[float]]
-from highway_env.road.objects import Obstacle, Landmark
 
 
 class Vehicle(Loggable):
@@ -166,7 +169,7 @@ class Vehicle(Loggable):
             lane = self.lane
         return lane.local_coordinates(vehicle.position)[0] - lane.local_coordinates(self.position)[0]
 
-    def check_collision(self, other: "Vehicle") -> None:
+    def check_collision(self, other: Union['Vehicle', 'RoadObject']) -> None:
         """
             Check for collision with another vehicle.
 
