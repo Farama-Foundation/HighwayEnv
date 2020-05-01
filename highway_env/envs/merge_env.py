@@ -6,7 +6,7 @@ from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, SineLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle, MDPVehicle
-from highway_env.vehicle.kinematics import Obstacle
+from highway_env.road.objects import Obstacle
 
 
 class MergeEnv(AbstractEnv):
@@ -91,7 +91,7 @@ class MergeEnv(AbstractEnv):
         net.add_lane("k", "b", lkb)
         net.add_lane("b", "c", lbc)
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
-        road.obstacles.append(Obstacle(road, lbc.position(ends[2], 0)))
+        road.objects.append(Obstacle(road, lbc.position(ends[2], 0)))
         self.road = road
 
     def _make_vehicles(self) -> None:

@@ -8,7 +8,8 @@ from numpy.core._multiarray_umath import ndarray
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import StraightLane, LineType
 from highway_env.road.road import Road, RoadNetwork
-from highway_env.vehicle.kinematics import Vehicle, Obstacle
+from highway_env.vehicle.kinematics import Vehicle
+from highway_env.road.objects import Landmark
 
 
 class ParkingEnv(AbstractEnv, GoalEnv):
@@ -84,9 +85,8 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         self.road.vehicles.append(self.vehicle)
 
         lane = self.np_random.choice(self.road.network.lanes_list())
-        self.goal = Obstacle(self.road, lane.position(lane.length/2, 0), heading=lane.heading)
-        self.goal.COLLISIONS_ENABLED = False
-        self.road.obstacles.append(self.goal)
+        self.goal = Landmark(self.road, lane.position(lane.length/2, 0), heading=lane.heading)
+        self.road.objects.append(self.goal)
 
     def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict, p: float = 0.5) -> float:
         """

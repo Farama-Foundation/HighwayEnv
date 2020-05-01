@@ -1,5 +1,5 @@
 import copy
-from typing import List, Union
+from typing import List, Union, TYPE_CHECKING
 import numpy as np
 import pandas as pd
 from collections import deque
@@ -8,6 +8,10 @@ from highway_env import utils
 from highway_env.logger import Loggable
 from highway_env.road.lane import AbstractLane
 from highway_env.road.road import Road, LaneIndex
+from highway_env.road.objects import Obstacle, Landmark
+
+if TYPE_CHECKING:
+    from highway_env.road.objects import RoadObject
 
 Vector = Union[np.ndarray, List[float]]
 
@@ -44,7 +48,6 @@ class Vehicle(Loggable):
         self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
-        self.crashed_with_obstacle = False
         self.log = []
         self.history = deque(maxlen=30)
 
@@ -166,27 +169,40 @@ class Vehicle(Loggable):
             lane = self.lane
         return lane.local_coordinates(vehicle.position)[0] - lane.local_coordinates(self.position)[0]
 
-    def check_collision(self, other: "Vehicle") -> None:
+    def check_collision(self, other: Union['Vehicle', 'RoadObject']) -> None:
         """
             Check for collision with another vehicle.
 
-        :param other: the other vehicle
+        :param other: the other vehicle or object
         """
-        if not self.COLLISIONS_ENABLED or not other.COLLISIONS_ENABLED or self.crashed or other is self:
+        if self.crashed or other is self:
             return
 
+        if isinstance(other, Vehicle):
+            if not self.COLLISIONS_ENABLED or not other.COLLISIONS_ENABLED:
+                return
+
+            if self._is_colliding(other):
+                self.velocity = other.velocity = min([self.velocity, other.velocity], key=abs)
+                self.crashed = other.crashed = True
+        elif isinstance(other, Obstacle):
+            if not self.COLLISIONS_ENABLED:
+                return
+
+            if self._is_colliding(other):
+                self.velocity = min([self.velocity, 0], key=abs)
+                self.crashed = other.hit = True
+        elif isinstance(other, Landmark):
+            if self._is_colliding(other):
+                other.hit = True
+
+    def _is_colliding(self, other):
         # Fast spherical pre-check
         if np.linalg.norm(other.position - self.position) > self.LENGTH:
-            return
-
+            return False
         # Accurate rectangular check
-        if utils.rotated_rectangles_intersect((self.position, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
-                                              (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading)):
-            self.velocity = other.velocity = min([self.velocity, other.velocity], key=abs)
-            if isinstance(other, Obstacle):
-                self.crashed_with_obstacle = other.crashed_with_obstacle = True
-            elif isinstance(other, Vehicle):
-                self.crashed = other.crashed = True
+        return utils.rotated_rectangles_intersect((self.position, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
+                                                  (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading))
 
     @property
     def direction(self) -> np.ndarray:
@@ -280,14 +296,3 @@ class Vehicle(Loggable):
 
     def __repr__(self):
         return self.__str__()
-
-
-class Obstacle(Vehicle):
-    """
-        A motionless obstacle at a given position.
-    """
-
-    def __init__(self, road: Road, position: Vector, heading: float = 0) -> None:
-        super(Obstacle, self).__init__(road, position, velocity=0, heading=heading)
-        self.target_velocity = 0
-        self.LENGTH = self.WIDTH

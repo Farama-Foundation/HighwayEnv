@@ -2,6 +2,7 @@ import pytest
 
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.kinematics import Vehicle
+from highway_env.road.objects import Obstacle, Landmark
 
 FPS = 15
 
@@ -46,3 +47,28 @@ def test_front():
 
     assert v1.lane_distance_to(v2) == pytest.approx(10)
     assert v2.lane_distance_to(v1) == pytest.approx(-10)
+
+
+def test_collision():
+    # Collision between two vehicles
+    r = Road(RoadNetwork.straight_road_network(1))
+    v1 = Vehicle(road=r, position=[0, 0], velocity=10)
+    v2 = Vehicle(road=r, position=[4, 0], velocity=20)
+    v1.check_collision(v2)
+
+    assert v1.crashed and v2.crashed
+    assert v1.velocity == v2.velocity == 10
+    # Collision between a vehicle and an obstacle
+    v3 = Vehicle(road=r, position=[20, 0], velocity=10)
+    o = Obstacle(road=r, position=[23, 0])
+    v3.check_collision(o)
+
+    assert v3.crashed and o.hit
+    assert v3.velocity == 0
+    # Collision between a vehicle and a landmark
+    v4 = Vehicle(road=r, position=[40, 0], velocity=10)
+    l = Landmark(road=r, position=[43, 0])
+    v4.check_collision(l)
+
+    assert v4.crashed is False
+    assert l.hit

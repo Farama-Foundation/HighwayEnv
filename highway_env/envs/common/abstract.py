@@ -11,7 +11,6 @@ from highway_env.envs.common.finite_mdp import finite_mdp
 from highway_env.envs.common.graphics import EnvViewer
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
-from highway_env.vehicle.kinematics import Obstacle
 
 Action = Union[int, np.ndarray]
 Observation = np.ndarray
@@ -323,7 +322,7 @@ class AbstractEnv(gym.Env):
         env_copy = copy.deepcopy(self)
         vehicles = env_copy.road.vehicles
         for i, v in enumerate(vehicles):
-            if v is not env_copy.vehicle and not isinstance(v, Obstacle):
+            if v is not env_copy.vehicle:
                 vehicles[i] = vehicle_class.create_from(v)
         return env_copy
 

@@ -8,6 +8,7 @@ from highway_env.road.lane import LineType, StraightLane, AbstractLane
 
 if TYPE_CHECKING:
     from highway_env.vehicle import kinematics
+    from highway_env.road import objects
 
 logger = logging.getLogger(__name__)
 
@@ -237,7 +238,7 @@ class Road(Loggable):
     def __init__(self,
                  network: RoadNetwork = None,
                  vehicles: List['kinematics.Vehicle'] = None,
-                 obstacles: List['kinematics.Obstacle'] = None,
+                 road_objects: List['objects.RoadObject'] = None,
                  np_random: np.random.RandomState = None,
                  record_history: bool = False) -> None:
         """
@@ -245,12 +246,13 @@ class Road(Loggable):
 
         :param network: the road network describing the lanes
         :param vehicles: the vehicles driving on the road
+        :param road_objects: the objects on the road including obstacles and landmarks
         :param np.random.RandomState np_random: a random number generator for vehicle behaviour
         :param record_history: whether the recent trajectories of vehicles should be recorded for display
         """
         self.network = network or []
         self.vehicles = vehicles or []
-        self.obstacles = obstacles or []
+        self.objects = road_objects or []
         self.np_random = np_random if np_random else np.random.RandomState()
         self.record_history = record_history
 
@@ -286,7 +288,7 @@ class Road(Loggable):
         for vehicle in self.vehicles:
             for other in self.vehicles:
                 vehicle.check_collision(other)
-            for other in self.obstacles:
+            for other in self.objects:
                 vehicle.check_collision(other)
 
     def neighbour_vehicles(self, vehicle: 'kinematics.Vehicle', lane_index: LaneIndex = None) \

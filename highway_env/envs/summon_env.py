@@ -5,7 +5,8 @@ from highway_env import utils
 from highway_env.envs import ParkingEnv
 from highway_env.road.lane import StraightLane, LineType
 from highway_env.road.road import Road, RoadNetwork
-from highway_env.vehicle.kinematics import Vehicle, Obstacle
+from highway_env.vehicle.kinematics import Vehicle
+from highway_env.road.objects import Landmark
 
 
 class SummonEnv(ParkingEnv):
@@ -74,9 +75,8 @@ class SummonEnv(ParkingEnv):
         self.road.vehicles.append(self.vehicle)
 
         goal_position = [self.np_random.choice([-2 * self.spots - 10, 2 * self.spots + 10]), 0]
-        self.goal = Obstacle(self.road, goal_position, heading=0)
-        self.goal.COLLISIONS_ENABLED = False
-        self.road.obstacles.append(self.goal)
+        self.goal = Landmark(self.road, goal_position, heading=0)
+        self.road.objects.append(self.goal)
 
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for i in range(self.config["vehicles_count"]):

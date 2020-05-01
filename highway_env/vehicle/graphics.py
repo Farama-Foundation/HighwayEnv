@@ -3,7 +3,7 @@ import numpy as np
 import pygame
 
 from highway_env.vehicle.dynamics import BicycleVehicle
-from highway_env.vehicle.kinematics import Vehicle, Obstacle
+from highway_env.vehicle.kinematics import Vehicle
 from highway_env.vehicle.controller import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 
@@ -122,7 +122,7 @@ class VehicleGraphics(object):
         color = cls.DEFAULT_COLOR
         if getattr(vehicle, "color", None):
             color = vehicle.color
-        elif vehicle.crashed or vehicle.crashed_with_obstacle:
+        elif vehicle.crashed:
             color = cls.RED
         elif isinstance(vehicle, LinearVehicle):
             color = cls.YELLOW
@@ -130,8 +130,6 @@ class VehicleGraphics(object):
             color = cls.BLUE
         elif isinstance(vehicle, MDPVehicle):
             color = cls.EGO_COLOR
-        elif isinstance(vehicle, Obstacle):
-            color = cls.GREEN
         if transparent:
             color = (color[0], color[1], color[2], 30)
         return color

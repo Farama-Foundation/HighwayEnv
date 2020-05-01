@@ -102,7 +102,7 @@ class EnvViewer(object):
                 self.sim_surface,
                 offscreen=self.offscreen)
 
-        RoadGraphics.display_obstacles(
+        RoadGraphics.display_road_objects(
             self.env.road,
             self.sim_surface,
             offscreen=self.offscreen
