@@ -75,7 +75,7 @@ class SummonEnv(ParkingEnv):
         self.road.vehicles.append(self.vehicle)
 
         goal_position = [self.np_random.choice([-2 * self.spots - 10, 2 * self.spots + 10]), 0]
-        self.goal = Landmark(self.road, goal_position, rotation_angle=0)
+        self.goal = Landmark(self.road, goal_position, heading=0)
         self.road.objects.append(self.goal)
 
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
