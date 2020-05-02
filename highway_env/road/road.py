@@ -250,7 +250,7 @@ class Road(Loggable):
         :param np.random.RandomState np_random: a random number generator for vehicle behaviour
         :param record_history: whether the recent trajectories of vehicles should be recorded for display
         """
-        self.network = network or []
+        self.network = network
         self.vehicles = vehicles or []
         self.objects = road_objects or []
         self.np_random = np_random if np_random else np.random.RandomState()
