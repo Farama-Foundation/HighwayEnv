@@ -210,7 +210,7 @@ class CircularLane(AbstractLane):
         A lane going in circle arc.
     """
     def __init__(self,
-                 center: Tuple[float],
+                 center: Vector,
                  radius: float,
                  start_phase: float,
                  end_phase: float,
