@@ -248,7 +248,6 @@ class LPV(object):
         if is_metzler(self.a0):
             self.x_i_t = self.step_interval_predictor(self.x_i_t, dt)
         else:
-            raise ValueError()
             self.x_i_t = self.step_naive_predictor(self.x_i_t, dt)
         dx = self.a0 @ self.x_t + self.b @ self.u.squeeze(-1)
         self.x_t = self.x_t + dx * dt

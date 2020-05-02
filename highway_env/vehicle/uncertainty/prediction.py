@@ -68,14 +68,16 @@ class IntervalVehicle(LinearVehicle):
                 data=getattr(vehicle, "data", None))
         return v
 
-    def step(self, dt):
+    def step(self, dt, mode="partial"):
         self.store_trajectories()
         if self.crashed:
             self.interval = VehicleInterval(self)
         else:
-            # self.observer_step(dt)
-            self.partial_observer_step(dt)
-            # self.predictor_step(dt)
+            if mode == "partial":
+                # self.observer_step(dt)
+                self.partial_observer_step(dt)
+            elif mode == "predictor":
+                self.predictor_step(dt)
         super().step(dt)
 
     def observer_step(self, dt):
@@ -164,6 +166,7 @@ class IntervalVehicle(LinearVehicle):
         noise = 1
         self.interval.position[:, 0] += noise * dt * np.array([-1, 1])
         self.interval.position[:, 1] += noise * dt * np.array([-1, 1])
+        self.interval.heading += noise * dt * np.array([-1, 1])
 
     def predictor_step(self, dt):
         """
@@ -237,11 +240,12 @@ class IntervalVehicle(LinearVehicle):
                       self.target_velocity,
                       self.target_velocity]
             noise = 1
-            b = np.array([1, 0, 0, 0])[:, np.newaxis]
-            d_i = np.array([[-1], [1]]) * noise
-            c = [self.target_velocity, self.target_velocity, 0, 0]
+            b = np.eye(4)
+            d = np.array([[1], [0], [0], [0]])
+            omega_i = np.array([[-1], [1]]) * noise
+            u = [[self.target_velocity], [self.target_velocity], [0], [0]]
             a0, da = self.longitudinal_matrix_polytope()
-            self.longitudinal_lpv = LPV(x0, a0, da, b, d_i, c, center)
+            self.longitudinal_lpv = LPV(x0, a0, da, b, d, omega_i, u, center=center)
 
             # Lateral predictor
             if not self.lateral_lpv:
@@ -250,10 +254,11 @@ class IntervalVehicle(LinearVehicle):
                 center = [0, 0]
                 noise = 0.5
                 b = np.identity(2)
-                d_i = np.array([[-1, 0], [1, 0]]) * noise
-                c = [0, 0]
+                d = np.array([[1], [0]])
+                omega_i = np.array([[-1], [1]]) * noise
+                u = [[0], [0]]
                 a0, da = self.lateral_matrix_polytope()
-                self.lateral_lpv = LPV(x0, a0, da, b, d_i, c, center)
+                self.lateral_lpv = LPV(x0, a0, da, b, d, omega_i, u, center=center)
 
     def longitudinal_matrix_polytope(self):
         return IntervalVehicle.parameter_box_to_polytope(self.theta_a_i, self.longitudinal_structure)
@@ -338,7 +343,8 @@ class IntervalVehicle(LinearVehicle):
         # 3. Merge the resulting intervals together to x_i(t+dt).
         self.interval.position = np.array([v_minus.interval.position[0], v_plus.interval.position[1]])
         self.interval.velocity = np.array([v_minus.interval.velocity[0], v_plus.interval.velocity[1]])
-        self.interval.heading = np.array([v_minus.interval.heading[0], v_plus.interval.heading[1]])
+        self.interval.heading = np.array([min(v_minus.interval.heading[0], v_plus.interval.heading[0]),
+                                          max(v_minus.interval.heading[1], v_plus.interval.heading[1])])
 
     def store_trajectories(self):
         """
