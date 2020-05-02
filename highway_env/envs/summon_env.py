@@ -22,7 +22,7 @@ class SummonEnv(ParkingEnv):
     COLLISION_REWARD = -5
 
     @classmethod
-    def default_config(cls):
+    def default_config(cls) -> dict:
         config = super().default_config()
         config.update({
             "vehicles_count": 10,
@@ -30,9 +30,10 @@ class SummonEnv(ParkingEnv):
         })
         return config
 
-    def _create_road(self, spots=15):
+    def _create_road(self, spots: int = 15) -> None:
         """
             Create a road composed of straight adjacent lanes.
+            :param spots: number of parking spots
         """
         net = RoadNetwork()
 
@@ -66,9 +67,10 @@ class SummonEnv(ParkingEnv):
                          np_random=self.np_random,
                          record_history=self.config["show_trajectories"])
 
-    def _create_vehicles(self, parked_probability=0.75):
+    def _create_vehicles(self, parked_probability: float = 0.75) -> None:
         """
             Create some new random vehicles of a given type, and add them on the road.
+            :param parked_probability: probability that a spot is occupied
         """
 
         self.vehicle = Vehicle(self.road, self.vehicle_starting, 2 * np.pi * self.np_random.rand(), 0)
@@ -95,7 +97,7 @@ class SummonEnv(ParkingEnv):
             if v is not self.vehicle and np.linalg.norm(v.position - self.vehicle.position) < 20:
                 self.road.vehicles.remove(v)
 
-    def compute_reward(self, achieved_goal, desired_goal, info, p=0.5):
+    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict, p: float = 0.5) -> float:
         """
             Proximity to the goal is rewarded
 
