@@ -3,7 +3,16 @@ import pytest
 
 import highway_env
 
-envs = ["highway-v0", "merge-v0", "roundabout-v0", "parking-v0", "intersection-v0"]
+envs = [
+    "highway-v0",
+    "merge-v0",
+    "roundabout-v0",
+    "intersection-v0",
+    "parking-v0",
+    "summon-v0",
+    "two-way-v0",
+    "lane-keeping-v0",
+]
 
 
 @pytest.mark.parametrize("env_spec", envs)
