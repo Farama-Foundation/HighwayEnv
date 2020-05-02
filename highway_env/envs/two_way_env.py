@@ -1,3 +1,4 @@
+import numpy as np
 from gym.envs.registration import register
 
 from highway_env import utils
@@ -16,13 +17,13 @@ class TwoWayEnv(AbstractEnv):
         in the CMDP/BMDP framework.
     """
 
-    COLLISION_REWARD = 0
-    LEFT_LANE_CONSTRAINT = 1
-    LEFT_LANE_REWARD = 0.2
-    HIGH_VELOCITY_REWARD = 0.8
+    COLLISION_REWARD: float = 0
+    LEFT_LANE_CONSTRAINT: float = 1
+    LEFT_LANE_REWARD: float = 0.2
+    HIGH_VELOCITY_REWARD: float = 0.8
 
     @classmethod
-    def default_config(cls):
+    def default_config(cls) -> dict:
         config = super().default_config()
         config.update({
             "observation": {
@@ -32,10 +33,7 @@ class TwoWayEnv(AbstractEnv):
         })
         return config
 
-    def step(self, action):
-        return super().step(action)
-
-    def _reward(self, action):
+    def _reward(self, action: int) -> float:
         """
             The vehicle is rewarded for driving with high velocity
         :param action: the action performed
@@ -47,19 +45,19 @@ class TwoWayEnv(AbstractEnv):
             + self.LEFT_LANE_REWARD * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
         return reward
 
-    def _is_terminal(self):
+    def _is_terminal(self) -> bool:
         """
             The episode is over if the ego vehicle crashed or the time is out.
         """
         return self.vehicle.crashed
 
-    def _cost(self, action):
+    def _cost(self, action: int) -> float:
         """
-            The constraint signal is the time spent driving on the opposite lane, and occurence of collisions.
+            The constraint signal is the time spent driving on the opposite lane, and occurrence of collisions.
         """
         return float(self.vehicle.crashed) + float(self.vehicle.lane_index[2] == 0)/15
 
-    def reset(self):
+    def reset(self) -> np.ndarray:
         self._make_road()
         self._make_vehicles()
         return super().reset()
@@ -73,16 +71,16 @@ class TwoWayEnv(AbstractEnv):
 
         # Lanes
         net.add_lane("a", "b", StraightLane([0, 0], [length, 0],
-                                            line_types=[LineType.CONTINUOUS_LINE, LineType.STRIPED]))
+                                            line_types=(LineType.CONTINUOUS_LINE, LineType.STRIPED)))
         net.add_lane("a", "b", StraightLane([0, StraightLane.DEFAULT_WIDTH], [length, StraightLane.DEFAULT_WIDTH],
-                                            line_types=[LineType.NONE, LineType.CONTINUOUS_LINE]))
+                                            line_types=(LineType.NONE, LineType.CONTINUOUS_LINE)))
         net.add_lane("b", "a", StraightLane([length, 0], [0, 0],
-                                            line_types=[LineType.NONE, LineType.NONE]))
+                                            line_types=(LineType.NONE, LineType.NONE)))
 
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         self.road = road
 
-    def _make_vehicles(self):
+    def _make_vehicles(self) -> None:
         """
             Populate a road with several vehicles on the road
         :return: the ego-vehicle
