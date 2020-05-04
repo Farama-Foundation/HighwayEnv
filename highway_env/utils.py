@@ -1,7 +1,7 @@
 import copy
 import importlib
 import itertools
-from typing import Union, Tuple, List
+from typing import Union, Tuple, List, Dict
 
 import numpy as np
 
@@ -114,7 +114,7 @@ def has_corner_inside(rect1: Tuple[Vector, float, float, float],
     return any([point_in_rotated_rectangle(c1+np.squeeze(p), c2, l2, w2, a2) for p in rotated_r1_points])
 
 
-def confidence_ellipsoid(data: dict[str, np.ndarray], lambda_: float = 1e-5, delta: float = 0.1, sigma: float = 0.1,
+def confidence_ellipsoid(data: Dict[str, np.ndarray], lambda_: float = 1e-5, delta: float = 0.1, sigma: float = 0.1,
                          param_bound: float = 1.0) -> Tuple[np.ndarray, np.ndarray, float]:
     """
         Compute a confidence ellipsoid over the parameter theta, where
