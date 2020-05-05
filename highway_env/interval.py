@@ -6,10 +6,11 @@ from numpy.linalg import LinAlgError
 
 from highway_env.road.lane import AbstractLane
 
-Vector = Union[np.ndarray, List[float]]
+Vector = Union[np.ndarray, List[float], float]
+Interval = Union[np.ndarray, List[Vector]]
 
 
-def intervals_product(a: Vector, b: Vector) -> np.ndarray:
+def intervals_product(a: Interval, b: Interval) -> np.ndarray:
     """
         Compute the product of two intervals
     :param a: interval [a_min, a_max]
@@ -23,7 +24,7 @@ def intervals_product(a: Vector, b: Vector) -> np.ndarray:
          np.dot(p(a[1]), p(b[1])) - np.dot(p(a[0]), n(b[1])) - np.dot(n(a[1]), p(b[0])) + np.dot(n(a[0]), n(b[0]))])
 
 
-def intervals_scaling(a: Vector, b: Vector) -> np.ndarray:
+def intervals_scaling(a: Interval, b: Interval) -> np.ndarray:
     """
         Scale an intervals
     :param a: matrix a
@@ -37,7 +38,7 @@ def intervals_scaling(a: Vector, b: Vector) -> np.ndarray:
          np.dot(p(a), b[1]) - np.dot(n(a), b[0])])
 
 
-def intervals_diff(a: Vector, b: Vector) -> np.ndarray:
+def intervals_diff(a: Interval, b: Interval) -> np.ndarray:
     """
         Compute the difference of two intervals
     :param a: interval [a_min, a_max]
@@ -47,7 +48,7 @@ def intervals_diff(a: Vector, b: Vector) -> np.ndarray:
     return np.array([a[0] - b[1], a[1] - b[0]])
 
 
-def interval_negative_part(a: Vector) -> np.ndarray:
+def interval_negative_part(a: Interval) -> np.ndarray:
     """
         Compute the negative part of an interval
     :param a: interval [a_min, a_max]
@@ -56,7 +57,7 @@ def interval_negative_part(a: Vector) -> np.ndarray:
     return np.minimum(a, 0)
 
 
-def integrator_interval(x: np.ndarray, k: np.ndarray) -> np.ndarray:
+def integrator_interval(x: Interval, k: Interval) -> np.ndarray:
     """
         Compute the interval of an integrator system: dx = -k*x
     :param x: state interval
@@ -73,7 +74,7 @@ def integrator_interval(x: np.ndarray, k: np.ndarray) -> np.ndarray:
     return interval_gain*x  # Note: no flip of x, contrary to using intervals_product(k,interval_minus(x))
 
 
-def vector_interval_section(v_i: np.ndarray, direction: np.ndarray) -> np.ndarray:
+def vector_interval_section(v_i: Interval, direction: Vector) -> np.ndarray:
     corners = [[v_i[0, 0], v_i[0, 1]],
                [v_i[0, 0], v_i[1, 1]],
                [v_i[1, 0], v_i[0, 1]],
@@ -82,7 +83,7 @@ def vector_interval_section(v_i: np.ndarray, direction: np.ndarray) -> np.ndarra
     return np.array([min(corners_dist), max(corners_dist)])
 
 
-def interval_absolute_to_local(position_i: np.ndarray, lane: AbstractLane) -> Tuple[np.ndarray, np.ndarray]:
+def interval_absolute_to_local(position_i: Interval, lane: AbstractLane) -> Tuple[np.ndarray, np.ndarray]:
     """
         Converts an interval in absolute x,y coordinates to an interval in local (longiturinal, lateral) coordinates
     :param position_i: the position interval [x_min, x_max]
@@ -99,7 +100,7 @@ def interval_absolute_to_local(position_i: np.ndarray, lane: AbstractLane) -> Tu
     return longitudinal_i, lateral_i
 
 
-def interval_local_to_absolute(longitudinal_i, lateral_i, lane):
+def interval_local_to_absolute(longitudinal_i: Interval, lateral_i: Interval, lane: AbstractLane) -> Interval:
     """
         Converts an interval in local (longiturinal, lateral) coordinates to an interval in absolute x,y coordinates
     :param longitudinal_i: the longitudinal interval [L_min, L_max]
@@ -218,9 +219,8 @@ class LPV(object):
             control = control - self.k @ state  # the Kx part of the control is already present in A0.
         self.u = control
 
-    def change_coordinates(self, value: Union[np.ndarray, List[np.ndarray]], matrix: np.ndarray = False,
-                           back: bool = False, interval: bool = False, offset: bool = True) \
-            -> Union[np.ndarray, List[np.ndarray]]:
+    def change_coordinates(self, value: Union[np.ndarray, List[np.ndarray]], matrix: bool = False, back: bool = False,
+                           interval: bool = False, offset: bool = True) -> Union[np.ndarray, List[np.ndarray]]:
         """
             Perform a change of coordinate: rotation and centering.
 
@@ -237,8 +237,8 @@ class LPV(object):
         transformation, transformation_inv = self.coordinates
         if interval:
             if back:
-                value = intervals_scaling(transformation,
-                    value[:, :, np.newaxis]).squeeze() + offset * np.array([self.center, self.center])
+                value = intervals_scaling(transformation, value[:, :, np.newaxis]).squeeze() + \
+                        offset * np.array([self.center, self.center])
                 return value
             else:
                 value = value - offset * np.array([self.center, self.center])
@@ -270,7 +270,7 @@ class LPV(object):
         dx = self.a0 @ self.x_t + self.b @ self.u.squeeze(-1)
         self.x_t = self.x_t + dx * dt
 
-    def step_naive_predictor(self, x_i: np.ndarray, dt: float) -> np.ndarray:
+    def step_naive_predictor(self, x_i: Interval, dt: float) -> np.ndarray:
         """
             Step an interval predictor with box uncertainty.
 
@@ -284,7 +284,7 @@ class LPV(object):
         dx_i = intervals_product(a_i, x_i) + intervals_product([d, d], omega_i) + np.array([bu, bu])
         return x_i + dx_i*dt
 
-    def step_interval_predictor(self, x_i: np.ndarray, dt: float) -> np.ndarray:
+    def step_interval_predictor(self, x_i: Interval, dt: float) -> np.ndarray:
         """
             Step an interval predictor with polytopic uncertainty.
 
