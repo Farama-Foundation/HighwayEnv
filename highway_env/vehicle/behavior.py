@@ -74,7 +74,6 @@ class IDMVehicle(ControlledVehicle):
             return
         action = {}
         front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
-
         # Lateral: MOBIL
         self.follow_road()
         if self.enable_lane_change:
@@ -88,7 +87,7 @@ class IDMVehicle(ControlledVehicle):
                                                    rear_vehicle=rear_vehicle)
         # action['acceleration'] = self.recover_from_stop(action['acceleration'])
         action['acceleration'] = np.clip(action['acceleration'], -self.ACC_MAX, self.ACC_MAX)
-        super().act(action)
+        super(ControlledVehicle, self).act(action)  # Skip ControlledVehicle.act(), or the command will be overriden.
 
     def step(self, dt: float):
         """
