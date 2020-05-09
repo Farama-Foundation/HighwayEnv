@@ -19,7 +19,7 @@ class VehicleGraphics(object):
     EGO_COLOR = GREEN
 
     @classmethod
-    def display(cls, vehicle, surface, transparent=False, offscreen=False):
+    def display(cls, vehicle, surface, transparent=False, offscreen=False, label=False):
         """
             Display a vehicle on a pygame surface.
 
@@ -29,6 +29,7 @@ class VehicleGraphics(object):
         :param surface: the surface to draw the vehicle on
         :param transparent: whether the vehicle should be drawn slightly transparent
         :param offscreen: whether the rendering should be done offscreen or not
+        :param label: whether a text label should be rendered
         """
         v = vehicle
         tire_length, tire_width = 1, 0.3
@@ -59,6 +60,13 @@ class VehicleGraphics(object):
         if not offscreen:  # convert_alpha throws errors in offscreen mode TODO() Explain why
             vehicle_surface = pygame.Surface.convert_alpha(vehicle_surface)
         cls.blitRotate(surface, vehicle_surface, position, np.rad2deg(-h))
+
+        # Label
+        if label:
+            font = pygame.font.Font(None, 15)
+            text = "#{}".format(id(v) % 1000)
+            text = font.render(text, 1, (10, 10, 10), (255, 255, 255))
+            surface.blit(text, position)
 
     @staticmethod
     def blitRotate(surf, image, pos, angle, origin_pos=None, show_rect=False):
