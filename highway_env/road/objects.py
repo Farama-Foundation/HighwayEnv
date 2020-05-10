@@ -14,14 +14,16 @@ class RoadObject(ABC):
     LENGTH = 2.0  # Object length [m]
     WIDTH = 2.0  # Object width [m]
 
-    def __init__(self, road, position: Sequence[float], heading: float = 0.):
+    def __init__(self, road, position: Sequence[float], velocity: float = 0., heading: float = 0.):
         """
         :param road: the road instance where the object is placed in
         :param position: cartesian position of object in the surface
+        :param velocity: cartesian velocity of object in the surface
         :param heading: the angle from positive direction of horizontal axis
         """
         self.road = road
         self.position = np.array(position, dtype=np.float)
+        self.velocity = velocity
         self.heading = heading
         # store whether object is hit by any vehicle
         self.hit = False
