@@ -1,11 +1,11 @@
 import copy
 import importlib
 import itertools
-from typing import Union, Tuple, List, Dict
+from typing import Tuple, Dict
 
 import numpy as np
 
-Vector = Union[np.ndarray, Tuple[float, float]]
+from highway_env.types import Vector
 
 
 def do_every(duration: float, timer: float) -> bool:

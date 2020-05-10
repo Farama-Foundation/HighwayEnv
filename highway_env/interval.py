@@ -1,14 +1,13 @@
 import itertools
-from typing import Tuple, Union, List, Callable
+from typing import Tuple, Union, List, Callable, Sequence
 
 import numpy as np
 from numpy.linalg import LinAlgError
 
 from highway_env.road.lane import AbstractLane
+from highway_env.types import Vector, Matrix
 
-Vector = Union[np.ndarray, List[float], float]
-Matrix = Union[np.ndarray, List[List[float]]]
-Interval = Union[np.ndarray, List[Vector]]
+Interval = Union[np.ndarray, Sequence[Vector], Sequence[Matrix]]
 
 
 def intervals_product(a: Interval, b: Interval) -> np.ndarray:

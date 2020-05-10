@@ -8,9 +8,10 @@ from highway_env.interval import polytope, vector_interval_section, integrator_i
     interval_local_to_absolute
 from highway_env.road.road import Route, LaneIndex, Road
 from highway_env.road.objects import RoadObject
+from highway_env.types import Vector
 from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
-from highway_env.vehicle.kinematics import Vector, Vehicle
+from highway_env.vehicle.kinematics import Vehicle
 
 Polytope = Tuple[np.ndarray, List[np.ndarray]]
 

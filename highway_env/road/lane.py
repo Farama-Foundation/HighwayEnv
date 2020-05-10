@@ -1,10 +1,9 @@
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, List, Union
+from typing import Tuple, List
 import numpy as np
 
 from highway_env import utils
-
-Vector = Union[np.ndarray, List[float]]
+from highway_env.types import Vector
 
 
 class AbstractLane(object):

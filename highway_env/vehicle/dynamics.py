@@ -4,9 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from highway_env.road.road import Road
+from highway_env.types import Vector
 from highway_env.vehicle.kinematics import Vehicle
-
-Vector = Union[np.ndarray, List[float]]
 
 
 class BicycleVehicle(Vehicle):

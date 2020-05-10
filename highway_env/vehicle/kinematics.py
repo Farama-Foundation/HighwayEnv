@@ -9,11 +9,10 @@ from highway_env.logger import Loggable
 from highway_env.road.lane import AbstractLane
 from highway_env.road.road import Road, LaneIndex
 from highway_env.road.objects import Obstacle, Landmark
+from highway_env.types import Vector
 
 if TYPE_CHECKING:
     from highway_env.road.objects import RoadObject
-
-Vector = Union[np.ndarray, List[float]]
 
 
 class Vehicle(Loggable):
