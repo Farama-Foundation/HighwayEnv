@@ -279,14 +279,14 @@ class LinearVehicle(IDMVehicle):
     """
         A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters
     """
-    ACCELERATION_PARAMETERS = [0.3, 0.14, 0.8]
+    ACCELERATION_PARAMETERS = [0.3, 0.3, 2.0]
     STEERING_PARAMETERS = [ControlledVehicle.KP_HEADING, ControlledVehicle.KP_HEADING * ControlledVehicle.KP_LATERAL]
 
     ACCELERATION_RANGE = np.array([0.5*np.array(ACCELERATION_PARAMETERS), 1.5*np.array(ACCELERATION_PARAMETERS)])
     STEERING_RANGE = np.array([np.array(STEERING_PARAMETERS) - np.array([0.07, 1.5]),
                                np.array(STEERING_PARAMETERS) + np.array([0.07, 1.5])])
 
-    TIME_WANTED = 2.0
+    TIME_WANTED = 2.5
 
     def __init__(self,
                  road: Road,
