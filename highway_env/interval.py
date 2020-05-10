@@ -7,6 +7,7 @@ from numpy.linalg import LinAlgError
 from highway_env.road.lane import AbstractLane
 
 Vector = Union[np.ndarray, List[float], float]
+Matrix = Union[np.ndarray, List[List[float]]]
 Interval = Union[np.ndarray, List[Vector]]
 
 
@@ -143,15 +144,15 @@ def is_metzler(matrix: np.ndarray, eps: float = 1e-9) -> bool:
 class LPV(object):
     def __init__(self,
                  x0: Vector,
-                 a0: Vector,
+                 a0: Matrix,
                  da: List[Vector],
-                 b: Vector = None,
-                 d: Vector = None,
-                 omega_i: Vector = None,
+                 b: Matrix = None,
+                 d: Matrix = None,
+                 omega_i: Matrix = None,
                  u: Vector = None,
-                 k: Vector = None,
+                 k: Matrix = None,
                  center: Vector = None,
-                 x_i: Vector = None) -> None:
+                 x_i: Matrix = None) -> None:
         """
         A Linear Parameter-Varying system:
                     dx = (a0 + sum(da))(x - center) + bd + c

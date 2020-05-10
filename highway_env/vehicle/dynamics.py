@@ -1,8 +1,12 @@
+from typing import Union, List, Tuple
+
 import numpy as np
 import matplotlib.pyplot as plt
 
-from highway_env.utils import not_zero
+from highway_env.road.road import Road
 from highway_env.vehicle.kinematics import Vehicle
+
+Vector = Union[np.ndarray, List[float]]
 
 
 class BicycleVehicle(Vehicle):
@@ -12,17 +16,17 @@ class BicycleVehicle(Vehicle):
         - the steering input to front tires and the corresponding slip angles are small
         See https://pdfs.semanticscholar.org/bb9c/d2892e9327ec1ee647c30c320f2089b290c1.pdf, Chapter 3.
     """
-    MASS = 1  # [kg]
-    LENGTH_A = Vehicle.LENGTH / 2  # [m]
-    LENGTH_B = Vehicle.LENGTH / 2  # [m]
-    INERTIA_Z = 1/12 * MASS * (Vehicle.LENGTH ** 2 + 3 * Vehicle.WIDTH ** 2)  # [kg.m2]
-    FRICTION_FRONT = 15.0 * MASS  # [N]
-    FRICTION_REAR = 15.0 * MASS  # [N]
+    MASS: float = 1  # [kg]
+    LENGTH_A: float = Vehicle.LENGTH / 2  # [m]
+    LENGTH_B: float = Vehicle.LENGTH / 2  # [m]
+    INERTIA_Z: float = 1/12 * MASS * (Vehicle.LENGTH ** 2 + 3 * Vehicle.WIDTH ** 2)  # [kg.m2]
+    FRICTION_FRONT: float = 15.0 * MASS  # [N]
+    FRICTION_REAR: float = 15.0 * MASS  # [N]
 
-    MAX_ANGULAR_VELOCITY = 2 * np.pi  # [rad/s]
-    MAX_VELOCITY = 15  # [m/s]
+    MAX_ANGULAR_VELOCITY: float = 2 * np.pi  # [rad/s]
+    MAX_VELOCITY: float = 15  # [m/s]
 
-    def __init__(self, road, position, heading=0, velocity=0):
+    def __init__(self, road: Road, position: Vector, heading: float = 0, velocity: float = 0) -> None:
         super().__init__(road, position, heading, velocity)
         self.lateral_velocity = 0
         self.yaw_rate = 0
@@ -30,7 +34,7 @@ class BicycleVehicle(Vehicle):
         self.A_lat, self.B_lat = self.lateral_lpv_dynamics()
 
     @property
-    def state(self):
+    def state(self) -> np.ndarray:
         return np.array([[self.position[0]],
                          [self.position[1]],
                          [self.heading],
@@ -39,7 +43,7 @@ class BicycleVehicle(Vehicle):
                          [self.yaw_rate]])
 
     @property
-    def derivative(self):
+    def derivative(self) -> np.ndarray:
         """
             See Chapter 2 of Lateral Vehicle Dynamics. Vehicle Dynamics and Control. Rajamani, R. (2011)
         :return: the state derivative
@@ -66,7 +70,7 @@ class BicycleVehicle(Vehicle):
                          [d_yaw_rate]])
 
     @property
-    def derivative_linear(self):
+    def derivative_linear(self) -> np.ndarray:
         x = np.array([[self.lateral_velocity], [self.yaw_rate]])
         u = np.array([[self.action['steering']]])
         self.A_lat, self.B_lat = self.lateral_lpv_dynamics()
@@ -76,7 +80,7 @@ class BicycleVehicle(Vehicle):
         velocity = R @ np.array([self.velocity, self.lateral_velocity])
         return np.array([[velocity[0]], [velocity[1]], [self.yaw_rate], [self.action['acceleration']], dx[0], dx[1]])
 
-    def step(self, dt):
+    def step(self, dt: float) -> None:
         self.clip_actions()
         derivative = self.derivative
         self.position += derivative[0:2, 0] * dt
@@ -87,16 +91,16 @@ class BicycleVehicle(Vehicle):
 
         self.on_state_update()
 
-    def clip_actions(self):
+    def clip_actions(self) -> None:
         super().clip_actions()
         # Required because of the linearisation
         self.action["steering"] = np.clip(self.action["steering"], -np.pi/2, np.pi/2)
         self.yaw_rate = np.clip(self.yaw_rate, -self.MAX_ANGULAR_VELOCITY, self.MAX_ANGULAR_VELOCITY)
 
-    def lateral_lpv_structure(self):
+    def lateral_lpv_structure(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
             State: [lateral velocity v, yaw rate r]
-        :return: lateral dynamics dx = (A0 + theta^T phi)x + B u
+        :return: lateral dynamics A0, phi, B such that dx = (A0 + theta^T phi)x + B u
         """
         B = np.array([
             [2*self.FRICTION_FRONT / self.MASS],
@@ -123,7 +127,7 @@ class BicycleVehicle(Vehicle):
         ])
         return A0, phi, B
 
-    def lateral_lpv_dynamics(self):
+    def lateral_lpv_dynamics(self) -> Tuple[np.ndarray, np.ndarray]:
         """
             State: [lateral velocity v, yaw rate r]
         :return: lateral dynamics A, B
@@ -133,11 +137,11 @@ class BicycleVehicle(Vehicle):
         A = A0 + np.tensordot(self.theta, phi, axes=[0, 0])
         return A, B
 
-    def full_lateral_lpv_structure(self):
+    def full_lateral_lpv_structure(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
             State: [position y, yaw psi, lateral velocity v, yaw rate r]
             The system is linearized around psi = 0
-        :return: lateral dynamics A, B
+        :return: lateral dynamics A, phi, B
         """
         A_lat, phi_lat, B_lat = self.lateral_lpv_structure()
 
@@ -147,12 +151,12 @@ class BicycleVehicle(Vehicle):
             [0, 0, 0, 1]
         ])
         A0 = np.concatenate((A_top, np.concatenate((np.zeros((2, 2)), A_lat), axis=1)))
-        phi = [np.concatenate((np.zeros((2, 4)), np.concatenate((np.zeros((2, 2)), phi_i), axis=1)))
-               for phi_i in phi_lat]
+        phi = np.array([np.concatenate((np.zeros((2, 4)), np.concatenate((np.zeros((2, 2)), phi_i), axis=1)))
+                        for phi_i in phi_lat])
         B = np.concatenate((np.zeros((2, 1)), B_lat))
         return A0, phi, B
 
-    def full_lateral_lpv_dynamics(self):
+    def full_lateral_lpv_dynamics(self) -> Tuple[np.ndarray, np.ndarray]:
         """
             State: [position y, yaw psi, lateral velocity v, yaw rate r]
             The system is linearized around psi = 0
@@ -164,7 +168,7 @@ class BicycleVehicle(Vehicle):
         return A, B
 
 
-def simulate(dt=0.1):
+def simulate(dt: float = 0.1) -> None:
     import control
     time = np.arange(0, 20, dt)
     vehicle = BicycleVehicle(road=None, position=[0, 5], velocity=8.3)
@@ -196,7 +200,7 @@ def simulate(dt=0.1):
     plot(time, xx, uu)
 
 
-def plot(time, xx, uu):
+def plot(time: np.ndarray, xx: np.ndarray, uu: np.ndarray) -> None:
     pos_x, pos_y = xx[:, 0, 0], xx[:, 1, 0]
     psi_x, psi_y = np.cos(xx[:, 2, 0]), np.sin(xx[:, 2, 0])
     dir_x, dir_y = np.cos(xx[:, 2, 0] + uu[:, 0, 0]), np.sin(xx[:, 2, 0] + uu[:, 0, 0])
@@ -215,7 +219,7 @@ def plot(time, xx, uu):
     plt.close()
 
 
-def main():
+def main() -> None:
     simulate()
 
 
