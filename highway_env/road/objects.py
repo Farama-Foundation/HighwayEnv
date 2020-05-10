@@ -3,6 +3,8 @@ from typing import Sequence
 
 import numpy as np
 
+from highway_env.road.road import LaneIndex
+
 
 class RoadObject(ABC):
     """
@@ -25,7 +27,7 @@ class RoadObject(ABC):
         self.hit = False
 
     @classmethod
-    def make_on_lane(cls, road, lane_index: tuple, longitudinal: int):
+    def make_on_lane(cls, road, lane_index: LaneIndex, longitudinal: float):
         """
             Create an object on a given lane at a longitudinal position.
 
