@@ -5,14 +5,14 @@ from typing import Tuple, Dict
 
 import numpy as np
 
-from highway_env.types import Vector
+from highway_env.types import Vector, Interval
 
 
 def do_every(duration: float, timer: float) -> bool:
     return duration < timer
 
 
-def remap(v: float, x: float, y: float) -> float:
+def remap(v: float, x: Interval, y: Interval) -> float:
     return y[0] + (v-x[0])*(y[1]-y[0])/(x[1]-x[0])
 
 
