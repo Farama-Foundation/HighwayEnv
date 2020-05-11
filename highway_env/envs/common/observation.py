@@ -100,12 +100,13 @@ class KinematicObservation(ObservationType):
     FEATURES: List[str] = ['presence', 'x', 'y', 'vx', 'vy']
 
     def __init__(self, env: 'AbstractEnv',
-                 features: List[str] = FEATURES,
+                 features: List[str] = None,
                  vehicles_count: int = 5,
                  features_range: Dict[str, List[float]] = None,
                  absolute: bool = False,
                  order: str = "sorted",
                  normalize: bool = True,
+                 clip: bool = True,
                  observe_intentions: bool = False,
                  **kwargs: dict) -> None:
         """
@@ -115,15 +116,17 @@ class KinematicObservation(ObservationType):
         :param absolute: Use absolute coordinates
         :param order: Order of observed vehicles. Values: sorted, shuffled
         :param normalize: Should the observation be normalized
+        :param clip: Should the value be clipped in the desired range
         :param observe_intentions: Observe the destinations of other vehicles
         """
         self.env = env
-        self.features = features
+        self.features = features or self.FEATURES
         self.vehicles_count = vehicles_count
         self.features_range = features_range
         self.absolute = absolute
         self.order = order
         self.normalize = normalize
+        self.clip = clip
         self.observe_intentions = observe_intentions
 
     def space(self) -> spaces.Space:
@@ -147,6 +150,8 @@ class KinematicObservation(ObservationType):
         for feature, f_range in self.features_range.items():
             if feature in df:
                 df[feature] = utils.remap(df[feature], [f_range[0], f_range[1]], [-1, 1])
+                if self.clip:
+                    df[feature] = np.clip(df[feature], -1, 1)
         return df
 
     def observe(self) -> np.ndarray:
@@ -165,7 +170,7 @@ class KinematicObservation(ObservationType):
                 [v.to_dict(origin, observe_intentions=self.observe_intentions)
                  for v in close_vehicles[-self.vehicles_count + 1:]])[self.features],
                            ignore_index=True)
-        # Normalize
+        # Normalize and clip
         if self.normalize:
             df = self.normalize_obs(df)
         # Fill missing rows
@@ -174,8 +179,6 @@ class KinematicObservation(ObservationType):
             df = df.append(pd.DataFrame(data=rows, columns=self.features), ignore_index=True)
         # Reorder
         df = df[self.features]
-        # Clip
-        obs = np.clip(df.values, -1, 1)
         if self.order == "shuffled":
             self.env.np_random.shuffle(obs[1:])
         # Flatten
