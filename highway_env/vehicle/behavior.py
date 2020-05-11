@@ -3,6 +3,7 @@ from typing import Tuple
 import numpy as np
 
 from highway_env.road.road import Road, Route, LaneIndex
+from highway_env.types import Vector
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env import utils
 from highway_env.vehicle.kinematics import Vehicle
@@ -32,7 +33,7 @@ class IDMVehicle(ControlledVehicle):
 
     def __init__(self,
                  road: Road,
-                 position: np.array,
+                 position: Vector,
                  heading: float = 0,
                  speed: float = 0,
                  target_lane_index: int = None,
@@ -173,7 +174,7 @@ class IDMVehicle(ControlledVehicle):
 
         return v_max, acceleration
 
-    def change_lane_policy(self):
+    def change_lane_policy(self) -> None:
         """
             Decide when to change lane.
 
@@ -290,7 +291,7 @@ class LinearVehicle(IDMVehicle):
 
     def __init__(self,
                  road: Road,
-                 position: np.array,
+                 position: Vector,
                  heading: float = 0,
                  speed: float = 0,
                  target_lane_index: int = None,

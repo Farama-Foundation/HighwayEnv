@@ -46,7 +46,7 @@ class MultipleModelVehicle(LinearVehicle):
         if not self.data:
             self.data = []
 
-    def act(self):
+    def act(self) -> None:
         if self.collecting_data:
             self.update_possible_routes()
         super().act()

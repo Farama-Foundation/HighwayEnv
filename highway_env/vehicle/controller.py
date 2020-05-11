@@ -4,6 +4,7 @@ import numpy as np
 import copy
 from highway_env import utils
 from highway_env.road.road import Road, LaneIndex, Route
+from highway_env.types import Vector
 from highway_env.vehicle.kinematics import Vehicle
 
 
@@ -28,7 +29,7 @@ class ControlledVehicle(Vehicle):
 
     def __init__(self,
                  road: Road,
-                 position: List[float],
+                 position: Vector,
                  heading: float = 0,
                  speed: float = 0,
                  target_lane_index: LaneIndex = None,

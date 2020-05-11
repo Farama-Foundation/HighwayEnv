@@ -5,6 +5,7 @@ import pygame
 
 from highway_env.road.lane import LineType, AbstractLane
 from highway_env.road.road import Road
+from highway_env.types import Vector
 from highway_env.vehicle.graphics import VehicleGraphics
 from highway_env.road.objects import Obstacle, Landmark
 
@@ -244,7 +245,7 @@ class RoadGraphics(object):
             VehicleGraphics.display(v, surface, offscreen=offscreen)
 
     @staticmethod
-    def display_road_objects(road, surface, offscreen=False):
+    def display_road_objects(road: Road, surface: WorldSurface, offscreen: bool = False) -> None:
         """
             Display the road objects on a surface.
 
@@ -293,7 +294,8 @@ class RoadObjectGraphics:
         cls.blit_rotate(surface, s, position, np.rad2deg(-h))
 
     @staticmethod
-    def blit_rotate(surf, image, pos, angle, origin_pos=None, show_rect=False):
+    def blit_rotate(surf: pygame.SurfaceType, image: pygame.SurfaceType, pos: Vector, angle: float,
+                    origin_pos: Vector = None, show_rect: bool = False) -> None:
         """Many thanks to https://stackoverflow.com/a/54714144 """
         # calculate the axis aligned bounding box of the rotated image
         w, h = image.get_size()
