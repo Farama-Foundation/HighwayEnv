@@ -20,7 +20,7 @@ class TwoWayEnv(AbstractEnv):
     COLLISION_REWARD: float = 0
     LEFT_LANE_CONSTRAINT: float = 1
     LEFT_LANE_REWARD: float = 0.2
-    HIGH_VELOCITY_REWARD: float = 0.8
+    HIGH_SPEED_REWARD: float = 0.8
 
     @classmethod
     def default_config(cls) -> dict:
@@ -35,14 +35,14 @@ class TwoWayEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         """
-            The vehicle is rewarded for driving with high velocity
+            The vehicle is rewarded for driving with high speed
         :param action: the action performed
         :return: the reward of the state-action transition
         """
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
 
-        reward = self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1) \
-            + self.LEFT_LANE_REWARD * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
+        reward = self.HIGH_SPEED_REWARD * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1) \
+                 + self.LEFT_LANE_REWARD * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
         return reward
 
     def _is_terminal(self) -> bool:
@@ -86,7 +86,7 @@ class TwoWayEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         road = self.road
-        ego_vehicle = MDPVehicle(road, road.network.get_lane(("a", "b", 1)).position(30, 0), velocity=30)
+        ego_vehicle = MDPVehicle(road, road.network.get_lane(("a", "b", 1)).position(30, 0), speed=30)
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 
@@ -97,7 +97,7 @@ class TwoWayEnv(AbstractEnv):
                               position=road.network.get_lane(("a", "b", 1))
                               .position(70+40*i + 10*self.np_random.randn(), 0),
                               heading=road.network.get_lane(("a", "b", 1)).heading_at(70+40*i),
-                              velocity=24 + 2*self.np_random.randn(),
+                              speed=24 + 2*self.np_random.randn(),
                               enable_lane_change=False)
             )
         for i in range(2):
@@ -105,7 +105,7 @@ class TwoWayEnv(AbstractEnv):
                               position=road.network.get_lane(("b", "a", 0))
                               .position(200+100*i + 10*self.np_random.randn(), 0),
                               heading=road.network.get_lane(("b", "a", 0)).heading_at(200+100*i),
-                              velocity=20 + 5*self.np_random.randn(),
+                              speed=20 + 5*self.np_random.randn(),
                               enable_lane_change=False)
             v.target_lane_index = ("b", "a", 0)
             self.road.vehicles.append(v)

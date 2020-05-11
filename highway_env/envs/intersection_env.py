@@ -13,7 +13,7 @@ from highway_env.vehicle.controller import MDPVehicle
 
 class IntersectionEnv(AbstractEnv):
     COLLISION_REWARD: float = -5
-    HIGH_VELOCITY_REWARD: float = 1
+    HIGH_SPEED_REWARD: float = 1
     ARRIVED_REWARD: float = 1
 
     ACTIONS: Dict[int, str] = {
@@ -56,7 +56,7 @@ class IntersectionEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         reward = self.config["collision_reward"] * self.vehicle.crashed \
-                 + self.HIGH_VELOCITY_REWARD * (self.vehicle.velocity_index == self.vehicle.SPEED_COUNT - 1)
+                 + self.HIGH_SPEED_REWARD * (self.vehicle.speed_index == self.vehicle.SPEED_COUNT - 1)
         reward = self.ARRIVED_REWARD if self.has_arrived else reward
         if self.config["normalize_reward"]:
             reward = utils.remap(reward, [self.config["collision_reward"], self.ARRIVED_REWARD], [0, 1])
@@ -157,7 +157,7 @@ class IntersectionEnv(AbstractEnv):
             [(self.road.act(), self.road.step(1 / self.config["simulation_frequency"])) for _ in range(self.config["simulation_frequency"])]
 
         # Challenger vehicle
-        self._spawn_vehicle(60, spawn_probability=1, go_straight=True, position_deviation=0.1, velocity_deviation=0)
+        self._spawn_vehicle(60, spawn_probability=1, go_straight=True, position_deviation=0.1, speed_deviation=0)
 
         # Ego-vehicle
         MDPVehicle.SPEED_MIN = 0
@@ -168,7 +168,7 @@ class IntersectionEnv(AbstractEnv):
         destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
         ego_vehicle = MDPVehicle(self.road,
                                  ego_lane.position(60, 0),
-                                 velocity=ego_lane.speed_limit,
+                                 speed=ego_lane.speed_limit,
                                  heading=ego_lane.heading_at(50)) \
             .plan_route_to(destination)
         self.road.vehicles.append(ego_vehicle)
@@ -180,7 +180,7 @@ class IntersectionEnv(AbstractEnv):
     def _spawn_vehicle(self,
                        longitudinal: float = 0,
                        position_deviation: float = 1.,
-                       velocity_deviation: float = 1.,
+                       speed_deviation: float = 1.,
                        spawn_probability: float = 0.6,
                        go_straight: bool = False) -> None:
         if self.np_random.rand() > spawn_probability:
@@ -191,7 +191,7 @@ class IntersectionEnv(AbstractEnv):
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
         vehicle = vehicle_type.make_on_lane(self.road, ("o" + str(route[0]), "ir" + str(route[0]), 0),
                                             longitudinal=longitudinal + 5 + self.np_random.randn() * position_deviation,
-                                            velocity=8 + self.np_random.randn() * velocity_deviation)
+                                            speed=8 + self.np_random.randn() * speed_deviation)
         for v in self.road.vehicles:
             if np.linalg.norm(v.position - vehicle.position) < 15:
                 return

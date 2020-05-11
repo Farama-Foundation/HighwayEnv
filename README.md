@@ -66,7 +66,7 @@ env = gym.make("highway-v0")
 ```
 
 In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles.
-The agent's objective is to reach a high velocity while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.
+The agent's objective is to reach a high speed while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.
 
 <p align="center">
     <img src="../gh-media/docs/media/highway.gif?raw=true"><br/>
@@ -80,7 +80,7 @@ The agent's objective is to reach a high velocity while avoiding collisions with
 env = gym.make("merge-v0")
 ```
 
-In this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high velocity while making room for the vehicles so that they can safely merge in the traffic.
+In this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high speed while making room for the vehicles so that they can safely merge in the traffic.
 
 <p align="center">
     <img src="../gh-media/docs/media/merge-env.gif?raw=true"><br/>
@@ -148,12 +148,12 @@ The vehicles kinematics are represented in the `Vehicle` class by a _Kinematic B
 
 ![\beta=\tan^{-1}(1/2\tan\delta)](https://render.githubusercontent.com/render/math?math=\beta=\tan^{-1}(\frac{1}{2}\tan\delta))
 
-Where *(x, y)* is the vehicle position, *v* its forward velocity and *psi* its heading.
+Where *(x, y)* is the vehicle position, *v* its forward speed and *psi* its heading.
 *a* is the acceleration command, *β* is the slip angle at the center of gravity, and δ is the front wheel angle used as a steering command.
 
 ### Control
 
-The `ControlledVehicle` class implements a low-level controller on top of a `Vehicle`, allowing to track a given target velocity and follow a target lane.
+The `ControlledVehicle` class implements a low-level controller on top of a `Vehicle`, allowing to track a given target speed and follow a target lane.
 
 ### Behaviours
 
@@ -163,7 +163,7 @@ In the `IDMVehicle` class,
 * Longitudinal Model: the acceleration of the vehicle is given by the Intelligent Driver Model (IDM) from [(Treiber et al, 2000)](https://arxiv.org/abs/cond-mat/0002177).
 * Lateral Model: the discrete lane change decisions are given by the MOBIL model from [(Kesting et al, 2007)](https://www.researchgate.net/publication/239439179_General_Lane-Changing_Model_MOBIL_for_Car-Following_Models).
 
-In the `LinearVehicle` class, the longitudinal and lateral behaviours are defined as linear weightings of several features, such as the distance and velocity difference to the leading vehicle.
+In the `LinearVehicle` class, the longitudinal and lateral behaviours are defined as linear weightings of several features, such as the distance and speed difference to the leading vehicle.
 
 ## The agents
 
@@ -197,7 +197,7 @@ This model-free policy-based reinforcement learning agent is optimized directly 
     <em>The Value Iteration agent solving highway-v0.</em>
 </p>
 
-The Value Iteration is only compatible with finite discrete MDPs, so the environment is first approximated by a [finite-mdp environment](https://github.com/eleurent/finite-mdp) using `env.to_finite_mdp()`. This simplified state representation describes the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road. The transition model is simplistic and assumes that each vehicle will keep driving at a constant velocity without changing lanes. This model bias can be a source of mistakes.
+The Value Iteration is only compatible with finite discrete MDPs, so the environment is first approximated by a [finite-mdp environment](https://github.com/eleurent/finite-mdp) using `env.to_finite_mdp()`. This simplified state representation describes the nearby traffic in terms of predicted Time-To-Collision (TTC) on each lane of the road. The transition model is simplistic and assumes that each vehicle will keep driving at a constant speed without changing lanes. This model bias can be a source of mistakes.
 
 The agent then performs a Value Iteration to compute the corresponding optimal state-value function.
 

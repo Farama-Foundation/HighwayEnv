@@ -13,7 +13,7 @@ class SummonEnv(ParkingEnv):
     """
         A continuous control environment.
 
-        It implements a reach-type task, where the agent observes their position and velocity and must
+        It implements a reach-type task, where the agent observes their position and speed and must
         control their acceleration and steering so as to reach a given goal.
 
         Credits to Vinny Ruia for the idea and initial implementation.
@@ -88,10 +88,10 @@ class SummonEnv(ParkingEnv):
                 idx = self.np_random.randint(0, self.num_middle_lanes)
                 longitudinal = (i * 5) - (self.x_range / 8) * self.np_random.randint(-1, 1)
                 self.road.vehicles.append(
-                    vehicles_type.make_on_lane(self.road, ("d", "e", idx), longitudinal, velocity=2))
+                    vehicles_type.make_on_lane(self.road, ("d", "e", idx), longitudinal, speed=2))
             else:
                 lane = ("a", "b", i) if self.np_random.rand() >= 0.5 else ("b", "c", i)
-                self.road.vehicles.append(Vehicle.make_on_lane(self.road, lane, 4, velocity=0))
+                self.road.vehicles.append(Vehicle.make_on_lane(self.road, lane, 4, speed=0))
 
         for v in self.road.vehicles:  # Prevent early collisions
             if v is not self.vehicle and np.linalg.norm(v.position - self.vehicle.position) < 20:

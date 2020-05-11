@@ -100,7 +100,7 @@ class LaneKeepingEnv(AbstractEnv):
         road = self.road
         ego_vehicle = BicycleVehicle(road, road.network.get_lane(("c", "d", 0)).position(50, -4),
                                      heading=road.network.get_lane(("c", "d", 0)).heading_at(0),
-                                     velocity=8.3)
+                                     speed=8.3)
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 

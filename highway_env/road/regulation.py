@@ -32,7 +32,7 @@ class RegulatedRoad(Road):
         for v in self.vehicles:
             if getattr(v, "is_yielding", False):
                 if v.yield_timer >= self.YIELD_DURATION * self.REGULATION_FREQUENCY:
-                    v.target_velocity = v.lane.speed_limit
+                    v.target_speed = v.lane.speed_limit
                     delattr(v, "color")
                     v.is_yielding = False
                 else:
@@ -47,7 +47,7 @@ class RegulatedRoad(Road):
                             isinstance(yielding_vehicle, ControlledVehicle) and \
                             not isinstance(yielding_vehicle, MDPVehicle):
                         yielding_vehicle.color = self.YIELDING_COLOR
-                        yielding_vehicle.target_velocity = 0
+                        yielding_vehicle.target_speed = 0
                         yielding_vehicle.is_yielding = True
                         yielding_vehicle.yield_timer = 0
 
@@ -69,8 +69,8 @@ class RegulatedRoad(Road):
     @staticmethod
     def is_conflict_possible(v1: ControlledVehicle, v2: ControlledVehicle, horizon: int = 3, step: float = 0.25) -> bool:
         times = np.arange(step, horizon, step)
-        positions_1, headings_1 = v1.predict_trajectory_constant_velocity(times)
-        positions_2, headings_2 = v2.predict_trajectory_constant_velocity(times)
+        positions_1, headings_1 = v1.predict_trajectory_constant_speed(times)
+        positions_2, headings_2 = v2.predict_trajectory_constant_speed(times)
 
         for position_1, heading_1, position_2, heading_2 in zip(positions_1, headings_1, positions_2, headings_2):
             # Fast spherical pre-check

@@ -21,7 +21,7 @@ class AbstractEnv(gym.Env):
         A generic environment for various tasks involving a vehicle driving on a road.
 
         The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and
-        velocity. The action space is fixed, but the observation space and reward function must be defined in the
+        speed. The action space is fixed, but the observation space and reward function must be defined in the
         environment implementations.
     """
     metadata = {'render.modes': ['human', 'rgb_array']}
@@ -181,7 +181,7 @@ class AbstractEnv(gym.Env):
         terminal = self._is_terminal()
 
         info = {
-            "velocity": self.vehicle.velocity,
+            "speed": self.vehicle.speed,
             "crashed": self.vehicle.crashed,
             "action": action,
         }
@@ -261,8 +261,8 @@ class AbstractEnv(gym.Env):
         """
             Get the list of currently available actions.
 
-            Lane changes are not available on the boundary of the road, and velocity changes are not available at
-            maximal or minimal velocity.
+            Lane changes are not available on the boundary of the road, and speed changes are not available at
+            maximal or minimal speed.
 
         :return: the list of available actions
         """
@@ -274,9 +274,9 @@ class AbstractEnv(gym.Env):
             if l_index[2] > self.vehicle.lane_index[2] \
                     and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position):
                 actions.append(self.ACTIONS_INDEXES['LANE_RIGHT'])
-        if self.vehicle.velocity_index < self.vehicle.SPEED_COUNT - 1:
+        if self.vehicle.speed_index < self.vehicle.SPEED_COUNT - 1:
             actions.append(self.ACTIONS_INDEXES['FASTER'])
-        if self.vehicle.velocity_index > 0:
+        if self.vehicle.speed_index > 0:
             actions.append(self.ACTIONS_INDEXES['SLOWER'])
         return actions
 

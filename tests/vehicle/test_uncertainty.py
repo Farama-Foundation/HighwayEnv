@@ -6,7 +6,7 @@ FPS = 15
 
 def test_partial():
     road = Road(RoadNetwork.straight_road_network())
-    v = IntervalVehicle(road, position=[0, 0], velocity=20, heading=0)
+    v = IntervalVehicle(road, position=[0, 0], speed=20, heading=0)
     for _ in range(2 * FPS):
         v.step(dt=1/FPS, mode="partial")
         assert v.interval.position[0, 0] <= v.position[0] <= v.interval.position[1, 0]
@@ -16,7 +16,7 @@ def test_partial():
 
 def test_predictor():
     road = Road(RoadNetwork.straight_road_network())
-    v = IntervalVehicle(road, position=[0, 0], velocity=20, heading=0)
+    v = IntervalVehicle(road, position=[0, 0], speed=20, heading=0)
     for _ in range(2 * FPS):
         v.step(dt=1/FPS, mode="predictor")
         assert v.interval.position[0, 0] <= v.position[0] <= v.interval.position[1, 0]

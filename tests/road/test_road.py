@@ -17,7 +17,7 @@ def test_network():
 
     # Road
     road = Road(network=net)
-    v = ControlledVehicle(road, [5, 0], heading=0, target_velocity=2)
+    v = ControlledVehicle(road, [5, 0], heading=0, target_speed=2)
     road.vehicles.append(v)
     assert v.lane_index == (0, 1, 0)
 

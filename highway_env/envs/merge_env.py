@@ -14,20 +14,20 @@ class MergeEnv(AbstractEnv):
         A highway merge negotiation environment.
 
         The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.
-        It is rewarded for maintaining a high velocity and avoiding collisions, but also making room for merging
+        It is rewarded for maintaining a high speed and avoiding collisions, but also making room for merging
         vehicles.
     """
 
     COLLISION_REWARD: float = -1
     RIGHT_LANE_REWARD: float = 0.1
-    HIGH_VELOCITY_REWARD: float = 0.2
-    MERGING_VELOCITY_REWARD: float = -0.5
+    HIGH_SPEED_REWARD: float = 0.2
+    MERGING_SPEED_REWARD: float = -0.5
     LANE_CHANGE_REWARD: float = -0.05
 
     def _reward(self, action: int) -> float:
         """
-            The vehicle is rewarded for driving with high velocity on lanes to the right and avoiding collisions, but
-            an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low velocity.
+            The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions, but
+            an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.
         :param action: the action performed
         :return: the reward of the state-action transition
         """
@@ -38,17 +38,17 @@ class MergeEnv(AbstractEnv):
                          4: 0}
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
                  + self.RIGHT_LANE_REWARD * self.vehicle.lane_index[2] / 1 \
-                 + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / (self.vehicle.SPEED_COUNT - 1)
+                 + self.HIGH_SPEED_REWARD * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1)
 
         # Altruistic penalty
         for vehicle in self.road.vehicles:
             if vehicle.lane_index == ("b", "c", 2) and isinstance(vehicle, ControlledVehicle):
-                reward += self.MERGING_VELOCITY_REWARD * \
-                          (vehicle.target_velocity - vehicle.velocity) / vehicle.target_velocity
+                reward += self.MERGING_SPEED_REWARD * \
+                          (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
 
         return utils.remap(action_reward[action] + reward,
-                           [self.COLLISION_REWARD + self.MERGING_VELOCITY_REWARD,
-                            self.HIGH_VELOCITY_REWARD + self.RIGHT_LANE_REWARD],
+                           [self.COLLISION_REWARD + self.MERGING_SPEED_REWARD,
+                            self.HIGH_SPEED_REWARD + self.RIGHT_LANE_REWARD],
                            [0, 1])
 
     def _is_terminal(self) -> bool:
@@ -100,16 +100,16 @@ class MergeEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         road = self.road
-        ego_vehicle = MDPVehicle(road, road.network.get_lane(("a", "b", 1)).position(30, 0), velocity=30)
+        ego_vehicle = MDPVehicle(road, road.network.get_lane(("a", "b", 1)).position(30, 0), speed=30)
         road.vehicles.append(ego_vehicle)
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), velocity=29))
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), velocity=31))
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), velocity=31.5))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), speed=29))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31))
+        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5))
 
-        merging_v = other_vehicles_type(road, road.network.get_lane(("j", "k", 0)).position(110, 0), velocity=20)
-        merging_v.target_velocity = 30
+        merging_v = other_vehicles_type(road, road.network.get_lane(("j", "k", 0)).position(110, 0), speed=20)
+        merging_v.target_speed = 30
         road.vehicles.append(merging_v)
         self.vehicle = ego_vehicle
 

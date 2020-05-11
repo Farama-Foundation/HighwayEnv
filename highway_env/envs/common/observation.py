@@ -86,9 +86,9 @@ class TimeToCollisionObservation(ObservationType):
         repeats = np.ones(clamped_grid.shape[0])
         repeats[np.array([0, -1])] += clamped_grid.shape[0]
         padded_grid = np.repeat(clamped_grid, repeats.astype(int), axis=0)
-        obs_velocities = 3
-        v0 = grid.shape[0] + self.env.vehicle.velocity_index - obs_velocities // 2
-        vf = grid.shape[0] + self.env.vehicle.velocity_index + obs_velocities // 2
+        obs_speeds = 3
+        v0 = grid.shape[0] + self.env.vehicle.speed_index - obs_speeds // 2
+        vf = grid.shape[0] + self.env.vehicle.speed_index + obs_speeds // 2
         clamped_grid = padded_grid[v0:vf + 1, :, :]
         return clamped_grid
 

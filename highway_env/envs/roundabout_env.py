@@ -13,7 +13,7 @@ from highway_env.vehicle.controller import MDPVehicle
 class RoundaboutEnv(AbstractEnv):
 
     COLLISION_REWARD: float = -1
-    HIGH_VELOCITY_REWARD: float = 0.2
+    HIGH_SPEED_REWARD: float = 0.2
     RIGHT_LANE_REWARD: float = 0
     LANE_CHANGE_REWARD: float = -0.05
 
@@ -31,9 +31,9 @@ class RoundaboutEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
-                 + self.HIGH_VELOCITY_REWARD * self.vehicle.velocity_index / max(self.vehicle.SPEED_COUNT - 1, 1) \
+                 + self.HIGH_SPEED_REWARD * self.vehicle.speed_index / max(self.vehicle.SPEED_COUNT - 1, 1) \
                  + self.LANE_CHANGE_REWARD * (action in [0, 2])
-        return utils.remap(reward, [self.COLLISION_REWARD+self.LANE_CHANGE_REWARD, self.HIGH_VELOCITY_REWARD], [0, 1])
+        return utils.remap(reward, [self.COLLISION_REWARD + self.LANE_CHANGE_REWARD, self.HIGH_SPEED_REWARD], [0, 1])
 
     def _is_terminal(self) -> bool:
         """
@@ -119,13 +119,13 @@ class RoundaboutEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         position_deviation = 2
-        velocity_deviation = 2
+        speed_deviation = 2
 
         # Ego-vehicle
         ego_lane = self.road.network.get_lane(("ser", "ses", 0))
         ego_vehicle = MDPVehicle(self.road,
                                  ego_lane.position(140, 0),
-                                 velocity=5,
+                                 speed=5,
                                  heading=ego_lane.heading_at(140)).plan_route_to("nxs")
         MDPVehicle.SPEED_MIN = 0
         MDPVehicle.SPEED_MAX = 15
@@ -139,7 +139,7 @@ class RoundaboutEnv(AbstractEnv):
         vehicle = other_vehicles_type.make_on_lane(self.road,
                                                    ("we", "sx", 1),
                                                    longitudinal=5 + self.np_random.randn()*position_deviation,
-                                                   velocity=16 + self.np_random.randn()*velocity_deviation)
+                                                   speed=16 + self.np_random.randn() * speed_deviation)
 
         if self.config["incoming_vehicle_destination"] is not None:
             destination = destinations[self.config["incoming_vehicle_destination"]]
@@ -154,7 +154,7 @@ class RoundaboutEnv(AbstractEnv):
             vehicle = other_vehicles_type.make_on_lane(self.road,
                                                        ("we", "sx", 0),
                                                        longitudinal=20*i + self.np_random.randn()*position_deviation,
-                                                       velocity=16 + self.np_random.randn()*velocity_deviation)
+                                                       speed=16 + self.np_random.randn() * speed_deviation)
             vehicle.plan_route_to(self.np_random.choice(destinations))
             vehicle.randomize_behavior()
             self.road.vehicles.append(vehicle)
@@ -163,7 +163,7 @@ class RoundaboutEnv(AbstractEnv):
         vehicle = other_vehicles_type.make_on_lane(self.road,
                                                    ("eer", "ees", 0),
                                                    longitudinal=50 + self.np_random.randn() * position_deviation,
-                                                   velocity=16 + self.np_random.randn() * velocity_deviation)
+                                                   speed=16 + self.np_random.randn() * speed_deviation)
         vehicle.plan_route_to(self.np_random.choice(destinations))
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)

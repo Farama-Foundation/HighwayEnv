@@ -34,14 +34,14 @@ class MultipleModelVehicle(LinearVehicle):
     def __init__(self, road: Road,
                  position: Vector,
                  heading: float = 0,
-                 velocity: float = 0,
+                 speed: float = 0,
                  target_lane_index: LaneIndex = None,
-                 target_velocity: float = None,
+                 target_speed: float = None,
                  route: Route = None,
                  enable_lane_change: bool = True,
                  timer: bool = None,
                  data: dict = None) -> None:
-        super().__init__(road, position, heading, velocity, target_lane_index, target_velocity, route,
+        super().__init__(road, position, heading, speed, target_lane_index, target_speed, route,
                          enable_lane_change, timer, data)
         if not self.data:
             self.data = []

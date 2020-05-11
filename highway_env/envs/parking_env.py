@@ -16,7 +16,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     """
         A continuous control environment.
 
-        It implements a reach-type task, where the agent observes their position and velocity and must
+        It implements a reach-type task, where the agent observes their position and speed and must
         control their acceleration and steering so as to reach a given goal.
 
         Credits to Munir Jojo-Verge for the idea and initial implementation.
