@@ -29,7 +29,7 @@ env = gym.make("highway-v0")
 done = False
 while not done:
     action = ... # Your agent code here
-    obs, reward, done, _ = env.step(action)
+    obs, reward, done, info = env.step(action)
     env.render()
 ```
 
