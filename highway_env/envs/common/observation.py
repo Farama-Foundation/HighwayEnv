@@ -107,6 +107,7 @@ class KinematicObservation(ObservationType):
                  order: str = "sorted",
                  normalize: bool = True,
                  clip: bool = True,
+                 direction: str = "front",
                  observe_intentions: bool = False,
                  **kwargs: dict) -> None:
         """
@@ -127,6 +128,7 @@ class KinematicObservation(ObservationType):
         self.order = order
         self.normalize = normalize
         self.clip = clip
+        self.direction = direction
         self.observe_intentions = observe_intentions
 
     def space(self) -> spaces.Space:
@@ -158,7 +160,12 @@ class KinematicObservation(ObservationType):
         # Add ego-vehicle
         df = pd.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features]
         # Add nearby traffic
-        sort, see_behind = (True, False) if self.order == "sorted" else (False, True)
+        if self.direction == "front":
+            sort,see_behind = (True,False)
+        elif self.direction == "behind":
+            sort,see_behind = (False,True)
+        else: #"both"
+            sort,see_behind = (True,True)
         close_vehicles = self.env.road.close_vehicles_to(self.env.vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
                                                          count=self.vehicles_count - 1,
