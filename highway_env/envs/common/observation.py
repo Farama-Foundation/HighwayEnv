@@ -107,7 +107,7 @@ class KinematicObservation(ObservationType):
                  order: str = "sorted",
                  normalize: bool = True,
                  clip: bool = True,
-                 direction: str = "front",
+                 see_behind: bool = False,
                  observe_intentions: bool = False,
                  **kwargs: dict) -> None:
         """
@@ -128,7 +128,7 @@ class KinematicObservation(ObservationType):
         self.order = order
         self.normalize = normalize
         self.clip = clip
-        self.direction = direction
+        self.see_behind = see_behind
         self.observe_intentions = observe_intentions
 
     def space(self) -> spaces.Space:
@@ -160,17 +160,12 @@ class KinematicObservation(ObservationType):
         # Add ego-vehicle
         df = pd.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features]
         # Add nearby traffic
-        if self.direction == "front":
-            sort,see_behind = (True,False)
-        elif self.direction == "behind":
-            sort,see_behind = (False,True)
-        else: #"both"
-            sort,see_behind = (True,True)
+        sort = True if self.order == "sorted" else sort = False
         close_vehicles = self.env.road.close_vehicles_to(self.env.vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
                                                          count=self.vehicles_count - 1,
                                                          sort=sort,
-                                                         see_behind=see_behind)
+                                                         see_behind=self.see_behind)
         if close_vehicles:
             origin = self.env.vehicle if not self.absolute else None
             df = df.append(pd.DataFrame.from_records(
@@ -187,8 +182,6 @@ class KinematicObservation(ObservationType):
         # Reorder
         df = df[self.features]
         obs = df.values.copy()
-        if not self.absolute:
-            obs[0,1]=0
         if self.order == "shuffled":
             self.env.np_random.shuffle(obs[1:])
         # Flatten

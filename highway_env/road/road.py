@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import pandas as pd
 import logging
@@ -262,10 +263,12 @@ class Road(Loggable):
                     if np.linalg.norm(v.position - vehicle.position) < distance
                     and v is not vehicle
                     and (see_behind or -2 * vehicle.LENGTH < vehicle.lane_distance_to(v))]
-        if sort:
-            vehicles = sorted(vehicles, key=lambda v: abs(vehicle.lane_distance_to(v)))
+
+        vehicles = sorted(vehicles, key=lambda v: abs(vehicle.lane_distance_to(v)))
         if count:
             vehicles = vehicles[:count]
+        if not sort:
+            random.shuffle(vehicles)
         return vehicles
 
     def act(self) -> None:
