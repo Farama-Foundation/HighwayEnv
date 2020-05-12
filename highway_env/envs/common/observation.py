@@ -187,6 +187,8 @@ class KinematicObservation(ObservationType):
         # Reorder
         df = df[self.features]
         obs = df.values.copy()
+        if not self.absolute:
+            obs[0,1]=0
         if self.order == "shuffled":
             self.env.np_random.shuffle(obs[1:])
         # Flatten
