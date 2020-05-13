@@ -107,6 +107,7 @@ class KinematicObservation(ObservationType):
                  order: str = "sorted",
                  normalize: bool = True,
                  clip: bool = True,
+                 see_behind: bool = False,
                  observe_intentions: bool = False,
                  **kwargs: dict) -> None:
         """
@@ -117,6 +118,7 @@ class KinematicObservation(ObservationType):
         :param order: Order of observed vehicles. Values: sorted, shuffled
         :param normalize: Should the observation be normalized
         :param clip: Should the value be clipped in the desired range
+        :param see_behind: Should the observation contains the vehicles behind
         :param observe_intentions: Observe the destinations of other vehicles
         """
         self.env = env
@@ -127,6 +129,7 @@ class KinematicObservation(ObservationType):
         self.order = order
         self.normalize = normalize
         self.clip = clip
+        self.see_behind = see_behind
         self.observe_intentions = observe_intentions
 
     def space(self) -> spaces.Space:
@@ -158,12 +161,11 @@ class KinematicObservation(ObservationType):
         # Add ego-vehicle
         df = pd.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features]
         # Add nearby traffic
-        sort, see_behind = (True, False) if self.order == "sorted" else (False, True)
+        sort = self.order == "sorted"
         close_vehicles = self.env.road.close_vehicles_to(self.env.vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
                                                          count=self.vehicles_count - 1,
-                                                         sort=sort,
-                                                         see_behind=see_behind)
+                                                         see_behind=self.see_behind)
         if close_vehicles:
             origin = self.env.vehicle if not self.absolute else None
             df = df.append(pd.DataFrame.from_records(
