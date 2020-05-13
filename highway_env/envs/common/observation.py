@@ -164,7 +164,6 @@ class KinematicObservation(ObservationType):
         close_vehicles = self.env.road.close_vehicles_to(self.env.vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
                                                          count=self.vehicles_count - 1,
-                                                         sort=sort,
                                                          see_behind=self.see_behind)
         if close_vehicles:
             origin = self.env.vehicle if not self.absolute else None
