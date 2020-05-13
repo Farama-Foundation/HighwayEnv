@@ -118,6 +118,7 @@ class KinematicObservation(ObservationType):
         :param order: Order of observed vehicles. Values: sorted, shuffled
         :param normalize: Should the observation be normalized
         :param clip: Should the value be clipped in the desired range
+        :param see_behind: Should the observation contains the vehicles behind
         :param observe_intentions: Observe the destinations of other vehicles
         """
         self.env = env
