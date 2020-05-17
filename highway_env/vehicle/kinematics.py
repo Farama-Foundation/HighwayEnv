@@ -226,6 +226,11 @@ class Vehicle(Loggable):
         else:
             return np.zeros((2,))
 
+    @property
+    def on_road(self) -> bool:
+        """ Is the vehicle on its current lane, or off-road ? """
+        return self.lane.on_lane(self.position)
+
     def front_distance_to(self, other: "Vehicle") -> float:
         return self.direction.dot(other.position - self.position)
 
