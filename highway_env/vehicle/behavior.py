@@ -7,6 +7,7 @@ from highway_env.types import Vector
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env import utils
 from highway_env.vehicle.kinematics import Vehicle
+from highway_env.road.objects import RoadObject
 
 
 class IDMVehicle(ControlledVehicle):
@@ -119,7 +120,7 @@ class IDMVehicle(ControlledVehicle):
         :param rear_vehicle: the vehicle following the ego-vehicle
         :return: the acceleration command for the ego-vehicle [m/s2]
         """
-        if not ego_vehicle:
+        if not ego_vehicle or isinstance(ego_vehicle, RoadObject):
             return 0
         ego_target_speed = utils.not_zero(getattr(ego_vehicle, "target_speed", 0))
         acceleration = self.COMFORT_ACC_MAX * (
