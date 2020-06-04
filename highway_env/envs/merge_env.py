@@ -46,10 +46,10 @@ class MergeEnv(AbstractEnv):
                 reward += self.MERGING_SPEED_REWARD * \
                           (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
 
-        return utils.remap(action_reward[action] + reward,
-                           [self.COLLISION_REWARD + self.MERGING_SPEED_REWARD,
+        return utils.lmap(action_reward[action] + reward,
+                          [self.COLLISION_REWARD + self.MERGING_SPEED_REWARD,
                             self.HIGH_SPEED_REWARD + self.RIGHT_LANE_REWARD],
-                           [0, 1])
+                          [0, 1])
 
     def _is_terminal(self) -> bool:
         """

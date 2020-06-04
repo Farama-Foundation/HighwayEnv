@@ -33,7 +33,7 @@ class RoundaboutEnv(AbstractEnv):
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
                  + self.HIGH_SPEED_REWARD * self.vehicle.speed_index / max(self.vehicle.SPEED_COUNT - 1, 1) \
                  + self.LANE_CHANGE_REWARD * (action in [0, 2])
-        return utils.remap(reward, [self.COLLISION_REWARD + self.LANE_CHANGE_REWARD, self.HIGH_SPEED_REWARD], [0, 1])
+        return utils.lmap(reward, [self.COLLISION_REWARD + self.LANE_CHANGE_REWARD, self.HIGH_SPEED_REWARD], [0, 1])
 
     def _is_terminal(self) -> bool:
         """

@@ -152,7 +152,7 @@ class KinematicObservation(ObservationType):
             }
         for feature, f_range in self.features_range.items():
             if feature in df:
-                df[feature] = utils.remap(df[feature], [f_range[0], f_range[1]], [-1, 1])
+                df[feature] = utils.lmap(df[feature], [f_range[0], f_range[1]], [-1, 1])
                 if self.clip:
                     df[feature] = np.clip(df[feature], -1, 1)
         return df
@@ -235,7 +235,7 @@ class OccupancyGridObservation(ObservationType):
             }
         for feature, f_range in self.features_range.items():
             if feature in df:
-                df[feature] = utils.remap(df[feature], [f_range[0], f_range[1]], [-1, 1])
+                df[feature] = utils.lmap(df[feature], [f_range[0], f_range[1]], [-1, 1])
         return df
 
     def observe(self) -> np.ndarray:
@@ -254,9 +254,9 @@ class OccupancyGridObservation(ObservationType):
                     x, y = vehicle["x"], vehicle["y"]
                     # Recover unnormalized coordinates for cell index
                     if "x" in self.features_range:
-                        x = utils.remap(x, [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
+                        x = utils.lmap(x, [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
                     if "y" in self.features_range:
-                        y = utils.remap(y, [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
+                        y = utils.lmap(y, [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
                     cell = (int((x - self.grid_size[0, 0]) / self.grid_step[0]),
                             int((y - self.grid_size[1, 0]) / self.grid_step[1]))
                     if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:

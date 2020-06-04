@@ -59,7 +59,7 @@ class IntersectionEnv(AbstractEnv):
                  + self.HIGH_SPEED_REWARD * (self.vehicle.speed_index == self.vehicle.SPEED_COUNT - 1)
         reward = self.ARRIVED_REWARD if self.has_arrived else reward
         if self.config["normalize_reward"]:
-            reward = utils.remap(reward, [self.config["collision_reward"], self.ARRIVED_REWARD], [0, 1])
+            reward = utils.lmap(reward, [self.config["collision_reward"], self.ARRIVED_REWARD], [0, 1])
         return reward
 
     def _is_terminal(self) -> bool:

@@ -12,8 +12,9 @@ def do_every(duration: float, timer: float) -> bool:
     return duration < timer
 
 
-def remap(v: float, x: Interval, y: Interval) -> float:
-    return y[0] + (v-x[0])*(y[1]-y[0])/(x[1]-x[0])
+def lmap(v: float, x: Interval, y: Interval) -> float:
+    """Linear map of value v with range x to desired range y"""
+    return y[0] + (v - x[0]) * (y[1] - y[0]) / (x[1] - x[0])
 
 
 def class_from_path(path: str) -> Callable:
