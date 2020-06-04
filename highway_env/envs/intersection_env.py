@@ -208,11 +208,10 @@ class IntersectionEnv(AbstractEnv):
                               vehicle is self.vehicle or not (is_leaving(vehicle) or vehicle.route is None)]
 
     @property
-    def has_arrived(self) -> bool:
+    def has_arrived(self, exit_distance=25) -> bool:
         return "il" in self.vehicle.lane_index[0] \
                and "o" in self.vehicle.lane_index[1] \
-               and self.vehicle.lane.local_coordinates(self.vehicle.position)[0] >= \
-               self.vehicle.lane.length - 3 * self.vehicle.LENGTH
+               and self.vehicle.lane.local_coordinates(self.vehicle.position)[0] >= exit_distance
 
     def _cost(self, action: int) -> float:
         """
