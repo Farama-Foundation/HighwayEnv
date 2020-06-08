@@ -5,6 +5,7 @@ from typing import List, Tuple, Dict, TYPE_CHECKING, Optional
 
 from highway_env.logger import Loggable
 from highway_env.road.lane import LineType, StraightLane, AbstractLane
+from highway_env.road.objects import Landmark
 
 if TYPE_CHECKING:
     from highway_env.vehicle import kinematics
@@ -283,8 +284,6 @@ class Road(Loggable):
         """
         for vehicle in self.vehicles:
             vehicle.step(dt)
-        # TODO: create a shallow copy of vehicles list(vehicle.copy()) and pop crashed vehicles from it to reduce
-        #  complexity and prevent multiple checks
         for vehicle in self.vehicles:
             for other in self.vehicles:
                 vehicle.check_collision(other)
@@ -309,7 +308,8 @@ class Road(Loggable):
         s_front = s_rear = None
         v_front = v_rear = None
         for v in self.vehicles + self.objects:
-            if v is not vehicle and True:  # self.network.is_connected_road(v.lane_index, lane_index, same_lane=True):
+            if v is not vehicle and not isinstance(v, Landmark):  # self.network.is_connected_road(v.lane_index,
+                # lane_index, same_lane=True):
                 s_v, lat_v = lane.local_coordinates(v.position)
                 if not lane.on_lane(v.position, s_v, lat_v, margin=1):
                     continue

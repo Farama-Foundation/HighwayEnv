@@ -1,9 +1,9 @@
 from abc import ABC
-from typing import Sequence
+from typing import Sequence, Tuple
 
 import numpy as np
 
-from highway_env.road.road import LaneIndex
+LaneIndex = Tuple[str, str, int]
 
 
 class RoadObject(ABC):
@@ -41,7 +41,7 @@ class RoadObject(ABC):
         lane = road.network.get_lane(lane_index)
         return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal))
 
-    # Just added for sake of compatibility, TODO: change usages the way that this make sense.
+    # Just added for sake of compatibility
     def to_dict(self, origin_vehicle=None, observe_intentions=True):
         d = {
             'presence': 1,
