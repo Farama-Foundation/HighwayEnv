@@ -1,6 +1,6 @@
 # highway-env
 [![build](https://github.com/eleurent/highway-env/workflows/build/badge.svg)](https://github.com/eleurent/highway-env/actions?query=workflow%3Abuild)
-[![docs](https://github.com/eleurent/highway-env/workflows/docs/badge.svg)](https://eleurent.github.io/highway-env/)
+[![docs](https://github.com/eleurent/highway-env/workflows/docs/badge.svg)](https://highway-env.readthedocs.io/en/latest/)
 [![GitHub contributors](https://img.shields.io/github/contributors/eleurent/highway-env)](https://github.com/eleurent/highway-env/graphs/contributors)
 [![Coverage](https://codecov.io/gh/eleurent/highway-env/branch/master/graph/badge.svg)](https://codecov.io/gh/eleurent/highway-env)
 
