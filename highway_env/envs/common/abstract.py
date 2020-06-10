@@ -84,9 +84,9 @@ class AbstractEnv(gym.Env):
     @classmethod
     def default_config(cls) -> dict:
         """
-            Default environment configuration.
+        Default environment configuration.
 
-            Can be overloaded in environment implementations, or by calling configure().
+        Can be overloaded in environment implementations, or by calling configure().
         :return: a configuration dict
         """
         return {
@@ -127,7 +127,7 @@ class AbstractEnv(gym.Env):
 
     def _reward(self, action: Action) -> float:
         """
-            Return the reward associated with performing a given action and ending up in the current state.
+        Return the reward associated with performing a given action and ending up in the current state.
 
         :param action: the last action performed
         :return: the reward
@@ -136,17 +136,17 @@ class AbstractEnv(gym.Env):
 
     def _is_terminal(self) -> bool:
         """
-            Check whether the current state is a terminal state
+        Check whether the current state is a terminal state
+
         :return:is the state terminal
         """
         raise NotImplementedError
 
     def _cost(self, action: Action) -> float:
         """
-            A constraint metric, for budgeted MDP.
+        A constraint metric, for budgeted MDP.
 
-            If a constraint is defined, it must be used with an alternate reward that doesn't contain it
-            as a penalty.
+        If a constraint is defined, it must be used with an alternate reward that doesn't contain it as a penalty.
         :param action: the last action performed
         :return: the constraint signal, the alternate (constraint-free) reward
         """
@@ -154,7 +154,8 @@ class AbstractEnv(gym.Env):
 
     def reset(self) -> Observation:
         """
-            Reset the environment to it's initial configuration
+        Reset the environment to it's initial configuration
+
         :return: the observation of the reset state
         """
         self.time = 0
@@ -164,10 +165,11 @@ class AbstractEnv(gym.Env):
 
     def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
         """
-            Perform an action and step the environment dynamics.
+        Perform an action and step the environment dynamics.
 
-            The action is executed by the ego-vehicle, and all other vehicles on the road performs their default
-            behaviour for several simulation timesteps until the next decision making step.
+        The action is executed by the ego-vehicle, and all other vehicles on the road performs their default behaviour
+        for several simulation timesteps until the next decision making step.
+
         :param int action: the action performed by the ego-vehicle
         :return: a tuple (observation, reward, terminal, info)
         """
@@ -194,7 +196,7 @@ class AbstractEnv(gym.Env):
 
     def _simulate(self, action: Optional[Action] = None) -> None:
         """
-            Perform several steps of simulation with constant action
+        Perform several steps of simulation with constant action
         """
         for k in range(int(self.config["simulation_frequency"] // self.config["policy_frequency"])):
             if action is not None and \
@@ -223,9 +225,9 @@ class AbstractEnv(gym.Env):
 
     def render(self, mode: str = 'human') -> Optional[np.ndarray]:
         """
-            Render the environment.
+        Render the environment.
 
-            Create a viewer if none exists, and use it to render an image.
+        Create a viewer if none exists, and use it to render an image.
         :param mode: the rendering mode
         """
         self.rendering_mode = mode
@@ -248,9 +250,9 @@ class AbstractEnv(gym.Env):
 
     def close(self) -> None:
         """
-            Close the environment.
+        Close the environment.
 
-            Will close the environment viewer if it exists.
+        Will close the environment viewer if it exists.
         """
         self.done = True
         if self.viewer is not None:
@@ -259,10 +261,10 @@ class AbstractEnv(gym.Env):
 
     def get_available_actions(self) -> List[int]:
         """
-            Get the list of currently available actions.
+        Get the list of currently available actions.
 
-            Lane changes are not available on the boundary of the road, and speed changes are not available at
-            maximal or minimal speed.
+        Lane changes are not available on the boundary of the road, and speed changes are not available at
+        maximal or minimal speed.
 
         :return: the list of available actions
         """
@@ -282,11 +284,12 @@ class AbstractEnv(gym.Env):
 
     def _automatic_rendering(self) -> None:
         """
-            Automatically render the intermediate frames while an action is still ongoing.
-            This allows to render the whole video and not only single steps corresponding to agent decision-making.
+        Automatically render the intermediate frames while an action is still ongoing.
 
-            If a callback has been set, use it to perform the rendering. This is useful for the environment wrappers
-            such as video-recording monitor that need to access these intermediate renderings.
+        This allows to render the whole video and not only single steps corresponding to agent decision-making.
+
+        If a callback has been set, use it to perform the rendering. This is useful for the environment wrappers
+        such as video-recording monitor that need to access these intermediate renderings.
         """
         if self.viewer is not None and self.enable_auto_render:
             self.should_update_rendering = True
@@ -298,9 +301,9 @@ class AbstractEnv(gym.Env):
 
     def simplify(self) -> 'AbstractEnv':
         """
-            Return a simplified copy of the environment where distant vehicles have been removed from the road.
+        Return a simplified copy of the environment where distant vehicles have been removed from the road.
 
-            This is meant to lower the policy computational load while preserving the optimal actions set.
+        This is meant to lower the policy computational load while preserving the optimal actions set.
 
         :return: a simplified environment state
         """
@@ -312,7 +315,8 @@ class AbstractEnv(gym.Env):
 
     def change_vehicles(self, vehicle_class_path: str) -> 'AbstractEnv':
         """
-            Change the type of all vehicles on the road
+        Change the type of all vehicles on the road
+
         :param vehicle_class_path: The path of the class of behavior for other vehicles
                              Example: "highway_env.vehicle.behavior.IDMVehicle"
         :return: a new environment with modified behavior model for other vehicles
@@ -351,12 +355,12 @@ class AbstractEnv(gym.Env):
                 setattr(v, field, value)
         return env_copy
 
-    def call_vehicle_method(self, args: Tuple[str, Tuple]) -> 'AbstractEnv':
-        method, args = args
+    def call_vehicle_method(self, args: Tuple[str, Tuple[object]]) -> 'AbstractEnv':
+        method, method_args = args
         env_copy = copy.deepcopy(self)
         for i, v in enumerate(env_copy.road.vehicles):
             if hasattr(v, method):
-                env_copy.road.vehicles[i] = getattr(v, method)(*args)
+                env_copy.road.vehicles[i] = getattr(v, method)(*method_args)
         return env_copy
 
     def randomize_behaviour(self) -> 'AbstractEnv':
@@ -371,7 +375,7 @@ class AbstractEnv(gym.Env):
 
     def __deepcopy__(self, memo):
         """
-            Perform a deep copy but without copying the environment viewer.
+        Perform a deep copy but without copying the environment viewer.
         """
         cls = self.__class__
         result = cls.__new__(cls)

@@ -26,8 +26,9 @@ class MergeEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         """
-            The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions, but
+        The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions, but
             an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.
+
         :param action: the action performed
         :return: the reward of the state-action transition
         """
@@ -53,7 +54,7 @@ class MergeEnv(AbstractEnv):
 
     def _is_terminal(self) -> bool:
         """
-            The episode is over when a collision occurs or when the access ramp has been passed.
+        The episode is over when a collision occurs or when the access ramp has been passed.
         """
         return self.vehicle.crashed or self.vehicle.position[0] > 370
 
@@ -64,7 +65,8 @@ class MergeEnv(AbstractEnv):
 
     def _make_road(self) -> None:
         """
-            Make a road composed of a straight highway and a merging lane.
+        Make a road composed of a straight highway and a merging lane.
+
         :return: the road
         """
         net = RoadNetwork()
@@ -96,7 +98,8 @@ class MergeEnv(AbstractEnv):
 
     def _make_vehicles(self) -> None:
         """
-            Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+
         :return: the ego-vehicle
         """
         road = self.road

@@ -16,8 +16,6 @@ class HighwayEnv(AbstractEnv):
         staying on the rightmost lanes and avoiding collisions.
     """
 
-    COLLISION_REWARD: float = -1
-    """ The reward received when colliding with a vehicle."""
     RIGHT_LANE_REWARD: float = 0.1
     """ The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes."""
     HIGH_SPEED_REWARD: float = 0.4
@@ -35,7 +33,7 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 50,
             "duration": 40,  # [s]
             "initial_spacing": 2,
-            "collision_reward": self.COLLISION_REWARD
+            "collision_reward": -1  # The reward received when colliding with a vehicle.
         })
         return config
 
