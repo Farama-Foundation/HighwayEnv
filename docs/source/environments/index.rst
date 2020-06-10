@@ -8,3 +8,4 @@ Environments
 
   highway
   merge
+  roundabout
