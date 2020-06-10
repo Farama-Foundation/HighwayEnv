@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to highway-env's documentation!
-=======================================
+Welcome to `highway-env <https://github.com/eleurent/highway-env>`_'s documentation!
+====================================================================================
 
 This project gathers a collection of environment for decision-making in Autonomous Driving. In particular, it focuses on scenarios of **interactions** with neighbour vehicles.
 
@@ -19,7 +19,7 @@ The purpose of this documentation is to provide:
 Installation instructions
 =========================
 
-See the `installation instructions <https://github.com/eleurent/hiwhay-env#installation>`_ on GitHub.
+See the `installation instructions <https://github.com/eleurent/highway-env#installation>`_ on GitHub.
 
 .. _index_how_to_cite_this_work:
 
