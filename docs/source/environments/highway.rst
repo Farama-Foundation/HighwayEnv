@@ -1,4 +1,4 @@
-.. _environemnts_highway:
+.. _environments_highway:
 
 .. currentmodule:: highway_env.envs.highway_env
 
