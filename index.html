@@ -34,7 +34,8 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Environments" href="environments/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -78,11 +79,14 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Welcome to highway-env’s documentation!</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="environments/index.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observations/index.html">Observations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actions/index.html">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamics/index.html">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rewards/index.html">Rewards</a></li>
 </ul>
-</div>
+
             
           
         </div>
@@ -147,11 +151,47 @@
             
   <div class="section" id="welcome-to-highway-env-s-documentation">
 <h1>Welcome to highway-env’s documentation!<a class="headerlink" href="#welcome-to-highway-env-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-</div>
+<p>This project gathers a collection of environment for decision-making in Autonomous Driving. In particular, it focuses on scenarios of <strong>interactions</strong> with neighbour vehicles.</p>
+<p>The purpose of this documentation is to provide:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p>a description of the environments, and how they can be configured</p></li>
+<li><p>instructions on how to contribute and add your own environments</p></li>
 </ul>
+</div>
+<div class="section" id="installation-instructions">
+<span id="index-installation-instructions"></span><h1>Installation instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this headline">¶</a></h1>
+<p>See the <a class="reference external" href="https://github.com/eleurent/hiwhay-env#installation">installation instructions</a> on GitHub.</p>
+</div>
+<div class="section" id="how-to-cite-this-work">
+<span id="index-how-to-cite-this-work"></span><h1>How to cite this work?<a class="headerlink" href="#how-to-cite-this-work" title="Permalink to this headline">¶</a></h1>
+<p>If you use this package, please consider citing it with this piece of
+BibTeX:</p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@misc</span><span class="p">{</span><span class="nl">highway-env</span><span class="p">,</span>
+  <span class="na">author</span> <span class="p">=</span> <span class="s">{Leurent, Edouard}</span><span class="p">,</span>
+  <span class="na">title</span> <span class="p">=</span> <span class="s">{An Environment for Autonomous Driving Decision-Making}</span><span class="p">,</span>
+  <span class="na">year</span> <span class="p">=</span> <span class="s">{2018}</span><span class="p">,</span>
+  <span class="na">publisher</span> <span class="p">=</span> <span class="s">{GitHub}</span><span class="p">,</span>
+  <span class="na">journal</span> <span class="p">=</span> <span class="s">{GitHub repository}</span><span class="p">,</span>
+  <span class="na">howpublished</span> <span class="p">=</span> <span class="s">{\url{https://github.com/eleurent/highway-env}}</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="documentation-contents">
+<h1>Documentation contents<a class="headerlink" href="#documentation-contents" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="environments/index.html">Environments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="environments/highway.html">Highway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/merge.html">Merge</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="observations/index.html">Observations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actions/index.html">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamics/index.html">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rewards/index.html">Rewards</a></li>
+</ul>
+</div>
 </div>
 
 
@@ -159,6 +199,13 @@
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="environments/index.html" class="btn btn-neutral float-right" title="Environments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
   
 
   <hr/>

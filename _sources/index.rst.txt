@@ -6,11 +6,48 @@
 Welcome to highway-env's documentation!
 =======================================
 
+This project gathers a collection of environment for decision-making in Autonomous Driving. In particular, it focuses on scenarios of **interactions** with neighbour vehicles.
+
+The purpose of this documentation is to provide:
+
+- a description of the environments, and how they can be configured
+- instructions on how to contribute and add your own environments
+
+
+.. _index_installation_instructions:
+
+Installation instructions
+=========================
+
+See the `installation instructions <https://github.com/eleurent/hiwhay-env#installation>`_ on GitHub.
+
+.. _index_how_to_cite_this_work:
+
+How to cite this work?
+======================
+
+If you use this package, please consider citing it with this piece of
+BibTeX:
+
+.. code:: bibtex
+
+  @misc{highway-env,
+    author = {Leurent, Edouard},
+    title = {An Environment for Autonomous Driving Decision-Making},
+    year = {2018},
+    publisher = {GitHub},
+    journal = {GitHub repository},
+    howpublished = {\url{https://github.com/eleurent/highway-env}},
+  }
+
+Documentation contents
+======================
+
 .. toctree::
-   :maxdepth: 4
-   :caption: Contents:
+  :maxdepth: 2
 
-.. automodule:: highway_env
-
-
-* :ref:`modindex`
+  environments/index
+  observations/index
+  actions/index
+  dynamics/index
+  rewards/index
