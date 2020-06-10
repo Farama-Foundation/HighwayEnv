@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Highway &mdash; highway-env  documentation</title>
+  <title>Merge &mdash; highway-env  documentation</title>
   
 
   
@@ -34,9 +34,7 @@
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Merge" href="merge.html" />
-    <link rel="prev" title="Environments" href="index.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,17 +78,8 @@
               
             
             
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Environments</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Highway</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#default-configuration">Default configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="merge.html">Merge</a></li>
-</ul>
-</li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../observations/index.html">Observations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../actions/index.html">Actions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dynamics/index.html">Dynamics</a></li>
@@ -140,15 +129,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="index.html">Environments</a> &raquo;</li>
-        
-      <li>Highway</li>
+      <li>Merge</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/environments/highway.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/environments/roundabout.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -161,15 +148,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="highway">
-<span id="environments-highway"></span><h1>Highway<a class="headerlink" href="#highway" title="Permalink to this headline">¶</a></h1>
-<p>In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles. The agent’s objective is to reach a high speed while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.</p>
-<div class="figure align-center" id="fig-highway-env">
-<a class="reference internal image-reference" href="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway.gif"><img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway.gif" style="width: 80%;" /></a>
+  <div class="section" id="merge">
+<span id="environments-roundabout"></span><h1>Merge<a class="headerlink" href="#merge" title="Permalink to this headline">¶</a></h1>
+<p>In this task, the ego-vehicle if approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.</p>
+<div class="figure align-center" id="fig-roundabout-env">
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/roundabout-env.gif"><img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/roundabout-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/roundabout-env.gif" style="width: 80%;" /></a>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;highway-v0&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;roundabout-v0&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -177,22 +164,19 @@
 <h2>Default configuration<a class="headerlink" href="#default-configuration" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;TimeToCollision&quot;</span>
     <span class="p">},</span>
     <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Discrete&quot;</span>
     <span class="p">},</span>
-    <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-    <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>  <span class="c1"># [s]</span>
-    <span class="s2">&quot;initial_spacing&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># The reward received when colliding with a vehicle.</span>
+    <span class="s2">&quot;incoming_vehicle_destination&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">11</span>
     <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
     <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
     <span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">:</span> <span class="s2">&quot;highway_env.vehicle.behavior.IDMVehicle&quot;</span><span class="p">,</span>
     <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px]</span>
-    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>  <span class="c1"># [px]</span>
-    <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px]</span>
+    <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
     <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mf">5.5</span><span class="p">,</span>
     <span class="s2">&quot;show_trajectories&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s2">&quot;render_agent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -212,15 +196,6 @@
            
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="merge.html" class="btn btn-neutral float-right" title="Merge" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="Environments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
