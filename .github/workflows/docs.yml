@@ -14,7 +14,9 @@ jobs:
         python-version: 3.6
     - uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "apt-get update -y && apt-get install -y libsdl1.2-dev"
+        pre-build-command: "apt-get update -y && apt-get install -y python-dev libsdl-image1.2-dev libsdl-mixer1.2-dev
+        libsdl-ttf2.0-dev libsdl1.2-dev libsmpeg-dev python-numpy subversion libportmidi-dev ffmpeg libswscale-dev
+        libavformat-dev libavcodec-dev install libfreetype6-dev"
         docs-folder: "docs/"
     - name: Commit documentation changes
       run: |
