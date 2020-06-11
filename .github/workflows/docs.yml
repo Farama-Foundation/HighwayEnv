@@ -14,7 +14,7 @@ jobs:
         python-version: 3.6
     - uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "pip install sphinx_rtd_theme && sudo pip install pygame && make apidoc"
+        pre-build-command: "apt-get update -y && apt-get install -y libsdl1.2-dev"
         docs-folder: "docs/"
     - name: Commit documentation changes
       run: |
