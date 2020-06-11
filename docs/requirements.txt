@@ -1,6 +1,5 @@
 gym
 numpy
-pygame
 matplotlib
 pandas
 
