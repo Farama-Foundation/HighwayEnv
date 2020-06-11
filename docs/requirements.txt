@@ -1,0 +1,11 @@
+gym
+numpy
+pygame
+matplotlib
+pandas
+
+# =========
+# Optionals
+# =========
+pytest
+scipy
