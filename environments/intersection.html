@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Parking &mdash; highway-env  documentation</title>
+  <title>Intersection &mdash; highway-env  documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Intersection" href="intersection.html" />
-    <link rel="prev" title="Roundabout" href="roundabout.html" /> 
+    <link rel="next" title="Observations" href="../observations/index.html" />
+    <link rel="prev" title="Parking" href="parking.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,13 +85,13 @@
 <li class="toctree-l2"><a class="reference internal" href="highway.html">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="merge.html">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="roundabout.html">Roundabout</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Parking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parking.html">Parking</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Intersection</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#default-configuration">Default configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="intersection.html">Intersection</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../observations/index.html">Observations</a></li>
@@ -145,13 +145,13 @@
         
           <li><a href="index.html">Environments</a> &raquo;</li>
         
-      <li>Parking</li>
+      <li>Intersection</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/environments/parking.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/environments/intersection.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -164,15 +164,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="parking">
-<span id="environments-parking"></span><h1>Parking<a class="headerlink" href="#parking" title="Permalink to this headline">¶</a></h1>
-<p>A goal-conditioned continuous control task in which the ego-vehicle must park in a given space with the appropriate heading.</p>
-<div class="figure align-center" id="fig-parking-env">
-<a class="reference internal image-reference" href="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/parking-env.gif"><img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/parking-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/parking-env.gif" style="width: 80%;" /></a>
+  <div class="section" id="intersection">
+<span id="environments-intersection"></span><h1>Intersection<a class="headerlink" href="#intersection" title="Permalink to this headline">¶</a></h1>
+<p>An intersection negotiation task with dense traffic.</p>
+<div class="figure align-center" id="fig-intersection-env">
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection-env.gif"><img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection-env.gif" style="width: 80%;" /></a>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;parking-v0&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;intersection-v0&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -180,23 +180,32 @@
 <h2>Default configuration<a class="headerlink" href="#default-configuration" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;KinematicsGoal&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;vx&#39;</span><span class="p">,</span> <span class="s1">&#39;vy&#39;</span><span class="p">,</span> <span class="s1">&#39;cos_h&#39;</span><span class="p">,</span> <span class="s1">&#39;sin_h&#39;</span><span class="p">],</span>
-        <span class="s2">&quot;scales&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="s2">&quot;normalize&quot;</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;presence&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;vx&quot;</span><span class="p">,</span> <span class="s2">&quot;vy&quot;</span><span class="p">,</span> <span class="s2">&quot;cos_h&quot;</span><span class="p">,</span> <span class="s2">&quot;sin_h&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;features_range&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="s2">&quot;vx&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+            <span class="s2">&quot;vy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;flatten&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;observe_intentions&quot;</span><span class="p">:</span> <span class="kc">False</span>
     <span class="p">},</span>
     <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Continuous&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-    <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Discrete&quot;</span>
+    <span class="p">}</span>
+    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>  <span class="c1"># [s]</span>
+    <span class="s2">&quot;destination&quot;</span><span class="p">:</span> <span class="s2">&quot;o1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;initial_vehicle_count&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;spawn_probability&quot;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span>
     <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
-    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-    <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
-    <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mi">7</span>
-    <span class="s2">&quot;show_trajectories&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s2">&quot;render_agent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;offscreen_rendering&quot;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
+    <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+    <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mf">5.5</span> <span class="o">*</span> <span class="mf">1.3</span><span class="p">,</span>
+    <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="n">IntersectionEnv</span><span class="o">.</span><span class="n">COLLISION_REWARD</span><span class="p">,</span>
+    <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">False</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -215,10 +224,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="intersection.html" class="btn btn-neutral float-right" title="Intersection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../observations/index.html" class="btn btn-neutral float-right" title="Observations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="roundabout.html" class="btn btn-neutral float-left" title="Roundabout" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="parking.html" class="btn btn-neutral float-left" title="Parking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -10,3 +10,4 @@ Environments
   merge
   roundabout
   parking
+  intersection
