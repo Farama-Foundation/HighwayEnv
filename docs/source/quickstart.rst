@@ -22,6 +22,19 @@ Here is a quick example of how to create an environment, and run an episode with
       obs, reward, done, info = env.step(action)
       env.render()
 
+All the environments
+~~~~~~~~~~~~~~~~~~
+You can try all the environments available:
+
+.. toctree::
+  :maxdepth: 1
+
+  environments/highway
+  environments/merge
+  environments/roundabout
+  environments/parking
+  environments/intersection
+
 Training an agent
 ~~~~~~~~~~~~~~~~~~
 
@@ -75,15 +88,30 @@ can be used:
       episode_reward = 0.0
       obs = env.reset()
 
-All the environments
-~~~~~~~~~~~~~~~~~~
-You can try all the environments available:
 
-.. toctree::
-  :maxdepth: 1
+Try it on Google Colab!
+~~~~~~~~~~~~~~~~~~~~~~~
 
-  environments/highway
-  environments/merge
-  environments/roundabout
-  environments/parking
-  environments/intersection
+Use these notebooks to train driving policies on `highway-env`.
+
+.. |parking_mb|  image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb
+.. |planning_hw|  image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb
+.. |parking_her|  image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb
+
+- A Model-based Reinforcement Learning tutorial on Parking |parking_mb|
+
+  A tutorial written for `RLSS 2019 <https://rlss.inria.fr/>`_ and demonstrating the principle of model-based
+  reinforcement learning on the `parking-v0` task.
+
+- Trajectory Planning on Highway |planning_hw|
+
+  Plan a trajectory on `highway-v0` using the `OPD` :cite:`Hren2008` implementation from
+  `rl-agents <https://github.com/eleurent/rl-agents>`_.
+
+- Parking with Hindsight Experience Replay |parking_her|
+
+  Train a goal-conditioned `parking-v0` policy using the :cite:`Andrychowicz2017` implementation
+  from `stable-baselines <https://github.com/hill-a/stable-baselines>`_.
