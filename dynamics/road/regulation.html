@@ -1,0 +1,507 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Road regulation &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Kinematics" href="../vehicle/kinematics.html" />
+    <link rel="prev" title="Road" href="road.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../environments/index.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../observations/index.html">Observations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actions/index.html">Actions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Dynamics</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#roads">Roads</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lane.html">Lane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="road.html">Road</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Road regulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-highway_env.road.regulation">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#vehicles">Vehicles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rewards/index.html">Rewards</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Dynamics</a> &raquo;</li>
+        
+      <li>Road regulation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/dynamics/road/regulation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="road-regulation">
+<span id="id1"></span><h1>Road regulation<a class="headerlink" href="#road-regulation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-highway_env.road.regulation">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.road.regulation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="highway_env.road.regulation.RegulatedRoad">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.road.regulation.</code><code class="sig-name descname">RegulatedRoad</code><span class="sig-paren">(</span><em class="sig-param">network: highway_env.road.road.RoadNetwork = None</em>, <em class="sig-param">vehicles: List[highway_env.vehicle.kinematics.Vehicle] = None</em>, <em class="sig-param">obstacles: List[highway_env.road.objects.Obstacle] = None</em>, <em class="sig-param">np_random: numpy.random.mtrand.RandomState = None</em>, <em class="sig-param">record_history: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/road/regulation.html#RegulatedRoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="road.html#highway_env.road.road.Road" title="highway_env.road.road.Road"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.road.Road</span></code></a></p>
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.YIELDING_COLOR">
+<code class="sig-name descname">YIELDING_COLOR</code><em class="property">: Tuple[float, float, float]</em><em class="property"> = None</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.YIELDING_COLOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.REGULATION_FREQUENCY">
+<code class="sig-name descname">REGULATION_FREQUENCY</code><em class="property">: int</em><em class="property"> = 2</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.REGULATION_FREQUENCY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.YIELD_DURATION">
+<code class="sig-name descname">YIELD_DURATION</code><em class="property">: float</em><em class="property"> = 0.0</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.YIELD_DURATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">network: highway_env.road.road.RoadNetwork = None</em>, <em class="sig-param">vehicles: List[highway_env.vehicle.kinematics.Vehicle] = None</em>, <em class="sig-param">obstacles: List[highway_env.road.objects.Obstacle] = None</em>, <em class="sig-param">np_random: numpy.random.mtrand.RandomState = None</em>, <em class="sig-param">record_history: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/regulation.html#RegulatedRoad.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>New road.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network</strong> – the road network describing the lanes</p></li>
+<li><p><strong>vehicles</strong> – the vehicles driving on the road</p></li>
+<li><p><strong>road_objects</strong> – the objects on the road including obstacles and landmarks</p></li>
+<li><p><strong>np_random</strong> (<em>np.random.RandomState</em>) – a random number generator for vehicle behaviour</p></li>
+<li><p><strong>record_history</strong> – whether the recent trajectories of vehicles should be recorded for display</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/regulation.html#RegulatedRoad.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step the dynamics of each entity on the road.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> – timestep [s]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.enforce_road_rules">
+<code class="sig-name descname">enforce_road_rules</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/regulation.html#RegulatedRoad.enforce_road_rules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.enforce_road_rules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find conflicts and resolve them by assigning yielding vehicles and stopping them.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.respect_priorities">
+<em class="property">static </em><code class="sig-name descname">respect_priorities</code><span class="sig-paren">(</span><em class="sig-param">v1: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">v2: highway_env.vehicle.kinematics.Vehicle</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="reference internal" href="../../_modules/highway_env/road/regulation.html#RegulatedRoad.respect_priorities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.respect_priorities" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Resolve a conflict between two vehicles by determining who should yield</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v1</strong> – first vehicle</p></li>
+<li><p><strong>v2</strong> – second vehicle</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the yielding vehicle</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.is_conflict_possible">
+<em class="property">static </em><code class="sig-name descname">is_conflict_possible</code><span class="sig-paren">(</span><em class="sig-param">v1: highway_env.vehicle.controller.ControlledVehicle</em>, <em class="sig-param">v2: highway_env.vehicle.controller.ControlledVehicle</em>, <em class="sig-param">horizon: int = 3</em>, <em class="sig-param">step: float = 0.25</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/highway_env/road/regulation.html#RegulatedRoad.is_conflict_possible"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.is_conflict_possible" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'REGULATION_FREQUENCY': &lt;class 'int'&gt;, 'YIELDING_COLOR': typing.Tuple[float, float, float], 'YIELD_DURATION': &lt;class 'float'&gt;}</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.regulation', '__annotations__': {'YIELDING_COLOR': typing.Tuple[float, float, float], 'REGULATION_FREQUENCY': &lt;class 'int'&gt;, 'YIELD_DURATION': &lt;class 'float'&gt;}, 'YIELDING_COLOR': None, 'REGULATION_FREQUENCY': 2, 'YIELD_DURATION': 0.0, '__init__': &lt;function RegulatedRoad.__init__&gt;, 'step': &lt;function RegulatedRoad.step&gt;, 'enforce_road_rules': &lt;function RegulatedRoad.enforce_road_rules&gt;, 'respect_priorities': &lt;staticmethod object&gt;, 'is_conflict_possible': &lt;staticmethod object&gt;, '__doc__': None})</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.regulation'</em><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.regulation.RegulatedRoad.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decide the actions of each entity on the road.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.close_vehicles_to">
+<code class="sig-name descname">close_vehicles_to</code><span class="sig-paren">(</span><em class="sig-param">vehicle: kinematics.Vehicle</em>, <em class="sig-param">distance: float</em>, <em class="sig-param">count: int = None</em>, <em class="sig-param">see_behind: bool = True</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.close_vehicles_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the data of all entities on the road</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.get_log">
+<code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.get_log" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Concatenate the logs of all entities on the road.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the concatenated log.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.regulation.RegulatedRoad.neighbour_vehicles">
+<code class="sig-name descname">neighbour_vehicles</code><span class="sig-paren">(</span><em class="sig-param">vehicle: kinematics.Vehicle</em>, <em class="sig-param">lane_index: Tuple[str</em>, <em class="sig-param">str</em>, <em class="sig-param">int] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[Optional[kinematics.Vehicle], Optional[kinematics.Vehicle]]<a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad.neighbour_vehicles" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Find the preceding and following vehicles of a given vehicle.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vehicle</strong> – the vehicle whose neighbours must be found</p></li>
+<li><p><strong>lane_index</strong> – the lane on which to look for preceding and following vehicles.
+It doesn’t have to be the current vehicle lane but can also be another lane, in which case the
+vehicle is projected on it considering its local coordinates in the lane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>its preceding vehicle, its following vehicle</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../vehicle/kinematics.html" class="btn btn-neutral float-right" title="Kinematics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="road.html" class="btn btn-neutral float-left" title="Road" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

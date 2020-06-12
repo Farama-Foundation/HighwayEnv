@@ -20,20 +20,12 @@
   <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -90,8 +82,14 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="environments/index.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observations/index.html">Observations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actions/index.html">Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamics/index.html">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rewards/index.html">Rewards</a></li>
+</ul>
+
             
           
         </div>
@@ -165,142 +163,37 @@
        <td><img src="_static/minus.png" class="toggler"
               id="toggle-1" style="display: none" alt="-" /></td>
        <td>
-       <a href="index.html#module-highway_env"><code class="xref">highway_env</code></a></td><td>
+       <code class="xref">highway_env</code></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.html#module-highway_env.envs"><code class="xref">highway_env.envs</code></a></td><td>
+       <a href="dynamics/road/lane.html#module-highway_env.road.lane"><code class="xref">highway_env.road.lane</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.common.html#module-highway_env.envs.common"><code class="xref">highway_env.envs.common</code></a></td><td>
+       <a href="dynamics/road/regulation.html#module-highway_env.road.regulation"><code class="xref">highway_env.road.regulation</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.common.abstract.html#module-highway_env.envs.common.abstract"><code class="xref">highway_env.envs.common.abstract</code></a></td><td>
+       <a href="dynamics/road/road.html#module-highway_env.road.road"><code class="xref">highway_env.road.road</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.common.finite_mdp.html#module-highway_env.envs.common.finite_mdp"><code class="xref">highway_env.envs.common.finite_mdp</code></a></td><td>
+       <a href="dynamics/vehicle/behavior.html#module-highway_env.vehicle.behavior"><code class="xref">highway_env.vehicle.behavior</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.common.graphics.html#module-highway_env.envs.common.graphics"><code class="xref">highway_env.envs.common.graphics</code></a></td><td>
+       <a href="dynamics/vehicle/controller.html#module-highway_env.vehicle.controller"><code class="xref">highway_env.vehicle.controller</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.common.observation.html#module-highway_env.envs.common.observation"><code class="xref">highway_env.envs.common.observation</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.highway_env.html#module-highway_env.envs.highway_env"><code class="xref">highway_env.envs.highway_env</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.intersection_env.html#module-highway_env.envs.intersection_env"><code class="xref">highway_env.envs.intersection_env</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.merge_env.html#module-highway_env.envs.merge_env"><code class="xref">highway_env.envs.merge_env</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.parking_env.html#module-highway_env.envs.parking_env"><code class="xref">highway_env.envs.parking_env</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.roundabout_env.html#module-highway_env.envs.roundabout_env"><code class="xref">highway_env.envs.roundabout_env</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.summon_env.html#module-highway_env.envs.summon_env"><code class="xref">highway_env.envs.summon_env</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.envs.two_way_env.html#module-highway_env.envs.two_way_env"><code class="xref">highway_env.envs.two_way_env</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.interval.html#module-highway_env.interval"><code class="xref">highway_env.interval</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.logger.html#module-highway_env.logger"><code class="xref">highway_env.logger</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.road.html#module-highway_env.road"><code class="xref">highway_env.road</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.road.graphics.html#module-highway_env.road.graphics"><code class="xref">highway_env.road.graphics</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.road.lane.html#module-highway_env.road.lane"><code class="xref">highway_env.road.lane</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.road.regulation.html#module-highway_env.road.regulation"><code class="xref">highway_env.road.regulation</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.road.road.html#module-highway_env.road.road"><code class="xref">highway_env.road.road</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.utils.html#module-highway_env.utils"><code class="xref">highway_env.utils</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.vehicle.html#module-highway_env.vehicle"><code class="xref">highway_env.vehicle</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.vehicle.behavior.html#module-highway_env.vehicle.behavior"><code class="xref">highway_env.vehicle.behavior</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.vehicle.control.html#module-highway_env.vehicle.control"><code class="xref">highway_env.vehicle.control</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.vehicle.dynamics.html#module-highway_env.vehicle.dynamics"><code class="xref">highway_env.vehicle.dynamics</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.vehicle.graphics.html#module-highway_env.vehicle.graphics"><code class="xref">highway_env.vehicle.graphics</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="highway_env.vehicle.uncertainty.html#module-highway_env.vehicle.uncertainty"><code class="xref">highway_env.vehicle.uncertainty</code></a></td><td>
+       <a href="dynamics/vehicle/kinematics.html#module-highway_env.vehicle.kinematics"><code class="xref">highway_env.vehicle.kinematics</code></a></td><td>
        <em></em></td></tr>
    </table>
 

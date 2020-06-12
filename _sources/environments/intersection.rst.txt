@@ -3,7 +3,7 @@
 .. currentmodule:: highway_env.envs.intersection_env
 
 Intersection
-**********
+************
 
 An intersection negotiation task with dense traffic.
 

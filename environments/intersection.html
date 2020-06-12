@@ -25,6 +25,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -308,8 +309,7 @@ for several simulation timesteps until the next decision making step.</p>
 <dl class="method">
 <dt id="highway_env.envs.intersection_env.IntersectionEnv._make_road">
 <code class="sig-name descname">_make_road</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/intersection_env.html#IntersectionEnv._make_road"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.intersection_env.IntersectionEnv._make_road" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Make an 4-way intersection.</p>
+<dd><p>Make an 4-way intersection.</p>
 <dl class="simple">
 <dt>The horizontal road has the right of way. More precisely, the levels of priority are:</dt><dd><ul class="simple">
 <li><p>3 for horizontal straight lanes and right-turns</p></li>
@@ -321,7 +321,6 @@ for several simulation timesteps until the next decision making step.</p>
 </dl>
 <p>The code for nodes in the road network is:
 (o:outer | i:inner + [r:right, l:left]) + (0:south | 1:west | 2:north | 3:east)</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the intersection road</p>
@@ -332,9 +331,7 @@ for several simulation timesteps until the next decision making step.</p>
 <dl class="method">
 <dt id="highway_env.envs.intersection_env.IntersectionEnv._make_vehicles">
 <code class="sig-name descname">_make_vehicles</code><span class="sig-paren">(</span><em class="sig-param">n_vehicles: int = 10</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/intersection_env.html#IntersectionEnv._make_vehicles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.intersection_env.IntersectionEnv._make_vehicles" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.</p>
-</div></blockquote>
+<dd><p>Populate a road with several vehicles on the highway and on the merging lane</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the ego-vehicle</p>

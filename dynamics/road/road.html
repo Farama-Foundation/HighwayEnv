@@ -1,0 +1,835 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Road &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Road regulation" href="regulation.html" />
+    <link rel="prev" title="Lane" href="lane.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../environments/index.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../observations/index.html">Observations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actions/index.html">Actions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Dynamics</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#roads">Roads</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lane.html">Lane</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="regulation.html">Road regulation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#vehicles">Vehicles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rewards/index.html">Rewards</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Dynamics</a> &raquo;</li>
+        
+      <li>Road</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/dynamics/road/road.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="road">
+<span id="road-road"></span><h1>Road<a class="headerlink" href="#road" title="Permalink to this headline">¶</a></h1>
+<p>A <a class="reference internal" href="#highway_env.road.road.Road" title="highway_env.road.road.Road"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.road.Road</span></code></a> is composed of a <a class="reference internal" href="#highway_env.road.road.RoadNetwork" title="highway_env.road.road.RoadNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.road.RoadNetwork</span></code></a> and a list
+of <a class="reference internal" href="../vehicle/kinematics.html#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.kinematics.Vehicle</span></code></a>.</p>
+<p>The <a class="reference internal" href="#highway_env.road.road.RoadNetwork" title="highway_env.road.road.RoadNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.road.RoadNetwork</span></code></a> describes the topology of the road infrastructure as a graph,
+where edges represent lanes and nodes represent intersections.</p>
+<p>Road API
+<a href="#id1"><span class="problematic" id="id2">**</span></a><a href="#id3"><span class="problematic" id="id4">*</span></a></p>
+<span class="target" id="module-highway_env.road.road"></span><dl class="class">
+<dt id="highway_env.road.road.RoadNetwork">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.road.road.</code><code class="sig-name descname">RoadNetwork</code><a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.RoadNetwork.graph">
+<code class="sig-name descname">graph</code><em class="property">: Dict[str, Dict[str, List[AbstractLane]]]</em><em class="property"> = None</em><a class="headerlink" href="#highway_env.road.road.RoadNetwork.graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.add_lane">
+<code class="sig-name descname">add_lane</code><span class="sig-paren">(</span><em class="sig-param">_from: str</em>, <em class="sig-param">_to: str</em>, <em class="sig-param">lane: highway_env.road.lane.AbstractLane</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.add_lane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.add_lane" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>A lane is encoded as an edge in the road network.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_from</strong> – the node at which the lane starts.</p></li>
+<li><p><strong>_to</strong> – the node at which the lane ends.</p></li>
+<li><p><strong>lane</strong> (<a class="reference internal" href="lane.html#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><em>AbstractLane</em></a>) – the lane geometry.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.get_lane">
+<code class="sig-name descname">get_lane</code><span class="sig-paren">(</span><em class="sig-param">index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; highway_env.road.lane.AbstractLane<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.get_lane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.get_lane" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Get the lane geometry corresponding to a given index in the road network.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> – a tuple (origin node, destination node, lane id on the road).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the corresponding lane geometry.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.get_closest_lane_index">
+<code class="sig-name descname">get_closest_lane_index</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[str, str, int]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.get_closest_lane_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.get_closest_lane_index" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Get the index of the lane closest to a world position.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>position</strong> – a world position [m].</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the index of the closest lane.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.next_lane">
+<code class="sig-name descname">next_lane</code><span class="sig-paren">(</span><em class="sig-param">current_index: Tuple[str, str, int], route: List[Tuple[str, str, int]] = None, position: numpy.ndarray = None, np_random: numpy.random.mtrand.RandomState = &lt;module 'numpy.random' from '/usr/local/lib/python3.8/site-packages/numpy/random/__init__.py'&gt;</em><span class="sig-paren">)</span> &#x2192; Tuple[str, str, int]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.next_lane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.next_lane" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Get the index of the next lane that should be followed after finishing the current lane.</p>
+<p>If a plan is available and matches with current lane, follow it.
+Else, pick next road randomly.
+If it has the same number of lanes as current road, stay in the same lane.
+Else, pick next road’s closest lane.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_index</strong> – the index of the current lane.</p></li>
+<li><p><strong>route</strong> – the planned route, if any.</p></li>
+<li><p><strong>position</strong> – the vehicle position.</p></li>
+<li><p><strong>np_random</strong> – a source of randomness.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the index of the next lane to be followed when current lane is finished.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.bfs_paths">
+<code class="sig-name descname">bfs_paths</code><span class="sig-paren">(</span><em class="sig-param">start: str</em>, <em class="sig-param">goal: str</em><span class="sig-paren">)</span> &#x2192; List[List[str]]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.bfs_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.bfs_paths" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Breadth-first search of all routes from start to goal.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> – starting node</p></li>
+<li><p><strong>goal</strong> – goal node</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of paths from start to goal.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.shortest_path">
+<code class="sig-name descname">shortest_path</code><span class="sig-paren">(</span><em class="sig-param">start: str</em>, <em class="sig-param">goal: str</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.shortest_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.shortest_path" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Breadth-first search of shortest path from start to goal.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> – starting node</p></li>
+<li><p><strong>goal</strong> – goal node</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>shortest path from start to goal.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.all_side_lanes">
+<code class="sig-name descname">all_side_lanes</code><span class="sig-paren">(</span><em class="sig-param">lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; List[Tuple[str, str, int]]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.all_side_lanes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.all_side_lanes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lane_index</strong> – the index of a lane.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>all lanes belonging to the same road.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.side_lanes">
+<code class="sig-name descname">side_lanes</code><span class="sig-paren">(</span><em class="sig-param">lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; List[Tuple[str, str, int]]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.side_lanes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.side_lanes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lane_index</strong> – the index of a lane.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>indexes of lanes next to a an input lane, to its right or left.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.is_same_road">
+<em class="property">static </em><code class="sig-name descname">is_same_road</code><span class="sig-paren">(</span><em class="sig-param">lane_index_1: Tuple[str, str, int], lane_index_2: Tuple[str, str, int], same_lane: bool = False</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.is_same_road"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.is_same_road" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is lane 1 in the same road as lane 2?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.is_leading_to_road">
+<em class="property">static </em><code class="sig-name descname">is_leading_to_road</code><span class="sig-paren">(</span><em class="sig-param">lane_index_1: Tuple[str, str, int], lane_index_2: Tuple[str, str, int], same_lane: bool = False</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.is_leading_to_road"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.is_leading_to_road" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is lane 1 leading to of lane 2?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.is_connected_road">
+<code class="sig-name descname">is_connected_road</code><span class="sig-paren">(</span><em class="sig-param">lane_index_1: Tuple[str, str, int], lane_index_2: Tuple[str, str, int], route: List[Tuple[str, str, int]] = None, same_lane: bool = False, depth: int = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.is_connected_road"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.is_connected_road" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Is the lane 2 leading to a road within lane 1’s route?</p>
+<p>Vehicles on these lanes must be considered for collisions.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lane_index_1</strong> – origin lane</p></li>
+<li><p><strong>lane_index_2</strong> – target lane</p></li>
+<li><p><strong>route</strong> – route from origin lane, if any</p></li>
+<li><p><strong>same_lane</strong> – compare lane id</p></li>
+<li><p><strong>depth</strong> – search depth from lane 1 along its route</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether the roads are connected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.lanes_list">
+<code class="sig-name descname">lanes_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[highway_env.road.lane.AbstractLane]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.lanes_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.lanes_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.straight_road_network">
+<em class="property">static </em><code class="sig-name descname">straight_road_network</code><span class="sig-paren">(</span><em class="sig-param">lanes: int = 4</em>, <em class="sig-param">length: float = 10000</em>, <em class="sig-param">angle: float = 0</em><span class="sig-paren">)</span> &#x2192; highway_env.road.road.RoadNetwork<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.straight_road_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.straight_road_network" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.position_heading_along_route">
+<code class="sig-name descname">position_heading_along_route</code><span class="sig-paren">(</span><em class="sig-param">route: List[Tuple[str, str, int]], longitudinal: float, lateral: float</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, float]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.position_heading_along_route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.position_heading_along_route" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Get the absolute position and heading along a route composed of several lanes at some local coordinates.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> – a planned route, list of lane indexes</p></li>
+<li><p><strong>longitudinal</strong> – longitudinal position</p></li>
+<li><p><strong>lateral</strong> – : lateral position</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>position, heading</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.RoadNetwork.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'graph': typing.Dict[str, typing.Dict[str, typing.List[highway_env.road.lane.AbstractLane]]]}</em><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.RoadNetwork.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.RoadNetwork.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.road', '__annotations__': {'graph': typing.Dict[str, typing.Dict[str, typing.List[highway_env.road.lane.AbstractLane]]]}, '__init__': &lt;function RoadNetwork.__init__&gt;, 'add_lane': &lt;function RoadNetwork.add_lane&gt;, 'get_lane': &lt;function RoadNetwork.get_lane&gt;, 'get_closest_lane_index': &lt;function RoadNetwork.get_closest_lane_index&gt;, 'next_lane': &lt;function RoadNetwork.next_lane&gt;, 'bfs_paths': &lt;function RoadNetwork.bfs_paths&gt;, 'shortest_path': &lt;function RoadNetwork.shortest_path&gt;, 'all_side_lanes': &lt;function RoadNetwork.all_side_lanes&gt;, 'side_lanes': &lt;function RoadNetwork.side_lanes&gt;, 'is_same_road': &lt;staticmethod object&gt;, 'is_leading_to_road': &lt;staticmethod object&gt;, 'is_connected_road': &lt;function RoadNetwork.is_connected_road&gt;, 'lanes_list': &lt;function RoadNetwork.lanes_list&gt;, 'straight_road_network': &lt;staticmethod object&gt;, 'position_heading_along_route': &lt;function RoadNetwork.position_heading_along_route&gt;, '__dict__': &lt;attribute '__dict__' of 'RoadNetwork' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'RoadNetwork' objects&gt;, '__doc__': None})</em><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.RoadNetwork.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.road'</em><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.RoadNetwork.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.RoadNetwork.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.road.RoadNetwork.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.road.road.Road">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.road.road.</code><code class="sig-name descname">Road</code><span class="sig-paren">(</span><em class="sig-param">network: highway_env.road.road.RoadNetwork = None</em>, <em class="sig-param">vehicles: List[kinematics.Vehicle] = None</em>, <em class="sig-param">road_objects: List[objects.RoadObject] = None</em>, <em class="sig-param">np_random: numpy.random.mtrand.RandomState = None</em>, <em class="sig-param">record_history: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/road/road.html#Road"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.logger.Loggable</span></code></p>
+<p>A road is a set of lanes, and a set of vehicles driving on these lanes</p>
+<dl class="method">
+<dt id="highway_env.road.road.Road.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">network: highway_env.road.road.RoadNetwork = None</em>, <em class="sig-param">vehicles: List[kinematics.Vehicle] = None</em>, <em class="sig-param">road_objects: List[objects.RoadObject] = None</em>, <em class="sig-param">np_random: numpy.random.mtrand.RandomState = None</em>, <em class="sig-param">record_history: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>New road.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network</strong> – the road network describing the lanes</p></li>
+<li><p><strong>vehicles</strong> – the vehicles driving on the road</p></li>
+<li><p><strong>road_objects</strong> – the objects on the road including obstacles and landmarks</p></li>
+<li><p><strong>np_random</strong> (<em>np.random.RandomState</em>) – a random number generator for vehicle behaviour</p></li>
+<li><p><strong>record_history</strong> – whether the recent trajectories of vehicles should be recorded for display</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.close_vehicles_to">
+<code class="sig-name descname">close_vehicles_to</code><span class="sig-paren">(</span><em class="sig-param">vehicle: kinematics.Vehicle</em>, <em class="sig-param">distance: float</em>, <em class="sig-param">count: int = None</em>, <em class="sig-param">see_behind: bool = True</em><span class="sig-paren">)</span> &#x2192; object<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.close_vehicles_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.close_vehicles_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.act"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decide the actions of each entity on the road.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.step" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Step the dynamics of each entity on the road.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> – timestep [s]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.neighbour_vehicles">
+<code class="sig-name descname">neighbour_vehicles</code><span class="sig-paren">(</span><em class="sig-param">vehicle: kinematics.Vehicle</em>, <em class="sig-param">lane_index: Tuple[str</em>, <em class="sig-param">str</em>, <em class="sig-param">int] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[Optional[kinematics.Vehicle], Optional[kinematics.Vehicle]]<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.neighbour_vehicles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.neighbour_vehicles" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Find the preceding and following vehicles of a given vehicle.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vehicle</strong> – the vehicle whose neighbours must be found</p></li>
+<li><p><strong>lane_index</strong> – the lane on which to look for preceding and following vehicles.
+It doesn’t have to be the current vehicle lane but can also be another lane, in which case the
+vehicle is projected on it considering its local coordinates in the lane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>its preceding vehicle, its following vehicle</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the data of all entities on the road</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.get_log">
+<code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.get_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.get_log" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Concatenate the logs of all entities on the road.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the concatenated log.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.Road.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.road.road.Road.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.Road.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.road', '__doc__': '\n        A road is a set of lanes, and a set of vehicles driving on these lanes\n    ', '__init__': &lt;function Road.__init__&gt;, 'close_vehicles_to': &lt;function Road.close_vehicles_to&gt;, 'act': &lt;function Road.act&gt;, 'step': &lt;function Road.step&gt;, 'neighbour_vehicles': &lt;function Road.neighbour_vehicles&gt;, 'dump': &lt;function Road.dump&gt;, 'get_log': &lt;function Road.get_log&gt;, '__repr__': &lt;function Road.__repr__&gt;})</em><a class="headerlink" href="#highway_env.road.road.Road.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.Road.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.road'</em><a class="headerlink" href="#highway_env.road.road.Road.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.road.road.Road.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.road.Road.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.road.road.Road.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.road.Road.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="regulation.html" class="btn btn-neutral float-right" title="Road regulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="lane.html" class="btn btn-neutral float-left" title="Lane" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

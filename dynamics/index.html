@@ -25,6 +25,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -35,7 +36,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Rewards" href="../rewards/index.html" />
+    <link rel="next" title="Lane" href="road/lane.html" />
     <link rel="prev" title="Actions" href="../actions/index.html" /> 
 </head>
 
@@ -84,7 +85,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../environments/index.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../observations/index.html">Observations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../actions/index.html">Actions</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Dynamics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dynamics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#roads">Roads</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="road/lane.html">Lane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="road/road.html">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="road/regulation.html">Road regulation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#vehicles">Vehicles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vehicle/kinematics.html">Kinematics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vehicle/controller.html">Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vehicle/behavior.html">Behavior</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../rewards/index.html">Rewards</a></li>
 </ul>
 
@@ -152,6 +167,28 @@
             
   <div class="section" id="dynamics">
 <span id="id1"></span><h1>Dynamics<a class="headerlink" href="#dynamics" title="Permalink to this headline">¶</a></h1>
+<p>New driving environments can easily be made from a set of building blocks.</p>
+<div class="section" id="roads">
+<h2>Roads<a class="headerlink" href="#roads" title="Permalink to this headline">¶</a></h2>
+<p>A <cite>Road</cite> is composed of a <cite>RoadNetwork</cite> and a list of <cite>Vehicles</cite>. The <cite>RoadNetwork</cite> describes the topology of the road infrastructure as a graph, where edges represent lanes and nodes represent intersections. For every edge, the corresponding lane geometry is stored in a <cite>Lane</cite> object as a parametrized center line curve, providing a local coordinate system.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="road/lane.html">Lane</a></li>
+<li class="toctree-l1"><a class="reference internal" href="road/road.html">Road</a></li>
+<li class="toctree-l1"><a class="reference internal" href="road/regulation.html">Road regulation</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="vehicles">
+<h2>Vehicles<a class="headerlink" href="#vehicles" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vehicle/kinematics.html">Kinematics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vehicle/controller.html">Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vehicle/behavior.html">Behavior</a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
@@ -162,7 +199,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../rewards/index.html" class="btn btn-neutral float-right" title="Rewards" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="road/lane.html" class="btn btn-neutral float-right" title="Lane" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../actions/index.html" class="btn btn-neutral float-left" title="Actions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

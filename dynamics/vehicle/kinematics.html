@@ -1,0 +1,630 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kinematics &mdash; highway-env  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Control" href="controller.html" />
+    <link rel="prev" title="Road regulation" href="../road/regulation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> highway-env
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../environments/index.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../observations/index.html">Observations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../actions/index.html">Actions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Dynamics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#roads">Roads</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#vehicles">Vehicles</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Kinematics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-highway_env.vehicle.kinematics">API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="controller.html">Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="behavior.html">Behavior</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rewards/index.html">Rewards</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">highway-env</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Dynamics</a> &raquo;</li>
+        
+      <li>Kinematics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/dynamics/vehicle/kinematics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kinematics">
+<span id="vehicle-kinematics"></span><h1>Kinematics<a class="headerlink" href="#kinematics" title="Permalink to this headline">¶</a></h1>
+<p>The vehicles kinematics are represented in the <cite>Vehicle</cite> class by the <em>Kinematic Bicycle Model</em> <a class="bibtex reference internal" href="../../bibliography/index.html#polack2017" id="id1">[PAltcheDAndreaN17]</a>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\dot{x}&amp;=v\cos(\psi+\beta) \\
+\dot{y}&amp;=v\sin(\psi+\beta) \\
+\dot{v}&amp;=a \\
+\dot{\psi}&amp;=\frac{v}{l}\sin\beta \\
+\beta&amp;=\tan^{-1}(1/2\tan\delta), \\\end{split}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((x, y)\)</span> is the vehicle position;</p></li>
+<li><p><span class="math notranslate nohighlight">\(v\)</span> its forward speed;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\psi\)</span> its heading;</p></li>
+<li><p><span class="math notranslate nohighlight">\(a\)</span> is the acceleration command;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta\)</span> is the slip angle at the center of gravity;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\delta\)</span> is the front wheel angle used as a steering command.</p></li>
+</ul>
+<div class="section" id="module-highway_env.vehicle.kinematics">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.vehicle.kinematics" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="highway_env.vehicle.kinematics.Vehicle">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.vehicle.kinematics.</code><code class="sig-name descname">Vehicle</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, position: Union[numpy.ndarray, Sequence[float]], heading: float = 0, speed: float = 0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.logger.Loggable</span></code></p>
+<p>A moving vehicle on a road, and its kinematics.</p>
+<p>The vehicle is represented by a dynamical system: a modified bicycle model.
+It’s state is propagated depending on its steering and acceleration actions.</p>
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.COLLISIONS_ENABLED">
+<code class="sig-name descname">COLLISIONS_ENABLED</code><em class="property"> = True</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.COLLISIONS_ENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable collision detection between vehicles</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.LENGTH">
+<code class="sig-name descname">LENGTH</code><em class="property"> = 5.0</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vehicle length [m]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.WIDTH">
+<code class="sig-name descname">WIDTH</code><em class="property"> = 2.0</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vehicle width [m]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.DEFAULT_SPEEDS">
+<code class="sig-name descname">DEFAULT_SPEEDS</code><em class="property"> = [23, 25]</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.DEFAULT_SPEEDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Range for random initial speeds [m/s]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.MAX_SPEED">
+<code class="sig-name descname">MAX_SPEED</code><em class="property"> = 40.0</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.MAX_SPEED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum reachable speed [m/s]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, position: Union[numpy.ndarray, Sequence[float]], heading: float = 0, speed: float = 0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.make_on_lane">
+<em class="property">classmethod </em><code class="sig-name descname">make_on_lane</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, lane_index: Tuple[str, str, int], longitudinal: float, speed: float = 0</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.make_on_lane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.make_on_lane" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Create a vehicle on a given lane at a longitudinal position.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>road</strong> – the road where the vehicle is driving</p></li>
+<li><p><strong>lane_index</strong> – index of the lane where the vehicle is located</p></li>
+<li><p><strong>longitudinal</strong> – longitudinal position along the lane</p></li>
+<li><p><strong>speed</strong> – initial speed in [m/s]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A vehicle with at the specified position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.create_random">
+<em class="property">classmethod </em><code class="sig-name descname">create_random</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road</em>, <em class="sig-param">speed: float = None</em>, <em class="sig-param">spacing: float = 1</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.create_random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.create_random" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Create a random vehicle on the road.</p>
+<p>The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
+vehicle in the road with density based on the number of lanes.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>road</strong> – the road where the vehicle is driving</p></li>
+<li><p><strong>speed</strong> – initial speed in [m/s]. If None, will be chosen randomly</p></li>
+<li><p><strong>spacing</strong> – ratio of spacing to the front vehicle, 1 being the default</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A vehicle with random position and/or speed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.create_from">
+<em class="property">classmethod </em><code class="sig-name descname">create_from</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.create_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.create_from" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Create a new vehicle from an existing one.
+Only the vehicle dynamics are copied, other properties are default.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vehicle</strong> – a vehicle</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a new vehicle at the same dynamical state</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: dict = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.act"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.act" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Store an action to be repeated.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> – the input action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.step" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Propagate the vehicle state given its actions.</p>
+<p>Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.
+If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.
+The vehicle’s current lane is updated.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> – timestep of integration of the model [s]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.clip_actions">
+<code class="sig-name descname">clip_actions</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.clip_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.clip_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.on_state_update">
+<code class="sig-name descname">on_state_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.on_state_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.on_state_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.lane_distance_to">
+<code class="sig-name descname">lane_distance_to</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">lane: highway_env.road.lane.AbstractLane = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.lane_distance_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.lane_distance_to" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Compute the signed distance to another vehicle along a lane.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vehicle</strong> – the other vehicle</p></li>
+<li><p><strong>lane</strong> – a lane</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the distance to the other vehicle [m]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.check_collision">
+<code class="sig-name descname">check_collision</code><span class="sig-paren">(</span><em class="sig-param">other: Union[Vehicle, RoadObject]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.check_collision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.check_collision" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Check for collision with another vehicle.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> – the other vehicle or object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle._is_colliding">
+<code class="sig-name descname">_is_colliding</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle._is_colliding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle._is_colliding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.direction">
+<em class="property">property </em><code class="sig-name descname">direction</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.velocity">
+<em class="property">property </em><code class="sig-name descname">velocity</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.destination">
+<em class="property">property </em><code class="sig-name descname">destination</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.destination" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.destination_direction">
+<em class="property">property </em><code class="sig-name descname">destination_direction</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.destination_direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.on_road">
+<em class="property">property </em><code class="sig-name descname">on_road</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.on_road" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the vehicle on its current lane, or off-road ?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.front_distance_to">
+<code class="sig-name descname">front_distance_to</code><span class="sig-paren">(</span><em class="sig-param">other: highway_env.vehicle.kinematics.Vehicle</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.front_distance_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.front_distance_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.kinematics', '__doc__': &quot;\n        A moving vehicle on a road, and its kinematics.\n\n        The vehicle is represented by a dynamical system: a modified bicycle model.\n        It's state is propagated depending on its steering and acceleration actions.\n    &quot;, 'COLLISIONS_ENABLED': True, 'LENGTH': 5.0, 'WIDTH': 2.0, 'DEFAULT_SPEEDS': [23, 25], 'MAX_SPEED': 40.0, '__init__': &lt;function Vehicle.__init__&gt;, 'make_on_lane': &lt;classmethod object&gt;, 'create_random': &lt;classmethod object&gt;, 'create_from': &lt;classmethod object&gt;, 'act': &lt;function Vehicle.act&gt;, 'step': &lt;function Vehicle.step&gt;, 'clip_actions': &lt;function Vehicle.clip_actions&gt;, 'on_state_update': &lt;function Vehicle.on_state_update&gt;, 'lane_distance_to': &lt;function Vehicle.lane_distance_to&gt;, 'check_collision': &lt;function Vehicle.check_collision&gt;, '_is_colliding': &lt;function Vehicle._is_colliding&gt;, 'direction': &lt;property object&gt;, 'velocity': &lt;property object&gt;, 'destination': &lt;property object&gt;, 'destination_direction': &lt;property object&gt;, 'on_road': &lt;property object&gt;, 'front_distance_to': &lt;function Vehicle.front_distance_to&gt;, 'to_dict': &lt;function Vehicle.to_dict&gt;, 'dump': &lt;function Vehicle.dump&gt;, 'get_log': &lt;function Vehicle.get_log&gt;, '__str__': &lt;function Vehicle.__str__&gt;, '__repr__': &lt;function Vehicle.__repr__&gt;})</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.vehicle.kinematics'</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.to_dict">
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">origin_vehicle: Optional[highway_env.vehicle.kinematics.Vehicle] = None</em>, <em class="sig-param">observe_intentions: bool = True</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.dump" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Update the internal log of the vehicle, containing:</dt><dd><ul class="simple">
+<li><p>its kinematics;</p></li>
+<li><p>some metrics relative to its neighbour vehicles.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.get_log">
+<code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.get_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.get_log" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Cast the internal log as a DataFrame.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the DataFrame of the Vehicle’s log.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.kinematics.Vehicle.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="controller.html" class="btn btn-neutral float-right" title="Control" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../road/regulation.html" class="btn btn-neutral float-left" title="Road regulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Edouard Leurent
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

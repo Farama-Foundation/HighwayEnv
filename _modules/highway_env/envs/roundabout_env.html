@@ -25,6 +25,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -186,7 +187,7 @@
 
 <div class="viewcode-block" id="RoundaboutEnv._is_terminal"><a class="viewcode-back" href="../../../environments/roundabout.html#highway_env.envs.roundabout_env.RoundaboutEnv._is_terminal">[docs]</a>    <span class="k">def</span> <span class="nf">_is_terminal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            The episode is over when a collision occurs or when the access ramp has been passed.</span>
+<span class="sd">        The episode is over when a collision occurs or when the access ramp has been passed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">]</span></div>
 
@@ -264,7 +265,8 @@
 
 <div class="viewcode-block" id="RoundaboutEnv._make_vehicles"><a class="viewcode-back" href="../../../environments/roundabout.html#highway_env.envs.roundabout_env.RoundaboutEnv._make_vehicles">[docs]</a>    <span class="k">def</span> <span class="nf">_make_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.</span>
+<span class="sd">        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.</span>
+
 <span class="sd">        :return: the ego-vehicle</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">position_deviation</span> <span class="o">=</span> <span class="mi">2</span>

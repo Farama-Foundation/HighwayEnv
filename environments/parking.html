@@ -25,6 +25,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -273,8 +274,12 @@ for several simulation timesteps until the next decision making step.</p>
 <dl class="method">
 <dt id="highway_env.envs.parking_env.ParkingEnv._create_road">
 <code class="sig-name descname">_create_road</code><span class="sig-paren">(</span><em class="sig-param">spots: int = 15</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/parking_env.html#ParkingEnv._create_road"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.parking_env.ParkingEnv._create_road" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a road composed of straight adjacent lanes.
-:param spots: number of spots in the parking</p>
+<dd><p>Create a road composed of straight adjacent lanes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>spots</strong> – number of spots in the parking</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -286,10 +291,8 @@ for several simulation timesteps until the next decision making step.</p>
 <dl class="method">
 <dt id="highway_env.envs.parking_env.ParkingEnv.compute_reward">
 <code class="sig-name descname">compute_reward</code><span class="sig-paren">(</span><em class="sig-param">achieved_goal: numpy.ndarray</em>, <em class="sig-param">desired_goal: numpy.ndarray</em>, <em class="sig-param">info: dict</em>, <em class="sig-param">p: float = 0.5</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/highway_env/envs/parking_env.html#ParkingEnv.compute_reward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.parking_env.ParkingEnv.compute_reward" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Proximity to the goal is rewarded</p>
+<dd><p>Proximity to the goal is rewarded</p>
 <p>We use a weighted p-norm</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -375,7 +378,7 @@ for several simulation timesteps until the next decision making step.</p>
 
 <dl class="attribute">
 <dt id="highway_env.envs.parking_env.ParkingEnv.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.parking_env', '__annotations__': {'REWARD_WEIGHTS': &lt;class 'numpy.ndarray'&gt;, 'SUCCESS_GOAL_REWARD': &lt;class 'float'&gt;, 'STEERING_RANGE': &lt;class 'float'&gt;}, '__doc__': '\n        A continuous control environment.\n\n        It implements a reach-type task, where the agent observes their position and speed and must\n        control their acceleration and steering so as to reach a given goal.\n\n        Credits to Munir Jojo-Verge for the idea and initial implementation.\n    ', 'REWARD_WEIGHTS': array([1.  , 0.3 , 0.  , 0.  , 0.02, 0.02]), 'SUCCESS_GOAL_REWARD': 0.12, 'STEERING_RANGE': 0.7853981633974483, 'default_config': &lt;classmethod object&gt;, 'step': &lt;function ParkingEnv.step&gt;, 'reset': &lt;function ParkingEnv.reset&gt;, '_create_road': &lt;function ParkingEnv._create_road&gt;, '_create_vehicles': &lt;function ParkingEnv._create_vehicles&gt;, 'compute_reward': &lt;function ParkingEnv.compute_reward&gt;, '_reward': &lt;function ParkingEnv._reward&gt;, '_is_success': &lt;function ParkingEnv._is_success&gt;, '_is_terminal': &lt;function ParkingEnv._is_terminal&gt;})</em><a class="headerlink" href="#highway_env.envs.parking_env.ParkingEnv.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.parking_env', '__annotations__': {'REWARD_WEIGHTS': &lt;class 'numpy.ndarray'&gt;, 'SUCCESS_GOAL_REWARD': &lt;class 'float'&gt;, 'STEERING_RANGE': &lt;class 'float'&gt;}, '__doc__': '\n    A continuous control environment.\n\n    It implements a reach-type task, where the agent observes their position and speed and must\n    control their acceleration and steering so as to reach a given goal.\n\n    Credits to Munir Jojo-Verge for the idea and initial implementation.\n    ', 'REWARD_WEIGHTS': array([1.  , 0.3 , 0.  , 0.  , 0.02, 0.02]), 'SUCCESS_GOAL_REWARD': 0.12, 'STEERING_RANGE': 0.7853981633974483, 'default_config': &lt;classmethod object&gt;, 'step': &lt;function ParkingEnv.step&gt;, 'reset': &lt;function ParkingEnv.reset&gt;, '_create_road': &lt;function ParkingEnv._create_road&gt;, '_create_vehicles': &lt;function ParkingEnv._create_vehicles&gt;, 'compute_reward': &lt;function ParkingEnv.compute_reward&gt;, '_reward': &lt;function ParkingEnv._reward&gt;, '_is_success': &lt;function ParkingEnv._is_success&gt;, '_is_terminal': &lt;function ParkingEnv._is_terminal&gt;})</em><a class="headerlink" href="#highway_env.envs.parking_env.ParkingEnv.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
