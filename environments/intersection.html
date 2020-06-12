@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Observations" href="../observations/index.html" />
+    <link rel="next" title="User Guide" href="../user_guide.html" />
     <link rel="prev" title="Parking" href="parking.html" /> 
 </head>
 
@@ -82,23 +82,26 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Environments</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="highway.html">Highway</a></li>
-<li class="toctree-l2"><a class="reference internal" href="merge.html">Merge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="roundabout.html">Roundabout</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parking.html">Parking</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Intersection</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#default-configuration">Default configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../quickstart.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#making-an-environment">Making an environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#training-an-agent">Training an agent</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../quickstart.html#all-the-environments">All the environments</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="highway.html">Highway</a></li>
+<li class="toctree-l3"><a class="reference internal" href="merge.html">Merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="roundabout.html">Roundabout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="parking.html">Parking</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Intersection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#default-configuration">Default configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api">API</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../observations/index.html">Observations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../actions/index.html">Actions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dynamics/index.html">Dynamics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../rewards/index.html">Rewards</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/index.html">Bibliography</a></li>
 </ul>
 
@@ -145,7 +148,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="index.html">Environments</a> &raquo;</li>
+          <li><a href="../quickstart.html">Getting Started</a> &raquo;</li>
         
       <li>Intersection</li>
     
@@ -171,6 +174,16 @@
 <p>An intersection negotiation task with dense traffic.</p>
 <div class="figure align-center" id="fig-intersection-env">
 <a class="reference internal image-reference" href="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection-env.gif"><img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection-env.gif" style="width: 80%;" /></a>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It’s quite hard to come up with good decentralized behaviors for other agents to avoid each other. Of course, this
+could be achieved by sophisticated centralized schedulers, or traffic lights, but to keep things simple a
+rudimentary collision prediction was added in the behaviour of other vehicles.</p>
+<p>Of course, it sometime fails which results in collisions, blocking the way for the ego-vehicle.
+I figured it was fine for my own purpose, since it did not happen too often and it’s reasonable to expect
+the ego-vehicle to simply wait the end of episode in these situations. But I agree that it is not ideal,
+and I welcome any contribution on that matter.</p>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
@@ -731,7 +744,7 @@ this won’t be true if seed=None, for example.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../observations/index.html" class="btn btn-neutral float-right" title="Observations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../user_guide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="parking.html" class="btn btn-neutral float-left" title="Parking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -12,6 +12,18 @@ An intersection negotiation task with dense traffic.
    :align: center
    :name: fig:intersection_env
 
+
+.. warning::
+
+    It's quite hard to come up with good decentralized behaviors for other agents to avoid each other. Of course, this
+    could be achieved by sophisticated centralized schedulers, or traffic lights, but to keep things simple a
+    rudimentary collision prediction was added in the behaviour of other vehicles.
+
+    Of course, it sometime fails which results in collisions, blocking the way for the ego-vehicle.
+    I figured it was fine for my own purpose, since it did not happen too often and it's reasonable to expect
+    the ego-vehicle to simply wait the end of episode in these situations. But I agree that it is not ideal,
+    and I welcome any contribution on that matter.
+
 Usage
 ==========
 

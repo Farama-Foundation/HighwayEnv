@@ -1,6 +1,6 @@
 .. _environments:
 
-Environments
+The Environments
 ############
 
 .. toctree::
