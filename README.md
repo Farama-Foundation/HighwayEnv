@@ -127,45 +127,6 @@ An intersection negotiation task with dense traffic.
     <em>The intersection-v0 environment.</em>
 </p>
 
-## The framework
-
-New driving environments can easily be made from a set of building blocks.
-
-### Roads
-
-A `Road` is composed of a `RoadNetwork` and a list of `Vehicles`. The `RoadNetwork` describes the topology of the road infrastructure as a graph, where edges represent lanes and nodes represent intersections. For every edge, the corresponding lane geometry is stored in a `Lane` object as a parametrized center line curve, providing a local coordinate system.
-
-### Vehicle kinematics
-
-The vehicles kinematics are represented in the `Vehicle` class by a _Kinematic Bicycle Model_.
-
-![\dot{x}=v\cos(\psi+\beta)](https://render.githubusercontent.com/render/math?math=\dot{x}=v\cos(\psi%2B\beta))
-
-![\dot{y}=v\sin(\psi+\beta)](https://render.githubusercontent.com/render/math?math=\dot{y}=v\sin(\psi%2B\beta))
-
-![\dot{v}=a](https://render.githubusercontent.com/render/math?math=\dot{v}=a)
-
-![\dot{\psi}=\frac{v}{l}\sin\beta](https://render.githubusercontent.com/render/math?math=\dot{\psi}=\frac{v}{l}\sin\beta)
-
-![\beta=\tan^{-1}(1/2\tan\delta)](https://render.githubusercontent.com/render/math?math=\beta=\tan^{-1}(\frac{1}{2}\tan\delta))
-
-Where *(x, y)* is the vehicle position, *v* its forward speed and *psi* its heading.
-*a* is the acceleration command, *β* is the slip angle at the center of gravity, and δ is the front wheel angle used as a steering command.
-
-### Control
-
-The `ControlledVehicle` class implements a low-level controller on top of a `Vehicle`, allowing to track a given target speed and follow a target lane.
-
-### Behaviours
-
-The vehicles populating the highway follow simple and realistic behaviours that dictate how they accelerate and steer on the road.
-
-In the `IDMVehicle` class,
-* Longitudinal Model: the acceleration of the vehicle is given by the Intelligent Driver Model (IDM) from [(Treiber et al, 2000)](https://arxiv.org/abs/cond-mat/0002177).
-* Lateral Model: the discrete lane change decisions are given by the MOBIL model from [(Kesting et al, 2007)](https://www.researchgate.net/publication/239439179_General_Lane-Changing_Model_MOBIL_for_Car-Following_Models).
-
-In the `LinearVehicle` class, the longitudinal and lateral behaviours are defined as linear weightings of several features, such as the distance and speed difference to the leading vehicle.
-
 ## The agents
 
 Agents solving the `highway-env` environments are available in the [RL-Agents](https://github.com/eleurent/rl-agents) repository.
