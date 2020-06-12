@@ -64,7 +64,7 @@ class IntersectionEnv(AbstractEnv):
 
     def _is_terminal(self) -> bool:
         """
-            The episode is over when a collision occurs or when the access ramp has been passed.
+        The episode is over when a collision occurs or when the access ramp has been passed.
         """
         return self.vehicle.crashed \
             or self.steps >= self.config["duration"] * self.config["policy_frequency"] \
@@ -85,15 +85,17 @@ class IntersectionEnv(AbstractEnv):
 
     def _make_road(self) -> None:
         """
-            Make an 4-way intersection.
+        Make an 4-way intersection.
 
-            The horizontal road has the right of way. More precisely, the levels of priority are:
-                - 3 for horizontal straight lanes and right-turns
-                - 1 for vertical straight lanes and right-turns
-                - 2 for horizontal left-turns
-                - 0 for vertical left-turns
-            The code for nodes in the road network is:
-            (o:outer | i:inner + [r:right, l:left]) + (0:south | 1:west | 2:north | 3:east)
+        The horizontal road has the right of way. More precisely, the levels of priority are:
+            - 3 for horizontal straight lanes and right-turns
+            - 1 for vertical straight lanes and right-turns
+            - 2 for horizontal left-turns
+            - 0 for vertical left-turns
+
+        The code for nodes in the road network is:
+        (o:outer | i:inner + [r:right, l:left]) + (0:south | 1:west | 2:north | 3:east)
+
         :return: the intersection road
         """
         lane_width = AbstractLane.DEFAULT_WIDTH
@@ -140,7 +142,8 @@ class IntersectionEnv(AbstractEnv):
 
     def _make_vehicles(self, n_vehicles: int = 10) -> None:
         """
-            Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+        Populate a road with several vehicles on the highway and on the merging lane
+
         :return: the ego-vehicle
         """
         # Configure vehicles
@@ -215,7 +218,7 @@ class IntersectionEnv(AbstractEnv):
 
     def _cost(self, action: int) -> float:
         """
-            The constraint signal is the occurrence of collisions.
+        The constraint signal is the occurrence of collisions.
         """
         return float(self.vehicle.crashed)
 

@@ -37,7 +37,7 @@ class RoundaboutEnv(AbstractEnv):
 
     def _is_terminal(self) -> bool:
         """
-            The episode is over when a collision occurs or when the access ramp has been passed.
+        The episode is over when a collision occurs or when the access ramp has been passed.
         """
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
@@ -115,7 +115,8 @@ class RoundaboutEnv(AbstractEnv):
 
     def _make_vehicles(self) -> None:
         """
-            Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+
         :return: the ego-vehicle
         """
         position_deviation = 2

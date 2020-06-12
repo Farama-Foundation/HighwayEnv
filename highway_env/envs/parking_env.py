@@ -14,12 +14,12 @@ from highway_env.road.objects import Landmark
 
 class ParkingEnv(AbstractEnv, GoalEnv):
     """
-        A continuous control environment.
+    A continuous control environment.
 
-        It implements a reach-type task, where the agent observes their position and speed and must
-        control their acceleration and steering so as to reach a given goal.
+    It implements a reach-type task, where the agent observes their position and speed and must
+    control their acceleration and steering so as to reach a given goal.
 
-        Credits to Munir Jojo-Verge for the idea and initial implementation.
+    Credits to Munir Jojo-Verge for the idea and initial implementation.
     """
     REWARD_WEIGHTS: ndarray = np.array([1, 0.3, 0, 0, 0.02, 0.02])
     SUCCESS_GOAL_REWARD: float = 0.12
@@ -59,8 +59,9 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _create_road(self, spots: int = 15) -> None:
         """
-            Create a road composed of straight adjacent lanes.
-            :param spots: number of spots in the parking
+        Create a road composed of straight adjacent lanes.
+
+        :param spots: number of spots in the parking
         """
         net = RoadNetwork()
         width = 4.0
@@ -79,7 +80,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _create_vehicles(self) -> None:
         """
-            Create some new random vehicles of a given type, and add them on the road.
+        Create some new random vehicles of a given type, and add them on the road.
         """
         self.vehicle = Vehicle(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)
         self.road.vehicles.append(self.vehicle)
@@ -90,9 +91,10 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict, p: float = 0.5) -> float:
         """
-            Proximity to the goal is rewarded
+        Proximity to the goal is rewarded
 
-            We use a weighted p-norm
+        We use a weighted p-norm
+
         :param achieved_goal: the goal that was achieved
         :param desired_goal: the goal that was desired
         :param dict info: any supplementary information
@@ -110,7 +112,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _is_terminal(self) -> bool:
         """
-            The episode is over if the ego vehicle crashed or the goal is reached.
+        The episode is over if the ego vehicle crashed or the goal is reached.
         """
         obs = self.observation.observe()
         return self.vehicle.crashed or self._is_success(obs['achieved_goal'], obs['desired_goal'])
