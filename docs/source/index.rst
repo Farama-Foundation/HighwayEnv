@@ -29,14 +29,6 @@ The purpose of this documentation is to provide:
 - a description of the environments, and how they can be configured
 - instructions on how to contribute and add your own environments
 
-
-.. _index_installation_instructions:
-
-Installation instructions
-=========================
-
-See the `installation instructions <https://github.com/eleurent/highway-env#installation>`_ on GitHub.
-
 .. _index_how_to_cite_this_work:
 
 How to cite this work?
@@ -62,9 +54,7 @@ Documentation contents
 .. toctree::
   :maxdepth: 2
 
-  environments/index
-  observations/index
-  actions/index
-  dynamics/index
-  rewards/index
+  installation
+  quickstart
+  user_guide
   bibliography/index
