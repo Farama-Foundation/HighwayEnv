@@ -85,7 +85,6 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#making-an-environment">Making an environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#training-an-agent">Training an agent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#all-the-environments">All the environments</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="environments/highway.html">Highway</a></li>
 <li class="toctree-l3"><a class="reference internal" href="environments/merge.html">Merge</a></li>
@@ -94,6 +93,8 @@
 <li class="toctree-l3"><a class="reference internal" href="environments/intersection.html">Intersection</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#training-an-agent">Training an agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#try-it-on-google-colab">Try it on Google Colab!</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
@@ -180,14 +181,27 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="all-the-environments">
+<h2>All the environments<a class="headerlink" href="#all-the-environments" title="Permalink to this headline">¶</a></h2>
+<p>You can try all the environments available:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="environments/highway.html">Highway</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments/merge.html">Merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments/roundabout.html">Roundabout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments/parking.html">Parking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments/intersection.html">Intersection</a></li>
+</ul>
+</div>
+</div>
 <div class="section" id="training-an-agent">
 <h2>Training an agent<a class="headerlink" href="#training-an-agent" title="Permalink to this headline">¶</a></h2>
 <p>To train Reinforcement Learing agents, libraries such as <a class="reference external" href="https://github.com/eleurent/rl-agents">rl-agents</a>,
 <a class="reference external" href="https://github.com/openai/baselines">baselines</a> or <a class="reference external" href="https://github.com/hill-a/stable-baselines">stable-baselines</a>
 can be used:</p>
-<div class="figure align-default" id="id1">
+<div class="figure align-default" id="id5">
 <img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/parking-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/parking-env.gif" />
-<p class="caption"><span class="caption-text">The highway-parking-v0 environment trained with HER.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The highway-parking-v0 environment trained with HER.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">highway_env</span>
@@ -231,18 +245,23 @@ can be used:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="all-the-environments">
-<h2>All the environments<a class="headerlink" href="#all-the-environments" title="Permalink to this headline">¶</a></h2>
-<p>You can try all the environments available:</p>
-<div class="toctree-wrapper compound">
+<div class="section" id="try-it-on-google-colab">
+<h2>Try it on Google Colab!<a class="headerlink" href="#try-it-on-google-colab" title="Permalink to this headline">¶</a></h2>
+<p>Use these notebooks to train driving policies on <cite>highway-env</cite>.</p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="environments/highway.html">Highway</a></li>
-<li class="toctree-l1"><a class="reference internal" href="environments/merge.html">Merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="environments/roundabout.html">Roundabout</a></li>
-<li class="toctree-l1"><a class="reference internal" href="environments/parking.html">Parking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="environments/intersection.html">Intersection</a></li>
+<li><p>A Model-based Reinforcement Learning tutorial on Parking <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb"><img alt="parking_mb" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>A tutorial written for <a class="reference external" href="https://rlss.inria.fr/">RLSS 2019</a> and demonstrating the principle of model-based
+reinforcement learning on the <cite>parking-v0</cite> task.</p>
+</li>
+<li><p>Trajectory Planning on Highway <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb"><img alt="planning_hw" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>Plan a trajectory on <cite>highway-v0</cite> using the <cite>OPD</cite> <a class="bibtex reference internal" href="bibliography/index.html#hren2008" id="id1">[HM08]</a> implementation from
+<a class="reference external" href="https://github.com/eleurent/rl-agents">rl-agents</a>.</p>
+</li>
+<li><p>Parking with Hindsight Experience Replay <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb"><img alt="parking_her" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>Train a goal-conditioned <cite>parking-v0</cite> policy using the <a class="bibtex reference internal" href="bibliography/index.html#andrychowicz2017" id="id3">[AWR+17]</a> implementation
+from <a class="reference external" href="https://github.com/hill-a/stable-baselines">stable-baselines</a>.</p>
+</li>
 </ul>
-</div>
 </div>
 </div>
 
