@@ -7,7 +7,7 @@ Merge
 
 In this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high speed while making room for the vehicles so that they can safely merge in the traffic.
 
-.. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/merge.gif
+.. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/merge-env.gif
    :width: 80%
    :align: center
    :name: fig:merge_env
