@@ -87,7 +87,14 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../configuration.html">Configuring an environment</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Observations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#kinematics">Kinematics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kinematics">Kinematics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-configuration">Example configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#occupancy-grid">Occupancy grid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Example configuration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-highway_env.envs.common.observation">API</a></li>
 </ul>
 </li>
@@ -190,7 +197,7 @@
         <span class="p">},</span>
         <span class="s2">&quot;grid_size&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="o">-</span><span class="mf">27.5</span><span class="p">,</span> <span class="mf">27.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">27.5</span><span class="p">,</span> <span class="mf">27.5</span><span class="p">]],</span>
         <span class="s2">&quot;grid_step&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
-        <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="n">false</span>
+        <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">False</span>
     <span class="p">}</span>
 <span class="p">})</span>
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -204,7 +211,8 @@
 <div class="section" id="kinematics">
 <h2>Kinematics<a class="headerlink" href="#kinematics" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.observation.KinematicObservation" title="highway_env.envs.common.observation.KinematicObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">KinematicObservation</span></code></a> is a <span class="math notranslate nohighlight">\(V\times F\)</span> array that describes a
-list of <span class="math notranslate nohighlight">\(V\)</span> nearby vehicles by some features of size <span class="math notranslate nohighlight">\(F\)</span>. For instance:</p>
+list of <span class="math notranslate nohighlight">\(V\)</span> nearby vehicles by a set of features of size <span class="math notranslate nohighlight">\(F\)</span>, listed in the <code class="docutils literal notranslate"><span class="pre">&quot;features&quot;</span></code> configuration field.
+For instance:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 22%" />
@@ -254,6 +262,10 @@ list of <span class="math notranslate nohighlight">\(V\)</span> nearby vehicles 
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ego-vehicle is always described in the first row</p>
+</div>
 <p>If configured with <code class="docutils literal notranslate"><span class="pre">normalized=True</span></code> (default), the observation is normalized within a fixed range, which gives for
 the range [100, 100, 20, 20]:</p>
 <table class="docutils align-default">
@@ -305,10 +317,6 @@ the range [100, 100, 20, 20]:</p>
 </tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The ego-vehicle is always described in the first row</p>
-</div>
 <p>If configured with <code class="docutils literal notranslate"><span class="pre">absolute=False</span></code>, the coordinates are relative to the ego-vehicle, except for the ego-vehicle
 which stays absolute.</p>
 <table class="docutils align-default">
@@ -362,10 +370,140 @@ which stays absolute.</p>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The number <span class="math notranslate nohighlight">\(V\)</span> of vehicles is constant and configured by the <code class="docutils literal notranslate"><span class="pre">vehicles_count</span></code> parameter, so that the
+<p>The number <span class="math notranslate nohighlight">\(V\)</span> of vehicles is constant and configured by the <code class="docutils literal notranslate"><span class="pre">vehicles_count</span></code> field, so that the
 observation has a fixed size. If fewer vehicles than <code class="docutils literal notranslate"><span class="pre">vehicles_count</span></code> are observed, the last rows are placeholders
 filled with zeros. The <cite>presence</cite> feature can be used to detect such cases, since it is set to 1 for any observed
 vehicle and 0 for placeholders.</p>
+</div>
+<div class="section" id="example-configuration">
+<h3>Example configuration<a class="headerlink" href="#example-configuration" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;presence&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;vx&quot;</span><span class="p">,</span> <span class="s2">&quot;vy&quot;</span><span class="p">,</span> <span class="s2">&quot;cos_h&quot;</span><span class="p">,</span> <span class="s2">&quot;sin_h&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;features_range&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="s2">&quot;vx&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+        <span class="s2">&quot;vy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="s2">&quot;sorted&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="occupancy-grid">
+<h2>Occupancy grid<a class="headerlink" href="#occupancy-grid" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.OccupancyGridObservation" title="highway_env.envs.common.observation.OccupancyGridObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">OccupancyGridObservation</span></code></a> is a <span class="math notranslate nohighlight">\(W\times H\times F\)</span> array,
+that represents a grid of shape <span class="math notranslate nohighlight">\(W\times H\)</span> discretising the space <span class="math notranslate nohighlight">\((X,Y)\)</span> around the ego-vehicle in
+uniform rectangle cells. Each cell is described by <span class="math notranslate nohighlight">\(F\)</span> features, listed in the <code class="docutils literal notranslate"><span class="pre">&quot;features&quot;</span></code> configuration field.
+The grid size and resolution is defined by the <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> and <code class="docutils literal notranslate"><span class="pre">grid_steps</span></code> configuration fields.</p>
+<p>For instance, the channel corresponding to the <code class="docutils literal notranslate"><span class="pre">presence</span></code> feature may look like this:</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">One vehicle is close to the north, and one is farther to the east.</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<p>The corresponding <span class="math notranslate nohighlight">\(v_x\)</span> feature may look like this:</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">The north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>-0.1</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="id2">
+<h3>Example configuration<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;OccupancyGrid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;presence&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;vx&quot;</span><span class="p">,</span> <span class="s2">&quot;vy&quot;</span><span class="p">,</span> <span class="s2">&quot;cos_h&quot;</span><span class="p">,</span> <span class="s2">&quot;sin_h&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;features_range&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="s2">&quot;vx&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+        <span class="s2">&quot;vy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;grid_size&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="o">-</span><span class="mf">27.5</span><span class="p">,</span> <span class="mf">27.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">27.5</span><span class="p">,</span> <span class="mf">27.5</span><span class="p">]],</span>
+    <span class="s2">&quot;grid_step&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">False</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="module-highway_env.envs.common.observation">
