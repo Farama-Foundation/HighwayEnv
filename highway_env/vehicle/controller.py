@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import numpy as np
 import copy
@@ -10,12 +10,14 @@ from highway_env.vehicle.kinematics import Vehicle
 
 class ControlledVehicle(Vehicle):
     """
-        A vehicle piloted by two low-level controller, allowing high-level actions
-        such as cruise control and lane changes.
+    A vehicle piloted by two low-level controller, allowing high-level actions such as cruise control and lane changes.
 
-        - The longitudinal controller is a speed controller;
-        - The lateral controller is a heading controller cascaded with a lateral position controller.
+    - The longitudinal controller is a speed controller;
+    - The lateral controller is a heading controller cascaded with a lateral position controller.
     """
+
+    target_speed: float
+    """ Desired velocity"""
 
     TAU_A = 0.6  # [s]
     TAU_DS = 0.2  # [s]
@@ -24,7 +26,6 @@ class ControlledVehicle(Vehicle):
     KP_HEADING = 1 / TAU_DS
     KP_LATERAL = 1/3 * KP_HEADING  # [1/s]
     MAX_STEERING_ANGLE = np.pi / 3  # [rad]
-
     DELTA_SPEED = 5  # [m/s]
 
     def __init__(self,

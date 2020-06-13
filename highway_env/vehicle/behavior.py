@@ -12,19 +12,30 @@ from highway_env.road.objects import RoadObject
 
 class IDMVehicle(ControlledVehicle):
     """
-        A vehicle using both a longitudinal and a lateral decision policies.
+    A vehicle using both a longitudinal and a lateral decision policies.
 
-        - Longitudinal: the IDM model computes an acceleration given the preceding vehicle's distance and speed.
-        - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.
-        """
+    - Longitudinal: the IDM model computes an acceleration given the preceding vehicle's distance and speed.
+    - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.
+    """
 
     # Longitudinal policy parameters
     ACC_MAX = 6.0  # [m/s2]
+    """Maximum acceleration"""
+
     COMFORT_ACC_MAX = 3.0  # [m/s2]
+    """Desired maximum acceleration"""
+
     COMFORT_ACC_MIN = -5.0  # [m/s2]
+    """Desired maximum deceleration"""
+
     DISTANCE_WANTED = 5.0 + ControlledVehicle.LENGTH  # [m]
+    """Desired jam distance to the front vehicle"""
+
     TIME_WANTED = 1.5  # [s]
+    """Desired time gap to the front vehicle"""
+
     DELTA = 4.0  # []
+    """Exponent of the velocity term"""
 
     # Lateral policy parameters
     POLITENESS = 0.  # in [0, 1]
