@@ -1,9 +1,11 @@
 .. _vehicle_kinematics:
 
+.. py:module::highway_env.vehicle.kinematics
+
 Kinematics
 ==================
 
-The vehicles kinematics are represented in the `Vehicle` class by the *Kinematic Bicycle Model* :cite:`Polack2017`.
+The vehicles kinematics are represented in the :py:class:`~highway_env.vehicle.kinematics.Vehicle` class by the *Kinematic Bicycle Model* :cite:`Polack2017`.
 
 .. math::
         \dot{x}&=v\cos(\psi+\beta) \\
@@ -20,6 +22,8 @@ where
 - :math:`a` is the acceleration command;
 - :math:`\beta` is the slip angle at the center of gravity;
 - :math:`\delta` is the front wheel angle used as a steering command.
+
+These calculations appear in the :py:meth:`~highway_env.vehicle.kinematics.Vehicle.step` method.
 
 API
 ***

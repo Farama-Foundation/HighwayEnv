@@ -180,8 +180,7 @@
 <dt id="highway_env.vehicle.controller.ControlledVehicle">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.vehicle.controller.</code><code class="sig-name descname">ControlledVehicle</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, position: Union[numpy.ndarray, Sequence[float]], heading: float = 0, speed: float = 0, target_lane_index: Tuple[str, str, int] = None, target_speed: float = None, route: List[Tuple[str, str, int]] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#ControlledVehicle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="kinematics.html#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.kinematics.Vehicle</span></code></a></p>
-<p>A vehicle piloted by two low-level controller, allowing high-level actions
-such as cruise control and lane changes.</p>
+<p>A vehicle piloted by two low-level controller, allowing high-level actions such as cruise control and lane changes.</p>
 <ul class="simple">
 <li><p>The longitudinal controller is a speed controller;</p></li>
 <li><p>The lateral controller is a heading controller cascaded with a lateral position controller.</p></li>
@@ -230,6 +229,12 @@ such as cruise control and lane changes.</p>
 <dt id="highway_env.vehicle.controller.ControlledVehicle.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, position: Union[numpy.ndarray, Sequence[float]], heading: float = 0, speed: float = 0, target_lane_index: Tuple[str, str, int] = None, target_speed: float = None, route: List[Tuple[str, str, int]] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#ControlledVehicle.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.controller.ControlledVehicle.target_speed">
+<code class="sig-name descname">target_speed</code><em class="property">: float</em><em class="property"> = None</em><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.target_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Desired velocity</p>
 </dd></dl>
 
 <dl class="method">
@@ -386,6 +391,11 @@ Erase current planned route.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="highway_env.vehicle.controller.ControlledVehicle.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'target_speed': &lt;class 'float'&gt;}</em><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="highway_env.vehicle.controller.ControlledVehicle.__class__">
 <code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.__class__" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
@@ -399,7 +409,7 @@ Erase current planned route.</p>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.controller.ControlledVehicle.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.controller', '__doc__': '\n        A vehicle piloted by two low-level controller, allowing high-level actions\n        such as cruise control and lane changes.\n\n        - The longitudinal controller is a speed controller;\n        - The lateral controller is a heading controller cascaded with a lateral position controller.\n    ', 'TAU_A': 0.6, 'TAU_DS': 0.2, 'PURSUIT_TAU': 0.30000000000000004, 'KP_A': 1.6666666666666667, 'KP_HEADING': 5.0, 'KP_LATERAL': 1.6666666666666665, 'MAX_STEERING_ANGLE': 1.0471975511965976, 'DELTA_SPEED': 5, '__init__': &lt;function ControlledVehicle.__init__&gt;, 'create_from': &lt;classmethod object&gt;, 'plan_route_to': &lt;function ControlledVehicle.plan_route_to&gt;, 'act': &lt;function ControlledVehicle.act&gt;, 'follow_road': &lt;function ControlledVehicle.follow_road&gt;, 'steering_control': &lt;function ControlledVehicle.steering_control&gt;, 'speed_control': &lt;function ControlledVehicle.speed_control&gt;, 'get_routes_at_intersection': &lt;function ControlledVehicle.get_routes_at_intersection&gt;, 'set_route_at_intersection': &lt;function ControlledVehicle.set_route_at_intersection&gt;, 'predict_trajectory_constant_speed': &lt;function ControlledVehicle.predict_trajectory_constant_speed&gt;})</em><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.controller', '__annotations__': {'target_speed': &lt;class 'float'&gt;}, '__doc__': '\n    A vehicle piloted by two low-level controller, allowing high-level actions such as cruise control and lane changes.\n\n    - The longitudinal controller is a speed controller;\n    - The lateral controller is a heading controller cascaded with a lateral position controller.\n    ', 'TAU_A': 0.6, 'TAU_DS': 0.2, 'PURSUIT_TAU': 0.30000000000000004, 'KP_A': 1.6666666666666667, 'KP_HEADING': 5.0, 'KP_LATERAL': 1.6666666666666665, 'MAX_STEERING_ANGLE': 1.0471975511965976, 'DELTA_SPEED': 5, '__init__': &lt;function ControlledVehicle.__init__&gt;, 'create_from': &lt;classmethod object&gt;, 'plan_route_to': &lt;function ControlledVehicle.plan_route_to&gt;, 'act': &lt;function ControlledVehicle.act&gt;, 'follow_road': &lt;function ControlledVehicle.follow_road&gt;, 'steering_control': &lt;function ControlledVehicle.steering_control&gt;, 'speed_control': &lt;function ControlledVehicle.speed_control&gt;, 'get_routes_at_intersection': &lt;function ControlledVehicle.get_routes_at_intersection&gt;, 'set_route_at_intersection': &lt;function ControlledVehicle.set_route_at_intersection&gt;, 'predict_trajectory_constant_speed': &lt;function ControlledVehicle.predict_trajectory_constant_speed&gt;})</em><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -757,28 +767,6 @@ Else, forward action to the ControlledVehicle handler.</p>
 <dd class="field-even"><p>the corresponding speed [m/s]</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.controller.MDPVehicle.speed_to_index">
-<em class="property">classmethod </em><code class="sig-name descname">speed_to_index</code><span class="sig-paren">(</span><em class="sig-param">speed: float</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#MDPVehicle.speed_to_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.speed_to_index" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Find the index of the closest speed allowed to a given speed.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>speed</strong> – an input speed [m/s]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the index of the closest speed allowed []</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.controller.MDPVehicle.speed_index">
-<code class="sig-name descname">speed_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#MDPVehicle.speed_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.speed_index" title="Permalink to this definition">¶</a></dt>
-<dd><p>The index of current speed</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1183,27 +1171,6 @@ vehicle in the road with density based on the number of lanes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="highway_env.vehicle.controller.MDPVehicle.predict_trajectory">
-<code class="sig-name descname">predict_trajectory</code><span class="sig-paren">(</span><em class="sig-param">actions: List</em>, <em class="sig-param">action_duration: float</em>, <em class="sig-param">trajectory_timestep: float</em>, <em class="sig-param">dt: float</em><span class="sig-paren">)</span> &#x2192; List[highway_env.vehicle.controller.ControlledVehicle]<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#MDPVehicle.predict_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.predict_trajectory" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Predict the future trajectory of the vehicle given a sequence of actions.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>actions</strong> – a sequence of future actions.</p></li>
-<li><p><strong>action_duration</strong> – the duration of each action.</p></li>
-<li><p><strong>trajectory_timestep</strong> – the duration between each save of the vehicle state.</p></li>
-<li><p><strong>dt</strong> – the timestep of the simulation</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the sequence of future states</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="highway_env.vehicle.controller.MDPVehicle.predict_trajectory_constant_speed">
 <code class="sig-name descname">predict_trajectory_constant_speed</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[List[numpy.ndarray], List[float]]<a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.predict_trajectory_constant_speed" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
@@ -1246,6 +1213,22 @@ Erase current planned route.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an acceleration command [m/s2]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.controller.MDPVehicle.speed_to_index">
+<em class="property">classmethod </em><code class="sig-name descname">speed_to_index</code><span class="sig-paren">(</span><em class="sig-param">speed: float</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#MDPVehicle.speed_to_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.speed_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Find the index of the closest speed allowed to a given speed.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>speed</strong> – an input speed [m/s]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the index of the closest speed allowed []</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1297,6 +1280,33 @@ The vehicle’s current lane is updated.</p>
 <dt id="highway_env.vehicle.controller.MDPVehicle.velocity">
 <em class="property">property </em><code class="sig-name descname">velocity</code><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.velocity" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.controller.MDPVehicle.speed_index">
+<code class="sig-name descname">speed_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#MDPVehicle.speed_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.speed_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>The index of current speed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.vehicle.controller.MDPVehicle.predict_trajectory">
+<code class="sig-name descname">predict_trajectory</code><span class="sig-paren">(</span><em class="sig-param">actions: List</em>, <em class="sig-param">action_duration: float</em>, <em class="sig-param">trajectory_timestep: float</em>, <em class="sig-param">dt: float</em><span class="sig-paren">)</span> &#x2192; List[highway_env.vehicle.controller.ControlledVehicle]<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#MDPVehicle.predict_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.predict_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Predict the future trajectory of the vehicle given a sequence of actions.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actions</strong> – a sequence of future actions.</p></li>
+<li><p><strong>action_duration</strong> – the duration of each action.</p></li>
+<li><p><strong>trajectory_timestep</strong> – the duration between each save of the vehicle state.</p></li>
+<li><p><strong>dt</strong> – the timestep of the simulation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the sequence of future states</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

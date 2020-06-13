@@ -165,7 +165,7 @@
 <span class="n">Observation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 
 
-<span class="k">class</span> <span class="nc">AbstractEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractEnv"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv">[docs]</a><span class="k">class</span> <span class="nc">AbstractEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A generic environment for various tasks involving a vehicle driving on a road.</span>
 
@@ -196,7 +196,7 @@
     <span class="n">STEERING_RANGE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span>
     <span class="n">ACCELERATION_RANGE</span> <span class="o">=</span> <span class="mf">5.0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.__init__"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Configuration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
@@ -228,9 +228,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">rendering_mode</span> <span class="o">=</span> <span class="s1">&#39;human&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enable_auto_render</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
 
-    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="AbstractEnv.default_config"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.default_config">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Default environment configuration.</span>
@@ -255,43 +255,43 @@
             <span class="s2">&quot;show_trajectories&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;render_agent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="s2">&quot;offscreen_rendering&quot;</span><span class="p">:</span> <span class="kc">False</span>
-        <span class="p">}</span>
+        <span class="p">}</span></div>
 
-    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractEnv.seed"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">seeding</span><span class="o">.</span><span class="n">np_random</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">seed</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">seed</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.configure"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">define_spaces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.define_spaces"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.define_spaces">[docs]</a>    <span class="k">def</span> <span class="nf">define_spaces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observation</span> <span class="o">=</span> <span class="n">observation_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;observation&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="o">.</span><span class="n">space</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Discrete&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS</span><span class="p">))</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Continuous&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv._reward"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv._reward">[docs]</a>    <span class="k">def</span> <span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the reward associated with performing a given action and ending up in the current state.</span>
 
 <span class="sd">        :param action: the last action performed</span>
 <span class="sd">        :return: the reward</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="k">def</span> <span class="nf">_is_terminal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv._is_terminal"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv._is_terminal">[docs]</a>    <span class="k">def</span> <span class="nf">_is_terminal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether the current state is a terminal state</span>
 
 <span class="sd">        :return:is the state terminal</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="k">def</span> <span class="nf">_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv._cost"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv._cost">[docs]</a>    <span class="k">def</span> <span class="nf">_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A constraint metric, for budgeted MDP.</span>
 
@@ -299,9 +299,9 @@
 <span class="sd">        :param action: the last action performed</span>
 <span class="sd">        :return: the constraint signal, the alternate (constraint-free) reward</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Observation</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.reset"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Observation</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the environment to it&#39;s initial configuration</span>
 
@@ -310,9 +310,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">define_spaces</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Observation</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractEnv.step"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Observation</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform an action and step the environment dynamics.</span>
 
@@ -341,9 +341,9 @@
         <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminal</span><span class="p">,</span> <span class="n">info</span>
+        <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminal</span><span class="p">,</span> <span class="n">info</span></div>
 
-    <span class="k">def</span> <span class="nf">_simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv._simulate"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv._simulate">[docs]</a>    <span class="k">def</span> <span class="nf">_simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform several steps of simulation with constant action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -370,9 +370,9 @@
             <span class="c1"># Stop at terminal states</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_terminal</span><span class="p">():</span>
                 <span class="k">break</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">enable_auto_render</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enable_auto_render</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;human&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractEnv.render"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;human&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Render the environment.</span>
 
@@ -395,9 +395,9 @@
         <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">:</span>
             <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">get_image</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">image</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">should_update_rendering</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">should_update_rendering</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.close"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Close the environment.</span>
 
@@ -406,9 +406,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-    <span class="k">def</span> <span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractEnv.get_available_actions"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.get_available_actions">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the list of currently available actions.</span>
 
@@ -429,9 +429,9 @@
             <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS_INDEXES</span><span class="p">[</span><span class="s1">&#39;FASTER&#39;</span><span class="p">])</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed_index</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS_INDEXES</span><span class="p">[</span><span class="s1">&#39;SLOWER&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">actions</span>
+        <span class="k">return</span> <span class="n">actions</span></div>
 
-    <span class="k">def</span> <span class="nf">_automatic_rendering</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv._automatic_rendering"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv._automatic_rendering">[docs]</a>    <span class="k">def</span> <span class="nf">_automatic_rendering</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Automatically render the intermediate frames while an action is still ongoing.</span>
 
@@ -446,9 +446,9 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">automatic_rendering_callback</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">automatic_rendering_callback</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rendering_mode</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rendering_mode</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.simplify"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.simplify">[docs]</a>    <span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a simplified copy of the environment where distant vehicles have been removed from the road.</span>
 
@@ -460,9 +460,9 @@
         <span class="n">state_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span> <span class="o">=</span> <span class="p">[</span><span class="n">state_copy</span><span class="o">.</span><span class="n">vehicle</span><span class="p">]</span> <span class="o">+</span> <span class="n">state_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">close_vehicles_to</span><span class="p">(</span>
             <span class="n">state_copy</span><span class="o">.</span><span class="n">vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PERCEPTION_DISTANCE</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">state_copy</span>
+        <span class="k">return</span> <span class="n">state_copy</span></div>
 
-    <span class="k">def</span> <span class="nf">change_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_class_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.change_vehicles"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.change_vehicles">[docs]</a>    <span class="k">def</span> <span class="nf">change_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_class_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the type of all vehicles on the road</span>
 
@@ -477,9 +477,9 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vehicles</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">vehicle</span><span class="p">:</span>
                 <span class="n">vehicles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">vehicle_class</span><span class="o">.</span><span class="n">create_from</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">env_copy</span>
+        <span class="k">return</span> <span class="n">env_copy</span></div>
 
-    <span class="k">def</span> <span class="nf">set_preferred_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preferred_lane</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.set_preferred_lane"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.set_preferred_lane">[docs]</a>    <span class="k">def</span> <span class="nf">set_preferred_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preferred_lane</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">preferred_lane</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
@@ -487,42 +487,42 @@
                     <span class="n">v</span><span class="o">.</span><span class="n">route</span> <span class="o">=</span> <span class="p">[(</span><span class="n">lane</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lane</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">preferred_lane</span><span class="p">)</span> <span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">route</span><span class="p">]</span>
                     <span class="c1"># Vehicle with lane preference are also less cautious</span>
                     <span class="n">v</span><span class="o">.</span><span class="n">LANE_CHANGE_MAX_BRAKING_IMPOSED</span> <span class="o">=</span> <span class="mi">1000</span>
-        <span class="k">return</span> <span class="n">env_copy</span>
+        <span class="k">return</span> <span class="n">env_copy</span></div>
 
-    <span class="k">def</span> <span class="nf">set_route_at_intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.set_route_at_intersection"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.set_route_at_intersection">[docs]</a>    <span class="k">def</span> <span class="nf">set_route_at_intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">IDMVehicle</span><span class="p">):</span>
                 <span class="n">v</span><span class="o">.</span><span class="n">set_route_at_intersection</span><span class="p">(</span><span class="n">_to</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">env_copy</span>
+        <span class="k">return</span> <span class="n">env_copy</span></div>
 
-    <span class="k">def</span> <span class="nf">set_vehicle_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.set_vehicle_field"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.set_vehicle_field">[docs]</a>    <span class="k">def</span> <span class="nf">set_vehicle_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
         <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">args</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">LinearVehicle</span><span class="p">):</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">env_copy</span>
+        <span class="k">return</span> <span class="n">env_copy</span></div>
 
-    <span class="k">def</span> <span class="nf">call_vehicle_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">object</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.call_vehicle_method"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.call_vehicle_method">[docs]</a>    <span class="k">def</span> <span class="nf">call_vehicle_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">object</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
         <span class="n">method</span><span class="p">,</span> <span class="n">method_args</span> <span class="o">=</span> <span class="n">args</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
                 <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="p">)(</span><span class="o">*</span><span class="n">method_args</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">env_copy</span>
+        <span class="k">return</span> <span class="n">env_copy</span></div>
 
-    <span class="k">def</span> <span class="nf">randomize_behaviour</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractEnv.randomize_behaviour"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.randomize_behaviour">[docs]</a>    <span class="k">def</span> <span class="nf">randomize_behaviour</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">IDMVehicle</span><span class="p">):</span>
                 <span class="n">v</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">env_copy</span>
+        <span class="k">return</span> <span class="n">env_copy</span></div>
 
-    <span class="k">def</span> <span class="nf">to_finite_mdp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">finite_mdp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_quantization</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="AbstractEnv.to_finite_mdp"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.to_finite_mdp">[docs]</a>    <span class="k">def</span> <span class="nf">to_finite_mdp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">finite_mdp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_quantization</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])</span></div>
 
-    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractEnv.__deepcopy__"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.__deepcopy__">[docs]</a>    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform a deep copy but without copying the environment viewer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -534,7 +534,7 @@
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">memo</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span></div></div>
 </pre></div>
 
            </div>

@@ -173,18 +173,43 @@
             
   <div class="section" id="behavior">
 <span id="vehicle-behavior"></span><h1>Behavior<a class="headerlink" href="#behavior" title="Permalink to this headline">¶</a></h1>
-<p>The vehicles populating the highway follow simple and realistic behaviours that dictate how they accelerate and
-steer on the road.</p>
-<p>In the <code class="xref py py-class docutils literal notranslate"><span class="pre">IDMVehicle</span></code> class,</p>
+<p>Other simulated vehicles follow simple and realistic behaviors that dictate how they accelerate and
+steer on the road. They are implemented in the <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle" title="highway_env.vehicle.behavior.IDMVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDMVehicle</span></code></a> class.</p>
+<div class="section" id="longitudinal-behavior">
+<h2>Longitudinal Behavior<a class="headerlink" href="#longitudinal-behavior" title="Permalink to this headline">¶</a></h2>
+<p>The acceleration of the vehicle is given by the <em>Intelligent Driver Model</em> (IDM) from <a class="bibtex reference internal" href="../../bibliography/index.html#treiber2000" id="id1">[THH00]</a>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\dot{v} &amp;= a\left[1-\left(\frac{v}{v_0}\right)^\delta - \left(\frac{d^*}{d}\right)^2\right] \\
+d^* &amp;= d_0 + Tv + \frac{v\Delta v}{2\sqrt{ab}} \\\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(v\)</span> is the vehicle velocity, <span class="math notranslate nohighlight">\(d\)</span> is the distance to its front vehicle.
+The dynamics are parametrised by:</p>
 <ul class="simple">
-<li><p>Longitudinal Model: the acceleration of the vehicle is given by the Intelligent Driver Model (IDM) from <a class="bibtex reference internal" href="../../bibliography/index.html#treiber2000" id="id1">[THH00]</a>.</p></li>
-<li><p>Lateral Model: the discrete lane change decisions are given by the MOBIL model from</p></li>
+<li><p><span class="math notranslate nohighlight">\(v_0\)</span> the desired velocity, as <code class="xref py py-attr docutils literal notranslate"><span class="pre">target_velocity</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(T\)</span> the desired time gap, as <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.TIME_WANTED" title="highway_env.vehicle.behavior.IDMVehicle.TIME_WANTED"><code class="xref py py-attr docutils literal notranslate"><span class="pre">TIME_WANTED</span></code></a></p></li>
+<li><p><span class="math notranslate nohighlight">\(d_0\)</span> the jam distance, as <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.DISTANCE_WANTED" title="highway_env.vehicle.behavior.IDMVehicle.DISTANCE_WANTED"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DISTANCE_WANTED</span></code></a></p></li>
+<li><p><span class="math notranslate nohighlight">\(\delta\)</span> the velocity exponent, as <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.DELTA" title="highway_env.vehicle.behavior.IDMVehicle.DELTA"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DELTA</span></code></a></p></li>
 </ul>
-<p>In the <a class="reference internal" href="#highway_env.vehicle.behavior.LinearVehicle" title="highway_env.vehicle.behavior.LinearVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.behavior.LinearVehicle</span></code></a> class, the longitudinal and lateral behaviours
-are defined as linear weightings of several features, such as the distance and speed difference to the leading
+<p>It is implemented in <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.acceleration" title="highway_env.vehicle.behavior.IDMVehicle.acceleration"><code class="xref py py-meth docutils literal notranslate"><span class="pre">acceleration()</span></code></a> method.</p>
+</div>
+<div class="section" id="lateral-behavior">
+<h2>Lateral Behavior<a class="headerlink" href="#lateral-behavior" title="Permalink to this headline">¶</a></h2>
+<p>The discrete lane change decisions are given by the <em>Minimizing Overall Braking Induced by Lane change</em> (MOBIL) model from <a class="bibtex reference internal" href="../../bibliography/index.html#kesting2007" id="id2">[KTH07]</a>.
+The model is parametrised by:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.POLITENESS" title="highway_env.vehicle.behavior.IDMVehicle.POLITENESS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">POLITENESS</span></code></a>, a politeness coefficient</p></li>
+<li><p><a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MIN_ACC_GAIN" title="highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MIN_ACC_GAIN"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LANE_CHANGE_MIN_ACC_GAIN</span></code></a>, the acceleration gain required to trigger a lane change</p></li>
+<li><p><a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MAX_BRAKING_IMPOSED" title="highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MAX_BRAKING_IMPOSED"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LANE_CHANGE_MAX_BRAKING_IMPOSED</span></code></a>, the maximum braking imposed to a vehicle in a cut-in</p></li>
+<li><p><a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_DELAY" title="highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_DELAY"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LANE_CHANGE_DELAY</span></code></a>, the minimum delay between two lane changes</p></li>
+</ul>
+<p>It is implemented in the <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.mobil" title="highway_env.vehicle.behavior.IDMVehicle.mobil"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mobil()</span></code></a> method.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the <a class="reference internal" href="#highway_env.vehicle.behavior.LinearVehicle" title="highway_env.vehicle.behavior.LinearVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearVehicle</span></code></a> class, the longitudinal and lateral behaviours
+are approximated as linear weightings of several features, such as the distance and speed difference to the leading
 vehicle.</p>
+</div>
 <div class="section" id="module-highway_env.vehicle.behavior">
-<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.vehicle.behavior" title="Permalink to this headline">¶</a></h2>
+<span id="api"></span><h3>API<a class="headerlink" href="#module-highway_env.vehicle.behavior" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="highway_env.vehicle.behavior.IDMVehicle">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.vehicle.behavior.</code><code class="sig-name descname">IDMVehicle</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, position: Union[numpy.ndarray, Sequence[float]], heading: float = 0, speed: float = 0, target_lane_index: int = None, target_speed: float = None, route: List[Tuple[str, str, int]] = None, enable_lane_change: bool = True, timer: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle" title="Permalink to this definition">¶</a></dt>
@@ -197,32 +222,38 @@ vehicle.</p>
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.ACC_MAX">
 <code class="sig-name descname">ACC_MAX</code><em class="property"> = 6.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.ACC_MAX" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Maximum acceleration</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MAX">
 <code class="sig-name descname">COMFORT_ACC_MAX</code><em class="property"> = 3.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MAX" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Desired maximum acceleration</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MIN">
 <code class="sig-name descname">COMFORT_ACC_MIN</code><em class="property"> = -5.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MIN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Desired maximum deceleration</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.DISTANCE_WANTED">
 <code class="sig-name descname">DISTANCE_WANTED</code><em class="property"> = 10.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.DISTANCE_WANTED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Desired jam distance to the front vehicle</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.TIME_WANTED">
 <code class="sig-name descname">TIME_WANTED</code><em class="property"> = 1.5</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.TIME_WANTED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Desired time gap to the front vehicle</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.DELTA">
 <code class="sig-name descname">DELTA</code><em class="property"> = 4.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.DELTA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Exponent of the velocity term</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.POLITENESS">
@@ -475,6 +506,11 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="highway_env.vehicle.behavior.IDMVehicle.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'target_speed': &lt;class 'float'&gt;}</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.__class__">
 <code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.__class__" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
@@ -488,7 +524,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.behavior', '__doc__': &quot;\n        A vehicle using both a longitudinal and a lateral decision policies.\n\n        - Longitudinal: the IDM model computes an acceleration given the preceding vehicle's distance and speed.\n        - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.\n        &quot;, 'ACC_MAX': 6.0, 'COMFORT_ACC_MAX': 3.0, 'COMFORT_ACC_MIN': -5.0, 'DISTANCE_WANTED': 10.0, 'TIME_WANTED': 1.5, 'DELTA': 4.0, 'POLITENESS': 0.0, 'LANE_CHANGE_MIN_ACC_GAIN': 0.2, 'LANE_CHANGE_MAX_BRAKING_IMPOSED': 2.0, 'LANE_CHANGE_DELAY': 1.0, '__init__': &lt;function IDMVehicle.__init__&gt;, 'randomize_behavior': &lt;function IDMVehicle.randomize_behavior&gt;, 'create_from': &lt;classmethod object&gt;, 'act': &lt;function IDMVehicle.act&gt;, 'step': &lt;function IDMVehicle.step&gt;, 'acceleration': &lt;function IDMVehicle.acceleration&gt;, 'desired_gap': &lt;function IDMVehicle.desired_gap&gt;, 'maximum_speed': &lt;function IDMVehicle.maximum_speed&gt;, 'change_lane_policy': &lt;function IDMVehicle.change_lane_policy&gt;, 'mobil': &lt;function IDMVehicle.mobil&gt;, 'recover_from_stop': &lt;function IDMVehicle.recover_from_stop&gt;})</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.behavior', '__doc__': &quot;\n    A vehicle using both a longitudinal and a lateral decision policies.\n\n    - Longitudinal: the IDM model computes an acceleration given the preceding vehicle's distance and speed.\n    - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.\n    &quot;, 'ACC_MAX': 6.0, 'COMFORT_ACC_MAX': 3.0, 'COMFORT_ACC_MIN': -5.0, 'DISTANCE_WANTED': 10.0, 'TIME_WANTED': 1.5, 'DELTA': 4.0, 'POLITENESS': 0.0, 'LANE_CHANGE_MIN_ACC_GAIN': 0.2, 'LANE_CHANGE_MAX_BRAKING_IMPOSED': 2.0, 'LANE_CHANGE_DELAY': 1.0, '__init__': &lt;function IDMVehicle.__init__&gt;, 'randomize_behavior': &lt;function IDMVehicle.randomize_behavior&gt;, 'create_from': &lt;classmethod object&gt;, 'act': &lt;function IDMVehicle.act&gt;, 'step': &lt;function IDMVehicle.step&gt;, 'acceleration': &lt;function IDMVehicle.acceleration&gt;, 'desired_gap': &lt;function IDMVehicle.desired_gap&gt;, 'maximum_speed': &lt;function IDMVehicle.maximum_speed&gt;, 'change_lane_policy': &lt;function IDMVehicle.change_lane_policy&gt;, 'mobil': &lt;function IDMVehicle.mobil&gt;, 'recover_from_stop': &lt;function IDMVehicle.recover_from_stop&gt;})</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -857,6 +893,11 @@ Erase current planned route.</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.IDMVehicle.target_speed">
+<code class="sig-name descname">target_speed</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.target_speed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">origin_vehicle: Optional[highway_env.vehicle.kinematics.Vehicle] = None</em>, <em class="sig-param">observe_intentions: bool = True</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.to_dict" title="Permalink to this definition">¶</a></dt>
@@ -1118,6 +1159,11 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.WIDTH">
 <code class="sig-name descname">WIDTH</code><em class="property"> = 2.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.LinearVehicle.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'target_speed': &lt;class 'float'&gt;}</em><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.__annotations__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1595,6 +1641,11 @@ Erase current planned route.</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.LinearVehicle.target_speed">
+<code class="sig-name descname">target_speed</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.target_speed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">origin_vehicle: Optional[highway_env.vehicle.kinematics.Vehicle] = None</em>, <em class="sig-param">observe_intentions: bool = True</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.to_dict" title="Permalink to this definition">¶</a></dt>
@@ -1759,6 +1810,11 @@ Erase current planned route.</p>
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.WIDTH">
 <code class="sig-name descname">WIDTH</code><em class="property"> = 2.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.AggressiveVehicle.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'target_speed': &lt;class 'float'&gt;}</em><a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.__annotations__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2347,6 +2403,11 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.AggressiveVehicle.target_speed">
+<code class="sig-name descname">target_speed</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.target_speed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">origin_vehicle: Optional[highway_env.vehicle.kinematics.Vehicle] = None</em>, <em class="sig-param">observe_intentions: bool = True</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.to_dict" title="Permalink to this definition">¶</a></dt>
@@ -2363,31 +2424,6 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.vehicle.behavior.</code><code class="sig-name descname">DefensiveVehicle</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, position: Union[numpy.ndarray, Sequence[float]], heading: float = 0, speed: float = 0, target_lane_index: int = None, target_speed: float = None, route: List[Tuple[str, str, int]] = None, enable_lane_change: bool = True, timer: float = None, data: dict = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#DefensiveVehicle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#highway_env.vehicle.behavior.LinearVehicle" title="highway_env.vehicle.behavior.LinearVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.behavior.LinearVehicle</span></code></a></p>
-<dl class="attribute">
-<dt id="highway_env.vehicle.behavior.DefensiveVehicle.LANE_CHANGE_MIN_ACC_GAIN">
-<code class="sig-name descname">LANE_CHANGE_MIN_ACC_GAIN</code><em class="property"> = 1.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.LANE_CHANGE_MIN_ACC_GAIN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.behavior.DefensiveVehicle.MERGE_ACC_GAIN">
-<code class="sig-name descname">MERGE_ACC_GAIN</code><em class="property"> = 1.2</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.MERGE_ACC_GAIN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.behavior.DefensiveVehicle.MERGE_VEL_RATIO">
-<code class="sig-name descname">MERGE_VEL_RATIO</code><em class="property"> = 0.75</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.MERGE_VEL_RATIO" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.behavior.DefensiveVehicle.MERGE_TARGET_VEL">
-<code class="sig-name descname">MERGE_TARGET_VEL</code><em class="property"> = 30</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.MERGE_TARGET_VEL" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.behavior.DefensiveVehicle.ACCELERATION_PARAMETERS">
-<code class="sig-name descname">ACCELERATION_PARAMETERS</code><em class="property"> = [0.16, 0.05333333333333333, 2.0]</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.ACCELERATION_PARAMETERS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.ACCELERATION_RANGE">
 <code class="sig-name descname">ACCELERATION_RANGE</code><em class="property"> = array([[0.15, 0.15, 1.  ],        [0.45, 0.45, 3.  ]])</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.ACCELERATION_RANGE" title="Permalink to this definition">¶</a></dt>
@@ -2511,6 +2547,11 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.WIDTH">
 <code class="sig-name descname">WIDTH</code><em class="property"> = 2.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.DefensiveVehicle.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'target_speed': &lt;class 'float'&gt;}</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.__annotations__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3099,6 +3140,11 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.DefensiveVehicle.target_speed">
+<code class="sig-name descname">target_speed</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.target_speed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">origin_vehicle: Optional[highway_env.vehicle.kinematics.Vehicle] = None</em>, <em class="sig-param">observe_intentions: bool = True</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.to_dict" title="Permalink to this definition">¶</a></dt>
@@ -3109,8 +3155,34 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <em class="property">property </em><code class="sig-name descname">velocity</code><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.velocity" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.DefensiveVehicle.LANE_CHANGE_MIN_ACC_GAIN">
+<code class="sig-name descname">LANE_CHANGE_MIN_ACC_GAIN</code><em class="property"> = 1.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.LANE_CHANGE_MIN_ACC_GAIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.DefensiveVehicle.MERGE_ACC_GAIN">
+<code class="sig-name descname">MERGE_ACC_GAIN</code><em class="property"> = 1.2</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.MERGE_ACC_GAIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.DefensiveVehicle.MERGE_VEL_RATIO">
+<code class="sig-name descname">MERGE_VEL_RATIO</code><em class="property"> = 0.75</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.MERGE_VEL_RATIO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.DefensiveVehicle.MERGE_TARGET_VEL">
+<code class="sig-name descname">MERGE_TARGET_VEL</code><em class="property"> = 30</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.MERGE_TARGET_VEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.vehicle.behavior.DefensiveVehicle.ACCELERATION_PARAMETERS">
+<code class="sig-name descname">ACCELERATION_PARAMETERS</code><em class="property"> = [0.16, 0.05333333333333333, 2.0]</em><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.ACCELERATION_PARAMETERS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
+</div>
 </div>
 </div>
 

@@ -161,19 +161,30 @@
 
 <div class="viewcode-block" id="IDMVehicle"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle">[docs]</a><span class="k">class</span> <span class="nc">IDMVehicle</span><span class="p">(</span><span class="n">ControlledVehicle</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A vehicle using both a longitudinal and a lateral decision policies.</span>
+<span class="sd">    A vehicle using both a longitudinal and a lateral decision policies.</span>
 
-<span class="sd">        - Longitudinal: the IDM model computes an acceleration given the preceding vehicle&#39;s distance and speed.</span>
-<span class="sd">        - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    - Longitudinal: the IDM model computes an acceleration given the preceding vehicle&#39;s distance and speed.</span>
+<span class="sd">    - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Longitudinal policy parameters</span>
     <span class="n">ACC_MAX</span> <span class="o">=</span> <span class="mf">6.0</span>  <span class="c1"># [m/s2]</span>
+    <span class="sd">&quot;&quot;&quot;Maximum acceleration&quot;&quot;&quot;</span>
+
     <span class="n">COMFORT_ACC_MAX</span> <span class="o">=</span> <span class="mf">3.0</span>  <span class="c1"># [m/s2]</span>
+    <span class="sd">&quot;&quot;&quot;Desired maximum acceleration&quot;&quot;&quot;</span>
+
     <span class="n">COMFORT_ACC_MIN</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span>  <span class="c1"># [m/s2]</span>
+    <span class="sd">&quot;&quot;&quot;Desired maximum deceleration&quot;&quot;&quot;</span>
+
     <span class="n">DISTANCE_WANTED</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">+</span> <span class="n">ControlledVehicle</span><span class="o">.</span><span class="n">LENGTH</span>  <span class="c1"># [m]</span>
+    <span class="sd">&quot;&quot;&quot;Desired jam distance to the front vehicle&quot;&quot;&quot;</span>
+
     <span class="n">TIME_WANTED</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># [s]</span>
+    <span class="sd">&quot;&quot;&quot;Desired time gap to the front vehicle&quot;&quot;&quot;</span>
+
     <span class="n">DELTA</span> <span class="o">=</span> <span class="mf">4.0</span>  <span class="c1"># []</span>
+    <span class="sd">&quot;&quot;&quot;Exponent of the velocity term&quot;&quot;&quot;</span>
 
     <span class="c1"># Lateral policy parameters</span>
     <span class="n">POLITENESS</span> <span class="o">=</span> <span class="mf">0.</span>  <span class="c1"># in [0, 1]</span>

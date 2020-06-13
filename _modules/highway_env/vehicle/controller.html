@@ -147,7 +147,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for highway_env.vehicle.controller</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">copy</span>
@@ -159,12 +159,14 @@
 
 <div class="viewcode-block" id="ControlledVehicle"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle">[docs]</a><span class="k">class</span> <span class="nc">ControlledVehicle</span><span class="p">(</span><span class="n">Vehicle</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A vehicle piloted by two low-level controller, allowing high-level actions</span>
-<span class="sd">        such as cruise control and lane changes.</span>
+<span class="sd">    A vehicle piloted by two low-level controller, allowing high-level actions such as cruise control and lane changes.</span>
 
-<span class="sd">        - The longitudinal controller is a speed controller;</span>
-<span class="sd">        - The lateral controller is a heading controller cascaded with a lateral position controller.</span>
+<span class="sd">    - The longitudinal controller is a speed controller;</span>
+<span class="sd">    - The lateral controller is a heading controller cascaded with a lateral position controller.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">target_speed</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="sd">&quot;&quot;&quot; Desired velocity&quot;&quot;&quot;</span>
 
     <span class="n">TAU_A</span> <span class="o">=</span> <span class="mf">0.6</span>  <span class="c1"># [s]</span>
     <span class="n">TAU_DS</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># [s]</span>
@@ -173,7 +175,6 @@
     <span class="n">KP_HEADING</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">TAU_DS</span>
     <span class="n">KP_LATERAL</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span> <span class="o">*</span> <span class="n">KP_HEADING</span>  <span class="c1"># [1/s]</span>
     <span class="n">MAX_STEERING_ANGLE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">3</span>  <span class="c1"># [rad]</span>
-
     <span class="n">DELTA_SPEED</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># [m/s]</span>
 
 <div class="viewcode-block" id="ControlledVehicle.__init__"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>

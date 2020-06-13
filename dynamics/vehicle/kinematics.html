@@ -171,9 +171,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="kinematics">
-<span id="vehicle-kinematics"></span><h1>Kinematics<a class="headerlink" href="#kinematics" title="Permalink to this headline">¶</a></h1>
-<p>The vehicles kinematics are represented in the <cite>Vehicle</cite> class by the <em>Kinematic Bicycle Model</em> <a class="bibtex reference internal" href="../../bibliography/index.html#polack2017" id="id1">[PAltcheDAndreaN17]</a>.</p>
+  <span class="target" id="vehicle-kinematics"></span><div class="section" id="kinematics">
+<h1>Kinematics<a class="headerlink" href="#kinematics" title="Permalink to this headline">¶</a></h1>
+<p>The vehicles kinematics are represented in the <a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vehicle</span></code></a> class by the <em>Kinematic Bicycle Model</em> <a class="bibtex reference internal" href="../../bibliography/index.html#polack2017" id="id1">[PAltcheDAndreaN17]</a>.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\dot{x}&amp;=v\cos(\psi+\beta) \\
 \dot{y}&amp;=v\sin(\psi+\beta) \\
@@ -189,6 +189,7 @@
 <li><p><span class="math notranslate nohighlight">\(\beta\)</span> is the slip angle at the center of gravity;</p></li>
 <li><p><span class="math notranslate nohighlight">\(\delta\)</span> is the front wheel angle used as a steering command.</p></li>
 </ul>
+<p>These calculations appear in the <a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle.step" title="highway_env.vehicle.kinematics.Vehicle.step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code></a> method.</p>
 <div class="section" id="module-highway_env.vehicle.kinematics">
 <span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.vehicle.kinematics" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
