@@ -110,6 +110,55 @@ Example configuration
         "order": "sorted"
     }
 
+
+Grayscale Image
+-----------------
+
+The :py:class:`~highway_env.envs.common.observation.GrayscaleObservation` is a :math:`W\times H` grayscale image of the scene, where :math:`W,H` are set with the ``observation_shape`` parameter.
+The RGB to grayscale conversion is a weighted sum, configured by the ``weights`` parameter. Several images can be stacked with the ``stack_size`` parameter, as is customary with image observations.
+
+
+The following images illustrate the stacking process for the *first four observations*, using the :ref:`example configuration <grayscale_example_configuration>` below.
+
+.. image:: grayscale_0.png
+   :scale: 45 %
+.. image:: grayscale_1.png
+   :scale: 45 %
+.. image:: grayscale_2.png
+   :scale: 45 %
+.. image:: grayscale_3.png
+   :scale: 45 %
+
+.. warning::
+   The ``screen_height`` and ``screen_width`` environment configurations should match the expected ``observation_shape``.
+
+.. warning::
+   This observation type required *pygame* rendering, which may be problematic when run on server without display. In this case, the call to ``pygame.display.set_mode()`` raises an exception, which can be avoided by setting the environment configuration ``offscreen_rendering`` to ``True``.
+
+.. _grayscale_example_configuration:
+
+Example configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    screen_width, screen_height = 84, 84
+    config = {
+        "offscreen_rendering": True,
+        "observation": {
+            "type": "GrayscaleObservation",
+            "weights": [0.2989, 0.5870, 0.1140],  # weights for RGB conversion
+            "stack_size": 4,
+            "observation_shape": (screen_width, screen_height)
+        },
+        "screen_width": screen_width,
+        "screen_height": screen_height,
+        "scaling": 1.75,
+        "policy_frequency": 2
+    }
+    env.configure(config)
+
+
 Occupancy grid
 ---------------
 

@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.githubpages',
     'sphinx.ext.viewcode',
+    'sphinx.ext.autosectionlabel',
     'sphinxcontrib.bibtex'
 ]
 
