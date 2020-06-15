@@ -7,10 +7,8 @@ Observations
 
 For all environments, **several types of observations** can be used. They are defined in the
 :py:mod:`~highway_env.envs.common.observation` module.
-
-.. note::
-    Each environment comes with a *default* observation in its configuration, which can be changed or parametrised using
-    :ref:`environment configurations <configuration>`.
+Each environment comes with a *default* observation, which can be changed or customised using
+:ref:`environment configurations <configuration>`. For instance,
 
 .. code-block:: python
 
@@ -90,7 +88,7 @@ vehicle V    0.172      0.065      0.15         0.025
 .. note::
     The number :math:`V` of vehicles is constant and configured by the ``vehicles_count`` field, so that the
     observation has a fixed size. If fewer vehicles than ``vehicles_count`` are observed, the last rows are placeholders
-    filled with zeros. The `presence` feature can be used to detect such cases, since it is set to 1 for any observed
+    filled with zeros. The ``presence`` feature can be used to detect such cases, since it is set to 1 for any observed
     vehicle and 0 for placeholders.
 
 Example configuration
@@ -122,7 +120,7 @@ The grid size and resolution is defined by the ``grid_size`` and ``grid_steps`` 
 
 For instance, the channel corresponding to the ``presence`` feature may look like this:
 
-.. table:: One vehicle is close to the north, and one is farther to the east.
+.. table:: presence feature: one vehicle is close to the north, and one is farther to the east.
 
     ==  ==  ==  ==  ==
     0   0   0   0   0
@@ -134,7 +132,7 @@ For instance, the channel corresponding to the ``presence`` feature may look lik
 
 The corresponding :math:`v_x` feature may look like this:
 
-.. table:: The north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower
+.. table::  :math:`v_x` feature: the north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower
 
     ==  ==  ==  ==  ==
     0   0   0   0   0
@@ -164,6 +162,42 @@ Example configuration
         "absolute": False
     }
 
+Time to collision
+-----------------
+
+
+The :py:class:`~highway_env.envs.common.observation.TimeToCollisionObservation` is a :math:`V\times L\times H` array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
+These predictions are performed for :math:`V` different values of the ego-vehicle speed, :math:`L` lanes on the road around the current lane, and represented as one-hot encodings over :math:`H` discretised time values (bins), with 1s steps.
+
+For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using :math:`V=3,\, L = 3\,H = 10`, with ego-speed of {:math:`15` m/s, :math:`20` m/s and :math:`25` m/s}, the predicted time-to-collisions are :math:`\infty,\,5s,\,2.5s` and the corresponding observation is
+
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+0   0   0   0   0   0   0   0   0   0
+0   0   0   0   0   0   0   0   0   0
+0   0   0   0   0   0   0   0   0   0
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+0   0   0   0   0   0   0   0   0   0
+0   0   0   0   0   0   0   0   0   0
+0   0   0   0   1   0   0   0   0   0
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+0   0   0   0   0   0   0   0   0   0
+0   0   0   0   0   0   0   0   0   0
+0   0   1   0   0   0   0   0   0   0
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+
+Example configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    "observation": {
+        "type": "TimeToCollision"
+        "horizon": 10
+    },
 
 API
 --------
