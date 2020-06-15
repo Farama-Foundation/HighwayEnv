@@ -91,12 +91,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#example-configuration">Example configuration</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#grayscale-image">Grayscale Image</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#grayscale-example-configuration">Example configuration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#occupancy-grid">Occupancy grid</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id2">Example configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Example configuration</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#time-to-collision">Time to collision</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id3">Example configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Example configuration</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-highway_env.envs.common.observation">API</a></li>
@@ -395,6 +399,44 @@ vehicle and 0 for placeholders.</p>
 </div>
 </div>
 </div>
+<div class="section" id="grayscale-image">
+<h2>Grayscale Image<a class="headerlink" href="#grayscale-image" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.GrayscaleObservation" title="highway_env.envs.common.observation.GrayscaleObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">GrayscaleObservation</span></code></a> is a <span class="math notranslate nohighlight">\(W\times H\)</span> grayscale image of the scene, where <span class="math notranslate nohighlight">\(W,H\)</span> are set with the <code class="docutils literal notranslate"><span class="pre">observation_shape</span></code> parameter.
+The RGB to grayscale conversion is a weighted sum, configured by the <code class="docutils literal notranslate"><span class="pre">weights</span></code> parameter. Several images can be stacked with the <code class="docutils literal notranslate"><span class="pre">stack_size</span></code> parameter, as is customary with image observations.</p>
+<p>The following images illustrate the stacking process for the <em>first four observations</em>, using the <a class="reference internal" href="#grayscale-example-configuration"><span class="std std-ref">example configuration</span></a> below.</p>
+<a class="reference internal image-reference" href="../_images/grayscale_0.png"><img alt="../_images/grayscale_0.png" src="../_images/grayscale_0.png" style="width: 324.0px; height: 324.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/grayscale_1.png"><img alt="../_images/grayscale_1.png" src="../_images/grayscale_1.png" style="width: 324.0px; height: 324.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/grayscale_2.png"><img alt="../_images/grayscale_2.png" src="../_images/grayscale_2.png" style="width: 324.0px; height: 324.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/grayscale_3.png"><img alt="../_images/grayscale_3.png" src="../_images/grayscale_3.png" style="width: 324.0px; height: 324.0px;" /></a>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">screen_height</span></code> and <code class="docutils literal notranslate"><span class="pre">screen_width</span></code> environment configurations should match the expected <code class="docutils literal notranslate"><span class="pre">observation_shape</span></code>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This observation type required <em>pygame</em> rendering, which may be problematic when run on server without display. In this case, the call to <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code> raises an exception, which can be avoided by setting the environment configuration <code class="docutils literal notranslate"><span class="pre">offscreen_rendering</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</div>
+<div class="section" id="grayscale-example-configuration">
+<span id="id2"></span><h3>Example configuration<a class="headerlink" href="#grayscale-example-configuration" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">screen_width</span><span class="p">,</span> <span class="n">screen_height</span> <span class="o">=</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">84</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;offscreen_rendering&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;GrayscaleObservation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2989</span><span class="p">,</span> <span class="mf">0.5870</span><span class="p">,</span> <span class="mf">0.1140</span><span class="p">],</span>  <span class="c1"># weights for RGB conversion</span>
+        <span class="s2">&quot;stack_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;observation_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">screen_width</span><span class="p">,</span> <span class="n">screen_height</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="n">screen_width</span><span class="p">,</span>
+    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="n">screen_height</span><span class="p">,</span>
+    <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mf">1.75</span><span class="p">,</span>
+    <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">2</span>
+<span class="p">}</span>
+<span class="n">env</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="occupancy-grid">
 <h2>Occupancy grid<a class="headerlink" href="#occupancy-grid" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.observation.OccupancyGridObservation" title="highway_env.envs.common.observation.OccupancyGridObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">OccupancyGridObservation</span></code></a> is a <span class="math notranslate nohighlight">\(W\times H\times F\)</span> array,
@@ -402,8 +444,8 @@ that represents a grid of shape <span class="math notranslate nohighlight">\(W\t
 uniform rectangle cells. Each cell is described by <span class="math notranslate nohighlight">\(F\)</span> features, listed in the <code class="docutils literal notranslate"><span class="pre">&quot;features&quot;</span></code> configuration field.
 The grid size and resolution is defined by the <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> and <code class="docutils literal notranslate"><span class="pre">grid_steps</span></code> configuration fields.</p>
 <p>For instance, the channel corresponding to the <code class="docutils literal notranslate"><span class="pre">presence</span></code> feature may look like this:</p>
-<table class="docutils align-default" id="id4">
-<caption><span class="caption-text">presence feature: one vehicle is close to the north, and one is farther to the east.</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">presence feature: one vehicle is close to the north, and one is farther to the east.</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 20%" />
@@ -445,8 +487,8 @@ The grid size and resolution is defined by the <code class="docutils literal not
 </tbody>
 </table>
 <p>The corresponding <span class="math notranslate nohighlight">\(v_x\)</span> feature may look like this:</p>
-<table class="docutils align-default" id="id5">
-<caption><span class="caption-text"><span class="math notranslate nohighlight">\(v_x\)</span> feature: the north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text"><span class="math notranslate nohighlight">\(v_x\)</span> feature: the north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 17%" />
 <col style="width: 17%" />
@@ -487,8 +529,8 @@ The grid size and resolution is defined by the <code class="docutils literal not
 </tr>
 </tbody>
 </table>
-<div class="section" id="id2">
-<h3>Example configuration<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Example configuration<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;OccupancyGrid&quot;</span><span class="p">,</span>
     <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
@@ -659,8 +701,8 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </tr>
 </tbody>
 </table>
-<div class="section" id="id3">
-<h3>Example configuration<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Example configuration<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;TimeToCollision&quot;</span>
     <span class="s2">&quot;horizon&quot;</span><span class="p">:</span> <span class="mi">10</span>
