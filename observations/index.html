@@ -95,6 +95,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#id2">Example configuration</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#time-to-collision">Time to collision</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Example configuration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-highway_env.envs.common.observation">API</a></li>
 </ul>
 </li>
@@ -174,12 +178,9 @@
   <span class="target" id="observations"></span><div class="section" id="id1">
 <h1>Observations<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>For all environments, <strong>several types of observations</strong> can be used. They are defined in the
-<a class="reference internal" href="#module-highway_env.envs.common.observation" title="highway_env.envs.common.observation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">observation</span></code></a> module.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Each environment comes with a <em>default</em> observation in its configuration, which can be changed or parametrised using
-<a class="reference internal" href="../configuration.html#configuration"><span class="std std-ref">environment configurations</span></a>.</p>
-</div>
+<a class="reference internal" href="#module-highway_env.envs.common.observation" title="highway_env.envs.common.observation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">observation</span></code></a> module.
+Each environment comes with a <em>default</em> observation, which can be changed or customised using
+<a class="reference internal" href="../configuration.html#configuration"><span class="std std-ref">environment configurations</span></a>. For instance,</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">highway_env</span>
 
@@ -372,7 +373,7 @@ which stays absolute.</p>
 <p class="admonition-title">Note</p>
 <p>The number <span class="math notranslate nohighlight">\(V\)</span> of vehicles is constant and configured by the <code class="docutils literal notranslate"><span class="pre">vehicles_count</span></code> field, so that the
 observation has a fixed size. If fewer vehicles than <code class="docutils literal notranslate"><span class="pre">vehicles_count</span></code> are observed, the last rows are placeholders
-filled with zeros. The <cite>presence</cite> feature can be used to detect such cases, since it is set to 1 for any observed
+filled with zeros. The <code class="docutils literal notranslate"><span class="pre">presence</span></code> feature can be used to detect such cases, since it is set to 1 for any observed
 vehicle and 0 for placeholders.</p>
 </div>
 <div class="section" id="example-configuration">
@@ -401,8 +402,8 @@ that represents a grid of shape <span class="math notranslate nohighlight">\(W\t
 uniform rectangle cells. Each cell is described by <span class="math notranslate nohighlight">\(F\)</span> features, listed in the <code class="docutils literal notranslate"><span class="pre">&quot;features&quot;</span></code> configuration field.
 The grid size and resolution is defined by the <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> and <code class="docutils literal notranslate"><span class="pre">grid_steps</span></code> configuration fields.</p>
 <p>For instance, the channel corresponding to the <code class="docutils literal notranslate"><span class="pre">presence</span></code> feature may look like this:</p>
-<table class="docutils align-default" id="id3">
-<caption><span class="caption-text">One vehicle is close to the north, and one is farther to the east.</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">presence feature: one vehicle is close to the north, and one is farther to the east.</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 20%" />
@@ -444,8 +445,8 @@ The grid size and resolution is defined by the <code class="docutils literal not
 </tbody>
 </table>
 <p>The corresponding <span class="math notranslate nohighlight">\(v_x\)</span> feature may look like this:</p>
-<table class="docutils align-default" id="id4">
-<caption><span class="caption-text">The north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text"><span class="math notranslate nohighlight">\(v_x\)</span> feature: the north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 17%" />
 <col style="width: 17%" />
@@ -502,6 +503,168 @@ The grid size and resolution is defined by the <code class="docutils literal not
     <span class="s2">&quot;grid_step&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
     <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">False</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="time-to-collision">
+<h2>Time to collision<a class="headerlink" href="#time-to-collision" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.TimeToCollisionObservation" title="highway_env.envs.common.observation.TimeToCollisionObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeToCollisionObservation</span></code></a> is a <span class="math notranslate nohighlight">\(V\times L\times H\)</span> array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
+These predictions are performed for <span class="math notranslate nohighlight">\(V\)</span> different values of the ego-vehicle speed, <span class="math notranslate nohighlight">\(L\)</span> lanes on the road around the current lane, and represented as one-hot encodings over <span class="math notranslate nohighlight">\(H\)</span> discretised time values (bins), with 1s steps.</p>
+<p>For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using <span class="math notranslate nohighlight">\(V=3,\, L = 3\,H = 10\)</span>, with ego-speed of {<span class="math notranslate nohighlight">\(15\)</span> m/s, <span class="math notranslate nohighlight">\(20\)</span> m/s and <span class="math notranslate nohighlight">\(25\)</span> m/s}, the predicted time-to-collisions are <span class="math notranslate nohighlight">\(\infty,\,5s,\,2.5s\)</span> and the corresponding observation is</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="id3">
+<h3>Example configuration<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;TimeToCollision&quot;</span>
+    <span class="s2">&quot;horizon&quot;</span><span class="p">:</span> <span class="mi">10</span>
+<span class="p">},</span>
 </pre></div>
 </div>
 </div>
