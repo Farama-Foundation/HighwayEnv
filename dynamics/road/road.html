@@ -173,13 +173,24 @@
             
   <div class="section" id="road">
 <span id="road-road"></span><h1>Road<a class="headerlink" href="#road" title="Permalink to this headline">¶</a></h1>
-<p>A <a class="reference internal" href="#highway_env.road.road.Road" title="highway_env.road.road.Road"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.road.Road</span></code></a> is composed of a <a class="reference internal" href="#highway_env.road.road.RoadNetwork" title="highway_env.road.road.RoadNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.road.RoadNetwork</span></code></a> and a list
-of <a class="reference internal" href="../vehicle/kinematics.html#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.kinematics.Vehicle</span></code></a>.</p>
-<p>The <a class="reference internal" href="#highway_env.road.road.RoadNetwork" title="highway_env.road.road.RoadNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.road.RoadNetwork</span></code></a> describes the topology of the road infrastructure as a graph,
-where edges represent lanes and nodes represent intersections.</p>
-<p>Road API
-<a href="#id1"><span class="problematic" id="id2">**</span></a><a href="#id3"><span class="problematic" id="id4">*</span></a></p>
-<span class="target" id="module-highway_env.road.road"></span><dl class="class">
+<p>A <a class="reference internal" href="#highway_env.road.road.Road" title="highway_env.road.road.Road"><code class="xref py py-class docutils literal notranslate"><span class="pre">Road</span></code></a> is composed of a <a class="reference internal" href="#highway_env.road.road.RoadNetwork" title="highway_env.road.road.RoadNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">RoadNetwork</span></code></a> and a list
+of <a class="reference internal" href="../vehicle/kinematics.html#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vehicle</span></code></a>.</p>
+<p>The <a class="reference internal" href="#highway_env.road.road.RoadNetwork" title="highway_env.road.road.RoadNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">RoadNetwork</span></code></a> describes the topology of the road infrastructure as a graph,
+where edges represent lanes and nodes represent intersections. It contains a <a class="reference internal" href="#highway_env.road.road.RoadNetwork.graph" title="highway_env.road.road.RoadNetwork.graph"><code class="xref py py-attr docutils literal notranslate"><span class="pre">graph</span></code></a> dictionary stores the <a class="reference internal" href="lane.html#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLane</span></code></a> geometries by their <code class="xref py py-class docutils literal notranslate"><span class="pre">LaneIndex</span></code>.
+A <code class="xref py py-class docutils literal notranslate"><span class="pre">LaneIndex</span></code> is a tuple containing:</p>
+<ul class="simple">
+<li><p>a string identifier of a given starting position</p></li>
+<li><p>a string identifier of a given ending position</p></li>
+<li><p>an integer giving the index of the described lane, in the (unique) road from the starting to the ending position</p></li>
+</ul>
+<p>For instance, the geometry of the second lane in the road going from the <code class="docutils literal notranslate"><span class="pre">&quot;lab&quot;</span></code> to the <code class="docutils literal notranslate"><span class="pre">&quot;pub&quot;</span></code> can be obtained by:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lane</span> <span class="o">=</span> <span class="n">road</span><span class="o">.</span><span class="n">road_network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;lab&quot;</span><span class="p">][</span><span class="s2">&quot;pub&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The actual positions of the lab and the pub are defined in the <a href="#id1"><span class="problematic" id="id2">``</span></a>lane```geometry object.</p>
+<div class="section" id="module-highway_env.road.road">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.road.road" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
 <dt id="highway_env.road.road.RoadNetwork">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.road.road.</code><code class="sig-name descname">RoadNetwork</code><a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -790,6 +801,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 
 </dd></dl>
 
+</div>
 </div>
 
 

@@ -176,10 +176,12 @@
             
   <div class="section" id="dynamics">
 <span id="id1"></span><h1>Dynamics<a class="headerlink" href="#dynamics" title="Permalink to this headline">¶</a></h1>
-<p>New driving environments can easily be made from a set of building blocks.</p>
+<p>The dynamics of every environment describes how vehicles move and behave through time.
+There are two important sections that affect these dynamics: the description of the roads, and the vehicle physics and behavioral models.</p>
 <div class="section" id="roads">
 <h2>Roads<a class="headerlink" href="#roads" title="Permalink to this headline">¶</a></h2>
-<p>A <cite>Road</cite> is composed of a <cite>RoadNetwork</cite> and a list of <cite>Vehicles</cite>. The <cite>RoadNetwork</cite> describes the topology of the road infrastructure as a graph, where edges represent lanes and nodes represent intersections. For every edge, the corresponding lane geometry is stored in a <cite>Lane</cite> object as a parametrized center line curve, providing a local coordinate system.</p>
+<p>A <a class="reference internal" href="road/road.html#highway_env.road.road.Road" title="highway_env.road.road.Road"><code class="xref py py-class docutils literal notranslate"><span class="pre">Road</span></code></a> is composed of a <a class="reference internal" href="road/road.html#highway_env.road.road.RoadNetwork" title="highway_env.road.road.RoadNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">RoadNetwork</span></code></a> and a list
+of <a class="reference internal" href="vehicle/kinematics.html#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vehicle</span></code></a>.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="road/lane.html">Lane</a></li>

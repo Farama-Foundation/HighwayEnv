@@ -173,6 +173,13 @@
             
   <div class="section" id="road-regulation">
 <span id="id1"></span><h1>Road regulation<a class="headerlink" href="#road-regulation" title="Permalink to this headline">¶</a></h1>
+<p>A <a class="reference internal" href="#highway_env.road.regulation.RegulatedRoad" title="highway_env.road.regulation.RegulatedRoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegulatedRoad</span></code></a> is a <a class="reference internal" href="road.html#highway_env.road.road.Road" title="highway_env.road.road.Road"><code class="xref py py-class docutils literal notranslate"><span class="pre">Road</span></code></a> in which the behavior of vehicles take or give the right of way at an intersection based on the <code class="xref py py-attr docutils literal notranslate"><span class="pre">priority</span></code> lane attribute.</p>
+<p>On such a road, some rules are enforced:</p>
+<ul class="simple">
+<li><p>most of the time, vehicles behave as usual;</p></li>
+<li><p>however, they try to predict collisions with other vehicles through the <a class="reference internal" href="#highway_env.road.regulation.RegulatedRoad.is_conflict_possible" title="highway_env.road.regulation.RegulatedRoad.is_conflict_possible"><code class="xref py py-meth docutils literal notranslate"><span class="pre">is_conflict_possible()</span></code></a> method;</p></li>
+<li><p>when it is the case, right of way is arbitrated through the <a class="reference internal" href="#highway_env.road.regulation.RegulatedRoad.respect_priorities" title="highway_env.road.regulation.RegulatedRoad.respect_priorities"><code class="xref py py-meth docutils literal notranslate"><span class="pre">respect_priorities()</span></code></a> method, and the yielding vehicle target velocity is set to 0 until the conflict is resolved.</p></li>
+</ul>
 <div class="section" id="module-highway_env.road.regulation">
 <span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.road.regulation" title="Permalink to this headline">¶</a></h2>
 <dl class="class">

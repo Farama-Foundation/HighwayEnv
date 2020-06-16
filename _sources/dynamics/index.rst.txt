@@ -3,12 +3,15 @@
 Dynamics
 ############
 
-New driving environments can easily be made from a set of building blocks.
+The dynamics of every environment describes how vehicles move and behave through time.
+There are two important sections that affect these dynamics: the description of the roads, and the vehicle physics and behavioral models.
 
 Roads
 ========
 
-A `Road` is composed of a `RoadNetwork` and a list of `Vehicles`. The `RoadNetwork` describes the topology of the road infrastructure as a graph, where edges represent lanes and nodes represent intersections. For every edge, the corresponding lane geometry is stored in a `Lane` object as a parametrized center line curve, providing a local coordinate system.
+
+A :py:class:`~highway_env.road.road.Road` is composed of a :py:class:`~highway_env.road.road.RoadNetwork` and a list
+of :py:class:`~highway_env.vehicle.kinematics.Vehicle`.
 
 .. toctree::
   :maxdepth: 1

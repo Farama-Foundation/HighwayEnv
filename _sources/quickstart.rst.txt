@@ -23,8 +23,8 @@ Here is a quick example of how to create an environment, and run an episode with
       env.render()
 
 All the environments
-~~~~~~~~~~~~~~~~~~
-You can try all the environments available:
+~~~~~~~~~~~~~~~~~~~~
+Here is a list of all the environments available and their descriptions:
 
 .. toctree::
   :maxdepth: 1

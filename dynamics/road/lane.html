@@ -173,7 +173,14 @@
             
   <div class="section" id="lane">
 <span id="road-lane"></span><h1>Lane<a class="headerlink" href="#lane" title="Permalink to this headline">¶</a></h1>
-<p>The geometry of lanes are stored in a <cite>Lane</cite> object as a parametrized center line curve, providing a local coordinate system.</p>
+<p>The geometry of lanes are described by <a class="reference internal" href="#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLane</span></code></a> objects, as a parametrized center line curve, providing a local coordinate system.</p>
+<p>Conversions between the (longi, lat) coordinates in the Frenet frame and the global <span class="math notranslate nohighlight">\(x,y\)</span> coordinates are ensured by the <a class="reference internal" href="#highway_env.road.lane.AbstractLane.position" title="highway_env.road.lane.AbstractLane.position"><code class="xref py py-meth docutils literal notranslate"><span class="pre">position()</span></code></a> and <a class="reference internal" href="#highway_env.road.lane.AbstractLane.local_coordinates" title="highway_env.road.lane.AbstractLane.local_coordinates"><code class="xref py py-meth docutils literal notranslate"><span class="pre">local_coordinates()</span></code></a> methods.</p>
+<p>The main implementations are:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#highway_env.road.lane.StraightLane" title="highway_env.road.lane.StraightLane"><code class="xref py py-class docutils literal notranslate"><span class="pre">StraightLane</span></code></a></p></li>
+<li><p><a class="reference internal" href="#highway_env.road.lane.SineLane" title="highway_env.road.lane.SineLane"><code class="xref py py-class docutils literal notranslate"><span class="pre">SineLane</span></code></a></p></li>
+<li><p><a class="reference internal" href="#highway_env.road.lane.CircularLane" title="highway_env.road.lane.CircularLane"><code class="xref py py-class docutils literal notranslate"><span class="pre">CircularLane</span></code></a></p></li>
+</ul>
 <div class="section" id="module-highway_env.road.lane">
 <span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.road.lane" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
