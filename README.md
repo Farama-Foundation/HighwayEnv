@@ -33,6 +33,10 @@ while not done:
     env.render()
 ```
 
+## Documentation
+
+Read the [documentation online](https://highway-env.readthedocs.io/).
+
 ## Citing
 
 If you use the project in your work, please consider citing it with:
