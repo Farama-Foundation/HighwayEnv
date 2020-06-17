@@ -173,7 +173,51 @@
             
   <div class="section" id="control">
 <span id="vehicle-controller"></span><h1>Control<a class="headerlink" href="#control" title="Permalink to this headline">¶</a></h1>
-<p>The <a class="reference internal" href="#highway_env.vehicle.controller.ControlledVehicle" title="highway_env.vehicle.controller.ControlledVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.controller.ControlledVehicle</span></code></a> class implements a low-level controller on top of a <cite>Vehicle</cite>, allowing to track a given target speed and follow a target lane.</p>
+<p>The <a class="reference internal" href="#highway_env.vehicle.controller.ControlledVehicle" title="highway_env.vehicle.controller.ControlledVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ControlledVehicle</span></code></a> class implements a low-level controller on top of a <a class="reference internal" href="kinematics.html#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vehicle</span></code></a>, allowing to track a given target speed and follow a target lane.
+The controls are computed when calling the <a class="reference internal" href="#highway_env.vehicle.controller.ControlledVehicle.act" title="highway_env.vehicle.controller.ControlledVehicle.act"><code class="xref py py-meth docutils literal notranslate"><span class="pre">act()</span></code></a> method.</p>
+<div class="section" id="longitudinal-controller">
+<h2>Longitudinal controller<a class="headerlink" href="#longitudinal-controller" title="Permalink to this headline">¶</a></h2>
+<p>The longitudinal controller is a simple proportional controller:</p>
+<div class="math notranslate nohighlight">
+\[a = K_p(v_r - v),\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(a\)</span> is the vehicle acceleration (throttle);</p></li>
+<li><p><span class="math notranslate nohighlight">\(v\)</span> is the vehicle velocity;</p></li>
+<li><p><span class="math notranslate nohighlight">\(v_r\)</span> is the reference velocity;</p></li>
+<li><p><span class="math notranslate nohighlight">\(K_p\)</span> is the controller proportional gain, implemented as <a class="reference internal" href="#highway_env.vehicle.controller.ControlledVehicle.KP_A" title="highway_env.vehicle.controller.ControlledVehicle.KP_A"><code class="xref py py-attr docutils literal notranslate"><span class="pre">KP_A</span></code></a>.</p></li>
+</ul>
+<p>It is implemented in the <a class="reference internal" href="#highway_env.vehicle.controller.ControlledVehicle.speed_control" title="highway_env.vehicle.controller.ControlledVehicle.speed_control"><code class="xref py py-meth docutils literal notranslate"><span class="pre">speed_control()</span></code></a> method.</p>
+</div>
+<div class="section" id="lateral-controller">
+<h2>Lateral controller<a class="headerlink" href="#lateral-controller" title="Permalink to this headline">¶</a></h2>
+<p>The lateral controller is a simple proportional-derivative controller, combined with some non-linearities that invert those of the <a class="reference internal" href="kinematics.html#vehicle-kinematics"><span class="std std-ref">kinematics model</span></a>.</p>
+<div class="section" id="position-control">
+<h3>Position control<a class="headerlink" href="#position-control" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\
+\Delta \psi_{r} &amp;= \arcsin \left(\frac{v_{\text{lat},r}}{v}\right),\end{split}\]</div>
+</div>
+<div class="section" id="heading-control">
+<h3>Heading control<a class="headerlink" href="#heading-control" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}\psi_r &amp;= \psi_L + \Delta \psi_{r}, \\
+\dot{\psi}_r &amp;= K_{p,\psi} (\psi_r - \psi), \\
+\delta &amp;= \arcsin \left(\frac{1}{2} \frac{l}{v} \dot{\psi}_r\right), \\\end{split}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\Delta_{\text{lat}}\)</span> is the lateral position of the vehicle with respect to the lane center-line;</p></li>
+<li><p><span class="math notranslate nohighlight">\(v_{\text{lat},r}\)</span> is the lateral velocity command;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta \psi_{r}\)</span> is a heading variation to apply the lateral velocity command;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\psi_L\)</span> is the lane heading (at some lookahead position to anticipate turns);</p></li>
+<li><p><span class="math notranslate nohighlight">\(\psi_r\)</span> is the target heading to follow the lane heading and position;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\dot{\psi}_r\)</span> is the yaw rate command;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\delta\)</span> is the front wheels angle control;</p></li>
+<li><p><span class="math notranslate nohighlight">\(K_{p,\text{lat}}\)</span> and <span class="math notranslate nohighlight">\(K_{p,\psi}\)</span> are the position and heading control gains.</p></li>
+</ul>
+<p>It is implemented in the <a class="reference internal" href="#highway_env.vehicle.controller.ControlledVehicle.steering_control" title="highway_env.vehicle.controller.ControlledVehicle.steering_control"><code class="xref py py-meth docutils literal notranslate"><span class="pre">steering_control()</span></code></a> method.</p>
+</div>
+</div>
 <div class="section" id="module-highway_env.vehicle.controller">
 <span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.vehicle.controller" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
