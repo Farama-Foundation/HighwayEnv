@@ -41,7 +41,7 @@ def finite_mdp(env: 'AbstractEnv',
     grid = compute_ttc_grid(env, time_quantization, horizon)
 
     # Compute current state
-    grid_state = (env.vehicle.speed_index(), env.vehicle.lane_index[2], 0)
+    grid_state = (env.vehicle.speed_index, env.vehicle.lane_index[2], 0)
     state = np.ravel_multi_index(grid_state, grid.shape)
 
     # Compute transition function
