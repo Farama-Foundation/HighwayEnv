@@ -13,9 +13,9 @@ if TYPE_CHECKING:
 
 
 class EnvViewer(object):
-    """
-        A viewer to render a highway driving environment.
-    """
+
+    """A viewer to render a highway driving environment."""
+
     SAVE_IMAGES = False
 
     def __init__(self, env: 'AbstractEnv') -> None:
@@ -76,9 +76,7 @@ class EnvViewer(object):
                                                                           1 / self.env.config["simulation_frequency"])
 
     def handle_events(self) -> None:
-        """
-            Handle pygame events by forwarding them to the display and environment vehicle.
-        """
+        """Handle pygame events by forwarding them to the display and environment vehicle."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.env.close()
@@ -87,9 +85,7 @@ class EnvViewer(object):
                 VehicleGraphics.handle_event(self.env.vehicle, event)
 
     def display(self) -> None:
-        """
-            Display the road and vehicles on a pygame window.
-        """
+        """Display the road and vehicles on a pygame window."""
         if not self.enabled:
             return
 
@@ -131,24 +127,18 @@ class EnvViewer(object):
             self.frame += 1
 
     def get_image(self) -> np.ndarray:
-        """
-        :return: the rendered image as a rbg array
-        """
+        """the rendered image as a rbg array"""
         surface = self.screen if self.env.config["render_agent"] and not self.offscreen else self.sim_surface
         data = pygame.surfarray.array3d(surface)
         return np.moveaxis(data, 0, 1)
 
     def window_position(self) -> np.ndarray:
-        """
-        :return: the world position of the center of the displayed window.
-        """
+        """the world position of the center of the displayed window."""
         if self.env.vehicle:
             return self.env.vehicle.position
         else:
             return np.array([0, 0])
 
     def close(self) -> None:
-        """
-            Close the pygame window.
-        """
+        """Close the pygame window."""
         pygame.quit()

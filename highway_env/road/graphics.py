@@ -16,9 +16,9 @@ PositionType = Union[Tuple[float, float], np.ndarray]
 
 
 class WorldSurface(pygame.Surface):
-    """
-        A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area.
-    """
+
+    """A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area."""
+
     BLACK = (0, 0, 0)
     GREY = (100, 100, 100)
     GREEN = (50, 200, 0)
@@ -89,9 +89,9 @@ class WorldSurface(pygame.Surface):
 
 
 class LaneGraphics(object):
-    """
-        A visualization of a lane.
-    """
+
+    """A visualization of a lane."""
+
     STRIPE_SPACING: float = 5
     """ Offset between stripes [m]"""
 
@@ -210,9 +210,7 @@ class LaneGraphics(object):
 
 
 class RoadGraphics(object):
-    """
-        A visualization of a road lanes and vehicles.
-    """
+    """A visualization of a road lanes and vehicles."""
     @staticmethod
     def display(road: Road, surface: WorldSurface) -> None:
         """
@@ -258,9 +256,9 @@ class RoadGraphics(object):
 
 
 class RoadObjectGraphics:
-    """
-        A visualization of objects on the road
-    """
+
+    """A visualization of objects on the road"""
+
     YELLOW = (200, 200, 0)
     BLUE = (100, 200, 255)
     RED = (255, 100, 100)

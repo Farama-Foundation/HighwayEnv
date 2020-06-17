@@ -7,9 +7,7 @@ from highway_env.types import Vector
 
 
 class AbstractLane(object):
-    """
-        A lane on the road, described by its central curve.
-    """
+    """A lane on the road, described by its central curve."""
     metaclass__ = ABCMeta
     DEFAULT_WIDTH: float = 4
     VEHICLE_LENGTH: float = 5
@@ -94,17 +92,13 @@ class AbstractLane(object):
         return longitudinal > self.length - self.VEHICLE_LENGTH / 2
 
     def distance(self, position):
-        """
-            Compute the L1 distance [m] from a position to the lane
-        """
+        """Compute the L1 distance [m] from a position to the lane"""
         s, r = self.local_coordinates(position)
         return abs(r) + max(s - self.length, 0) + max(0 - s, 0)
 
 
 class LineType:
-    """
-        A lane side line type.
-    """
+    """A lane side line type."""
     NONE = 0
     STRIPED = 1
     CONTINUOUS = 2
@@ -112,9 +106,7 @@ class LineType:
 
 
 class StraightLane(AbstractLane):
-    """
-        A lane going in straight line.
-    """
+    """A lane going in straight line."""
     def __init__(self,
                  start: Vector,
                  end: Vector,
@@ -162,9 +154,7 @@ class StraightLane(AbstractLane):
 
 
 class SineLane(StraightLane):
-    """
-        A sinusoidal lane
-    """
+    """A sinusoidal lane"""
 
     def __init__(self,
                  start: Vector,
@@ -205,9 +195,7 @@ class SineLane(StraightLane):
 
 
 class CircularLane(AbstractLane):
-    """
-        A lane going in circle arc.
-    """
+    """A lane going in circle arc."""
     def __init__(self,
                  center: Vector,
                  radius: float,

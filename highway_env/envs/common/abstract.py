@@ -32,18 +32,13 @@ class AbstractEnv(gym.Env):
                2: 'LANE_RIGHT',
                3: 'FASTER',
                4: 'SLOWER'}
-    """
-        A mapping of action indexes to action labels
-    """
+    """A mapping of action indexes to action labels"""
+    
     ACTIONS_INDEXES = {v: k for k, v in ACTIONS.items()}
-    """
-        A mapping of action labels to action indexes
-    """
+    """A mapping of action labels to action indexes"""
 
     PERCEPTION_DISTANCE = 6.0 * MDPVehicle.SPEED_MAX
-    """
-        The maximum distance of any vehicle present in the observation [m]
-    """
+    """The maximum distance of any vehicle present in the observation [m]"""
 
     STEERING_RANGE = np.pi / 4
     ACCELERATION_RANGE = 5.0
@@ -196,9 +191,7 @@ class AbstractEnv(gym.Env):
         return obs, reward, terminal, info
 
     def _simulate(self, action: Optional[Action] = None) -> None:
-        """
-        Perform several steps of simulation with constant action
-        """
+        """Perform several steps of simulation with constant action"""
         for k in range(int(self.config["simulation_frequency"] // self.config["policy_frequency"])):
             if action is not None and \
                     self.time % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
@@ -375,9 +368,7 @@ class AbstractEnv(gym.Env):
         return finite_mdp(self, time_quantization=1/self.config["policy_frequency"])
 
     def __deepcopy__(self, memo):
-        """
-        Perform a deep copy but without copying the environment viewer.
-        """
+        """Perform a deep copy but without copying the environment viewer."""
         cls = self.__class__
         result = cls.__new__(cls)
         memo[id(self)] = result

@@ -36,9 +36,7 @@ class RoundaboutEnv(AbstractEnv):
         return utils.lmap(reward, [self.COLLISION_REWARD + self.LANE_CHANGE_REWARD, self.HIGH_SPEED_REWARD], [0, 1])
 
     def _is_terminal(self) -> bool:
-        """
-        The episode is over when a collision occurs or when the access ramp has been passed.
-        """
+        """The episode is over when a collision occurs or when the access ramp has been passed."""
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
     def reset(self) -> np.ndarray:

@@ -70,14 +70,10 @@ class RoadObject(ABC):
 
 
 class Obstacle(RoadObject):
-    """
-        Obstacles on the road.
-    """
+    """Obstacles on the road."""
     pass
 
 
 class Landmark(RoadObject):
-    """
-        Landmarks of certain areas on the road that must be reached
-    """
+    """Landmarks of certain areas on the road that must be reached"""
     pass

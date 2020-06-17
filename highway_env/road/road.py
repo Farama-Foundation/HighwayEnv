@@ -157,16 +157,12 @@ class RoadNetwork(object):
 
     @staticmethod
     def is_same_road(lane_index_1: LaneIndex, lane_index_2: LaneIndex, same_lane: bool = False) -> bool:
-        """
-            Is lane 1 in the same road as lane 2?
-        """
+        """Is lane 1 in the same road as lane 2?"""
         return lane_index_1[:2] == lane_index_2[:2] and (not same_lane or lane_index_1[2] == lane_index_2[2])
 
     @staticmethod
     def is_leading_to_road(lane_index_1: LaneIndex, lane_index_2: LaneIndex, same_lane: bool = False) -> bool:
-        """
-            Is lane 1 leading to of lane 2?
-        """
+        """Is lane 1 leading to of lane 2?"""
         return lane_index_1[1] == lane_index_2[0] and (not same_lane or lane_index_1[2] == lane_index_2[2])
 
     def is_connected_road(self, lane_index_1: LaneIndex, lane_index_2: LaneIndex, route: Route = None,
@@ -232,9 +228,7 @@ class RoadNetwork(object):
 
 
 class Road(Loggable):
-    """
-        A road is a set of lanes, and a set of vehicles driving on these lanes
-    """
+    """A road is a set of lanes, and a set of vehicles driving on these lanes"""
 
     def __init__(self,
                  network: RoadNetwork = None,
@@ -270,9 +264,7 @@ class Road(Loggable):
         return vehicles
 
     def act(self) -> None:
-        """
-            Decide the actions of each entity on the road.
-        """
+        """Decide the actions of each entity on the road."""
         for vehicle in self.vehicles:
             vehicle.act()
 
@@ -322,9 +314,7 @@ class Road(Loggable):
         return v_front, v_rear
 
     def dump(self) -> None:
-        """
-            Dump the data of all entities on the road
-        """
+        """Dump the data of all entities on the road"""
         for v in self.vehicles:
             v.dump()
 

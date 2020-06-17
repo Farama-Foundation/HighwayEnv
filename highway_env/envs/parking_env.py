@@ -79,9 +79,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
                          record_history=self.config["show_trajectories"])
 
     def _create_vehicles(self) -> None:
-        """
-        Create some new random vehicles of a given type, and add them on the road.
-        """
+        """Create some new random vehicles of a given type, and add them on the road."""
         self.vehicle = Vehicle(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)
         self.road.vehicles.append(self.vehicle)
 
@@ -111,9 +109,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         return self.compute_reward(achieved_goal, desired_goal, {}) > -self.SUCCESS_GOAL_REWARD
 
     def _is_terminal(self) -> bool:
-        """
-        The episode is over if the ego vehicle crashed or the goal is reached.
-        """
+        """The episode is over if the ego vehicle crashed or the goal is reached."""
         obs = self.observation.observe()
         return self.vehicle.crashed or self._is_success(obs['achieved_goal'], obs['desired_goal'])
 

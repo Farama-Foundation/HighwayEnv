@@ -10,9 +10,7 @@ from highway_env.vehicle.uncertainty.prediction import IntervalVehicle, Polytope
 
 
 class RegressionVehicle(IntervalVehicle):
-    """
-        Estimator for the parameter of a LinearVehicle.
-    """
+    """Estimator for the parameter of a LinearVehicle."""
     def longitudinal_matrix_polytope(self) -> Polytope:
         return self.polytope_from_estimation(self.data["longitudinal"], self.theta_a_i, self.longitudinal_structure)
 
@@ -52,9 +50,7 @@ class MultipleModelVehicle(LinearVehicle):
         super().act(action)
 
     def collect_data(self) -> None:
-        """
-            Collect the features for each possible route, and true observed outputs.
-        """
+        """Collect the features for each possible route, and true observed outputs."""
         for route, data in self.data:
             self.add_features(data, route[0], output_lane=self.target_lane_index)
 

@@ -63,9 +63,7 @@ class IntersectionEnv(AbstractEnv):
         return reward
 
     def _is_terminal(self) -> bool:
-        """
-        The episode is over when a collision occurs or when the access ramp has been passed.
-        """
+        """The episode is over when a collision occurs or when the access ramp has been passed."""
         return self.vehicle.crashed \
             or self.steps >= self.config["duration"] * self.config["policy_frequency"] \
             or self.has_arrived
@@ -217,9 +215,7 @@ class IntersectionEnv(AbstractEnv):
                and self.vehicle.lane.local_coordinates(self.vehicle.position)[0] >= exit_distance
 
     def _cost(self, action: int) -> float:
-        """
-        The constraint signal is the occurrence of collisions.
-        """
+        """The constraint signal is the occurrence of collisions."""
         return float(self.vehicle.crashed)
 
 

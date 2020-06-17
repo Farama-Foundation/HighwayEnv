@@ -25,9 +25,8 @@ class RegulatedRoad(Road):
         return super().step(dt)
 
     def enforce_road_rules(self) -> None:
-        """
-            Find conflicts and resolve them by assigning yielding vehicles and stopping them.
-        """
+        """Find conflicts and resolve them by assigning yielding vehicles and stopping them."""
+
         # Unfreeze previous yielding vehicles
         for v in self.vehicles:
             if getattr(v, "is_yielding", False):

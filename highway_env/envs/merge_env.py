@@ -53,9 +53,7 @@ class MergeEnv(AbstractEnv):
                           [0, 1])
 
     def _is_terminal(self) -> bool:
-        """
-        The episode is over when a collision occurs or when the access ramp has been passed.
-        """
+        """The episode is over when a collision occurs or when the access ramp has been passed."""
         return self.vehicle.crashed or self.vehicle.position[0] > 370
 
     def reset(self) -> np.ndarray:

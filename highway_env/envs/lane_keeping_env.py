@@ -14,9 +14,7 @@ from highway_env.vehicle.dynamics import BicycleVehicle
 
 
 class LaneKeepingEnv(AbstractEnv):
-    """
-        A lane keeping control task.
-    """
+    """A lane keeping control task."""
 
     def __init__(self, config: dict = None) -> None:
         super().__init__(config)

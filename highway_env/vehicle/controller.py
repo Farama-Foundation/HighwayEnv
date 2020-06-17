@@ -102,9 +102,7 @@ class ControlledVehicle(Vehicle):
         super().act(action)
 
     def follow_road(self) -> None:
-        """
-           At the end of a lane, automatically switch to a next one.
-        """
+        """At the end of a lane, automatically switch to a next one."""
         if self.road.network.get_lane(self.target_lane_index).after_end(self.position):
             self.target_lane_index = self.road.network.next_lane(self.target_lane_index,
                                                                  route=self.route,
@@ -153,9 +151,7 @@ class ControlledVehicle(Vehicle):
         return self.KP_A * (target_speed - self.speed)
 
     def get_routes_at_intersection(self) -> List[Route]:
-        """
-            Get the list of routes that can be followed at the next intersection.
-        """
+        """Get the list of routes that can be followed at the next intersection."""
         if not self.route:
             return []
         for index in range(min(len(self.route), 3)):
@@ -198,9 +194,7 @@ class ControlledVehicle(Vehicle):
 
 
 class MDPVehicle(ControlledVehicle):
-    """
-        A controlled vehicle with a specified discrete range of allowed target speeds.
-    """
+    """A controlled vehicle with a specified discrete range of allowed target speeds."""
 
     SPEED_COUNT: int = 3  # []
     SPEED_MIN: float = 20  # [m/s]

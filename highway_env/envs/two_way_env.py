@@ -46,15 +46,11 @@ class TwoWayEnv(AbstractEnv):
         return reward
 
     def _is_terminal(self) -> bool:
-        """
-            The episode is over if the ego vehicle crashed or the time is out.
-        """
+        """The episode is over if the ego vehicle crashed or the time is out."""
         return self.vehicle.crashed
 
     def _cost(self, action: int) -> float:
-        """
-            The constraint signal is the time spent driving on the opposite lane, and occurrence of collisions.
-        """
+        """The constraint signal is the time spent driving on the opposite lane, and occurrence of collisions."""
         return float(self.vehicle.crashed) + float(self.vehicle.lane_index[2] == 0)/15
 
     def reset(self) -> np.ndarray:

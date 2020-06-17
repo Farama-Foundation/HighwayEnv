@@ -220,9 +220,7 @@ class IntervalVehicle(LinearVehicle):
         self.interval.heading = x_i_lat[:, 1]
 
     def predictor_init(self) -> None:
-        """
-            Initialize the LPV models used for interval prediction
-        """
+        """Initialize the LPV models used for interval prediction"""
         position_i = self.interval.position
         target_lane = self.road.network.get_lane(self.target_lane_index)
         longi_i, lat_i = interval_absolute_to_local(position_i, target_lane)
@@ -353,9 +351,7 @@ class IntervalVehicle(LinearVehicle):
                                           max(v_minus.interval.heading[1], v_plus.interval.heading[1])])
 
     def store_trajectories(self) -> None:
-        """
-            Store the current model, min and max states to a trajectory list
-        """
+        """Store the current model, min and max states to a trajectory list"""
         self.trajectory.append(LinearVehicle.create_from(self))
         self.interval_trajectory.append(copy.deepcopy(self.interval))
 

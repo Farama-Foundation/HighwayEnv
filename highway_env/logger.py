@@ -1,17 +1,13 @@
 class Loggable(object):
-    """
-        Implements an object whose metrics can be logged through
-        time and accessed as a pandas DataFrame.
-    """
+    """Implements an object whose metrics can be logged through time and accessed as a pandas DataFrame."""
+
     def dump(self):
-        """
-            Update an internal log of object data.
-        """
+        """Update an internal log of object data."""
         raise Exception('Not implemented.')
 
     def get_log(self):
         """
-            Cast the object's internal log into a pandas DataFrame.
+        Cast the object's internal log into a pandas DataFrame.
 
         :return: the DataFrame containing the object's log
         """

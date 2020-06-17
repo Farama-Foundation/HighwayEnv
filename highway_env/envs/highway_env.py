@@ -10,18 +10,20 @@ from highway_env.vehicle.controller import MDPVehicle
 
 class HighwayEnv(AbstractEnv):
     """
-        A highway driving environment.
+    A highway driving environment.
 
-        The vehicle is driving on a straight highway with several lanes, and is rewarded for reaching a high speed,
-        staying on the rightmost lanes and avoiding collisions.
+    The vehicle is driving on a straight highway with several lanes, and is rewarded for reaching a high speed,
+    staying on the rightmost lanes and avoiding collisions.
     """
 
     RIGHT_LANE_REWARD: float = 0.1
-    """ The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes."""
+    """The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes."""
+
     HIGH_SPEED_REWARD: float = 0.4
-    """ The reward received when driving at full speed, linearly mapped to zero for lower speeds."""
+    """The reward received when driving at full speed, linearly mapped to zero for lower speeds."""
+
     LANE_CHANGE_REWARD: float = -0
-    """ The reward received at each lane change action."""
+    """The reward received at each lane change action."""
 
     def default_config(self) -> dict:
         config = super().default_config()
@@ -48,16 +50,12 @@ class HighwayEnv(AbstractEnv):
         return super().step(action)
 
     def _create_road(self) -> None:
-        """
-            Create a road composed of straight adjacent lanes.
-        """
+        """Create a road composed of straight adjacent lanes."""
         self.road = Road(network=RoadNetwork.straight_road_network(self.config["lanes_count"]),
                          np_random=self.np_random, record_history=self.config["show_trajectories"])
 
     def _create_vehicles(self) -> None:
-        """
-            Create some new random vehicles of a given type, and add them on the road.
-        """
+        """Create some new random vehicles of a given type, and add them on the road."""
         self.vehicle = MDPVehicle.create_random(self.road, 25, spacing=self.config["initial_spacing"])
         self.road.vehicles.append(self.vehicle)
 
@@ -82,15 +80,11 @@ class HighwayEnv(AbstractEnv):
                           [0, 1])
 
     def _is_terminal(self) -> bool:
-        """
-            The episode is over if the ego vehicle crashed or the time is out.
-        """
+        """The episode is over if the ego vehicle crashed or the time is out."""
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
     def _cost(self, action: int) -> float:
-        """
-            The cost signal is the occurrence of collision
-        """
+        """The cost signal is the occurrence of collision"""
         return float(self.vehicle.crashed)
 
 

@@ -94,9 +94,9 @@ class TimeToCollisionObservation(ObservationType):
 
 
 class KinematicObservation(ObservationType):
-    """
-        Observe the kinematics of nearby vehicles.
-    """
+
+    """Observe the kinematics of nearby vehicles."""
+
     FEATURES: List[str] = ['presence', 'x', 'y', 'vx', 'vy']
 
     def __init__(self, env: 'AbstractEnv',
@@ -189,9 +189,9 @@ class KinematicObservation(ObservationType):
 
 
 class OccupancyGridObservation(ObservationType):
-    """
-        Observe an occupancy grid of nearby vehicles.
-    """
+
+    """Observe an occupancy grid of nearby vehicles."""
+
     FEATURES: List[str] = ['presence', 'vx', 'vy']
     GRID_SIZE: List[List[float]] = [[-5.5*5, 5.5*5], [-5.5*5, 5.5*5]]
     GRID_STEP: List[int] = [5, 5]
