@@ -158,7 +158,6 @@
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">highway_env.vehicle</span> <span class="kn">import</span> <span class="n">kinematics</span>
-    <span class="kn">from</span> <span class="nn">highway_env.road</span> <span class="kn">import</span> <span class="n">objects</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -235,7 +234,7 @@
             <span class="k">if</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_index</span><span class="p">[:</span><span class="mi">2</span><span class="p">]:</span>  <span class="c1"># We just finished the first step of the route, drop it.</span>
                 <span class="n">route</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">route</span> <span class="ow">and</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">_to</span><span class="p">:</span>  <span class="c1"># Next road in route is starting at the end of current road.</span>
-                <span class="n">_</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">route_id</span> <span class="o">=</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">route</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Route </span><span class="si">{}</span><span class="s2"> does not start after current road </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">current_index</span><span class="p">))</span>
         <span class="c1"># Randomly pick next road</span>
