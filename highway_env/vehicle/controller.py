@@ -194,6 +194,7 @@ class ControlledVehicle(Vehicle):
 
 
 class MDPVehicle(ControlledVehicle):
+
     """A controlled vehicle with a specified discrete range of allowed target speeds."""
 
     SPEED_COUNT: int = 3  # []

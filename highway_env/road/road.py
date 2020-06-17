@@ -228,6 +228,7 @@ class RoadNetwork(object):
 
 
 class Road(Loggable):
+
     """A road is a set of lanes, and a set of vehicles driving on these lanes"""
 
     def __init__(self,

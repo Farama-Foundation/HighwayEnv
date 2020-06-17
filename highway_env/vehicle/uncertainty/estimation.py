@@ -10,7 +10,9 @@ from highway_env.vehicle.uncertainty.prediction import IntervalVehicle, Polytope
 
 
 class RegressionVehicle(IntervalVehicle):
+
     """Estimator for the parameter of a LinearVehicle."""
+
     def longitudinal_matrix_polytope(self) -> Polytope:
         return self.polytope_from_estimation(self.data["longitudinal"], self.theta_a_i, self.longitudinal_structure)
 

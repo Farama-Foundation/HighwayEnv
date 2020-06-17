@@ -210,7 +210,9 @@ class LaneGraphics(object):
 
 
 class RoadGraphics(object):
+
     """A visualization of a road lanes and vehicles."""
+
     @staticmethod
     def display(road: Road, surface: WorldSurface) -> None:
         """

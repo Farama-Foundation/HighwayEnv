@@ -1,4 +1,5 @@
 class Loggable(object):
+
     """Implements an object whose metrics can be logged through time and accessed as a pandas DataFrame."""
 
     def dump(self):

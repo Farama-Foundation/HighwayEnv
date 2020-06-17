@@ -7,7 +7,9 @@ from highway_env.types import Vector
 
 
 class AbstractLane(object):
+
     """A lane on the road, described by its central curve."""
+
     metaclass__ = ABCMeta
     DEFAULT_WIDTH: float = 4
     VEHICLE_LENGTH: float = 5
@@ -98,7 +100,9 @@ class AbstractLane(object):
 
 
 class LineType:
+
     """A lane side line type."""
+
     NONE = 0
     STRIPED = 1
     CONTINUOUS = 2
@@ -106,7 +110,9 @@ class LineType:
 
 
 class StraightLane(AbstractLane):
+
     """A lane going in straight line."""
+
     def __init__(self,
                  start: Vector,
                  end: Vector,
@@ -154,6 +160,7 @@ class StraightLane(AbstractLane):
 
 
 class SineLane(StraightLane):
+
     """A sinusoidal lane"""
 
     def __init__(self,
@@ -195,7 +202,9 @@ class SineLane(StraightLane):
 
 
 class CircularLane(AbstractLane):
+
     """A lane going in circle arc."""
+
     def __init__(self,
                  center: Vector,
                  radius: float,
