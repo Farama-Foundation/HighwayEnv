@@ -438,9 +438,7 @@
 
 
 <div class="viewcode-block" id="LinearVehicle"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.LinearVehicle">[docs]</a><span class="k">class</span> <span class="nc">LinearVehicle</span><span class="p">(</span><span class="n">IDMVehicle</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters&quot;&quot;&quot;</span>
     <span class="n">ACCELERATION_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
     <span class="n">STEERING_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="n">ControlledVehicle</span><span class="o">.</span><span class="n">KP_HEADING</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="o">.</span><span class="n">KP_HEADING</span> <span class="o">*</span> <span class="n">ControlledVehicle</span><span class="o">.</span><span class="n">KP_LATERAL</span><span class="p">]</span>
 
@@ -599,9 +597,7 @@
         <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">phi</span></div>
 
 <div class="viewcode-block" id="LinearVehicle.collect_data"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.LinearVehicle.collect_data">[docs]</a>    <span class="k">def</span> <span class="nf">collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Store features and outputs for parameter regression</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Store features and outputs for parameter regression&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_features</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LinearVehicle.add_features"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.LinearVehicle.add_features">[docs]</a>    <span class="k">def</span> <span class="nf">add_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">,</span> <span class="n">output_lane</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

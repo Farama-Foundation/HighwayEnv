@@ -243,9 +243,9 @@
 
 
 <div class="viewcode-block" id="KinematicObservation"><a class="viewcode-back" href="../../../../observations/index.html#highway_env.envs.common.observation.KinematicObservation">[docs]</a><span class="k">class</span> <span class="nc">KinematicObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Observe the kinematics of nearby vehicles.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="sd">&quot;&quot;&quot;Observe the kinematics of nearby vehicles.&quot;&quot;&quot;</span>
+
     <span class="n">FEATURES</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;presence&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;vx&#39;</span><span class="p">,</span> <span class="s1">&#39;vy&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="KinematicObservation.__init__"><a class="viewcode-back" href="../../../../observations/index.html#highway_env.envs.common.observation.KinematicObservation.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">,</span>
@@ -338,9 +338,9 @@
 
 
 <div class="viewcode-block" id="OccupancyGridObservation"><a class="viewcode-back" href="../../../../observations/index.html#highway_env.envs.common.observation.OccupancyGridObservation">[docs]</a><span class="k">class</span> <span class="nc">OccupancyGridObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Observe an occupancy grid of nearby vehicles.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="sd">&quot;&quot;&quot;Observe an occupancy grid of nearby vehicles.&quot;&quot;&quot;</span>
+
     <span class="n">FEATURES</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;presence&#39;</span><span class="p">,</span> <span class="s1">&#39;vx&#39;</span><span class="p">,</span> <span class="s1">&#39;vy&#39;</span><span class="p">]</span>
     <span class="n">GRID_SIZE</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mf">5.5</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="mf">5.5</span><span class="o">*</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.5</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="mf">5.5</span><span class="o">*</span><span class="mi">5</span><span class="p">]]</span>
     <span class="n">GRID_STEP</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>

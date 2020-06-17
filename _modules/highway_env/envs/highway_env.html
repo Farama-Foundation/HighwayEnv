@@ -159,18 +159,20 @@
 
 <div class="viewcode-block" id="HighwayEnv"><a class="viewcode-back" href="../../../environments/highway.html#highway_env.envs.highway_env.HighwayEnv">[docs]</a><span class="k">class</span> <span class="nc">HighwayEnv</span><span class="p">(</span><span class="n">AbstractEnv</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A highway driving environment.</span>
+<span class="sd">    A highway driving environment.</span>
 
-<span class="sd">        The vehicle is driving on a straight highway with several lanes, and is rewarded for reaching a high speed,</span>
-<span class="sd">        staying on the rightmost lanes and avoiding collisions.</span>
+<span class="sd">    The vehicle is driving on a straight highway with several lanes, and is rewarded for reaching a high speed,</span>
+<span class="sd">    staying on the rightmost lanes and avoiding collisions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">RIGHT_LANE_REWARD</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>
-    <span class="sd">&quot;&quot;&quot; The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes.&quot;&quot;&quot;</span>
+
     <span class="n">HIGH_SPEED_REWARD</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span>
-    <span class="sd">&quot;&quot;&quot; The reward received when driving at full speed, linearly mapped to zero for lower speeds.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The reward received when driving at full speed, linearly mapped to zero for lower speeds.&quot;&quot;&quot;</span>
+
     <span class="n">LANE_CHANGE_REWARD</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">0</span>
-    <span class="sd">&quot;&quot;&quot; The reward received at each lane change action.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The reward received at each lane change action.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="HighwayEnv.default_config"><a class="viewcode-back" href="../../../environments/highway.html#highway_env.envs.highway_env.HighwayEnv.default_config">[docs]</a>    <span class="k">def</span> <span class="nf">default_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
@@ -197,16 +199,12 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HighwayEnv._create_road"><a class="viewcode-back" href="../../../environments/highway.html#highway_env.envs.highway_env.HighwayEnv._create_road">[docs]</a>    <span class="k">def</span> <span class="nf">_create_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Create a road composed of straight adjacent lanes.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create a road composed of straight adjacent lanes.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">RoadNetwork</span><span class="o">.</span><span class="n">straight_road_network</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">]),</span>
                          <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span> <span class="n">record_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_trajectories&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="HighwayEnv._create_vehicles"><a class="viewcode-back" href="../../../environments/highway.html#highway_env.envs.highway_env.HighwayEnv._create_vehicles">[docs]</a>    <span class="k">def</span> <span class="nf">_create_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Create some new random vehicles of a given type, and add them on the road.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create some new random vehicles of a given type, and add them on the road.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span> <span class="o">=</span> <span class="n">MDPVehicle</span><span class="o">.</span><span class="n">create_random</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;initial_spacing&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="p">)</span>
 
@@ -231,15 +229,11 @@
                           <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="HighwayEnv._is_terminal"><a class="viewcode-back" href="../../../environments/highway.html#highway_env.envs.highway_env.HighwayEnv._is_terminal">[docs]</a>    <span class="k">def</span> <span class="nf">_is_terminal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            The episode is over if the ego vehicle crashed or the time is out.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;The episode is over if the ego vehicle crashed or the time is out.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="HighwayEnv._cost"><a class="viewcode-back" href="../../../environments/highway.html#highway_env.envs.highway_env.HighwayEnv._cost">[docs]</a>    <span class="k">def</span> <span class="nf">_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            The cost signal is the occurrence of collision</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;The cost signal is the occurrence of collision&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span><span class="p">)</span></div></div>
 
 

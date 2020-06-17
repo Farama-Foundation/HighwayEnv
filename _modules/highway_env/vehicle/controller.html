@@ -251,9 +251,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ControlledVehicle.follow_road"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.follow_road">[docs]</a>    <span class="k">def</span> <span class="nf">follow_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">           At the end of a lane, automatically switch to a next one.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;At the end of a lane, automatically switch to a next one.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">after_end</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">next_lane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">,</span>
                                                                  <span class="n">route</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">,</span>
@@ -302,9 +300,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">KP_A</span> <span class="o">*</span> <span class="p">(</span><span class="n">target_speed</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ControlledVehicle.get_routes_at_intersection"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.get_routes_at_intersection">[docs]</a>    <span class="k">def</span> <span class="nf">get_routes_at_intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Get the list of routes that can be followed at the next intersection.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the list of routes that can be followed at the next intersection.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">),</span> <span class="mi">3</span><span class="p">)):</span>
@@ -347,9 +343,7 @@
 
 
 <div class="viewcode-block" id="MDPVehicle"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.MDPVehicle">[docs]</a><span class="k">class</span> <span class="nc">MDPVehicle</span><span class="p">(</span><span class="n">ControlledVehicle</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A controlled vehicle with a specified discrete range of allowed target speeds.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A controlled vehicle with a specified discrete range of allowed target speeds.&quot;&quot;&quot;</span>
 
     <span class="n">SPEED_COUNT</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># []</span>
     <span class="n">SPEED_MIN</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># [m/s]</span>

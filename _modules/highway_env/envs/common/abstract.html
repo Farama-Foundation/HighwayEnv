@@ -181,18 +181,13 @@
                <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;LANE_RIGHT&#39;</span><span class="p">,</span>
                <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;FASTER&#39;</span><span class="p">,</span>
                <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;SLOWER&#39;</span><span class="p">}</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A mapping of action indexes to action labels</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A mapping of action indexes to action labels&quot;&quot;&quot;</span>
+    
     <span class="n">ACTIONS_INDEXES</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ACTIONS</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A mapping of action labels to action indexes</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A mapping of action labels to action indexes&quot;&quot;&quot;</span>
 
     <span class="n">PERCEPTION_DISTANCE</span> <span class="o">=</span> <span class="mf">6.0</span> <span class="o">*</span> <span class="n">MDPVehicle</span><span class="o">.</span><span class="n">SPEED_MAX</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The maximum distance of any vehicle present in the observation [m]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The maximum distance of any vehicle present in the observation [m]&quot;&quot;&quot;</span>
 
     <span class="n">STEERING_RANGE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span>
     <span class="n">ACCELERATION_RANGE</span> <span class="o">=</span> <span class="mf">5.0</span>
@@ -345,9 +340,7 @@
         <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminal</span><span class="p">,</span> <span class="n">info</span></div>
 
 <div class="viewcode-block" id="AbstractEnv._simulate"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv._simulate">[docs]</a>    <span class="k">def</span> <span class="nf">_simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Perform several steps of simulation with constant action</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Perform several steps of simulation with constant action&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">]</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])):</span>
             <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
                     <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">]</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -524,9 +517,7 @@
         <span class="k">return</span> <span class="n">finite_mdp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_quantization</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="AbstractEnv.__deepcopy__"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv.__deepcopy__">[docs]</a>    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Perform a deep copy but without copying the environment viewer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Perform a deep copy but without copying the environment viewer.&quot;&quot;&quot;</span>
         <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">memo</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="n">result</span>

@@ -306,16 +306,12 @@
 
 <div class="viewcode-block" id="RoadNetwork.is_same_road"><a class="viewcode-back" href="../../../dynamics/road/road.html#highway_env.road.regulation.RoadNetwork.is_same_road">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_same_road</span><span class="p">(</span><span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Is lane 1 in the same road as lane 2?</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Is lane 1 in the same road as lane 2?&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lane_index_1</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">same_lane</span> <span class="ow">or</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="RoadNetwork.is_leading_to_road"><a class="viewcode-back" href="../../../dynamics/road/road.html#highway_env.road.regulation.RoadNetwork.is_leading_to_road">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_leading_to_road</span><span class="p">(</span><span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Is lane 1 leading to of lane 2?</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Is lane 1 leading to of lane 2?&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">same_lane</span> <span class="ow">or</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="RoadNetwork.is_connected_road"><a class="viewcode-back" href="../../../dynamics/road/road.html#highway_env.road.regulation.RoadNetwork.is_connected_road">[docs]</a>    <span class="k">def</span> <span class="nf">is_connected_road</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -381,9 +377,7 @@
 
 
 <div class="viewcode-block" id="Road"><a class="viewcode-back" href="../../../dynamics/road/road.html#highway_env.road.regulation.Road">[docs]</a><span class="k">class</span> <span class="nc">Road</span><span class="p">(</span><span class="n">Loggable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A road is a set of lanes, and a set of vehicles driving on these lanes</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A road is a set of lanes, and a set of vehicles driving on these lanes&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Road.__init__"><a class="viewcode-back" href="../../../dynamics/road/road.html#highway_env.road.regulation.Road.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">network</span><span class="p">:</span> <span class="n">RoadNetwork</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -419,9 +413,7 @@
         <span class="k">return</span> <span class="n">vehicles</span></div>
 
 <div class="viewcode-block" id="Road.act"><a class="viewcode-back" href="../../../dynamics/road/road.html#highway_env.road.regulation.Road.act">[docs]</a>    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Decide the actions of each entity on the road.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Decide the actions of each entity on the road.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="n">vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">()</span></div>
 
@@ -471,9 +463,7 @@
         <span class="k">return</span> <span class="n">v_front</span><span class="p">,</span> <span class="n">v_rear</span></div>
 
 <div class="viewcode-block" id="Road.dump"><a class="viewcode-back" href="../../../dynamics/road/road.html#highway_env.road.regulation.Road.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Dump the data of all entities on the road</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Dump the data of all entities on the road&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="n">v</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span></div>
 

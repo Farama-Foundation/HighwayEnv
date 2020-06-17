@@ -212,9 +212,7 @@
         <span class="k">return</span> <span class="n">reward</span></div>
 
 <div class="viewcode-block" id="IntersectionEnv._is_terminal"><a class="viewcode-back" href="../../../environments/intersection.html#highway_env.envs.intersection_env.IntersectionEnv._is_terminal">[docs]</a>    <span class="k">def</span> <span class="nf">_is_terminal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The episode is over when a collision occurs or when the access ramp has been passed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;The episode is over when a collision occurs or when the access ramp has been passed.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span> \
             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">]</span> \
             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_arrived</span></div>
@@ -366,9 +364,7 @@
                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">exit_distance</span>
 
 <div class="viewcode-block" id="IntersectionEnv._cost"><a class="viewcode-back" href="../../../environments/intersection.html#highway_env.envs.intersection_env.IntersectionEnv._cost">[docs]</a>    <span class="k">def</span> <span class="nf">_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The constraint signal is the occurrence of collisions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;The constraint signal is the occurrence of collisions.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span><span class="p">)</span></div></div>
 
 

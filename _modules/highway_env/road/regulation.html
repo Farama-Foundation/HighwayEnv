@@ -174,9 +174,8 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RegulatedRoad.enforce_road_rules"><a class="viewcode-back" href="../../../dynamics/road/regulation.html#highway_env.road.regulation.RegulatedRoad.enforce_road_rules">[docs]</a>    <span class="k">def</span> <span class="nf">enforce_road_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Find conflicts and resolve them by assigning yielding vehicles and stopping them.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Find conflicts and resolve them by assigning yielding vehicles and stopping them.&quot;&quot;&quot;</span>
+
         <span class="c1"># Unfreeze previous yielding vehicles</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;is_yielding&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
