@@ -1,5 +1,4 @@
-import copy
-from typing import List, Union, TYPE_CHECKING
+from typing import Union, TYPE_CHECKING
 import numpy as np
 import pandas as pd
 from collections import deque

@@ -232,7 +232,7 @@ class RoadNetwork(object):
 
 class Road(Loggable):
 
-    """A road is a set of lanes, and a set of vehicles driving on these lanes"""
+    """A road is a set of lanes, and a set of vehicles driving on these lanes."""
 
     def __init__(self,
                  network: RoadNetwork = None,
@@ -319,7 +319,7 @@ class Road(Loggable):
         return v_front, v_rear
 
     def dump(self) -> None:
-        """Dump the data of all entities on the road"""
+        """Dump the data of all entities on the road."""
         for v in self.vehicles:
             v.dump()
 

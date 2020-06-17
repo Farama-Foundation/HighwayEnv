@@ -20,22 +20,22 @@ class IDMVehicle(ControlledVehicle):
 
     # Longitudinal policy parameters
     ACC_MAX = 6.0  # [m/s2]
-    """Maximum acceleration"""
+    """Maximum acceleration."""
 
     COMFORT_ACC_MAX = 3.0  # [m/s2]
-    """Desired maximum acceleration"""
+    """Desired maximum acceleration."""
 
     COMFORT_ACC_MIN = -5.0  # [m/s2]
-    """Desired maximum deceleration"""
+    """Desired maximum deceleration."""
 
     DISTANCE_WANTED = 5.0 + ControlledVehicle.LENGTH  # [m]
-    """Desired jam distance to the front vehicle"""
+    """Desired jam distance to the front vehicle."""
 
     TIME_WANTED = 1.5  # [s]
-    """Desired time gap to the front vehicle"""
+    """Desired time gap to the front vehicle."""
 
     DELTA = 4.0  # []
-    """Exponent of the velocity term"""
+    """Exponent of the velocity term."""
 
     # Lateral policy parameters
     POLITENESS = 0.  # in [0, 1]
@@ -291,7 +291,7 @@ class IDMVehicle(ControlledVehicle):
 
 class LinearVehicle(IDMVehicle):
 
-    """A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters"""
+    """A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters."""
 
     ACCELERATION_PARAMETERS = [0.3, 0.3, 2.0]
     STEERING_PARAMETERS = [ControlledVehicle.KP_HEADING, ControlledVehicle.KP_HEADING * ControlledVehicle.KP_LATERAL]
@@ -454,7 +454,7 @@ class LinearVehicle(IDMVehicle):
         return A, phi
 
     def collect_data(self):
-        """Store features and outputs for parameter regression"""
+        """Store features and outputs for parameter regression."""
         self.add_features(self.data, self.target_lane_index)
 
     def add_features(self, data, lane_index, output_lane=None):

@@ -17,7 +17,7 @@ class ControlledVehicle(Vehicle):
     """
 
     target_speed: float
-    """ Desired velocity"""
+    """ Desired velocity."""
 
     TAU_A = 0.6  # [s]
     TAU_DS = 0.2  # [s]

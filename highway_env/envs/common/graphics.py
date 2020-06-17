@@ -130,7 +130,7 @@ class EnvViewer(object):
             self.frame += 1
 
     def get_image(self) -> np.ndarray:
-        """the rendered image as a rbg array"""
+        """the rendered image as a rbg array."""
         surface = self.screen if self.env.config["render_agent"] and not self.offscreen else self.sim_surface
         data = pygame.surfarray.array3d(surface)
         return np.moveaxis(data, 0, 1)

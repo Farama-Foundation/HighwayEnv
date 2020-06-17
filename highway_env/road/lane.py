@@ -94,7 +94,7 @@ class AbstractLane(object):
         return longitudinal > self.length - self.VEHICLE_LENGTH / 2
 
     def distance(self, position):
-        """Compute the L1 distance [m] from a position to the lane"""
+        """Compute the L1 distance [m] from a position to the lane."""
         s, r = self.local_coordinates(position)
         return abs(r) + max(s - self.length, 0) + max(0 - s, 0)
 
@@ -161,7 +161,7 @@ class StraightLane(AbstractLane):
 
 class SineLane(StraightLane):
 
-    """A sinusoidal lane"""
+    """A sinusoidal lane."""
 
     def __init__(self,
                  start: Vector,

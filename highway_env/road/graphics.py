@@ -260,7 +260,7 @@ class RoadGraphics(object):
 
 class RoadObjectGraphics:
 
-    """A visualization of objects on the road"""
+    """A visualization of objects on the road."""
 
     YELLOW = (200, 200, 0)
     BLUE = (100, 200, 255)
@@ -273,7 +273,7 @@ class RoadObjectGraphics:
     def display(cls, object_: 'RoadObject', surface: WorldSurface, transparent: bool = False,
                 offscreen: bool = False):
         """
-        Display a road objects on a pygame surface
+        Display a road objects on a pygame surface.
 
         The objects is represented as a colored rotated rectangle
 
@@ -297,7 +297,7 @@ class RoadObjectGraphics:
     @staticmethod
     def blit_rotate(surf: pygame.SurfaceType, image: pygame.SurfaceType, pos: Vector, angle: float,
                     origin_pos: Vector = None, show_rect: bool = False) -> None:
-        """Many thanks to https://stackoverflow.com/a/54714144 """
+        """Many thanks to https://stackoverflow.com/a/54714144."""
         # calculate the axis aligned bounding box of the rotated image
         w, h = image.get_size()
         box = [pygame.math.Vector2(p) for p in [(0, 0), (w, 0), (w, -h), (0, -h)]]
