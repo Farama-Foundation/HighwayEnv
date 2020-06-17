@@ -28,9 +28,9 @@ class VehicleGraphics(object):
     def display(cls, vehicle: Vehicle, surface: "WorldSurface", transparent: bool = False, offscreen: bool = False,
                 label: bool = False) -> None:
         """
-            Display a vehicle on a pygame surface.
+        Display a vehicle on a pygame surface.
 
-            The vehicle is represented as a colored rotated rectangle.
+        The vehicle is represented as a colored rotated rectangle.
 
         :param vehicle: the vehicle to be drawn
         :param surface: the surface to draw the vehicle on
@@ -106,7 +106,7 @@ class VehicleGraphics(object):
     @classmethod
     def display_trajectory(cls, states: List[Vehicle], surface: "WorldSurface", offscreen: bool = False) -> None:
         """
-            Display the whole trajectory of a vehicle on a pygame surface.
+        Display the whole trajectory of a vehicle on a pygame surface.
 
         :param states: the list of vehicle states within the trajectory to be displayed
         :param surface: the surface to draw the vehicle future states on
@@ -119,7 +119,7 @@ class VehicleGraphics(object):
     def display_history(cls, vehicle: Vehicle, surface: "WorldSurface", frequency: float = 3, duration: float = 2,
                         simulation: int = 15, offscreen: bool = False) -> None:
         """
-            Display the whole trajectory of a vehicle on a pygame surface.
+        Display the whole trajectory of a vehicle on a pygame surface.
 
         :param vehicle: the vehicle states within the trajectory to be displayed
         :param surface: the surface to draw the vehicle future states on
@@ -154,7 +154,7 @@ class VehicleGraphics(object):
     @classmethod
     def handle_event(cls, vehicle: Vehicle, event: pygame.event.EventType) -> None:
         """
-            Handle a pygame event depending on the vehicle type
+        Handle a pygame event depending on the vehicle type
 
         :param vehicle: the vehicle receiving the event
         :param event: the pygame event
@@ -167,7 +167,7 @@ class VehicleGraphics(object):
     @classmethod
     def control_event(cls, vehicle: Vehicle, event: pygame.event.EventType) -> None:
         """
-            Map the pygame keyboard events to control decisions
+        Map the pygame keyboard events to control decisions
 
         :param vehicle: the vehicle receiving the event
         :param event: the pygame event
@@ -185,7 +185,7 @@ class VehicleGraphics(object):
     @classmethod
     def dynamics_event(cls, vehicle: Vehicle, event: pygame.event.EventType) -> None:
         """
-            Map the pygame keyboard events to dynamics actuation
+        Map the pygame keyboard events to dynamics actuation
 
         :param vehicle: the vehicle receiving the event
         :param event: the pygame event

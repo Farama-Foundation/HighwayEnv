@@ -16,12 +16,14 @@ if TYPE_CHECKING:
 
 
 class Vehicle(Loggable):
-    """
-        A moving vehicle on a road, and its kinematics.
 
-        The vehicle is represented by a dynamical system: a modified bicycle model.
-        It's state is propagated depending on its steering and acceleration actions.
     """
+    A moving vehicle on a road, and its kinematics.
+
+    The vehicle is represented by a dynamical system: a modified bicycle model.
+    It's state is propagated depending on its steering and acceleration actions.
+    """
+
     COLLISIONS_ENABLED = True
     """ Enable collision detection between vehicles """
 
@@ -53,7 +55,7 @@ class Vehicle(Loggable):
     @classmethod
     def make_on_lane(cls, road: Road, lane_index: LaneIndex, longitudinal: float, speed: float = 0) -> "Vehicle":
         """
-            Create a vehicle on a given lane at a longitudinal position.
+        Create a vehicle on a given lane at a longitudinal position.
 
         :param road: the road where the vehicle is driving
         :param lane_index: index of the lane where the vehicle is located
@@ -69,10 +71,10 @@ class Vehicle(Loggable):
     @classmethod
     def create_random(cls, road: Road, speed: float = None, spacing: float = 1) -> "Vehicle":
         """
-            Create a random vehicle on the road.
+        Create a random vehicle on the road.
 
-            The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
-            vehicle in the road with density based on the number of lanes.
+        The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
+        vehicle in the road with density based on the number of lanes.
 
         :param road: the road where the vehicle is driving
         :param speed: initial speed in [m/s]. If None, will be chosen randomly
@@ -96,8 +98,9 @@ class Vehicle(Loggable):
     @classmethod
     def create_from(cls, vehicle: "Vehicle") -> "Vehicle":
         """
-            Create a new vehicle from an existing one.
-            Only the vehicle dynamics are copied, other properties are default.
+        Create a new vehicle from an existing one.
+
+        Only the vehicle dynamics are copied, other properties are default.
 
         :param vehicle: a vehicle
         :return: a new vehicle at the same dynamical state
@@ -107,7 +110,7 @@ class Vehicle(Loggable):
 
     def act(self, action: Union[dict, str] = None) -> None:
         """
-            Store an action to be repeated.
+        Store an action to be repeated.
 
         :param action: the input action
         """
@@ -116,11 +119,11 @@ class Vehicle(Loggable):
 
     def step(self, dt: float) -> None:
         """
-            Propagate the vehicle state given its actions.
+        Propagate the vehicle state given its actions.
 
-            Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.
-            If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.
-            The vehicle's current lane is updated.
+        Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.
+        If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.
+        The vehicle's current lane is updated.
 
         :param dt: timestep of integration of the model [s]
         """
@@ -154,7 +157,7 @@ class Vehicle(Loggable):
 
     def lane_distance_to(self, vehicle: "Vehicle", lane: AbstractLane = None) -> float:
         """
-            Compute the signed distance to another vehicle along a lane.
+        Compute the signed distance to another vehicle along a lane.
 
         :param vehicle: the other vehicle
         :param lane: a lane
@@ -168,7 +171,7 @@ class Vehicle(Loggable):
 
     def check_collision(self, other: Union['Vehicle', 'RoadObject']) -> None:
         """
-            Check for collision with another vehicle.
+        Check for collision with another vehicle.
 
         :param other: the other vehicle or object
         """
@@ -254,9 +257,11 @@ class Vehicle(Loggable):
 
     def dump(self) -> None:
         """
-            Update the internal log of the vehicle, containing:
-                - its kinematics;
-                - some metrics relative to its neighbour vehicles.
+        Update the internal log of the vehicle
+
+        The log contains:
+        - its kinematics;
+        - some metrics relative to its neighbour vehicles.
         """
         data = {
             'x': self.position[0],
@@ -291,7 +296,7 @@ class Vehicle(Loggable):
 
     def get_log(self) -> pd.DataFrame:
         """
-            Cast the internal log as a DataFrame.
+        Cast the internal log as a DataFrame.
 
         :return: the DataFrame of the Vehicle's log.
         """

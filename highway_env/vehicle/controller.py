@@ -44,8 +44,9 @@ class ControlledVehicle(Vehicle):
     @classmethod
     def create_from(cls, vehicle: "ControlledVehicle") -> "ControlledVehicle":
         """
-            Create a new vehicle from an existing one.
-            The vehicle dynamics and target dynamics are copied, other properties are default.
+        Create a new vehicle from an existing one.
+
+        The vehicle dynamics and target dynamics are copied, other properties are default.
 
         :param vehicle: a vehicle
         :return: a new vehicle at the same dynamical state
@@ -57,7 +58,7 @@ class ControlledVehicle(Vehicle):
 
     def plan_route_to(self, destination: str) -> "ControlledVehicle":
         """
-            Plan a route to a destination in the road network
+        Plan a route to a destination in the road network
 
         :param destination: a node in the road network
         """
@@ -73,10 +74,10 @@ class ControlledVehicle(Vehicle):
 
     def act(self, action: Union[dict, str] = None) -> None:
         """
-            Perform a high-level action to change the desired lane or speed.
+        Perform a high-level action to change the desired lane or speed.
 
-            - If a high-level action is provided, update the target speed and lane;
-            - then, perform longitudinal and lateral control.
+        - If a high-level action is provided, update the target speed and lane;
+        - then, perform longitudinal and lateral control.
 
         :param action: a high-level action
         """
@@ -111,7 +112,7 @@ class ControlledVehicle(Vehicle):
 
     def steering_control(self, target_lane_index: LaneIndex) -> float:
         """
-            Steer the vehicle to follow the center of an given lane.
+        Steer the vehicle to follow the center of an given lane.
 
         1. Lateral position is controlled by a proportional controller yielding a lateral speed command
         2. Lateral speed command is converted to a heading reference
@@ -141,9 +142,9 @@ class ControlledVehicle(Vehicle):
 
     def speed_control(self, target_speed: float) -> float:
         """
-            Control the speed of the vehicle.
+        Control the speed of the vehicle.
 
-            Using a simple proportional controller.
+        Using a simple proportional controller.
 
         :param target_speed: the desired speed
         :return: an acceleration command [m/s2]
@@ -170,8 +171,10 @@ class ControlledVehicle(Vehicle):
 
     def set_route_at_intersection(self, _to: int) -> None:
         """
-            Set the road to be followed at the next intersection.
-            Erase current planned route.
+        Set the road to be followed at the next intersection.
+
+        Erase current planned route.
+
         :param _to: index of the road to follow at next intersection, in the road network
         """
 
@@ -183,7 +186,8 @@ class ControlledVehicle(Vehicle):
 
     def predict_trajectory_constant_speed(self, times: np.ndarray) -> Tuple[List[np.ndarray], List[float]]:
         """
-            Predict the future positions of the vehicle along its planned route, under constant speed
+        Predict the future positions of the vehicle along its planned route, under constant speed
+
         :param times: timesteps of prediction
         :return: positions, headings
         """
@@ -215,10 +219,10 @@ class MDPVehicle(ControlledVehicle):
 
     def act(self, action: Union[dict, str] = None) -> None:
         """
-            Perform a high-level action.
+        Perform a high-level action.
 
-            If the action is a speed change, choose speed from the allowed discrete range.
-            Else, forward action to the ControlledVehicle handler.
+        - If the action is a speed change, choose speed from the allowed discrete range.
+        - Else, forward action to the ControlledVehicle handler.
 
         :param action: a high-level action
         """
@@ -236,7 +240,8 @@ class MDPVehicle(ControlledVehicle):
     @classmethod
     def index_to_speed(cls, index: int) -> float:
         """
-            Convert an index among allowed speeds to its corresponding speed
+        Convert an index among allowed speeds to its corresponding speed
+
         :param index: the speed index []
         :return: the corresponding speed [m/s]
         """
@@ -248,7 +253,8 @@ class MDPVehicle(ControlledVehicle):
     @classmethod
     def speed_to_index(cls, speed: float) -> int:
         """
-            Find the index of the closest speed allowed to a given speed.
+        Find the index of the closest speed allowed to a given speed.
+
         :param speed: an input speed [m/s]
         :return: the index of the closest speed allowed []
         """
@@ -258,7 +264,7 @@ class MDPVehicle(ControlledVehicle):
     def predict_trajectory(self, actions: List, action_duration: float, trajectory_timestep: float, dt: float) \
             -> List[ControlledVehicle]:
         """
-            Predict the future trajectory of the vehicle given a sequence of actions.
+        Predict the future trajectory of the vehicle given a sequence of actions.
 
         :param actions: a sequence of future actions.
         :param action_duration: the duration of each action.

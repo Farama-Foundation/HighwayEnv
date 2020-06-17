@@ -7,10 +7,13 @@ LaneIndex = Tuple[str, str, int]
 
 
 class RoadObject(ABC):
+
     """
-        Common interface for objects that appear on the road, beside vehicles.
-        For now we assume all objects are rectangular.
+    Common interface for objects that appear on the road, beside vehicles.
+
+    For now we assume all objects are rectangular.
     """
+
     LENGTH = 2.0  # Object length [m]
     WIDTH = 2.0  # Object width [m]
 
@@ -31,7 +34,7 @@ class RoadObject(ABC):
     @classmethod
     def make_on_lane(cls, road, lane_index: LaneIndex, longitudinal: float):
         """
-            Create an object on a given lane at a longitudinal position.
+        Create an object on a given lane at a longitudinal position.
 
         :param road: the road instance where the object is placed in
         :param lane_index: a tuple (origin node, destination node, lane id on the road).

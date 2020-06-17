@@ -17,12 +17,13 @@ Observation = np.ndarray
 
 
 class AbstractEnv(gym.Env):
-    """
-        A generic environment for various tasks involving a vehicle driving on a road.
 
-        The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and
-        speed. The action space is fixed, but the observation space and reward function must be defined in the
-        environment implementations.
+    """
+    A generic environment for various tasks involving a vehicle driving on a road.
+
+    The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and
+    speed. The action space is fixed, but the observation space and reward function must be defined in the
+    environment implementations.
     """
     automatic_rendering_callback: Optional[Callable]
     metadata = {'render.modes': ['human', 'rgb_array']}
@@ -33,7 +34,7 @@ class AbstractEnv(gym.Env):
                3: 'FASTER',
                4: 'SLOWER'}
     """A mapping of action indexes to action labels"""
-    
+
     ACTIONS_INDEXES = {v: k for k, v in ACTIONS.items()}
     """A mapping of action labels to action indexes"""
 

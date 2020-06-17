@@ -14,24 +14,24 @@ def finite_mdp(env: 'AbstractEnv',
                time_quantization: float = 1.,
                horizon: float = 10.) -> object:
     """
-        Time-To-Collision (TTC) representation of the state.
+    Time-To-Collision (TTC) representation of the state.
 
-        The state reward is defined from a occupancy grid over different TTCs and lanes. The grid cells encode the
-        probability that the ego-vehicle will collide with another vehicle if it is located on a given lane in a given
-        duration, under the hypothesis that every vehicles observed will maintain a constant speed (including the
-        ego-vehicle) and not change lane (excluding the ego-vehicle).
+    The state reward is defined from a occupancy grid over different TTCs and lanes. The grid cells encode the
+    probability that the ego-vehicle will collide with another vehicle if it is located on a given lane in a given
+    duration, under the hypothesis that every vehicles observed will maintain a constant speed (including the
+    ego-vehicle) and not change lane (excluding the ego-vehicle).
 
-        For instance, in a three-lane road with a vehicle on the left lane with collision predicted in 5s the grid will
-        be:
-        [0, 0, 0, 0, 1, 0, 0,
-         0, 0, 0, 0, 0, 0, 0,
-         0, 0, 0, 0, 0, 0, 0]
-        The TTC-state is a coordinate (lane, time) within this grid.
+    For instance, in a three-lane road with a vehicle on the left lane with collision predicted in 5s the grid will
+    be:
+    [0, 0, 0, 0, 1, 0, 0,
+     0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0]
+    The TTC-state is a coordinate (lane, time) within this grid.
 
-        If the ego-vehicle has the ability to change its speed, an additional layer is added to the occupancy grid
-        to iterate over the different speed choices available.
+    If the ego-vehicle has the ability to change its speed, an additional layer is added to the occupancy grid
+    to iterate over the different speed choices available.
 
-        Finally, this state is flattened for compatibility with the FiniteMDPEnv environment.
+    Finally, this state is flattened for compatibility with the FiniteMDPEnv environment.
 
     :param AbstractEnv env: an environment
     :param time_quantization: the time quantization used in the state representation [s]
@@ -80,8 +80,9 @@ def finite_mdp(env: 'AbstractEnv',
 def compute_ttc_grid(env: 'AbstractEnv', time_quantization: float, horizon: float, considered_lanes: str = "all") \
         -> np.ndarray:
     """
-        For each ego-speed and lane, compute the predicted time-to-collision to each vehicle within the lane and
-        store the results in an occupancy grid.
+    Compute the grid of predicted time-to-collision to each vehicle within the lane
+
+    For each ego-speed and lane.
     """
     road_lanes = env.road.network.all_side_lanes(env.vehicle.lane_index)
     grid = np.zeros((env.vehicle.SPEED_COUNT, len(road_lanes), int(horizon / time_quantization)))
@@ -117,7 +118,7 @@ def compute_ttc_grid(env: 'AbstractEnv', time_quantization: float, horizon: floa
 
 def transition_model(h: int, i: int, j: int, a: int, grid: np.ndarray) -> np.ndarray:
     """
-        Deterministic transition from a position in the grid to the next.
+    Deterministic transition from a position in the grid to the next.
 
     :param h: speed index
     :param i: lane index
@@ -140,7 +141,7 @@ def transition_model(h: int, i: int, j: int, a: int, grid: np.ndarray) -> np.nda
 
 def clip_position(h: int, i: int, j: int, grid: np.ndarray) -> np.ndarray:
     """
-        Clip a position in the TTC grid, so that it stays within bounds.
+    Clip a position in the TTC grid, so that it stays within bounds.
 
     :param h: speed index
     :param i: lane index

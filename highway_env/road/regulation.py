@@ -53,7 +53,8 @@ class RegulatedRoad(Road):
     @staticmethod
     def respect_priorities(v1: Vehicle, v2: Vehicle) -> Vehicle:
         """
-            Resolve a conflict between two vehicles by determining who should yield
+        Resolve a conflict between two vehicles by determining who should yield
+
         :param v1: first vehicle
         :param v2: second vehicle
         :return: the yielding vehicle

@@ -10,10 +10,12 @@ from highway_env.vehicle.kinematics import Vehicle
 
 class BicycleVehicle(Vehicle):
     """
-        This model is based on the following assumptions:
-        - the vehicle is moving with a constant longitudinal speed
-        - the steering input to front tires and the corresponding slip angles are small
-        See https://pdfs.semanticscholar.org/bb9c/d2892e9327ec1ee647c30c320f2089b290c1.pdf, Chapter 3.
+    This model is based on the following assumptions:
+
+    - the vehicle is moving with a constant longitudinal speed
+    - the steering input to front tires and the corresponding slip angles are small
+
+    See https://pdfs.semanticscholar.org/bb9c/d2892e9327ec1ee647c30c320f2089b290c1.pdf, Chapter 3.
     """
     MASS: float = 1  # [kg]
     LENGTH_A: float = Vehicle.LENGTH / 2  # [m]
@@ -44,7 +46,8 @@ class BicycleVehicle(Vehicle):
     @property
     def derivative(self) -> np.ndarray:
         """
-            See Chapter 2 of Lateral Vehicle Dynamics. Vehicle Dynamics and Control. Rajamani, R. (2011)
+        See Chapter 2 of Lateral Vehicle Dynamics. Vehicle Dynamics and Control. Rajamani, R. (2011)
+
         :return: the state derivative
         """
         delta_f = self.action["steering"]
@@ -98,7 +101,8 @@ class BicycleVehicle(Vehicle):
 
     def lateral_lpv_structure(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
-            State: [lateral speed v, yaw rate r]
+        State: [lateral speed v, yaw rate r]
+
         :return: lateral dynamics A0, phi, B such that dx = (A0 + theta^T phi)x + B u
         """
         B = np.array([
@@ -128,7 +132,8 @@ class BicycleVehicle(Vehicle):
 
     def lateral_lpv_dynamics(self) -> Tuple[np.ndarray, np.ndarray]:
         """
-            State: [lateral speed v, yaw rate r]
+        State: [lateral speed v, yaw rate r]
+
         :return: lateral dynamics A, B
         """
         A0, phi, B = self.lateral_lpv_structure()
@@ -138,8 +143,10 @@ class BicycleVehicle(Vehicle):
 
     def full_lateral_lpv_structure(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
-            State: [position y, yaw psi, lateral speed v, yaw rate r]
-            The system is linearized around psi = 0
+        State: [position y, yaw psi, lateral speed v, yaw rate r]
+
+        The system is linearized around psi = 0
+
         :return: lateral dynamics A, phi, B
         """
         A_lat, phi_lat, B_lat = self.lateral_lpv_structure()
@@ -157,8 +164,10 @@ class BicycleVehicle(Vehicle):
 
     def full_lateral_lpv_dynamics(self) -> Tuple[np.ndarray, np.ndarray]:
         """
-            State: [position y, yaw psi, lateral speed v, yaw rate r]
-            The system is linearized around psi = 0
+        State: [position y, yaw psi, lateral speed v, yaw rate r]
+
+        The system is linearized around psi = 0
+
         :return: lateral dynamics A, B
         """
         A0, phi, B = self.full_lateral_lpv_structure()

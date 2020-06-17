@@ -48,8 +48,10 @@ class EnvViewer(object):
 
     def set_agent_display(self, agent_display: Callable) -> None:
         """
-            Set a display callback provided by an agent, so that they can render their behaviour on a dedicated
-            agent surface, or even on the simulation surface.
+        Set a display callback provided by an agent
+
+        So that they can render their behaviour on a dedicated agent surface, or even on the simulation surface.
+
         :param agent_display: a callback provided by the agent to display on surfaces
         """
         if self.agent_display is None:
@@ -64,7 +66,8 @@ class EnvViewer(object):
 
     def set_agent_action_sequence(self, actions: List['Action']) -> None:
         """
-            Set the sequence of actions chosen by the agent, so that it can be displayed
+        Set the sequence of actions chosen by the agent, so that it can be displayed
+
         :param actions: list of action, following the env's action space specification
         """
         if isinstance(self.env.action_space, Discrete):

@@ -42,7 +42,8 @@ def wrap_to_pi(x: float) -> float:
 
 def point_in_rectangle(point: Vector, rect_min: Vector, rect_max: Vector) -> bool:
     """
-        Check if a point is inside a rectangle
+    Check if a point is inside a rectangle
+
     :param point: a point (x, y)
     :param rect_min: x_min, y_min
     :param rect_max: x_max, y_max
@@ -53,7 +54,8 @@ def point_in_rectangle(point: Vector, rect_min: Vector, rect_max: Vector) -> boo
 def point_in_rotated_rectangle(point: np.ndarray, center: np.ndarray, length: float, width: float, angle: float) \
         -> bool:
     """
-        Check if a point is inside a rotated rectangle
+    Check if a point is inside a rotated rectangle
+
     :param point: a point
     :param center: rectangle center
     :param length: rectangle length
@@ -69,7 +71,8 @@ def point_in_rotated_rectangle(point: np.ndarray, center: np.ndarray, length: fl
 
 def point_in_ellipse(point: Vector, center: Vector, angle: float, length: float, width: float) -> bool:
     """
-        Check if a point is inside an ellipse
+    Check if a point is inside an ellipse
+
     :param point: a point
     :param center: ellipse center
     :param angle: ellipse main axis angle
@@ -86,7 +89,8 @@ def point_in_ellipse(point: Vector, center: Vector, angle: float, length: float,
 def rotated_rectangles_intersect(rect1: Tuple[Vector, float, float, float],
                                  rect2: Tuple[Vector, float, float, float]) -> bool:
     """
-        Do two rotated rectangles intersect?
+    Do two rotated rectangles intersect?
+
     :param rect1: (center, length, width, angle)
     :param rect2: (center, length, width, angle)
     :return: do they?
@@ -97,7 +101,8 @@ def rotated_rectangles_intersect(rect1: Tuple[Vector, float, float, float],
 def has_corner_inside(rect1: Tuple[Vector, float, float, float],
                       rect2: Tuple[Vector, float, float, float]) -> bool:
     """
-        Check if rect1 has a corner inside rect2
+    Check if rect1 has a corner inside rect2
+
     :param rect1: (center, length, width, angle)
     :param rect2: (center, length, width, angle)
     """
@@ -118,8 +123,7 @@ def has_corner_inside(rect1: Tuple[Vector, float, float, float],
 def confidence_ellipsoid(data: Dict[str, np.ndarray], lambda_: float = 1e-5, delta: float = 0.1, sigma: float = 0.1,
                          param_bound: float = 1.0) -> Tuple[np.ndarray, np.ndarray, float]:
     """
-        Compute a confidence ellipsoid over the parameter theta, where
-                                y = theta^T phi
+    Compute a confidence ellipsoid over the parameter theta, where y = theta^T phi
 
     :param data: a dictionary {"features": [phi_0,...,phi_N], "outputs": [y_0,...,y_N]}
     :param lambda_: l2 regularization parameter
@@ -140,8 +144,7 @@ def confidence_ellipsoid(data: Dict[str, np.ndarray], lambda_: float = 1e-5, del
 
 def confidence_polytope(data: dict, parameter_box: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float]:
     """
-    Compute a confidence polytope over the parameter theta, where
-                              y = theta^T phi
+    Compute a confidence polytope over the parameter theta, where y = theta^T phi
 
     :param data: a dictionary {"features": [phi_0,...,phi_N], "outputs": [y_0,...,y_N]}
     :param parameter_box: a box [theta_min, theta_max]  containing the parameter theta
@@ -165,7 +168,7 @@ def confidence_polytope(data: dict, parameter_box: np.ndarray) -> Tuple[np.ndarr
 def is_valid_observation(y: np.ndarray, phi: np.ndarray, theta: np.ndarray, gramian: np.ndarray,
                          beta: float, sigma: float = 0.1) -> bool:
     """
-        Check if a new observation (phi, y) is valid according to a confidence ellipsoid on theta.
+    Check if a new observation (phi, y) is valid according to a confidence ellipsoid on theta.
 
     :param y: observation
     :param phi: feature
@@ -185,8 +188,10 @@ def is_valid_observation(y: np.ndarray, phi: np.ndarray, theta: np.ndarray, gram
 
 def is_consistent_dataset(data: dict, parameter_box: np.ndarray = None) -> bool:
     """
-        Check whether a dataset {phi_n, y_n} is consistent: the last observation should be in the confidence
-        ellipsoid obtained by the N-1 first observations.
+    Check whether a dataset {phi_n, y_n} is consistent
+
+    The last observation should be in the confidence ellipsoid obtained by the N-1 first observations.
+
     :param data: a dictionary {"features": [phi_0,...,phi_N], "outputs": [y_0,...,y_N]}
     :param parameter_box: a box [theta_min, theta_max]  containing the parameter theta
     :return: consistency of the dataset

@@ -10,12 +10,13 @@ from highway_env.road.objects import Obstacle
 
 
 class MergeEnv(AbstractEnv):
-    """
-        A highway merge negotiation environment.
 
-        The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.
-        It is rewarded for maintaining a high speed and avoiding collisions, but also making room for merging
-        vehicles.
+    """
+    A highway merge negotiation environment.
+
+    The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.
+    It is rewarded for maintaining a high speed and avoiding collisions, but also making room for merging
+    vehicles.
     """
 
     COLLISION_REWARD: float = -1
@@ -26,8 +27,9 @@ class MergeEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         """
-        The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions, but
-            an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.
+        The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions
+
+        But an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.
 
         :param action: the action performed
         :return: the reward of the state-action transition

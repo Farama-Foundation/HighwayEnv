@@ -17,13 +17,15 @@ Polytope = Tuple[np.ndarray, List[np.ndarray]]
 
 
 class IntervalVehicle(LinearVehicle):
-    """
-        Estimator for the interval-membership of a LinearVehicle under parameter uncertainty.
 
-        The model trajectory is stored in a model_vehicle, and the lower and upper bounds of the states are stored
-        in a min_vehicle and max_vehicle. Note that these vehicles do not follow a proper Vehicle dynamics, and
-        are only used for storage of the bounds.
     """
+    Estimator for the interval-membership of a LinearVehicle under parameter uncertainty.
+
+    The model trajectory is stored in a model_vehicle, and the lower and upper bounds of the states are stored
+    in a min_vehicle and max_vehicle. Note that these vehicles do not follow a proper Vehicle dynamics, and
+    are only used for storage of the bounds.
+    """
+
     def __init__(self,
                  road: Road,
                  position: Vector,
@@ -88,7 +90,8 @@ class IntervalVehicle(LinearVehicle):
 
     def observer_step(self, dt: float) -> None:
         """
-            Step the interval observer dynamics
+        Step the interval observer dynamics
+
         :param dt: timestep [s]
         """
         # Input state intervals
@@ -176,7 +179,8 @@ class IntervalVehicle(LinearVehicle):
 
     def predictor_step(self, dt: float) -> None:
         """
-            Step the interval predictor dynamics
+        Step the interval predictor dynamics
+
         :param dt: timestep [s]
         """
         # Create longitudinal and lateral LPVs
@@ -293,7 +297,8 @@ class IntervalVehicle(LinearVehicle):
 
     def get_followed_lanes(self, lane_change_model: str = "model", squeeze: bool = True) -> List[LaneIndex]:
         """
-            Get the list of lanes that could be followed by this vehicle.
+        Get the list of lanes that could be followed by this vehicle.
+
         :param lane_change_model: - model: assume that the vehicle will follow the lane of its model behaviour.
                                   - all: assume that any lane change decision is possible at any timestep
                                   - right: assume that a right lane change decision is possible at any timestep
@@ -317,11 +322,12 @@ class IntervalVehicle(LinearVehicle):
 
     def partial_observer_step(self, dt: float, alpha: float = 0) -> None:
         """
-            Step the boundary parts of the current state interval
+        Step the boundary parts of the current state interval
 
-            1. Split x_i(t) into two upper and lower intervals x_i_-(t) and x_i_+(t)
-            2. Propagate their observer dynamics x_i_-(t+dt) and x_i_+(t+dt)
-            3. Merge the resulting intervals together to x_i(t+dt).
+        1. Split x_i(t) into two upper and lower intervals x_i_-(t) and x_i_+(t)
+        2. Propagate their observer dynamics x_i_-(t+dt) and x_i_+(t+dt)
+        3. Merge the resulting intervals together to x_i(t+dt).
+
         :param dt: timestep [s]
         :param alpha: ratio of the full interval that defines the boundaries
         """
@@ -357,8 +363,10 @@ class IntervalVehicle(LinearVehicle):
 
     def check_collision(self, other: Union['Vehicle', 'RoadObject']) -> None:
         """
-            For robust planning, we assume that MDPVehicles collide with the uncertainty set of an IntervalVehicle,
-            which corresponds to worst-case outcome.
+        Worst-case collision check.
+
+        For robust planning, we assume that MDPVehicles collide with the uncertainty set of an IntervalVehicle,
+        which corresponds to worst-case outcome.
 
         :param other: the other vehicle
         """

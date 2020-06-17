@@ -63,8 +63,9 @@ class IDMVehicle(ControlledVehicle):
     @classmethod
     def create_from(cls, vehicle: ControlledVehicle) -> "IDMVehicle":
         """
-            Create a new vehicle from an existing one.
-            The vehicle dynamics and target dynamics are copied, other properties are default.
+        Create a new vehicle from an existing one.
+
+        The vehicle dynamics and target dynamics are copied, other properties are default.
 
         :param vehicle: a vehicle
         :return: a new vehicle at the same dynamical state
@@ -76,10 +77,10 @@ class IDMVehicle(ControlledVehicle):
 
     def act(self, action: Union[dict, str] = None):
         """
-            Execute an action.
+        Execute an action.
 
-            For now, no action is supported because the vehicle takes all decisions
-            of acceleration and lane changes on its own, based on the IDM and MOBIL models.
+        For now, no action is supported because the vehicle takes all decisions
+        of acceleration and lane changes on its own, based on the IDM and MOBIL models.
 
         :param action: the action
         """
@@ -104,9 +105,9 @@ class IDMVehicle(ControlledVehicle):
 
     def step(self, dt: float):
         """
-            Step the simulation.
+        Step the simulation.
 
-            Increases a timer used for decision policies, and step the vehicle dynamics.
+        Increases a timer used for decision policies, and step the vehicle dynamics.
 
         :param dt: timestep
         """
@@ -118,11 +119,11 @@ class IDMVehicle(ControlledVehicle):
                      front_vehicle: Vehicle = None,
                      rear_vehicle: Vehicle = None) -> float:
         """
-            Compute an acceleration command with the Intelligent Driver Model.
+        Compute an acceleration command with the Intelligent Driver Model.
 
-            The acceleration is chosen so as to:
-            - reach a target speed;
-            - maintain a minimum safety distance (and safety time) w.r.t the front vehicle.
+        The acceleration is chosen so as to:
+        - reach a target speed;
+        - maintain a minimum safety distance (and safety time) w.r.t the front vehicle.
 
         :param ego_vehicle: the vehicle whose desired acceleration is to be computed. It does not have to be an
                             IDM vehicle, which is why this method is a class method. This allows an IDM vehicle to
@@ -145,7 +146,7 @@ class IDMVehicle(ControlledVehicle):
 
     def desired_gap(self, ego_vehicle: Vehicle, front_vehicle: Vehicle = None) -> float:
         """
-            Compute the desired distance between a vehicle and its leading vehicle.
+        Compute the desired distance between a vehicle and its leading vehicle.
 
         :param ego_vehicle: the vehicle being controlled
         :param front_vehicle: its leading vehicle
@@ -160,11 +161,11 @@ class IDMVehicle(ControlledVehicle):
 
     def maximum_speed(self, front_vehicle: Vehicle = None) -> Tuple[float, float]:
         """
-            Compute the maximum allowed speed to avoid Inevitable Collision States.
+        Compute the maximum allowed speed to avoid Inevitable Collision States.
 
-            Assume the front vehicle is going to brake at full deceleration and that
-            it will be noticed after a given delay, and compute the maximum speed
-            which allows the ego-vehicle to brake enough to avoid the collision.
+        Assume the front vehicle is going to brake at full deceleration and that
+        it will be noticed after a given delay, and compute the maximum speed
+        which allows the ego-vehicle to brake enough to avoid the collision.
 
         :param front_vehicle: the preceding vehicle
         :return: the maximum allowed speed, and suggested acceleration
@@ -188,12 +189,12 @@ class IDMVehicle(ControlledVehicle):
 
     def change_lane_policy(self) -> None:
         """
-            Decide when to change lane.
+        Decide when to change lane.
 
-            Based on:
-            - frequency;
-            - closeness of the target lane;
-            - MOBIL model.
+        Based on:
+        - frequency;
+        - closeness of the target lane;
+        - MOBIL model.
         """
         # If a lane change already ongoing
         if self.lane_index != self.target_lane_index:
@@ -227,7 +228,7 @@ class IDMVehicle(ControlledVehicle):
 
     def mobil(self, lane_index: LaneIndex) -> bool:
         """
-            MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change
+        MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change
 
             The vehicle should change lane only if:
             - after changing it (and/or following vehicles) can accelerate more;
@@ -269,7 +270,7 @@ class IDMVehicle(ControlledVehicle):
 
     def recover_from_stop(self, acceleration: float) -> float:
         """
-            If stopped on the wrong lane, try a reversing maneuver.
+        If stopped on the wrong lane, try a reversing maneuver.
 
         :param acceleration: desired acceleration from IDM
         :return: suggested acceleration to recover from being stuck
@@ -334,12 +335,12 @@ class LinearVehicle(IDMVehicle):
                      front_vehicle: Vehicle = None,
                      rear_vehicle: Vehicle = None) -> float:
         """
-            Compute an acceleration command with a Linear Model.
+        Compute an acceleration command with a Linear Model.
 
-            The acceleration is chosen so as to:
-            - reach a target speed;
-            - reach the speed of the leading (resp following) vehicle, if it is lower (resp higher) than ego's;
-            - maintain a minimum safety distance w.r.t the leading vehicle.
+        The acceleration is chosen so as to:
+        - reach a target speed;
+        - reach the speed of the leading (resp following) vehicle, if it is lower (resp higher) than ego's;
+        - maintain a minimum safety distance w.r.t the leading vehicle.
 
         :param ego_vehicle: the vehicle whose desired acceleration is to be computed. It does not have to be an
                             Linear vehicle, which is why this method is a class method. This allows a Linear vehicle to
@@ -366,8 +367,10 @@ class LinearVehicle(IDMVehicle):
 
     def steering_control(self, target_lane_index: LaneIndex) -> float:
         """
-            Linear controller with respect to parameters.
-            Overrides the non-linear controller ControlledVehicle.steering_control()
+        Linear controller with respect to parameters.
+
+        Overrides the non-linear controller ControlledVehicle.steering_control()
+
         :param target_lane_index: index of the lane to follow
         :return: a steering wheel angle command [rad]
         """
@@ -375,7 +378,8 @@ class LinearVehicle(IDMVehicle):
 
     def steering_features(self, target_lane_index: LaneIndex) -> np.ndarray:
         """
-            A collection of features used to follow a lane
+        A collection of features used to follow a lane
+
         :param target_lane_index: index of the lane to follow
         :return: a array of features
         """

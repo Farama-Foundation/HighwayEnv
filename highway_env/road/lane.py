@@ -19,7 +19,7 @@ class AbstractLane(object):
     @abstractmethod
     def position(self, longitudinal: float, lateral: float) -> np.ndarray:
         """
-            Convert local lane coordinates to a world position.
+        Convert local lane coordinates to a world position.
 
         :param longitudinal: longitudinal lane coordinate [m]
         :param lateral: lateral lane coordinate [m]
@@ -30,7 +30,7 @@ class AbstractLane(object):
     @abstractmethod
     def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
         """
-            Convert a world position to local lane coordinates.
+        Convert a world position to local lane coordinates.
 
         :param position: a world position [m]
         :return: the (longitudinal, lateral) lane coordinates [m]
@@ -40,7 +40,7 @@ class AbstractLane(object):
     @abstractmethod
     def heading_at(self, longitudinal: float) -> float:
         """
-            Get the lane heading at a given longitudinal lane coordinate.
+        Get the lane heading at a given longitudinal lane coordinate.
 
         :param longitudinal: longitudinal lane coordinate [m]
         :return: the lane heading [rad]
@@ -50,7 +50,7 @@ class AbstractLane(object):
     @abstractmethod
     def width_at(self, longitudinal: float) -> float:
         """
-            Get the lane width at a given longitudinal lane coordinate.
+        Get the lane width at a given longitudinal lane coordinate.
 
         :param longitudinal: longitudinal lane coordinate [m]
         :return: the lane width [m]
@@ -60,7 +60,7 @@ class AbstractLane(object):
     def on_lane(self, position: np.ndarray, longitudinal: float = None, lateral: float = None, margin: float = 0) \
             -> bool:
         """
-            Whether a given world position is on the lane.
+        Whether a given world position is on the lane.
 
         :param position: a world position [m]
         :param longitudinal: (optional) the corresponding longitudinal lane coordinate, if known [m]
@@ -76,7 +76,7 @@ class AbstractLane(object):
 
     def is_reachable_from(self, position: np.ndarray) -> bool:
         """
-            Whether the lane is reachable from a given world position
+        Whether the lane is reachable from a given world position
 
         :param position: the world position [m]
         :return: is the lane reachable?
@@ -122,7 +122,7 @@ class StraightLane(AbstractLane):
                  speed_limit: float = 20,
                  priority: int = 0) -> None:
         """
-            New straight lane.
+        New straight lane.
 
         :param start: the lane starting position [m]
         :param end: the lane ending position [m]
@@ -175,7 +175,7 @@ class SineLane(StraightLane):
                  speed_limit: float = 20,
                  priority: int = 0) -> None:
         """
-            New sinusoidal lane.
+        New sinusoidal lane.
 
         :param start: the lane starting position [m]
         :param end: the lane ending position [m]

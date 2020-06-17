@@ -58,10 +58,11 @@ class MultipleModelVehicle(LinearVehicle):
 
     def update_possible_routes(self) -> None:
         """
-            Update a list of possible routes that this vehicle could be following.
-            - Add routes at the next intersection
-            - Step the current lane in each route
-            - Reject inconsistent routes
+        Update a list of possible routes that this vehicle could be following.
+
+        - Add routes at the next intersection
+        - Step the current lane in each route
+        - Reject inconsistent routes
         """
 
         for route in self.get_routes_at_intersection():  # Candidates
@@ -91,7 +92,8 @@ class MultipleModelVehicle(LinearVehicle):
 
     def assume_model_is_valid(self, index: int) -> "LinearVehicle":
         """
-            Get a copy of this vehicle behaving according to one of its possible routes.
+        Get a copy of this vehicle behaving according to one of its possible routes.
+
         :param index: index of the route to consider
         :return: a copy of the vehicle
         """

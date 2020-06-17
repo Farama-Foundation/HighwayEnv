@@ -10,15 +10,16 @@ from highway_env.road.objects import Landmark
 
 
 class SummonEnv(ParkingEnv):
-    """
-        A continuous control environment.
 
-        It implements a reach-type task, where the agent observes their position and speed and must
-        control their acceleration and steering so as to reach a given goal.
-
-        Credits to Vinny Ruia for the idea and initial implementation.
     """
-    
+    A continuous control environment.
+
+    It implements a reach-type task, where the agent observes their position and speed and must
+    control their acceleration and steering so as to reach a given goal.
+
+    Credits to Vinny Ruia for the idea and initial implementation.
+    """
+
     COLLISION_REWARD = -5
 
     @classmethod
@@ -32,8 +33,9 @@ class SummonEnv(ParkingEnv):
 
     def _create_road(self, spots: int = 15) -> None:
         """
-            Create a road composed of straight adjacent lanes.
-            :param spots: number of parking spots
+        Create a road composed of straight adjacent lanes.
+
+        :param spots: number of parking spots
         """
         net = RoadNetwork()
 
@@ -69,8 +71,9 @@ class SummonEnv(ParkingEnv):
 
     def _create_vehicles(self, parked_probability: float = 0.75) -> None:
         """
-            Create some new random vehicles of a given type, and add them on the road.
-            :param parked_probability: probability that a spot is occupied
+        Create some new random vehicles of a given type, and add them on the road.
+
+        :param parked_probability: probability that a spot is occupied
         """
 
         self.vehicle = Vehicle(self.road, self.vehicle_starting, 2 * np.pi * self.np_random.rand(), 0)
@@ -99,9 +102,9 @@ class SummonEnv(ParkingEnv):
 
     def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict, p: float = 0.5) -> float:
         """
-            Proximity to the goal is rewarded
+        Proximity to the goal is rewarded
 
-            We use a weighted p-norm
+        We use a weighted p-norm
         :param achieved_goal: the goal that was achieved
         :param desired_goal: the goal that was desired
         :param info: any supplementary information

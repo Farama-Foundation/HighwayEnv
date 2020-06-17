@@ -21,22 +21,25 @@ class ObservationType(object):
 
 
 class GrayscaleObservation(ObservationType):
-    """
-        An observation class that collects directly what the simulator renders
-        as the input, and stacks the collected frames just as in the nature DQN
-        . Specific keys are expected in the configuration dictionary passed.
 
-        Example of observation dictionary in the environment config:
-            observation": {
-                "type": "GrayscaleObservation",
-                "weights": [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,
-                "stack_size": 4,
-                "observation_shape": (84, 84)
-            }
-
-        Also, the screen_height and screen_width of the environment should match the
-        expected observation_shape. 
     """
+    An observation class that collects directly what the simulator renders
+
+    Also stacks the collected frames as in the nature DQN.
+    Specific keys are expected in the configuration dictionary passed.
+
+    Example of observation dictionary in the environment config:
+        observation": {
+            "type": "GrayscaleObservation",
+            "weights": [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,
+            "stack_size": 4,
+            "observation_shape": (84, 84)
+        }
+
+    Also, the screen_height and screen_width of the environment should match the
+    expected observation_shape.
+    """
+
     def __init__(self, env: 'AbstractEnv', config: dict) -> None:
         self.env = env
         self.config = config
@@ -137,9 +140,9 @@ class KinematicObservation(ObservationType):
 
     def normalize_obs(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-            Normalize the observation values.
+        Normalize the observation values.
 
-            For now, assume that the road is straight along the x axis.
+        For now, assume that the road is straight along the x axis.
         :param Dataframe df: observation data
         """
         if not self.features_range:
@@ -223,9 +226,9 @@ class OccupancyGridObservation(ObservationType):
 
     def normalize(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-            Normalize the observation values.
+        Normalize the observation values.
 
-            For now, assume that the road is straight along the x axis.
+        For now, assume that the road is straight along the x axis.
         :param Dataframe df: observation data
         """
         if not self.features_range:

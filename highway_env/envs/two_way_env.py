@@ -9,12 +9,14 @@ from highway_env.vehicle.controller import MDPVehicle
 
 
 class TwoWayEnv(AbstractEnv):
-    """
-        A risk management task: the agent is driving on a two-way lane with icoming traffic.
-        It must balance making progress by overtaking and ensuring safety.
 
-        These conflicting objectives are implemented by a reward signal and a constraint signal,
-        in the CMDP/BMDP framework.
+    """
+    A risk management task: the agent is driving on a two-way lane with icoming traffic.
+
+    It must balance making progress by overtaking and ensuring safety.
+
+    These conflicting objectives are implemented by a reward signal and a constraint signal,
+    in the CMDP/BMDP framework.
     """
 
     COLLISION_REWARD: float = 0
@@ -35,7 +37,7 @@ class TwoWayEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         """
-            The vehicle is rewarded for driving with high speed
+        The vehicle is rewarded for driving with high speed
         :param action: the action performed
         :return: the reward of the state-action transition
         """
@@ -60,7 +62,8 @@ class TwoWayEnv(AbstractEnv):
 
     def _make_road(self, length=800):
         """
-            Make a road composed of a two-way road.
+        Make a road composed of a two-way road.
+
         :return: the road
         """
         net = RoadNetwork()
@@ -78,7 +81,8 @@ class TwoWayEnv(AbstractEnv):
 
     def _make_vehicles(self) -> None:
         """
-            Populate a road with several vehicles on the road
+        Populate a road with several vehicles on the road
+
         :return: the ego-vehicle
         """
         road = self.road
