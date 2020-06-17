@@ -224,6 +224,11 @@ environment implementations.</p>
 <code class="sig-name descname">observation_space</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.observation_space" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="highway_env.envs.common.abstract.AbstractEnv.automatic_rendering_callback">
+<code class="sig-name descname">automatic_rendering_callback</code><em class="property">: Optional[Callable]</em><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.automatic_rendering_callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.default_config">
 <em class="property">classmethod </em><code class="sig-name descname">default_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/highway_env/envs/common/abstract.html#AbstractEnv.default_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.default_config" title="Permalink to this definition">¶</a></dt>
@@ -404,9 +409,9 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 <code class="sig-name descname">set_vehicle_field</code><span class="sig-paren">(</span><em class="sig-param">args: Tuple[str, object]</em><span class="sig-paren">)</span> &#x2192; highway_env.envs.common.abstract.AbstractEnv<a class="reference internal" href="_modules/highway_env/envs/common/abstract.html#AbstractEnv.set_vehicle_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.set_vehicle_field" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.call_vehicle_method">
-<code class="sig-name descname">call_vehicle_method</code><span class="sig-paren">(</span><em class="sig-param">args: Tuple[str, Tuple[object]]</em><span class="sig-paren">)</span> &#x2192; highway_env.envs.common.abstract.AbstractEnv<a class="reference internal" href="_modules/highway_env/envs/common/abstract.html#AbstractEnv.call_vehicle_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.call_vehicle_method" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="highway_env.envs.common.abstract.AbstractEnv.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'automatic_rendering_callback': typing.Union[typing.Callable, NoneType]}</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__annotations__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -423,7 +428,7 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 
 <dl class="attribute">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.abstract', '__doc__': '\n        A generic environment for various tasks involving a vehicle driving on a road.\n\n        The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and\n        speed. The action space is fixed, but the observation space and reward function must be defined in the\n        environment implementations.\n    ', 'metadata': {'render.modes': ['human', 'rgb_array']}, 'ACTIONS': {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}, 'ACTIONS_INDEXES': {'LANE_LEFT': 0, 'IDLE': 1, 'LANE_RIGHT': 2, 'FASTER': 3, 'SLOWER': 4}, 'PERCEPTION_DISTANCE': 180.0, 'STEERING_RANGE': 0.7853981633974483, 'ACCELERATION_RANGE': 5.0, '__init__': &lt;function AbstractEnv.__init__&gt;, 'default_config': &lt;classmethod object&gt;, 'seed': &lt;function AbstractEnv.seed&gt;, 'configure': &lt;function AbstractEnv.configure&gt;, 'define_spaces': &lt;function AbstractEnv.define_spaces&gt;, '_reward': &lt;function AbstractEnv._reward&gt;, '_is_terminal': &lt;function AbstractEnv._is_terminal&gt;, '_cost': &lt;function AbstractEnv._cost&gt;, 'reset': &lt;function AbstractEnv.reset&gt;, 'step': &lt;function AbstractEnv.step&gt;, '_simulate': &lt;function AbstractEnv._simulate&gt;, 'render': &lt;function AbstractEnv.render&gt;, 'close': &lt;function AbstractEnv.close&gt;, 'get_available_actions': &lt;function AbstractEnv.get_available_actions&gt;, '_automatic_rendering': &lt;function AbstractEnv._automatic_rendering&gt;, 'simplify': &lt;function AbstractEnv.simplify&gt;, 'change_vehicles': &lt;function AbstractEnv.change_vehicles&gt;, 'set_preferred_lane': &lt;function AbstractEnv.set_preferred_lane&gt;, 'set_route_at_intersection': &lt;function AbstractEnv.set_route_at_intersection&gt;, 'set_vehicle_field': &lt;function AbstractEnv.set_vehicle_field&gt;, 'call_vehicle_method': &lt;function AbstractEnv.call_vehicle_method&gt;, 'randomize_behaviour': &lt;function AbstractEnv.randomize_behaviour&gt;, 'to_finite_mdp': &lt;function AbstractEnv.to_finite_mdp&gt;, '__deepcopy__': &lt;function AbstractEnv.__deepcopy__&gt;})</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.abstract', '__annotations__': {'automatic_rendering_callback': typing.Union[typing.Callable, NoneType]}, '__doc__': '\n        A generic environment for various tasks involving a vehicle driving on a road.\n\n        The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and\n        speed. The action space is fixed, but the observation space and reward function must be defined in the\n        environment implementations.\n    ', 'metadata': {'render.modes': ['human', 'rgb_array']}, 'ACTIONS': {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}, 'ACTIONS_INDEXES': {'LANE_LEFT': 0, 'IDLE': 1, 'LANE_RIGHT': 2, 'FASTER': 3, 'SLOWER': 4}, 'PERCEPTION_DISTANCE': 180.0, 'STEERING_RANGE': 0.7853981633974483, 'ACCELERATION_RANGE': 5.0, '__init__': &lt;function AbstractEnv.__init__&gt;, 'default_config': &lt;classmethod object&gt;, 'seed': &lt;function AbstractEnv.seed&gt;, 'configure': &lt;function AbstractEnv.configure&gt;, 'define_spaces': &lt;function AbstractEnv.define_spaces&gt;, '_reward': &lt;function AbstractEnv._reward&gt;, '_is_terminal': &lt;function AbstractEnv._is_terminal&gt;, '_cost': &lt;function AbstractEnv._cost&gt;, 'reset': &lt;function AbstractEnv.reset&gt;, 'step': &lt;function AbstractEnv.step&gt;, '_simulate': &lt;function AbstractEnv._simulate&gt;, 'render': &lt;function AbstractEnv.render&gt;, 'close': &lt;function AbstractEnv.close&gt;, 'get_available_actions': &lt;function AbstractEnv.get_available_actions&gt;, '_automatic_rendering': &lt;function AbstractEnv._automatic_rendering&gt;, 'simplify': &lt;function AbstractEnv.simplify&gt;, 'change_vehicles': &lt;function AbstractEnv.change_vehicles&gt;, 'set_preferred_lane': &lt;function AbstractEnv.set_preferred_lane&gt;, 'set_route_at_intersection': &lt;function AbstractEnv.set_route_at_intersection&gt;, 'set_vehicle_field': &lt;function AbstractEnv.set_vehicle_field&gt;, 'call_vehicle_method': &lt;function AbstractEnv.call_vehicle_method&gt;, 'randomize_behaviour': &lt;function AbstractEnv.randomize_behaviour&gt;, 'to_finite_mdp': &lt;function AbstractEnv.to_finite_mdp&gt;, '__deepcopy__': &lt;function AbstractEnv.__deepcopy__&gt;})</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -570,8 +575,8 @@ overrides the normal algorithm (and the outcome is cached).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.randomize_behaviour">
-<code class="sig-name descname">randomize_behaviour</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; highway_env.envs.common.abstract.AbstractEnv<a class="reference internal" href="_modules/highway_env/envs/common/abstract.html#AbstractEnv.randomize_behaviour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.randomize_behaviour" title="Permalink to this definition">¶</a></dt>
+<dt id="highway_env.envs.common.abstract.AbstractEnv.call_vehicle_method">
+<code class="sig-name descname">call_vehicle_method</code><span class="sig-paren">(</span><em class="sig-param">args: Tuple[str, Tuple[object]]</em><span class="sig-paren">)</span> &#x2192; highway_env.envs.common.abstract.AbstractEnv<a class="reference internal" href="_modules/highway_env/envs/common/abstract.html#AbstractEnv.call_vehicle_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.call_vehicle_method" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -593,6 +598,11 @@ overrides the normal algorithm (and the outcome is cached).</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.abstract.AbstractEnv.randomize_behaviour">
+<code class="sig-name descname">randomize_behaviour</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; highway_env.envs.common.abstract.AbstractEnv<a class="reference internal" href="_modules/highway_env/envs/common/abstract.html#AbstractEnv.randomize_behaviour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.randomize_behaviour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.to_finite_mdp">
