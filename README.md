@@ -133,7 +133,7 @@ An intersection negotiation task with dense traffic.
 
 ## The agents
 
-Agents solving the `highway-env` environments are available in the [RL-Agents](https://github.com/eleurent/rl-agents) repository.
+Agents solving the `highway-env` environments are available in the [rl-agents](https://github.com/eleurent/rl-agents) and [stable-baselines](https://github.com/hill-a/stable-baselines) repositories.
 
 `pip install --user git+https://github.com/eleurent/rl-agents`
 
