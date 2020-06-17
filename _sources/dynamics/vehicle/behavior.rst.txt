@@ -31,12 +31,25 @@ Lateral Behavior
 ~~~~~~~~~~~~~~~~
 
 The discrete lane change decisions are given by the *Minimizing Overall Braking Induced by Lane change* (MOBIL) model from :cite:`Kesting2007`.
-The model is parametrised by:
+According to this model, a vehicle decides to change lane when:
 
-- :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.POLITENESS`, a politeness coefficient
-- :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MIN_ACC_GAIN`, the acceleration gain required to trigger a lane change
-- :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MAX_BRAKING_IMPOSED`, the maximum braking imposed to a vehicle in a cut-in
-- :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_DELAY`, the minimum delay between two lane changes
+- it is **safe** (do not cut-in):
+
+.. math::
+      \tilde{a}_n \geq - b_\text{safe};
+
+- there is an **incentive** (for the ego-vehicle and possibly its followers):
+
+.. math::
+      \underbrace{\tilde{a}_c - a_c}_{\text{ego-vehicle}} + p\left(\underbrace{\tilde{a}_n - a_n}_{\text{new follower}} + \underbrace{\tilde{a}_o - a_o}_{\text{old follower}}\right) \geq \Delta a_\text{th},
+
+where
+
+- :math:`c` is the center (ego-) vehicle, :math:`o` is its old follower *before* the lane change, and :math:`n` is its new follower *after* the lane change
+- :math:`a, \tilde{a}` are the acceleration of the vehicles *before* and *after* the lane change, respectively.
+- :math:`p` is a politeness coefficient, implemented as :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.POLITENESS`
+- :math:`\Delta a_\text{th}` the acceleration gain required to trigger a lane change, implemented as :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MIN_ACC_GAIN`
+- :math:`b_\text{safe}` the maximum braking imposed to a vehicle during a cut-in, implemented as :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MAX_BRAKING_IMPOSED`
 
 
 It is implemented in the :py:meth:`~highway_env.vehicle.behavior.IDMVehicle.mobil` method.

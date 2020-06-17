@@ -194,12 +194,24 @@ The dynamics are parametrised by:</p>
 <div class="section" id="lateral-behavior">
 <h2>Lateral Behavior<a class="headerlink" href="#lateral-behavior" title="Permalink to this headline">¶</a></h2>
 <p>The discrete lane change decisions are given by the <em>Minimizing Overall Braking Induced by Lane change</em> (MOBIL) model from <a class="bibtex reference internal" href="../../bibliography/index.html#kesting2007" id="id2">[KTH07]</a>.
-The model is parametrised by:</p>
+According to this model, a vehicle decides to change lane when:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.POLITENESS" title="highway_env.vehicle.behavior.IDMVehicle.POLITENESS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">POLITENESS</span></code></a>, a politeness coefficient</p></li>
-<li><p><a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MIN_ACC_GAIN" title="highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MIN_ACC_GAIN"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LANE_CHANGE_MIN_ACC_GAIN</span></code></a>, the acceleration gain required to trigger a lane change</p></li>
-<li><p><a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MAX_BRAKING_IMPOSED" title="highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MAX_BRAKING_IMPOSED"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LANE_CHANGE_MAX_BRAKING_IMPOSED</span></code></a>, the maximum braking imposed to a vehicle in a cut-in</p></li>
-<li><p><a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_DELAY" title="highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_DELAY"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LANE_CHANGE_DELAY</span></code></a>, the minimum delay between two lane changes</p></li>
+<li><p>it is <strong>safe</strong> (do not cut-in):</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\tilde{a}_n \geq - b_\text{safe};\]</div>
+<ul class="simple">
+<li><p>there is an <strong>incentive</strong> (for the ego-vehicle and possibly its followers):</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\underbrace{\tilde{a}_c - a_c}_{\text{ego-vehicle}} + p\left(\underbrace{\tilde{a}_n - a_n}_{\text{new follower}} + \underbrace{\tilde{a}_o - a_o}_{\text{old follower}}\right) \geq \Delta a_\text{th},\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(c\)</span> is the center (ego-) vehicle, <span class="math notranslate nohighlight">\(o\)</span> is its old follower <em>before</em> the lane change, and <span class="math notranslate nohighlight">\(n\)</span> is its new follower <em>after</em> the lane change</p></li>
+<li><p><span class="math notranslate nohighlight">\(a, \tilde{a}\)</span> are the acceleration of the vehicles <em>before</em> and <em>after</em> the lane change, respectively.</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span> is a politeness coefficient, implemented as <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.POLITENESS" title="highway_env.vehicle.behavior.IDMVehicle.POLITENESS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">POLITENESS</span></code></a></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta a_\text{th}\)</span> the acceleration gain required to trigger a lane change, implemented as <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MIN_ACC_GAIN" title="highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MIN_ACC_GAIN"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LANE_CHANGE_MIN_ACC_GAIN</span></code></a></p></li>
+<li><p><span class="math notranslate nohighlight">\(b_\text{safe}\)</span> the maximum braking imposed to a vehicle during a cut-in, implemented as <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MAX_BRAKING_IMPOSED" title="highway_env.vehicle.behavior.IDMVehicle.LANE_CHANGE_MAX_BRAKING_IMPOSED"><code class="xref py py-attr docutils literal notranslate"><span class="pre">LANE_CHANGE_MAX_BRAKING_IMPOSED</span></code></a></p></li>
 </ul>
 <p>It is implemented in the <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle.mobil" title="highway_env.vehicle.behavior.IDMVehicle.mobil"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mobil()</span></code></a> method.</p>
 <div class="admonition note">
