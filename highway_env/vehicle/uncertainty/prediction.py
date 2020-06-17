@@ -1,5 +1,5 @@
 import copy
-from typing import List, Tuple, Callable, Union
+from typing import List, Tuple, Callable, Union, TYPE_CHECKING
 import numpy as np
 
 from highway_env import utils
@@ -11,6 +11,9 @@ from highway_env.types import Vector
 from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.kinematics import Vehicle
+
+if TYPE_CHECKING:
+    from highway_env.road.objects import RoadObject
 
 Polytope = Tuple[np.ndarray, List[np.ndarray]]
 
