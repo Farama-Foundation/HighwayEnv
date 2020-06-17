@@ -159,12 +159,13 @@
 
 
 <div class="viewcode-block" id="MergeEnv"><a class="viewcode-back" href="../../../environments/merge.html#highway_env.envs.merge_env.MergeEnv">[docs]</a><span class="k">class</span> <span class="nc">MergeEnv</span><span class="p">(</span><span class="n">AbstractEnv</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A highway merge negotiation environment.</span>
 
-<span class="sd">        The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.</span>
-<span class="sd">        It is rewarded for maintaining a high speed and avoiding collisions, but also making room for merging</span>
-<span class="sd">        vehicles.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A highway merge negotiation environment.</span>
+
+<span class="sd">    The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.</span>
+<span class="sd">    It is rewarded for maintaining a high speed and avoiding collisions, but also making room for merging</span>
+<span class="sd">    vehicles.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">COLLISION_REWARD</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -175,8 +176,9 @@
 
 <div class="viewcode-block" id="MergeEnv._reward"><a class="viewcode-back" href="../../../environments/merge.html#highway_env.envs.merge_env.MergeEnv._reward">[docs]</a>    <span class="k">def</span> <span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions, but</span>
-<span class="sd">            an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.</span>
+<span class="sd">        The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions</span>
+
+<span class="sd">        But an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.</span>
 
 <span class="sd">        :param action: the action performed</span>
 <span class="sd">        :return: the reward of the state-action transition</span>

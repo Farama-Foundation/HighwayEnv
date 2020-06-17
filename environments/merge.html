@@ -252,10 +252,8 @@ vehicles.</p>
 <dl class="method">
 <dt id="highway_env.envs.merge_env.MergeEnv._reward">
 <code class="sig-name descname">_reward</code><span class="sig-paren">(</span><em class="sig-param">action: int</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/highway_env/envs/merge_env.html#MergeEnv._reward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv._reward" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions, but</dt><dd><p>an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.</p>
-</dd>
-</dl>
+<dd><p>The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions</p>
+<p>But an additional altruistic penalty is also suffered if any vehicle on the merging lane has a low speed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>action</strong> – the action performed</p>
@@ -355,7 +353,7 @@ vehicles.</p>
 
 <dl class="attribute">
 <dt id="highway_env.envs.merge_env.MergeEnv.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.merge_env', '__annotations__': {'COLLISION_REWARD': &lt;class 'float'&gt;, 'RIGHT_LANE_REWARD': &lt;class 'float'&gt;, 'HIGH_SPEED_REWARD': &lt;class 'float'&gt;, 'MERGING_SPEED_REWARD': &lt;class 'float'&gt;, 'LANE_CHANGE_REWARD': &lt;class 'float'&gt;}, '__doc__': '\n        A highway merge negotiation environment.\n\n        The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.\n        It is rewarded for maintaining a high speed and avoiding collisions, but also making room for merging\n        vehicles.\n    ', 'COLLISION_REWARD': -1, 'RIGHT_LANE_REWARD': 0.1, 'HIGH_SPEED_REWARD': 0.2, 'MERGING_SPEED_REWARD': -0.5, 'LANE_CHANGE_REWARD': -0.05, '_reward': &lt;function MergeEnv._reward&gt;, '_is_terminal': &lt;function MergeEnv._is_terminal&gt;, 'reset': &lt;function MergeEnv.reset&gt;, '_make_road': &lt;function MergeEnv._make_road&gt;, '_make_vehicles': &lt;function MergeEnv._make_vehicles&gt;})</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.merge_env', '__annotations__': {'COLLISION_REWARD': &lt;class 'float'&gt;, 'RIGHT_LANE_REWARD': &lt;class 'float'&gt;, 'HIGH_SPEED_REWARD': &lt;class 'float'&gt;, 'MERGING_SPEED_REWARD': &lt;class 'float'&gt;, 'LANE_CHANGE_REWARD': &lt;class 'float'&gt;}, '__doc__': '\n    A highway merge negotiation environment.\n\n    The ego-vehicle is driving on a highway and approached a merge, with some vehicles incoming on the access ramp.\n    It is rewarded for maintaining a high speed and avoiding collisions, but also making room for merging\n    vehicles.\n    ', 'COLLISION_REWARD': -1, 'RIGHT_LANE_REWARD': 0.1, 'HIGH_SPEED_REWARD': 0.2, 'MERGING_SPEED_REWARD': -0.5, 'LANE_CHANGE_REWARD': -0.05, '_reward': &lt;function MergeEnv._reward&gt;, '_is_terminal': &lt;function MergeEnv._is_terminal&gt;, 'reset': &lt;function MergeEnv.reset&gt;, '_make_road': &lt;function MergeEnv._make_road&gt;, '_make_vehicles': &lt;function MergeEnv._make_vehicles&gt;})</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

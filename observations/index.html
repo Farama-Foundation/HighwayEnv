@@ -887,9 +887,9 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dt id="highway_env.envs.common.observation.GrayscaleObservation">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">GrayscaleObservation</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">config: dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#GrayscaleObservation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.observation.ObservationType" title="highway_env.envs.common.observation.ObservationType"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.observation.ObservationType</span></code></a></p>
-<p>An observation class that collects directly what the simulator renders
-as the input, and stacks the collected frames just as in the nature DQN
-. Specific keys are expected in the configuration dictionary passed.</p>
+<p>An observation class that collects directly what the simulator renders</p>
+<p>Also stacks the collected frames as in the nature DQN.
+Specific keys are expected in the configuration dictionary passed.</p>
 <dl>
 <dt>Example of observation dictionary in the environment config:</dt><dd><dl class="simple">
 <dt>observation”: {</dt><dd><p>“type”: “GrayscaleObservation”,
@@ -938,7 +938,7 @@ expected observation_shape.</p>
 
 <dl class="attribute">
 <dt id="highway_env.envs.common.observation.GrayscaleObservation.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', '__doc__': '\n        An observation class that collects directly what the simulator renders\n        as the input, and stacks the collected frames just as in the nature DQN\n        . Specific keys are expected in the configuration dictionary passed.\n\n        Example of observation dictionary in the environment config:\n            observation&quot;: {\n                &quot;type&quot;: &quot;GrayscaleObservation&quot;,\n                &quot;weights&quot;: [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,\n                &quot;stack_size&quot;: 4,\n                &quot;observation_shape&quot;: (84, 84)\n            }\n\n        Also, the screen_height and screen_width of the environment should match the\n        expected observation_shape. \n    ', '__init__': &lt;function GrayscaleObservation.__init__&gt;, 'space': &lt;function GrayscaleObservation.space&gt;, 'observe': &lt;function GrayscaleObservation.observe&gt;, '_record_to_grayscale': &lt;function GrayscaleObservation._record_to_grayscale&gt;})</em><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', '__doc__': '\n    An observation class that collects directly what the simulator renders\n\n    Also stacks the collected frames as in the nature DQN.\n    Specific keys are expected in the configuration dictionary passed.\n\n    Example of observation dictionary in the environment config:\n        observation&quot;: {\n            &quot;type&quot;: &quot;GrayscaleObservation&quot;,\n            &quot;weights&quot;: [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,\n            &quot;stack_size&quot;: 4,\n            &quot;observation_shape&quot;: (84, 84)\n        }\n\n    Also, the screen_height and screen_width of the environment should match the\n    expected observation_shape.\n    ', '__init__': &lt;function GrayscaleObservation.__init__&gt;, 'space': &lt;function GrayscaleObservation.space&gt;, 'observe': &lt;function GrayscaleObservation.observe&gt;, '_record_to_grayscale': &lt;function GrayscaleObservation._record_to_grayscale&gt;})</em><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1282,15 +1282,9 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.envs.common.observation.KinematicObservation.normalize_obs">
 <code class="sig-name descname">normalize_obs</code><span class="sig-paren">(</span><em class="sig-param">df: pandas.core.frame.DataFrame</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicObservation.normalize_obs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.normalize_obs" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Normalize the observation values.</p>
-<p>For now, assume that the road is straight along the x axis.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>Dataframe</em>) – observation data</p>
-</dd>
-</dl>
+<dd><p>Normalize the observation values.</p>
+<p>For now, assume that the road is straight along the x axis.
+:param Dataframe df: observation data</p>
 </dd></dl>
 
 <dl class="method">
@@ -1495,15 +1489,9 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.envs.common.observation.OccupancyGridObservation.normalize">
 <code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param">df: pandas.core.frame.DataFrame</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#OccupancyGridObservation.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.normalize" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Normalize the observation values.</p>
-<p>For now, assume that the road is straight along the x axis.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>Dataframe</em>) – observation data</p>
-</dd>
-</dl>
+<dd><p>Normalize the observation values.</p>
+<p>For now, assume that the road is straight along the x axis.
+:param Dataframe df: observation data</p>
 </dd></dl>
 
 <dl class="method">
@@ -1861,15 +1849,9 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.envs.common.observation.KinematicsGoalObservation.normalize_obs">
 <code class="sig-name descname">normalize_obs</code><span class="sig-paren">(</span><em class="sig-param">df: pandas.core.frame.DataFrame</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.normalize_obs" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Normalize the observation values.</p>
-<p>For now, assume that the road is straight along the x axis.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>Dataframe</em>) – observation data</p>
-</dd>
-</dl>
+<dd><p>Normalize the observation values.</p>
+<p>For now, assume that the road is straight along the x axis.
+:param Dataframe df: observation data</p>
 </dd></dl>
 
 </dd></dl>

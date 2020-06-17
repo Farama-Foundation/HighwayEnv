@@ -212,8 +212,9 @@
 <div class="viewcode-block" id="IDMVehicle.create_from"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle.create_from">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;IDMVehicle&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Create a new vehicle from an existing one.</span>
-<span class="sd">            The vehicle dynamics and target dynamics are copied, other properties are default.</span>
+<span class="sd">        Create a new vehicle from an existing one.</span>
+
+<span class="sd">        The vehicle dynamics and target dynamics are copied, other properties are default.</span>
 
 <span class="sd">        :param vehicle: a vehicle</span>
 <span class="sd">        :return: a new vehicle at the same dynamical state</span>
@@ -225,10 +226,10 @@
 
 <div class="viewcode-block" id="IDMVehicle.act"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle.act">[docs]</a>    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Execute an action.</span>
+<span class="sd">        Execute an action.</span>
 
-<span class="sd">            For now, no action is supported because the vehicle takes all decisions</span>
-<span class="sd">            of acceleration and lane changes on its own, based on the IDM and MOBIL models.</span>
+<span class="sd">        For now, no action is supported because the vehicle takes all decisions</span>
+<span class="sd">        of acceleration and lane changes on its own, based on the IDM and MOBIL models.</span>
 
 <span class="sd">        :param action: the action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -253,9 +254,9 @@
 
 <div class="viewcode-block" id="IDMVehicle.step"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Step the simulation.</span>
+<span class="sd">        Step the simulation.</span>
 
-<span class="sd">            Increases a timer used for decision policies, and step the vehicle dynamics.</span>
+<span class="sd">        Increases a timer used for decision policies, and step the vehicle dynamics.</span>
 
 <span class="sd">        :param dt: timestep</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -267,11 +268,11 @@
                      <span class="n">front_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">rear_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Compute an acceleration command with the Intelligent Driver Model.</span>
+<span class="sd">        Compute an acceleration command with the Intelligent Driver Model.</span>
 
-<span class="sd">            The acceleration is chosen so as to:</span>
-<span class="sd">            - reach a target speed;</span>
-<span class="sd">            - maintain a minimum safety distance (and safety time) w.r.t the front vehicle.</span>
+<span class="sd">        The acceleration is chosen so as to:</span>
+<span class="sd">        - reach a target speed;</span>
+<span class="sd">        - maintain a minimum safety distance (and safety time) w.r.t the front vehicle.</span>
 
 <span class="sd">        :param ego_vehicle: the vehicle whose desired acceleration is to be computed. It does not have to be an</span>
 <span class="sd">                            IDM vehicle, which is why this method is a class method. This allows an IDM vehicle to</span>
@@ -294,7 +295,7 @@
 
 <div class="viewcode-block" id="IDMVehicle.desired_gap"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle.desired_gap">[docs]</a>    <span class="k">def</span> <span class="nf">desired_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ego_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Compute the desired distance between a vehicle and its leading vehicle.</span>
+<span class="sd">        Compute the desired distance between a vehicle and its leading vehicle.</span>
 
 <span class="sd">        :param ego_vehicle: the vehicle being controlled</span>
 <span class="sd">        :param front_vehicle: its leading vehicle</span>
@@ -309,11 +310,11 @@
 
 <div class="viewcode-block" id="IDMVehicle.maximum_speed"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle.maximum_speed">[docs]</a>    <span class="k">def</span> <span class="nf">maximum_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Compute the maximum allowed speed to avoid Inevitable Collision States.</span>
+<span class="sd">        Compute the maximum allowed speed to avoid Inevitable Collision States.</span>
 
-<span class="sd">            Assume the front vehicle is going to brake at full deceleration and that</span>
-<span class="sd">            it will be noticed after a given delay, and compute the maximum speed</span>
-<span class="sd">            which allows the ego-vehicle to brake enough to avoid the collision.</span>
+<span class="sd">        Assume the front vehicle is going to brake at full deceleration and that</span>
+<span class="sd">        it will be noticed after a given delay, and compute the maximum speed</span>
+<span class="sd">        which allows the ego-vehicle to brake enough to avoid the collision.</span>
 
 <span class="sd">        :param front_vehicle: the preceding vehicle</span>
 <span class="sd">        :return: the maximum allowed speed, and suggested acceleration</span>
@@ -337,12 +338,12 @@
 
 <div class="viewcode-block" id="IDMVehicle.change_lane_policy"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle.change_lane_policy">[docs]</a>    <span class="k">def</span> <span class="nf">change_lane_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Decide when to change lane.</span>
+<span class="sd">        Decide when to change lane.</span>
 
-<span class="sd">            Based on:</span>
-<span class="sd">            - frequency;</span>
-<span class="sd">            - closeness of the target lane;</span>
-<span class="sd">            - MOBIL model.</span>
+<span class="sd">        Based on:</span>
+<span class="sd">        - frequency;</span>
+<span class="sd">        - closeness of the target lane;</span>
+<span class="sd">        - MOBIL model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># If a lane change already ongoing</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">:</span>
@@ -376,7 +377,7 @@
 
 <div class="viewcode-block" id="IDMVehicle.mobil"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle.mobil">[docs]</a>    <span class="k">def</span> <span class="nf">mobil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</span>
+<span class="sd">        MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</span>
 
 <span class="sd">            The vehicle should change lane only if:</span>
 <span class="sd">            - after changing it (and/or following vehicles) can accelerate more;</span>
@@ -418,7 +419,7 @@
 
 <div class="viewcode-block" id="IDMVehicle.recover_from_stop"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.IDMVehicle.recover_from_stop">[docs]</a>    <span class="k">def</span> <span class="nf">recover_from_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acceleration</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            If stopped on the wrong lane, try a reversing maneuver.</span>
+<span class="sd">        If stopped on the wrong lane, try a reversing maneuver.</span>
 
 <span class="sd">        :param acceleration: desired acceleration from IDM</span>
 <span class="sd">        :return: suggested acceleration to recover from being stuck</span>
@@ -483,12 +484,12 @@
                      <span class="n">front_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">rear_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Compute an acceleration command with a Linear Model.</span>
+<span class="sd">        Compute an acceleration command with a Linear Model.</span>
 
-<span class="sd">            The acceleration is chosen so as to:</span>
-<span class="sd">            - reach a target speed;</span>
-<span class="sd">            - reach the speed of the leading (resp following) vehicle, if it is lower (resp higher) than ego&#39;s;</span>
-<span class="sd">            - maintain a minimum safety distance w.r.t the leading vehicle.</span>
+<span class="sd">        The acceleration is chosen so as to:</span>
+<span class="sd">        - reach a target speed;</span>
+<span class="sd">        - reach the speed of the leading (resp following) vehicle, if it is lower (resp higher) than ego&#39;s;</span>
+<span class="sd">        - maintain a minimum safety distance w.r.t the leading vehicle.</span>
 
 <span class="sd">        :param ego_vehicle: the vehicle whose desired acceleration is to be computed. It does not have to be an</span>
 <span class="sd">                            Linear vehicle, which is why this method is a class method. This allows a Linear vehicle to</span>
@@ -515,8 +516,10 @@
 
 <div class="viewcode-block" id="LinearVehicle.steering_control"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.LinearVehicle.steering_control">[docs]</a>    <span class="k">def</span> <span class="nf">steering_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Linear controller with respect to parameters.</span>
-<span class="sd">            Overrides the non-linear controller ControlledVehicle.steering_control()</span>
+<span class="sd">        Linear controller with respect to parameters.</span>
+
+<span class="sd">        Overrides the non-linear controller ControlledVehicle.steering_control()</span>
+
 <span class="sd">        :param target_lane_index: index of the lane to follow</span>
 <span class="sd">        :return: a steering wheel angle command [rad]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -524,7 +527,8 @@
 
 <div class="viewcode-block" id="LinearVehicle.steering_features"><a class="viewcode-back" href="../../../dynamics/vehicle/behavior.html#highway_env.vehicle.behavior.LinearVehicle.steering_features">[docs]</a>    <span class="k">def</span> <span class="nf">steering_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            A collection of features used to follow a lane</span>
+<span class="sd">        A collection of features used to follow a lane</span>
+
 <span class="sd">        :param target_lane_index: index of the lane to follow</span>
 <span class="sd">        :return: a array of features</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -301,10 +301,8 @@ vehicle.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.create_from">
 <em class="property">classmethod </em><code class="sig-name descname">create_from</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.controller.ControlledVehicle</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.behavior.IDMVehicle<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle.create_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.create_from" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a new vehicle from an existing one.
-The vehicle dynamics and target dynamics are copied, other properties are default.</p>
-</div></blockquote>
+<dd><p>Create a new vehicle from an existing one.</p>
+<p>The vehicle dynamics and target dynamics are copied, other properties are default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vehicle</strong> – a vehicle</p>
@@ -318,11 +316,9 @@ The vehicle dynamics and target dynamics are copied, other properties are defaul
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.act">
 <code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: Union[dict</em>, <em class="sig-param">str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle.act"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.act" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Execute an action.</p>
+<dd><p>Execute an action.</p>
 <p>For now, no action is supported because the vehicle takes all decisions
 of acceleration and lane changes on its own, based on the IDM and MOBIL models.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>action</strong> – the action</p>
@@ -333,10 +329,8 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.step">
 <code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.step" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Step the simulation.</p>
+<dd><p>Step the simulation.</p>
 <p>Increases a timer used for decision policies, and step the vehicle dynamics.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dt</strong> – timestep</p>
@@ -347,12 +341,10 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.acceleration">
 <code class="sig-name descname">acceleration</code><span class="sig-paren">(</span><em class="sig-param">ego_vehicle: highway_env.vehicle.controller.ControlledVehicle</em>, <em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em>, <em class="sig-param">rear_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle.acceleration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.acceleration" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute an acceleration command with the Intelligent Driver Model.</p>
+<dd><p>Compute an acceleration command with the Intelligent Driver Model.</p>
 <p>The acceleration is chosen so as to:
 - reach a target speed;
 - maintain a minimum safety distance (and safety time) w.r.t the front vehicle.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -372,9 +364,7 @@ reason about other vehicles behaviors even though they may not IDMs.</p></li>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.desired_gap">
 <code class="sig-name descname">desired_gap</code><span class="sig-paren">(</span><em class="sig-param">ego_vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle.desired_gap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.desired_gap" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the desired distance between a vehicle and its leading vehicle.</p>
-</div></blockquote>
+<dd><p>Compute the desired distance between a vehicle and its leading vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -391,12 +381,10 @@ reason about other vehicles behaviors even though they may not IDMs.</p></li>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.maximum_speed">
 <code class="sig-name descname">maximum_speed</code><span class="sig-paren">(</span><em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; Tuple[float, float]<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle.maximum_speed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.maximum_speed" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the maximum allowed speed to avoid Inevitable Collision States.</p>
+<dd><p>Compute the maximum allowed speed to avoid Inevitable Collision States.</p>
 <p>Assume the front vehicle is going to brake at full deceleration and that
 it will be noticed after a given delay, and compute the maximum speed
 which allows the ego-vehicle to brake enough to avoid the collision.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>front_vehicle</strong> – the preceding vehicle</p>
@@ -420,9 +408,9 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.mobil">
 <code class="sig-name descname">mobil</code><span class="sig-paren">(</span><em class="sig-param">lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle.mobil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.mobil" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</p>
-<p>The vehicle should change lane only if:
+<dd><p>MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</p>
+<blockquote>
+<div><p>The vehicle should change lane only if:
 - after changing it (and/or following vehicles) can accelerate more;
 - it doesn’t impose an unsafe braking on its new following vehicle.</p>
 </div></blockquote>
@@ -439,9 +427,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.recover_from_stop">
 <code class="sig-name descname">recover_from_stop</code><span class="sig-paren">(</span><em class="sig-param">acceleration: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#IDMVehicle.recover_from_stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.recover_from_stop" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>If stopped on the wrong lane, try a reversing maneuver.</p>
-</div></blockquote>
+<dd><p>If stopped on the wrong lane, try a reversing maneuver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>acceleration</strong> – desired acceleration from IDM</p>
@@ -678,9 +664,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.check_collision">
 <code class="sig-name descname">check_collision</code><span class="sig-paren">(</span><em class="sig-param">other: Union[Vehicle, RoadObject]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.check_collision" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Check for collision with another vehicle.</p>
-</div></blockquote>
+<dd><p>Check for collision with another vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>other</strong> – the other vehicle or object</p>
@@ -696,11 +680,9 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.create_random">
 <em class="property">classmethod </em><code class="sig-name descname">create_random</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road</em>, <em class="sig-param">speed: float = None</em>, <em class="sig-param">spacing: float = 1</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.create_random" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a random vehicle on the road.</p>
+<dd><p>Create a random vehicle on the road.</p>
 <p>The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
 vehicle in the road with density based on the number of lanes.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -733,13 +715,10 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.dump">
 <code class="sig-name descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.dump" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Update the internal log of the vehicle, containing:</dt><dd><ul class="simple">
-<li><p>its kinematics;</p></li>
-<li><p>some metrics relative to its neighbour vehicles.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Update the internal log of the vehicle</p>
+<p>The log contains:
+- its kinematics;
+- some metrics relative to its neighbour vehicles.</p>
 </dd></dl>
 
 <dl class="method">
@@ -756,9 +735,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.get_log">
 <code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.get_log" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Cast the internal log as a DataFrame.</p>
-</div></blockquote>
+<dd><p>Cast the internal log as a DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the DataFrame of the Vehicle’s log.</p>
@@ -775,9 +752,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.lane_distance_to">
 <code class="sig-name descname">lane_distance_to</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">lane: highway_env.road.lane.AbstractLane = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.lane_distance_to" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the signed distance to another vehicle along a lane.</p>
-</div></blockquote>
+<dd><p>Compute the signed distance to another vehicle along a lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -794,9 +769,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.make_on_lane">
 <em class="property">classmethod </em><code class="sig-name descname">make_on_lane</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, lane_index: Tuple[str, str, int], longitudinal: float, speed: float = 0</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.make_on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a vehicle on a given lane at a longitudinal position.</p>
-</div></blockquote>
+<dd><p>Create a vehicle on a given lane at a longitudinal position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -826,9 +799,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.plan_route_to">
 <code class="sig-name descname">plan_route_to</code><span class="sig-paren">(</span><em class="sig-param">destination: str</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.controller.ControlledVehicle<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.plan_route_to" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Plan a route to a destination in the road network</p>
-</div></blockquote>
+<dd><p>Plan a route to a destination in the road network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>destination</strong> – a node in the road network</p>
@@ -839,9 +810,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.predict_trajectory_constant_speed">
 <code class="sig-name descname">predict_trajectory_constant_speed</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[List[numpy.ndarray], List[float]]<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.predict_trajectory_constant_speed" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Predict the future positions of the vehicle along its planned route, under constant speed</p>
-</div></blockquote>
+<dd><p>Predict the future positions of the vehicle along its planned route, under constant speed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>times</strong> – timesteps of prediction</p>
@@ -855,10 +824,8 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.set_route_at_intersection">
 <code class="sig-name descname">set_route_at_intersection</code><span class="sig-paren">(</span><em class="sig-param">_to: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.set_route_at_intersection" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Set the road to be followed at the next intersection.
-Erase current planned route.</p>
-</div></blockquote>
+<dd><p>Set the road to be followed at the next intersection.</p>
+<p>Erase current planned route.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>_to</strong> – index of the road to follow at next intersection, in the road network</p>
@@ -869,10 +836,8 @@ Erase current planned route.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.speed_control">
 <code class="sig-name descname">speed_control</code><span class="sig-paren">(</span><em class="sig-param">target_speed: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.speed_control" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Control the speed of the vehicle.</p>
+<dd><p>Control the speed of the vehicle.</p>
 <p>Using a simple proportional controller.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_speed</strong> – the desired speed</p>
@@ -886,9 +851,7 @@ Erase current planned route.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.steering_control">
 <code class="sig-name descname">steering_control</code><span class="sig-paren">(</span><em class="sig-param">target_lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.steering_control" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Steer the vehicle to follow the center of an given lane.</p>
-</div></blockquote>
+<dd><p>Steer the vehicle to follow the center of an given lane.</p>
 <ol class="arabic simple">
 <li><p>Lateral position is controlled by a proportional controller yielding a lateral speed command</p></li>
 <li><p>Lateral speed command is converted to a heading reference</p></li>
@@ -962,10 +925,8 @@ Erase current planned route.</p>
 <dt id="highway_env.vehicle.behavior.LinearVehicle.act">
 <code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: Union[dict</em>, <em class="sig-param">str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#LinearVehicle.act"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.act" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute an action.</p>
-<blockquote>
-<div><p>For now, no action is supported because the vehicle takes all decisions
+<p>For now, no action is supported because the vehicle takes all decisions
 of acceleration and lane changes on its own, based on the IDM and MOBIL models.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>action</strong> – the action</p>
@@ -981,13 +942,11 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.acceleration">
 <code class="sig-name descname">acceleration</code><span class="sig-paren">(</span><em class="sig-param">ego_vehicle: highway_env.vehicle.controller.ControlledVehicle</em>, <em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em>, <em class="sig-param">rear_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#LinearVehicle.acceleration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.acceleration" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute an acceleration command with a Linear Model.</p>
+<dd><p>Compute an acceleration command with a Linear Model.</p>
 <p>The acceleration is chosen so as to:
 - reach a target speed;
 - reach the speed of the leading (resp following) vehicle, if it is lower (resp higher) than ego’s;
 - maintain a minimum safety distance w.r.t the leading vehicle.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1012,10 +971,8 @@ reason about other vehicles behaviors even though they may not Linear.</p></li>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.steering_control">
 <code class="sig-name descname">steering_control</code><span class="sig-paren">(</span><em class="sig-param">target_lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#LinearVehicle.steering_control"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.steering_control" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Linear controller with respect to parameters.
-Overrides the non-linear controller ControlledVehicle.steering_control()</p>
-</div></blockquote>
+<dd><p>Linear controller with respect to parameters.</p>
+<p>Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_lane_index</strong> – index of the lane to follow</p>
@@ -1029,9 +986,7 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.steering_features">
 <code class="sig-name descname">steering_features</code><span class="sig-paren">(</span><em class="sig-param">target_lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#LinearVehicle.steering_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.steering_features" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>A collection of features used to follow a lane</p>
-</div></blockquote>
+<dd><p>A collection of features used to follow a lane</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_lane_index</strong> – index of the lane to follow</p>
@@ -1344,9 +1299,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.check_collision">
 <code class="sig-name descname">check_collision</code><span class="sig-paren">(</span><em class="sig-param">other: Union[Vehicle, RoadObject]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.check_collision" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Check for collision with another vehicle.</p>
-</div></blockquote>
+<dd><p>Check for collision with another vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>other</strong> – the other vehicle or object</p>
@@ -1362,10 +1315,8 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.create_from">
 <em class="property">classmethod </em><code class="sig-name descname">create_from</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.controller.ControlledVehicle</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.behavior.IDMVehicle<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.create_from" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a new vehicle from an existing one.
-The vehicle dynamics and target dynamics are copied, other properties are default.</p>
-</div></blockquote>
+<dd><p>Create a new vehicle from an existing one.</p>
+<p>The vehicle dynamics and target dynamics are copied, other properties are default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vehicle</strong> – a vehicle</p>
@@ -1379,11 +1330,9 @@ The vehicle dynamics and target dynamics are copied, other properties are defaul
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.create_random">
 <em class="property">classmethod </em><code class="sig-name descname">create_random</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road</em>, <em class="sig-param">speed: float = None</em>, <em class="sig-param">spacing: float = 1</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.create_random" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a random vehicle on the road.</p>
+<dd><p>Create a random vehicle on the road.</p>
 <p>The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
 vehicle in the road with density based on the number of lanes.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1401,9 +1350,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.desired_gap">
 <code class="sig-name descname">desired_gap</code><span class="sig-paren">(</span><em class="sig-param">ego_vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.desired_gap" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the desired distance between a vehicle and its leading vehicle.</p>
-</div></blockquote>
+<dd><p>Compute the desired distance between a vehicle and its leading vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1435,13 +1382,10 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.dump">
 <code class="sig-name descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.dump" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Update the internal log of the vehicle, containing:</dt><dd><ul class="simple">
-<li><p>its kinematics;</p></li>
-<li><p>some metrics relative to its neighbour vehicles.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Update the internal log of the vehicle</p>
+<p>The log contains:
+- its kinematics;
+- some metrics relative to its neighbour vehicles.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1458,9 +1402,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.get_log">
 <code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.get_log" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Cast the internal log as a DataFrame.</p>
-</div></blockquote>
+<dd><p>Cast the internal log as a DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the DataFrame of the Vehicle’s log.</p>
@@ -1477,9 +1419,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.lane_distance_to">
 <code class="sig-name descname">lane_distance_to</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">lane: highway_env.road.lane.AbstractLane = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.lane_distance_to" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the signed distance to another vehicle along a lane.</p>
-</div></blockquote>
+<dd><p>Compute the signed distance to another vehicle along a lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1496,9 +1436,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.make_on_lane">
 <em class="property">classmethod </em><code class="sig-name descname">make_on_lane</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, lane_index: Tuple[str, str, int], longitudinal: float, speed: float = 0</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.make_on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a vehicle on a given lane at a longitudinal position.</p>
-</div></blockquote>
+<dd><p>Create a vehicle on a given lane at a longitudinal position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1517,12 +1455,10 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.maximum_speed">
 <code class="sig-name descname">maximum_speed</code><span class="sig-paren">(</span><em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; Tuple[float, float]<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.maximum_speed" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the maximum allowed speed to avoid Inevitable Collision States.</p>
+<dd><p>Compute the maximum allowed speed to avoid Inevitable Collision States.</p>
 <p>Assume the front vehicle is going to brake at full deceleration and that
 it will be noticed after a given delay, and compute the maximum speed
 which allows the ego-vehicle to brake enough to avoid the collision.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>front_vehicle</strong> – the preceding vehicle</p>
@@ -1536,9 +1472,9 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.mobil">
 <code class="sig-name descname">mobil</code><span class="sig-paren">(</span><em class="sig-param">lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.mobil" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</p>
-<p>The vehicle should change lane only if:
+<dd><p>MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</p>
+<blockquote>
+<div><p>The vehicle should change lane only if:
 - after changing it (and/or following vehicles) can accelerate more;
 - it doesn’t impose an unsafe braking on its new following vehicle.</p>
 </div></blockquote>
@@ -1566,9 +1502,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.plan_route_to">
 <code class="sig-name descname">plan_route_to</code><span class="sig-paren">(</span><em class="sig-param">destination: str</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.controller.ControlledVehicle<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.plan_route_to" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Plan a route to a destination in the road network</p>
-</div></blockquote>
+<dd><p>Plan a route to a destination in the road network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>destination</strong> – a node in the road network</p>
@@ -1579,9 +1513,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.predict_trajectory_constant_speed">
 <code class="sig-name descname">predict_trajectory_constant_speed</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[List[numpy.ndarray], List[float]]<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.predict_trajectory_constant_speed" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Predict the future positions of the vehicle along its planned route, under constant speed</p>
-</div></blockquote>
+<dd><p>Predict the future positions of the vehicle along its planned route, under constant speed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>times</strong> – timesteps of prediction</p>
@@ -1595,9 +1527,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.recover_from_stop">
 <code class="sig-name descname">recover_from_stop</code><span class="sig-paren">(</span><em class="sig-param">acceleration: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.recover_from_stop" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>If stopped on the wrong lane, try a reversing maneuver.</p>
-</div></blockquote>
+<dd><p>If stopped on the wrong lane, try a reversing maneuver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>acceleration</strong> – desired acceleration from IDM</p>
@@ -1611,10 +1541,8 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.set_route_at_intersection">
 <code class="sig-name descname">set_route_at_intersection</code><span class="sig-paren">(</span><em class="sig-param">_to: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.set_route_at_intersection" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Set the road to be followed at the next intersection.
-Erase current planned route.</p>
-</div></blockquote>
+<dd><p>Set the road to be followed at the next intersection.</p>
+<p>Erase current planned route.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>_to</strong> – index of the road to follow at next intersection, in the road network</p>
@@ -1625,10 +1553,8 @@ Erase current planned route.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.speed_control">
 <code class="sig-name descname">speed_control</code><span class="sig-paren">(</span><em class="sig-param">target_speed: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.speed_control" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Control the speed of the vehicle.</p>
+<dd><p>Control the speed of the vehicle.</p>
 <p>Using a simple proportional controller.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_speed</strong> – the desired speed</p>
@@ -1642,10 +1568,8 @@ Erase current planned route.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.step">
 <code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.step" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Step the simulation.</p>
+<dd><p>Step the simulation.</p>
 <p>Increases a timer used for decision policies, and step the vehicle dynamics.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dt</strong> – timestep</p>
@@ -1991,13 +1915,11 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.acceleration">
 <code class="sig-name descname">acceleration</code><span class="sig-paren">(</span><em class="sig-param">ego_vehicle: highway_env.vehicle.controller.ControlledVehicle</em>, <em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em>, <em class="sig-param">rear_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.acceleration" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute an acceleration command with a Linear Model.</p>
+<dd><p>Compute an acceleration command with a Linear Model.</p>
 <p>The acceleration is chosen so as to:
 - reach a target speed;
 - reach the speed of the leading (resp following) vehicle, if it is lower (resp higher) than ego’s;
 - maintain a minimum safety distance w.r.t the leading vehicle.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2023,10 +1945,8 @@ reason about other vehicles behaviors even though they may not Linear.</p></li>
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.act">
 <code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: Union[dict</em>, <em class="sig-param">str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.act" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute an action.</p>
-<blockquote>
-<div><p>For now, no action is supported because the vehicle takes all decisions
+<p>For now, no action is supported because the vehicle takes all decisions
 of acceleration and lane changes on its own, based on the IDM and MOBIL models.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>action</strong> – the action</p>
@@ -2052,9 +1972,7 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.check_collision">
 <code class="sig-name descname">check_collision</code><span class="sig-paren">(</span><em class="sig-param">other: Union[Vehicle, RoadObject]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.check_collision" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Check for collision with another vehicle.</p>
-</div></blockquote>
+<dd><p>Check for collision with another vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>other</strong> – the other vehicle or object</p>
@@ -2076,10 +1994,8 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.create_from">
 <em class="property">classmethod </em><code class="sig-name descname">create_from</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.controller.ControlledVehicle</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.behavior.IDMVehicle<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.create_from" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a new vehicle from an existing one.
-The vehicle dynamics and target dynamics are copied, other properties are default.</p>
-</div></blockquote>
+<dd><p>Create a new vehicle from an existing one.</p>
+<p>The vehicle dynamics and target dynamics are copied, other properties are default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vehicle</strong> – a vehicle</p>
@@ -2093,11 +2009,9 @@ The vehicle dynamics and target dynamics are copied, other properties are defaul
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.create_random">
 <em class="property">classmethod </em><code class="sig-name descname">create_random</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road</em>, <em class="sig-param">speed: float = None</em>, <em class="sig-param">spacing: float = 1</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.create_random" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a random vehicle on the road.</p>
+<dd><p>Create a random vehicle on the road.</p>
 <p>The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
 vehicle in the road with density based on the number of lanes.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2115,9 +2029,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.desired_gap">
 <code class="sig-name descname">desired_gap</code><span class="sig-paren">(</span><em class="sig-param">ego_vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.desired_gap" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the desired distance between a vehicle and its leading vehicle.</p>
-</div></blockquote>
+<dd><p>Compute the desired distance between a vehicle and its leading vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2149,13 +2061,10 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.dump">
 <code class="sig-name descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.dump" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Update the internal log of the vehicle, containing:</dt><dd><ul class="simple">
-<li><p>its kinematics;</p></li>
-<li><p>some metrics relative to its neighbour vehicles.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Update the internal log of the vehicle</p>
+<p>The log contains:
+- its kinematics;
+- some metrics relative to its neighbour vehicles.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2172,9 +2081,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.get_log">
 <code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.get_log" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Cast the internal log as a DataFrame.</p>
-</div></blockquote>
+<dd><p>Cast the internal log as a DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the DataFrame of the Vehicle’s log.</p>
@@ -2191,9 +2098,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.lane_distance_to">
 <code class="sig-name descname">lane_distance_to</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">lane: highway_env.road.lane.AbstractLane = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.lane_distance_to" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the signed distance to another vehicle along a lane.</p>
-</div></blockquote>
+<dd><p>Compute the signed distance to another vehicle along a lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2220,9 +2125,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.make_on_lane">
 <em class="property">classmethod </em><code class="sig-name descname">make_on_lane</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, lane_index: Tuple[str, str, int], longitudinal: float, speed: float = 0</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.make_on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a vehicle on a given lane at a longitudinal position.</p>
-</div></blockquote>
+<dd><p>Create a vehicle on a given lane at a longitudinal position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2241,12 +2144,10 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.maximum_speed">
 <code class="sig-name descname">maximum_speed</code><span class="sig-paren">(</span><em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; Tuple[float, float]<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.maximum_speed" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the maximum allowed speed to avoid Inevitable Collision States.</p>
+<dd><p>Compute the maximum allowed speed to avoid Inevitable Collision States.</p>
 <p>Assume the front vehicle is going to brake at full deceleration and that
 it will be noticed after a given delay, and compute the maximum speed
 which allows the ego-vehicle to brake enough to avoid the collision.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>front_vehicle</strong> – the preceding vehicle</p>
@@ -2260,9 +2161,9 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.mobil">
 <code class="sig-name descname">mobil</code><span class="sig-paren">(</span><em class="sig-param">lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.mobil" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</p>
-<p>The vehicle should change lane only if:
+<dd><p>MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</p>
+<blockquote>
+<div><p>The vehicle should change lane only if:
 - after changing it (and/or following vehicles) can accelerate more;
 - it doesn’t impose an unsafe braking on its new following vehicle.</p>
 </div></blockquote>
@@ -2290,9 +2191,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.plan_route_to">
 <code class="sig-name descname">plan_route_to</code><span class="sig-paren">(</span><em class="sig-param">destination: str</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.controller.ControlledVehicle<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.plan_route_to" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Plan a route to a destination in the road network</p>
-</div></blockquote>
+<dd><p>Plan a route to a destination in the road network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>destination</strong> – a node in the road network</p>
@@ -2303,9 +2202,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.predict_trajectory_constant_speed">
 <code class="sig-name descname">predict_trajectory_constant_speed</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[List[numpy.ndarray], List[float]]<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.predict_trajectory_constant_speed" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Predict the future positions of the vehicle along its planned route, under constant speed</p>
-</div></blockquote>
+<dd><p>Predict the future positions of the vehicle along its planned route, under constant speed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>times</strong> – timesteps of prediction</p>
@@ -2324,9 +2221,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.recover_from_stop">
 <code class="sig-name descname">recover_from_stop</code><span class="sig-paren">(</span><em class="sig-param">acceleration: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.recover_from_stop" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>If stopped on the wrong lane, try a reversing maneuver.</p>
-</div></blockquote>
+<dd><p>If stopped on the wrong lane, try a reversing maneuver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>acceleration</strong> – desired acceleration from IDM</p>
@@ -2340,10 +2235,8 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.set_route_at_intersection">
 <code class="sig-name descname">set_route_at_intersection</code><span class="sig-paren">(</span><em class="sig-param">_to: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.set_route_at_intersection" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Set the road to be followed at the next intersection.
-Erase current planned route.</p>
-</div></blockquote>
+<dd><p>Set the road to be followed at the next intersection.</p>
+<p>Erase current planned route.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>_to</strong> – index of the road to follow at next intersection, in the road network</p>
@@ -2354,10 +2247,8 @@ Erase current planned route.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.speed_control">
 <code class="sig-name descname">speed_control</code><span class="sig-paren">(</span><em class="sig-param">target_speed: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.speed_control" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Control the speed of the vehicle.</p>
+<dd><p>Control the speed of the vehicle.</p>
 <p>Using a simple proportional controller.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_speed</strong> – the desired speed</p>
@@ -2371,10 +2262,8 @@ Erase current planned route.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.steering_control">
 <code class="sig-name descname">steering_control</code><span class="sig-paren">(</span><em class="sig-param">target_lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.steering_control" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Linear controller with respect to parameters.
-Overrides the non-linear controller ControlledVehicle.steering_control()</p>
-</div></blockquote>
+<dd><p>Linear controller with respect to parameters.</p>
+<p>Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_lane_index</strong> – index of the lane to follow</p>
@@ -2388,9 +2277,7 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.steering_features">
 <code class="sig-name descname">steering_features</code><span class="sig-paren">(</span><em class="sig-param">target_lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.steering_features" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>A collection of features used to follow a lane</p>
-</div></blockquote>
+<dd><p>A collection of features used to follow a lane</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_lane_index</strong> – index of the lane to follow</p>
@@ -2404,10 +2291,8 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.step">
 <code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.step" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Step the simulation.</p>
+<dd><p>Step the simulation.</p>
 <p>Increases a timer used for decision policies, and step the vehicle dynamics.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dt</strong> – timestep</p>
@@ -2728,13 +2613,11 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.acceleration">
 <code class="sig-name descname">acceleration</code><span class="sig-paren">(</span><em class="sig-param">ego_vehicle: highway_env.vehicle.controller.ControlledVehicle</em>, <em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em>, <em class="sig-param">rear_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.acceleration" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute an acceleration command with a Linear Model.</p>
+<dd><p>Compute an acceleration command with a Linear Model.</p>
 <p>The acceleration is chosen so as to:
 - reach a target speed;
 - reach the speed of the leading (resp following) vehicle, if it is lower (resp higher) than ego’s;
 - maintain a minimum safety distance w.r.t the leading vehicle.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2760,10 +2643,8 @@ reason about other vehicles behaviors even though they may not Linear.</p></li>
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.act">
 <code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: Union[dict</em>, <em class="sig-param">str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.act" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute an action.</p>
-<blockquote>
-<div><p>For now, no action is supported because the vehicle takes all decisions
+<p>For now, no action is supported because the vehicle takes all decisions
 of acceleration and lane changes on its own, based on the IDM and MOBIL models.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>action</strong> – the action</p>
@@ -2789,9 +2670,7 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.check_collision">
 <code class="sig-name descname">check_collision</code><span class="sig-paren">(</span><em class="sig-param">other: Union[Vehicle, RoadObject]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.check_collision" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Check for collision with another vehicle.</p>
-</div></blockquote>
+<dd><p>Check for collision with another vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>other</strong> – the other vehicle or object</p>
@@ -2813,10 +2692,8 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.create_from">
 <em class="property">classmethod </em><code class="sig-name descname">create_from</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.controller.ControlledVehicle</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.behavior.IDMVehicle<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.create_from" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a new vehicle from an existing one.
-The vehicle dynamics and target dynamics are copied, other properties are default.</p>
-</div></blockquote>
+<dd><p>Create a new vehicle from an existing one.</p>
+<p>The vehicle dynamics and target dynamics are copied, other properties are default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vehicle</strong> – a vehicle</p>
@@ -2830,11 +2707,9 @@ The vehicle dynamics and target dynamics are copied, other properties are defaul
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.create_random">
 <em class="property">classmethod </em><code class="sig-name descname">create_random</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road</em>, <em class="sig-param">speed: float = None</em>, <em class="sig-param">spacing: float = 1</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.create_random" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a random vehicle on the road.</p>
+<dd><p>Create a random vehicle on the road.</p>
 <p>The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
 vehicle in the road with density based on the number of lanes.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2852,9 +2727,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.desired_gap">
 <code class="sig-name descname">desired_gap</code><span class="sig-paren">(</span><em class="sig-param">ego_vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.desired_gap" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the desired distance between a vehicle and its leading vehicle.</p>
-</div></blockquote>
+<dd><p>Compute the desired distance between a vehicle and its leading vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2886,13 +2759,10 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.dump">
 <code class="sig-name descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.dump" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Update the internal log of the vehicle, containing:</dt><dd><ul class="simple">
-<li><p>its kinematics;</p></li>
-<li><p>some metrics relative to its neighbour vehicles.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Update the internal log of the vehicle</p>
+<p>The log contains:
+- its kinematics;
+- some metrics relative to its neighbour vehicles.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2909,9 +2779,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.get_log">
 <code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.get_log" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Cast the internal log as a DataFrame.</p>
-</div></blockquote>
+<dd><p>Cast the internal log as a DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the DataFrame of the Vehicle’s log.</p>
@@ -2928,9 +2796,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.lane_distance_to">
 <code class="sig-name descname">lane_distance_to</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">lane: highway_env.road.lane.AbstractLane = None</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.lane_distance_to" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the signed distance to another vehicle along a lane.</p>
-</div></blockquote>
+<dd><p>Compute the signed distance to another vehicle along a lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2957,9 +2823,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.make_on_lane">
 <em class="property">classmethod </em><code class="sig-name descname">make_on_lane</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, lane_index: Tuple[str, str, int], longitudinal: float, speed: float = 0</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.kinematics.Vehicle<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.make_on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a vehicle on a given lane at a longitudinal position.</p>
-</div></blockquote>
+<dd><p>Create a vehicle on a given lane at a longitudinal position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2978,12 +2842,10 @@ vehicle in the road with density based on the number of lanes.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.maximum_speed">
 <code class="sig-name descname">maximum_speed</code><span class="sig-paren">(</span><em class="sig-param">front_vehicle: highway_env.vehicle.kinematics.Vehicle = None</em><span class="sig-paren">)</span> &#x2192; Tuple[float, float]<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.maximum_speed" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the maximum allowed speed to avoid Inevitable Collision States.</p>
+<dd><p>Compute the maximum allowed speed to avoid Inevitable Collision States.</p>
 <p>Assume the front vehicle is going to brake at full deceleration and that
 it will be noticed after a given delay, and compute the maximum speed
 which allows the ego-vehicle to brake enough to avoid the collision.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>front_vehicle</strong> – the preceding vehicle</p>
@@ -2997,9 +2859,9 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.mobil">
 <code class="sig-name descname">mobil</code><span class="sig-paren">(</span><em class="sig-param">lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.mobil" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</p>
-<p>The vehicle should change lane only if:
+<dd><p>MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</p>
+<blockquote>
+<div><p>The vehicle should change lane only if:
 - after changing it (and/or following vehicles) can accelerate more;
 - it doesn’t impose an unsafe braking on its new following vehicle.</p>
 </div></blockquote>
@@ -3027,9 +2889,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.plan_route_to">
 <code class="sig-name descname">plan_route_to</code><span class="sig-paren">(</span><em class="sig-param">destination: str</em><span class="sig-paren">)</span> &#x2192; highway_env.vehicle.controller.ControlledVehicle<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.plan_route_to" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Plan a route to a destination in the road network</p>
-</div></blockquote>
+<dd><p>Plan a route to a destination in the road network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>destination</strong> – a node in the road network</p>
@@ -3040,9 +2900,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.predict_trajectory_constant_speed">
 <code class="sig-name descname">predict_trajectory_constant_speed</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[List[numpy.ndarray], List[float]]<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.predict_trajectory_constant_speed" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Predict the future positions of the vehicle along its planned route, under constant speed</p>
-</div></blockquote>
+<dd><p>Predict the future positions of the vehicle along its planned route, under constant speed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>times</strong> – timesteps of prediction</p>
@@ -3061,9 +2919,7 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.recover_from_stop">
 <code class="sig-name descname">recover_from_stop</code><span class="sig-paren">(</span><em class="sig-param">acceleration: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.recover_from_stop" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>If stopped on the wrong lane, try a reversing maneuver.</p>
-</div></blockquote>
+<dd><p>If stopped on the wrong lane, try a reversing maneuver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>acceleration</strong> – desired acceleration from IDM</p>
@@ -3077,10 +2933,8 @@ which allows the ego-vehicle to brake enough to avoid the collision.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.set_route_at_intersection">
 <code class="sig-name descname">set_route_at_intersection</code><span class="sig-paren">(</span><em class="sig-param">_to: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.set_route_at_intersection" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Set the road to be followed at the next intersection.
-Erase current planned route.</p>
-</div></blockquote>
+<dd><p>Set the road to be followed at the next intersection.</p>
+<p>Erase current planned route.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>_to</strong> – index of the road to follow at next intersection, in the road network</p>
@@ -3091,10 +2945,8 @@ Erase current planned route.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.speed_control">
 <code class="sig-name descname">speed_control</code><span class="sig-paren">(</span><em class="sig-param">target_speed: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.speed_control" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Control the speed of the vehicle.</p>
+<dd><p>Control the speed of the vehicle.</p>
 <p>Using a simple proportional controller.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_speed</strong> – the desired speed</p>
@@ -3108,10 +2960,8 @@ Erase current planned route.</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.steering_control">
 <code class="sig-name descname">steering_control</code><span class="sig-paren">(</span><em class="sig-param">target_lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.steering_control" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Linear controller with respect to parameters.
-Overrides the non-linear controller ControlledVehicle.steering_control()</p>
-</div></blockquote>
+<dd><p>Linear controller with respect to parameters.</p>
+<p>Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_lane_index</strong> – index of the lane to follow</p>
@@ -3125,9 +2975,7 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.steering_features">
 <code class="sig-name descname">steering_features</code><span class="sig-paren">(</span><em class="sig-param">target_lane_index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.steering_features" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>A collection of features used to follow a lane</p>
-</div></blockquote>
+<dd><p>A collection of features used to follow a lane</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>target_lane_index</strong> – index of the lane to follow</p>
@@ -3141,10 +2989,8 @@ Overrides the non-linear controller ControlledVehicle.steering_control()</p>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.step">
 <code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.step" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Step the simulation.</p>
+<dd><p>Step the simulation.</p>
 <p>Increases a timer used for decision policies, and step the vehicle dynamics.</p>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dt</strong> – timestep</p>

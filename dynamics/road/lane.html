@@ -217,9 +217,7 @@
 <dl class="method">
 <dt id="highway_env.road.lane.AbstractLane.position">
 <em class="property">abstract </em><code class="sig-name descname">position</code><span class="sig-paren">(</span><em class="sig-param">longitudinal: float</em>, <em class="sig-param">lateral: float</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../../_modules/highway_env/road/lane.html#AbstractLane.position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.AbstractLane.position" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Convert local lane coordinates to a world position.</p>
-</div></blockquote>
+<dd><p>Convert local lane coordinates to a world position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -236,9 +234,7 @@
 <dl class="method">
 <dt id="highway_env.road.lane.AbstractLane.local_coordinates">
 <em class="property">abstract </em><code class="sig-name descname">local_coordinates</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[float, float]<a class="reference internal" href="../../_modules/highway_env/road/lane.html#AbstractLane.local_coordinates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.AbstractLane.local_coordinates" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Convert a world position to local lane coordinates.</p>
-</div></blockquote>
+<dd><p>Convert a world position to local lane coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>position</strong> – a world position [m]</p>
@@ -252,9 +248,7 @@
 <dl class="method">
 <dt id="highway_env.road.lane.AbstractLane.heading_at">
 <em class="property">abstract </em><code class="sig-name descname">heading_at</code><span class="sig-paren">(</span><em class="sig-param">longitudinal: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/road/lane.html#AbstractLane.heading_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.AbstractLane.heading_at" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Get the lane heading at a given longitudinal lane coordinate.</p>
-</div></blockquote>
+<dd><p>Get the lane heading at a given longitudinal lane coordinate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>longitudinal</strong> – longitudinal lane coordinate [m]</p>
@@ -268,9 +262,7 @@
 <dl class="method">
 <dt id="highway_env.road.lane.AbstractLane.width_at">
 <em class="property">abstract </em><code class="sig-name descname">width_at</code><span class="sig-paren">(</span><em class="sig-param">longitudinal: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../../_modules/highway_env/road/lane.html#AbstractLane.width_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.AbstractLane.width_at" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Get the lane width at a given longitudinal lane coordinate.</p>
-</div></blockquote>
+<dd><p>Get the lane width at a given longitudinal lane coordinate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>longitudinal</strong> – longitudinal lane coordinate [m]</p>
@@ -284,9 +276,7 @@
 <dl class="method">
 <dt id="highway_env.road.lane.AbstractLane.on_lane">
 <code class="sig-name descname">on_lane</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em>, <em class="sig-param">margin: float = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/highway_env/road/lane.html#AbstractLane.on_lane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.AbstractLane.on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Whether a given world position is on the lane.</p>
-</div></blockquote>
+<dd><p>Whether a given world position is on the lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -305,9 +295,7 @@
 <dl class="method">
 <dt id="highway_env.road.lane.AbstractLane.is_reachable_from">
 <code class="sig-name descname">is_reachable_from</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/highway_env/road/lane.html#AbstractLane.is_reachable_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.AbstractLane.is_reachable_from" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Whether the lane is reachable from a given world position</p>
-</div></blockquote>
+<dd><p>Whether the lane is reachable from a given world position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>position</strong> – the world position [m]</p>
@@ -679,9 +667,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.lane.StraightLane.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">start: Union[numpy.ndarray, Sequence[float]], end: Union[numpy.ndarray, Sequence[float]], width: float = 4, line_types: Tuple[highway_env.road.lane.LineType, highway_env.road.lane.LineType] = None, forbidden: bool = False, speed_limit: float = 20, priority: int = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/lane.html#StraightLane.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.StraightLane.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>New straight lane.</p>
-</div></blockquote>
+<dd><p>New straight lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -942,9 +928,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.lane.StraightLane.is_reachable_from">
 <code class="sig-name descname">is_reachable_from</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.StraightLane.is_reachable_from" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Whether the lane is reachable from a given world position</p>
-</div></blockquote>
+<dd><p>Whether the lane is reachable from a given world position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>position</strong> – the world position [m]</p>
@@ -964,9 +948,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.lane.StraightLane.on_lane">
 <code class="sig-name descname">on_lane</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em>, <em class="sig-param">margin: float = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.StraightLane.on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Whether a given world position is on the lane.</p>
-</div></blockquote>
+<dd><p>Whether a given world position is on the lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -992,9 +974,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.lane.SineLane.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">start: Union[numpy.ndarray, Sequence[float]], end: Union[numpy.ndarray, Sequence[float]], amplitude: float, pulsation: float, phase: float, width: float = 4, line_types: List[highway_env.road.lane.LineType] = None, forbidden: bool = False, speed_limit: float = 20, priority: int = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/lane.html#SineLane.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.SineLane.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>New sinusoidal lane.</p>
-</div></blockquote>
+<dd><p>New sinusoidal lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1230,9 +1210,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.lane.SineLane.is_reachable_from">
 <code class="sig-name descname">is_reachable_from</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.SineLane.is_reachable_from" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Whether the lane is reachable from a given world position</p>
-</div></blockquote>
+<dd><p>Whether the lane is reachable from a given world position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>position</strong> – the world position [m]</p>
@@ -1262,9 +1240,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.lane.SineLane.on_lane">
 <code class="sig-name descname">on_lane</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em>, <em class="sig-param">margin: float = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.SineLane.on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Whether a given world position is on the lane.</p>
-</div></blockquote>
+<dd><p>Whether a given world position is on the lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1553,9 +1529,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.lane.CircularLane.is_reachable_from">
 <code class="sig-name descname">is_reachable_from</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.CircularLane.is_reachable_from" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Whether the lane is reachable from a given world position</p>
-</div></blockquote>
+<dd><p>Whether the lane is reachable from a given world position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>position</strong> – the world position [m]</p>
@@ -1575,9 +1549,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.lane.CircularLane.on_lane">
 <code class="sig-name descname">on_lane</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em>, <em class="sig-param">margin: float = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.CircularLane.on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Whether a given world position is on the lane.</p>
-</div></blockquote>
+<dd><p>Whether a given world position is on the lane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

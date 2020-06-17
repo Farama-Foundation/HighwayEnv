@@ -193,8 +193,9 @@
 <div class="viewcode-block" id="ControlledVehicle.create_from"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.create_from">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="s2">&quot;ControlledVehicle&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ControlledVehicle&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Create a new vehicle from an existing one.</span>
-<span class="sd">            The vehicle dynamics and target dynamics are copied, other properties are default.</span>
+<span class="sd">        Create a new vehicle from an existing one.</span>
+
+<span class="sd">        The vehicle dynamics and target dynamics are copied, other properties are default.</span>
 
 <span class="sd">        :param vehicle: a vehicle</span>
 <span class="sd">        :return: a new vehicle at the same dynamical state</span>
@@ -206,7 +207,7 @@
 
 <div class="viewcode-block" id="ControlledVehicle.plan_route_to"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.plan_route_to">[docs]</a>    <span class="k">def</span> <span class="nf">plan_route_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ControlledVehicle&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Plan a route to a destination in the road network</span>
+<span class="sd">        Plan a route to a destination in the road network</span>
 
 <span class="sd">        :param destination: a node in the road network</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -222,10 +223,10 @@
 
 <div class="viewcode-block" id="ControlledVehicle.act"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.act">[docs]</a>    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Perform a high-level action to change the desired lane or speed.</span>
+<span class="sd">        Perform a high-level action to change the desired lane or speed.</span>
 
-<span class="sd">            - If a high-level action is provided, update the target speed and lane;</span>
-<span class="sd">            - then, perform longitudinal and lateral control.</span>
+<span class="sd">        - If a high-level action is provided, update the target speed and lane;</span>
+<span class="sd">        - then, perform longitudinal and lateral control.</span>
 
 <span class="sd">        :param action: a high-level action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -260,7 +261,7 @@
 
 <div class="viewcode-block" id="ControlledVehicle.steering_control"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.steering_control">[docs]</a>    <span class="k">def</span> <span class="nf">steering_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Steer the vehicle to follow the center of an given lane.</span>
+<span class="sd">        Steer the vehicle to follow the center of an given lane.</span>
 
 <span class="sd">        1. Lateral position is controlled by a proportional controller yielding a lateral speed command</span>
 <span class="sd">        2. Lateral speed command is converted to a heading reference</span>
@@ -290,9 +291,9 @@
 
 <div class="viewcode-block" id="ControlledVehicle.speed_control"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.speed_control">[docs]</a>    <span class="k">def</span> <span class="nf">speed_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Control the speed of the vehicle.</span>
+<span class="sd">        Control the speed of the vehicle.</span>
 
-<span class="sd">            Using a simple proportional controller.</span>
+<span class="sd">        Using a simple proportional controller.</span>
 
 <span class="sd">        :param target_speed: the desired speed</span>
 <span class="sd">        :return: an acceleration command [m/s2]</span>
@@ -319,8 +320,10 @@
 
 <div class="viewcode-block" id="ControlledVehicle.set_route_at_intersection"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.set_route_at_intersection">[docs]</a>    <span class="k">def</span> <span class="nf">set_route_at_intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_to</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Set the road to be followed at the next intersection.</span>
-<span class="sd">            Erase current planned route.</span>
+<span class="sd">        Set the road to be followed at the next intersection.</span>
+
+<span class="sd">        Erase current planned route.</span>
+
 <span class="sd">        :param _to: index of the road to follow at next intersection, in the road network</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -332,7 +335,8 @@
 
 <div class="viewcode-block" id="ControlledVehicle.predict_trajectory_constant_speed"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.ControlledVehicle.predict_trajectory_constant_speed">[docs]</a>    <span class="k">def</span> <span class="nf">predict_trajectory_constant_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">times</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Predict the future positions of the vehicle along its planned route, under constant speed</span>
+<span class="sd">        Predict the future positions of the vehicle along its planned route, under constant speed</span>
+
 <span class="sd">        :param times: timesteps of prediction</span>
 <span class="sd">        :return: positions, headings</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -364,10 +368,10 @@
 
 <div class="viewcode-block" id="MDPVehicle.act"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.MDPVehicle.act">[docs]</a>    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Perform a high-level action.</span>
+<span class="sd">        Perform a high-level action.</span>
 
-<span class="sd">            If the action is a speed change, choose speed from the allowed discrete range.</span>
-<span class="sd">            Else, forward action to the ControlledVehicle handler.</span>
+<span class="sd">        - If the action is a speed change, choose speed from the allowed discrete range.</span>
+<span class="sd">        - Else, forward action to the ControlledVehicle handler.</span>
 
 <span class="sd">        :param action: a high-level action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -385,7 +389,8 @@
 <div class="viewcode-block" id="MDPVehicle.index_to_speed"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.MDPVehicle.index_to_speed">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">index_to_speed</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Convert an index among allowed speeds to its corresponding speed</span>
+<span class="sd">        Convert an index among allowed speeds to its corresponding speed</span>
+
 <span class="sd">        :param index: the speed index []</span>
 <span class="sd">        :return: the corresponding speed [m/s]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -397,7 +402,8 @@
 <div class="viewcode-block" id="MDPVehicle.speed_to_index"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.MDPVehicle.speed_to_index">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">speed_to_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Find the index of the closest speed allowed to a given speed.</span>
+<span class="sd">        Find the index of the closest speed allowed to a given speed.</span>
+
 <span class="sd">        :param speed: an input speed [m/s]</span>
 <span class="sd">        :return: the index of the closest speed allowed []</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -407,7 +413,7 @@
 <div class="viewcode-block" id="MDPVehicle.predict_trajectory"><a class="viewcode-back" href="../../../dynamics/vehicle/controller.html#highway_env.vehicle.behavior.MDPVehicle.predict_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">predict_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">action_duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">trajectory_timestep</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ControlledVehicle</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Predict the future trajectory of the vehicle given a sequence of actions.</span>
+<span class="sd">        Predict the future trajectory of the vehicle given a sequence of actions.</span>
 
 <span class="sd">        :param actions: a sequence of future actions.</span>
 <span class="sd">        :param action_duration: the duration of each action.</span>

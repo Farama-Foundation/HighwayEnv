@@ -168,7 +168,7 @@
 <div class="viewcode-block" id="AbstractLane.position"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.AbstractLane.position">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Convert local lane coordinates to a world position.</span>
+<span class="sd">        Convert local lane coordinates to a world position.</span>
 
 <span class="sd">        :param longitudinal: longitudinal lane coordinate [m]</span>
 <span class="sd">        :param lateral: lateral lane coordinate [m]</span>
@@ -179,7 +179,7 @@
 <div class="viewcode-block" id="AbstractLane.local_coordinates"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.AbstractLane.local_coordinates">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Convert a world position to local lane coordinates.</span>
+<span class="sd">        Convert a world position to local lane coordinates.</span>
 
 <span class="sd">        :param position: a world position [m]</span>
 <span class="sd">        :return: the (longitudinal, lateral) lane coordinates [m]</span>
@@ -189,7 +189,7 @@
 <div class="viewcode-block" id="AbstractLane.heading_at"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.AbstractLane.heading_at">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Get the lane heading at a given longitudinal lane coordinate.</span>
+<span class="sd">        Get the lane heading at a given longitudinal lane coordinate.</span>
 
 <span class="sd">        :param longitudinal: longitudinal lane coordinate [m]</span>
 <span class="sd">        :return: the lane heading [rad]</span>
@@ -199,7 +199,7 @@
 <div class="viewcode-block" id="AbstractLane.width_at"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.AbstractLane.width_at">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Get the lane width at a given longitudinal lane coordinate.</span>
+<span class="sd">        Get the lane width at a given longitudinal lane coordinate.</span>
 
 <span class="sd">        :param longitudinal: longitudinal lane coordinate [m]</span>
 <span class="sd">        :return: the lane width [m]</span>
@@ -209,7 +209,7 @@
 <div class="viewcode-block" id="AbstractLane.on_lane"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.AbstractLane.on_lane">[docs]</a>    <span class="k">def</span> <span class="nf">on_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Whether a given world position is on the lane.</span>
+<span class="sd">        Whether a given world position is on the lane.</span>
 
 <span class="sd">        :param position: a world position [m]</span>
 <span class="sd">        :param longitudinal: (optional) the corresponding longitudinal lane coordinate, if known [m]</span>
@@ -225,7 +225,7 @@
 
 <div class="viewcode-block" id="AbstractLane.is_reachable_from"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.AbstractLane.is_reachable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_reachable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Whether the lane is reachable from a given world position</span>
+<span class="sd">        Whether the lane is reachable from a given world position</span>
 
 <span class="sd">        :param position: the world position [m]</span>
 <span class="sd">        :return: is the lane reachable?</span>
@@ -271,7 +271,7 @@
                  <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
                  <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            New straight lane.</span>
+<span class="sd">        New straight lane.</span>
 
 <span class="sd">        :param start: the lane starting position [m]</span>
 <span class="sd">        :param end: the lane ending position [m]</span>
@@ -324,7 +324,7 @@
                  <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
                  <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            New sinusoidal lane.</span>
+<span class="sd">        New sinusoidal lane.</span>
 
 <span class="sd">        :param start: the lane starting position [m]</span>
 <span class="sd">        :param end: the lane ending position [m]</span>

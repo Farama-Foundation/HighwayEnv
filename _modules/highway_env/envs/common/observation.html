@@ -170,22 +170,25 @@
 
 
 <div class="viewcode-block" id="GrayscaleObservation"><a class="viewcode-back" href="../../../../observations/index.html#highway_env.envs.common.observation.GrayscaleObservation">[docs]</a><span class="k">class</span> <span class="nc">GrayscaleObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An observation class that collects directly what the simulator renders</span>
-<span class="sd">        as the input, and stacks the collected frames just as in the nature DQN</span>
-<span class="sd">        . Specific keys are expected in the configuration dictionary passed.</span>
+<span class="sd">    An observation class that collects directly what the simulator renders</span>
 
-<span class="sd">        Example of observation dictionary in the environment config:</span>
-<span class="sd">            observation&quot;: {</span>
-<span class="sd">                &quot;type&quot;: &quot;GrayscaleObservation&quot;,</span>
-<span class="sd">                &quot;weights&quot;: [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,</span>
-<span class="sd">                &quot;stack_size&quot;: 4,</span>
-<span class="sd">                &quot;observation_shape&quot;: (84, 84)</span>
-<span class="sd">            }</span>
+<span class="sd">    Also stacks the collected frames as in the nature DQN.</span>
+<span class="sd">    Specific keys are expected in the configuration dictionary passed.</span>
 
-<span class="sd">        Also, the screen_height and screen_width of the environment should match the</span>
-<span class="sd">        expected observation_shape. </span>
+<span class="sd">    Example of observation dictionary in the environment config:</span>
+<span class="sd">        observation&quot;: {</span>
+<span class="sd">            &quot;type&quot;: &quot;GrayscaleObservation&quot;,</span>
+<span class="sd">            &quot;weights&quot;: [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,</span>
+<span class="sd">            &quot;stack_size&quot;: 4,</span>
+<span class="sd">            &quot;observation_shape&quot;: (84, 84)</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Also, the screen_height and screen_width of the environment should match the</span>
+<span class="sd">    expected observation_shape.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="GrayscaleObservation.__init__"><a class="viewcode-back" href="../../../../observations/index.html#highway_env.envs.common.observation.GrayscaleObservation.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
@@ -286,9 +289,9 @@
 
 <div class="viewcode-block" id="KinematicObservation.normalize_obs"><a class="viewcode-back" href="../../../../observations/index.html#highway_env.envs.common.observation.KinematicObservation.normalize_obs">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Normalize the observation values.</span>
+<span class="sd">        Normalize the observation values.</span>
 
-<span class="sd">            For now, assume that the road is straight along the x axis.</span>
+<span class="sd">        For now, assume that the road is straight along the x axis.</span>
 <span class="sd">        :param Dataframe df: observation data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">features_range</span><span class="p">:</span>
@@ -372,9 +375,9 @@
 
 <div class="viewcode-block" id="OccupancyGridObservation.normalize"><a class="viewcode-back" href="../../../../observations/index.html#highway_env.envs.common.observation.OccupancyGridObservation.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Normalize the observation values.</span>
+<span class="sd">        Normalize the observation values.</span>
 
-<span class="sd">            For now, assume that the road is straight along the x axis.</span>
+<span class="sd">        For now, assume that the road is straight along the x axis.</span>
 <span class="sd">        :param Dataframe df: observation data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">features_range</span><span class="p">:</span>

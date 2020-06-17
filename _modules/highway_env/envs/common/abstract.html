@@ -166,12 +166,13 @@
 
 
 <div class="viewcode-block" id="AbstractEnv"><a class="viewcode-back" href="../../../../make_your_own.html#highway_env.envs.highway_env.AbstractEnv">[docs]</a><span class="k">class</span> <span class="nc">AbstractEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A generic environment for various tasks involving a vehicle driving on a road.</span>
 
-<span class="sd">        The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and</span>
-<span class="sd">        speed. The action space is fixed, but the observation space and reward function must be defined in the</span>
-<span class="sd">        environment implementations.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A generic environment for various tasks involving a vehicle driving on a road.</span>
+
+<span class="sd">    The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and</span>
+<span class="sd">    speed. The action space is fixed, but the observation space and reward function must be defined in the</span>
+<span class="sd">    environment implementations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">automatic_rendering_callback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;render.modes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">]}</span>
@@ -182,7 +183,7 @@
                <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;FASTER&#39;</span><span class="p">,</span>
                <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;SLOWER&#39;</span><span class="p">}</span>
     <span class="sd">&quot;&quot;&quot;A mapping of action indexes to action labels&quot;&quot;&quot;</span>
-    
+
     <span class="n">ACTIONS_INDEXES</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ACTIONS</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="sd">&quot;&quot;&quot;A mapping of action labels to action indexes&quot;&quot;&quot;</span>
 

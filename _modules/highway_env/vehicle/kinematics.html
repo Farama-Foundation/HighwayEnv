@@ -165,12 +165,14 @@
 
 
 <div class="viewcode-block" id="Vehicle"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle">[docs]</a><span class="k">class</span> <span class="nc">Vehicle</span><span class="p">(</span><span class="n">Loggable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A moving vehicle on a road, and its kinematics.</span>
 
-<span class="sd">        The vehicle is represented by a dynamical system: a modified bicycle model.</span>
-<span class="sd">        It&#39;s state is propagated depending on its steering and acceleration actions.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A moving vehicle on a road, and its kinematics.</span>
+
+<span class="sd">    The vehicle is represented by a dynamical system: a modified bicycle model.</span>
+<span class="sd">    It&#39;s state is propagated depending on its steering and acceleration actions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">COLLISIONS_ENABLED</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="sd">&quot;&quot;&quot; Enable collision detection between vehicles &quot;&quot;&quot;</span>
 
@@ -202,7 +204,7 @@
 <div class="viewcode-block" id="Vehicle.make_on_lane"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.make_on_lane">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">make_on_lane</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Vehicle&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Create a vehicle on a given lane at a longitudinal position.</span>
+<span class="sd">        Create a vehicle on a given lane at a longitudinal position.</span>
 
 <span class="sd">        :param road: the road where the vehicle is driving</span>
 <span class="sd">        :param lane_index: index of the lane where the vehicle is located</span>
@@ -218,10 +220,10 @@
 <div class="viewcode-block" id="Vehicle.create_random"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.create_random">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_random</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spacing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Vehicle&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Create a random vehicle on the road.</span>
+<span class="sd">        Create a random vehicle on the road.</span>
 
-<span class="sd">            The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last</span>
-<span class="sd">            vehicle in the road with density based on the number of lanes.</span>
+<span class="sd">        The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last</span>
+<span class="sd">        vehicle in the road with density based on the number of lanes.</span>
 
 <span class="sd">        :param road: the road where the vehicle is driving</span>
 <span class="sd">        :param speed: initial speed in [m/s]. If None, will be chosen randomly</span>
@@ -245,8 +247,9 @@
 <div class="viewcode-block" id="Vehicle.create_from"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.create_from">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="s2">&quot;Vehicle&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Vehicle&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Create a new vehicle from an existing one.</span>
-<span class="sd">            Only the vehicle dynamics are copied, other properties are default.</span>
+<span class="sd">        Create a new vehicle from an existing one.</span>
+
+<span class="sd">        Only the vehicle dynamics are copied, other properties are default.</span>
 
 <span class="sd">        :param vehicle: a vehicle</span>
 <span class="sd">        :return: a new vehicle at the same dynamical state</span>
@@ -256,7 +259,7 @@
 
 <div class="viewcode-block" id="Vehicle.act"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.act">[docs]</a>    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Store an action to be repeated.</span>
+<span class="sd">        Store an action to be repeated.</span>
 
 <span class="sd">        :param action: the input action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -265,11 +268,11 @@
 
 <div class="viewcode-block" id="Vehicle.step"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Propagate the vehicle state given its actions.</span>
+<span class="sd">        Propagate the vehicle state given its actions.</span>
 
-<span class="sd">            Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.</span>
-<span class="sd">            If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.</span>
-<span class="sd">            The vehicle&#39;s current lane is updated.</span>
+<span class="sd">        Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.</span>
+<span class="sd">        If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.</span>
+<span class="sd">        The vehicle&#39;s current lane is updated.</span>
 
 <span class="sd">        :param dt: timestep of integration of the model [s]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -303,7 +306,7 @@
 
 <div class="viewcode-block" id="Vehicle.lane_distance_to"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.lane_distance_to">[docs]</a>    <span class="k">def</span> <span class="nf">lane_distance_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="s2">&quot;Vehicle&quot;</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Compute the signed distance to another vehicle along a lane.</span>
+<span class="sd">        Compute the signed distance to another vehicle along a lane.</span>
 
 <span class="sd">        :param vehicle: the other vehicle</span>
 <span class="sd">        :param lane: a lane</span>
@@ -317,7 +320,7 @@
 
 <div class="viewcode-block" id="Vehicle.check_collision"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.check_collision">[docs]</a>    <span class="k">def</span> <span class="nf">check_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Vehicle&#39;</span><span class="p">,</span> <span class="s1">&#39;RoadObject&#39;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Check for collision with another vehicle.</span>
+<span class="sd">        Check for collision with another vehicle.</span>
 
 <span class="sd">        :param other: the other vehicle or object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -403,9 +406,11 @@
 
 <div class="viewcode-block" id="Vehicle.dump"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Update the internal log of the vehicle, containing:</span>
-<span class="sd">                - its kinematics;</span>
-<span class="sd">                - some metrics relative to its neighbour vehicles.</span>
+<span class="sd">        Update the internal log of the vehicle</span>
+
+<span class="sd">        The log contains:</span>
+<span class="sd">        - its kinematics;</span>
+<span class="sd">        - some metrics relative to its neighbour vehicles.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -440,7 +445,7 @@
 
 <div class="viewcode-block" id="Vehicle.get_log"><a class="viewcode-back" href="../../../dynamics/vehicle/kinematics.html#highway_env.vehicle.behavior.Vehicle.get_log">[docs]</a>    <span class="k">def</span> <span class="nf">get_log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Cast the internal log as a DataFrame.</span>
+<span class="sd">        Cast the internal log as a DataFrame.</span>
 
 <span class="sd">        :return: the DataFrame of the Vehicle&#39;s log.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

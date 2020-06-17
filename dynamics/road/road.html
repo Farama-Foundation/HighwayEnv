@@ -208,9 +208,7 @@ A <code class="xref py py-class docutils literal notranslate"><span class="pre">
 <dl class="method">
 <dt id="highway_env.road.road.RoadNetwork.add_lane">
 <code class="sig-name descname">add_lane</code><span class="sig-paren">(</span><em class="sig-param">_from: str</em>, <em class="sig-param">_to: str</em>, <em class="sig-param">lane: highway_env.road.lane.AbstractLane</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.add_lane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.add_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>A lane is encoded as an edge in the road network.</p>
-</div></blockquote>
+<dd><p>A lane is encoded as an edge in the road network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -225,9 +223,7 @@ A <code class="xref py py-class docutils literal notranslate"><span class="pre">
 <dl class="method">
 <dt id="highway_env.road.road.RoadNetwork.get_lane">
 <code class="sig-name descname">get_lane</code><span class="sig-paren">(</span><em class="sig-param">index: Tuple[str, str, int]</em><span class="sig-paren">)</span> &#x2192; highway_env.road.lane.AbstractLane<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.get_lane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.get_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Get the lane geometry corresponding to a given index in the road network.</p>
-</div></blockquote>
+<dd><p>Get the lane geometry corresponding to a given index in the road network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>index</strong> – a tuple (origin node, destination node, lane id on the road).</p>
@@ -241,9 +237,7 @@ A <code class="xref py py-class docutils literal notranslate"><span class="pre">
 <dl class="method">
 <dt id="highway_env.road.road.RoadNetwork.get_closest_lane_index">
 <code class="sig-name descname">get_closest_lane_index</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[str, str, int]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.get_closest_lane_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.get_closest_lane_index" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Get the index of the lane closest to a world position.</p>
-</div></blockquote>
+<dd><p>Get the index of the lane closest to a world position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>position</strong> – a world position [m].</p>
@@ -257,13 +251,13 @@ A <code class="xref py py-class docutils literal notranslate"><span class="pre">
 <dl class="method">
 <dt id="highway_env.road.road.RoadNetwork.next_lane">
 <code class="sig-name descname">next_lane</code><span class="sig-paren">(</span><em class="sig-param">current_index: Tuple[str, str, int], route: List[Tuple[str, str, int]] = None, position: numpy.ndarray = None, np_random: numpy.random.mtrand.RandomState = &lt;module 'numpy.random' from '/usr/local/lib/python3.8/site-packages/numpy/random/__init__.py'&gt;</em><span class="sig-paren">)</span> &#x2192; Tuple[str, str, int]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.next_lane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.next_lane" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Get the index of the next lane that should be followed after finishing the current lane.</p>
-<p>If a plan is available and matches with current lane, follow it.
-Else, pick next road randomly.
-If it has the same number of lanes as current road, stay in the same lane.
-Else, pick next road’s closest lane.</p>
-</div></blockquote>
+<dd><p>Get the index of the next lane that should be followed after finishing the current lane.</p>
+<ul class="simple">
+<li><p>If a plan is available and matches with current lane, follow it.</p></li>
+<li><p>Else, pick next road randomly.</p></li>
+<li><p>If it has the same number of lanes as current road, stay in the same lane.</p></li>
+<li><p>Else, pick next road’s closest lane.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -282,9 +276,7 @@ Else, pick next road’s closest lane.</p>
 <dl class="method">
 <dt id="highway_env.road.road.RoadNetwork.bfs_paths">
 <code class="sig-name descname">bfs_paths</code><span class="sig-paren">(</span><em class="sig-param">start: str</em>, <em class="sig-param">goal: str</em><span class="sig-paren">)</span> &#x2192; List[List[str]]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.bfs_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.bfs_paths" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Breadth-first search of all routes from start to goal.</p>
-</div></blockquote>
+<dd><p>Breadth-first search of all routes from start to goal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -301,9 +293,7 @@ Else, pick next road’s closest lane.</p>
 <dl class="method">
 <dt id="highway_env.road.road.RoadNetwork.shortest_path">
 <code class="sig-name descname">shortest_path</code><span class="sig-paren">(</span><em class="sig-param">start: str</em>, <em class="sig-param">goal: str</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.shortest_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.shortest_path" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Breadth-first search of shortest path from start to goal.</p>
-</div></blockquote>
+<dd><p>Breadth-first search of shortest path from start to goal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -358,24 +348,14 @@ Else, pick next road’s closest lane.</p>
 <dl class="method">
 <dt id="highway_env.road.road.RoadNetwork.is_connected_road">
 <code class="sig-name descname">is_connected_road</code><span class="sig-paren">(</span><em class="sig-param">lane_index_1: Tuple[str, str, int], lane_index_2: Tuple[str, str, int], route: List[Tuple[str, str, int]] = None, same_lane: bool = False, depth: int = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.is_connected_road"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.is_connected_road" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Is the lane 2 leading to a road within lane 1’s route?</p>
-<p>Vehicles on these lanes must be considered for collisions.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>lane_index_1</strong> – origin lane</p></li>
-<li><p><strong>lane_index_2</strong> – target lane</p></li>
-<li><p><strong>route</strong> – route from origin lane, if any</p></li>
-<li><p><strong>same_lane</strong> – compare lane id</p></li>
-<li><p><strong>depth</strong> – search depth from lane 1 along its route</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>whether the roads are connected</p>
-</dd>
-</dl>
+<dd><p>Is the lane 2 leading to a road within lane 1’s route?</p>
+<p>Vehicles on these lanes must be considered for collisions.
+:param lane_index_1: origin lane
+:param lane_index_2: target lane
+:param route: route from origin lane, if any
+:param same_lane: compare lane id
+:param depth: search depth from lane 1 along its route
+:return: whether the roads are connected</p>
 </dd></dl>
 
 <dl class="method">
@@ -391,9 +371,7 @@ Else, pick next road’s closest lane.</p>
 <dl class="method">
 <dt id="highway_env.road.road.RoadNetwork.position_heading_along_route">
 <code class="sig-name descname">position_heading_along_route</code><span class="sig-paren">(</span><em class="sig-param">route: List[Tuple[str, str, int]], longitudinal: float, lateral: float</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, float]<a class="reference internal" href="../../_modules/highway_env/road/road.html#RoadNetwork.position_heading_along_route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.RoadNetwork.position_heading_along_route" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Get the absolute position and heading along a route composed of several lanes at some local coordinates.</p>
-</div></blockquote>
+<dd><p>Get the absolute position and heading along a route composed of several lanes at some local coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -571,9 +549,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.road.Road.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">network: highway_env.road.road.RoadNetwork = None</em>, <em class="sig-param">vehicles: List[kinematics.Vehicle] = None</em>, <em class="sig-param">road_objects: List[objects.RoadObject] = None</em>, <em class="sig-param">np_random: numpy.random.mtrand.RandomState = None</em>, <em class="sig-param">record_history: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>New road.</p>
-</div></blockquote>
+<dd><p>New road.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -601,9 +577,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.road.Road.step">
 <code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">dt: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.step" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Step the dynamics of each entity on the road.</p>
-</div></blockquote>
+<dd><p>Step the dynamics of each entity on the road.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dt</strong> – timestep [s]</p>
@@ -614,9 +588,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="method">
 <dt id="highway_env.road.road.Road.neighbour_vehicles">
 <code class="sig-name descname">neighbour_vehicles</code><span class="sig-paren">(</span><em class="sig-param">vehicle: kinematics.Vehicle</em>, <em class="sig-param">lane_index: Tuple[str</em>, <em class="sig-param">str</em>, <em class="sig-param">int] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[Optional[kinematics.Vehicle], Optional[kinematics.Vehicle]]<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.neighbour_vehicles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.neighbour_vehicles" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Find the preceding and following vehicles of a given vehicle.</p>
-</div></blockquote>
+<dd><p>Find the preceding and following vehicles of a given vehicle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -641,9 +613,7 @@ vehicle is projected on it considering its local coordinates in the lane.</p></l
 <dl class="method">
 <dt id="highway_env.road.road.Road.get_log">
 <code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../../_modules/highway_env/road/road.html#Road.get_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.road.Road.get_log" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Concatenate the logs of all entities on the road.</p>
-</div></blockquote>
+<dd><p>Concatenate the logs of all entities on the road.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the concatenated log.</p>
