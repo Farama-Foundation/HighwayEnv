@@ -160,7 +160,7 @@ def confidence_polytope(data: dict, parameter_box: np.ndarray) -> Tuple[np.ndarr
 
     # Clip the parameter and confidence region within the prior parameter box.
     theta_n_lambda = np.clip(theta_n_lambda, parameter_box[0], parameter_box[1])
-    for k in range(len(d_theta)):
+    for k, _ in enumerate(d_theta):
         d_theta[k] = np.clip(d_theta[k], parameter_box[0] - theta_n_lambda, parameter_box[1] - theta_n_lambda)
     return theta_n_lambda, d_theta, g_n_lambda, beta_n
 

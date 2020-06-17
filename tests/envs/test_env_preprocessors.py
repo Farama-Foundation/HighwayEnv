@@ -16,7 +16,7 @@ def test_preprocessors():
     env.reset()
     for _ in range(3):
         action = env.action_space.sample()
-        obs, reward, done, info = env.step(action)
+        obs, reward, _, _ = env.step(action)
     env.close()
 
     assert env.observation_space.contains(obs)
