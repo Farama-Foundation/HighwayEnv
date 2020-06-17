@@ -1,5 +1,5 @@
 import copy
-from typing import List, Union, Tuple, Optional
+from typing import List, Union, Tuple, Optional, Callable
 import gym
 from gym import spaces
 from gym.utils import seeding
@@ -24,6 +24,7 @@ class AbstractEnv(gym.Env):
         speed. The action space is fixed, but the observation space and reward function must be defined in the
         environment implementations.
     """
+    automatic_rendering_callback: Optional[Callable]
     metadata = {'render.modes': ['human', 'rgb_array']}
 
     ACTIONS = {0: 'LANE_LEFT',
@@ -294,7 +295,7 @@ class AbstractEnv(gym.Env):
         if self.viewer is not None and self.enable_auto_render:
             self.should_update_rendering = True
 
-            if self.automatic_rendering_callback:
+            if self.automatic_rendering_callback is not None:
                 self.automatic_rendering_callback()
             else:
                 self.render(self.rendering_mode)
