@@ -243,7 +243,7 @@
         <span class="k">return</span> <span class="n">longitudinal</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">VEHICLE_LENGTH</span> <span class="o">/</span> <span class="mi">2</span></div>
 
 <div class="viewcode-block" id="AbstractLane.distance"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.AbstractLane.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute the L1 distance [m] from a position to the lane&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Compute the L1 distance [m] from a position to the lane.&quot;&quot;&quot;</span>
         <span class="n">s</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div></div>
 
@@ -310,7 +310,7 @@
 
 <div class="viewcode-block" id="SineLane"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.SineLane">[docs]</a><span class="k">class</span> <span class="nc">SineLane</span><span class="p">(</span><span class="n">StraightLane</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;A sinusoidal lane&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A sinusoidal lane.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SineLane.__init__"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.SineLane.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">start</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>

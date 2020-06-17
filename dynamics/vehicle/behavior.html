@@ -234,37 +234,37 @@ vehicle.</p>
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.ACC_MAX">
 <code class="sig-name descname">ACC_MAX</code><em class="property"> = 6.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.ACC_MAX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maximum acceleration</p>
+<dd><p>Maximum acceleration.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MAX">
 <code class="sig-name descname">COMFORT_ACC_MAX</code><em class="property"> = 3.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MAX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Desired maximum acceleration</p>
+<dd><p>Desired maximum acceleration.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MIN">
 <code class="sig-name descname">COMFORT_ACC_MIN</code><em class="property"> = -5.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MIN" title="Permalink to this definition">¶</a></dt>
-<dd><p>Desired maximum deceleration</p>
+<dd><p>Desired maximum deceleration.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.DISTANCE_WANTED">
 <code class="sig-name descname">DISTANCE_WANTED</code><em class="property"> = 10.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.DISTANCE_WANTED" title="Permalink to this definition">¶</a></dt>
-<dd><p>Desired jam distance to the front vehicle</p>
+<dd><p>Desired jam distance to the front vehicle.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.TIME_WANTED">
 <code class="sig-name descname">TIME_WANTED</code><em class="property"> = 1.5</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.TIME_WANTED" title="Permalink to this definition">¶</a></dt>
-<dd><p>Desired time gap to the front vehicle</p>
+<dd><p>Desired time gap to the front vehicle.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.IDMVehicle.DELTA">
 <code class="sig-name descname">DELTA</code><em class="property"> = 4.0</em><a class="headerlink" href="#highway_env.vehicle.behavior.IDMVehicle.DELTA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exponent of the velocity term</p>
+<dd><p>Exponent of the velocity term.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -889,7 +889,7 @@ vehicle in the road with density based on the number of lanes.</p>
 <dt id="highway_env.vehicle.behavior.LinearVehicle">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.vehicle.behavior.</code><code class="sig-name descname">LinearVehicle</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, position: Union[numpy.ndarray, Sequence[float]], heading: float = 0, speed: float = 0, target_lane_index: int = None, target_speed: float = None, route: List[Tuple[str, str, int]] = None, enable_lane_change: bool = True, timer: float = None, data: dict = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#LinearVehicle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle" title="highway_env.vehicle.behavior.IDMVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.behavior.IDMVehicle</span></code></a></p>
-<p>A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters</p>
+<p>A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters.</p>
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.ACCELERATION_PARAMETERS">
 <code class="sig-name descname">ACCELERATION_PARAMETERS</code><em class="property"> = [0.3, 0.3, 2.0]</em><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.ACCELERATION_PARAMETERS" title="Permalink to this definition">¶</a></dt>
@@ -1010,7 +1010,7 @@ reason about other vehicles behaviors even though they may not Linear.</p></li>
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.collect_data">
 <code class="sig-name descname">collect_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/behavior.html#LinearVehicle.collect_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.collect_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Store features and outputs for parameter regression</p>
+<dd><p>Store features and outputs for parameter regression.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1147,7 +1147,7 @@ reason about other vehicles behaviors even though they may not Linear.</p></li>
 
 <dl class="attribute">
 <dt id="highway_env.vehicle.behavior.LinearVehicle.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.behavior', '__doc__': 'A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters', 'ACCELERATION_PARAMETERS': [0.3, 0.3, 2.0], 'STEERING_PARAMETERS': [5.0, 8.333333333333332], 'ACCELERATION_RANGE': array([[0.15, 0.15, 1.  ],        [0.45, 0.45, 3.  ]]), 'STEERING_RANGE': array([[4.93      , 6.83333333],        [5.07      , 9.83333333]]), 'TIME_WANTED': 2.5, '__init__': &lt;function LinearVehicle.__init__&gt;, 'act': &lt;function LinearVehicle.act&gt;, 'randomize_behavior': &lt;function LinearVehicle.randomize_behavior&gt;, 'acceleration': &lt;function LinearVehicle.acceleration&gt;, 'acceleration_features': &lt;function LinearVehicle.acceleration_features&gt;, 'steering_control': &lt;function LinearVehicle.steering_control&gt;, 'steering_features': &lt;function LinearVehicle.steering_features&gt;, 'longitudinal_structure': &lt;function LinearVehicle.longitudinal_structure&gt;, 'lateral_structure': &lt;function LinearVehicle.lateral_structure&gt;, 'collect_data': &lt;function LinearVehicle.collect_data&gt;, 'add_features': &lt;function LinearVehicle.add_features&gt;})</em><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.behavior', '__doc__': 'A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters.', 'ACCELERATION_PARAMETERS': [0.3, 0.3, 2.0], 'STEERING_PARAMETERS': [5.0, 8.333333333333332], 'ACCELERATION_RANGE': array([[0.15, 0.15, 1.  ],        [0.45, 0.45, 3.  ]]), 'STEERING_RANGE': array([[4.93      , 6.83333333],        [5.07      , 9.83333333]]), 'TIME_WANTED': 2.5, '__init__': &lt;function LinearVehicle.__init__&gt;, 'act': &lt;function LinearVehicle.act&gt;, 'randomize_behavior': &lt;function LinearVehicle.randomize_behavior&gt;, 'acceleration': &lt;function LinearVehicle.acceleration&gt;, 'acceleration_features': &lt;function LinearVehicle.acceleration_features&gt;, 'steering_control': &lt;function LinearVehicle.steering_control&gt;, 'steering_features': &lt;function LinearVehicle.steering_features&gt;, 'longitudinal_structure': &lt;function LinearVehicle.longitudinal_structure&gt;, 'lateral_structure': &lt;function LinearVehicle.lateral_structure&gt;, 'collect_data': &lt;function LinearVehicle.collect_data&gt;, 'add_features': &lt;function LinearVehicle.add_features&gt;})</em><a class="headerlink" href="#highway_env.vehicle.behavior.LinearVehicle.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1988,7 +1988,7 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.AggressiveVehicle.collect_data">
 <code class="sig-name descname">collect_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.behavior.AggressiveVehicle.collect_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Store features and outputs for parameter regression</p>
+<dd><p>Store features and outputs for parameter regression.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2686,7 +2686,7 @@ of acceleration and lane changes on its own, based on the IDM and MOBIL models.<
 <dl class="method">
 <dt id="highway_env.vehicle.behavior.DefensiveVehicle.collect_data">
 <code class="sig-name descname">collect_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.behavior.DefensiveVehicle.collect_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Store features and outputs for parameter regression</p>
+<dd><p>Store features and outputs for parameter regression.</p>
 </dd></dl>
 
 <dl class="method">
