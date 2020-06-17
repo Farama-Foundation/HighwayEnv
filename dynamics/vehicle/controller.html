@@ -313,7 +313,7 @@ The vehicle dynamics and target dynamics are copied, other properties are defaul
 
 <dl class="method">
 <dt id="highway_env.vehicle.controller.ControlledVehicle.act">
-<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: dict = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#ControlledVehicle.act"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.act" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: Union[dict</em>, <em class="sig-param">str] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#ControlledVehicle.act"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.act" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Perform a high-level action to change the desired lane or speed.</p>
 <ul class="simple">
@@ -784,7 +784,7 @@ The vehicle’s current lane is updated.</p>
 
 <dl class="method">
 <dt id="highway_env.vehicle.controller.MDPVehicle.act">
-<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: str = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#MDPVehicle.act"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.act" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">action: Union[dict</em>, <em class="sig-param">str] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/vehicle/controller.html#MDPVehicle.act"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.act" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Perform a high-level action.</p>
 <p>If the action is a speed change, choose speed from the allowed discrete range.
