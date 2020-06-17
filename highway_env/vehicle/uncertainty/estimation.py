@@ -1,4 +1,4 @@
-from typing import Tuple, List, Callable, Union
+from typing import Callable, Union
 
 import numpy as np
 
@@ -67,8 +67,8 @@ class MultipleModelVehicle(LinearVehicle):
 
         for route in self.get_routes_at_intersection():  # Candidates
             # Unknown lane -> first lane
-            for i in range(len(route)):
-                route[i] = route[i] if route[i][2] is not None else (route[i][0], route[i][1], 0)
+            for i, lane_index in enumerate(route):
+                route[i] = lane_index if lane_index[2] is not None else (lane_index[0], lane_index[1], 0)
             # Is this route already considered, or a suffix of a route already considered ?
             for known_route, _ in self.data:
                 if known_route == route:

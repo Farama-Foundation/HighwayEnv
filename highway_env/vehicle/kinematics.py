@@ -10,9 +10,6 @@ from highway_env.road.road import Road, LaneIndex
 from highway_env.road.objects import Obstacle, Landmark
 from highway_env.types import Vector
 
-if TYPE_CHECKING:
-    from highway_env.road.objects import RoadObject
-
 
 class Vehicle(Loggable):
 

@@ -20,7 +20,7 @@ def test_env_step(env_spec):
     env = gym.make(env_spec)
 
     env.reset()
-    for i in range(3):
+    for _ in range(3):
         action = env.action_space.sample()
         obs, reward, done, info = env.step(action)
     env.close()

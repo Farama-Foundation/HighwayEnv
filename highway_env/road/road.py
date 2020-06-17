@@ -9,7 +9,6 @@ from highway_env.road.objects import Landmark
 
 if TYPE_CHECKING:
     from highway_env.vehicle import kinematics
-    from highway_env.road import objects
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +85,7 @@ class RoadNetwork(object):
             if route[0][:2] == current_index[:2]:  # We just finished the first step of the route, drop it.
                 route.pop(0)
             if route and route[0][0] == _to:  # Next road in route is starting at the end of current road.
-                _, next_to, route_id = route[0]
+                _, next_to, _ = route[0]
             elif route:
                 logger.warning("Route {} does not start after current road {}.".format(route[0], current_index))
         # Randomly pick next road

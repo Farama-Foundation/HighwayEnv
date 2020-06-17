@@ -193,7 +193,7 @@ class AbstractEnv(gym.Env):
 
     def _simulate(self, action: Optional[Action] = None) -> None:
         """Perform several steps of simulation with constant action."""
-        for k in range(int(self.config["simulation_frequency"] // self.config["policy_frequency"])):
+        for _ in range(int(self.config["simulation_frequency"] // self.config["policy_frequency"])):
             if action is not None and \
                     self.time % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
                 # Forward action to the vehicle

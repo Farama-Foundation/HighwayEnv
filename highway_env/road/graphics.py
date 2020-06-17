@@ -9,8 +9,6 @@ from highway_env.types import Vector
 from highway_env.vehicle.graphics import VehicleGraphics
 from highway_env.road.objects import Obstacle, Landmark
 
-if TYPE_CHECKING:
-    from highway_env.road.objects import RoadObject
 
 PositionType = Union[Tuple[float, float], np.ndarray]
 
@@ -186,7 +184,7 @@ class LaneGraphics(object):
         """
         starts = np.clip(starts, 0, lane.length)
         ends = np.clip(ends, 0, lane.length)
-        for k in range(len(starts)):
+        for k, _ in enumerate(starts):
             if abs(starts[k] - ends[k]) > 0.5 * cls.STRIPE_LENGTH:
                 pygame.draw.line(surface, surface.WHITE,
                                  (surface.vec2pix(lane.position(starts[k], lats[k]))),

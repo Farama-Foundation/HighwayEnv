@@ -14,7 +14,7 @@ def test_preprocessors():
     env = env.randomize_behaviour()
 
     env.reset()
-    for i in range(3):
+    for _ in range(3):
         action = env.action_space.sample()
         obs, reward, done, info = env.step(action)
     env.close()

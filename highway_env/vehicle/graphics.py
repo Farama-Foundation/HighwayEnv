@@ -1,5 +1,5 @@
 import itertools
-from typing import List, Union, Tuple, TYPE_CHECKING
+from typing import List, Tuple, TYPE_CHECKING
 
 import numpy as np
 import pygame
@@ -9,9 +9,6 @@ from highway_env.vehicle.dynamics import BicycleVehicle
 from highway_env.vehicle.kinematics import Vehicle
 from highway_env.vehicle.controller import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
-
-if TYPE_CHECKING:
-    from highway_env.road.graphics import WorldSurface
 
 
 class VehicleGraphics(object):

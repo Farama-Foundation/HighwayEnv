@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, TYPE_CHECKING
+from typing import List, Dict, TYPE_CHECKING, Optional
 from gym import spaces
 import numpy as np
 import pandas as pd
@@ -164,7 +164,7 @@ class KinematicObservation(ObservationType):
         # Add ego-vehicle
         df = pd.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features]
         # Add nearby traffic
-        sort = self.order == "sorted"
+        # sort = self.order == "sorted"
         close_vehicles = self.env.road.close_vehicles_to(self.env.vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
                                                          count=self.vehicles_count - 1,
@@ -201,9 +201,9 @@ class OccupancyGridObservation(ObservationType):
 
     def __init__(self,
                  env: 'AbstractEnv',
-                 features: List[str] = FEATURES,
-                 grid_size: List[List[float]] = GRID_SIZE,
-                 grid_step: List[int] = GRID_STEP,
+                 features: Optional[List[str]] = None,
+                 grid_size: Optional[List[List[float]]] = None,
+                 grid_step: Optional[List[int]] = None,
                  features_range: Dict[str, List[float]] = None,
                  absolute: bool = False,
                  **kwargs: dict) -> None:
@@ -213,9 +213,9 @@ class OccupancyGridObservation(ObservationType):
         :param vehicles_count: Number of observed vehicles
         """
         self.env = env
-        self.features = features
-        self.grid_size = np.array(grid_size)
-        self.grid_step = np.array(grid_step)
+        self.features = features if features is not None else self.FEATURES
+        self.grid_size = np.array(grid_size) if grid_size is not None else np.array(self.GRID_SIZE)
+        self.grid_step = np.array(grid_step) if grid_step is not None else np.array(self.GRID_STEP)
         grid_shape = np.asarray(np.floor((self.grid_size[:, 1] - self.grid_size[:, 0]) / grid_step), dtype=np.int)
         self.grid = np.zeros((len(self.features), *grid_shape))
         self.features_range = features_range

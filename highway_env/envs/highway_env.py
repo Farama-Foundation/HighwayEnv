@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, Tuple
+from typing import Tuple
 from gym.envs.registration import register
 
 from highway_env import utils

@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple
+from typing import Tuple
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -199,7 +199,7 @@ def simulate(dt: float = 0.1) -> None:
         # Interval
         lpv.set_control(u, state=vehicle.state[[1, 2, 4, 5]])
         lpv.step(dt)
-        x_i_t = lpv.change_coordinates(lpv.x_i_t, back=True, interval=True)
+        # x_i_t = lpv.change_coordinates(lpv.x_i_t, back=True, interval=True)
         # Step
         vehicle.act({"acceleration": 0, "steering": u})
         vehicle.step(dt)
@@ -212,7 +212,7 @@ def plot(time: np.ndarray, xx: np.ndarray, uu: np.ndarray) -> None:
     pos_x, pos_y = xx[:, 0, 0], xx[:, 1, 0]
     psi_x, psi_y = np.cos(xx[:, 2, 0]), np.sin(xx[:, 2, 0])
     dir_x, dir_y = np.cos(xx[:, 2, 0] + uu[:, 0, 0]), np.sin(xx[:, 2, 0] + uu[:, 0, 0])
-    fig, ax = plt.subplots(1, 1)
+    _, ax = plt.subplots(1, 1)
     ax.plot(pos_x, pos_y, linewidth=0.5)
     dir_scale = 1/5
     ax.quiver(pos_x[::20]-0.5/dir_scale*psi_x[::20],

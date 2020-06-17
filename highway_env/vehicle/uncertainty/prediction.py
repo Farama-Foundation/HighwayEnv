@@ -7,7 +7,6 @@ from highway_env.interval import polytope, vector_interval_section, integrator_i
     interval_negative_part, intervals_diff, intervals_product, LPV, interval_absolute_to_local, \
     interval_local_to_absolute
 from highway_env.road.road import Route, LaneIndex, Road
-from highway_env.road.objects import RoadObject
 from highway_env.types import Vector
 from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
@@ -237,7 +236,7 @@ class IntervalVehicle(LinearVehicle):
 
             # LPV specification
             if front_interval:
-                f_longi_i, f_lat_i = interval_absolute_to_local(front_interval.position, target_lane)
+                f_longi_i, _ = interval_absolute_to_local(front_interval.position, target_lane)
                 f_pos = f_longi_i[0]
                 f_vel = front_interval.speed[0]
             else:
