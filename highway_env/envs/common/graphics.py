@@ -9,6 +9,7 @@ from highway_env.vehicle.graphics import VehicleGraphics
 
 if TYPE_CHECKING:
     from highway_env.envs import AbstractEnv
+    from highway_env.envs.common.abstract import Action
 
 
 class EnvViewer(object):

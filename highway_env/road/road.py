@@ -9,6 +9,7 @@ from highway_env.road.objects import Landmark
 
 if TYPE_CHECKING:
     from highway_env.vehicle import kinematics
+    from highway_env.road import objects
 
 logger = logging.getLogger(__name__)
 

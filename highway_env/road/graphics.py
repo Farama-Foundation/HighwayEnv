@@ -9,6 +9,8 @@ from highway_env.types import Vector
 from highway_env.vehicle.graphics import VehicleGraphics
 from highway_env.road.objects import Obstacle, Landmark
 
+if TYPE_CHECKING:
+    from highway_env.road.objects import RoadObject
 
 PositionType = Union[Tuple[float, float], np.ndarray]
 

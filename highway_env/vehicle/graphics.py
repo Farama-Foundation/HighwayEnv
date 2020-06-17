@@ -10,6 +10,9 @@ from highway_env.vehicle.kinematics import Vehicle
 from highway_env.vehicle.controller import ControlledVehicle, MDPVehicle
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 
+if TYPE_CHECKING:
+    from highway_env.road.graphics import WorldSurface
+
 
 class VehicleGraphics(object):
     RED = (255, 100, 100)
