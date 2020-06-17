@@ -156,7 +156,9 @@
 
 
 <div class="viewcode-block" id="AbstractLane"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.AbstractLane">[docs]</a><span class="k">class</span> <span class="nc">AbstractLane</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;A lane on the road, described by its central curve.&quot;&quot;&quot;</span>
+
     <span class="n">metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
     <span class="n">DEFAULT_WIDTH</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="n">VEHICLE_LENGTH</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">5</span>
@@ -247,7 +249,9 @@
 
 
 <div class="viewcode-block" id="LineType"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.LineType">[docs]</a><span class="k">class</span> <span class="nc">LineType</span><span class="p">:</span>
+
     <span class="sd">&quot;&quot;&quot;A lane side line type.&quot;&quot;&quot;</span>
+
     <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">STRIPED</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">CONTINUOUS</span> <span class="o">=</span> <span class="mi">2</span>
@@ -255,7 +259,9 @@
 
 
 <div class="viewcode-block" id="StraightLane"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.StraightLane">[docs]</a><span class="k">class</span> <span class="nc">StraightLane</span><span class="p">(</span><span class="n">AbstractLane</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;A lane going in straight line.&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="StraightLane.__init__"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.StraightLane.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">start</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
                  <span class="n">end</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
@@ -303,6 +309,7 @@
 
 
 <div class="viewcode-block" id="SineLane"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.SineLane">[docs]</a><span class="k">class</span> <span class="nc">SineLane</span><span class="p">(</span><span class="n">StraightLane</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;A sinusoidal lane&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SineLane.__init__"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.SineLane.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -344,7 +351,9 @@
 
 
 <div class="viewcode-block" id="CircularLane"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.CircularLane">[docs]</a><span class="k">class</span> <span class="nc">CircularLane</span><span class="p">(</span><span class="n">AbstractLane</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;A lane going in circle arc.&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="CircularLane.__init__"><a class="viewcode-back" href="../../../dynamics/road/lane.html#highway_env.road.lane.CircularLane.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">center</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
                  <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
