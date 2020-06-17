@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Union
 
 import numpy as np
 import copy
@@ -71,7 +71,7 @@ class ControlledVehicle(Vehicle):
             self.route = [self.lane_index]
         return self
 
-    def act(self, action: dict = None) -> None:
+    def act(self, action: Union[dict, str] = None) -> None:
         """
             Perform a high-level action to change the desired lane or speed.
 
@@ -218,7 +218,7 @@ class MDPVehicle(ControlledVehicle):
         self.speed_index = self.speed_to_index(self.target_speed)
         self.target_speed = self.index_to_speed(self.speed_index)
 
-    def act(self, action: str = None) -> None:
+    def act(self, action: Union[dict, str] = None) -> None:
         """
             Perform a high-level action.
 

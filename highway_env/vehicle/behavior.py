@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Union
 
 import numpy as np
 
@@ -74,7 +74,7 @@ class IDMVehicle(ControlledVehicle):
                 route=vehicle.route, timer=getattr(vehicle, 'timer', None))
         return v
 
-    def act(self, action: dict = None):
+    def act(self, action: Union[dict, str] = None):
         """
             Execute an action.
 
@@ -317,10 +317,10 @@ class LinearVehicle(IDMVehicle):
         self.data = data if data is not None else {}
         self.collecting_data = True
 
-    def act(self):
+    def act(self, action: Union[dict, str] = None):
         if self.collecting_data:
             self.collect_data()
-        super().act()
+        super().act(action)
 
     def randomize_behavior(self):
         ua = self.road.np_random.uniform(size=np.shape(self.ACCELERATION_PARAMETERS))

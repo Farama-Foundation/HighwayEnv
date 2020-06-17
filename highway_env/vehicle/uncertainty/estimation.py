@@ -46,10 +46,10 @@ class MultipleModelVehicle(LinearVehicle):
         if not self.data:
             self.data = []
 
-    def act(self) -> None:
+    def act(self, action: Union[dict, str] = None) -> None:
         if self.collecting_data:
             self.update_possible_routes()
-        super().act()
+        super().act(action)
 
     def collect_data(self) -> None:
         """

@@ -105,7 +105,7 @@ class Vehicle(Loggable):
         v = cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.speed)
         return v
 
-    def act(self, action: dict = None) -> None:
+    def act(self, action: Union[dict, str] = None) -> None:
         """
             Store an action to be repeated.
 
