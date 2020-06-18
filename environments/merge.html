@@ -307,28 +307,8 @@ vehicles.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.envs.merge_env.MergeEnv.ACCELERATION_RANGE">
-<code class="sig-name descname">ACCELERATION_RANGE</code><em class="property"> = 5.0</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.ACCELERATION_RANGE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.merge_env.MergeEnv.ACTIONS">
-<code class="sig-name descname">ACTIONS</code><em class="property"> = {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.ACTIONS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.merge_env.MergeEnv.ACTIONS_INDEXES">
-<code class="sig-name descname">ACTIONS_INDEXES</code><em class="property"> = {'FASTER': 3, 'IDLE': 1, 'LANE_LEFT': 0, 'LANE_RIGHT': 2, 'SLOWER': 4}</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.ACTIONS_INDEXES" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.envs.merge_env.MergeEnv.PERCEPTION_DISTANCE">
 <code class="sig-name descname">PERCEPTION_DISTANCE</code><em class="property"> = 180.0</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.PERCEPTION_DISTANCE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.merge_env.MergeEnv.STEERING_RANGE">
-<code class="sig-name descname">STEERING_RANGE</code><em class="property"> = 0.7853981633974483</em><a class="headerlink" href="#highway_env.envs.merge_env.MergeEnv.STEERING_RANGE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -683,7 +663,7 @@ this won’t be true if seed=None, for example.</p>
 for several simulation timesteps until the next decision making step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>action</strong> (<em>int</em>) – the action performed by the ego-vehicle</p>
+<dd class="field-odd"><p><strong>action</strong> – the action performed by the ego-vehicle</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a tuple (observation, reward, terminal, info)</p>

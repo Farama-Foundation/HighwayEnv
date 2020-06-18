@@ -173,6 +173,9 @@
     <span class="k">def</span> <span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
             <span class="s2">&quot;incoming_vehicle_destination&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
             <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
@@ -274,10 +277,10 @@
 
         <span class="c1"># Ego-vehicle</span>
         <span class="n">ego_lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">((</span><span class="s2">&quot;ser&quot;</span><span class="p">,</span> <span class="s2">&quot;ses&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="n">ego_vehicle</span> <span class="o">=</span> <span class="n">MDPVehicle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
-                                 <span class="n">ego_lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mi">140</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                                 <span class="n">speed</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                                 <span class="n">heading</span><span class="o">=</span><span class="n">ego_lane</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="mi">140</span><span class="p">))</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;nxs&quot;</span><span class="p">)</span>
+        <span class="n">ego_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+                                                     <span class="n">ego_lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mi">140</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                                     <span class="n">speed</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                                     <span class="n">heading</span><span class="o">=</span><span class="n">ego_lane</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="mi">140</span><span class="p">))</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;nxs&quot;</span><span class="p">)</span>
         <span class="n">MDPVehicle</span><span class="o">.</span><span class="n">SPEED_MIN</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">MDPVehicle</span><span class="o">.</span><span class="n">SPEED_MAX</span> <span class="o">=</span> <span class="mi">15</span>
         <span class="n">MDPVehicle</span><span class="o">.</span><span class="n">SPEED_COUNT</span> <span class="o">=</span> <span class="mi">4</span>

@@ -276,7 +276,7 @@ staying on the rightmost lanes and avoiding collisions.</p>
 for several simulation timesteps until the next decision making step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>action</strong> (<em>int</em>) – the action performed by the ego-vehicle</p>
+<dd class="field-odd"><p><strong>action</strong> – the action performed by the ego-vehicle</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a tuple (observation, reward, terminal, info)</p>
@@ -297,28 +297,8 @@ for several simulation timesteps until the next decision making step.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.envs.highway_env.HighwayEnv.ACCELERATION_RANGE">
-<code class="sig-name descname">ACCELERATION_RANGE</code><em class="property"> = 5.0</em><a class="headerlink" href="#highway_env.envs.highway_env.HighwayEnv.ACCELERATION_RANGE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.highway_env.HighwayEnv.ACTIONS">
-<code class="sig-name descname">ACTIONS</code><em class="property"> = {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}</em><a class="headerlink" href="#highway_env.envs.highway_env.HighwayEnv.ACTIONS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.highway_env.HighwayEnv.ACTIONS_INDEXES">
-<code class="sig-name descname">ACTIONS_INDEXES</code><em class="property"> = {'FASTER': 3, 'IDLE': 1, 'LANE_LEFT': 0, 'LANE_RIGHT': 2, 'SLOWER': 4}</em><a class="headerlink" href="#highway_env.envs.highway_env.HighwayEnv.ACTIONS_INDEXES" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.envs.highway_env.HighwayEnv.PERCEPTION_DISTANCE">
 <code class="sig-name descname">PERCEPTION_DISTANCE</code><em class="property"> = 180.0</em><a class="headerlink" href="#highway_env.envs.highway_env.HighwayEnv.PERCEPTION_DISTANCE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.highway_env.HighwayEnv.STEERING_RANGE">
-<code class="sig-name descname">STEERING_RANGE</code><em class="property"> = 0.7853981633974483</em><a class="headerlink" href="#highway_env.envs.highway_env.HighwayEnv.STEERING_RANGE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -509,7 +489,7 @@ such as video-recording monitor that need to access these intermediate rendering
 
 <dl class="method">
 <dt id="highway_env.envs.highway_env.HighwayEnv._reward">
-<code class="sig-name descname">_reward</code><span class="sig-paren">(</span><em class="sig-param">action: int</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/highway_env/envs/highway_env.html#HighwayEnv._reward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.highway_env.HighwayEnv._reward" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_reward</code><span class="sig-paren">(</span><em class="sig-param">action: Union[int, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/highway_env/envs/highway_env.html#HighwayEnv._reward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.highway_env.HighwayEnv._reward" title="Permalink to this definition">¶</a></dt>
 <dd><p>The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
 :param action: the last action performed
 :return: the corresponding reward</p>

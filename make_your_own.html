@@ -184,32 +184,10 @@ environment implementations.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.ACTIONS">
-<code class="sig-name descname">ACTIONS</code><em class="property"> = {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.ACTIONS" title="Permalink to this definition">¶</a></dt>
-<dd><p>A mapping of action indexes to action labels.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.ACTIONS_INDEXES">
-<code class="sig-name descname">ACTIONS_INDEXES</code><em class="property"> = {'FASTER': 3, 'IDLE': 1, 'LANE_LEFT': 0, 'LANE_RIGHT': 2, 'SLOWER': 4}</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.ACTIONS_INDEXES" title="Permalink to this definition">¶</a></dt>
-<dd><p>A mapping of action labels to action indexes.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE">
 <code class="sig-name descname">PERCEPTION_DISTANCE</code><em class="property"> = 180.0</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The maximum distance of any vehicle present in the observation [m]</p>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.STEERING_RANGE">
-<code class="sig-name descname">STEERING_RANGE</code><em class="property"> = 0.7853981633974483</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.STEERING_RANGE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.ACCELERATION_RANGE">
-<code class="sig-name descname">ACCELERATION_RANGE</code><em class="property"> = 5.0</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.ACCELERATION_RANGE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="method">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.__init__">
@@ -218,8 +196,18 @@ environment implementations.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="highway_env.envs.common.abstract.AbstractEnv.action_type">
+<code class="sig-name descname">action_type</code><em class="property">: ActionType</em><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.action_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.action_space">
 <code class="sig-name descname">action_space</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.action_space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.abstract.AbstractEnv.observation_type">
+<code class="sig-name descname">observation_type</code><em class="property">: ObservationType</em><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.observation_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -319,7 +307,7 @@ this won’t be true if seed=None, for example.</p>
 for several simulation timesteps until the next decision making step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>action</strong> (<em>int</em>) – the action performed by the ego-vehicle</p>
+<dd class="field-odd"><p><strong>action</strong> – the action performed by the ego-vehicle</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a tuple (observation, reward, terminal, info)</p>
@@ -414,7 +402,7 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 
 <dl class="attribute">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.__annotations__">
-<code class="sig-name descname">__annotations__</code><em class="property"> = {'automatic_rendering_callback': typing.Union[typing.Callable, NoneType]}</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__annotations__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'action_type': &lt;class 'highway_env.envs.common.action.ActionType'&gt;, 'automatic_rendering_callback': typing.Union[typing.Callable, NoneType], 'observation_type': &lt;class 'highway_env.envs.common.observation.ObservationType'&gt;}</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__annotations__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -431,7 +419,7 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 
 <dl class="attribute">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.abstract', '__annotations__': {'automatic_rendering_callback': typing.Union[typing.Callable, NoneType]}, '__doc__': '\n    A generic environment for various tasks involving a vehicle driving on a road.\n\n    The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and\n    speed. The action space is fixed, but the observation space and reward function must be defined in the\n    environment implementations.\n    ', 'metadata': {'render.modes': ['human', 'rgb_array']}, 'ACTIONS': {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}, 'ACTIONS_INDEXES': {'LANE_LEFT': 0, 'IDLE': 1, 'LANE_RIGHT': 2, 'FASTER': 3, 'SLOWER': 4}, 'PERCEPTION_DISTANCE': 180.0, 'STEERING_RANGE': 0.7853981633974483, 'ACCELERATION_RANGE': 5.0, '__init__': &lt;function AbstractEnv.__init__&gt;, 'default_config': &lt;classmethod object&gt;, 'seed': &lt;function AbstractEnv.seed&gt;, 'configure': &lt;function AbstractEnv.configure&gt;, 'define_spaces': &lt;function AbstractEnv.define_spaces&gt;, '_reward': &lt;function AbstractEnv._reward&gt;, '_is_terminal': &lt;function AbstractEnv._is_terminal&gt;, '_cost': &lt;function AbstractEnv._cost&gt;, 'reset': &lt;function AbstractEnv.reset&gt;, 'step': &lt;function AbstractEnv.step&gt;, '_simulate': &lt;function AbstractEnv._simulate&gt;, 'render': &lt;function AbstractEnv.render&gt;, 'close': &lt;function AbstractEnv.close&gt;, 'get_available_actions': &lt;function AbstractEnv.get_available_actions&gt;, '_automatic_rendering': &lt;function AbstractEnv._automatic_rendering&gt;, 'simplify': &lt;function AbstractEnv.simplify&gt;, 'change_vehicles': &lt;function AbstractEnv.change_vehicles&gt;, 'set_preferred_lane': &lt;function AbstractEnv.set_preferred_lane&gt;, 'set_route_at_intersection': &lt;function AbstractEnv.set_route_at_intersection&gt;, 'set_vehicle_field': &lt;function AbstractEnv.set_vehicle_field&gt;, 'call_vehicle_method': &lt;function AbstractEnv.call_vehicle_method&gt;, 'randomize_behaviour': &lt;function AbstractEnv.randomize_behaviour&gt;, 'to_finite_mdp': &lt;function AbstractEnv.to_finite_mdp&gt;, '__deepcopy__': &lt;function AbstractEnv.__deepcopy__&gt;})</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.abstract', '__annotations__': {'observation_type': &lt;class 'highway_env.envs.common.observation.ObservationType'&gt;, 'action_type': &lt;class 'highway_env.envs.common.action.ActionType'&gt;, 'automatic_rendering_callback': typing.Union[typing.Callable, NoneType]}, '__doc__': '\n    A generic environment for various tasks involving a vehicle driving on a road.\n\n    The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and\n    speed. The action space is fixed, but the observation space and reward function must be defined in the\n    environment implementations.\n    ', 'metadata': {'render.modes': ['human', 'rgb_array']}, 'PERCEPTION_DISTANCE': 180.0, '__init__': &lt;function AbstractEnv.__init__&gt;, 'default_config': &lt;classmethod object&gt;, 'seed': &lt;function AbstractEnv.seed&gt;, 'configure': &lt;function AbstractEnv.configure&gt;, 'define_spaces': &lt;function AbstractEnv.define_spaces&gt;, '_reward': &lt;function AbstractEnv._reward&gt;, '_is_terminal': &lt;function AbstractEnv._is_terminal&gt;, '_cost': &lt;function AbstractEnv._cost&gt;, 'reset': &lt;function AbstractEnv.reset&gt;, 'step': &lt;function AbstractEnv.step&gt;, '_simulate': &lt;function AbstractEnv._simulate&gt;, 'render': &lt;function AbstractEnv.render&gt;, 'close': &lt;function AbstractEnv.close&gt;, 'get_available_actions': &lt;function AbstractEnv.get_available_actions&gt;, '_automatic_rendering': &lt;function AbstractEnv._automatic_rendering&gt;, 'simplify': &lt;function AbstractEnv.simplify&gt;, 'change_vehicles': &lt;function AbstractEnv.change_vehicles&gt;, 'set_preferred_lane': &lt;function AbstractEnv.set_preferred_lane&gt;, 'set_route_at_intersection': &lt;function AbstractEnv.set_route_at_intersection&gt;, 'set_vehicle_field': &lt;function AbstractEnv.set_vehicle_field&gt;, 'call_vehicle_method': &lt;function AbstractEnv.call_vehicle_method&gt;, 'randomize_behaviour': &lt;function AbstractEnv.randomize_behaviour&gt;, 'to_finite_mdp': &lt;function AbstractEnv.to_finite_mdp&gt;, '__deepcopy__': &lt;function AbstractEnv.__deepcopy__&gt;})</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
