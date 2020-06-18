@@ -36,7 +36,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
                 "normalize": False
             },
             "action": {
-                "type": "Continuous"
+                "type": "ContinuousAction"
             },
             "simulation_frequency": 15,
             "policy_frequency": 5,
@@ -80,7 +80,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _create_vehicles(self) -> None:
         """Create some new random vehicles of a given type, and add them on the road."""
-        self.vehicle = Vehicle(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)
+        self.vehicle = self.action_type.vehicle_class(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)
         self.road.vehicles.append(self.vehicle)
 
         lane = self.np_random.choice(self.road.network.lanes_list())
@@ -102,7 +102,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         return -np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
 
     def _reward(self, action: np.ndarray) -> float:
-        obs = self.observation.observe()
+        obs = self.observation_type.observe()
         return self.compute_reward(obs['achieved_goal'], obs['desired_goal'], {})
 
     def _is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> bool:
@@ -110,7 +110,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the goal is reached."""
-        obs = self.observation.observe()
+        obs = self.observation_type.observe()
         return self.vehicle.crashed or self._is_success(obs['achieved_goal'], obs['desired_goal'])
 
 

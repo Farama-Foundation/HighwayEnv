@@ -6,13 +6,14 @@ from gym.utils import seeding
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.observation import observation_factory
+from highway_env.envs.common.action import action_factory, Action, DiscreteMetaAction, ActionType
+from highway_env.envs.common.observation import observation_factory, ObservationType
 from highway_env.envs.common.finite_mdp import finite_mdp
 from highway_env.envs.common.graphics import EnvViewer
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
 
-Action = Union[int, np.ndarray]
+
 Observation = np.ndarray
 
 
@@ -25,24 +26,13 @@ class AbstractEnv(gym.Env):
     speed. The action space is fixed, but the observation space and reward function must be defined in the
     environment implementations.
     """
+    observation_type: ObservationType
+    action_type: ActionType
     automatic_rendering_callback: Optional[Callable]
     metadata = {'render.modes': ['human', 'rgb_array']}
 
-    ACTIONS = {0: 'LANE_LEFT',
-               1: 'IDLE',
-               2: 'LANE_RIGHT',
-               3: 'FASTER',
-               4: 'SLOWER'}
-    """A mapping of action indexes to action labels."""
-
-    ACTIONS_INDEXES = {v: k for k, v in ACTIONS.items()}
-    """A mapping of action labels to action indexes."""
-
     PERCEPTION_DISTANCE = 6.0 * MDPVehicle.SPEED_MAX
     """The maximum distance of any vehicle present in the observation [m]"""
-
-    STEERING_RANGE = np.pi / 4
-    ACCELERATION_RANGE = 5.0
 
     def __init__(self, config: dict = None) -> None:
         # Configuration
@@ -59,8 +49,9 @@ class AbstractEnv(gym.Env):
         self.vehicle = None
 
         # Spaces
-        self.observation = None
+        self.action_type = None
         self.action_space = None
+        self.observation_type = None
         self.observation_space = None
         self.define_spaces()
 
@@ -91,7 +82,7 @@ class AbstractEnv(gym.Env):
                 "type": "TimeToCollision"
             },
             "action": {
-                "type": "Discrete"
+                "type": "DiscreteMetaAction"
             },
             "simulation_frequency": 15,  # [Hz]
             "policy_frequency": 1,  # [Hz]
@@ -114,13 +105,10 @@ class AbstractEnv(gym.Env):
             self.config.update(config)
 
     def define_spaces(self) -> None:
-        self.observation = observation_factory(self, self.config["observation"])
-        self.observation_space = self.observation.space()
-
-        if self.config["action"]["type"] == "Discrete":
-            self.action_space = spaces.Discrete(len(self.ACTIONS))
-        elif self.config["action"]["type"] == "Continuous":
-            self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
+        self.observation_type = observation_factory(self, self.config["observation"])
+        self.observation_space = self.observation_type.space()
+        self.action_type = action_factory(self, self.config["action"])
+        self.action_space = self.action_type.space()
 
     def _reward(self, action: Action) -> float:
         """
@@ -158,7 +146,7 @@ class AbstractEnv(gym.Env):
         self.time = 0
         self.done = False
         self.define_spaces()
-        return self.observation.observe()
+        return self.observation_type.observe()
 
     def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
         """
@@ -167,7 +155,7 @@ class AbstractEnv(gym.Env):
         The action is executed by the ego-vehicle, and all other vehicles on the road performs their default behaviour
         for several simulation timesteps until the next decision making step.
 
-        :param int action: the action performed by the ego-vehicle
+        :param action: the action performed by the ego-vehicle
         :return: a tuple (observation, reward, terminal, info)
         """
         if self.road is None or self.vehicle is None:
@@ -175,7 +163,7 @@ class AbstractEnv(gym.Env):
 
         self._simulate(action)
 
-        obs = self.observation.observe()
+        obs = self.observation_type.observe()
         reward = self._reward(action)
         terminal = self._is_terminal()
 
@@ -197,13 +185,7 @@ class AbstractEnv(gym.Env):
             if action is not None and \
                     self.time % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
                 # Forward action to the vehicle
-                if self.config["action"]["type"] == "Discrete":
-                    self.vehicle.act(self.ACTIONS[action])
-                elif self.config["action"]["type"] == "Continuous":
-                    self.vehicle.act({
-                        "acceleration": action[0] * self.ACCELERATION_RANGE,
-                        "steering": action[1] * self.STEERING_RANGE
-                    })
+                self.action_type.act(action)
 
             self.road.act()
             self.road.step(1 / self.config["simulation_frequency"])
@@ -263,18 +245,22 @@ class AbstractEnv(gym.Env):
 
         :return: the list of available actions
         """
-        actions = [self.ACTIONS_INDEXES['IDLE']]
+        if not isinstance(self.action_type, DiscreteMetaAction):
+            raise ValueError("Only discrete meta-actions can be unavailable.")
+        actions = [self.action_type.actions_indexes['IDLE']]
         for l_index in self.road.network.side_lanes(self.vehicle.lane_index):
             if l_index[2] < self.vehicle.lane_index[2] \
-                    and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position):
-                actions.append(self.ACTIONS_INDEXES['LANE_LEFT'])
+                    and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position) \
+                    and self.action_type.lateral:
+                actions.append(self.action_type.actions_indexes['LANE_LEFT'])
             if l_index[2] > self.vehicle.lane_index[2] \
-                    and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position):
-                actions.append(self.ACTIONS_INDEXES['LANE_RIGHT'])
-        if self.vehicle.speed_index < self.vehicle.SPEED_COUNT - 1:
-            actions.append(self.ACTIONS_INDEXES['FASTER'])
-        if self.vehicle.speed_index > 0:
-            actions.append(self.ACTIONS_INDEXES['SLOWER'])
+                    and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position) \
+                    and self.action_type.lateral:
+                actions.append(self.action_type.actions_indexes['LANE_RIGHT'])
+        if self.vehicle.speed_index < self.vehicle.SPEED_COUNT - 1 and self.action_type.longitudinal:
+            actions.append(self.action_type.actions_indexes['FASTER'])
+        if self.vehicle.speed_index > 0 and self.action_type.longitudinal:
+            actions.append(self.action_type.actions_indexes['SLOWER'])
         return actions
 
     def _automatic_rendering(self) -> None:

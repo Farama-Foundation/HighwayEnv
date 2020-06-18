@@ -41,6 +41,11 @@ class IntersectionEnv(AbstractEnv):
                 "flatten": False,
                 "observe_intentions": False
             },
+            "action": {
+                "type": "DiscreteMetaAction",
+                "longitudinal": False,
+                "lateral": True
+            },
             "duration": 13,  # [s]
             "destination": "o1",
             "initial_vehicle_count": 10,
@@ -167,10 +172,11 @@ class IntersectionEnv(AbstractEnv):
         # MDPVehicle.TAU_A = 1.0
         ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
         destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
-        ego_vehicle = MDPVehicle(self.road,
-                                 ego_lane.position(60, 0),
-                                 speed=ego_lane.speed_limit,
-                                 heading=ego_lane.heading_at(50)) \
+        ego_vehicle = self.action_type.vehicle_class(
+                         self.road,
+                         ego_lane.position(60, 0),
+                         speed=ego_lane.speed_limit,
+                         heading=ego_lane.heading_at(50)) \
             .plan_route_to(destination)
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle

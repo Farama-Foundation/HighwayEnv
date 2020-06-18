@@ -103,7 +103,9 @@ class MergeEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         road = self.road
-        ego_vehicle = MDPVehicle(road, road.network.get_lane(("a", "b", 1)).position(30, 0), speed=30)
+        ego_vehicle = self.action_type.vehicle_class(road,
+                                                     road.network.get_lane(("a", "b", 1)).position(30, 0),
+                                                     speed=30)
         road.vehicles.append(ego_vehicle)
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])

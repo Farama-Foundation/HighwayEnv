@@ -21,6 +21,9 @@ class RoundaboutEnv(AbstractEnv):
     def default_config(cls) -> dict:
         config = super().default_config()
         config.update({
+            "action": {
+                "type": "DiscreteMetaAction",
+            },
             "incoming_vehicle_destination": None,
             "screen_width": 600,
             "screen_height": 600,
@@ -122,10 +125,10 @@ class RoundaboutEnv(AbstractEnv):
 
         # Ego-vehicle
         ego_lane = self.road.network.get_lane(("ser", "ses", 0))
-        ego_vehicle = MDPVehicle(self.road,
-                                 ego_lane.position(140, 0),
-                                 speed=5,
-                                 heading=ego_lane.heading_at(140)).plan_route_to("nxs")
+        ego_vehicle = self.action_type.vehicle_class(self.road,
+                                                     ego_lane.position(140, 0),
+                                                     speed=5,
+                                                     heading=ego_lane.heading_at(140)).plan_route_to("nxs")
         MDPVehicle.SPEED_MIN = 0
         MDPVehicle.SPEED_MAX = 15
         MDPVehicle.SPEED_COUNT = 4

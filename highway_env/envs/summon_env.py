@@ -76,7 +76,9 @@ class SummonEnv(ParkingEnv):
         :param parked_probability: probability that a spot is occupied
         """
 
-        self.vehicle = Vehicle(self.road, self.vehicle_starting, 2 * np.pi * self.np_random.rand(), 0)
+        self.vehicle = self.action_type.vehicle_class(self.road,
+                                                      self.vehicle_starting,
+                                                      2 * np.pi * self.np_random.rand(), 0)
         self.road.vehicles.append(self.vehicle)
 
         goal_position = [self.np_random.choice([-2 * self.spots - 10, 2 * self.spots + 10]), 0]

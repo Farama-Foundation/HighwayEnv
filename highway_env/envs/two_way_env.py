@@ -32,6 +32,9 @@ class TwoWayEnv(AbstractEnv):
                 "type": "TimeToCollision",
                 "horizon": 5
             },
+            "action": {
+                "type": "DiscreteMetaAction",
+            },
         })
         return config
 
@@ -86,7 +89,9 @@ class TwoWayEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         road = self.road
-        ego_vehicle = MDPVehicle(road, road.network.get_lane(("a", "b", 1)).position(30, 0), speed=30)
+        ego_vehicle = self.action_type.vehicle_class(road,
+                                                     road.network.get_lane(("a", "b", 1)).position(30, 0),
+                                                     speed=30)
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 
