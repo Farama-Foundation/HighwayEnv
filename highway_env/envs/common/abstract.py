@@ -93,7 +93,8 @@ class AbstractEnv(gym.Env):
             "scaling": 5.5,
             "show_trajectories": False,
             "render_agent": True,
-            "offscreen_rendering": False
+            "offscreen_rendering": False,
+            "manual_control": False
         }
 
     def seed(self, seed: int = None) -> List[int]:
@@ -182,9 +183,10 @@ class AbstractEnv(gym.Env):
     def _simulate(self, action: Optional[Action] = None) -> None:
         """Perform several steps of simulation with constant action."""
         for _ in range(int(self.config["simulation_frequency"] // self.config["policy_frequency"])):
-            if action is not None and \
-                    self.time % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
-                # Forward action to the vehicle
+            # Forward action to the vehicle
+            if action is not None \
+                    and not self.config["manual_control"] \
+                    and self.time % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
                 self.action_type.act(action)
 
             self.road.act()

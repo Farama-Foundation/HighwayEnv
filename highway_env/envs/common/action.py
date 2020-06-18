@@ -19,7 +19,7 @@ class ActionType(object):
 
     def space(self) -> spaces.Space:
         """The action space."""
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @property
     def vehicle_class(self) -> Callable:
@@ -40,7 +40,7 @@ class ActionType(object):
 
         :param action: the action to execute
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 class ContinuousAction(ActionType):
@@ -88,8 +88,9 @@ class ContinuousAction(ActionType):
             raise ValueError("Either longitudinal and/or lateral control must be enabled")
         self.dynamical = dynamical
         self.clip = clip
+        self.last_action = np.zeros(self.space().shape)
 
-    def space(self) -> spaces.Space:
+    def space(self) -> spaces.Box:
         size = 2 if self.lateral and self.longitudinal else 1
         return spaces.Box(-1., 1., shape=(size,), dtype=np.float32)
 
@@ -115,6 +116,7 @@ class ContinuousAction(ActionType):
                 "acceleration": 0,
                 "steering": utils.lmap(action[0], [-1, 1], self.steering_range)
             })
+        self.last_action = action
 
 
 class DiscreteMetaAction(ActionType):
