@@ -10,24 +10,30 @@
 .. |Documentation Status| image:: https://readthedocs.org/projects/highway-env/badge/?version=latest
    :target: https://highway-env.readthedocs.io/en/latest/
 
+.. |Codacy Status| image:: https://api.codacy.com/project/badge/Grade/63847d9328f64fce9c137b03fcafcc27
+  :target: https://app.codacy.com/manual/eleurent/highway-env?utm_source=github.com&utm_medium=referral&utm_content=eleurent/highway-env&utm_campaign=Badge_Grade_Dashboard
+
 .. |Coverage Status| image:: https://codecov.io/gh/eleurent/highway-env/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/eleurent/highway-env
 
 .. |Contributors| image:: https://img.shields.io/github/contributors/eleurent/highway-env
   :target: https://github.com/eleurent/highway-env/graphs/contributors
 
+.. |Environments| image:: https://img.shields.io/github/search/eleurent/highway-env/import%20filename:*_env%20path:highway_env/envs?label=environments
+  :target: https://highway-env.readthedocs.io/en/latest/quickstart.html#all-the-environments
 
-|Build Status| |Documentation Status| |Coverage Status| |Contributors|
+
+|Build Status| |Documentation Status| |Codacy Status| |Coverage Status| |Contributors|
 
 Welcome to `highway-env <https://github.com/eleurent/highway-env>`_'s documentation!
 ====================================================================================
 
-This project gathers a collection of environment for decision-making in Autonomous Driving. In particular, it focuses on scenarios of **interactions** with neighbour vehicles.
+This project gathers a collection of environment for *decision-making* in Autonomous Driving.
 
 The purpose of this documentation is to provide:
 
-- a description of the environments, and how they can be configured
-- instructions on how to contribute and add your own environments
+1. a :ref:`quick start guide <quickstart>` describing the environments and their customization options;
+2. a :ref:`detailed description <user_guide>` of the nuts and bolts of the project, and how *you* can contribute.
 
 .. _index_how_to_cite_this_work:
 
