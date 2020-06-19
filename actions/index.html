@@ -89,7 +89,13 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../configuration.html">Configuring an environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../observations/index.html">Observations</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Actions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-actions">Continuous Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#discrete-meta-actions">Discrete Meta-Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manual-control">Manual control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../dynamics/index.html">Dynamics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../rewards/index.html">Rewards</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../make_your_own.html">Make your own environment</a></li>
@@ -163,8 +169,61 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="actions">
-<span id="id1"></span><h1>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h1>
+  <span class="target" id="module-highway_env.envs.common.action"><span id="actions"></span></span><div class="section" id="id1">
+<h1>Actions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Similarly to <a class="reference internal" href="../observations/index.html#id1"><span class="std std-ref">observations</span></a>, <strong>several types of actions</strong> can be used in every environment. They are defined in the
+<a class="reference internal" href="#module-highway_env.envs.common.action" title="highway_env.envs.common.action"><code class="xref py py-mod docutils literal notranslate"><span class="pre">action</span></code></a> module.
+Each environment comes with a <em>default</em> action type, which can be changed or customised using
+<a class="reference internal" href="../configuration.html#configuration"><span class="std std-ref">environment configurations</span></a>. For instance,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">highway_env</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">configure</span><span class="p">({</span>
+    <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ContinuousAction&quot;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="continuous-actions">
+<h2>Continuous Actions<a class="headerlink" href="#continuous-actions" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousAction</span></code> type allows the agent to directly set the low-level
+controls of the <a class="reference internal" href="../dynamics/vehicle/kinematics.html#vehicle-kinematics"><span class="std std-ref">vehicle kinematics</span></a>, namely the throttle <span class="math notranslate nohighlight">\(a\)</span> and steering angle <span class="math notranslate nohighlight">\(\delta\)</span>.</p>
+<p>The control of throttle and steering can be enabled or disabled through the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">longitudinal</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">lateral</span></code>
+configurations, respectively. Thus, the action space is either 1D or 2D.</p>
+</div>
+<div class="section" id="discrete-meta-actions">
+<h2>Discrete Meta-Actions<a class="headerlink" href="#discrete-meta-actions" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteMetaAction</span></code> type adds a layer of <a class="reference internal" href="../dynamics/vehicle/controller.html#vehicle-controller"><span class="std std-ref">speed and steering controllers</span></a>
+on top of the continuous low-level control, so that the ego-vehicle can automatically follow the road at a desired velocity.
+Then, the available <strong>meta-actions</strong> consist in <em>changing the target lane and speed</em> that are used as setpoints for the low-level controllers.</p>
+<p>The full corresponding action space is defined in <code class="xref py py-attr docutils literal notranslate"><span class="pre">ACTIONS_ALL</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTIONS_ALL</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;LANE_LEFT&#39;</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;IDLE&#39;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;LANE_RIGHT&#39;</span><span class="p">,</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;FASTER&#39;</span><span class="p">,</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;SLOWER&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Some of these actions might not be always available (lane changes at the edges of the roads, or accelerating/decelrating
+beyond the maximum/minimum velocity), and the list of available actions can be accessed with <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_available_actions()</span></code> method.
+Taking an unavailable action is equivalent to taking the <code class="docutils literal notranslate"><span class="pre">IDLE</span></code> action.</p>
+<p>Similarly to continuous actions, the longitudinal (speed changes) and lateral (lane changes) actions can be disabled separately
+through the <code class="xref py py-attr docutils literal notranslate"><span class="pre">longitudinal</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">lateral</span></code> parameters.
+For instance, in the default configuration of the <a class="reference internal" href="../environments/intersection.html#environments-intersection"><span class="std std-ref">intersection</span></a> environment, only the speed is controlled by the agent,
+while the lateral control of the vehicle is automatically performed by a <a class="reference internal" href="../dynamics/vehicle/controller.html#vehicle-controller"><span class="std std-ref">steering controller</span></a> to track a desired lane.</p>
+</div>
+<div class="section" id="manual-control">
+<h2>Manual control<a class="headerlink" href="#manual-control" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 

@@ -33,7 +33,7 @@ Default configuration
             "normalize": False
         },
         "action": {
-            "type": "Continuous"
+            "type": "ContinuousAction"
         },
         "simulation_frequency": 15,
         "policy_frequency": 5,
