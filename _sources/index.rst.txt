@@ -23,7 +23,7 @@
   :target: https://highway-env.readthedocs.io/en/latest/quickstart.html#all-the-environments
 
 
-|Build Status| |Documentation Status| |Codacy Status| |Coverage Status| |Contributors|
+|Build Status| |Documentation Status| |Codacy Status| |Coverage Status| |Contributors| |Environments|
 
 Welcome to `highway-env <https://github.com/eleurent/highway-env>`_'s documentation!
 ====================================================================================
