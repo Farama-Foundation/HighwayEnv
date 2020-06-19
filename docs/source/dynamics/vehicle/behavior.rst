@@ -66,5 +66,4 @@ API
 
 .. automodule:: highway_env.vehicle.behavior
     :members:
-    :inherited-members:
-    :show-inheritance:
+

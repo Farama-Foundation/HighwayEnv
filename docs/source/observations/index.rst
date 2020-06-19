@@ -253,5 +253,4 @@ API
 
 .. automodule:: highway_env.envs.common.observation
     :members:
-    :inherited-members:
-    :show-inheritance:
+

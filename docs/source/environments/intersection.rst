@@ -78,5 +78,3 @@ API
 
 .. autoclass:: IntersectionEnv
     :members:
-    :inherited-members:
-    :show-inheritance:

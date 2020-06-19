@@ -58,5 +58,3 @@ API
 
 .. autoclass:: HighwayEnv
     :members:
-    :inherited-members:
-    :show-inheritance:

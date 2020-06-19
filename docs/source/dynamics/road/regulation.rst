@@ -16,5 +16,4 @@ API
 
 .. automodule:: highway_env.road.regulation
     :members:
-    :inherited-members:
-    :show-inheritance:
+
