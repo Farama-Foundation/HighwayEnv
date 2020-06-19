@@ -14,9 +14,11 @@ if TYPE_CHECKING:
 
 class ObservationType(object):
     def space(self) -> spaces.Space:
+        """Get the observation space."""
         raise NotImplementedError()
 
     def observe(self):
+        """Get an observation of the environment state."""
         raise NotImplementedError()
 
 
