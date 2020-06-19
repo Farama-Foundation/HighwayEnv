@@ -105,7 +105,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#id4">Example configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-highway_env.envs.common.observation">API</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../actions/index.html">Actions</a></li>
@@ -185,7 +185,7 @@
   <span class="target" id="observations"></span><div class="section" id="id1">
 <h1>Observations<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>For all environments, <strong>several types of observations</strong> can be used. They are defined in the
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">observation</span></code> module.
+<a class="reference internal" href="#module-highway_env.envs.common.observation" title="highway_env.envs.common.observation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">observation</span></code></a> module.
 Each environment comes with a <em>default</em> observation, which can be changed or customised using
 <a class="reference internal" href="../configuration.html#configuration"><span class="std std-ref">environment configurations</span></a>. For instance,</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
@@ -214,11 +214,11 @@ Each environment comes with a <em>default</em> observation, which can be changed
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">&quot;type&quot;</span></code> field in the observation configuration takes values defined in
-<code class="xref py py-func docutils literal notranslate"><span class="pre">observation_factory()</span></code> (see source)</p>
+<a class="reference internal" href="#highway_env.envs.common.observation.observation_factory" title="highway_env.envs.common.observation.observation_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">observation_factory()</span></code></a> (see source)</p>
 </div>
 <div class="section" id="kinematics">
 <h2>Kinematics<a class="headerlink" href="#kinematics" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">KinematicObservation</span></code> is a <span class="math notranslate nohighlight">\(V\times F\)</span> array that describes a
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.KinematicObservation" title="highway_env.envs.common.observation.KinematicObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">KinematicObservation</span></code></a> is a <span class="math notranslate nohighlight">\(V\times F\)</span> array that describes a
 list of <span class="math notranslate nohighlight">\(V\)</span> nearby vehicles by a set of features of size <span class="math notranslate nohighlight">\(F\)</span>, listed in the <code class="docutils literal notranslate"><span class="pre">&quot;features&quot;</span></code> configuration field.
 For instance:</p>
 <table class="docutils align-default">
@@ -404,7 +404,7 @@ vehicle and 0 for placeholders.</p>
 </div>
 <div class="section" id="grayscale-image">
 <h2>Grayscale Image<a class="headerlink" href="#grayscale-image" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">GrayscaleObservation</span></code> is a <span class="math notranslate nohighlight">\(W\times H\)</span> grayscale image of the scene, where <span class="math notranslate nohighlight">\(W,H\)</span> are set with the <code class="docutils literal notranslate"><span class="pre">observation_shape</span></code> parameter.
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.GrayscaleObservation" title="highway_env.envs.common.observation.GrayscaleObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">GrayscaleObservation</span></code></a> is a <span class="math notranslate nohighlight">\(W\times H\)</span> grayscale image of the scene, where <span class="math notranslate nohighlight">\(W,H\)</span> are set with the <code class="docutils literal notranslate"><span class="pre">observation_shape</span></code> parameter.
 The RGB to grayscale conversion is a weighted sum, configured by the <code class="docutils literal notranslate"><span class="pre">weights</span></code> parameter. Several images can be stacked with the <code class="docutils literal notranslate"><span class="pre">stack_size</span></code> parameter, as is customary with image observations.</p>
 <p>The following images illustrate the stacking process for the <em>first four observations</em>, using the <a class="reference internal" href="#grayscale-example-configuration"><span class="std std-ref">example configuration</span></a> below.</p>
 <a class="reference internal image-reference" href="../_images/grayscale_0.png"><img alt="../_images/grayscale_0.png" src="../_images/grayscale_0.png" style="width: 324.0px; height: 324.0px;" /></a>
@@ -442,7 +442,7 @@ The RGB to grayscale conversion is a weighted sum, configured by the <code class
 </div>
 <div class="section" id="occupancy-grid">
 <h2>Occupancy grid<a class="headerlink" href="#occupancy-grid" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">OccupancyGridObservation</span></code> is a <span class="math notranslate nohighlight">\(W\times H\times F\)</span> array,
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.OccupancyGridObservation" title="highway_env.envs.common.observation.OccupancyGridObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">OccupancyGridObservation</span></code></a> is a <span class="math notranslate nohighlight">\(W\times H\times F\)</span> array,
 that represents a grid of shape <span class="math notranslate nohighlight">\(W\times H\)</span> discretising the space <span class="math notranslate nohighlight">\((X,Y)\)</span> around the ego-vehicle in
 uniform rectangle cells. Each cell is described by <span class="math notranslate nohighlight">\(F\)</span> features, listed in the <code class="docutils literal notranslate"><span class="pre">&quot;features&quot;</span></code> configuration field.
 The grid size and resolution is defined by the <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> and <code class="docutils literal notranslate"><span class="pre">grid_steps</span></code> configuration fields.</p>
@@ -554,7 +554,7 @@ The grid size and resolution is defined by the <code class="docutils literal not
 </div>
 <div class="section" id="time-to-collision">
 <h2>Time to collision<a class="headerlink" href="#time-to-collision" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeToCollisionObservation</span></code> is a <span class="math notranslate nohighlight">\(V\times L\times H\)</span> array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.TimeToCollisionObservation" title="highway_env.envs.common.observation.TimeToCollisionObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeToCollisionObservation</span></code></a> is a <span class="math notranslate nohighlight">\(V\times L\times H\)</span> array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
 These predictions are performed for <span class="math notranslate nohighlight">\(V\)</span> different values of the ego-vehicle speed, <span class="math notranslate nohighlight">\(L\)</span> lanes on the road around the current lane, and represented as one-hot encodings over <span class="math notranslate nohighlight">\(H\)</span> discretised time values (bins), with 1s steps.</p>
 <p>For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using <span class="math notranslate nohighlight">\(V=3,\, L = 3\,H = 10\)</span>, with ego-speed of {<span class="math notranslate nohighlight">\(15\)</span> m/s, <span class="math notranslate nohighlight">\(20\)</span> m/s and <span class="math notranslate nohighlight">\(25\)</span> m/s}, the predicted time-to-collisions are <span class="math notranslate nohighlight">\(\infty,\,5s,\,2.5s\)</span> and the corresponding observation is</p>
 <table class="docutils align-default">
@@ -714,8 +714,1326 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </div>
 </div>
 </div>
-<div class="section" id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-highway_env.envs.common.observation">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.envs.common.observation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="highway_env.envs.common.observation.ObservationType">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">ObservationType</code><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#ObservationType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.space">
+<code class="sig-name descname">space</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gym.spaces.space.Space<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#ObservationType.space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.observe">
+<code class="sig-name descname">observe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#ObservationType.observe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.observe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.ObservationType.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.ObservationType.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', 'space': &lt;function ObservationType.space&gt;, 'observe': &lt;function ObservationType.observe&gt;, '__dict__': &lt;attribute '__dict__' of 'ObservationType' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'ObservationType' objects&gt;, '__doc__': None})</em><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.ObservationType.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.observation'</em><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.ObservationType.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.ObservationType.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.observation.ObservationType.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">GrayscaleObservation</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">config: dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#GrayscaleObservation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.observation.ObservationType" title="highway_env.envs.common.observation.ObservationType"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.observation.ObservationType</span></code></a></p>
+<p>An observation class that collects directly what the simulator renders</p>
+<p>Also stacks the collected frames as in the nature DQN.
+Specific keys are expected in the configuration dictionary passed.</p>
+<dl>
+<dt>Example of observation dictionary in the environment config:</dt><dd><dl class="simple">
+<dt>observation”: {</dt><dd><p>“type”: “GrayscaleObservation”,
+“weights”: [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,
+“stack_size”: 4,
+“observation_shape”: (84, 84)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>Also, the screen_height and screen_width of the environment should match the
+expected observation_shape.</p>
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">config: dict</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#GrayscaleObservation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.space">
+<code class="sig-name descname">space</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gym.spaces.space.Space<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#GrayscaleObservation.space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.observe">
+<code class="sig-name descname">observe</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#GrayscaleObservation.observe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.observe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation._record_to_grayscale">
+<code class="sig-name descname">_record_to_grayscale</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#GrayscaleObservation._record_to_grayscale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation._record_to_grayscale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', '__doc__': '\n    An observation class that collects directly what the simulator renders\n\n    Also stacks the collected frames as in the nature DQN.\n    Specific keys are expected in the configuration dictionary passed.\n\n    Example of observation dictionary in the environment config:\n        observation&quot;: {\n            &quot;type&quot;: &quot;GrayscaleObservation&quot;,\n            &quot;weights&quot;: [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,\n            &quot;stack_size&quot;: 4,\n            &quot;observation_shape&quot;: (84, 84)\n        }\n\n    Also, the screen_height and screen_width of the environment should match the\n    expected observation_shape.\n    ', '__init__': &lt;function GrayscaleObservation.__init__&gt;, 'space': &lt;function GrayscaleObservation.space&gt;, 'observe': &lt;function GrayscaleObservation.observe&gt;, '_record_to_grayscale': &lt;function GrayscaleObservation._record_to_grayscale&gt;})</em><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.observation'</em><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.GrayscaleObservation.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">TimeToCollisionObservation</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">horizon: int = 10</em>, <em class="sig-param">**kwargs: dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#TimeToCollisionObservation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.observation.ObservationType" title="highway_env.envs.common.observation.ObservationType"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.observation.ObservationType</span></code></a></p>
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">horizon: int = 10</em>, <em class="sig-param">**kwargs: dict</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#TimeToCollisionObservation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.space">
+<code class="sig-name descname">space</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gym.spaces.space.Space<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#TimeToCollisionObservation.space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.observe">
+<code class="sig-name descname">observe</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#TimeToCollisionObservation.observe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.observe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', '__init__': &lt;function TimeToCollisionObservation.__init__&gt;, 'space': &lt;function TimeToCollisionObservation.space&gt;, 'observe': &lt;function TimeToCollisionObservation.observe&gt;, '__doc__': None})</em><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.observation'</em><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.TimeToCollisionObservation.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.observation.TimeToCollisionObservation.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.envs.common.observation.KinematicObservation">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">KinematicObservation</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">features: List[str] = None</em>, <em class="sig-param">vehicles_count: int = 5</em>, <em class="sig-param">features_range: Dict[str</em>, <em class="sig-param">List[float]] = None</em>, <em class="sig-param">absolute: bool = False</em>, <em class="sig-param">order: str = 'sorted'</em>, <em class="sig-param">normalize: bool = True</em>, <em class="sig-param">clip: bool = True</em>, <em class="sig-param">see_behind: bool = False</em>, <em class="sig-param">observe_intentions: bool = False</em>, <em class="sig-param">**kwargs: dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicObservation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.observation.ObservationType" title="highway_env.envs.common.observation.ObservationType"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.observation.ObservationType</span></code></a></p>
+<p>Observe the kinematics of nearby vehicles.</p>
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicObservation.FEATURES">
+<code class="sig-name descname">FEATURES</code><em class="property">: List[str]</em><em class="property"> = ['presence', 'x', 'y', 'vx', 'vy']</em><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.FEATURES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">features: List[str] = None</em>, <em class="sig-param">vehicles_count: int = 5</em>, <em class="sig-param">features_range: Dict[str</em>, <em class="sig-param">List[float]] = None</em>, <em class="sig-param">absolute: bool = False</em>, <em class="sig-param">order: str = 'sorted'</em>, <em class="sig-param">normalize: bool = True</em>, <em class="sig-param">clip: bool = True</em>, <em class="sig-param">see_behind: bool = False</em>, <em class="sig-param">observe_intentions: bool = False</em>, <em class="sig-param">**kwargs: dict</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicObservation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> – The environment to observe</p></li>
+<li><p><strong>features</strong> – Names of features used in the observation</p></li>
+<li><p><strong>vehicles_count</strong> – Number of observed vehicles</p></li>
+<li><p><strong>absolute</strong> – Use absolute coordinates</p></li>
+<li><p><strong>order</strong> – Order of observed vehicles. Values: sorted, shuffled</p></li>
+<li><p><strong>normalize</strong> – Should the observation be normalized</p></li>
+<li><p><strong>clip</strong> – Should the value be clipped in the desired range</p></li>
+<li><p><strong>see_behind</strong> – Should the observation contains the vehicles behind</p></li>
+<li><p><strong>observe_intentions</strong> – Observe the destinations of other vehicles</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.space">
+<code class="sig-name descname">space</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gym.spaces.space.Space<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicObservation.space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.normalize_obs">
+<code class="sig-name descname">normalize_obs</code><span class="sig-paren">(</span><em class="sig-param">df: pandas.core.frame.DataFrame</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicObservation.normalize_obs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.normalize_obs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the observation values.</p>
+<p>For now, assume that the road is straight along the x axis.
+:param Dataframe df: observation data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.observe">
+<code class="sig-name descname">observe</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicObservation.observe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.observe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'FEATURES': typing.List[str]}</em><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', '__annotations__': {'FEATURES': typing.List[str]}, '__doc__': 'Observe the kinematics of nearby vehicles.', 'FEATURES': ['presence', 'x', 'y', 'vx', 'vy'], '__init__': &lt;function KinematicObservation.__init__&gt;, 'space': &lt;function KinematicObservation.space&gt;, 'normalize_obs': &lt;function KinematicObservation.normalize_obs&gt;, 'observe': &lt;function KinematicObservation.observe&gt;})</em><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.observation'</em><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicObservation.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">OccupancyGridObservation</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">features: Optional[List[str]] = None</em>, <em class="sig-param">grid_size: Optional[List[List[float]]] = None</em>, <em class="sig-param">grid_step: Optional[List[int]] = None</em>, <em class="sig-param">features_range: Dict[str</em>, <em class="sig-param">List[float]] = None</em>, <em class="sig-param">absolute: bool = False</em>, <em class="sig-param">**kwargs: dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#OccupancyGridObservation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.observation.ObservationType" title="highway_env.envs.common.observation.ObservationType"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.observation.ObservationType</span></code></a></p>
+<p>Observe an occupancy grid of nearby vehicles.</p>
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.FEATURES">
+<code class="sig-name descname">FEATURES</code><em class="property">: List[str]</em><em class="property"> = ['presence', 'vx', 'vy']</em><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.FEATURES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.GRID_SIZE">
+<code class="sig-name descname">GRID_SIZE</code><em class="property">: List[List[float]]</em><em class="property"> = [[-27.5, 27.5], [-27.5, 27.5]]</em><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.GRID_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.GRID_STEP">
+<code class="sig-name descname">GRID_STEP</code><em class="property">: List[int]</em><em class="property"> = [5, 5]</em><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.GRID_STEP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">features: Optional[List[str]] = None</em>, <em class="sig-param">grid_size: Optional[List[List[float]]] = None</em>, <em class="sig-param">grid_step: Optional[List[int]] = None</em>, <em class="sig-param">features_range: Dict[str</em>, <em class="sig-param">List[float]] = None</em>, <em class="sig-param">absolute: bool = False</em>, <em class="sig-param">**kwargs: dict</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#OccupancyGridObservation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> – The environment to observe</p></li>
+<li><p><strong>features</strong> – Names of features used in the observation</p></li>
+<li><p><strong>vehicles_count</strong> – Number of observed vehicles</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.space">
+<code class="sig-name descname">space</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gym.spaces.space.Space<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#OccupancyGridObservation.space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.normalize">
+<code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param">df: pandas.core.frame.DataFrame</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#OccupancyGridObservation.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the observation values.</p>
+<p>For now, assume that the road is straight along the x axis.
+:param Dataframe df: observation data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.observe">
+<code class="sig-name descname">observe</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#OccupancyGridObservation.observe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.observe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'FEATURES': typing.List[str], 'GRID_SIZE': typing.List[typing.List[float]], 'GRID_STEP': typing.List[int]}</em><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', '__annotations__': {'FEATURES': typing.List[str], 'GRID_SIZE': typing.List[typing.List[float]], 'GRID_STEP': typing.List[int]}, '__doc__': 'Observe an occupancy grid of nearby vehicles.', 'FEATURES': ['presence', 'vx', 'vy'], 'GRID_SIZE': [[-27.5, 27.5], [-27.5, 27.5]], 'GRID_STEP': [5, 5], '__init__': &lt;function OccupancyGridObservation.__init__&gt;, 'space': &lt;function OccupancyGridObservation.space&gt;, 'normalize': &lt;function OccupancyGridObservation.normalize&gt;, 'observe': &lt;function OccupancyGridObservation.observe&gt;})</em><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.observation'</em><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.OccupancyGridObservation.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">KinematicsGoalObservation</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv, scales: List[float], **kwargs: dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicsGoalObservation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.observation.KinematicObservation" title="highway_env.envs.common.observation.KinematicObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.observation.KinematicObservation</span></code></a></p>
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv, scales: List[float], **kwargs: dict</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicsGoalObservation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> – The environment to observe</p></li>
+<li><p><strong>features</strong> – Names of features used in the observation</p></li>
+<li><p><strong>vehicles_count</strong> – Number of observed vehicles</p></li>
+<li><p><strong>absolute</strong> – Use absolute coordinates</p></li>
+<li><p><strong>order</strong> – Order of observed vehicles. Values: sorted, shuffled</p></li>
+<li><p><strong>normalize</strong> – Should the observation be normalized</p></li>
+<li><p><strong>clip</strong> – Should the value be clipped in the desired range</p></li>
+<li><p><strong>see_behind</strong> – Should the observation contains the vehicles behind</p></li>
+<li><p><strong>observe_intentions</strong> – Observe the destinations of other vehicles</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.space">
+<code class="sig-name descname">space</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gym.spaces.space.Space<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicsGoalObservation.space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.observe">
+<code class="sig-name descname">observe</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Dict[str, numpy.ndarray]<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#KinematicsGoalObservation.observe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.observe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.FEATURES">
+<code class="sig-name descname">FEATURES</code><em class="property">: List[str]</em><em class="property"> = ['presence', 'x', 'y', 'vx', 'vy']</em><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.FEATURES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__annotations__">
+<code class="sig-name descname">__annotations__</code><em class="property"> = {'FEATURES': typing.List[str]}</em><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__annotations__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', '__init__': &lt;function KinematicsGoalObservation.__init__&gt;, 'space': &lt;function KinematicsGoalObservation.space&gt;, 'observe': &lt;function KinematicsGoalObservation.observe&gt;, '__doc__': None})</em><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.observation'</em><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.KinematicsGoalObservation.normalize_obs">
+<code class="sig-name descname">normalize_obs</code><span class="sig-paren">(</span><em class="sig-param">df: pandas.core.frame.DataFrame</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.normalize_obs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the observation values.</p>
+<p>For now, assume that the road is straight along the x axis.
+:param Dataframe df: observation data</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="highway_env.envs.common.observation.AttributesObservation">
+<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">AttributesObservation</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv, attributes: List[str], **kwargs: dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#AttributesObservation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.observation.ObservationType" title="highway_env.envs.common.observation.ObservationType"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.observation.ObservationType</span></code></a></p>
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv, attributes: List[str], **kwargs: dict</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#AttributesObservation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.space">
+<code class="sig-name descname">space</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gym.spaces.space.Space<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#AttributesObservation.space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.observe">
+<code class="sig-name descname">observe</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Dict[str, numpy.ndarray]<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#AttributesObservation.observe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.observe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__class__">
+<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__class__" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.observation', '__init__': &lt;function AttributesObservation.__init__&gt;, 'space': &lt;function AttributesObservation.space&gt;, 'observe': &lt;function AttributesObservation.observe&gt;, '__doc__': None})</em><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.observation'</em><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="highway_env.envs.common.observation.AttributesObservation.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.observation.AttributesObservation.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="highway_env.envs.common.observation.observation_factory">
+<code class="sig-prename descclassname">highway_env.envs.common.observation.</code><code class="sig-name descname">observation_factory</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">config: dict</em><span class="sig-paren">)</span> &#x2192; highway_env.envs.common.observation.ObservationType<a class="reference internal" href="../_modules/highway_env/envs/common/observation.html#observation_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.observation.observation_factory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 
