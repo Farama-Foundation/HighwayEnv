@@ -30,7 +30,7 @@ Default configuration
             "type": "TimeToCollision"
         },
         "action": {
-            "type": "Discrete"
+            "type": "DiscreteMetaAction"
         },
         "simulation_frequency": 15,  # [Hz]
         "policy_frequency": 1,  # [Hz]

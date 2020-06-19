@@ -30,7 +30,7 @@ Default configuration
             "type": "TimeToCollision"
         },
         "action": {
-            "type": "Discrete"
+            "type": "DiscreteMetaAction"
         },
         "incoming_vehicle_destination": None,
         "duration": 11

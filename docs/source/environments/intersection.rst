@@ -53,8 +53,10 @@ Default configuration
             "observe_intentions": False
         },
         "action": {
-            "type": "Discrete"
-        }
+            "type": "DiscreteMetaAction",
+            "longitudinal": False,
+            "lateral": True
+        },
         "duration": 13,  # [s]
         "destination": "o1",
         "initial_vehicle_count": 10,

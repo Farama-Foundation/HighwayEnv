@@ -30,7 +30,7 @@ Default configuration
             "type": "Kinematics"
         },
         "action": {
-            "type": "Discrete"
+            "type": "DiscreteMetaAction",
         },
         "lanes_count": 4,
         "vehicles_count": 50,
