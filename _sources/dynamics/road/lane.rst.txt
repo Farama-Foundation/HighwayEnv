@@ -18,5 +18,4 @@ API
 
 .. automodule:: highway_env.road.lane
     :members:
-    :inherited-members:
-    :show-inheritance:
+

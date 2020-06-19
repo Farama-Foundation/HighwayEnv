@@ -226,8 +226,7 @@ while the lateral control of the vehicle is automatically performed by a <a clas
 <dl class="class">
 <dt id="highway_env.envs.common.action.ActionType">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.action.</code><code class="sig-name descname">ActionType</code><a class="reference internal" href="../_modules/highway_env/envs/common/action.html#ActionType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A type of action specifies its definition space, and how actions are executed in the environment</p>
+<dd><p>A type of action specifies its definition space, and how actions are executed in the environment</p>
 <dl class="method">
 <dt id="highway_env.envs.common.action.ActionType.space">
 <code class="sig-name descname">space</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gym.spaces.space.Space<a class="reference internal" href="../_modules/highway_env/envs/common/action.html#ActionType.space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType.space" title="Permalink to this definition">¶</a></dt>
@@ -256,152 +255,14 @@ Must some pre-processing can be applied to the action based on the ActionType co
 </dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.envs.common.action.ActionType.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.envs.common.action.ActionType.__dict__">
 <code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.action', '__doc__': 'A type of action specifies its definition space, and how actions are executed in the environment', 'space': &lt;function ActionType.space&gt;, 'vehicle_class': &lt;property object&gt;, 'act': &lt;function ActionType.act&gt;, '__dict__': &lt;attribute '__dict__' of 'ActionType' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'ActionType' objects&gt;})</em><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.envs.common.action.ActionType.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.action'</em><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ActionType.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.envs.common.action.ActionType.__weakref__">
@@ -414,8 +275,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="class">
 <dt id="highway_env.envs.common.action.ContinuousAction">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.action.</code><code class="sig-name descname">ContinuousAction</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">acceleration_range: Optional[Tuple[float</em>, <em class="sig-param">float]] = None</em>, <em class="sig-param">steering_range: Optional[Tuple[float</em>, <em class="sig-param">float]] = None</em>, <em class="sig-param">longitudinal: bool = True</em>, <em class="sig-param">lateral: bool = True</em>, <em class="sig-param">dynamical: bool = False</em>, <em class="sig-param">clip: bool = True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action.html#ContinuousAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.action.ActionType" title="highway_env.envs.common.action.ActionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.action.ActionType</span></code></a></p>
-<p>An continuous action space for throttle and/or steering angle.</p>
+<dd><p>An continuous action space for throttle and/or steering angle.</p>
 <p>If both throttle and steering are enabled, they are set in this order: [throttle, steering]</p>
 <p>The space intervals are always [-1, 1], but are mapped to throttle/steering intervals through configurations.</p>
 <dl class="attribute">
@@ -477,160 +337,16 @@ Must some pre-processing can be applied to the action based on the ActionType co
 </dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.envs.common.action.ContinuousAction.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.action.ContinuousAction.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.action', '__doc__': '\n    An continuous action space for throttle and/or steering angle.\n\n    If both throttle and steering are enabled, they are set in this order: [throttle, steering]\n\n    The space intervals are always [-1, 1], but are mapped to throttle/steering intervals through configurations.\n    ', 'ACCELERATION_RANGE': (-5, 5.0), 'STEERING_RANGE': (-0.7853981633974483, 0.7853981633974483), '__init__': &lt;function ContinuousAction.__init__&gt;, 'space': &lt;function ContinuousAction.space&gt;, 'vehicle_class': &lt;property object&gt;, 'act': &lt;function ContinuousAction.act&gt;})</em><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.envs.common.action.ContinuousAction.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.action'</em><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.ContinuousAction.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.action.ContinuousAction.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="highway_env.envs.common.action.DiscreteMetaAction">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.action.</code><code class="sig-name descname">DiscreteMetaAction</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em>, <em class="sig-param">longitudinal: bool = True</em>, <em class="sig-param">lateral: bool = True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action.html#DiscreteMetaAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#highway_env.envs.common.action.ActionType" title="highway_env.envs.common.action.ActionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.action.ActionType</span></code></a></p>
-<p>An discrete action space of meta-actions: lane changes, and cruise control set-point.</p>
+<dd><p>An discrete action space of meta-actions: lane changes, and cruise control set-point.</p>
 <dl class="attribute">
 <dt id="highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_ALL">
 <code class="sig-name descname">ACTIONS_ALL</code><em class="property"> = {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}</em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_ALL" title="Permalink to this definition">¶</a></dt>
@@ -665,152 +381,9 @@ overrides the normal algorithm (and the outcome is cached).</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.action', '__doc__': '\n    An discrete action space of meta-actions: lane changes, and cruise control set-point.\n    ', 'ACTIONS_ALL': {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT', 3: 'FASTER', 4: 'SLOWER'}, 'ACTIONS_LONGI': {0: 'SLOWER', 1: 'IDLE', 2: 'FASTER'}, 'ACTIONS_LAT': {0: 'LANE_LEFT', 1: 'IDLE', 2: 'LANE_RIGHT'}, '__init__': &lt;function DiscreteMetaAction.__init__&gt;, 'space': &lt;function DiscreteMetaAction.space&gt;, 'vehicle_class': &lt;property object&gt;, 'act': &lt;function DiscreteMetaAction.act&gt;})</em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.envs.common.action.DiscreteMetaAction.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.action'</em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.action.DiscreteMetaAction.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
 
 <dl class="method">
 <dt id="highway_env.envs.common.action.DiscreteMetaAction.space">

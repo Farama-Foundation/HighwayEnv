@@ -9,5 +9,4 @@ API
 
 .. automodule:: highway_env.envs.common.abstract
     :members:
-    :inherited-members:
-    :show-inheritance:
+

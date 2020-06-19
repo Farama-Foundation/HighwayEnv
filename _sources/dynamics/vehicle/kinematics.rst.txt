@@ -30,5 +30,4 @@ API
 
 .. automodule:: highway_env.vehicle.kinematics
     :members:
-    :inherited-members:
-    :show-inheritance:
+

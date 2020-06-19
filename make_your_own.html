@@ -173,8 +173,7 @@
 <dl class="class">
 <dt id="highway_env.envs.common.abstract.AbstractEnv">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.abstract.</code><code class="sig-name descname">AbstractEnv</code><span class="sig-paren">(</span><em class="sig-param">config: dict = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/highway_env/envs/common/abstract.html#AbstractEnv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">gym.core.Env</span></code></p>
-<p>A generic environment for various tasks involving a vehicle driving on a road.</p>
+<dd><p>A generic environment for various tasks involving a vehicle driving on a road.</p>
 <p>The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and
 speed. The action space is fixed, but the observation space and reward function must be defined in the
 environment implementations.</p>
@@ -201,18 +200,8 @@ environment implementations.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.action_space">
-<code class="sig-name descname">action_space</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.action_space" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.observation_type">
 <code class="sig-name descname">observation_type</code><em class="property">: ObservationType</em><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.observation_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.observation_space">
-<code class="sig-name descname">observation_space</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.observation_space" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -406,189 +395,14 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.abstract', '__annotations__': {'observation_type': &lt;class 'highway_env.envs.common.observation.ObservationType'&gt;, 'action_type': &lt;class 'highway_env.envs.common.action.ActionType'&gt;, 'automatic_rendering_callback': typing.Union[typing.Callable, NoneType]}, '__doc__': '\n    A generic environment for various tasks involving a vehicle driving on a road.\n\n    The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and\n    speed. The action space is fixed, but the observation space and reward function must be defined in the\n    environment implementations.\n    ', 'metadata': {'render.modes': ['human', 'rgb_array']}, 'PERCEPTION_DISTANCE': 180.0, '__init__': &lt;function AbstractEnv.__init__&gt;, 'default_config': &lt;classmethod object&gt;, 'seed': &lt;function AbstractEnv.seed&gt;, 'configure': &lt;function AbstractEnv.configure&gt;, 'define_spaces': &lt;function AbstractEnv.define_spaces&gt;, '_reward': &lt;function AbstractEnv._reward&gt;, '_is_terminal': &lt;function AbstractEnv._is_terminal&gt;, '_cost': &lt;function AbstractEnv._cost&gt;, 'reset': &lt;function AbstractEnv.reset&gt;, 'step': &lt;function AbstractEnv.step&gt;, '_simulate': &lt;function AbstractEnv._simulate&gt;, 'render': &lt;function AbstractEnv.render&gt;, 'close': &lt;function AbstractEnv.close&gt;, 'get_available_actions': &lt;function AbstractEnv.get_available_actions&gt;, '_automatic_rendering': &lt;function AbstractEnv._automatic_rendering&gt;, 'simplify': &lt;function AbstractEnv.simplify&gt;, 'change_vehicles': &lt;function AbstractEnv.change_vehicles&gt;, 'set_preferred_lane': &lt;function AbstractEnv.set_preferred_lane&gt;, 'set_route_at_intersection': &lt;function AbstractEnv.set_route_at_intersection&gt;, 'set_vehicle_field': &lt;function AbstractEnv.set_vehicle_field&gt;, 'call_vehicle_method': &lt;function AbstractEnv.call_vehicle_method&gt;, 'randomize_behaviour': &lt;function AbstractEnv.randomize_behaviour&gt;, 'to_finite_mdp': &lt;function AbstractEnv.to_finite_mdp&gt;, '__deepcopy__': &lt;function AbstractEnv.__deepcopy__&gt;})</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__enter__">
-<code class="sig-name descname">__enter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__enter__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Support with-statement for the environment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__exit__">
-<code class="sig-name descname">__exit__</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__exit__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Support with-statement for the environment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.abstract'</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.call_vehicle_method">
 <code class="sig-name descname">call_vehicle_method</code><span class="sig-paren">(</span><em class="sig-param">args: Tuple[str, Tuple[object]]</em><span class="sig-paren">)</span> &#x2192; highway_env.envs.common.abstract.AbstractEnv<a class="reference internal" href="_modules/highway_env/envs/common/abstract.html#AbstractEnv.call_vehicle_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.call_vehicle_method" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.reward_range">
-<code class="sig-name descname">reward_range</code><em class="property"> = (-inf, inf)</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.reward_range" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.spec">
-<code class="sig-name descname">spec</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.spec" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.abstract.AbstractEnv.unwrapped">
-<em class="property">property </em><code class="sig-name descname">unwrapped</code><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.unwrapped" title="Permalink to this definition">¶</a></dt>
-<dd><p>Completely unwrap this env.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>gym.Env: The base non-wrapped gym.Env instance</p>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="method">
 <dt id="highway_env.envs.common.abstract.AbstractEnv.randomize_behaviour">

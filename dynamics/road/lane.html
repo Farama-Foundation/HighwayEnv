@@ -189,8 +189,7 @@
 <dl class="class">
 <dt id="highway_env.road.lane.AbstractLane">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.road.lane.</code><code class="sig-name descname">AbstractLane</code><a class="reference internal" href="../../_modules/highway_env/road/lane.html#AbstractLane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.AbstractLane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A lane on the road, described by its central curve.</p>
+<dd><p>A lane on the road, described by its central curve.</p>
 <dl class="attribute">
 <dt id="highway_env.road.lane.AbstractLane.metaclass__">
 <code class="sig-name descname">metaclass__</code><a class="headerlink" href="#highway_env.road.lane.AbstractLane.metaclass__" title="Permalink to this definition">¶</a></dt>
@@ -326,152 +325,14 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.road.lane.AbstractLane.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.road.lane.AbstractLane.__dict__">
 <code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.lane', '__annotations__': {'DEFAULT_WIDTH': &lt;class 'float'&gt;, 'VEHICLE_LENGTH': &lt;class 'float'&gt;, 'length': &lt;class 'float'&gt;, 'line_types': typing.List[ForwardRef('LineType')]}, '__doc__': 'A lane on the road, described by its central curve.', 'metaclass__': &lt;class 'abc.ABCMeta'&gt;, 'DEFAULT_WIDTH': 4, 'VEHICLE_LENGTH': 5, 'length': 0, 'position': &lt;function AbstractLane.position&gt;, 'local_coordinates': &lt;function AbstractLane.local_coordinates&gt;, 'heading_at': &lt;function AbstractLane.heading_at&gt;, 'width_at': &lt;function AbstractLane.width_at&gt;, 'on_lane': &lt;function AbstractLane.on_lane&gt;, 'is_reachable_from': &lt;function AbstractLane.is_reachable_from&gt;, 'after_end': &lt;function AbstractLane.after_end&gt;, 'distance': &lt;function AbstractLane.distance&gt;, '__dict__': &lt;attribute '__dict__' of 'AbstractLane' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'AbstractLane' objects&gt;})</em><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.road.lane.AbstractLane.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.lane'</em><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.AbstractLane.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.AbstractLane.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.road.lane.AbstractLane.__weakref__">
@@ -484,8 +345,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="class">
 <dt id="highway_env.road.lane.LineType">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.road.lane.</code><code class="sig-name descname">LineType</code><a class="reference internal" href="../../_modules/highway_env/road/lane.html#LineType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.LineType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A lane side line type.</p>
+<dd><p>A lane side line type.</p>
 <dl class="attribute">
 <dt id="highway_env.road.lane.LineType.NONE">
 <code class="sig-name descname">NONE</code><em class="property"> = 0</em><a class="headerlink" href="#highway_env.road.lane.LineType.NONE" title="Permalink to this definition">¶</a></dt>
@@ -507,152 +367,14 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.road.lane.LineType.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.road.lane.LineType.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.road.lane.LineType.__dict__">
 <code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.lane', '__doc__': 'A lane side line type.', 'NONE': 0, 'STRIPED': 1, 'CONTINUOUS': 2, 'CONTINUOUS_LINE': 3, '__dict__': &lt;attribute '__dict__' of 'LineType' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'LineType' objects&gt;})</em><a class="headerlink" href="#highway_env.road.lane.LineType.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.road.lane.LineType.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.lane'</em><a class="headerlink" href="#highway_env.road.lane.LineType.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.LineType.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.LineType.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.road.lane.LineType.__weakref__">
@@ -665,8 +387,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="class">
 <dt id="highway_env.road.lane.StraightLane">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.road.lane.</code><code class="sig-name descname">StraightLane</code><span class="sig-paren">(</span><em class="sig-param">start: Union[numpy.ndarray, Sequence[float]], end: Union[numpy.ndarray, Sequence[float]], width: float = 4, line_types: Tuple[highway_env.road.lane.LineType, highway_env.road.lane.LineType] = None, forbidden: bool = False, speed_limit: float = 20, priority: int = 0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/road/lane.html#StraightLane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.StraightLane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.lane.AbstractLane</span></code></a></p>
-<p>A lane going in straight line.</p>
+<dd><p>A lane going in straight line.</p>
 <dl class="method">
 <dt id="highway_env.road.lane.StraightLane.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">start: Union[numpy.ndarray, Sequence[float]], end: Union[numpy.ndarray, Sequence[float]], width: float = 4, line_types: Tuple[highway_env.road.lane.LineType, highway_env.road.lane.LineType] = None, forbidden: bool = False, speed_limit: float = 20, priority: int = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/lane.html#StraightLane.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.StraightLane.__init__" title="Permalink to this definition">¶</a></dt>
@@ -684,11 +405,6 @@ overrides the normal algorithm (and the outcome is cached).</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.StraightLane.length">
-<code class="sig-name descname">length</code><em class="property">: float</em><em class="property"> = 0</em><a class="headerlink" href="#highway_env.road.lane.StraightLane.length" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="highway_env.road.lane.StraightLane.line_types">
@@ -755,225 +471,16 @@ overrides the normal algorithm (and the outcome is cached).</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.road.lane.StraightLane.DEFAULT_WIDTH">
-<code class="sig-name descname">DEFAULT_WIDTH</code><em class="property">: float</em><em class="property"> = 4</em><a class="headerlink" href="#highway_env.road.lane.StraightLane.DEFAULT_WIDTH" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.StraightLane.VEHICLE_LENGTH">
-<code class="sig-name descname">VEHICLE_LENGTH</code><em class="property">: float</em><em class="property"> = 5</em><a class="headerlink" href="#highway_env.road.lane.StraightLane.VEHICLE_LENGTH" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.StraightLane.__annotations__">
-<code class="sig-name descname">__annotations__</code><em class="property"> = {'DEFAULT_WIDTH': &lt;class 'float'&gt;, 'VEHICLE_LENGTH': &lt;class 'float'&gt;, 'length': &lt;class 'float'&gt;, 'line_types': typing.List[ForwardRef('LineType')]}</em><a class="headerlink" href="#highway_env.road.lane.StraightLane.__annotations__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.StraightLane.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.road.lane.StraightLane.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.StraightLane.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.lane', '__doc__': 'A lane going in straight line.', '__init__': &lt;function StraightLane.__init__&gt;, 'position': &lt;function StraightLane.position&gt;, 'heading_at': &lt;function StraightLane.heading_at&gt;, 'width_at': &lt;function StraightLane.width_at&gt;, 'local_coordinates': &lt;function StraightLane.local_coordinates&gt;})</em><a class="headerlink" href="#highway_env.road.lane.StraightLane.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.road.lane.StraightLane.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.lane'</em><a class="headerlink" href="#highway_env.road.lane.StraightLane.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.StraightLane.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.lane.StraightLane.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.after_end">
-<code class="sig-name descname">after_end</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.StraightLane.after_end" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.distance">
-<code class="sig-name descname">distance</code><span class="sig-paren">(</span><em class="sig-param">position</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.StraightLane.distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the L1 distance [m] from a position to the lane.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.is_reachable_from">
-<code class="sig-name descname">is_reachable_from</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.StraightLane.is_reachable_from" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the lane is reachable from a given world position</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>position</strong> – the world position [m]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>is the lane reachable?</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.StraightLane.metaclass__">
-<code class="sig-name descname">metaclass__</code><a class="headerlink" href="#highway_env.road.lane.StraightLane.metaclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABCMeta</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.StraightLane.on_lane">
-<code class="sig-name descname">on_lane</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em>, <em class="sig-param">margin: float = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.StraightLane.on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether a given world position is on the lane.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – a world position [m]</p></li>
-<li><p><strong>longitudinal</strong> – (optional) the corresponding longitudinal lane coordinate, if known [m]</p></li>
-<li><p><strong>lateral</strong> – (optional) the corresponding lateral lane coordinate, if known [m]</p></li>
-<li><p><strong>margin</strong> – (optional) a supplementary margin around the lane width</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>is the position on the lane?</p>
-</dd>
-</dl>
-</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="highway_env.road.lane.SineLane">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.road.lane.</code><code class="sig-name descname">SineLane</code><span class="sig-paren">(</span><em class="sig-param">start: Union[numpy.ndarray, Sequence[float]], end: Union[numpy.ndarray, Sequence[float]], amplitude: float, pulsation: float, phase: float, width: float = 4, line_types: List[highway_env.road.lane.LineType] = None, forbidden: bool = False, speed_limit: float = 20, priority: int = 0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/road/lane.html#SineLane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.SineLane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#highway_env.road.lane.StraightLane" title="highway_env.road.lane.StraightLane"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.lane.StraightLane</span></code></a></p>
-<p>A sinusoidal lane.</p>
+<dd><p>A sinusoidal lane.</p>
 <dl class="method">
 <dt id="highway_env.road.lane.SineLane.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">start: Union[numpy.ndarray, Sequence[float]], end: Union[numpy.ndarray, Sequence[float]], amplitude: float, pulsation: float, phase: float, width: float = 4, line_types: List[highway_env.road.lane.LineType] = None, forbidden: bool = False, speed_limit: float = 20, priority: int = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/lane.html#SineLane.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.SineLane.__init__" title="Permalink to this definition">¶</a></dt>
@@ -1037,196 +544,8 @@ overrides the normal algorithm (and the outcome is cached).</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.road.lane.SineLane.DEFAULT_WIDTH">
-<code class="sig-name descname">DEFAULT_WIDTH</code><em class="property">: float</em><em class="property"> = 4</em><a class="headerlink" href="#highway_env.road.lane.SineLane.DEFAULT_WIDTH" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.SineLane.VEHICLE_LENGTH">
-<code class="sig-name descname">VEHICLE_LENGTH</code><em class="property">: float</em><em class="property"> = 5</em><a class="headerlink" href="#highway_env.road.lane.SineLane.VEHICLE_LENGTH" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.SineLane.__annotations__">
-<code class="sig-name descname">__annotations__</code><em class="property"> = {'DEFAULT_WIDTH': &lt;class 'float'&gt;, 'VEHICLE_LENGTH': &lt;class 'float'&gt;, 'length': &lt;class 'float'&gt;, 'line_types': typing.List[ForwardRef('LineType')]}</em><a class="headerlink" href="#highway_env.road.lane.SineLane.__annotations__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.SineLane.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.road.lane.SineLane.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.SineLane.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.lane', '__doc__': 'A sinusoidal lane.', '__init__': &lt;function SineLane.__init__&gt;, 'position': &lt;function SineLane.position&gt;, 'heading_at': &lt;function SineLane.heading_at&gt;, 'local_coordinates': &lt;function SineLane.local_coordinates&gt;})</em><a class="headerlink" href="#highway_env.road.lane.SineLane.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.road.lane.SineLane.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.lane'</em><a class="headerlink" href="#highway_env.road.lane.SineLane.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.SineLane.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.lane.SineLane.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.after_end">
-<code class="sig-name descname">after_end</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.SineLane.after_end" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.distance">
-<code class="sig-name descname">distance</code><span class="sig-paren">(</span><em class="sig-param">position</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.SineLane.distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the L1 distance [m] from a position to the lane.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.is_reachable_from">
-<code class="sig-name descname">is_reachable_from</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.SineLane.is_reachable_from" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the lane is reachable from a given world position</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>position</strong> – the world position [m]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>is the lane reachable?</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.SineLane.length">
-<code class="sig-name descname">length</code><em class="property">: float</em><em class="property"> = 0</em><a class="headerlink" href="#highway_env.road.lane.SineLane.length" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1234,52 +553,12 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <code class="sig-name descname">line_types</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.road.lane.SineLane.line_types" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="highway_env.road.lane.SineLane.metaclass__">
-<code class="sig-name descname">metaclass__</code><a class="headerlink" href="#highway_env.road.lane.SineLane.metaclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABCMeta</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.on_lane">
-<code class="sig-name descname">on_lane</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em>, <em class="sig-param">margin: float = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.SineLane.on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether a given world position is on the lane.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – a world position [m]</p></li>
-<li><p><strong>longitudinal</strong> – (optional) the corresponding longitudinal lane coordinate, if known [m]</p></li>
-<li><p><strong>lateral</strong> – (optional) the corresponding lateral lane coordinate, if known [m]</p></li>
-<li><p><strong>margin</strong> – (optional) a supplementary margin around the lane width</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>is the position on the lane?</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.SineLane.width_at">
-<code class="sig-name descname">width_at</code><span class="sig-paren">(</span><em class="sig-param">longitudinal: float</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#highway_env.road.lane.SineLane.width_at" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the lane width at a given longitudinal lane coordinate.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>longitudinal</strong> – longitudinal lane coordinate [m]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the lane width [m]</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="highway_env.road.lane.CircularLane">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.road.lane.</code><code class="sig-name descname">CircularLane</code><span class="sig-paren">(</span><em class="sig-param">center: Union[numpy.ndarray, Sequence[float]], radius: float, start_phase: float, end_phase: float, clockwise: bool = True, width: float = 4, line_types: List[highway_env.road.lane.LineType] = None, forbidden: bool = False, speed_limit: float = 20, priority: int = 0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/road/lane.html#CircularLane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.CircularLane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.road.lane.AbstractLane</span></code></a></p>
-<p>A lane going in circle arc.</p>
+<dd><p>A lane going in circle arc.</p>
 <dl class="method">
 <dt id="highway_env.road.lane.CircularLane.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">center: Union[numpy.ndarray, Sequence[float]], radius: float, start_phase: float, end_phase: float, clockwise: bool = True, width: float = 4, line_types: List[highway_env.road.lane.LineType] = None, forbidden: bool = False, speed_limit: float = 20, priority: int = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/highway_env/road/lane.html#CircularLane.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.lane.CircularLane.__init__" title="Permalink to this definition">¶</a></dt>
@@ -1289,11 +568,6 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="attribute">
 <dt id="highway_env.road.lane.CircularLane.line_types">
 <code class="sig-name descname">line_types</code><em class="property"> = None</em><a class="headerlink" href="#highway_env.road.lane.CircularLane.line_types" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.CircularLane.length">
-<code class="sig-name descname">length</code><em class="property">: float</em><em class="property"> = 0</em><a class="headerlink" href="#highway_env.road.lane.CircularLane.length" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1356,217 +630,9 @@ overrides the normal algorithm (and the outcome is cached).</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.road.lane.CircularLane.DEFAULT_WIDTH">
-<code class="sig-name descname">DEFAULT_WIDTH</code><em class="property">: float</em><em class="property"> = 4</em><a class="headerlink" href="#highway_env.road.lane.CircularLane.DEFAULT_WIDTH" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.CircularLane.VEHICLE_LENGTH">
-<code class="sig-name descname">VEHICLE_LENGTH</code><em class="property">: float</em><em class="property"> = 5</em><a class="headerlink" href="#highway_env.road.lane.CircularLane.VEHICLE_LENGTH" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.CircularLane.__annotations__">
-<code class="sig-name descname">__annotations__</code><em class="property"> = {'DEFAULT_WIDTH': &lt;class 'float'&gt;, 'VEHICLE_LENGTH': &lt;class 'float'&gt;, 'length': &lt;class 'float'&gt;, 'line_types': typing.List[ForwardRef('LineType')]}</em><a class="headerlink" href="#highway_env.road.lane.CircularLane.__annotations__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.CircularLane.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.road.lane.CircularLane.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.CircularLane.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.lane', '__doc__': 'A lane going in circle arc.', '__init__': &lt;function CircularLane.__init__&gt;, 'position': &lt;function CircularLane.position&gt;, 'heading_at': &lt;function CircularLane.heading_at&gt;, 'width_at': &lt;function CircularLane.width_at&gt;, 'local_coordinates': &lt;function CircularLane.local_coordinates&gt;})</em><a class="headerlink" href="#highway_env.road.lane.CircularLane.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.road.lane.CircularLane.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.lane'</em><a class="headerlink" href="#highway_env.road.lane.CircularLane.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.CircularLane.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.lane.CircularLane.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.after_end">
-<code class="sig-name descname">after_end</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.CircularLane.after_end" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.distance">
-<code class="sig-name descname">distance</code><span class="sig-paren">(</span><em class="sig-param">position</em><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.road.lane.CircularLane.distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the L1 distance [m] from a position to the lane.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.is_reachable_from">
-<code class="sig-name descname">is_reachable_from</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.CircularLane.is_reachable_from" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the lane is reachable from a given world position</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>position</strong> – the world position [m]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>is the lane reachable?</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.lane.CircularLane.metaclass__">
-<code class="sig-name descname">metaclass__</code><a class="headerlink" href="#highway_env.road.lane.CircularLane.metaclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABCMeta</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.lane.CircularLane.on_lane">
-<code class="sig-name descname">on_lane</code><span class="sig-paren">(</span><em class="sig-param">position: numpy.ndarray</em>, <em class="sig-param">longitudinal: float = None</em>, <em class="sig-param">lateral: float = None</em>, <em class="sig-param">margin: float = 0</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#highway_env.road.lane.CircularLane.on_lane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether a given world position is on the lane.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – a world position [m]</p></li>
-<li><p><strong>longitudinal</strong> – (optional) the corresponding longitudinal lane coordinate, if known [m]</p></li>
-<li><p><strong>lateral</strong> – (optional) the corresponding lateral lane coordinate, if known [m]</p></li>
-<li><p><strong>margin</strong> – (optional) a supplementary margin around the lane width</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>is the position on the lane?</p>
-</dd>
-</dl>
-</dd></dl>
 
 </dd></dl>
 

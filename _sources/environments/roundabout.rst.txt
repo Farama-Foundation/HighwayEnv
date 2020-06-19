@@ -55,5 +55,3 @@ API
 
 .. autoclass:: RoundaboutEnv
     :members:
-    :inherited-members:
-    :show-inheritance:

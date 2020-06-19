@@ -72,5 +72,4 @@ API
 
 .. automodule:: highway_env.envs.common.action
     :members:
-    :inherited-members:
-    :show-inheritance:
+

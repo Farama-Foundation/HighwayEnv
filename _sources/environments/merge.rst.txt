@@ -53,5 +53,4 @@ API
 
 .. autoclass:: MergeEnv
     :members:
-    :inherited-members:
-    :show-inheritance:
+

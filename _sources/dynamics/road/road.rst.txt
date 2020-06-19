@@ -28,5 +28,4 @@ API
 
 .. automodule:: highway_env.road.road
     :members:
-    :inherited-members:
-    :show-inheritance:
+

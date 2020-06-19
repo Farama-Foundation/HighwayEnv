@@ -55,5 +55,3 @@ API
 
 .. autoclass:: ParkingEnv
     :members:
-    :inherited-members:
-    :show-inheritance:

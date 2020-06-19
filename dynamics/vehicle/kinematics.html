@@ -198,8 +198,7 @@
 <dl class="class">
 <dt id="highway_env.vehicle.kinematics.Vehicle">
 <em class="property">class </em><code class="sig-prename descclassname">highway_env.vehicle.kinematics.</code><code class="sig-name descname">Vehicle</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road, position: Union[numpy.ndarray, Sequence[float]], heading: float = 0, speed: float = 0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/vehicle/kinematics.html#Vehicle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.logger.Loggable</span></code></p>
-<p>A moving vehicle on a road, and its kinematics.</p>
+<dd><p>A moving vehicle on a road, and its kinematics.</p>
 <p>The vehicle is represented by a dynamical system: a modified bicycle model.
 It’s state is propagated depending on its steering and acceleration actions.</p>
 <dl class="attribute">
@@ -392,140 +391,9 @@ The vehicle’s current lane is updated.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__class__">
-<code class="sig-name descname">__class__</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__class__" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.type</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__delattr__">
-<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement delattr(self, name).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.kinematics', '__doc__': &quot;\n    A moving vehicle on a road, and its kinematics.\n\n    The vehicle is represented by a dynamical system: a modified bicycle model.\n    It's state is propagated depending on its steering and acceleration actions.\n    &quot;, 'COLLISIONS_ENABLED': True, 'LENGTH': 5.0, 'WIDTH': 2.0, 'DEFAULT_SPEEDS': [23, 25], 'MAX_SPEED': 40.0, '__init__': &lt;function Vehicle.__init__&gt;, 'make_on_lane': &lt;classmethod object&gt;, 'create_random': &lt;classmethod object&gt;, 'create_from': &lt;classmethod object&gt;, 'act': &lt;function Vehicle.act&gt;, 'step': &lt;function Vehicle.step&gt;, 'clip_actions': &lt;function Vehicle.clip_actions&gt;, 'on_state_update': &lt;function Vehicle.on_state_update&gt;, 'lane_distance_to': &lt;function Vehicle.lane_distance_to&gt;, 'check_collision': &lt;function Vehicle.check_collision&gt;, '_is_colliding': &lt;function Vehicle._is_colliding&gt;, 'direction': &lt;property object&gt;, 'velocity': &lt;property object&gt;, 'destination': &lt;property object&gt;, 'destination_direction': &lt;property object&gt;, 'on_road': &lt;property object&gt;, 'front_distance_to': &lt;function Vehicle.front_distance_to&gt;, 'to_dict': &lt;function Vehicle.to_dict&gt;, 'dump': &lt;function Vehicle.dump&gt;, 'get_log': &lt;function Vehicle.get_log&gt;, '__str__': &lt;function Vehicle.__str__&gt;, '__repr__': &lt;function Vehicle.__repr__&gt;})</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__dir__">
-<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__dir__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default dir() implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__format__">
-<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default object formatter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__ge__">
-<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__ge__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__getattribute__">
-<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return getattr(self, name).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__gt__">
-<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__gt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&gt;value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__init_subclass__">
-<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__init_subclass__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a class is subclassed.</p>
-<p>The default implementation does nothing. It may be
-overridden to extend subclasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__le__">
-<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__le__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__lt__">
-<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__lt__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self&lt;value.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="highway_env.vehicle.kinematics.Vehicle.__module__">
 <code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.vehicle.kinematics'</em><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__module__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__ne__">
-<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__ne__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self!=value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__new__">
-<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__new__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__reduce__">
-<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__reduce_ex__">
-<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper for pickle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__setattr__">
-<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement setattr(self, name, value).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__sizeof__">
-<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of object in memory, in bytes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__subclasshook__">
-<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__subclasshook__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract classes can override this to customize issubclass().</p>
-<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
-It should return True, False or NotImplemented.  If it returns
-NotImplemented, the normal algorithm is used.  Otherwise, it
-overrides the normal algorithm (and the outcome is cached).</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.kinematics.Vehicle.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
 
 <dl class="method">
 <dt id="highway_env.vehicle.kinematics.Vehicle.to_dict">
