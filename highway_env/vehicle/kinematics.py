@@ -3,8 +3,6 @@ import numpy as np
 import pandas as pd
 from collections import deque
 
-from numba import jit
-
 from highway_env import utils
 from highway_env.logger import Loggable
 from highway_env.road.lane import AbstractLane
@@ -129,23 +127,14 @@ class Vehicle(Loggable):
         :param dt: timestep of integration of the model [s]
         """
         self.clip_actions()
-        self. position, self.heading, self.speed = self.kinematic_bicycle(self.position,
-                                                                          self.heading,
-                                                                          self.speed,
-                                                                          self.action['steering'],
-                                                                          self.action['acceleration'],
-                                                                          self.LENGTH / 2, dt)
+        delta_f = self.action['steering']
+        beta = np.arctan(1 / 2 * np.tan(delta_f))
+        v = self.speed * np.array([np.cos(self.heading + beta),
+                                   np.sin(self.heading + beta)])
+        self.position += v * dt
+        self.heading += self.speed * np.sin(beta) / (self.LENGTH / 2) * dt
+        self.speed += self.action['acceleration'] * dt
         self.on_state_update()
-
-    @staticmethod
-    @jit(nopython=True)
-    def kinematic_bicycle(position, heading, speed, steering, acceleration, length, dt):
-        beta = np.arctan(1 / 2 * np.tan(steering))
-        v = speed * np.array([np.cos(heading + beta), np.sin(heading + beta)])
-        position += v * dt
-        heading += speed * np.sin(beta) / length * dt
-        speed += acceleration * dt
-        return position, heading, speed
 
     def clip_actions(self) -> None:
         if self.crashed:
