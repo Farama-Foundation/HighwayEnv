@@ -11,4 +11,5 @@ User Guide
   actions/index
   dynamics/index
   rewards/index
+  graphics/index
   make_your_own

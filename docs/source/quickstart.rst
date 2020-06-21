@@ -18,7 +18,7 @@ Here is a quick example of how to create an environment, and run an episode with
   obs = env.reset()
   done = False
   while not done:
-      action = env.ACTIONS["IDLE"]
+      action = env.action_type.actions["IDLE"]
       obs, reward, done, info = env.step(action)
       env.render()
 

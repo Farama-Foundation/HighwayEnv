@@ -31,9 +31,10 @@ Continuous Actions
 The :py:class:`~highway_env.envs.common.action.ContinuousAction` type allows the agent to directly set the low-level
 controls of the :ref:`vehicle kinematics <vehicle_kinematics>`, namely the throttle :math:`a` and steering angle :math:`\delta`.
 
-The control of throttle and steering can be enabled or disabled through the
-:py:attr:`~highway_env.envs.common.action.ContinuousAction.longitudinal` and :py:attr:`~highway_env.envs.common.action.ContinuousAction.lateral`
-configurations, respectively. Thus, the action space is either 1D or 2D.
+.. note::
+    The control of throttle and steering can be enabled or disabled through the
+    :py:attr:`~highway_env.envs.common.action.ContinuousAction.longitudinal` and :py:attr:`~highway_env.envs.common.action.ContinuousAction.lateral`
+    configurations, respectively. Thus, the action space can be either 1D or 2D.
 
 Discrete Meta-Actions
 ----------------------
@@ -66,6 +67,21 @@ while the lateral control of the vehicle is automatically performed by a :ref:`s
 
 Manual control
 ----------------
+
+The environments can be used as a simulation:
+
+.. code-block:: python
+    env = gym.make("highway-v0")
+    env.configure({
+        "manual_control": True
+    })
+    env.reset()
+    done = False
+    while not done:
+        env.step(env.action_space.sample())  # with manual control, these actions are ignored
+
+The ego-vehicle is controlled by directional arrows keys, as defined in
+:py:class:`~highway_env.envs.common.graphics.EventHandler`
 
 API
 --------
