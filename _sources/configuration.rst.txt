@@ -3,8 +3,9 @@
 Configuring an environment
 ==========================
 
-The observation, action, dynamics and rewards of an environment are all specified in its configuration, defined as a
-dictionary :py:attr:`~highway_env.envs.common.abstract.AbstractEnv.config`.
+The :ref:`observations <observations>`, :ref:`actions <actions>`, :ref:`dynamics <dynamics>` and :ref:`rewards <rewards>`
+of an environment are parametrized by a configuration, defined as a
+:py:attr:`~highway_env.envs.common.abstract.AbstractEnv.config` dictionary.
 
 After environment creation, its configuration can be changed using the
 :py:meth:`~highway_env.envs.common.abstract.AbstractEnv.configure` method.

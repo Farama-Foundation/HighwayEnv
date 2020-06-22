@@ -98,6 +98,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../dynamics/index.html">Dynamics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../rewards/index.html">Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../graphics/index.html">Graphics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../make_your_own.html">Make your own environment</a></li>
 </ul>
 </li>
@@ -191,9 +192,12 @@ Each environment comes with a <em>default</em> action type, which can be changed
 <h2>Continuous Actions<a class="headerlink" href="#continuous-actions" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.action.ContinuousAction" title="highway_env.envs.common.action.ContinuousAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousAction</span></code></a> type allows the agent to directly set the low-level
 controls of the <a class="reference internal" href="../dynamics/vehicle/kinematics.html#vehicle-kinematics"><span class="std std-ref">vehicle kinematics</span></a>, namely the throttle <span class="math notranslate nohighlight">\(a\)</span> and steering angle <span class="math notranslate nohighlight">\(\delta\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The control of throttle and steering can be enabled or disabled through the
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">longitudinal</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">lateral</span></code>
-configurations, respectively. Thus, the action space is either 1D or 2D.</p>
+configurations, respectively. Thus, the action space can be either 1D or 2D.</p>
+</div>
 </div>
 <div class="section" id="discrete-meta-actions">
 <h2>Discrete Meta-Actions<a class="headerlink" href="#discrete-meta-actions" title="Permalink to this headline">¶</a></h2>
@@ -220,6 +224,9 @@ while the lateral control of the vehicle is automatically performed by a <a clas
 </div>
 <div class="section" id="manual-control">
 <h2>Manual control<a class="headerlink" href="#manual-control" title="Permalink to this headline">¶</a></h2>
+<p>The environments can be used as a simulation:</p>
+<p>The ego-vehicle is controlled by directional arrows keys, as defined in
+<a class="reference internal" href="../graphics/index.html#highway_env.envs.common.graphics.EventHandler" title="highway_env.envs.common.graphics.EventHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventHandler</span></code></a></p>
 </div>
 <div class="section" id="module-highway_env.envs.common.action">
 <span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.envs.common.action" title="Permalink to this headline">¶</a></h2>

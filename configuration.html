@@ -92,6 +92,7 @@
 <li class="toctree-l2"><a class="reference internal" href="actions/index.html">Actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamics/index.html">Dynamics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rewards/index.html">Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics/index.html">Graphics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="make_your_own.html">Make your own environment</a></li>
 </ul>
 </li>
@@ -165,8 +166,9 @@
             
   <div class="section" id="configuring-an-environment">
 <span id="configuration"></span><h1>Configuring an environment<a class="headerlink" href="#configuring-an-environment" title="Permalink to this headline">¶</a></h1>
-<p>The observation, action, dynamics and rewards of an environment are all specified in its configuration, defined as a
-dictionary <code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code>.</p>
+<p>The <a class="reference internal" href="observations/index.html#id1"><span class="std std-ref">observations</span></a>, <a class="reference internal" href="actions/index.html#id1"><span class="std std-ref">actions</span></a>, <a class="reference internal" href="dynamics/index.html#dynamics"><span class="std std-ref">dynamics</span></a> and <a class="reference internal" href="rewards/index.html#rewards"><span class="std std-ref">rewards</span></a>
+of an environment are parametrized by a configuration, defined as a
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.</p>
 <p>After environment creation, its configuration can be changed using the
 <a class="reference internal" href="make_your_own.html#highway_env.envs.common.abstract.AbstractEnv.configure" title="highway_env.envs.common.abstract.AbstractEnv.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">configure()</span></code></a> method.</p>
 </div>
