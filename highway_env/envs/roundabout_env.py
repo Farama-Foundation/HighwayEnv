@@ -55,7 +55,7 @@ class RoundaboutEnv(AbstractEnv):
     def _make_road(self) -> None:
         # Circle lanes: (s)outh/(e)ast/(n)orth/(w)est (e)ntry/e(x)it.
         center = [0, 0]  # [m]
-        radius = 30  # [m]
+        radius = 15  # [m]
         alpha = 24  # [deg]
 
         net = RoadNetwork()
@@ -89,9 +89,9 @@ class RoundaboutEnv(AbstractEnv):
                                       clockwise=False, line_types=line[lane]))
 
         # Access lanes: (r)oad/(s)ine
-        access = 200  # [m]
-        dev = 115  # [m]
-        a = 10  # [m]
+        access = 170  # [m]
+        dev = 68  # [m]
+        a = 5  # [m]
         delta_st = 0.2*dev  # [m]
 
         delta_en = dev-delta_st
@@ -110,6 +110,11 @@ class RoundaboutEnv(AbstractEnv):
         net.add_lane("nes", "ne", SineLane([-2 - a, -dev / 2], [-2 - a, -dev / 2 + delta_st], a, w, -np.pi / 2, line_types=(c, c)))
         net.add_lane("nx", "nxs", SineLane([2 + a, dev / 2 - delta_en], [2 + a, -dev / 2], a, w, -np.pi / 2 + w * delta_en, line_types=(c, c)))
         net.add_lane("nxs", "nxr", StraightLane([2, -dev / 2], [2, -access], line_types=(n, c)))
+
+        net.add_lane("wer", "wes", StraightLane([-access, 2], [-dev / 2, 2], line_types=(s, c)))
+        net.add_lane("wes", "we", SineLane([-dev / 2, 2+a], [-dev / 2 + delta_st, 2+a], a, w, -np.pi / 2, line_types=(c, c)))
+        net.add_lane("wx", "wxs", SineLane([dev / 2 - delta_en, -2-a], [-dev / 2, -2-a], a, w, -np.pi / 2 + w * delta_en, line_types=(c, c)))
+        net.add_lane("wxs", "wxr", StraightLane([-dev / 2, -2], [-access, -2], line_types=(n, c)))
 
         road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
         self.road = road
