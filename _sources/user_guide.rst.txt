@@ -6,7 +6,6 @@ User Guide
 .. toctree::
   :maxdepth: 2
 
-  configuration
   observations/index
   actions/index
   dynamics/index

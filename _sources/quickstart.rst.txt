@@ -5,7 +5,7 @@ Getting Started
 ===============
 
 Making an environment
-~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 Here is a quick example of how to create an environment, and run an episode with an `IDLE` policy :
 
@@ -24,7 +24,7 @@ Here is a quick example of how to create an environment, and run an episode with
 
 All the environments
 ~~~~~~~~~~~~~~~~~~~~
-Here is a list of all the environments available and their descriptions:
+Here is the list of all the environments available and their descriptions:
 
 .. toctree::
   :maxdepth: 1
@@ -35,12 +35,25 @@ Here is a list of all the environments available and their descriptions:
   environments/parking
   environments/intersection
 
-Training an agent
-~~~~~~~~~~~~~~~~~~
+.. _configuration:
 
-To train Reinforcement Learing agents, libraries such as `rl-agents <https://github.com/eleurent/rl-agents>`_,
-`baselines <https://github.com/openai/baselines>`_ or `stable-baselines <https://github.com/hill-a/stable-baselines>`_
-can be used:
+Configuring an environment
+---------------------------
+
+The :ref:`observations <observations>`, :ref:`actions <actions>`, :ref:`dynamics <dynamics>` and :ref:`rewards <rewards>`
+of an environment are parametrized by a configuration, defined as a
+:py:attr:`~highway_env.envs.common.abstract.AbstractEnv.config` dictionary.
+
+After environment creation, its configuration can be changed using the
+:py:meth:`~highway_env.envs.common.abstract.AbstractEnv.configure` method.
+
+
+Training an agent
+-------------------
+
+Reinforcement Learning agents can be trained using libraries such as `rl-agents <https://github.com/eleurent/rl-agents>`_,
+`baselines <https://github.com/openai/baselines>`_ or `stable-baselines <https://github.com/hill-a/stable-baselines>`_.
+
 
 .. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/parking-env.gif
 
@@ -89,8 +102,8 @@ can be used:
       obs = env.reset()
 
 
-Try it on Google Colab!
-~~~~~~~~~~~~~~~~~~~~~~~
+Examples on Google Colab
+-------------------------
 
 Use these notebooks to train driving policies on `highway-env`.
 

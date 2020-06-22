@@ -86,17 +86,20 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#making-an-environment">Making an environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#all-the-environments">All the environments</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="environments/highway.html">Highway</a></li>
-<li class="toctree-l3"><a class="reference internal" href="environments/merge.html">Merge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="environments/roundabout.html">Roundabout</a></li>
-<li class="toctree-l3"><a class="reference internal" href="environments/parking.html">Parking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="environments/intersection.html">Intersection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-an-environment">Making an environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#all-the-environments">All the environments</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="environments/highway.html">Highway</a></li>
+<li class="toctree-l4"><a class="reference internal" href="environments/merge.html">Merge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="environments/roundabout.html">Roundabout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="environments/parking.html">Parking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="environments/intersection.html">Intersection</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-an-environment">Configuring an environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#training-an-agent">Training an agent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#try-it-on-google-colab">Try it on Google Colab!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples-on-google-colab">Examples on Google Colab</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
@@ -183,10 +186,9 @@
     <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
 <div class="section" id="all-the-environments">
-<h2>All the environments<a class="headerlink" href="#all-the-environments" title="Permalink to this headline">¶</a></h2>
-<p>Here is a list of all the environments available and their descriptions:</p>
+<h3>All the environments<a class="headerlink" href="#all-the-environments" title="Permalink to this headline">¶</a></h3>
+<p>Here is the list of all the environments available and their descriptions:</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="environments/highway.html">Highway</a></li>
@@ -197,11 +199,19 @@
 </ul>
 </div>
 </div>
+</div>
+<div class="section" id="configuring-an-environment">
+<span id="configuration"></span><h2>Configuring an environment<a class="headerlink" href="#configuring-an-environment" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="observations/index.html#id1"><span class="std std-ref">observations</span></a>, <a class="reference internal" href="actions/index.html#id1"><span class="std std-ref">actions</span></a>, <a class="reference internal" href="dynamics/index.html#dynamics"><span class="std std-ref">dynamics</span></a> and <a class="reference internal" href="rewards/index.html#rewards"><span class="std std-ref">rewards</span></a>
+of an environment are parametrized by a configuration, defined as a
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.</p>
+<p>After environment creation, its configuration can be changed using the
+<a class="reference internal" href="make_your_own.html#highway_env.envs.common.abstract.AbstractEnv.configure" title="highway_env.envs.common.abstract.AbstractEnv.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">configure()</span></code></a> method.</p>
+</div>
 <div class="section" id="training-an-agent">
 <h2>Training an agent<a class="headerlink" href="#training-an-agent" title="Permalink to this headline">¶</a></h2>
-<p>To train Reinforcement Learing agents, libraries such as <a class="reference external" href="https://github.com/eleurent/rl-agents">rl-agents</a>,
-<a class="reference external" href="https://github.com/openai/baselines">baselines</a> or <a class="reference external" href="https://github.com/hill-a/stable-baselines">stable-baselines</a>
-can be used:</p>
+<p>Reinforcement Learning agents can be trained using libraries such as <a class="reference external" href="https://github.com/eleurent/rl-agents">rl-agents</a>,
+<a class="reference external" href="https://github.com/openai/baselines">baselines</a> or <a class="reference external" href="https://github.com/hill-a/stable-baselines">stable-baselines</a>.</p>
 <div class="figure align-default" id="id5">
 <img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/parking-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/parking-env.gif" />
 <p class="caption"><span class="caption-text">The highway-parking-v0 environment trained with HER.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
@@ -248,8 +258,8 @@ can be used:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="try-it-on-google-colab">
-<h2>Try it on Google Colab!<a class="headerlink" href="#try-it-on-google-colab" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="examples-on-google-colab">
+<h2>Examples on Google Colab<a class="headerlink" href="#examples-on-google-colab" title="Permalink to this headline">¶</a></h2>
 <p>Use these notebooks to train driving policies on <cite>highway-env</cite>.</p>
 <ul>
 <li><p>A Model-based Reinforcement Learning tutorial on Parking <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb"><img alt="parking_mb" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
