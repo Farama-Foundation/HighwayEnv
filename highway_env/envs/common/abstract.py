@@ -1,7 +1,7 @@
 import copy
-from typing import List, Union, Tuple, Optional, Callable
+import os
+from typing import List, Tuple, Optional, Callable
 import gym
-from gym import spaces
 from gym.utils import seeding
 import numpy as np
 
@@ -93,7 +93,7 @@ class AbstractEnv(gym.Env):
             "scaling": 5.5,
             "show_trajectories": False,
             "render_agent": True,
-            "offscreen_rendering": False,
+            "offscreen_rendering": bool(os.environ.get("OFFSCREEN_RENDERING", False)),
             "manual_control": False
         }
 
