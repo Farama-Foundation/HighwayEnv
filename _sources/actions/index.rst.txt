@@ -71,6 +71,7 @@ Manual control
 The environments can be used as a simulation:
 
 .. code-block:: python
+
     env = gym.make("highway-v0")
     env.configure({
         "manual_control": True

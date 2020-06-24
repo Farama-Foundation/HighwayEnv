@@ -7,20 +7,23 @@ Getting Started
 Making an environment
 ------------------------
 
-Here is a quick example of how to create an environment, and run an episode with an `IDLE` policy :
+Here is a quick example of how to create an environment:
 
-.. code-block:: python
+.. jupyter-execute::
 
   import gym
   import highway_env
+  from matplotlib import pyplot as plt
+  % matplotlib inline
 
   env = gym.make('highway-v0')
-  obs = env.reset()
-  done = False
-  while not done:
-      action = env.action_type.actions["IDLE"]
+  env.reset()
+  for _ in range(3):
+      action = env.action_type.actions_indexes["IDLE"]
       obs, reward, done, info = env.step(action)
-      env.render()
+
+  plt.imshow(env.render(mode="rgb_array"))
+  plt.show()
 
 All the environments
 ~~~~~~~~~~~~~~~~~~~~
@@ -43,9 +46,24 @@ Configuring an environment
 The :ref:`observations <observations>`, :ref:`actions <actions>`, :ref:`dynamics <dynamics>` and :ref:`rewards <rewards>`
 of an environment are parametrized by a configuration, defined as a
 :py:attr:`~highway_env.envs.common.abstract.AbstractEnv.config` dictionary.
+After environment creation, the configuration can be accessed using the
+:py:attr:`~highway_env.envs.common.abstract.AbstractEnv.config` attribute.
 
-After environment creation, its configuration can be changed using the
-:py:meth:`~highway_env.envs.common.abstract.AbstractEnv.configure` method.
+.. jupyter-execute::
+
+  import pprint
+
+  env = gym.make("highway-v0")
+  pprint.pprint(env.config)
+
+For example, the number of lanes can be changed with:
+
+.. jupyter-execute::
+
+  env.config["lanes_count"] = 2
+  env.reset()
+  plt.imshow(env.render(mode="rgb_array"))
+  plt.show()
 
 
 Training an agent

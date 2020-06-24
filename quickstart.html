@@ -13,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/jupyter-sphinx.css" type="text/css" />
 
   
   
@@ -30,6 +31,8 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -173,18 +176,27 @@
 <span id="quickstart"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="making-an-environment">
 <h2>Making an environment<a class="headerlink" href="#making-an-environment" title="Permalink to this headline">¶</a></h2>
-<p>Here is a quick example of how to create an environment, and run an episode with an <cite>IDLE</cite> policy :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
+<p>Here is a quick example of how to create an environment:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">highway_env</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">)</span>
-<span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-    <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="s2">&quot;IDLE&quot;</span><span class="p">]</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s2">&quot;IDLE&quot;</span><span class="p">]</span>
     <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rgb_array&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
 </div>
 <div class="section" id="all-the-environments">
 <h3>All the environments<a class="headerlink" href="#all-the-environments" title="Permalink to this headline">¶</a></h3>
@@ -204,9 +216,55 @@
 <span id="configuration"></span><h2>Configuring an environment<a class="headerlink" href="#configuring-an-environment" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="observations/index.html#id1"><span class="std std-ref">observations</span></a>, <a class="reference internal" href="actions/index.html#id1"><span class="std std-ref">actions</span></a>, <a class="reference internal" href="dynamics/index.html#dynamics"><span class="std std-ref">dynamics</span></a> and <a class="reference internal" href="rewards/index.html#rewards"><span class="std std-ref">rewards</span></a>
 of an environment are parametrized by a configuration, defined as a
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.</p>
-<p>After environment creation, its configuration can be changed using the
-<a class="reference internal" href="make_your_own.html#highway_env.envs.common.abstract.AbstractEnv.configure" title="highway_env.envs.common.abstract.AbstractEnv.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">configure()</span></code></a> method.</p>
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.
+After environment creation, the configuration can be accessed using the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> attribute.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pprint</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;highway-v0&quot;</span><span class="p">)</span>
+<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;action&#39;: {&#39;type&#39;: &#39;DiscreteMetaAction&#39;},
+ &#39;centering_position&#39;: [0.3, 0.5],
+ &#39;collision_reward&#39;: -1,
+ &#39;duration&#39;: 40,
+ &#39;initial_spacing&#39;: 2,
+ &#39;lanes_count&#39;: 4,
+ &#39;manual_control&#39;: False,
+ &#39;observation&#39;: {&#39;type&#39;: &#39;Kinematics&#39;},
+ &#39;offscreen_rendering&#39;: False,
+ &#39;other_vehicles_type&#39;: &#39;highway_env.vehicle.behavior.IDMVehicle&#39;,
+ &#39;policy_frequency&#39;: 1,
+ &#39;render_agent&#39;: True,
+ &#39;scaling&#39;: 5.5,
+ &#39;screen_height&#39;: 150,
+ &#39;screen_width&#39;: 600,
+ &#39;show_trajectories&#39;: False,
+ &#39;simulation_frequency&#39;: 15,
+ &#39;vehicles_count&#39;: 50}
+</pre></div>
+</div>
+</div>
+</div>
+<p>For example, the number of lanes can be changed with:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rgb_array&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/quickstart_2_0.png" src="_images/quickstart_2_0.png" />
+</div>
+</div>
 </div>
 <div class="section" id="training-an-agent">
 <h2>Training an agent<a class="headerlink" href="#training-an-agent" title="Permalink to this headline">¶</a></h2>
