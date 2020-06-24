@@ -93,7 +93,7 @@ class AbstractEnv(gym.Env):
             "scaling": 5.5,
             "show_trajectories": False,
             "render_agent": True,
-            "offscreen_rendering": bool(os.environ.get("OFFSCREEN_RENDERING", False)),
+            "offscreen_rendering": True,
             "manual_control": False
         }
 
