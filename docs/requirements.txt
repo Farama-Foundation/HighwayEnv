@@ -1,6 +1,7 @@
 sphinx_rtd_theme
 sphinxcontrib-bibtex
-jupyter-sphinx
+# jupyter-sphinx
+git+git://github.com/eleurent/jupyter-sphinx@master#egg=jupyter-sphinx
 gym
 numpy
 pygame
