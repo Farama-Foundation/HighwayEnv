@@ -17,6 +17,14 @@ import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
 
+# -- Path setup for jupyter-sphix --------------------------------------------
+# See https://jupyter-sphinx.readthedocs.io/en/latest/#configuration-options
+# BUT this does not seem to work with Anaconda on windows
+import os
+package_path = os.path.abspath('../..')
+os.environ['PYTHONPATH'] = ':'.join(filter(None, (package_path, os.environ.get('PYTHONPATH', ''))))
+
+
 # -- Project information -----------------------------------------------------
 
 project = 'highway-env'
@@ -44,7 +52,8 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosectionlabel',
-    'sphinxcontrib.bibtex'
+    'sphinxcontrib.bibtex',
+    'jupyter_sphinx'
 ]
 
 autodoc_default_flags = ['members', 'private-members', 'undoc-members', 'special-members']
