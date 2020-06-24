@@ -14,7 +14,7 @@ Here is a quick example of how to create an environment:
   import gym
   import highway_env
   from matplotlib import pyplot as plt
-  % matplotlib inline
+  %matplotlib inline
 
   env = gym.make('highway-v0')
   env.reset()
