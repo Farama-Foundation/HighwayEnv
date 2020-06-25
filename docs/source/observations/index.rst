@@ -94,21 +94,30 @@ vehicle V    0.172      0.065      0.15         0.025
 Example configuration
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: python
+.. jupyter-execute::
 
-    "observation": {
-        "type": "Kinematics",
-        "vehicles_count": 15,
-        "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
-        "features_range": {
-            "x": [-100, 100],
-            "y": [-100, 100],
-            "vx": [-20, 20],
-            "vy": [-20, 20]
-        },
-        "absolute": False,
-        "order": "sorted"
+    import gym
+    import highway_env
+
+    config = {
+        "observation": {
+            "type": "Kinematics",
+            "vehicles_count": 15,
+            "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
+            "features_range": {
+                "x": [-100, 100],
+                "y": [-100, 100],
+                "vx": [-20, 20],
+                "vy": [-20, 20]
+            },
+            "absolute": False,
+            "order": "sorted"
+        }
     }
+    env = gym.make('highway-v0')
+    env.configure(config)
+    obs = env.reset()
+    print(obs)
 
 
 Grayscale Image
@@ -116,18 +125,6 @@ Grayscale Image
 
 The :py:class:`~highway_env.envs.common.observation.GrayscaleObservation` is a :math:`W\times H` grayscale image of the scene, where :math:`W,H` are set with the ``observation_shape`` parameter.
 The RGB to grayscale conversion is a weighted sum, configured by the ``weights`` parameter. Several images can be stacked with the ``stack_size`` parameter, as is customary with image observations.
-
-
-The following images illustrate the stacking process for the *first four observations*, using the :ref:`example configuration <grayscale_example_configuration>` below.
-
-.. image:: grayscale_0.png
-   :scale: 45 %
-.. image:: grayscale_1.png
-   :scale: 45 %
-.. image:: grayscale_2.png
-   :scale: 45 %
-.. image:: grayscale_3.png
-   :scale: 45 %
 
 .. warning::
    The ``screen_height`` and ``screen_width`` environment configurations should match the expected ``observation_shape``.
@@ -140,7 +137,10 @@ The following images illustrate the stacking process for the *first four observa
 Example configuration
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: python
+.. jupyter-execute::
+
+    from matplotlib import pyplot as plt
+    %matplotlib inline
 
     screen_width, screen_height = 84, 84
     config = {
@@ -157,7 +157,27 @@ Example configuration
         "policy_frequency": 2
     }
     env.configure(config)
+    obs = env.reset()
 
+    _, axes = plt.subplots(ncols=4, figsize=(12, 5))
+    for i, ax in enumerate(axes.flat):
+        ax.imshow(obs[..., i], cmap=plt.get_cmap('gray'))
+    plt.show()
+
+Illustration of the stack mechanism
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We illustrate the stack update by performing three steps in the environment.
+
+.. jupyter-execute::
+
+    for _ in range(3):
+        obs, _, _, _ = env.step(env.action_type.actions_indexes["IDLE"])
+
+        _, axes = plt.subplots(ncols=4, figsize=(12, 5))
+        for i, ax in enumerate(axes.flat):
+            ax.imshow(obs[..., i], cmap=plt.get_cmap('gray'))
+    plt.show()
 
 Occupancy grid
 ---------------
