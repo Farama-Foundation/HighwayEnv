@@ -43,7 +43,7 @@ class VehicleGraphics(object):
 
         # Vehicle rectangle
         length = v.LENGTH + 2 * tire_length
-        vehicle_surface = pygame.Surface((surface.pix(length), surface.pix(length)), pygame.SRCALPHA)  # per-pixel alpha
+        vehicle_surface = pygame.Surface((surface.pix(length), surface.pix(length)), flags=pygame.SRCALPHA)  # per-pixel alpha
         rect = (surface.pix(tire_length), surface.pix(length / 2 - v.WIDTH / 2), surface.pix(v.LENGTH), surface.pix(v.WIDTH))
         pygame.draw.rect(vehicle_surface, cls.get_color(v, transparent), rect, 0)
         pygame.draw.rect(vehicle_surface, cls.BLACK, rect, 1)
@@ -64,7 +64,9 @@ class VehicleGraphics(object):
         # Centered rotation
         h = v.heading if abs(v.heading) > 2 * np.pi / 180 else 0
         position = [*surface.pos2pix(v.position[0], v.position[1])]
-        if not offscreen:  # convert_alpha throws errors in offscreen mode TODO() Explain why
+        if not offscreen:
+            # convert_alpha throws errors in offscreen mode
+            # see https://stackoverflow.com/a/19057853
             vehicle_surface = pygame.Surface.convert_alpha(vehicle_surface)
         cls.blit_rotate(surface, vehicle_surface, position, np.rad2deg(-h))
 
