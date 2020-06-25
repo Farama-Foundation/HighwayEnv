@@ -66,10 +66,10 @@ For example, the number of lanes can be changed with:
   plt.imshow(env.render(mode="rgb_array"))
   plt.show()
 
-.. warning::
+.. note::
 
-    The environment must be :py:meth:`~highway_env.envs.common.abstract.AbstractEnv.reset` before the change of configuration
-    is effective.
+    The environment must be :py:meth:`~highway_env.envs.common.abstract.AbstractEnv.reset` for the change of configuration
+    to be effective.
 
 
 Training an agent
