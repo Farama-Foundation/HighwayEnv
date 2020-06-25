@@ -16,6 +16,8 @@ jobs:
       with:
         pre-build-command: "apt-get update -y && apt-get install -y git && apt-get install -y python-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsdl1.2-dev libsmpeg-dev python-numpy subversion libportmidi-dev ffmpeg libswscale-dev libavformat-dev libavcodec-dev libfreetype6-dev gcc"
         docs-folder: "docs/"
+      env: 
+        OFFSCREEN_RENDERING: 1
     - name: Commit documentation changes
       run: |
         git clone https://github.com/eleurent/highway-env.git --branch gh-pages --single-branch gh-pages
