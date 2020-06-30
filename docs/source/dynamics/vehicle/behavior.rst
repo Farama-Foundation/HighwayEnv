@@ -23,6 +23,7 @@ The dynamics are parametrised by:
 - :math:`v_0` the desired velocity, as :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.target_velocity`
 - :math:`T` the desired time gap, as :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.TIME_WANTED`
 - :math:`d_0` the jam distance, as :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.DISTANCE_WANTED`
+- :math:`a,\,b` the maximum acceleration and deceleration, as :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MAX` and :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.COMFORT_ACC_MIN`
 - :math:`\delta` the velocity exponent, as :py:attr:`~highway_env.vehicle.behavior.IDMVehicle.DELTA`
 
 It is implemented in :py:meth:`~highway_env.vehicle.behavior.IDMVehicle.acceleration` method.
