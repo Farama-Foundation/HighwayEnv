@@ -9,4 +9,5 @@ API
 
 .. automodule:: highway_env.envs.common.abstract
     :members:
+    :private-members:
 
