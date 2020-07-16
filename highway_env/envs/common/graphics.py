@@ -56,12 +56,13 @@ class EnvViewer(object):
         :param agent_display: a callback provided by the agent to display on surfaces
         """
         if self.agent_display is None:
-            if self.env.config["screen_width"] > self.env.config["screen_height"]:
-                self.screen = pygame.display.set_mode((self.env.config["screen_width"],
-                                                       2 * self.env.config["screen_height"]))
-            else:
-                self.screen = pygame.display.set_mode((2 * self.env.config["screen_width"],
-                                                       self.env.config["screen_height"]))
+            if not self.offscreen:
+                if self.env.config["screen_width"] > self.env.config["screen_height"]:
+                    self.screen = pygame.display.set_mode((self.env.config["screen_width"],
+                                                           2 * self.env.config["screen_height"]))
+                else:
+                    self.screen = pygame.display.set_mode((2 * self.env.config["screen_width"],
+                                                           self.env.config["screen_height"]))
             self.agent_surface = pygame.Surface((self.env.config["screen_width"], self.env.config["screen_height"]))
         self.agent_display = agent_display
 
