@@ -43,8 +43,8 @@ class IntersectionEnv(AbstractEnv):
             },
             "action": {
                 "type": "DiscreteMetaAction",
-                "longitudinal": False,
-                "lateral": True
+                "longitudinal": True,
+                "lateral": False
             },
             "duration": 13,  # [s]
             "destination": "o1",
