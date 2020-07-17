@@ -13,3 +13,7 @@ Plan a trajectory on `highway-v0` using the [OPD](https://hal.archives-ouvertes.
 ## Parking with Hindsight Experience Replay [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb)
 
 Train a goal-conditioned `parking-v0` policy using the [HER](https://arxiv.org/abs/1707.01495) implementation from [stable-baselines](https://github.com/hill-a/stable-baselines).
+
+## Intersection with DQN and social attention [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb)
+
+Train an `intersection-v0` crossing policy using the [social attention](https://arxiv.org/abs/1911.12250) architecture and the DQN implementation from [rl-agents](https://github.com/eleurent/rl-agents).
