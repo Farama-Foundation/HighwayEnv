@@ -214,7 +214,7 @@ class AbstractEnv(gym.Env):
         if self.viewer is None:
             self.viewer = EnvViewer(self)
 
-        self.enable_auto_render = not self.viewer.offscreen
+        self.enable_auto_render = True
 
         # If the frame has already been rendered, do nothing
         if self.should_update_rendering:
