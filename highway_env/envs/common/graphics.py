@@ -111,10 +111,11 @@ class EnvViewer(object):
 
         if self.agent_display:
             self.agent_display(self.agent_surface, self.sim_surface)
-            if self.env.config["screen_width"] > self.env.config["screen_height"]:
-                self.screen.blit(self.agent_surface, (0, self.env.config["screen_height"]))
-            else:
-                self.screen.blit(self.agent_surface, (self.env.config["screen_width"], 0))
+            if not self.offscreen:
+                if self.env.config["screen_width"] > self.env.config["screen_height"]:
+                    self.screen.blit(self.agent_surface, (0, self.env.config["screen_height"]))
+                else:
+                    self.screen.blit(self.agent_surface, (self.env.config["screen_width"], 0))
 
         RoadGraphics.display_traffic(
             self.env.road,
