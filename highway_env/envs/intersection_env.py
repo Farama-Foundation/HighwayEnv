@@ -166,10 +166,6 @@ class IntersectionEnv(AbstractEnv):
         self._spawn_vehicle(60, spawn_probability=1, go_straight=True, position_deviation=0.1, speed_deviation=0)
 
         # Ego-vehicle
-        MDPVehicle.SPEED_MIN = 0
-        MDPVehicle.SPEED_MAX = 9
-        MDPVehicle.SPEED_COUNT = 3
-        # MDPVehicle.TAU_A = 1.0
         ego_lane = self.road.network.get_lane(("o0", "ir0", 0))
         destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
         ego_vehicle = self.action_type.vehicle_class(
@@ -178,6 +174,10 @@ class IntersectionEnv(AbstractEnv):
                          speed=ego_lane.speed_limit,
                          heading=ego_lane.heading_at(50)) \
             .plan_route_to(destination)
+        ego_vehicle.SPEED_MIN = 0
+        ego_vehicle.SPEED_MAX = 9
+        ego_vehicle.SPEED_COUNT = 3
+        # ego_vehicle.TAU_A = 1.0
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
         for v in self.road.vehicles:  # Prevent early collisions
