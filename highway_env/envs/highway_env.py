@@ -39,7 +39,8 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 50,
             "duration": 40,  # [s]
             "initial_spacing": 2,
-            "collision_reward": -1  # The reward received when colliding with a vehicle.
+            "collision_reward": -1,  # The reward received when colliding with a vehicle.
+            "offroad_terminal": False
         })
         return config
 
@@ -90,7 +91,9 @@ class HighwayEnv(AbstractEnv):
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
-        return self.vehicle.crashed or self.steps >= self.config["duration"]
+        return self.vehicle.crashed or \
+            self.steps >= self.config["duration"] or \
+            (self.config["offroad_terminal"] and not self.vehicle.on_road)
 
     def _cost(self, action: int) -> float:
         """The cost signal is the occurrence of collision."""
