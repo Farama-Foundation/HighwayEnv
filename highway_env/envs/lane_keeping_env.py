@@ -111,6 +111,8 @@ class LaneKeepingEnv(AbstractEnv):
 
     @property
     def state(self) -> np.ndarray:
+        if not self.vehicle:
+            return np.zeros((4, 1))
         return self.vehicle.state[[1, 2, 4, 5]] + \
                self.np_random.uniform(low=-self.config["state_noise"],
                                       high=self.config["state_noise"],
@@ -118,6 +120,8 @@ class LaneKeepingEnv(AbstractEnv):
 
     @property
     def derivative(self) -> np.ndarray:
+        if not self.vehicle:
+            return np.zeros((4, 1))
         return self.vehicle.derivative[[1, 2, 4, 5]] + \
                self.np_random.uniform(low=-self.config["derivative_noise"],
                                       high=self.config["derivative_noise"],
@@ -125,6 +129,8 @@ class LaneKeepingEnv(AbstractEnv):
 
     @property
     def reference_state(self) -> np.ndarray:
+        if not self.vehicle or not self.lane:
+            return np.zeros((4, 1))
         longi, lat = self.lane.local_coordinates(self.vehicle.position)
         psi_l = self.lane.heading_at(longi)
         state = self.vehicle.state[[1, 2, 4, 5]]

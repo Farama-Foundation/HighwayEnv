@@ -82,7 +82,7 @@ class TimeToCollisionObservation(ObservationType):
 
     def observe(self) -> np.ndarray:
         if not self.env.road:
-            return np.zeros(self.space().shape)
+            return np.zeros((3, 3, int(self.horizon * self.env.config["policy_frequency"])))
         grid = compute_ttc_grid(self.env, time_quantization=1/self.env.config["policy_frequency"], horizon=self.horizon)
         padding = np.ones(np.shape(grid))
         padded_grid = np.concatenate([padding, grid, padding], axis=1)

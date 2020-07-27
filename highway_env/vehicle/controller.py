@@ -260,6 +260,10 @@ class MDPVehicle(ControlledVehicle):
         x = (speed - cls.SPEED_MIN) / (cls.SPEED_MAX - cls.SPEED_MIN)
         return np.int(np.clip(np.round(x * (cls.SPEED_COUNT - 1)), 0, cls.SPEED_COUNT - 1))
 
+    @classmethod
+    def get_speed_index(cls, vehicle: Vehicle) -> int:
+        return getattr(vehicle, "speed_index", cls.speed_to_index(vehicle.speed))
+
     def predict_trajectory(self, actions: List, action_duration: float, trajectory_timestep: float, dt: float) \
             -> List[ControlledVehicle]:
         """

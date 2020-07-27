@@ -33,9 +33,10 @@ class RoundaboutEnv(AbstractEnv):
         return config
 
     def _reward(self, action: int) -> float:
+        lane_change = action is 0 or action is 2
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
-                 + self.HIGH_SPEED_REWARD * self.vehicle.speed_index / max(self.vehicle.SPEED_COUNT - 1, 1) \
-                 + self.LANE_CHANGE_REWARD * (action in [0, 2])
+                 + self.HIGH_SPEED_REWARD * MDPVehicle.get_speed_index(self.vehicle) / max(MDPVehicle.SPEED_COUNT - 1, 1) \
+                 + self.LANE_CHANGE_REWARD * lane_change
         return utils.lmap(reward, [self.COLLISION_REWARD + self.LANE_CHANGE_REWARD, self.HIGH_SPEED_REWARD], [0, 1])
 
     def _is_terminal(self) -> bool:
@@ -134,7 +135,11 @@ class RoundaboutEnv(AbstractEnv):
         ego_vehicle = self.action_type.vehicle_class(self.road,
                                                      ego_lane.position(140, 0),
                                                      speed=5,
-                                                     heading=ego_lane.heading_at(140)).plan_route_to("nxs")
+                                                     heading=ego_lane.heading_at(140))
+        try:
+            ego_vehicle.plan_route_to("nxs")
+        except AttributeError:
+            pass
         MDPVehicle.SPEED_MIN = 0
         MDPVehicle.SPEED_MAX = 15
         MDPVehicle.SPEED_COUNT = 4
