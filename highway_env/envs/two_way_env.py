@@ -59,9 +59,10 @@ class TwoWayEnv(AbstractEnv):
         return float(self.vehicle.crashed) + float(self.vehicle.lane_index[2] == 0)/15
 
     def reset(self) -> np.ndarray:
+        super().reset()
         self._make_road()
         self._make_vehicles()
-        return super().reset()
+        return self.observation_type.observe()
 
     def _make_road(self, length=800):
         """

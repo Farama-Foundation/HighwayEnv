@@ -76,9 +76,10 @@ class LaneKeepingEnv(AbstractEnv):
         return False  # not self.lane.on_lane(self.vehicle.position)
 
     def reset(self) -> np.ndarray:
+        super().reset()
         self._make_road()
         self._make_vehicles()
-        return super().reset()
+        return self.observation_type.observe()
 
     def _make_road(self) -> None:
         net = RoadNetwork()

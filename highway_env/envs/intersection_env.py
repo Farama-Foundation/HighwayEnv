@@ -74,10 +74,11 @@ class IntersectionEnv(AbstractEnv):
             or self.has_arrived
 
     def reset(self) -> np.ndarray:
+        super().reset()
         self._make_road()
         self._make_vehicles(self.config["initial_vehicle_count"])
         self.steps = 0
-        return super().reset()
+        return self.observation_type.observe()
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
         results = super().step(action)

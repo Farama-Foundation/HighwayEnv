@@ -53,9 +53,10 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         return obs, reward, terminal, info
 
     def reset(self) -> np.ndarray:
+        super().reset()
         self._create_road()
         self._create_vehicles()
-        return super().reset()
+        return self.observation_type.observe()
 
     def _create_road(self, spots: int = 15) -> None:
         """

@@ -59,9 +59,10 @@ class MergeEnv(AbstractEnv):
         return self.vehicle.crashed or self.vehicle.position[0] > 370
 
     def reset(self) -> np.ndarray:
+        super().reset()
         self._make_road()
         self._make_vehicles()
-        return super().reset()
+        return self.observation_type.observe()
 
     def _make_road(self) -> None:
         """

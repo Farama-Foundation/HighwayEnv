@@ -81,6 +81,8 @@ class TimeToCollisionObservation(ObservationType):
             return spaces.Space()
 
     def observe(self) -> np.ndarray:
+        if not self.env.road:
+            return np.zeros(self.space().shape)
         grid = compute_ttc_grid(self.env, time_quantization=1/self.env.config["policy_frequency"], horizon=self.horizon)
         padding = np.ones(np.shape(grid))
         padded_grid = np.concatenate([padding, grid, padding], axis=1)
@@ -163,6 +165,9 @@ class KinematicObservation(ObservationType):
         return df
 
     def observe(self) -> np.ndarray:
+        if not self.env.road:
+            return np.zeros(self.space().shape)
+
         # Add ego-vehicle
         df = pd.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features]
         # Add nearby traffic
@@ -244,6 +249,9 @@ class OccupancyGridObservation(ObservationType):
         return df
 
     def observe(self) -> np.ndarray:
+        if not self.env.road:
+            return np.zeros(self.space().shape)
+
         if self.absolute:
             raise NotImplementedError()
         else:
@@ -288,6 +296,13 @@ class KinematicsGoalObservation(KinematicObservation):
             return spaces.Space()
 
     def observe(self) -> Dict[str, np.ndarray]:
+        if not self.env.vehicle:
+            return {
+            "observation": np.zeros((len(self.features),)),
+            "achieved_goal": np.zeros((len(self.features),)),
+            "desired_goal": np.zeros((len(self.features),))
+        }
+
         obs = np.ravel(pd.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features])
         goal = np.ravel(pd.DataFrame.from_records([self.env.goal.to_dict()])[self.features])
         obs = {
