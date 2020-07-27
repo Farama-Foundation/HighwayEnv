@@ -137,6 +137,8 @@ Use these notebooks to train driving policies on `highway-env`.
    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb
 .. |parking_her|  image:: https://colab.research.google.com/assets/colab-badge.svg
    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb
+.. |dqn_social|  image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb
 
 - A Model-based Reinforcement Learning tutorial on Parking |parking_mb|
 
@@ -152,3 +154,10 @@ Use these notebooks to train driving policies on `highway-env`.
 
   Train a goal-conditioned `parking-v0` policy using the :cite:`Andrychowicz2017` implementation
   from `stable-baselines <https://github.com/hill-a/stable-baselines>`_.
+
+- Intersection with DQN and social attention |dqn_social|
+
+  Train a goal-conditioned `parking-v0` policy using the :cite:`Andrychowicz2017` implementation
+  from `stable-baselines <https://github.com/hill-a/stable-baselines>`_.
+
+  Train an `intersection-v0` crossing policy using the social attention architecture :cite:`Leurent2019social` and the DQN implementation from `rl-agents <https://github.com/eleurent/rl-agents>`_.
