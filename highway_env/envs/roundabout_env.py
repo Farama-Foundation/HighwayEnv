@@ -33,7 +33,7 @@ class RoundaboutEnv(AbstractEnv):
         return config
 
     def _reward(self, action: int) -> float:
-        lane_change = action is 0 or action is 2
+        lane_change = action == 0 or action == 2
         reward = self.COLLISION_REWARD * self.vehicle.crashed \
                  + self.HIGH_SPEED_REWARD * MDPVehicle.get_speed_index(self.vehicle) / max(MDPVehicle.SPEED_COUNT - 1, 1) \
                  + self.LANE_CHANGE_REWARD * lane_change
