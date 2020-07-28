@@ -178,6 +178,9 @@ class IntersectionEnv(AbstractEnv):
         ego_vehicle.SPEED_MIN = 0
         ego_vehicle.SPEED_MAX = 9
         ego_vehicle.SPEED_COUNT = 3
+        ego_vehicle.speed_index = ego_vehicle.speed_to_index(ego_lane.speed_limit)
+        ego_vehicle.target_speed = ego_vehicle.index_to_speed(ego_vehicle.speed_index)
+
         # ego_vehicle.TAU_A = 1.0
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle

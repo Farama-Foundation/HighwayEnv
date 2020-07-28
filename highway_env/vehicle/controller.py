@@ -249,8 +249,18 @@ class MDPVehicle(ControlledVehicle):
         else:
             return self.SPEED_MIN
 
+    def speed_to_index(self, speed: float) -> int:
+        """
+        Find the index of the closest speed allowed to a given speed.
+
+        :param speed: an input speed [m/s]
+        :return: the index of the closest speed allowed []
+        """
+        x = (speed - self.SPEED_MIN) / (self.SPEED_MAX - self.SPEED_MIN)
+        return np.int(np.clip(np.round(x * (self.SPEED_COUNT - 1)), 0, self.SPEED_COUNT - 1))
+
     @classmethod
-    def speed_to_index(cls, speed: float) -> int:
+    def speed_to_index_default(cls, speed: float) -> int:
         """
         Find the index of the closest speed allowed to a given speed.
 
@@ -262,7 +272,7 @@ class MDPVehicle(ControlledVehicle):
 
     @classmethod
     def get_speed_index(cls, vehicle: Vehicle) -> int:
-        return getattr(vehicle, "speed_index", cls.speed_to_index(vehicle.speed))
+        return getattr(vehicle, "speed_index", cls.speed_to_index_default(vehicle.speed))
 
     def predict_trajectory(self, actions: List, action_duration: float, trajectory_timestep: float, dt: float) \
             -> List[ControlledVehicle]:
