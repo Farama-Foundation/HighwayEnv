@@ -21,6 +21,11 @@ class RoundaboutEnv(AbstractEnv):
     def default_config(cls) -> dict:
         config = super().default_config()
         config.update({
+            "observation": {
+                "type": "Kinematics",
+                "absolute": True,
+                "features_range": {"x": [-100, 100], "y": [-100, 100], "vx": [-15, 15], "vy": [-15, 15]},
+            },
             "action": {
                 "type": "DiscreteMetaAction",
             },
@@ -133,15 +138,15 @@ class RoundaboutEnv(AbstractEnv):
         # Ego-vehicle
         ego_lane = self.road.network.get_lane(("ser", "ses", 0))
         ego_vehicle = self.action_type.vehicle_class(self.road,
-                                                     ego_lane.position(135, 0),
-                                                     speed=5,
+                                                     ego_lane.position(125, 0),
+                                                     speed=8,
                                                      heading=ego_lane.heading_at(140))
         try:
             ego_vehicle.plan_route_to("nxs")
         except AttributeError:
             pass
         MDPVehicle.SPEED_MIN = 0
-        MDPVehicle.SPEED_MAX = 15
+        MDPVehicle.SPEED_MAX = 16
         MDPVehicle.SPEED_COUNT = 3
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
