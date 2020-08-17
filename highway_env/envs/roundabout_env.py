@@ -57,7 +57,7 @@ class RoundaboutEnv(AbstractEnv):
     def _make_road(self) -> None:
         # Circle lanes: (s)outh/(e)ast/(n)orth/(w)est (e)ntry/e(x)it.
         center = [0, 0]  # [m]
-        radius = 15  # [m]
+        radius = 20  # [m]
         alpha = 24  # [deg]
 
         net = RoadNetwork()
@@ -92,7 +92,7 @@ class RoundaboutEnv(AbstractEnv):
 
         # Access lanes: (r)oad/(s)ine
         access = 170  # [m]
-        dev = 68  # [m]
+        dev = 85  # [m]
         a = 5  # [m]
         delta_st = 0.2*dev  # [m]
 
@@ -133,7 +133,7 @@ class RoundaboutEnv(AbstractEnv):
         # Ego-vehicle
         ego_lane = self.road.network.get_lane(("ser", "ses", 0))
         ego_vehicle = self.action_type.vehicle_class(self.road,
-                                                     ego_lane.position(140, 0),
+                                                     ego_lane.position(135, 0),
                                                      speed=5,
                                                      heading=ego_lane.heading_at(140))
         try:
@@ -142,7 +142,7 @@ class RoundaboutEnv(AbstractEnv):
             pass
         MDPVehicle.SPEED_MIN = 0
         MDPVehicle.SPEED_MAX = 15
-        MDPVehicle.SPEED_COUNT = 4
+        MDPVehicle.SPEED_COUNT = 3
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 
