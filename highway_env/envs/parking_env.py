@@ -40,6 +40,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             },
             "simulation_frequency": 15,
             "policy_frequency": 5,
+            "duration": 100,
             "screen_width": 600,
             "screen_height": 300,
             "centering_position": [0.5, 0.5],
@@ -110,22 +111,22 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the goal is reached."""
         obs = self.observation_type.observe()
-        return self.vehicle.crashed or self._is_success(obs['achieved_goal'], obs['desired_goal'])
+        return self.vehicle.crashed or \
+            self.steps >= self.config["duration"] or \
+            self._is_success(obs['achieved_goal'], obs['desired_goal'])
 
 
 class ParkingEnvActionRepeat(ParkingEnv):
     def __init__(self):
-        super().__init__({"policy_frequency": 1})
+        super().__init__({"policy_frequency": 1, "duration": 20})
 
 
 register(
     id='parking-v0',
     entry_point='highway_env.envs:ParkingEnv',
-    max_episode_steps=100
 )
 
 register(
     id='parking-ActionRepeat-v0',
-    entry_point='highway_env.envs:ParkingEnvActionRepeat',
-    max_episode_steps=20
+    entry_point='highway_env.envs:ParkingEnvActionRepeat'
 )

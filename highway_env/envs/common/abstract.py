@@ -179,6 +179,7 @@ class AbstractEnv(gym.Env):
         if self.road is None or self.vehicle is None:
             raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
 
+        self.steps += 1
         self._simulate(action)
 
         obs = self.observation_type.observe()

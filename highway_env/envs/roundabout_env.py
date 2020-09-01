@@ -51,11 +51,6 @@ class RoundaboutEnv(AbstractEnv):
     def _reset(self) -> None:
         self._make_road()
         self._make_vehicles()
-        self.steps = 0
-
-    def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
-        self.steps += 1
-        return super().step(action)
 
     def _make_road(self) -> None:
         # Circle lanes: (s)outh/(e)ast/(n)orth/(w)est (e)ntry/e(x)it.

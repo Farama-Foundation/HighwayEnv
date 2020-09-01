@@ -48,10 +48,6 @@ class HighwayEnv(AbstractEnv):
         self._create_road()
         self._create_vehicles()
 
-    def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
-        self.steps += 1
-        return super().step(action)
-
     def _create_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
         self.road = Road(network=RoadNetwork.straight_road_network(self.config["lanes_count"]),

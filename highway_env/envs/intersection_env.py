@@ -79,7 +79,6 @@ class IntersectionEnv(AbstractEnv):
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
         results = super().step(action)
-        self.steps += 1
         self._clear_vehicles()
         self._spawn_vehicle(spawn_probability=self.config["spawn_probability"])
         return results
