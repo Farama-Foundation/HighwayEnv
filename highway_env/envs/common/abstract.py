@@ -46,7 +46,7 @@ class AbstractEnv(gym.Env):
 
         # Scene
         self.road = None
-        self.vehicle = None
+        self.controlled_vehicles = []
 
         # Spaces
         self.action_type = None
@@ -68,6 +68,14 @@ class AbstractEnv(gym.Env):
         self.enable_auto_render = False
 
         self.reset()
+
+    @property
+    def vehicle(self) -> Vehicle:
+        return self.controlled_vehicles[0] if self.controlled_vehicles else None
+
+    @vehicle.setter
+    def vehicle(self, vehicle: Vehicle) -> None:
+        self.controlled_vehicles = [vehicle]
 
     @classmethod
     def default_config(cls) -> dict:
