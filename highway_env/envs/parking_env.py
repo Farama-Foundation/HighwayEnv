@@ -44,7 +44,8 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "screen_width": 600,
             "screen_height": 300,
             "centering_position": [0.5, 0.5],
-            "scaling": 7
+            "scaling": 7,
+            "controlled_vehicles": 1
         })
         return config
 
@@ -80,8 +81,11 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _create_vehicles(self) -> None:
         """Create some new random vehicles of a given type, and add them on the road."""
-        self.vehicle = self.action_type.vehicle_class(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)
-        self.road.vehicles.append(self.vehicle)
+        self.controlled_vehicles = []
+        for i in range(self.config["controlled_vehicles"]):
+            vehicle = self.action_type.vehicle_class(self.road, [i*20, 0], 2*np.pi*self.np_random.rand(), 0)
+            self.road.vehicles.append(vehicle)
+            self.controlled_vehicles.append(vehicle)
 
         lane = self.np_random.choice(self.road.network.lanes_list())
         self.goal = Landmark(self.road, lane.position(lane.length/2, 0), heading=lane.heading)
