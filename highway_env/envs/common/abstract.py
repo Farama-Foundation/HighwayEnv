@@ -144,10 +144,19 @@ class AbstractEnv(gym.Env):
 
         :return: the observation of the reset state
         """
-        self.time = 0
+        self.time = self.steps = 0
         self.done = False
+        self._reset()
         self.define_spaces()
         return self.observation_type.observe()
+
+    def _reset(self) -> None:
+        """
+        Reset the scene: roads and vehicles.
+
+        This method must be overloaded by the environments.
+        """
+        raise NotImplementedError()
 
     def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
         """

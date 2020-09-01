@@ -58,11 +58,9 @@ class TwoWayEnv(AbstractEnv):
         """The constraint signal is the time spent driving on the opposite lane, and occurrence of collisions."""
         return float(self.vehicle.crashed) + float(self.vehicle.lane_index[2] == 0)/15
 
-    def reset(self) -> np.ndarray:
-        super().reset()
+    def _reset(self) -> np.ndarray:
         self._make_road()
         self._make_vehicles()
-        return self.observation_type.observe()
 
     def _make_road(self, length=800):
         """

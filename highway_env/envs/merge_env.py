@@ -58,11 +58,9 @@ class MergeEnv(AbstractEnv):
         """The episode is over when a collision occurs or when the access ramp has been passed."""
         return self.vehicle.crashed or self.vehicle.position[0] > 370
 
-    def reset(self) -> np.ndarray:
-        super().reset()
+    def _reset(self) -> None:
         self._make_road()
         self._make_vehicles()
-        return self.observation_type.observe()
 
     def _make_road(self) -> None:
         """

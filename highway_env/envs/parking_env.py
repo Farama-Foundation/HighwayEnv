@@ -52,11 +52,9 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         info.update({"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])})
         return obs, reward, terminal, info
 
-    def reset(self) -> np.ndarray:
-        super().reset()
+    def _reset(self):
         self._create_road()
         self._create_vehicles()
-        return self.observation_type.observe()
 
     def _create_road(self, spots: int = 15) -> None:
         """

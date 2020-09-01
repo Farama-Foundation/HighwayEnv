@@ -44,12 +44,9 @@ class HighwayEnv(AbstractEnv):
         })
         return config
 
-    def reset(self) -> np.ndarray:
-        super().reset()
+    def _reset(self) -> None:
         self._create_road()
         self._create_vehicles()
-        self.steps = 0
-        return self.observation_type.observe()
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
         self.steps += 1

@@ -48,12 +48,10 @@ class RoundaboutEnv(AbstractEnv):
         """The episode is over when a collision occurs or when the access ramp has been passed."""
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
-    def reset(self) -> np.ndarray:
-        super().reset()
+    def _reset(self) -> None:
         self._make_road()
         self._make_vehicles()
         self.steps = 0
-        return self.observation_type.observe()
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
         self.steps += 1
