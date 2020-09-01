@@ -12,7 +12,7 @@ from highway_env.envs.common.finite_mdp import finite_mdp
 from highway_env.envs.common.graphics import EnvViewer
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
-
+from highway_env.vehicle.kinematics import Vehicle
 
 Observation = np.ndarray
 
@@ -53,7 +53,8 @@ class AbstractEnv(gym.Env):
         self.action_space = None
         self.observation_type = None
         self.observation_space = None
-        self.define_spaces()
+        self.set_obs_action_types()
+        self.set_obs_action_spaces()
 
         # Running
         self.time = 0  # Simulation time
@@ -113,10 +114,12 @@ class AbstractEnv(gym.Env):
         if config:
             self.config.update(config)
 
-    def define_spaces(self) -> None:
+    def set_obs_action_types(self) -> None:
         self.observation_type = observation_factory(self, self.config["observation"])
-        self.observation_space = self.observation_type.space()
         self.action_type = action_factory(self, self.config["action"])
+
+    def set_obs_action_spaces(self) -> None:
+        self.observation_space = self.observation_type.space()
         self.action_space = self.action_type.space()
 
     def _reward(self, action: Action) -> float:
@@ -152,10 +155,12 @@ class AbstractEnv(gym.Env):
 
         :return: the observation of the reset state
         """
+        self.set_obs_action_types()
         self.time = self.steps = 0
         self.done = False
         self._reset()
-        self.define_spaces()
+        self.action_type.env_reset_callback()
+        self.set_obs_action_spaces()
         return self.observation_type.observe()
 
     def _reset(self) -> None:
