@@ -51,7 +51,9 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
         obs, reward, terminal, info = super().step(action)
-        info.update({"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])})
+        obs = obs if isinstance(obs, tuple) else (obs,)
+        success = tuple(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
+        info.update({"is_success": success})
         return obs, reward, terminal, info
 
     def _reset(self):
@@ -107,17 +109,21 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _reward(self, action: np.ndarray) -> float:
         obs = self.observation_type.observe()
-        return self.compute_reward(obs['achieved_goal'], obs['desired_goal'], {})
+        obs = obs if isinstance(obs, tuple) else (obs,)
+        return sum(self.compute_reward(agent_obs['achieved_goal'], agent_obs['desired_goal'], {})
+                     for agent_obs in obs)
 
     def _is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> bool:
         return self.compute_reward(achieved_goal, desired_goal, {}) > -self.SUCCESS_GOAL_REWARD
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the goal is reached."""
+        time = self.steps >= self.config["duration"]
+        crashed = any(vehicle.crashed for vehicle in self.controlled_vehicles)
         obs = self.observation_type.observe()
-        return self.vehicle.crashed or \
-            self.steps >= self.config["duration"] or \
-            self._is_success(obs['achieved_goal'], obs['desired_goal'])
+        obs = obs if isinstance(obs, tuple) else (obs,)
+        success = all(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
+        return time or crashed or success
 
 
 class ParkingEnvActionRepeat(ParkingEnv):
