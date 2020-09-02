@@ -19,7 +19,7 @@ class ActionType(object):
 
     def __init__(self, env: 'AbstractEnv', **kwargs) -> None:
         self.env = env
-        self.vehicle = None
+        self.__controlled_vehicle = None
 
     def space(self) -> spaces.Space:
         """The action space."""
@@ -46,8 +46,16 @@ class ActionType(object):
         """
         raise NotImplementedError
 
-    def env_reset_callback(self):
-        self.vehicle = self.env.vehicle  # Set the default vehicle as being controlled
+    @property
+    def controlled_vehicle(self):
+        """The vehicle acted upon.
+
+        If not set, the first controlled vehicle is used by default."""
+        return self.__controlled_vehicle or self.env.vehicle
+
+    @controlled_vehicle.setter
+    def controlled_vehicle(self, vehicle):
+        self.__controlled_vehicle = vehicle
 
 
 class ContinuousAction(ActionType):
@@ -109,17 +117,17 @@ class ContinuousAction(ActionType):
         if self.clip:
             action = np.clip(action, -1, 1)
         if self.longitudinal and self.lateral:
-            self.vehicle.act({
+            self.controlled_vehicle.act({
                 "acceleration": utils.lmap(action[0], [-1, 1], self.acceleration_range),
                 "steering": utils.lmap(action[1], [-1, 1], self.steering_range),
             })
         elif self.longitudinal:
-            self.vehicle.act({
+            self.controlled_vehicle.act({
                 "acceleration": utils.lmap(action[0], [-1, 1], self.acceleration_range),
                 "steering": 0,
             })
         elif self.lateral:
-            self.vehicle.act({
+            self.controlled_vehicle.act({
                 "acceleration": 0,
                 "steering": utils.lmap(action[0], [-1, 1], self.steering_range)
             })
@@ -157,7 +165,6 @@ class DiscreteMetaAction(ActionType):
 
     def __init__(self,
                  env: 'AbstractEnv',
-                 vehicle: Optional[Vehicle] = None,
                  longitudinal: bool = True,
                  lateral: bool = True,
                  **kwargs) -> None:
@@ -165,7 +172,6 @@ class DiscreteMetaAction(ActionType):
         Create a discrete action space of meta-actions.
 
         :param env: the environment
-        :param vehicle: the vehicle to apply the action to. If None, the default controlled vehicle is used.
         :param longitudinal: include longitudinal actions
         :param lateral: include lateral actions
         """
@@ -188,7 +194,7 @@ class DiscreteMetaAction(ActionType):
         return MDPVehicle
 
     def act(self, action: int) -> None:
-        self.vehicle.act(self.actions[action])
+        self.controlled_vehicle.act(self.actions[action])
 
 
 class MultiAgentAction(ActionType):
@@ -198,14 +204,10 @@ class MultiAgentAction(ActionType):
                  **kwargs) -> None:
         super().__init__(env)
         self.action_config = action_config
-        self.agents_action_types = []  # Wait for scene creation
-
-    def env_reset_callback(self):
-        # The scene and vehicles are now created, the corresponding action types can be set.
         self.agents_action_types = []
         for vehicle in self.env.controlled_vehicles:
             action_type = action_factory(self.env, self.action_config)
-            action_type.vehicle = vehicle
+            action_type.controlled_vehicle = vehicle
             self.agents_action_types.append(action_type)
 
     def space(self) -> spaces.Space:
@@ -221,11 +223,11 @@ class MultiAgentAction(ActionType):
             action_type.act(agent_action)
 
 
-def action_factory(env: 'AbstractEnv', config: dict, vehicle: Optional[Vehicle] = None) -> ActionType:
+def action_factory(env: 'AbstractEnv', config: dict) -> ActionType:
     if config["type"] == "ContinuousAction":
-        return ContinuousAction(env, vehicle, **config)
+        return ContinuousAction(env, **config)
     elif config["type"] == "DiscreteMetaAction":
-        return DiscreteMetaAction(env, vehicle, **config)
+        return DiscreteMetaAction(env, **config)
     elif config["type"] == "MultiAgentAction":
         return MultiAgentAction(env, **config)
     else:

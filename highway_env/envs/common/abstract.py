@@ -53,8 +53,7 @@ class AbstractEnv(gym.Env):
         self.action_space = None
         self.observation_type = None
         self.observation_space = None
-        self.set_obs_action_types()
-        self.set_obs_action_spaces()
+        self.define_spaces()
 
         # Running
         self.time = 0  # Simulation time
@@ -72,10 +71,12 @@ class AbstractEnv(gym.Env):
 
     @property
     def vehicle(self) -> Vehicle:
+        """First (default) controlled vehicle."""
         return self.controlled_vehicles[0] if self.controlled_vehicles else None
 
     @vehicle.setter
     def vehicle(self, vehicle: Vehicle) -> None:
+        """Set a unique controlled vehicle."""
         self.controlled_vehicles = [vehicle]
 
     @classmethod
@@ -114,11 +115,12 @@ class AbstractEnv(gym.Env):
         if config:
             self.config.update(config)
 
-    def set_obs_action_types(self) -> None:
+    def define_spaces(self) -> None:
+        """
+        Set the types and spaces of observation and action from config.
+        """
         self.observation_type = observation_factory(self, self.config["observation"])
         self.action_type = action_factory(self, self.config["action"])
-
-    def set_obs_action_spaces(self) -> None:
         self.observation_space = self.observation_type.space()
         self.action_space = self.action_type.space()
 
@@ -155,12 +157,11 @@ class AbstractEnv(gym.Env):
 
         :return: the observation of the reset state
         """
-        self.set_obs_action_types()
+        self.define_spaces()  # First, to set the controlled vehicle class depending on action space
         self.time = self.steps = 0
         self.done = False
         self._reset()
-        self.action_type.env_reset_callback()
-        self.set_obs_action_spaces()
+        self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
         return self.observation_type.observe()
 
     def _reset(self) -> None:
