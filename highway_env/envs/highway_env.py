@@ -79,7 +79,7 @@ class HighwayEnv(AbstractEnv):
         lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
             else self.vehicle.lane_index[2]
         speed = self.vehicle.speed_index if isinstance(self.vehicle, MDPVehicle) \
-            else MDPVehicle.speed_to_index(self.vehicle.speed)
+            else MDPVehicle.speed_to_index_default(self.vehicle.speed)
         reward = \
             + self.config["collision_reward"] * self.vehicle.crashed \
             + self.RIGHT_LANE_REWARD * lane / (len(neighbours) - 1) \
