@@ -8,7 +8,6 @@ from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane, CircularLane, AbstractLane
 from highway_env.road.regulation import RegulatedRoad
 from highway_env.road.road import RoadNetwork
-from highway_env.vehicle.controller import MDPVehicle
 
 
 class IntersectionEnv(AbstractEnv):
@@ -225,7 +224,60 @@ class IntersectionEnv(AbstractEnv):
         return float(self.vehicle.crashed)
 
 
+class MultiAgentIntersectionEnv(IntersectionEnv):
+    @classmethod
+    def default_config(cls) -> dict:
+        config = super().default_config()
+        config.update({
+            "action": {
+                 "type": "MultiAgentAction",
+                 "action_config": {
+                     "type": "DiscreteMetaAction",
+                     "lateral": False,
+                     "longitudinal": True
+                 }
+            },
+            "observation": {
+                "type": "MultiAgentObservation",
+                "observation_config": {
+                    "type": "Kinematics"
+                }
+            },
+            "controlled_vehicles": 2
+        })
+        return config
+
+    def _make_vehicles(self, n_vehicles: int = 10) -> None:
+        super()._make_vehicles()
+
+        # Ego-vehicles
+        for ego_id in range(1, self.config["controlled_vehicles"]):
+            ego_lane = self.road.network.get_lane(("o{}".format(ego_id), "ir{}".format(ego_id), 0))
+            destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
+            ego_vehicle = self.action_type.vehicle_class(
+                             self.road,
+                             ego_lane.position(60, 0),
+                             speed=ego_lane.speed_limit,
+                             heading=ego_lane.heading_at(50)) \
+                .plan_route_to(destination)
+            ego_vehicle.SPEED_MIN = 0
+            ego_vehicle.SPEED_MAX = 9
+            ego_vehicle.SPEED_COUNT = 3
+            ego_vehicle.speed_index = ego_vehicle.speed_to_index(ego_lane.speed_limit)
+            ego_vehicle.target_speed = ego_vehicle.index_to_speed(ego_vehicle.speed_index)
+
+            self.road.vehicles.append(ego_vehicle)
+            self.controlled_vehicles.append(ego_vehicle)
+            for v in self.road.vehicles:  # Prevent early collisions
+                if v is not ego_vehicle and np.linalg.norm(v.position - ego_vehicle.position) < 20:
+                    self.road.vehicles.remove(v)
+
 register(
     id='intersection-v0',
     entry_point='highway_env.envs:IntersectionEnv',
+)
+
+register(
+    id='intersection-multi-agent-v0',
+    entry_point='highway_env.envs:MultiAgentIntersectionEnv',
 )
