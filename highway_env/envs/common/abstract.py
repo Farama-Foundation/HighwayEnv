@@ -334,7 +334,7 @@ class AbstractEnv(gym.Env):
         field, value = args
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
-            if isinstance(v, LinearVehicle):
+            if v is not self.vehicle:
                 setattr(v, field, value)
         return env_copy
 
