@@ -77,7 +77,7 @@ class IntersectionEnv(AbstractEnv):
 
     def _agent_is_terminal(self, vehicle: Vehicle) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
-        return self.vehicle.crashed \
+        return vehicle.crashed \
             or self.steps >= self.config["duration"] * self.config["policy_frequency"] \
             or self.has_arrived(vehicle)
 
