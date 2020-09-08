@@ -56,13 +56,14 @@ class IntersectionEnv(AbstractEnv):
             "centering_position": [0.5, 0.6],
             "scaling": 5.5 * 1.3,
             "collision_reward": IntersectionEnv.COLLISION_REWARD,
-            "normalize_reward": True
+            "normalize_reward": False
         })
         return config
 
     def _reward(self, action: int) -> float:
         # Cooperative multi-agent reward
-        return sum(self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles)
+        return sum(self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles) \
+               / len(self.controlled_vehicles)
 
     def _agent_reward(self, action: int, vehicle: Vehicle) -> float:
         reward = self.config["collision_reward"] * vehicle.crashed \
@@ -73,7 +74,9 @@ class IntersectionEnv(AbstractEnv):
         return reward
 
     def _is_terminal(self) -> bool:
-        return any(self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles)
+        return any(vehicle.crashed for vehicle in self.controlled_vehicles) \
+               or all(self.has_arrived(vehicle) for vehicle in self.controlled_vehicles) \
+               or self.steps >= self.config["duration"] * self.config["policy_frequency"]
 
     def _agent_is_terminal(self, vehicle: Vehicle) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
@@ -179,9 +182,9 @@ class IntersectionEnv(AbstractEnv):
             destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
             ego_vehicle = self.action_type.vehicle_class(
                              self.road,
-                             ego_lane.position(60, 0),
+                             ego_lane.position(60 + 5*self.np_random.randn(1), 0),
                              speed=ego_lane.speed_limit,
-                             heading=ego_lane.heading_at(50)) \
+                             heading=ego_lane.heading_at(60)) \
                 .plan_route_to(destination)
             ego_vehicle.SPEED_MIN = 0
             ego_vehicle.SPEED_MAX = 9
