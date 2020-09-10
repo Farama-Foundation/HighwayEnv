@@ -6,6 +6,7 @@ import numpy as np
 from numpy.core._multiarray_umath import ndarray
 
 from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs.common.observation import MultiAgentObservation
 from highway_env.road.lane import StraightLane, LineType
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.kinematics import Vehicle
@@ -51,8 +52,10 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
         obs, reward, terminal, info = super().step(action)
-        obs = obs if isinstance(obs, tuple) else (obs,)
-        success = tuple(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
+        if isinstance(self.observation_type, MultiAgentObservation):
+            success = tuple(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
+        else:
+            success = self._is_success(obs['achieved_goal'], obs['desired_goal'])
         info.update({"is_success": success})
         return obs, reward, terminal, info
 
