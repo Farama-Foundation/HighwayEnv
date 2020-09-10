@@ -17,6 +17,10 @@ class ActionType(object):
 
     """A type of action specifies its definition space, and how actions are executed in the environment"""
 
+    def __init__(self, env: 'AbstractEnv', **kwargs) -> None:
+        self.env = env
+        self.__controlled_vehicle = None
+
     def space(self) -> spaces.Space:
         """The action space."""
         raise NotImplementedError
@@ -41,6 +45,17 @@ class ActionType(object):
         :param action: the action to execute
         """
         raise NotImplementedError
+
+    @property
+    def controlled_vehicle(self):
+        """The vehicle acted upon.
+
+        If not set, the first controlled vehicle is used by default."""
+        return self.__controlled_vehicle or self.env.vehicle
+
+    @controlled_vehicle.setter
+    def controlled_vehicle(self, vehicle):
+        self.__controlled_vehicle = vehicle
 
 
 class ContinuousAction(ActionType):
@@ -79,7 +94,7 @@ class ContinuousAction(ActionType):
         :param dynamical: whether to simulate dynamics (i.e. friction) rather than kinematics
         :param clip: clip action to the defined range
         """
-        self.env = env
+        super().__init__(env)
         self.acceleration_range = acceleration_range if acceleration_range else self.ACCELERATION_RANGE
         self.steering_range = steering_range if steering_range else self.STEERING_RANGE
         self.lateral = lateral
@@ -102,17 +117,17 @@ class ContinuousAction(ActionType):
         if self.clip:
             action = np.clip(action, -1, 1)
         if self.longitudinal and self.lateral:
-            self.env.vehicle.act({
+            self.controlled_vehicle.act({
                 "acceleration": utils.lmap(action[0], [-1, 1], self.acceleration_range),
                 "steering": utils.lmap(action[1], [-1, 1], self.steering_range),
             })
         elif self.longitudinal:
-            self.env.vehicle.act({
+            self.controlled_vehicle.act({
                 "acceleration": utils.lmap(action[0], [-1, 1], self.acceleration_range),
                 "steering": 0,
             })
         elif self.lateral:
-            self.env.vehicle.act({
+            self.controlled_vehicle.act({
                 "acceleration": 0,
                 "steering": utils.lmap(action[0], [-1, 1], self.steering_range)
             })
@@ -156,11 +171,11 @@ class DiscreteMetaAction(ActionType):
         """
         Create a discrete action space of meta-actions.
 
+        :param env: the environment
         :param longitudinal: include longitudinal actions
         :param lateral: include lateral actions
-        :param env: the environment
         """
-        self.env = env
+        super().__init__(env)
         self.longitudinal = longitudinal
         self.lateral = lateral
         self.actions = self.ACTIONS_ALL if longitudinal and lateral \
@@ -179,7 +194,33 @@ class DiscreteMetaAction(ActionType):
         return MDPVehicle
 
     def act(self, action: int) -> None:
-        self.env.vehicle.act(self.actions[action])
+        self.controlled_vehicle.act(self.actions[action])
+
+
+class MultiAgentAction(ActionType):
+    def __init__(self,
+                 env: 'AbstractEnv',
+                 action_config: dict,
+                 **kwargs) -> None:
+        super().__init__(env)
+        self.action_config = action_config
+        self.agents_action_types = []
+        for vehicle in self.env.controlled_vehicles:
+            action_type = action_factory(self.env, self.action_config)
+            action_type.controlled_vehicle = vehicle
+            self.agents_action_types.append(action_type)
+
+    def space(self) -> spaces.Space:
+        return spaces.Tuple([action_type.space() for action_type in self.agents_action_types])
+
+    @property
+    def vehicle_class(self) -> Callable:
+        return action_factory(self.env, self.action_config).vehicle_class
+
+    def act(self, action: Action) -> None:
+        assert isinstance(action, tuple)
+        for agent_action, action_type in zip(action, self.agents_action_types):
+            action_type.act(agent_action)
 
 
 def action_factory(env: 'AbstractEnv', config: dict) -> ActionType:
@@ -187,5 +228,7 @@ def action_factory(env: 'AbstractEnv', config: dict) -> ActionType:
         return ContinuousAction(env, **config)
     elif config["type"] == "DiscreteMetaAction":
         return DiscreteMetaAction(env, **config)
+    elif config["type"] == "MultiAgentAction":
+        return MultiAgentAction(env, **config)
     else:
         raise ValueError("Unknown action type")

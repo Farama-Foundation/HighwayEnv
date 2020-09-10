@@ -157,7 +157,4 @@ Use these notebooks to train driving policies on `highway-env`.
 
 - Intersection with DQN and social attention |dqn_social|
 
-  Train a goal-conditioned `parking-v0` policy using the :cite:`Andrychowicz2017` implementation
-  from `stable-baselines <https://github.com/hill-a/stable-baselines>`_.
-
   Train an `intersection-v0` crossing policy using the social attention architecture :cite:`Leurent2019social` and the DQN implementation from `rl-agents <https://github.com/eleurent/rl-agents>`_.

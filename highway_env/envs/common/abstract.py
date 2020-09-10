@@ -2,6 +2,7 @@ import copy
 import os
 from typing import List, Tuple, Optional, Callable
 import gym
+from gym import Wrapper
 from gym.utils import seeding
 import numpy as np
 
@@ -12,7 +13,7 @@ from highway_env.envs.common.finite_mdp import finite_mdp
 from highway_env.envs.common.graphics import EnvViewer
 from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
-
+from highway_env.vehicle.kinematics import Vehicle
 
 Observation = np.ndarray
 
@@ -46,7 +47,7 @@ class AbstractEnv(gym.Env):
 
         # Scene
         self.road = None
-        self.vehicle = None
+        self.controlled_vehicles = []
 
         # Spaces
         self.action_type = None
@@ -68,6 +69,16 @@ class AbstractEnv(gym.Env):
         self.enable_auto_render = False
 
         self.reset()
+
+    @property
+    def vehicle(self) -> Vehicle:
+        """First (default) controlled vehicle."""
+        return self.controlled_vehicles[0] if self.controlled_vehicles else None
+
+    @vehicle.setter
+    def vehicle(self, vehicle: Vehicle) -> None:
+        """Set a unique controlled vehicle."""
+        self.controlled_vehicles = [vehicle]
 
     @classmethod
     def default_config(cls) -> dict:
@@ -106,9 +117,12 @@ class AbstractEnv(gym.Env):
             self.config.update(config)
 
     def define_spaces(self) -> None:
+        """
+        Set the types and spaces of observation and action from config.
+        """
         self.observation_type = observation_factory(self, self.config["observation"])
-        self.observation_space = self.observation_type.space()
         self.action_type = action_factory(self, self.config["action"])
+        self.observation_space = self.observation_type.space()
         self.action_space = self.action_type.space()
 
     def _reward(self, action: Action) -> float:
@@ -144,10 +158,20 @@ class AbstractEnv(gym.Env):
 
         :return: the observation of the reset state
         """
-        self.time = 0
+        self.define_spaces()  # First, to set the controlled vehicle class depending on action space
+        self.time = self.steps = 0
         self.done = False
-        self.define_spaces()
+        self._reset()
+        self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
         return self.observation_type.observe()
+
+    def _reset(self) -> None:
+        """
+        Reset the scene: roads and vehicles.
+
+        This method must be overloaded by the environments.
+        """
+        raise NotImplementedError()
 
     def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
         """
@@ -162,6 +186,7 @@ class AbstractEnv(gym.Env):
         if self.road is None or self.vehicle is None:
             raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
 
+        self.steps += 1
         self._simulate(action)
 
         obs = self.observation_type.observe()
@@ -367,3 +392,11 @@ class AbstractEnv(gym.Env):
             else:
                 setattr(result, k, None)
         return result
+
+
+class MultiAgentWrapper(Wrapper):
+    def step(self, action):
+        obs, reward, done, info = super().step(action)
+        reward = info["agents_rewards"]
+        done = info["agents_dones"]
+        return obs, reward, done, info

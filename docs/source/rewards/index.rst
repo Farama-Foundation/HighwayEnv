@@ -32,7 +32,7 @@ where :math:`v,\,v_\min,\,v_\max` are the current, minimum and maximum speed of 
     Normalizing rewards has also been observed to be practically beneficial in deep reinforcement learning :cite:`Mnih2015`.
     Note that we forbid negative rewards, since they may encourage the agent to prefer terminating an episode early (by causing a collision) rather than risking suffering a negative return if no satisfying trajectory can be found.
 
-In some environments, the weight of the collision penalty can be configures through the `collision_penalty` parameter.
+In some environments, the weight of the collision penalty can be configured through the `collision_penalty` parameter.
 
 Goal environments
 -----------------

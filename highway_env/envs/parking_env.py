@@ -6,6 +6,7 @@ import numpy as np
 from numpy.core._multiarray_umath import ndarray
 
 from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs.common.observation import MultiAgentObservation
 from highway_env.road.lane import StraightLane, LineType
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.kinematics import Vehicle
@@ -40,23 +41,27 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             },
             "simulation_frequency": 15,
             "policy_frequency": 5,
+            "duration": 100,
             "screen_width": 600,
             "screen_height": 300,
             "centering_position": [0.5, 0.5],
-            "scaling": 7
+            "scaling": 7,
+            "controlled_vehicles": 1
         })
         return config
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
         obs, reward, terminal, info = super().step(action)
-        info.update({"is_success": self._is_success(obs['achieved_goal'], obs['desired_goal'])})
+        if isinstance(self.observation_type, MultiAgentObservation):
+            success = tuple(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
+        else:
+            success = self._is_success(obs['achieved_goal'], obs['desired_goal'])
+        info.update({"is_success": success})
         return obs, reward, terminal, info
 
-    def reset(self) -> np.ndarray:
-        super().reset()
+    def _reset(self):
         self._create_road()
         self._create_vehicles()
-        return self.observation_type.observe()
 
     def _create_road(self, spots: int = 15) -> None:
         """
@@ -81,8 +86,11 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _create_vehicles(self) -> None:
         """Create some new random vehicles of a given type, and add them on the road."""
-        self.vehicle = self.action_type.vehicle_class(self.road, [0, 0], 2*np.pi*self.np_random.rand(), 0)
-        self.road.vehicles.append(self.vehicle)
+        self.controlled_vehicles = []
+        for i in range(self.config["controlled_vehicles"]):
+            vehicle = self.action_type.vehicle_class(self.road, [i*20, 0], 2*np.pi*self.np_random.rand(), 0)
+            self.road.vehicles.append(vehicle)
+            self.controlled_vehicles.append(vehicle)
 
         lane = self.np_random.choice(self.road.network.lanes_list())
         self.goal = Landmark(self.road, lane.position(lane.length/2, 0), heading=lane.heading)
@@ -104,30 +112,34 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _reward(self, action: np.ndarray) -> float:
         obs = self.observation_type.observe()
-        return self.compute_reward(obs['achieved_goal'], obs['desired_goal'], {})
+        obs = obs if isinstance(obs, tuple) else (obs,)
+        return sum(self.compute_reward(agent_obs['achieved_goal'], agent_obs['desired_goal'], {})
+                     for agent_obs in obs)
 
     def _is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> bool:
         return self.compute_reward(achieved_goal, desired_goal, {}) > -self.SUCCESS_GOAL_REWARD
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the goal is reached."""
+        time = self.steps >= self.config["duration"]
+        crashed = any(vehicle.crashed for vehicle in self.controlled_vehicles)
         obs = self.observation_type.observe()
-        return self.vehicle.crashed or self._is_success(obs['achieved_goal'], obs['desired_goal'])
+        obs = obs if isinstance(obs, tuple) else (obs,)
+        success = all(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
+        return time or crashed or success
 
 
 class ParkingEnvActionRepeat(ParkingEnv):
     def __init__(self):
-        super().__init__({"policy_frequency": 1})
+        super().__init__({"policy_frequency": 1, "duration": 20})
 
 
 register(
     id='parking-v0',
     entry_point='highway_env.envs:ParkingEnv',
-    max_episode_steps=100
 )
 
 register(
     id='parking-ActionRepeat-v0',
-    entry_point='highway_env.envs:ParkingEnvActionRepeat',
-    max_episode_steps=20
+    entry_point='highway_env.envs:ParkingEnvActionRepeat'
 )

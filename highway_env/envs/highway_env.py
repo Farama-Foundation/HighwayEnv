@@ -37,6 +37,7 @@ class HighwayEnv(AbstractEnv):
             },
             "lanes_count": 4,
             "vehicles_count": 50,
+            "controlled_vehicles": 1,
             "duration": 40,  # [s]
             "initial_spacing": 2,
             "collision_reward": -1,  # The reward received when colliding with a vehicle.
@@ -44,16 +45,9 @@ class HighwayEnv(AbstractEnv):
         })
         return config
 
-    def reset(self) -> np.ndarray:
-        super().reset()
+    def _reset(self) -> None:
         self._create_road()
         self._create_vehicles()
-        self.steps = 0
-        return self.observation_type.observe()
-
-    def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
-        self.steps += 1
-        return super().step(action)
 
     def _create_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
@@ -62,8 +56,11 @@ class HighwayEnv(AbstractEnv):
 
     def _create_vehicles(self) -> None:
         """Create some new random vehicles of a given type, and add them on the road."""
-        self.vehicle = self.action_type.vehicle_class.create_random(self.road, 25, spacing=self.config["initial_spacing"])
-        self.road.vehicles.append(self.vehicle)
+        self.controlled_vehicles = []
+        for _ in range(self.config["controlled_vehicles"]):
+            vehicle = self.action_type.vehicle_class.create_random(self.road, 25, spacing=self.config["initial_spacing"])
+            self.controlled_vehicles.append(vehicle)
+            self.road.vehicles.append(vehicle)
 
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for _ in range(self.config["vehicles_count"]):

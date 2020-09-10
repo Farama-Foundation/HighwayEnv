@@ -1,4 +1,4 @@
-from typing import List, Dict, TYPE_CHECKING, Optional
+from typing import List, Dict, TYPE_CHECKING, Optional, Union
 from gym import spaces
 import numpy as np
 import pandas as pd
@@ -13,6 +13,10 @@ if TYPE_CHECKING:
 
 
 class ObservationType(object):
+    def __init__(self, env: 'AbstractEnv', **kwargs) -> None:
+        self.env = env
+        self.__observer_vehicle = None
+
     def space(self) -> spaces.Space:
         """Get the observation space."""
         raise NotImplementedError()
@@ -20,6 +24,19 @@ class ObservationType(object):
     def observe(self):
         """Get an observation of the environment state."""
         raise NotImplementedError()
+
+    @property
+    def observer_vehicle(self):
+        """
+        The vehicle observing the scene.
+
+        If not set, the first controlled vehicle is used by default.
+        """
+        return self.__observer_vehicle or self.env.vehicle
+
+    @observer_vehicle.setter
+    def observer_vehicle(self, vehicle):
+        self.__observer_vehicle = vehicle
 
 
 class GrayscaleObservation(ObservationType):
@@ -43,7 +60,7 @@ class GrayscaleObservation(ObservationType):
     """
 
     def __init__(self, env: 'AbstractEnv', config: dict) -> None:
-        self.env = env
+        super().__init__(env)
         self.config = config
         self.observation_shape = config["observation_shape"]
         self.shape = self.observation_shape + (config["stack_size"], )
@@ -65,13 +82,14 @@ class GrayscaleObservation(ObservationType):
         return self.state
 
     def _record_to_grayscale(self) -> np.ndarray:
+        #TODO: center rendering on the observer vehicle
         raw_rgb = self.env.render('rgb_array')
         return np.dot(raw_rgb[..., :3], self.config['weights'])
 
 
 class TimeToCollisionObservation(ObservationType):
     def __init__(self, env: 'AbstractEnv', horizon: int = 10, **kwargs: dict) -> None:
-        self.env = env
+        super().__init__(env)
         self.horizon = horizon
 
     def space(self) -> spaces.Space:
@@ -83,19 +101,20 @@ class TimeToCollisionObservation(ObservationType):
     def observe(self) -> np.ndarray:
         if not self.env.road:
             return np.zeros((3, 3, int(self.horizon * self.env.config["policy_frequency"])))
-        grid = compute_ttc_grid(self.env, time_quantization=1/self.env.config["policy_frequency"], horizon=self.horizon)
+        grid = compute_ttc_grid(self.env, vehicle=self.observer_vehicle,
+                                time_quantization=1/self.env.config["policy_frequency"], horizon=self.horizon)
         padding = np.ones(np.shape(grid))
         padded_grid = np.concatenate([padding, grid, padding], axis=1)
         obs_lanes = 3
-        l0 = grid.shape[1] + self.env.vehicle.lane_index[2] - obs_lanes // 2
-        lf = grid.shape[1] + self.env.vehicle.lane_index[2] + obs_lanes // 2
+        l0 = grid.shape[1] + self.observer_vehicle.lane_index[2] - obs_lanes // 2
+        lf = grid.shape[1] + self.observer_vehicle.lane_index[2] + obs_lanes // 2
         clamped_grid = padded_grid[:, l0:lf+1, :]
         repeats = np.ones(clamped_grid.shape[0])
         repeats[np.array([0, -1])] += clamped_grid.shape[0]
         padded_grid = np.repeat(clamped_grid, repeats.astype(int), axis=0)
         obs_speeds = 3
-        v0 = grid.shape[0] + self.env.vehicle.speed_index - obs_speeds // 2
-        vf = grid.shape[0] + self.env.vehicle.speed_index + obs_speeds // 2
+        v0 = grid.shape[0] + self.observer_vehicle.speed_index - obs_speeds // 2
+        vf = grid.shape[0] + self.observer_vehicle.speed_index + obs_speeds // 2
         clamped_grid = padded_grid[v0:vf + 1, :, :]
         return clamped_grid
 
@@ -128,7 +147,7 @@ class KinematicObservation(ObservationType):
         :param see_behind: Should the observation contains the vehicles behind
         :param observe_intentions: Observe the destinations of other vehicles
         """
-        self.env = env
+        super().__init__(env)
         self.features = features or self.FEATURES
         self.vehicles_count = vehicles_count
         self.features_range = features_range
@@ -150,7 +169,7 @@ class KinematicObservation(ObservationType):
         :param Dataframe df: observation data
         """
         if not self.features_range:
-            side_lanes = self.env.road.network.all_side_lanes(self.env.vehicle.lane_index)
+            side_lanes = self.env.road.network.all_side_lanes(self.observer_vehicle.lane_index)
             self.features_range = {
                 "x": [-5.0 * MDPVehicle.SPEED_MAX, 5.0 * MDPVehicle.SPEED_MAX],
                 "y": [-AbstractLane.DEFAULT_WIDTH * len(side_lanes), AbstractLane.DEFAULT_WIDTH * len(side_lanes)],
@@ -169,15 +188,15 @@ class KinematicObservation(ObservationType):
             return np.zeros(self.space().shape)
 
         # Add ego-vehicle
-        df = pd.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features]
+        df = pd.DataFrame.from_records([self.observer_vehicle.to_dict()])[self.features]
         # Add nearby traffic
         # sort = self.order == "sorted"
-        close_vehicles = self.env.road.close_vehicles_to(self.env.vehicle,
+        close_vehicles = self.env.road.close_vehicles_to(self.observer_vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
                                                          count=self.vehicles_count - 1,
                                                          see_behind=self.see_behind)
         if close_vehicles:
-            origin = self.env.vehicle if not self.absolute else None
+            origin = self.observer_vehicle if not self.absolute else None
             df = df.append(pd.DataFrame.from_records(
                 [v.to_dict(origin, observe_intentions=self.observe_intentions)
                  for v in close_vehicles[-self.vehicles_count + 1:]])[self.features],
@@ -258,7 +277,7 @@ class OccupancyGridObservation(ObservationType):
             # Add nearby traffic
             self.grid.fill(0)
             df = pd.DataFrame.from_records(
-                [v.to_dict(self.env.vehicle) for v in self.env.road.vehicles])
+                [v.to_dict(self.observer_vehicle) for v in self.env.road.vehicles])
             # Normalize
             df = self.normalize(df)
             # Fill-in features
@@ -296,14 +315,14 @@ class KinematicsGoalObservation(KinematicObservation):
             return spaces.Space()
 
     def observe(self) -> Dict[str, np.ndarray]:
-        if not self.env.vehicle:
+        if not self.observer_vehicle:
             return {
             "observation": np.zeros((len(self.features),)),
             "achieved_goal": np.zeros((len(self.features),)),
             "desired_goal": np.zeros((len(self.features),))
         }
 
-        obs = np.ravel(pd.DataFrame.from_records([self.env.vehicle.to_dict()])[self.features])
+        obs = np.ravel(pd.DataFrame.from_records([self.observer_vehicle.to_dict()])[self.features])
         goal = np.ravel(pd.DataFrame.from_records([self.env.goal.to_dict()])[self.features])
         obs = {
             "observation": obs / self.scales,
@@ -334,6 +353,26 @@ class AttributesObservation(ObservationType):
         }
 
 
+class MultiAgentObservation(ObservationType):
+    def __init__(self,
+                 env: 'AbstractEnv',
+                 observation_config: dict,
+                 **kwargs) -> None:
+        super().__init__(env)
+        self.observation_config = observation_config
+        self.agents_observation_types = []
+        for vehicle in self.env.controlled_vehicles:
+            obs_type = observation_factory(self.env, self.observation_config)
+            obs_type.observer_vehicle = vehicle
+            self.agents_observation_types.append(obs_type)
+
+    def space(self) -> spaces.Space:
+        return spaces.Tuple([obs_type.space() for obs_type in self.agents_observation_types])
+
+    def observe(self) -> tuple:
+        return tuple(obs_type.observe() for obs_type in self.agents_observation_types)
+
+
 def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
     if config["type"] == "TimeToCollision":
         return TimeToCollisionObservation(env, **config)
@@ -347,5 +386,7 @@ def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
         return GrayscaleObservation(env, config)
     elif config["type"] == "AttributesObservation":
         return AttributesObservation(env, **config)
+    elif config["type"] == "MultiAgentObservation":
+        return MultiAgentObservation(env, **config)
     else:
         raise ValueError("Unknown observation type")
