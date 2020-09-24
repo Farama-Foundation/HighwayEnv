@@ -238,7 +238,7 @@ class OccupancyGridObservation(ObservationType):
         :param features: Names of features used in the observation
         :param vehicles_count: Number of observed vehicles
         """
-        self.env = env
+        super().__init__(env)
         self.features = features if features is not None else self.FEATURES
         self.grid_size = np.array(grid_size) if grid_size is not None else np.array(self.GRID_SIZE)
         self.grid_step = np.array(grid_step) if grid_step is not None else np.array(self.GRID_STEP)
