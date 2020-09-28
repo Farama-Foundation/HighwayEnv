@@ -10,12 +10,9 @@ from highway_env.vehicle.kinematics import Vehicle
 
 class BicycleVehicle(Vehicle):
     """
-    This model is based on the following assumptions:
-
-    - the vehicle is moving with a constant longitudinal speed
-    - the steering input to front tires and the corresponding slip angles are small
-
-    See https://pdfs.semanticscholar.org/bb9c/d2892e9327ec1ee647c30c320f2089b290c1.pdf, Chapter 3.
+    A dynamical bicycle model, with tire friction and slipping.
+    
+    See Chapter 2 of Lateral Vehicle Dynamics. Vehicle Dynamics and Control. Rajamani, R. (2011)
     """
     MASS: float = 1  # [kg]
     LENGTH_A: float = Vehicle.LENGTH / 2  # [m]
@@ -73,6 +70,15 @@ class BicycleVehicle(Vehicle):
 
     @property
     def derivative_linear(self) -> np.ndarray:
+        """
+        Linearized lateral dynamics.
+            
+        This model is based on the following assumptions:
+        - the vehicle is moving with a constant longitudinal speed
+        - the steering input to front tires and the corresponding slip angles are small
+        
+        See https://pdfs.semanticscholar.org/bb9c/d2892e9327ec1ee647c30c320f2089b290c1.pdf, Chapter 3.
+        """
         x = np.array([[self.lateral_speed], [self.yaw_rate]])
         u = np.array([[self.action['steering']]])
         self.A_lat, self.B_lat = self.lateral_lpv_dynamics()
