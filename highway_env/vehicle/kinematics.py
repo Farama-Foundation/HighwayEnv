@@ -240,6 +240,7 @@ class Vehicle(object):
             'y': self.position[1],
             'vx': self.velocity[0],
             'vy': self.velocity[1],
+            'heading': self.heading,
             'cos_h': self.direction[0],
             'sin_h': self.direction[1],
             'cos_d': self.destination_direction[0],
