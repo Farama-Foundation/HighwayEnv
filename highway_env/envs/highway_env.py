@@ -39,7 +39,8 @@ class HighwayEnv(AbstractEnv):
             "vehicles_count": 50,
             "controlled_vehicles": 1,
             "duration": 40,  # [s]
-            "initial_spacing": 2,
+            "ego_spacing": 2,
+            "vehicles_density": 1,
             "collision_reward": -1,  # The reward received when colliding with a vehicle.
             "offroad_terminal": False
         })
@@ -58,13 +59,13 @@ class HighwayEnv(AbstractEnv):
         """Create some new random vehicles of a given type, and add them on the road."""
         self.controlled_vehicles = []
         for _ in range(self.config["controlled_vehicles"]):
-            vehicle = self.action_type.vehicle_class.create_random(self.road, 25, spacing=self.config["initial_spacing"])
+            vehicle = self.action_type.vehicle_class.create_random(self.road, 25, spacing=self.config["ego_spacing"])
             self.controlled_vehicles.append(vehicle)
             self.road.vehicles.append(vehicle)
 
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for _ in range(self.config["vehicles_count"]):
-            self.road.vehicles.append(vehicles_type.create_random(self.road))
+            self.road.vehicles.append(vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"]))
 
     def _reward(self, action: Action) -> float:
         """
