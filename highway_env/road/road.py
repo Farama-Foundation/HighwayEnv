@@ -3,7 +3,6 @@ import pandas as pd
 import logging
 from typing import List, Tuple, Dict, TYPE_CHECKING, Optional
 
-from highway_env.logger import Loggable
 from highway_env.road.lane import LineType, StraightLane, AbstractLane
 from highway_env.road.objects import Landmark
 
@@ -230,7 +229,7 @@ class RoadNetwork(object):
         return self.get_lane(route[0]).position(longitudinal, lateral), self.get_lane(route[0]).heading_at(longitudinal)
 
 
-class Road(Loggable):
+class Road(object):
 
     """A road is a set of lanes, and a set of vehicles driving on these lanes."""
 
@@ -317,19 +316,6 @@ class Road(Loggable):
                     s_rear = s_v
                     v_rear = v
         return v_front, v_rear
-
-    def dump(self) -> None:
-        """Dump the data of all entities on the road."""
-        for v in self.vehicles:
-            v.dump()
-
-    def get_log(self) -> pd.DataFrame:
-        """
-        Concatenate the logs of all entities on the road.
-
-        :return: the concatenated log.
-        """
-        return pd.concat([v.get_log() for v in self.vehicles])
 
     def __repr__(self):
         return self.vehicles.__repr__()

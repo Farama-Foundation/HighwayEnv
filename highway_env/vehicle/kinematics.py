@@ -4,7 +4,6 @@ import pandas as pd
 from collections import deque
 
 from highway_env import utils
-from highway_env.logger import Loggable
 from highway_env.road.lane import AbstractLane
 from highway_env.road.road import Road, LaneIndex
 from highway_env.road.objects import Obstacle, Landmark
@@ -14,7 +13,7 @@ if TYPE_CHECKING:
     from highway_env.road.objects import RoadObject
 
 
-class Vehicle(Loggable):
+class Vehicle(object):
 
     """
     A moving vehicle on a road, and its kinematics.
@@ -253,53 +252,6 @@ class Vehicle(Loggable):
             for key in ['x', 'y', 'vx', 'vy']:
                 d[key] -= origin_dict[key]
         return d
-
-    def dump(self) -> None:
-        """
-        Update the internal log of the vehicle
-
-        The log contains:
-        - its kinematics;
-        - some metrics relative to its neighbour vehicles.
-        """
-        data = {
-            'x': self.position[0],
-            'y': self.position[1],
-            'psi': self.heading,
-            'vx': self.speed * np.cos(self.heading),
-            'vy': self.speed * np.sin(self.heading),
-            'v': self.speed,
-            'acceleration': self.action['acceleration'],
-            'steering': self.action['steering']}
-
-        if self.road:
-            for lane_index in self.road.network.side_lanes(self.lane_index):
-                lane_coords = self.road.network.get_lane(lane_index).local_coordinates(self.position)
-                data.update({
-                    'dy_lane_{}'.format(lane_index): lane_coords[1],
-                    'psi_lane_{}'.format(lane_index): self.road.network.get_lane(lane_index).heading_at(lane_coords[0])
-                })
-            front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self)
-            if front_vehicle:
-                data.update({
-                    'front_v': front_vehicle.speed,
-                    'front_distance': self.lane_distance_to(front_vehicle)
-                })
-            if rear_vehicle:
-                data.update({
-                    'rear_v': rear_vehicle.speed,
-                    'rear_distance': rear_vehicle.lane_distance_to(self)
-                })
-
-        self.log.append(data)
-
-    def get_log(self) -> pd.DataFrame:
-        """
-        Cast the internal log as a DataFrame.
-
-        :return: the DataFrame of the Vehicle's log.
-        """
-        return pd.DataFrame(self.log)
 
     def __str__(self):
         return "{} #{}: {}".format(self.__class__.__name__, id(self) % 1000, self.position)
