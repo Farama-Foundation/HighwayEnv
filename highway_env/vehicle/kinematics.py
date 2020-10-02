@@ -1,4 +1,4 @@
-from typing import Union, TYPE_CHECKING
+from typing import Union, TYPE_CHECKING, Optional
 import numpy as np
 import pandas as pd
 from collections import deque
@@ -67,7 +67,8 @@ class Vehicle(object):
         return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), speed)
 
     @classmethod
-    def create_random(cls, road: Road, speed: float = None, spacing: float = 1) -> "Vehicle":
+    def create_random(cls, road: Road, speed: float = None, lane_id: Optional[int] = None, spacing: float = 1) \
+            -> "Vehicle":
         """
         Create a random vehicle on the road.
 
@@ -76,6 +77,7 @@ class Vehicle(object):
 
         :param road: the road where the vehicle is driving
         :param speed: initial speed in [m/s]. If None, will be chosen randomly
+        :param lane_id: id of the lane to spawn in
         :param spacing: ratio of spacing to the front vehicle, 1 being the default
         :return: A vehicle with random position and/or speed
         """
@@ -84,7 +86,7 @@ class Vehicle(object):
         default_spacing = 1.5*speed
         _from = road.np_random.choice(list(road.network.graph.keys()))
         _to = road.np_random.choice(list(road.network.graph[_from].keys()))
-        _id = road.np_random.choice(len(road.network.graph[_from][_to]))
+        _id = lane_id if lane_id is not None else road.np_random.choice(len(road.network.graph[_from][_to]))
         lane = road.network.get_lane((_from, _to, _id))
         offset = spacing * default_spacing * np.exp(-5 / 30 * len(road.network.graph[_from][_to]))
         x0 = np.max([lane.local_coordinates(v.position)[0] for v in road.vehicles]) \

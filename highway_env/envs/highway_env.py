@@ -38,6 +38,7 @@ class HighwayEnv(AbstractEnv):
             "lanes_count": 4,
             "vehicles_count": 50,
             "controlled_vehicles": 1,
+            "initial_lane_id": None,
             "duration": 40,  # [s]
             "ego_spacing": 2,
             "vehicles_density": 1,
@@ -60,7 +61,10 @@ class HighwayEnv(AbstractEnv):
         """Create some new random vehicles of a given type, and add them on the road."""
         self.controlled_vehicles = []
         for _ in range(self.config["controlled_vehicles"]):
-            vehicle = self.action_type.vehicle_class.create_random(self.road, 25, spacing=self.config["ego_spacing"])
+            vehicle = self.action_type.vehicle_class.create_random(self.road,
+                                                                   speed=25,
+                                                                   lane_id=self.config["initial_lane_id"],
+                                                                   spacing=self.config["ego_spacing"])
             self.controlled_vehicles.append(vehicle)
             self.road.vehicles.append(vehicle)
 
