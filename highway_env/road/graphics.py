@@ -56,11 +56,22 @@ class WorldSurface(pygame.Surface):
 
     def vec2pix(self, vec: PositionType) -> Tuple[int, int]:
         """
-             Convert a world position [m] into a position in the surface [px].
+        Convert a world position [m] into a position in the surface [px].
+
         :param vec: a world position [m]
         :return: the coordinates of the corresponding pixel [px]
         """
         return self.pos2pix(vec[0], vec[1])
+
+    def is_visible(self, vec: PositionType, margin: int = 50) -> bool:
+        """
+        Is a position visible in the surface?
+        :param vec: a position
+        :param margin: margins around the frame to test for visibility
+        :return: whether the position is visible
+        """
+        x, y = self.vec2pix(vec)
+        return -margin < x < self.get_width() + margin and -margin < y < self.get_height() + margin
 
     def move_display_window_to(self, position: PositionType) -> None:
         """

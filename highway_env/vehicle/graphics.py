@@ -38,6 +38,9 @@ class VehicleGraphics(object):
         :param offscreen: whether the rendering should be done offscreen or not
         :param label: whether a text label should be rendered
         """
+        if not surface.is_visible(vehicle.position):
+            return
+
         v = vehicle
         tire_length, tire_width = 1, 0.3
 
