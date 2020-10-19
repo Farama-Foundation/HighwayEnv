@@ -125,7 +125,8 @@ class EnvViewer(object):
 
         if not self.offscreen:
             self.screen.blit(self.sim_surface, (0, 0))
-            self.clock.tick(self.env.config["simulation_frequency"])
+            if self.env.config["real_time_rendering"]:
+                self.clock.tick(self.env.config["simulation_frequency"])
             pygame.display.flip()
 
         if self.SAVE_IMAGES and self.directory:
