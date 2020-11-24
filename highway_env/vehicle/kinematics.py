@@ -43,7 +43,7 @@ class Vehicle(object):
         self.position = np.array(position).astype('float')
         self.heading = heading
         self.speed = speed
-        self.lane_index = self.road.network.get_closest_lane_index(self.position) if self.road else np.nan
+        self.lane_index = self.road.network.get_closest_lane_index(self.position, self.heading) if self.road else np.nan
         self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
@@ -150,7 +150,7 @@ class Vehicle(object):
 
     def on_state_update(self) -> None:
         if self.road:
-            self.lane_index = self.road.network.get_closest_lane_index(self.position)
+            self.lane_index = self.road.network.get_closest_lane_index(self.position, self.heading)
             self.lane = self.road.network.get_lane(self.lane_index)
             if self.road.record_history:
                 self.history.appendleft(self.create_from(self))

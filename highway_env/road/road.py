@@ -48,18 +48,19 @@ class RoadNetwork(object):
             _id = 0
         return self.graph[_from][_to][_id]
 
-    def get_closest_lane_index(self, position: np.ndarray) -> LaneIndex:
+    def get_closest_lane_index(self, position: np.ndarray, heading: Optional[float] = None) -> LaneIndex:
         """
         Get the index of the lane closest to a world position.
 
         :param position: a world position [m].
+        :param heading: a heading angle [rad].
         :return: the index of the closest lane.
         """
         indexes, distances = [], []
         for _from, to_dict in self.graph.items():
             for _to, lanes in to_dict.items():
                 for _id, l in enumerate(lanes):
-                    distances.append(l.distance(position))
+                    distances.append(l.distance_with_heading(position, heading))
                     indexes.append((_from, _to, _id))
         return indexes[int(np.argmin(distances))]
 

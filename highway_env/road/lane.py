@@ -1,9 +1,10 @@
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 import numpy as np
 
 from highway_env import utils
 from highway_env.types import Vector
+from highway_env.utils import wrap_to_pi
 
 
 class AbstractLane(object):
@@ -93,10 +94,18 @@ class AbstractLane(object):
             longitudinal, _ = self.local_coordinates(position)
         return longitudinal > self.length - self.VEHICLE_LENGTH / 2
 
-    def distance(self, position):
+    def distance(self, position: np.ndarray):
         """Compute the L1 distance [m] from a position to the lane."""
         s, r = self.local_coordinates(position)
         return abs(r) + max(s - self.length, 0) + max(0 - s, 0)
+
+    def distance_with_heading(self, position: np.ndarray, heading: Optional[float], heading_weight: float = 1.0):
+        """Compute a weighted distance in position and heading to the lane."""
+        if heading is None:
+            return self.distance(position)
+        s, r = self.local_coordinates(position)
+        angle = np.abs(wrap_to_pi(heading - self.heading_at(s)))
+        return abs(r) + max(s - self.length, 0) + max(0 - s, 0) + heading_weight*angle
 
 
 class LineType:
