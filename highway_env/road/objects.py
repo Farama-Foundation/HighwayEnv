@@ -12,6 +12,7 @@ class RoadObject(ABC):
     Common interface for objects that appear on the road, beside vehicles.
 
     For now we assume all objects are rectangular.
+    TODO: vehicles and other objects should inherit from a common class
     """
 
     LENGTH = 2.0  # Object length [m]
@@ -64,6 +65,14 @@ class RoadObject(ABC):
             for key in ['x', 'y', 'vx', 'vy']:
                 d[key] -= origin_dict[key]
         return d
+
+    @property
+    def direction(self) -> np.ndarray:
+        return np.array([np.cos(self.heading), np.sin(self.heading)])
+
+    @property
+    def velocity(self) -> np.ndarray:
+        return self.speed * self.direction
 
     def __str__(self):
         return f"{self.__class__.__name__} #{id(self) % 1000}: at {self.position}"
