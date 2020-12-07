@@ -67,7 +67,12 @@ class Vehicle(object):
         return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), speed)
 
     @classmethod
-    def create_random(cls, road: Road, speed: float = None, lane_id: Optional[int] = None, spacing: float = 1) \
+    def create_random(cls, road: Road,
+                      speed: float = None,
+                      lane_from: Optional[str] = None,
+                      lane_to: Optional[str] = None,
+                      lane_id: Optional[int] = None,
+                      spacing: float = 1) \
             -> "Vehicle":
         """
         Create a random vehicle on the road.
@@ -77,6 +82,8 @@ class Vehicle(object):
 
         :param road: the road where the vehicle is driving
         :param speed: initial speed in [m/s]. If None, will be chosen randomly
+        :param lane_from: start node of the lane to spawn in
+        :param lane_to: end node of the lane to spawn in
         :param lane_id: id of the lane to spawn in
         :param spacing: ratio of spacing to the front vehicle, 1 being the default
         :return: A vehicle with random position and/or speed
@@ -84,8 +91,8 @@ class Vehicle(object):
         if speed is None:
             speed = road.np_random.uniform(Vehicle.DEFAULT_SPEEDS[0], Vehicle.DEFAULT_SPEEDS[1])
         default_spacing = 1.5*speed
-        _from = road.np_random.choice(list(road.network.graph.keys()))
-        _to = road.np_random.choice(list(road.network.graph[_from].keys()))
+        _from = lane_from or road.np_random.choice(list(road.network.graph.keys()))
+        _to = lane_to or road.np_random.choice(list(road.network.graph[_from].keys()))
         _id = lane_id if lane_id is not None else road.np_random.choice(len(road.network.graph[_from][_to]))
         lane = road.network.get_lane((_from, _to, _id))
         offset = spacing * default_spacing * np.exp(-5 / 30 * len(road.network.graph[_from][_to]))
@@ -215,7 +222,9 @@ class Vehicle(object):
     @property
     def destination(self) -> np.ndarray:
         if getattr(self, "route", None):
-            last_lane = self.road.network.get_lane(self.route[-1])
+            last_lane_index = self.route[-1]
+            last_lane_index = last_lane_index if last_lane_index[-1] is not None else (*last_lane_index[:-1], 0)
+            last_lane = self.road.network.get_lane(last_lane_index)
             return last_lane.position(last_lane.length, 0)
         else:
             return self.position
