@@ -102,7 +102,6 @@ class ExitEnv(HighwayEnv):
         reward = utils.lmap(reward,
                           [self.config["collision_reward"], self.config["goal_reward"] + self.HIGH_SPEED_REWARD],
                           [0, 1])
-        print(lane_index, goal_reached, reward)
         return reward
 
     def _is_terminal(self) -> bool:
