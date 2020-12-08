@@ -24,12 +24,13 @@ class ExitEnv(HighwayEnv):
             "action": {
                 "type": "DiscreteMetaAction",
             },
-            "lanes_count": 3,
+            "lanes_count": 4,
             "collision_reward": 0,
             "goal_reward": 1,
-            "vehicles_count": 5,
+            "vehicles_count": 10,
+            "vehicles_density": 1.3,
             "controlled_vehicles": 1,
-            "duration": 15,  # [s],
+            "duration": 18,  # [s],
             "scaling": 5
         })
         return config
@@ -38,7 +39,7 @@ class ExitEnv(HighwayEnv):
         self._create_road()
         self._create_vehicles()
 
-    def _create_road(self, road_length=1000, exit_position=300, exit_length=100) -> None:
+    def _create_road(self, road_length=1000, exit_position=500, exit_length=100) -> None:
         net = RoadNetwork.straight_road_network(self.config["lanes_count"], start=0,
                                                 length=exit_position, nodes_str=("0", "1"))
         net = RoadNetwork.straight_road_network(self.config["lanes_count"] + 1, start=exit_position,
