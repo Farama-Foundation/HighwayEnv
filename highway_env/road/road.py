@@ -73,7 +73,7 @@ class RoadNetwork(object):
         - Else, pick next road randomly.
         - If it has the same number of lanes as current road, stay in the same lane.
         - Else, pick next road's closest lane.
-        :param current_index: the index of the current lane.
+        :param current_index: the index of the current target lane.
         :param route: the planned route, if any.
         :param position: the vehicle position.
         :param np_random: a source of randomness.
@@ -89,15 +89,22 @@ class RoadNetwork(object):
                 _, next_to, _ = route[0]
             elif route:
                 logger.warning("Route {} does not start after current road {}.".format(route[0], current_index))
+
+        # Compute current projected (desired) position
+        long, lat = self.get_lane(current_index).local_coordinates(position)
+        projected_position = self.get_lane(current_index).position(long, lateral=0)
         # If next route is not known
         if not next_to:
-            # Pick the one with the closest closest lane
-            lanes_dists = [(next_to, *self.next_lane_given_next_road(_from, _to, _id, next_to, position))
-                           for next_to in self.graph[_to].keys()]  # (next_to, next_id, distance)
-            next_to, next_id, _ = min(lanes_dists, key=lambda x: x[-1])
+            # Pick the one with the closest lane to projected target position
+            try:
+                lanes_dists = [(next_to, *self.next_lane_given_next_road(_from, _to, _id, next_to, projected_position))
+                               for next_to in self.graph[_to].keys()]  # (next_to, next_id, distance)
+                next_to, next_id, _ = min(lanes_dists, key=lambda x: x[-1])
+            except KeyError:
+                return current_index
         else:
             # If it is known, follow it and get the closest lane
-            next_id, _ = self.next_lane_given_next_road(_from, _to, _id, next_to, position)
+            next_id, _ = self.next_lane_given_next_road(_from, _to, _id, next_to, projected_position)
         return _to, next_to, next_id
 
     def next_lane_given_next_road(self, _from, _to, _id, next_to, position):
