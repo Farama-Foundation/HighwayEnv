@@ -373,6 +373,47 @@ class MultiAgentObservation(ObservationType):
         return tuple(obs_type.observe() for obs_type in self.agents_observation_types)
 
 
+class ExitObservation(KinematicObservation):
+
+    """Observe the kinematics of nearby vehicles."""
+
+    def observe(self) -> np.ndarray:
+        if not self.env.road:
+            return np.zeros(self.space().shape)
+
+        # Add ego-vehicle
+        ego_dict = self.observer_vehicle.to_dict()
+        exit_lane = self.env.road.network.get_lane(("1", "2", -1))
+        ego_dict["x"] = exit_lane.local_coordinates(self.observer_vehicle.position)[0]
+        df = pd.DataFrame.from_records([ego_dict])[self.features]
+
+        # Add nearby traffic
+        close_vehicles = self.env.road.close_vehicles_to(self.observer_vehicle,
+                                                         self.env.PERCEPTION_DISTANCE,
+                                                         count=self.vehicles_count - 1,
+                                                         see_behind=self.see_behind)
+        if close_vehicles:
+            origin = self.observer_vehicle if not self.absolute else None
+            df = df.append(pd.DataFrame.from_records(
+                [v.to_dict(origin, observe_intentions=self.observe_intentions)
+                 for v in close_vehicles[-self.vehicles_count + 1:]])[self.features],
+                           ignore_index=True)
+        # Normalize and clip
+        if self.normalize:
+            df = self.normalize_obs(df)
+        # Fill missing rows
+        if df.shape[0] < self.vehicles_count:
+            rows = np.zeros((self.vehicles_count - df.shape[0], len(self.features)))
+            df = df.append(pd.DataFrame(data=rows, columns=self.features), ignore_index=True)
+        # Reorder
+        df = df[self.features]
+        obs = df.values.copy()
+        if self.order == "shuffled":
+            self.env.np_random.shuffle(obs[1:])
+        # Flatten
+        return obs
+
+
 def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
     if config["type"] == "TimeToCollision":
         return TimeToCollisionObservation(env, **config)
@@ -388,5 +429,7 @@ def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
         return AttributesObservation(env, **config)
     elif config["type"] == "MultiAgentObservation":
         return MultiAgentObservation(env, **config)
+    elif config["type"] == "ExitObservation":
+        return ExitObservation(env, **config)
     else:
         raise ValueError("Unknown observation type")

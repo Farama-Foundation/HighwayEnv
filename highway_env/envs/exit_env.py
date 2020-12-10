@@ -19,7 +19,8 @@ class ExitEnv(HighwayEnv):
         config = super().default_config()
         config.update({
             "observation": {
-                "type": "Kinematics"
+                "type": "ExitObservation",
+                "clip": False
             },
             "action": {
                 "type": "DiscreteMetaAction",
