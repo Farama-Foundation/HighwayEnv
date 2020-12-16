@@ -13,11 +13,13 @@ from highway_env.vehicle.controller import ControlledVehicle
 class ExitEnv(HighwayEnv):
     """
     """
-    def default_config(self) -> dict:
+    @classmethod
+    def default_config(cls) -> dict:
         config = super().default_config()
         config.update({
             "observation": {
                 "type": "ExitObservation",
+                "vehicles_count": 5,
                 "clip": False
             },
             "action": {
@@ -26,7 +28,7 @@ class ExitEnv(HighwayEnv):
             "lanes_count": 5,
             "collision_reward": 0,
             "high_speed_reward": 0.1,
-            "right_lane_reward": 0,  # 0.1 for dense rewards
+            "right_lane_reward": 0,
             "goal_reward": 1,
             "vehicles_count": 20,
             "vehicles_density": 1.5,
@@ -123,7 +125,24 @@ class ExitEnv(HighwayEnv):
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
 
+class DenseExitEnv(ExitEnv):
+    @classmethod
+    def default_config(cls) -> dict:
+        return dict(super().default_config(),
+                    right_lane_reward=0.1)
+
+
 register(
     id='exit-v0',
     entry_point='highway_env.envs:ExitEnv',
+)
+
+register(
+    id='exit-sparse-v0',
+    entry_point='highway_env.envs:ExitEnv',
+)
+
+register(
+    id='exit-dense-v0',
+    entry_point='highway_env.envs:DenseExitEnv',
 )
