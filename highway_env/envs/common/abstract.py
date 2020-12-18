@@ -178,7 +178,7 @@ class AbstractEnv(gym.Env):
         Perform an action and step the environment dynamics.
 
         The action is executed by the ego-vehicle, and all other vehicles on the road performs their default behaviour
-        for several simulation timesteps until the next decision making step.
+        for several simulation timactesteps until the next decision making step.
 
         :param action: the action performed by the ego-vehicle
         :return: a tuple (observation, reward, terminal, info)
@@ -190,6 +190,10 @@ class AbstractEnv(gym.Env):
         self._simulate(action)
 
         obs = self.observation_type.observe()
+        print("obs in ",obs)
+        print("act in ",action)
+
+
         reward = self._reward(action)
         terminal = self._is_terminal()
 

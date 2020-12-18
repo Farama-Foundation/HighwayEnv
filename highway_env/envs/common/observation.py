@@ -217,6 +217,9 @@ class KinematicObservation(ObservationType):
         return obs
 
 
+
+
+
 class OccupancyGridObservation(ObservationType):
 
     """Observe an occupancy grid of nearby vehicles."""
@@ -370,7 +373,55 @@ class MultiAgentObservation(ObservationType):
         return spaces.Tuple([obs_type.space() for obs_type in self.agents_observation_types])
 
     def observe(self) -> tuple:
+        print("hi")
         return tuple(obs_type.observe() for obs_type in self.agents_observation_types)
+        
+
+
+    # def space(self) -> spaces.Space:
+    #     return spaces.Box(shape=(10, 5), low=-1, high=1, dtype=np.float32)
+  
+    # def observe(self) -> np.ndarray:
+    #     ob=self.agents_observation_types[0].observe()
+    #     for obs_type in self.agents_observation_types[1:]:
+    #         ob = np.vstack((ob,obs_type.observe()))
+
+    #     return ob
+
+
+
+
+
+# class MultiAgentObservation2(ObservationType):
+#     def __init__(self,
+#                  env: 'AbstractEnv',
+#                  observation_config: dict,
+#                  **kwargs) -> None:
+#         super().__init__(env)
+#         self.observation_config = observation_config
+#         self.agents_observation_types = []
+#         for vehicle in self.env.controlled_vehicles:
+#             obs_type = observation_factory(self.env, self.observation_config)
+#             obs_type.observer_vehicle = vehicle
+#             self.agents_observation_types.append(obs_type)
+#         print("bi")
+
+#     def space(self) -> spaces.Space:
+#         return spaces.Box(shape=(10, 5), low=-1, high=1, dtype=np.float32)
+
+#     def observe(self) -> np.ndarray:
+#         ob=self.agents_observation_types[0].observe()
+#         # ob=np.vstack((self.agents_observation_types[0].observe(),self.agents_observation_types[1].observe()))
+#         # print(ob.shape)
+#         # print("inside",ob)
+#         # # print(self.agents_observation_types)
+
+#         for obs_type in self.agents_observation_types[1:]:
+#             ob = np.vstack((ob,obs_type.observe()))
+
+#         return ob
+        # return tuple(obs_type.observe() for obs_type in self.agents_observation_types)
+
 
 
 def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
@@ -387,6 +438,8 @@ def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
     elif config["type"] == "AttributesObservation":
         return AttributesObservation(env, **config)
     elif config["type"] == "MultiAgentObservation":
+        return MultiAgentObservation(env, **config)
+    elif config["type"] == "MultiAgentObservation2":
         return MultiAgentObservation(env, **config)
     else:
         raise ValueError("Unknown observation type")

@@ -496,3 +496,41 @@ class DefensiveVehicle(LinearVehicle):
     ACCELERATION_PARAMETERS = [MERGE_ACC_GAIN / ((1 - MERGE_VEL_RATIO) * MERGE_TARGET_VEL),
                                MERGE_ACC_GAIN / (MERGE_VEL_RATIO * MERGE_TARGET_VEL),
                                2.0]
+
+
+class AggressiveCar(ControlledVehicle):
+    """
+        A vehicle using both a longitudinal and a lateral decision policies.
+
+        - Longitudinal: the IDM model computes an acceleration given the preceding vehicle's distance and velocity.
+        - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.
+        """
+
+    # Longitudinal policy parameters
+    ACC_MAX = 9.0  # [m/s2]
+    COMFORT_ACC_MAX = 6.0  # [m/s2]
+    COMFORT_ACC_MIN = -9.0  # [m/s2]
+    DISTANCE_WANTED = 0.5  # [m]
+    TIME_WANTED = 1.2  # [s]
+    DELTA = 4.0  # []
+    DELTA_VELOCITY = 15  # [m/s]
+    DEFAULT_VELOCITIES = [35, 40]
+    MAX_VELOCITY = 50
+    # Lateral policy parameters
+    POLITENESS = 0.0  # in [0, 1]
+    LANE_CHANGE_MIN_ACC_GAIN = 0.1 # [m/s2]
+    LANE_CHANGE_MAX_BRAKING_IMPOSED = 9.0  # [m/s2]
+    LANE_CHANGE_DELAY = 0.5 # [s]
+
+
+    def __init__(self, road, position,
+                 heading=0,
+                 velocity=0,
+                 target_lane_index=None,
+                 target_velocity=None,
+                 route=None,
+                 enable_lane_change=True,
+                 timer=None):
+        super(AggressiveCar, self).__init__(road, position, heading, velocity, target_lane_index, target_velocity, route)
+        self.enable_lane_change = enable_lane_change
+        self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
