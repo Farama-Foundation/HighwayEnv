@@ -54,10 +54,12 @@ def finite_mdp(env: 'AbstractEnv',
     v, l, t = grid.shape
     lanes = np.arange(l)/max(l - 1, 1)
     speeds = np.arange(v)/max(v - 1, 1)
+    
     state_reward = \
-        + env.COLLISION_REWARD * grid \
+        + env.config["collision_reward"] * grid \
         + env.RIGHT_LANE_REWARD * np.tile(lanes[np.newaxis, :, np.newaxis], (v, 1, t)) \
         + env.HIGH_SPEED_REWARD * np.tile(speeds[:, np.newaxis, np.newaxis], (1, l, t))
+    
     state_reward = np.ravel(state_reward)
     action_reward = [env.LANE_CHANGE_REWARD, 0, env.LANE_CHANGE_REWARD, 0, 0]
     reward = np.fromfunction(np.vectorize(lambda s, a: state_reward[s] + action_reward[a]),
