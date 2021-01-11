@@ -1,6 +1,6 @@
 pygments==2.4.1
 sphinx_rtd_theme
-sphinxcontrib-bibtex
+sphinxcontrib-bibtex<2.0.0
 # jupyter-sphinx
 git+git://github.com/eleurent/jupyter-sphinx@master#egg=jupyter-sphinx
 gym
