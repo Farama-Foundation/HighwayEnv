@@ -3,8 +3,7 @@ from typing import Tuple
 from gym.envs.registration import register
 
 from highway_env import utils
-from highway_env.envs import HighwayEnv, StraightLane, CircularLane
-from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs import HighwayEnv, CircularLane
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
@@ -42,6 +41,11 @@ class ExitEnv(HighwayEnv):
     def _reset(self) -> None:
         self._create_road()
         self._create_vehicles()
+
+    def step(self, action) -> Tuple[np.ndarray, float, bool, dict]:
+        obs, reward, terminal, info = super().step(action)
+        info.update({"is_success": self._is_success()})
+        return obs, reward, terminal, info
 
     def _create_road(self, road_length=1000, exit_position=400, exit_length=100) -> None:
         net = RoadNetwork.straight_road_network(self.config["lanes_count"], start=0,
@@ -107,10 +111,9 @@ class ExitEnv(HighwayEnv):
         """
         lane_index = self.vehicle.target_lane_index if isinstance(self.vehicle, ControlledVehicle) \
             else self.vehicle.lane_index
-        goal_reached = lane_index == ("1", "2", self.config["lanes_count"]) or lane_index == ("2", "exit", 0)
         scaled_speed = utils.lmap(self.vehicle.speed, self.config["reward_speed_range"], [0, 1])
         reward = self.config["collision_reward"] * self.vehicle.crashed \
-                 + self.config["goal_reward"] * goal_reached \
+                 + self.config["goal_reward"] * self._is_success() \
                  + self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1) \
                  + self.config["right_lane_reward"] * lane_index[-1]
 
@@ -120,29 +123,27 @@ class ExitEnv(HighwayEnv):
         reward = np.clip(reward, 0, 1)
         return reward
 
+    def _is_success(self):
+        lane_index = self.vehicle.target_lane_index if isinstance(self.vehicle, ControlledVehicle) \
+            else self.vehicle.lane_index
+        goal_reached = lane_index == ("1", "2", self.config["lanes_count"]) or lane_index == ("2", "exit", 0)
+        return goal_reached
+
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
         return self.vehicle.crashed or self.steps >= self.config["duration"]
 
 
-class DenseExitEnv(ExitEnv):
-    @classmethod
-    def default_config(cls) -> dict:
-        return dict(super().default_config(),
-                    right_lane_reward=0.1)
+# class DenseLidarExitEnv(DenseExitEnv):
+#     @classmethod
+#     def default_config(cls) -> dict:
+#         return dict(super().default_config(),
+#                     observation=dict(type="LidarObservation"))
+
+
 
 
 register(
     id='exit-v0',
     entry_point='highway_env.envs:ExitEnv',
-)
-
-register(
-    id='exit-sparse-v0',
-    entry_point='highway_env.envs:ExitEnv',
-)
-
-register(
-    id='exit-dense-v0',
-    entry_point='highway_env.envs:DenseExitEnv',
 )
