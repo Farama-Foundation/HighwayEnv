@@ -18,13 +18,14 @@ class ExitEnv(HighwayEnv):
         config.update({
             "observation": {
                 "type": "ExitObservation",
-                "vehicles_count": 5,
+                "vehicles_count": 15,
+                "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
                 "clip": False
             },
             "action": {
                 "type": "DiscreteMetaAction",
             },
-            "lanes_count": 5,
+            "lanes_count": 6,
             "collision_reward": 0,
             "high_speed_reward": 0.1,
             "right_lane_reward": 0,
