@@ -204,3 +204,26 @@ def is_consistent_dataset(data: dict, parameter_box: np.ndarray = None) -> bool:
         return is_valid_observation(y, phi, theta, gramian, beta)
     else:
         return True
+
+
+def distance_to_circle(center, radius, direction):
+    scaling = radius * np.ones((2, 1))
+    a = np.linalg.norm(direction / scaling) ** 2
+    b = -2 * np.dot(np.transpose(center), direction / np.square(scaling))
+    c = np.linalg.norm(center / scaling) ** 2 - 1
+    root_inf, root_sup = solve_trinom(a, b, c)
+    if root_inf and root_inf > 0:
+        distance = root_inf
+    elif root_sup and root_sup > 0:
+        distance = 0
+    else:
+        distance = np.infty
+    return distance
+
+
+def solve_trinom(a, b, c):
+    delta = b ** 2 - 4 * a * c
+    if delta >= 0:
+        return (-b - np.sqrt(delta)) / (2 * a), (-b + np.sqrt(delta)) / (2 * a)
+    else:
+        return None, None
