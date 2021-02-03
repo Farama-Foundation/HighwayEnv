@@ -6,6 +6,7 @@ from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
+from highway_env.utils import near_split
 from highway_env.vehicle.controller import ControlledVehicle
 
 
@@ -59,18 +60,24 @@ class HighwayEnv(AbstractEnv):
 
     def _create_vehicles(self) -> None:
         """Create some new random vehicles of a given type, and add them on the road."""
-        self.controlled_vehicles = []
-        for _ in range(self.config["controlled_vehicles"]):
-            vehicle = self.action_type.vehicle_class.create_random(self.road,
-                                                                   speed=25,
-                                                                   lane_id=self.config["initial_lane_id"],
-                                                                   spacing=self.config["ego_spacing"])
-            self.controlled_vehicles.append(vehicle)
-            self.road.vehicles.append(vehicle)
+        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        other_per_controlled = near_split(self.config["vehicles_count"], num_bins=self.config["controlled_vehicles"])
 
-        vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        for _ in range(self.config["vehicles_count"]):
-            self.road.vehicles.append(vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"]))
+        self.controlled_vehicles = []
+        for others in other_per_controlled:
+            controlled_vehicle = self.action_type.vehicle_class.create_random(
+                self.road,
+                speed=25,
+                lane_id=self.config["initial_lane_id"],
+                spacing=self.config["ego_spacing"]
+            )
+            self.controlled_vehicles.append(controlled_vehicle)
+            self.road.vehicles.append(controlled_vehicle)
+
+            for _ in range(others):
+                self.road.vehicles.append(
+                    other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
+                )
 
     def _reward(self, action: Action) -> float:
         """
