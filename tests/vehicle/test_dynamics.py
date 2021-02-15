@@ -57,14 +57,12 @@ def test_collision():
     v1.check_collision(v2)
 
     assert v1.crashed and v2.crashed
-    assert v1.speed == v2.speed == 10
     # Collision between a vehicle and an obstacle
     v3 = Vehicle(road=r, position=[20, 0], speed=10)
     o = Obstacle(road=r, position=[23, 0])
     v3.check_collision(o)
 
     assert v3.crashed and o.hit
-    assert v3.speed == 0
     # Collision between a vehicle and a landmark
     v4 = Vehicle(road=r, position=[40, 0], speed=10)
     l = Landmark(road=r, position=[43, 0])
