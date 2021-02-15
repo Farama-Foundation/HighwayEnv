@@ -23,7 +23,7 @@ class UTurnEnv(AbstractEnv):
     COLLISION_REWARD: float = -1.0
     """Reward received for maintaining left most lane."""
     LEFT_LANE_REWARD: float = 0.1
-    """Reward received for maintaining cruzing speed."""
+    """Reward received for maintaining cruising speed."""
     HIGH_SPEED_REWARD: float = 0.4
     """Reward received for maintaining course on road."""
     ON_ROAD_CONSTRAINT: float = 0.2
@@ -134,7 +134,7 @@ class UTurnEnv(AbstractEnv):
     def _make_vehicles(self) -> None:
         """
         Strategic addition of vechiles for testing safety behavior limits
-        while performing U-Turn manoeuvre at given cruzing interval.
+        while performing U-Turn manoeuvre at given cruising interval.
 
         :return: the ego-vehicle
         """
