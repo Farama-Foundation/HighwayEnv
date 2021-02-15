@@ -1,14 +1,12 @@
 import numpy as np
-import pandas as pd
 import logging
 from typing import List, Tuple, Dict, TYPE_CHECKING, Optional
 
 from highway_env.road.lane import LineType, StraightLane, AbstractLane
-from highway_env.road.objects import Landmark
+from highway_env.vehicle.objects import Landmark
 
 if TYPE_CHECKING:
-    from highway_env.vehicle import kinematics
-    from highway_env.road import objects
+    from highway_env.vehicle import kinematics, objects
 
 logger = logging.getLogger(__name__)
 
