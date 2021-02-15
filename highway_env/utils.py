@@ -1,7 +1,7 @@
 import copy
 import importlib
 import itertools
-from typing import Tuple, Dict, Callable
+from typing import Tuple, Dict, Callable, List
 
 import numpy as np
 
@@ -118,6 +118,40 @@ def has_corner_inside(rect1: Tuple[Vector, float, float, float],
     r = np.array([[c, -s], [s, c]])
     rotated_r1_points = r.dot(r1_points.transpose()).transpose()
     return any([point_in_rotated_rectangle(c1+np.squeeze(p), c2, l2, w2, a2) for p in rotated_r1_points])
+
+
+def project_polygon(polygon: List[Vector], axis: Vector) -> Tuple[float, float]:
+    min_p, max_p = None, None
+    for p in polygon:
+        projected = p.dot(axis)
+        if min_p is None or projected < min_p:
+            min_p = projected
+        if max_p is None or projected > max_p:
+            max_p = projected
+    return min_p, max_p
+
+def are_polygons_intersecting(a: List[Vector], b: List[Vector]) -> bool:
+    """
+    Checks if the two polygons are intersecting.
+
+    See https://stackoverflow.com/a/10965077
+
+    :param a: a list of [x, y] points
+    :param b: a list of [x, y] points
+    :return: intersection
+    """
+    for polygon in [a, b]:
+        for i1 in range(len(polygon)):
+            i2 = (i1 + 1) % len(polygon)
+            p1, p2 = polygon[i1], polygon[i2]
+
+            normal = [p2[1] - p1[1], p1[0] - p2[0]]
+            min_a, max_a = project_polygon(a, normal)
+            min_b, max_b = project_polygon(b, normal)
+
+            if max_a < min_b or max_b < min_a:
+                return False
+    return True
 
 
 def confidence_ellipsoid(data: Dict[str, np.ndarray], lambda_: float = 1e-5, delta: float = 0.1, sigma: float = 0.1,

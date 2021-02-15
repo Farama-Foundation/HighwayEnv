@@ -196,13 +196,29 @@ class Vehicle(object):
             if self._is_colliding(other):
                 other.hit = True
 
+    def polygon(self) -> np.ndarray:
+        points = np.array([
+            [-self.LENGTH / 2, -self.WIDTH / 2],
+            [-self.LENGTH / 2, +self.WIDTH / 2],
+            [+self.LENGTH / 2, -self.WIDTH / 2],
+            [+self.LENGTH / 2, +self.WIDTH / 2],
+        ]).T
+        c, s = np.cos(self.heading), np.sin(self.heading)
+        rotation = np.array([
+            [c, -s],
+            [s, c]
+        ])
+        points = (rotation @ points).T + np.tile(self.position, (4, 1))
+        return np.vstack([points, points[0:1]])
+
     def _is_colliding(self, other):
         # Fast spherical pre-check
         if np.linalg.norm(other.position - self.position) > self.LENGTH:
             return False
         # Accurate rectangular check
-        return utils.rotated_rectangles_intersect((self.position, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
-                                                  (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading))
+        return utils.are_polygons_intersecting(self.polygon(), other.polygon())
+        # return utils.rotated_rectangles_intersect((self.position, self.LENGTH, self.WIDTH, self.heading),
+        #                                           (other.position, other.LENGTH, other.WIDTH, other.heading))
 
     @property
     def direction(self) -> np.ndarray:
