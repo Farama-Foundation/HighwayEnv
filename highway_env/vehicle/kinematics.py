@@ -47,6 +47,7 @@ class Vehicle(object):
         self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
+        self.impact = None
         self.log = []
         self.history = deque(maxlen=30)
 
@@ -133,6 +134,10 @@ class Vehicle(object):
         v = self.speed * np.array([np.cos(self.heading + beta),
                                    np.sin(self.heading + beta)])
         self.position += v * dt
+        if self.impact is not None:
+            self.position += self.impact
+            self.crashed = True
+            self.impact = None
         self.heading += self.speed * np.sin(beta) / (self.LENGTH / 2) * dt
         self.speed += self.action['acceleration'] * dt
         self.on_state_update()
@@ -169,39 +174,44 @@ class Vehicle(object):
             lane = self.lane
         return lane.local_coordinates(vehicle.position)[0] - lane.local_coordinates(self.position)[0]
 
-    def check_collision(self, other: Union['Vehicle', 'RoadObject']) -> None:
+    def check_collision(self, other: Union['Vehicle', 'RoadObject'], dt: float = 0) -> None:
         """
         Check for collision with another vehicle.
 
         :param other: the other vehicle or object
+        :param dt: timestep to check for future collisions (at constant velocity)
         """
-        if self.crashed or other is self:
+        if other is self:
             return
 
         if isinstance(other, Vehicle):
             if not self.COLLISIONS_ENABLED or not other.COLLISIONS_ENABLED:
                 return
-
-            if self._is_colliding(other):
-                self.speed = other.speed = min([self.speed, other.speed], key=abs)
+            intersecting, will_intersect, transition = self._is_colliding(other, dt)
+            if will_intersect:
+                self.impact = transition / 2
+                other.impact = -transition / 2
+            if intersecting:
                 self.crashed = other.crashed = True
         elif isinstance(other, Obstacle):
             if not self.COLLISIONS_ENABLED:
                 return
-
-            if self._is_colliding(other):
-                self.speed = min([self.speed, 0], key=abs)
+            intersecting, will_intersect, transition = self._is_colliding(other, dt)
+            if will_intersect:
+                self.impact = transition
+            if intersecting:
                 self.crashed = other.hit = True
         elif isinstance(other, Landmark):
-            if self._is_colliding(other):
+            intersecting, will_intersect, transition = self._is_colliding(other, dt)
+            if intersecting:
                 other.hit = True
 
     def polygon(self) -> np.ndarray:
         points = np.array([
             [-self.LENGTH / 2, -self.WIDTH / 2],
             [-self.LENGTH / 2, +self.WIDTH / 2],
-            [+self.LENGTH / 2, -self.WIDTH / 2],
             [+self.LENGTH / 2, +self.WIDTH / 2],
+            [+self.LENGTH / 2, -self.WIDTH / 2],
         ]).T
         c, s = np.cos(self.heading), np.sin(self.heading)
         rotation = np.array([
@@ -211,14 +221,12 @@ class Vehicle(object):
         points = (rotation @ points).T + np.tile(self.position, (4, 1))
         return np.vstack([points, points[0:1]])
 
-    def _is_colliding(self, other):
+    def _is_colliding(self, other, dt):
         # Fast spherical pre-check
-        if np.linalg.norm(other.position - self.position) > self.LENGTH:
-            return False
+        if np.linalg.norm(other.position - self.position) > self.LENGTH + self.speed * dt:
+            return False, False, np.zeros(2,)
         # Accurate rectangular check
-        return utils.are_polygons_intersecting(self.polygon(), other.polygon())
-        # return utils.rotated_rectangles_intersect((self.position, self.LENGTH, self.WIDTH, self.heading),
-        #                                           (other.position, other.LENGTH, other.WIDTH, other.heading))
+        return utils.are_polygons_intersecting(self.polygon(), other.polygon(), self.velocity * dt, other.velocity * dt)
 
     @property
     def direction(self) -> np.ndarray:
