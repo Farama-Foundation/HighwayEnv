@@ -223,9 +223,6 @@ class AbstractEnv(gym.Env):
             # Ignored if the rendering is done offscreen
             self._automatic_rendering()
 
-            # Stop at terminal states
-            if self.done or self._is_terminal():
-                break
         self.enable_auto_render = False
 
     def render(self, mode: str = 'human') -> Optional[np.ndarray]:

@@ -1,19 +1,14 @@
-from typing import Union, TYPE_CHECKING, Optional
+from typing import Union, Optional
 import numpy as np
-import pandas as pd
 from collections import deque
 
 from highway_env import utils
-from highway_env.road.lane import AbstractLane
 from highway_env.road.road import Road, LaneIndex
-from highway_env.road.objects import Obstacle, Landmark
+from highway_env.vehicle.objects import RoadObject, Obstacle, Landmark
 from highway_env.types import Vector
 
-if TYPE_CHECKING:
-    from highway_env.road.objects import RoadObject
 
-
-class Vehicle(object):
+class Vehicle(RoadObject):
 
     """
     A moving vehicle on a road, and its kinematics.
@@ -39,14 +34,10 @@ class Vehicle(object):
                  position: Vector,
                  heading: float = 0,
                  speed: float = 0):
-        self.road = road
-        self.position = np.array(position).astype('float')
-        self.heading = heading
-        self.speed = speed
-        self.lane_index = self.road.network.get_closest_lane_index(self.position, self.heading) if self.road else np.nan
-        self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
+        super().__init__(road, position, heading, speed)
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
+        self.impact = None
         self.log = []
         self.history = deque(maxlen=30)
 
@@ -133,6 +124,10 @@ class Vehicle(object):
         v = self.speed * np.array([np.cos(self.heading + beta),
                                    np.sin(self.heading + beta)])
         self.position += v * dt
+        if self.impact is not None:
+            self.position += self.impact
+            self.crashed = True
+            self.impact = None
         self.heading += self.speed * np.sin(beta) / (self.LENGTH / 2) * dt
         self.speed += self.action['acceleration'] * dt
         self.on_state_update()
@@ -155,58 +150,44 @@ class Vehicle(object):
             if self.road.record_history:
                 self.history.appendleft(self.create_from(self))
 
-    def lane_distance_to(self, vehicle: "Vehicle", lane: AbstractLane = None) -> float:
-        """
-        Compute the signed distance to another vehicle along a lane.
-
-        :param vehicle: the other vehicle
-        :param lane: a lane
-        :return: the distance to the other vehicle [m]
-        """
-        if not vehicle:
-            return np.nan
-        if not lane:
-            lane = self.lane
-        return lane.local_coordinates(vehicle.position)[0] - lane.local_coordinates(self.position)[0]
-
-    def check_collision(self, other: Union['Vehicle', 'RoadObject']) -> None:
+    def check_collision(self, other: 'RoadObject', dt: float = 0) -> None:
         """
         Check for collision with another vehicle.
 
         :param other: the other vehicle or object
+        :param dt: timestep to check for future collisions (at constant velocity)
         """
-        if self.crashed or other is self:
+        if other is self:
             return
 
         if isinstance(other, Vehicle):
             if not self.COLLISIONS_ENABLED or not other.COLLISIONS_ENABLED:
                 return
-
-            if self._is_colliding(other):
-                self.speed = other.speed = min([self.speed, other.speed], key=abs)
+            intersecting, will_intersect, transition = self._is_colliding(other, dt)
+            if will_intersect:
+                self.impact = transition / 2
+                other.impact = -transition / 2
+            if intersecting:
                 self.crashed = other.crashed = True
         elif isinstance(other, Obstacle):
             if not self.COLLISIONS_ENABLED:
                 return
-
-            if self._is_colliding(other):
-                self.speed = min([self.speed, 0], key=abs)
+            intersecting, will_intersect, transition = self._is_colliding(other, dt)
+            if will_intersect:
+                self.impact = transition
+            if intersecting:
                 self.crashed = other.hit = True
         elif isinstance(other, Landmark):
-            if self._is_colliding(other):
+            intersecting, will_intersect, transition = self._is_colliding(other, dt)
+            if intersecting:
                 other.hit = True
 
-    def _is_colliding(self, other):
+    def _is_colliding(self, other, dt):
         # Fast spherical pre-check
-        if np.linalg.norm(other.position - self.position) > self.LENGTH:
-            return False
+        if np.linalg.norm(other.position - self.position) > self.LENGTH + self.speed * dt:
+            return False, False, np.zeros(2,)
         # Accurate rectangular check
-        return utils.rotated_rectangles_intersect((self.position, 0.9*self.LENGTH, 0.9*self.WIDTH, self.heading),
-                                                  (other.position, 0.9*other.LENGTH, 0.9*other.WIDTH, other.heading))
-
-    @property
-    def direction(self) -> np.ndarray:
-        return np.array([np.cos(self.heading), np.sin(self.heading)])
+        return utils.are_polygons_intersecting(self.polygon(), other.polygon(), self.velocity * dt, other.velocity * dt)
 
     @property
     def velocity(self) -> np.ndarray:
@@ -226,14 +207,6 @@ class Vehicle(object):
             return (self.destination - self.position) / np.linalg.norm(self.destination - self.position)
         else:
             return np.zeros((2,))
-
-    @property
-    def on_road(self) -> bool:
-        """ Is the vehicle on its current lane, or off-road ? """
-        return self.lane.on_lane(self.position)
-
-    def front_distance_to(self, other: "Vehicle") -> float:
-        return self.direction.dot(other.position - self.position)
 
     def to_dict(self, origin_vehicle: "Vehicle" = None, observe_intentions: bool = True) -> dict:
         d = {

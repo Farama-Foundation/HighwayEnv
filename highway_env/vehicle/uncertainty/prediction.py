@@ -13,7 +13,7 @@ from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
 if TYPE_CHECKING:
-    from highway_env.road.objects import RoadObject
+    from highway_env.vehicle.objects import RoadObject
 
 Polytope = Tuple[np.ndarray, List[np.ndarray]]
 
@@ -363,7 +363,7 @@ class IntervalVehicle(LinearVehicle):
         self.trajectory.append(LinearVehicle.create_from(self))
         self.interval_trajectory.append(copy.deepcopy(self.interval))
 
-    def check_collision(self, other: Union['Vehicle', 'RoadObject']) -> None:
+    def check_collision(self, other: 'RoadObject') -> None:
         """
         Worst-case collision check.
 
