@@ -1,3 +1,5 @@
+%%writefile /content/highway-env/highway_env/envs/u_turn_env.py
+
 import numpy as np
 from typing import Tuple
 from gym.envs.registration import register
@@ -23,6 +25,8 @@ class UTurnEnv(AbstractEnv):
     LEFT_LANE_REWARD: float = 0.1
     """Reward received for maintaining cruzing speed."""
     HIGH_SPEED_REWARD: float = 0.4
+    """Reward received for maintaining course on road."""
+    ON_ROAD_CONSTRAINT: float = 0.2
 
     @classmethod
     def default_config(cls) -> dict:
@@ -55,7 +59,8 @@ class UTurnEnv(AbstractEnv):
         reward = \
             + self.COLLISION_REWARD * self.vehicle.crashed \
             + self.LEFT_LANE_REWARD * lane / max(len(neighbours) - 1, 1) \
-            + self.HIGH_SPEED_REWARD * np.clip(scaled_speed, 0, 1)
+            + self.HIGH_SPEED_REWARD * np.clip(scaled_speed, 0, 1) \
+            + self.ON_ROAD_CONSTRAINT * self.vehicle.on_road
         reward = utils.lmap(reward,
                           [self.COLLISION_REWARD, self.HIGH_SPEED_REWARD + self.LEFT_LANE_REWARD],
                           [0, 1])
@@ -67,8 +72,8 @@ class UTurnEnv(AbstractEnv):
         The episode is over if the ego vehicle crashed or the time is out.
         """
         return self.vehicle.crashed or \
-            self.steps >= self.config["duration"] or \
-            (self.config["offroad_terminal"] and not self.vehicle.on_road)
+            self.steps >= self.config["duration"] # or \
+            # (self.config["offroad_terminal"] and not self.vehicle.on_road)
 
     def _cost(self, action: int) -> float:
         """
@@ -89,7 +94,8 @@ class UTurnEnv(AbstractEnv):
         """
         net = RoadNetwork()
 
-        # Defining lower starting lanes before the U-Turn.
+        # Defining upper starting lanes after the U-Turn.
+        # These Lanes are defined from x-coordinate 'length' to 0.
         net.add_lane("c", "d", StraightLane([length, 0], [0, 0],
                                             line_types=(LineType.NONE, LineType.CONTINUOUS_LINE)))
         net.add_lane("c", "d", StraightLane([length, StraightLane.DEFAULT_WIDTH], [0, StraightLane.DEFAULT_WIDTH],
@@ -110,7 +116,8 @@ class UTurnEnv(AbstractEnv):
 
         offset = 2*radius
 
-        # Defining upper starting lanes after the U-Turn.
+        # Defining lower starting lanes before the U-Turn.
+        # These Lanes are defined from x-coordinate 0 to 'length'.
         net.add_lane("a", "b", StraightLane([0, (2 * StraightLane.DEFAULT_WIDTH + offset)],
                                             [length, (2 * StraightLane.DEFAULT_WIDTH + offset)],
                                             line_types=(LineType.NONE,
