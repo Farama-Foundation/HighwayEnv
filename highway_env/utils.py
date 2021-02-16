@@ -290,6 +290,7 @@ def near_split(x, num_bins=None, size_bins=None):
     elif size_bins:
         return near_split(x, num_bins=int(np.ceil(x / size_bins)))
 
+
 def distance_to_circle(center, radius, direction):
     scaling = radius * np.ones((2, 1))
     a = np.linalg.norm(direction / scaling) ** 2

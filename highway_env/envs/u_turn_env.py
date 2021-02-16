@@ -1,5 +1,3 @@
-%%writefile /content/highway-env/highway_env/envs/u_turn_env.py
-
 import numpy as np
 from typing import Tuple
 from gym.envs.registration import register
