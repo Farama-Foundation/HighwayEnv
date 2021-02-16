@@ -78,13 +78,13 @@ class RoadNetwork(object):
         :return: the index of the next lane to be followed when current lane is finished.
         """
         _from, _to, _id = current_index
-        next_to = None
+        next_to = next_id = None
         # Pick next road according to planned route
         if route:
             if route[0][:2] == current_index[:2]:  # We just finished the first step of the route, drop it.
                 route.pop(0)
             if route and route[0][0] == _to:  # Next road in route is starting at the end of current road.
-                _, next_to, _ = route[0]
+                _, next_to, next_id = route[0]
             elif route:
                 logger.warning("Route {} does not start after current road {}.".format(route[0], current_index))
         # Randomly pick next road
@@ -97,7 +97,8 @@ class RoadNetwork(object):
 
         # If next road has same number of lane, stay on the same lane
         if len(self.graph[_from][_to]) == len(self.graph[_to][next_to]):
-            next_id = _id
+            if next_id is None:
+                next_id = _id
         # Else, pick closest lane
         else:
             lanes = range(len(self.graph[_to][next_to]))
