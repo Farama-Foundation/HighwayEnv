@@ -43,7 +43,7 @@ class VehicleGraphics(object):
 
         v = vehicle
         tire_length, tire_width = 1, 0.3
-        headlight_length, headlight_width = 0.7, 0.6
+        headlight_length, headlight_width = 0.72, 0.6
         roof_length, roof_width = 2.0, 1.5
 
         # Vehicle rectangle
@@ -179,7 +179,7 @@ class VehicleGraphics(object):
         return color
 
     @classmethod
-    def darken(cls, color, ratio=0.825):
+    def darken(cls, color, ratio=0.83):
         return (
             int(color[0] * ratio),
             int(color[1] * ratio),
@@ -187,7 +187,7 @@ class VehicleGraphics(object):
         ) + color[3:]
 
     @classmethod
-    def lighten(cls, color, ratio=0.875):
+    def lighten(cls, color, ratio=0.68):
         return (
             min(int(color[0] / ratio), 255),
             min(int(color[1] / ratio), 255),
