@@ -69,7 +69,7 @@ class AbstractLane(object):
         :param margin: (optional) a supplementary margin around the lane width
         :return: is the position on the lane?
         """
-        if not longitudinal or not lateral:
+        if longitudinal is None or lateral is None:
             longitudinal, lateral = self.local_coordinates(position)
         is_on = np.abs(lateral) <= self.width_at(longitudinal) / 2 + margin and \
             -self.VEHICLE_LENGTH <= longitudinal < self.length + self.VEHICLE_LENGTH
