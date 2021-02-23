@@ -71,7 +71,7 @@ class RoadNetwork(object):
         - Else, pick next road randomly.
         - If it has the same number of lanes as current road, stay in the same lane.
         - Else, pick next road's closest lane.
-        :param current_index: the index of the current lane.
+        :param current_index: the index of the current target lane.
         :param route: the planned route, if any.
         :param position: the vehicle position.
         :param np_random: a source of randomness.
@@ -87,14 +87,25 @@ class RoadNetwork(object):
                 _, next_to, next_id = route[0]
             elif route:
                 logger.warning("Route {} does not start after current road {}.".format(route[0], current_index))
-        # Randomly pick next road
-        if not next_to:
-            try:
-                next_to = list(self.graph[_to].keys())[np_random.randint(len(self.graph[_to]))]
-            except KeyError:
-                # logger.warning("End of lane reached.")
-                return current_index
 
+        # Compute current projected (desired) position
+        long, lat = self.get_lane(current_index).local_coordinates(position)
+        projected_position = self.get_lane(current_index).position(long, lateral=0)
+        # If next route is not known
+        if not next_to:
+            # Pick the one with the closest lane to projected target position
+            try:
+                lanes_dists = [(next_to, *self.next_lane_given_next_road(_from, _to, _id, next_to, projected_position))
+                               for next_to in self.graph[_to].keys()]  # (next_to, next_id, distance)
+                next_to, next_id, _ = min(lanes_dists, key=lambda x: x[-1])
+            except KeyError:
+                return current_index
+        else:
+            # If it is known, follow it and get the closest lane
+            next_id, _ = self.next_lane_given_next_road(_from, _to, _id, next_to, projected_position)
+        return _to, next_to, next_id
+
+    def next_lane_given_next_road(self, _from, _to, _id, next_to, position):
         # If next road has same number of lane, stay on the same lane
         if len(self.graph[_from][_to]) == len(self.graph[_to][next_to]):
             if next_id is None:
@@ -104,8 +115,7 @@ class RoadNetwork(object):
             lanes = range(len(self.graph[_to][next_to]))
             next_id = min(lanes,
                           key=lambda l: self.get_lane((_to, next_to, l)).distance(position))
-
-        return _to, next_to, next_id
+        return next_id, self.get_lane((_to, next_to, next_id)).distance(position)
 
     def bfs_paths(self, start: str, goal: str) -> List[List[str]]:
         """
@@ -200,17 +210,24 @@ class RoadNetwork(object):
         return [lane for to in self.graph.values() for ids in to.values() for lane in ids]
 
     @staticmethod
-    def straight_road_network(lanes: int = 4, length: float = 10000, angle: float = 0) -> 'RoadNetwork':
-        net = RoadNetwork()
+    def straight_road_network(lanes: int = 4,
+                              start: float = 0,
+                              length: float = 10000,
+                              angle: float = 0,
+                              nodes_str: Optional[Tuple[str, str]] = None,
+                              net: Optional['RoadNetwork'] = None) \
+            -> 'RoadNetwork':
+        net = net or RoadNetwork()
+        nodes_str = nodes_str or ("0", "1")
         for lane in range(lanes):
-            origin = np.array([0, lane * StraightLane.DEFAULT_WIDTH])
-            end = np.array([length, lane * StraightLane.DEFAULT_WIDTH])
+            origin = np.array([start, lane * StraightLane.DEFAULT_WIDTH])
+            end = np.array([start + length, lane * StraightLane.DEFAULT_WIDTH])
             rotation = np.array([[np.cos(angle), np.sin(angle)], [-np.sin(angle), np.cos(angle)]])
             origin = rotation @ origin
             end = rotation @ end
             line_types = [LineType.CONTINUOUS_LINE if lane == 0 else LineType.STRIPED,
                           LineType.CONTINUOUS_LINE if lane == lanes - 1 else LineType.NONE]
-            net.add_lane("0", "1", StraightLane(origin, end, line_types=line_types))
+            net.add_lane(*nodes_str, StraightLane(origin, end, line_types=line_types))
         return net
 
     def position_heading_along_route(self, route: Route, longitudinal: float, lateral: float) \
