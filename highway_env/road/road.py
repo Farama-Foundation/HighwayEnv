@@ -95,17 +95,19 @@ class RoadNetwork(object):
         if not next_to:
             # Pick the one with the closest lane to projected target position
             try:
-                lanes_dists = [(next_to, *self.next_lane_given_next_road(_from, _to, _id, next_to, projected_position))
+                lanes_dists = [(next_to,
+                                *self.next_lane_given_next_road(_from, _to, _id, next_to, next_id, projected_position))
                                for next_to in self.graph[_to].keys()]  # (next_to, next_id, distance)
                 next_to, next_id, _ = min(lanes_dists, key=lambda x: x[-1])
             except KeyError:
                 return current_index
         else:
             # If it is known, follow it and get the closest lane
-            next_id, _ = self.next_lane_given_next_road(_from, _to, _id, next_to, projected_position)
+            next_id, _ = self.next_lane_given_next_road(_from, _to, _id, next_to, next_id, projected_position)
         return _to, next_to, next_id
 
-    def next_lane_given_next_road(self, _from, _to, _id, next_to, position):
+    def next_lane_given_next_road(self, _from: str, _to: str, _id: int,
+                                  next_to: str, next_id: int, position: np.ndarray) -> Tuple[int, float]:
         # If next road has same number of lane, stay on the same lane
         if len(self.graph[_from][_to]) == len(self.graph[_to][next_to]):
             if next_id is None:
