@@ -174,7 +174,7 @@ class IntervalVehicle(LinearVehicle):
         self.interval.position[:, 1] += dy_i * dt
 
         # Add noise
-        noise = 1
+        noise = 0.3
         self.interval.position[:, 0] += noise * dt * np.array([-1, 1])
         self.interval.position[:, 1] += noise * dt * np.array([-1, 1])
         self.interval.heading += noise * dt * np.array([-1, 1])
@@ -363,7 +363,7 @@ class IntervalVehicle(LinearVehicle):
         self.trajectory.append(LinearVehicle.create_from(self))
         self.interval_trajectory.append(copy.deepcopy(self.interval))
 
-    def check_collision(self, other: 'RoadObject') -> None:
+    def check_collision(self, other: 'RoadObject', dt: float) -> None:
         """
         Worst-case collision check.
 
@@ -371,6 +371,7 @@ class IntervalVehicle(LinearVehicle):
         which corresponds to worst-case outcome.
 
         :param other: the other vehicle
+        :param dt: a timestep
         """
         if not isinstance(other, MDPVehicle):
             super().check_collision(other)
