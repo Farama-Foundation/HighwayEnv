@@ -143,6 +143,25 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
+    def _info(self, obs: Observation, action: Action) -> dict:
+        """
+        Return a dictionary of additional information
+
+        :param obs: current observation
+        :param action: current action
+        :return: info dict
+        """
+        info = {
+            "speed": self.vehicle.speed,
+            "crashed": self.vehicle.crashed,
+            "action": action,
+        }
+        try:
+            info["cost"] = self._cost(action)
+        except NotImplementedError:
+            pass
+        return info
+
     def _cost(self, action: Action) -> float:
         """
         A constraint metric, for budgeted MDP.
@@ -194,16 +213,7 @@ class AbstractEnv(gym.Env):
         obs = self.observation_type.observe()
         reward = self._reward(action)
         terminal = self._is_terminal()
-
-        info = {
-            "speed": self.vehicle.speed,
-            "crashed": self.vehicle.crashed,
-            "action": action,
-        }
-        try:
-            info["cost"] = self._cost(action)
-        except NotImplementedError:
-            pass
+        info = self._info(obs, action)
 
         return obs, reward, terminal, info
 

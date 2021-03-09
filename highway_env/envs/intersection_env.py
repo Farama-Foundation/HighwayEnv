@@ -84,6 +84,12 @@ class IntersectionEnv(AbstractEnv):
             or self.steps >= self.config["duration"] * self.config["policy_frequency"] \
             or self.has_arrived(vehicle)
 
+    def _info(self, obs: np.ndarray, action: int) -> dict:
+        info = super()._info(obs, action)
+        info["agents_rewards"] = tuple(self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles)
+        info["agents_dones"] = tuple(self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles)
+        return info
+
     def _reset(self) -> None:
         self._make_road()
         self._make_vehicles(self.config["initial_vehicle_count"])
@@ -92,8 +98,6 @@ class IntersectionEnv(AbstractEnv):
         obs, reward, done, info = super().step(action)
         self._clear_vehicles()
         self._spawn_vehicle(spawn_probability=self.config["spawn_probability"])
-        info["agents_rewards"] = tuple(self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles)
-        info["agents_dones"] = tuple(self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles)
         return obs, reward, done, info
 
     def _make_road(self) -> None:

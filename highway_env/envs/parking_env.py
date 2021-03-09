@@ -49,14 +49,14 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         })
         return config
 
-    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
-        obs, reward, terminal, info = super().step(action)
+    def _info(self, obs, action) -> dict:
+        info = super(ParkingEnv, self)._info(obs, action)
         if isinstance(self.observation_type, MultiAgentObservation):
             success = tuple(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
         else:
             success = self._is_success(obs['achieved_goal'], obs['desired_goal'])
         info.update({"is_success": success})
-        return obs, reward, terminal, info
+        return info
 
     def _reset(self):
         self._create_road()
