@@ -1,14 +1,10 @@
 from setuptools import setup, find_packages
 
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
 setup(
     name='highway-env',
     version='1.1.dev0',
     description='An environment for simulated highway driving tasks',
-    long_description=long_description,
     url='https://github.com/eleurent/highway-env',
     author='Edouard Leurent',
     author_email='eleurent@gmail.com',
