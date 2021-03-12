@@ -1,5 +1,7 @@
 # Compiled sources
 *.pyc
+build/
+dist/
 
 # Setup
 **.egg*
