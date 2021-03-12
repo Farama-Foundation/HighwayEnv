@@ -28,7 +28,7 @@ In this task, the ego-vehicle is driving on a multilane highway populated with o
 The agent's objective is to reach a high speed while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.
 
 <p align="center">
-    <img src="../gh-media/docs/media/highway.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/highway.gif?raw=true"><br/>
     <em>The highway-v0 environment.</em>
 </p>
 
@@ -41,7 +41,7 @@ env = gym.make("merge-v0")
 In this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high speed while making room for the vehicles so that they can safely merge in the traffic.
 
 <p align="center">
-    <img src="../gh-media/docs/media/merge-env.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/merge-env.gif?raw=true"><br/>
     <em>The merge-v0 environment.</em>
 </p>
 
@@ -54,7 +54,7 @@ env = gym.make("roundabout-v0")
 In this task, the ego-vehicle if approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.
 
 <p align="center">
-    <img src="../gh-media/docs/media/roundabout-env.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/roundabout-env.gif?raw=true"><br/>
     <em>The roundabout-v0 environment.</em>
 </p>
 
@@ -67,7 +67,7 @@ env = gym.make("parking-v0")
 A goal-conditioned continuous control task in which the ego-vehicle must park in a given space with the appropriate heading.
 
 <p align="center">
-    <img src="../gh-media/docs/media/parking-env.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/parking-env.gif?raw=true"><br/>
     <em>The parking-v0 environment.</em>
 </p>
 
@@ -80,7 +80,7 @@ env = gym.make("intersection-v0")
 An intersection negotiation task with dense traffic.
 
 <p align="center">
-    <img src="../gh-media/docs/media/intersection-env.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/intersection-env.gif?raw=true"><br/>
     <em>The intersection-v0 environment.</em>
 </p>
 
@@ -93,7 +93,7 @@ Agents solving the `highway-env` environments are available in the [rl-agents](h
 ### [Deep Q-Network](https://github.com/eleurent/rl-agents/tree/master/rl_agents/agents/dqn)
 
 <p align="center">
-    <img src="../gh-media/docs/media/dqn.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/dqn.gif?raw=true"><br/>
     <em>The DQN agent solving highway-v0.</em>
 </p>
 
@@ -102,7 +102,7 @@ This model-free value-based reinforcement learning agent performs Q-learning wit
 ### [Deep Deterministic Policy Gradient](https://github.com/openai/baselines/tree/master/baselines/her)
 
 <p align="center">
-    <img src="../gh-media/docs/media/ddpg.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/ddpg.gif?raw=true"><br/>
     <em>The DDPG agent solving parking-v0.</em>
 </p>
 
@@ -111,7 +111,7 @@ This model-free policy-based reinforcement learning agent is optimized directly 
 ### [Value Iteration](https://github.com/eleurent/rl-agents/blob/master/rl_agents/agents/dynamic_programming/value_iteration.py)
 
 <p align="center">
-    <img src="../gh-media/docs/media/ttcvi.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/ttcvi.gif?raw=true"><br/>
     <em>The Value Iteration agent solving highway-v0.</em>
 </p>
 
@@ -124,7 +124,7 @@ The agent then performs a Value Iteration to compute the corresponding optimal s
 This agent leverages a transition and reward models to perform a stochastic tree search [(Coulom, 2006)](https://hal.inria.fr/inria-00116992/document) of the optimal trajectory. No particular assumption is required on the state representation or transition model.
 
 <p align="center">
-    <img src="../gh-media/docs/media/mcts.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/mcts.gif?raw=true"><br/>
     <em>The MCTS agent solving highway-v0.</em>
 </p>
 
