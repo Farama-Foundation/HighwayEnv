@@ -19,12 +19,15 @@ class ControlledVehicle(Vehicle):
     target_speed: float
     """ Desired velocity."""
 
-    TAU_A = 0.6  # [s]
-    TAU_DS = 0.2  # [s]
-    PURSUIT_TAU = 0.5*TAU_DS  # [s]
-    KP_A = 1 / TAU_A
-    KP_HEADING = 1 / TAU_DS
-    KP_LATERAL = 1/3 * KP_HEADING  # [1/s]
+    """Characteristic time"""
+    TAU_ACC = 0.6  # [s]
+    TAU_HEADING = 0.2  # [s]
+    TAU_LATERAL = 0.6  # [s]
+
+    TAU_PURSUIT = 0.5 * TAU_HEADING  # [s]
+    KP_A = 1 / TAU_ACC
+    KP_HEADING = 1 / TAU_HEADING
+    KP_LATERAL = 1 / TAU_LATERAL  # [1/s]
     MAX_STEERING_ANGLE = np.pi / 3  # [rad]
     DELTA_SPEED = 5  # [m/s]
 
@@ -124,7 +127,7 @@ class ControlledVehicle(Vehicle):
         """
         target_lane = self.road.network.get_lane(target_lane_index)
         lane_coords = target_lane.local_coordinates(self.position)
-        lane_next_coords = lane_coords[0] + self.speed * self.PURSUIT_TAU
+        lane_next_coords = lane_coords[0] + self.speed * self.TAU_PURSUIT
         lane_future_heading = target_lane.heading_at(lane_next_coords)
 
         # Lateral position control

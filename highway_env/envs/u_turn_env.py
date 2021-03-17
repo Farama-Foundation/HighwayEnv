@@ -137,7 +137,7 @@ class UTurnEnv(AbstractEnv):
                                                      ego_lane.position(0, 0),
                                                      speed=16)
         # Stronger anticipation for the turn
-        ego_vehicle.PURSUIT_TAU = MDPVehicle.TAU_DS
+        ego_vehicle.PURSUIT_TAU = MDPVehicle.TAU_HEADING
         # Lower speed range
         ego_vehicle.SPEED_MIN = 8
         ego_vehicle.SPEED_MAX = 24
