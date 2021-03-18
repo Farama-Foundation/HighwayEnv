@@ -10,6 +10,9 @@
 .. |Documentation Status| image:: https://readthedocs.org/projects/highway-env/badge/?version=latest
    :target: https://highway-env.readthedocs.io/en/latest/
 
+.. |Downloads| image:: https://img.shields.io/pypi/dm/highway-env
+   :target: https://pypi.org/project/highway-env/
+
 .. |Codacy Status| image:: https://api.codacy.com/project/badge/Grade/63847d9328f64fce9c137b03fcafcc27
   :target: https://app.codacy.com/manual/eleurent/highway-env?utm_source=github.com&utm_medium=referral&utm_content=eleurent/highway-env&utm_campaign=Badge_Grade_Dashboard
 
@@ -23,7 +26,7 @@
   :target: https://highway-env.readthedocs.io/en/latest/quickstart.html#all-the-environments
 
 
-|Build Status| |Documentation Status| |Codacy Status| |Coverage Status| |Contributors| |Environments|
+|Build Status| |Documentation Status| |Downloads| |Codacy Status| |Coverage Status| |Contributors| |Environments|
 
 Welcome to `highway-env <https://github.com/eleurent/highway-env>`_'s documentation!
 ====================================================================================
