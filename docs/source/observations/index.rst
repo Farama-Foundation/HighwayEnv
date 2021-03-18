@@ -58,7 +58,7 @@ vehicle V    22.2       10.5       18.0          0.5
 .. note::
     The ego-vehicle is always described in the first row
 
-If configured with ``normalized=True`` (default), the observation is normalized within a fixed range, which gives for
+If configured with ``normalize=True`` (default), the observation is normalized within a fixed range, which gives for
 the range [100, 100, 20, 20]:
 
 ===========  =========  =========  ===========  ===========
