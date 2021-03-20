@@ -65,13 +65,14 @@ class GrayscaleObservation(ObservationType):
         self.config = config
         self.observation_shape = config["observation_shape"]
         self.shape = self.observation_shape + (config["stack_size"], )
+        self.dtype = np.uint8
         self.state = np.zeros(self.shape)
 
     def space(self) -> spaces.Space:
         try:
             return spaces.Box(shape=self.shape,
-                              low=0, high=1,
-                              dtype=np.float32)
+                              low=0, high=255,
+                              dtype=self.dtype)
         except AttributeError:
             return spaces.Space()
 
@@ -85,7 +86,7 @@ class GrayscaleObservation(ObservationType):
     def _record_to_grayscale(self) -> np.ndarray:
         #TODO: center rendering on the observer vehicle
         raw_rgb = self.env.render('rgb_array')
-        return np.dot(raw_rgb[..., :3], self.config['weights'])
+        return np.dot(raw_rgb[..., :3], self.config['weights']).astype(self.dtype)
 
 
 class TimeToCollisionObservation(ObservationType):
