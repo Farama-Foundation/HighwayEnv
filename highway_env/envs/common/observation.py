@@ -1,10 +1,11 @@
-from typing import List, Dict, TYPE_CHECKING, Optional, Union
+from typing import List, Dict, TYPE_CHECKING, Optional, Union, Tuple
 from gym import spaces
 import numpy as np
 import pandas as pd
 
 from highway_env import utils
 from highway_env.envs.common.finite_mdp import compute_ttc_grid
+from highway_env.envs.common.graphics import EnvViewer
 from highway_env.road.lane import AbstractLane
 from highway_env.utils import distance_to_circle
 from highway_env.vehicle.controller import MDPVehicle
@@ -43,50 +44,60 @@ class ObservationType(object):
 class GrayscaleObservation(ObservationType):
 
     """
-    An observation class that collects directly what the simulator renders
+    An observation class that collects directly what the simulator renders.
 
     Also stacks the collected frames as in the nature DQN.
-    Specific keys are expected in the configuration dictionary passed.
+    The observation shape is C x W x H.
 
+    Specific keys are expected in the configuration dictionary passed.
     Example of observation dictionary in the environment config:
         observation": {
             "type": "GrayscaleObservation",
-            "weights": [0.2989, 0.5870, 0.1140],  #weights for RGB conversion,
-            "stack_size": 4,
             "observation_shape": (84, 84)
+            "stack_size": 4,
+            "weights": [0.2989, 0.5870, 0.1140],  # weights for RGB conversion,
         }
-
-    Also, the screen_height and screen_width of the environment should match the
-    expected observation_shape.
     """
 
-    def __init__(self, env: 'AbstractEnv', config: dict) -> None:
+    def __init__(self, env: 'AbstractEnv',
+                 observation_shape: Tuple[int, int],
+                 stack_size: int,
+                 weights: List[float],
+                 scaling: Optional[float] = None,
+                 centering_position: Optional[List[float]] = None,
+                 **kwargs) -> None:
         super().__init__(env)
-        self.config = config
-        self.observation_shape = config["observation_shape"]
-        self.shape = self.observation_shape + (config["stack_size"], )
-        self.dtype = np.uint8
-        self.state = np.zeros(self.shape)
+        self.observation_shape = observation_shape
+        self.shape = (stack_size, ) + self.observation_shape
+        self.weights = weights
+        self.obs = np.zeros(self.shape)
+
+        # The viewer configuration can be different between this observation and env.render() (typically smaller)
+        viewer_config = env.config.copy()
+        viewer_config.update({
+            "offscreen_rendering": True,
+            "screen_width": self.observation_shape[0],
+            "screen_height": self.observation_shape[1],
+            "scaling": scaling or viewer_config["scaling"],
+            "centering_position": centering_position or viewer_config["centering_position"]
+        })
+        self.viewer = EnvViewer(env, config=viewer_config)
 
     def space(self) -> spaces.Space:
-        try:
-            return spaces.Box(shape=self.shape,
-                              low=0, high=255,
-                              dtype=self.dtype)
-        except AttributeError:
-            return spaces.Space()
+        return spaces.Box(shape=self.shape, low=0, high=255, dtype=np.uint8)
 
     def observe(self) -> np.ndarray:
-        new_obs = self._record_to_grayscale()
-        new_obs = np.reshape(new_obs, self.observation_shape)
-        self.state = np.roll(self.state, -1, axis=-1)
-        self.state[:, :, -1] = new_obs
-        return self.state
+        new_obs = self._render_to_grayscale()
+        self.obs = np.roll(self.obs, -1, axis=0)
+        self.obs[-1, :, :] = new_obs
+        return self.obs
 
-    def _record_to_grayscale(self) -> np.ndarray:
-        #TODO: center rendering on the observer vehicle
-        raw_rgb = self.env.render('rgb_array')
-        return np.dot(raw_rgb[..., :3], self.config['weights']).astype(self.dtype)
+    def _render_to_grayscale(self) -> np.ndarray:
+        # TODO: center rendering on the observer vehicle
+        self.viewer.display()
+        raw_rgb = self.viewer.get_image()  # H x W x C
+        raw_rgb = np.moveaxis(raw_rgb, 0, 1)
+        return np.dot(raw_rgb[..., :3], self.weights).clip(0, 255).astype(np.uint8)
 
 
 class TimeToCollisionObservation(ObservationType):
@@ -500,7 +511,7 @@ def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
     elif config["type"] == "KinematicsGoal":
         return KinematicsGoalObservation(env, **config)
     elif config["type"] == "GrayscaleObservation":
-        return GrayscaleObservation(env, config)
+        return GrayscaleObservation(env, **config)
     elif config["type"] == "AttributesObservation":
         return AttributesObservation(env, **config)
     elif config["type"] == "MultiAgentObservation":

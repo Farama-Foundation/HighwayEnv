@@ -1,11 +1,10 @@
 import os
-from typing import TYPE_CHECKING, Callable, List
+from typing import TYPE_CHECKING, Callable, List, Optional
 import numpy as np
 import pygame
 from gym.spaces import Discrete
 
 from highway_env.envs.common.action import ActionType, DiscreteMetaAction, ContinuousAction
-from highway_env.envs.common.observation import LidarObservation
 from highway_env.road.graphics import WorldSurface, RoadGraphics
 from highway_env.vehicle.graphics import VehicleGraphics
 
@@ -20,22 +19,23 @@ class EnvViewer(object):
 
     SAVE_IMAGES = False
 
-    def __init__(self, env: 'AbstractEnv') -> None:
+    def __init__(self, env: 'AbstractEnv', config: Optional[dict] = None) -> None:
         self.env = env
-        self.offscreen = env.config["offscreen_rendering"]
+        self.config = config or env.config
+        self.offscreen = self.config["offscreen_rendering"]
 
         pygame.init()
         pygame.display.set_caption("Highway-env")
-        panel_size = (self.env.config["screen_width"], self.env.config["screen_height"])
+        panel_size = (self.config["screen_width"], self.config["screen_height"])
 
         # A display is not mandatory to draw things. Ignoring the display.set_mode()
         # instruction allows the drawing to be done on surfaces without
         # handling a screen display, useful for e.g. cloud computing
         if not self.offscreen:
-            self.screen = pygame.display.set_mode([self.env.config["screen_width"], self.env.config["screen_height"]])
+            self.screen = pygame.display.set_mode([self.config["screen_width"], self.config["screen_height"]])
         self.sim_surface = WorldSurface(panel_size, 0, pygame.Surface(panel_size))
-        self.sim_surface.scaling = env.config.get("scaling", self.sim_surface.INITIAL_SCALING)
-        self.sim_surface.centering_position = env.config.get("centering_position", self.sim_surface.INITIAL_CENTERING)
+        self.sim_surface.scaling = self.config.get("scaling", self.sim_surface.INITIAL_SCALING)
+        self.sim_surface.centering_position = self.config.get("centering_position", self.sim_surface.INITIAL_CENTERING)
         self.clock = pygame.time.Clock()
 
         self.enabled = True
@@ -58,13 +58,13 @@ class EnvViewer(object):
         """
         if self.agent_display is None:
             if not self.offscreen:
-                if self.env.config["screen_width"] > self.env.config["screen_height"]:
-                    self.screen = pygame.display.set_mode((self.env.config["screen_width"],
-                                                           2 * self.env.config["screen_height"]))
+                if self.config["screen_width"] > self.config["screen_height"]:
+                    self.screen = pygame.display.set_mode((self.config["screen_width"],
+                                                           2 * self.config["screen_height"]))
                 else:
-                    self.screen = pygame.display.set_mode((2 * self.env.config["screen_width"],
-                                                           self.env.config["screen_height"]))
-            self.agent_surface = pygame.Surface((self.env.config["screen_width"], self.env.config["screen_height"]))
+                    self.screen = pygame.display.set_mode((2 * self.config["screen_width"],
+                                                           self.config["screen_height"]))
+            self.agent_surface = pygame.Surface((self.config["screen_width"], self.config["screen_height"]))
         self.agent_display = agent_display
 
     def set_agent_action_sequence(self, actions: List['Action']) -> None:
@@ -113,10 +113,10 @@ class EnvViewer(object):
         if self.agent_display:
             self.agent_display(self.agent_surface, self.sim_surface)
             if not self.offscreen:
-                if self.env.config["screen_width"] > self.env.config["screen_height"]:
-                    self.screen.blit(self.agent_surface, (0, self.env.config["screen_height"]))
+                if self.config["screen_width"] > self.config["screen_height"]:
+                    self.screen.blit(self.agent_surface, (0, self.config["screen_height"]))
                 else:
-                    self.screen.blit(self.agent_surface, (self.env.config["screen_width"], 0))
+                    self.screen.blit(self.agent_surface, (self.config["screen_width"], 0))
 
         RoadGraphics.display_traffic(
             self.env.road,
@@ -137,9 +137,13 @@ class EnvViewer(object):
             self.frame += 1
 
     def get_image(self) -> np.ndarray:
-        """the rendered image as a rbg array."""
-        surface = self.screen if self.env.config["render_agent"] and not self.offscreen else self.sim_surface
-        data = pygame.surfarray.array3d(surface)
+        """
+        The rendered image as a rbg array.
+
+        OpenAI gym's channel convention is H x W x C
+        """
+        surface = self.screen if self.config["render_agent"] and not self.offscreen else self.sim_surface
+        data = pygame.surfarray.array3d(surface)  # in W x H x C channel convention
         return np.moveaxis(data, 0, 1)
 
     def window_position(self) -> np.ndarray:
@@ -210,6 +214,7 @@ class ObservationGraphics(object):
 
     @classmethod
     def display(cls, obs, sim_surface):
+        from highway_env.envs.common.observation import LidarObservation
         if isinstance(obs, LidarObservation):
             cls.display_grid(obs, sim_surface)
 
