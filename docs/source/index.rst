@@ -66,4 +66,5 @@ Documentation contents
   installation
   quickstart
   user_guide
+  faq
   bibliography/index
