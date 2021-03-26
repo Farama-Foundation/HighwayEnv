@@ -17,7 +17,7 @@ class BicycleVehicle(Vehicle):
     MASS: float = 1  # [kg]
     LENGTH_A: float = Vehicle.LENGTH / 2  # [m]
     LENGTH_B: float = Vehicle.LENGTH / 2  # [m]
-    INERTIA_Z: float = 1/12 * MASS * (Vehicle.LENGTH ** 2 + 3 * Vehicle.WIDTH ** 2)  # [kg.m2]
+    INERTIA_Z: float = 1/12 * MASS * (Vehicle.LENGTH ** 2 + Vehicle.WIDTH ** 2)  # [kg.m2]
     FRICTION_FRONT: float = 15.0 * MASS  # [N]
     FRICTION_REAR: float = 15.0 * MASS  # [N]
 
