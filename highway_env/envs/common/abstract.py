@@ -29,8 +29,10 @@ class AbstractEnv(gym.Env):
     """
     observation_type: ObservationType
     action_type: ActionType
-    automatic_rendering_callback: Optional[Callable]
-    metadata = {'render.modes': ['human', 'rgb_array']}
+    _automatic_rendering_callback: Optional[Callable]
+    metadata = {
+        'render.modes': ['human', 'rgb_array'],
+    }
 
     PERCEPTION_DISTANCE = 6.0 * MDPVehicle.SPEED_MAX
     """The maximum distance of any vehicle present in the observation [m]"""
@@ -38,8 +40,7 @@ class AbstractEnv(gym.Env):
     def __init__(self, config: dict = None) -> None:
         # Configuration
         self.config = self.default_config()
-        if config:
-            self.config.update(config)
+        self.configure(config)
 
         # Seeding
         self.np_random = None
@@ -63,7 +64,7 @@ class AbstractEnv(gym.Env):
 
         # Rendering
         self.viewer = None
-        self.automatic_rendering_callback = None
+        self._automatic_rendering_callback = None
         self.should_update_rendering = True
         self.rendering_mode = 'human'
         self.enable_auto_render = False
@@ -116,6 +117,10 @@ class AbstractEnv(gym.Env):
     def configure(self, config: dict) -> None:
         if config:
             self.config.update(config)
+
+    def update_metadata(self):
+        self.metadata['video.frames_per_second'] = self.config["simulation_frequency"] \
+            if self._automatic_rendering_callback else self.config["policy_frequency"]
 
     def define_spaces(self) -> None:
         """
@@ -178,6 +183,7 @@ class AbstractEnv(gym.Env):
 
         :return: the observation of the reset state
         """
+        self.update_metadata()
         self.define_spaces()  # First, to set the controlled vehicle class depending on action space
         self.time = self.steps = 0
         self.done = False
@@ -299,6 +305,10 @@ class AbstractEnv(gym.Env):
             actions.append(self.action_type.actions_indexes['SLOWER'])
         return actions
 
+    def set_rendering_callback(self, callback: Optional[Callable]):
+        self._automatic_rendering_callback = callback
+        self.update_metadata()
+
     def _automatic_rendering(self) -> None:
         """
         Automatically render the intermediate frames while an action is still ongoing.
@@ -311,8 +321,8 @@ class AbstractEnv(gym.Env):
         if self.viewer is not None and self.enable_auto_render:
             self.should_update_rendering = True
 
-            if self.automatic_rendering_callback is not None:
-                self.automatic_rendering_callback()
+            if self._automatic_rendering_callback is not None:
+                self._automatic_rendering_callback()
             else:
                 self.render(self.rendering_mode)
 
@@ -396,7 +406,7 @@ class AbstractEnv(gym.Env):
         result = cls.__new__(cls)
         memo[id(self)] = result
         for k, v in self.__dict__.items():
-            if k not in ['viewer', 'automatic_rendering_callback']:
+            if k not in ['viewer', '_automatic_rendering_callback']:
                 setattr(result, k, copy.deepcopy(v, memo))
             else:
                 setattr(result, k, None)
