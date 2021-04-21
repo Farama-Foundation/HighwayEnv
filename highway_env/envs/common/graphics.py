@@ -138,7 +138,7 @@ class EnvViewer(object):
 
     def get_image(self) -> np.ndarray:
         """
-        The rendered image as a rbg array.
+        The rendered image as a rgb array.
 
         OpenAI gym's channel convention is H x W x C
         """
