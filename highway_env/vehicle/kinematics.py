@@ -85,10 +85,10 @@ class Vehicle(RoadObject):
         lane = road.network.get_lane((_from, _to, _id))
         if speed is None:
             if lane.speed_limit is not None:
-                speed = road.np_random.uniform(0.7*lane.speed_limit, lane.speed_limit)
+                speed = road.np_random.uniform(0.7*lane.speed_limit, 0.8*lane.speed_limit)
             else:
                 speed = road.np_random.uniform(Vehicle.DEFAULT_SPEEDS[0], Vehicle.DEFAULT_SPEEDS[1])
-        default_spacing = 15+1.2*speed
+        default_spacing = 12+1.0*speed
         offset = spacing * default_spacing * np.exp(-5 / 40 * len(road.network.graph[_from][_to]))
         x0 = np.max([lane.local_coordinates(v.position)[0] for v in road.vehicles]) \
             if len(road.vehicles) else 3*offset

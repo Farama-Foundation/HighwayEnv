@@ -216,6 +216,7 @@ class RoadNetwork(object):
                               start: float = 0,
                               length: float = 10000,
                               angle: float = 0,
+                              speed_limit: float = 30,
                               nodes_str: Optional[Tuple[str, str]] = None,
                               net: Optional['RoadNetwork'] = None) \
             -> 'RoadNetwork':
@@ -229,7 +230,7 @@ class RoadNetwork(object):
             end = rotation @ end
             line_types = [LineType.CONTINUOUS_LINE if lane == 0 else LineType.STRIPED,
                           LineType.CONTINUOUS_LINE if lane == lanes - 1 else LineType.NONE]
-            net.add_lane(*nodes_str, StraightLane(origin, end, line_types=line_types))
+            net.add_lane(*nodes_str, StraightLane(origin, end, line_types=line_types, speed_limit=speed_limit))
         return net
 
     def position_heading_along_route(self, route: Route, longitudinal: float, lateral: float) \
