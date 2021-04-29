@@ -27,10 +27,19 @@ Windows 10
 We recommend using `Anaconda <https://conda.io/docs/user-guide/install/windows.html>`_.
 
 
-Latest stable release
+Stable release
 ---------------------
 To install the latest stable version:
 
 .. code-block:: bash
 
     pip install highway-env
+
+Development version
+---------------------
+
+To install the current development version:
+
+.. code-block:: bash
+
+    pip install --user git+https://github.com/eleurent/highway-env
