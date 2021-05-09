@@ -20,8 +20,6 @@ class SummonEnv(ParkingEnv):
     Credits to Vinny Ruia for the idea and initial implementation.
     """
 
-    COLLISION_REWARD = -5
-
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
@@ -114,7 +112,7 @@ class SummonEnv(ParkingEnv):
         :return: the corresponding reward
         """
         return super().compute_reward(achieved_goal, desired_goal, info, p) + \
-            self.COLLISION_REWARD * self.vehicle.crashed
+            self.config["collision_reward"] * self.vehicle.crashed
 
 
 class SummonEnvActionRepeat(SummonEnv):

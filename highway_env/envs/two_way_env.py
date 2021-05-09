@@ -19,11 +19,6 @@ class TwoWayEnv(AbstractEnv):
     in the CMDP/BMDP framework.
     """
 
-    COLLISION_REWARD: float = 0
-    LEFT_LANE_CONSTRAINT: float = 1
-    LEFT_LANE_REWARD: float = 0.2
-    HIGH_SPEED_REWARD: float = 0.8
-
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
@@ -35,6 +30,10 @@ class TwoWayEnv(AbstractEnv):
             "action": {
                 "type": "DiscreteMetaAction",
             },
+            "collision_reward": 0,
+            "left_lane_constraint": 1,
+            "left_lane_reward": 0.2,
+            "high_speed_reward": 0.8,
         })
         return config
 
@@ -46,8 +45,9 @@ class TwoWayEnv(AbstractEnv):
         """
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
 
-        reward = self.HIGH_SPEED_REWARD * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1) \
-                 + self.LEFT_LANE_REWARD * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
+        reward = self.config["high_speed_reward"] * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1) \
+            + self.config["left_lane_reward"] \
+                * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
         return reward
 
     def _is_terminal(self) -> bool:

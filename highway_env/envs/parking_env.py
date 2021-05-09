@@ -1,9 +1,6 @@
-from typing import Tuple
-
 from gym.envs.registration import register
 from gym import GoalEnv
 import numpy as np
-from numpy.core._multiarray_umath import ndarray
 
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.observation import MultiAgentObservation
@@ -21,9 +18,6 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     Credits to Munir Jojo-Verge for the idea and initial implementation.
     """
-    REWARD_WEIGHTS: ndarray = np.array([1, 0.3, 0, 0, 0.02, 0.02])
-    SUCCESS_GOAL_REWARD: float = 0.12
-    STEERING_RANGE: float = np.deg2rad(45)
 
     @classmethod
     def default_config(cls) -> dict:
@@ -38,6 +32,10 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "action": {
                 "type": "ContinuousAction"
             },
+            "reward_weights": np.array([1, 0.3, 0, 0, 0.02, 0.02]),
+            "success_goal_reward": 0.12,
+            "collision_reward": -5,
+            "steering_range": np.deg2rad(45),
             "simulation_frequency": 15,
             "policy_frequency": 5,
             "duration": 100,
@@ -107,7 +105,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         :param p: the Lp^p norm used in the reward. Use p<1 to have high kurtosis for rewards in [0, 1]
         :return: the corresponding reward
         """
-        return -np.power(np.dot(np.abs(achieved_goal - desired_goal), self.REWARD_WEIGHTS), p)
+        return -np.power(np.dot(np.abs(achieved_goal - desired_goal), self.config["reward_weights"]), p)
 
     def _reward(self, action: np.ndarray) -> float:
         obs = self.observation_type.observe()
@@ -116,7 +114,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
                      for agent_obs in obs)
 
     def _is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> bool:
-        return self.compute_reward(achieved_goal, desired_goal, {}) > -self.SUCCESS_GOAL_REWARD
+        return self.compute_reward(achieved_goal, desired_goal, {}) > -self.config["success_goal_reward"]
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the goal is reached."""

@@ -12,11 +12,6 @@ from highway_env.vehicle.controller import MDPVehicle
 
 class RoundaboutEnv(AbstractEnv):
 
-    COLLISION_REWARD: float = -1
-    HIGH_SPEED_REWARD: float = 0.2
-    RIGHT_LANE_REWARD: float = 0
-    LANE_CHANGE_REWARD: float = -0.05
-
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
@@ -30,6 +25,10 @@ class RoundaboutEnv(AbstractEnv):
                 "type": "DiscreteMetaAction",
             },
             "incoming_vehicle_destination": None,
+            "collision_reward": -1,
+            "high_speed_reward": 0.2,
+            "right_lane_reward": 0,
+            "lane_change_reward": -0.05,
             "screen_width": 600,
             "screen_height": 600,
             "centering_position": [0.5, 0.6],
@@ -39,10 +38,13 @@ class RoundaboutEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         lane_change = action == 0 or action == 2
-        reward = self.COLLISION_REWARD * self.vehicle.crashed \
-                 + self.HIGH_SPEED_REWARD * MDPVehicle.get_speed_index(self.vehicle) / max(MDPVehicle.SPEED_COUNT - 1, 1) \
-                 + self.LANE_CHANGE_REWARD * lane_change
-        return utils.lmap(reward, [self.COLLISION_REWARD + self.LANE_CHANGE_REWARD, self.HIGH_SPEED_REWARD], [0, 1])
+        reward = self.config["collision_reward"] * self.vehicle.crashed \
+            + self.config["high_speed_reward"] * \
+                 MDPVehicle.get_speed_index(self.vehicle) / max(MDPVehicle.SPEED_COUNT - 1, 1) \
+            + self.config["lane_change_reward"] * lane_change
+        return utils.lmap(reward,
+                          [self.config["collision_reward"] + self.config["lane_change_reward"],
+                           self.config["high_speed_reward"]], [0, 1])
 
     def _is_terminal(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""

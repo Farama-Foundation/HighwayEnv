@@ -16,13 +16,6 @@ class UTurnEnv(AbstractEnv):
     traffic. High speed overtaking must be balanced with ensuring safety.
     """
 
-    """Penalization received for vehicle collision."""
-    COLLISION_REWARD: float = -1.0
-    """Reward received for maintaining left most lane."""
-    LEFT_LANE_REWARD: float = 0.1
-    """Reward received for maintaining cruising speed."""
-    HIGH_SPEED_REWARD: float = 0.4
-
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
@@ -37,6 +30,9 @@ class UTurnEnv(AbstractEnv):
             "screen_width": 789,
             "screen_height": 289,
             "duration": 10,
+            "collision_reward": -1.0,  # Penalization received for vehicle collision.
+            "left_lane_reward": 0.1,  # Reward received for maintaining left most lane.
+            "high_speed_reward": 0.4,  # Reward received for maintaining cruising speed.
             "reward_speed_range": [8, 24],
             "offroad_terminal": False
         })
@@ -52,10 +48,12 @@ class UTurnEnv(AbstractEnv):
         lane = self.vehicle.lane_index[2]
         scaled_speed = utils.lmap(self.vehicle.speed, self.config["reward_speed_range"], [0, 1])
         reward = \
-            + self.COLLISION_REWARD * self.vehicle.crashed \
-            + self.LEFT_LANE_REWARD * lane / max(len(neighbours) - 1, 1) \
-            + self.HIGH_SPEED_REWARD * np.clip(scaled_speed, 0, 1)
-        reward = utils.lmap(reward, [self.COLLISION_REWARD, self.HIGH_SPEED_REWARD + self.LEFT_LANE_REWARD], [0, 1])
+            + self.config["collision_reward"] * self.vehicle.crashed \
+            + self.config["left_lane_reward"] * lane / max(len(neighbours) - 1, 1) \
+            + self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1)
+        reward = utils.lmap(reward,
+                            [self.config["collision_reward"],
+                             self.config["high_speed_reward"] + self.config["left_lane_reward"]], [0, 1])
         reward = 0 if not self.vehicle.on_road else reward
         return reward
 

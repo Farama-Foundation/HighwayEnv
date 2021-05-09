@@ -1,5 +1,4 @@
 import numpy as np
-from typing import Tuple
 from gym.envs.registration import register
 
 from highway_env import utils
@@ -18,15 +17,6 @@ class HighwayEnv(AbstractEnv):
     staying on the rightmost lanes and avoiding collisions.
     """
 
-    RIGHT_LANE_REWARD: float = 0.1
-    """The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes."""
-
-    HIGH_SPEED_REWARD: float = 0.4
-    """The reward received when driving at full speed, linearly mapped to zero for lower speeds according to config["reward_speed_range"]."""
-
-    LANE_CHANGE_REWARD: float = 0
-    """The reward received at each lane change action."""
-
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
@@ -44,7 +34,12 @@ class HighwayEnv(AbstractEnv):
             "duration": 40,  # [s]
             "ego_spacing": 2,
             "vehicles_density": 1,
-            "collision_reward": -1,  # The reward received when colliding with a vehicle.
+            "collision_reward": -1,    # The reward received when colliding with a vehicle.
+            "right_lane_reward": 0.1,  # The reward received when driving on the right-most lanes, linearly mapped to
+                                       # zero for other lanes.
+            "high_speed_reward": 0.4,  # The reward received when driving at full speed, linearly mapped to zero for
+                                       # lower speeds according to config["reward_speed_range"].
+            "lane_change_reward": 0,   # The reward received at each lane change action.
             "reward_speed_range": [20, 30],
             "offroad_terminal": False
         })
@@ -92,10 +87,11 @@ class HighwayEnv(AbstractEnv):
         scaled_speed = utils.lmap(self.vehicle.speed, self.config["reward_speed_range"], [0, 1])
         reward = \
             + self.config["collision_reward"] * self.vehicle.crashed \
-            + self.RIGHT_LANE_REWARD * lane / max(len(neighbours) - 1, 1) \
-            + self.HIGH_SPEED_REWARD * np.clip(scaled_speed, 0, 1)
+            + self.config["right_lane_reward"] * lane / max(len(neighbours) - 1, 1) \
+            + self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1)
         reward = utils.lmap(reward,
-                          [self.config["collision_reward"], self.HIGH_SPEED_REWARD + self.RIGHT_LANE_REWARD],
+                          [self.config["collision_reward"],
+                           self.config["high_speed_reward"] + self.config["right_lane_reward"]],
                           [0, 1])
         reward = 0 if not self.vehicle.on_road else reward
         return reward

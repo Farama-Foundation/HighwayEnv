@@ -19,11 +19,17 @@ class MergeEnv(AbstractEnv):
     vehicles.
     """
 
-    COLLISION_REWARD: float = -1
-    RIGHT_LANE_REWARD: float = 0.1
-    HIGH_SPEED_REWARD: float = 0.2
-    MERGING_SPEED_REWARD: float = -0.5
-    LANE_CHANGE_REWARD: float = -0.05
+    @classmethod
+    def default_config(cls) -> dict:
+        cfg = super().default_config()
+        cfg.update({
+            "collision_reward": -1,
+            "right_lane_reward": 0.1,
+            "high_speed_reward": 0.2,
+            "merging_speed_reward": -0.5,
+            "lane_change_reward": -0.05,
+        })
+        return cfg
 
     def _reward(self, action: int) -> float:
         """
@@ -34,24 +40,24 @@ class MergeEnv(AbstractEnv):
         :param action: the action performed
         :return: the reward of the state-action transition
         """
-        action_reward = {0: self.LANE_CHANGE_REWARD,
+        action_reward = {0: self.config["lane_change_reward"],
                          1: 0,
-                         2: self.LANE_CHANGE_REWARD,
+                         2: self.config["lane_change_reward"],
                          3: 0,
                          4: 0}
-        reward = self.COLLISION_REWARD * self.vehicle.crashed \
-                 + self.RIGHT_LANE_REWARD * self.vehicle.lane_index[2] / 1 \
-                 + self.HIGH_SPEED_REWARD * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1)
+        reward = self.config["collision_reward"] * self.vehicle.crashed \
+            + self.config["right_lane_reward"] * self.vehicle.lane_index[2] / 1 \
+            + self.config["high_speed_reward"] * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1)
 
         # Altruistic penalty
         for vehicle in self.road.vehicles:
             if vehicle.lane_index == ("b", "c", 2) and isinstance(vehicle, ControlledVehicle):
-                reward += self.MERGING_SPEED_REWARD * \
+                reward += self.config["merging_speed_reward"] * \
                           (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
 
         return utils.lmap(action_reward[action] + reward,
-                          [self.COLLISION_REWARD + self.MERGING_SPEED_REWARD,
-                            self.HIGH_SPEED_REWARD + self.RIGHT_LANE_REWARD],
+                          [self.config["collision_reward"] + self.config["merging_speed_reward"],
+                           self.config["high_speed_reward"] + self.config["right_lane_reward"]],
                           [0, 1])
 
     def _is_terminal(self) -> bool:
