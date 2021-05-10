@@ -1,10 +1,11 @@
 import gym
 from stable_baselines3 import DQN
-from stable_baselines3.common.vec_env import VecVideoRecorder
+from stable_baselines3.common.vec_env import VecVideoRecorder, DummyVecEnv
+
+import highway_env
 
 
-if __name__ == '__main__':
-    # Train
+def train_env():
     env = gym.make('highway-v0')
     env.configure({
         "lanes_count": 3,
@@ -20,7 +21,19 @@ if __name__ == '__main__':
         "duration": 40,
     })
     env.reset()
-    model = DQN('CnnPolicy', env,
+    return env
+
+
+def test_env():
+    env = train_env()
+    env.configure({"policy_frequency": 15, "duration": 20 * 15})
+    env.reset()
+    return env
+
+
+if __name__ == '__main__':
+    # Train
+    model = DQN('CnnPolicy', DummyVecEnv([train_env]),
                 gamma=0.8,
                 learning_rate=5e-4,
                 buffer_size=40*1000,
@@ -35,8 +48,9 @@ if __name__ == '__main__':
 
     # Record video
     model = DQN.load("dqn_highway")
-    env.configure({"policy_frequency": 15, "duration": 20 * 15})
-    video_length = 2 * env.config["duration"]
+
+    env = DummyVecEnv([test_env])
+    video_length = 2 * env.envs[0].config["duration"]
     env = VecVideoRecorder(env, "videos/",
                            record_video_trigger=lambda x: x == 0, video_length=video_length,
                            name_prefix="dqn-agent")
