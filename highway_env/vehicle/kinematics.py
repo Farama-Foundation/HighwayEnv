@@ -1,5 +1,6 @@
-from typing import Union, Optional
+from typing import Union, Optional, Tuple, List
 import numpy as np
+import copy
 from collections import deque
 
 from highway_env import utils
@@ -33,8 +34,10 @@ class Vehicle(RoadObject):
                  road: Road,
                  position: Vector,
                  heading: float = 0,
-                 speed: float = 0):
+                 speed: float = 0,
+                 predition_type: str = 'constant_steering'):
         super().__init__(road, position, heading, speed)
+        self.prediction_type = predition_type
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
         self.impact = None
@@ -198,6 +201,26 @@ class Vehicle(RoadObject):
             return False, False, np.zeros(2,)
         # Accurate rectangular check
         return utils.are_polygons_intersecting(self.polygon(), other.polygon(), self.velocity * dt, other.velocity * dt)
+
+    def predict_trajectory_constant_speed(self, times: np.ndarray) -> Tuple[List[np.ndarray], List[float]]:
+        if self.prediction_type == 'zero_steering':
+            action = {'acceleration': 0.0, 'steering': 0.0}
+        elif self.prediction_type == 'constant_steering':
+            action = {'acceleration': 0.0, 'steering': self.action['steering']}
+        else:
+            raise ValueError("Unknown predition type")
+
+        dt = np.diff(np.concatenate(([0.0], times)))
+
+        positions = []
+        headings = []
+        v = copy.deepcopy(self)
+        v.act(action)
+        for t in dt:
+            v.step(t)
+            positions.append(v.position.copy())
+            headings.append(v.heading)
+        return (positions, headings)
 
     @property
     def velocity(self) -> np.ndarray:
