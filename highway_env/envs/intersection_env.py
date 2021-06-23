@@ -67,12 +67,9 @@ class IntersectionEnv(AbstractEnv):
                / len(self.controlled_vehicles)
 
     def _agent_reward(self, action: int, vehicle: Vehicle) -> float:
-        reward = self.config["collision_reward"] * vehicle.crashed
-        if isinstance(vehicle, ControlledVehicle):
-            reward += self.config["high_speed_reward"] * (vehicle.speed_index == vehicle.SPEED_COUNT - 1)
-        else:
-            scaled_speed = utils.lmap(self.vehicle.speed, self.config["reward_speed_range"], [0, 1])
-            reward += self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1)
+        scaled_speed = utils.lmap(self.vehicle.speed, self.config["reward_speed_range"], [0, 1])
+        reward = self.config["collision_reward"] * vehicle.crashed \
+                 + self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1)
 
         reward = self.config["arrived_reward"] if self.has_arrived(vehicle) else reward
         if self.config["normalize_reward"]:
