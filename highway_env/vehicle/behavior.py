@@ -36,6 +36,9 @@ class IDMVehicle(ControlledVehicle):
     DELTA = 4.0  # []
     """Exponent of the velocity term."""
 
+    DELTA_RANGE = [3.5, 4.5]
+    """Range of delta when chosen randomly."""
+
     # Lateral policy parameters
     POLITENESS = 0.  # in [0, 1]
     LANE_CHANGE_MIN_ACC_GAIN = 0.2  # [m/s2]
@@ -57,7 +60,7 @@ class IDMVehicle(ControlledVehicle):
         self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
 
     def randomize_behavior(self):
-        pass
+        self.DELTA = self.road.np_random.uniform(low=self.DELTA_RANGE[0], high=self.DELTA_RANGE[1])
 
     @classmethod
     def create_from(cls, vehicle: ControlledVehicle) -> "IDMVehicle":

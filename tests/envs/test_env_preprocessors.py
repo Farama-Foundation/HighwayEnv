@@ -11,7 +11,7 @@ def test_preprocessors():
     env = env.set_route_at_intersection("random")
     env = env.set_vehicle_field(("crashed", False))
     env = env.call_vehicle_method(("plan_route_to", "1"))
-    env = env.randomize_behaviour()
+    env = env.randomize_behavior()
 
     env.reset()
     for _ in range(3):

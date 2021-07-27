@@ -71,9 +71,9 @@ class HighwayEnv(AbstractEnv):
             self.road.vehicles.append(controlled_vehicle)
 
             for _ in range(others):
-                self.road.vehicles.append(
-                    other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
-                )
+                vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
+                vehicle.randomize_behavior()
+                self.road.vehicles.append(vehicle)
 
     def _reward(self, action: Action) -> float:
         """
