@@ -29,6 +29,8 @@ class Vehicle(RoadObject):
     """ Range for random initial speeds [m/s] """
     MAX_SPEED = 40.
     """ Maximum reachable speed [m/s] """
+    HISTORY_SIZE = 30
+    """ Length of the vehicle state history, for trajectory display"""
 
     def __init__(self,
                  road: Road,
@@ -42,7 +44,7 @@ class Vehicle(RoadObject):
         self.crashed = False
         self.impact = None
         self.log = []
-        self.history = deque(maxlen=30)
+        self.history = deque(maxlen=self.HISTORY_SIZE)
 
     @classmethod
     def make_on_lane(cls, road: Road, lane_index: LaneIndex, longitudinal: float, speed: float = 0) -> "Vehicle":
