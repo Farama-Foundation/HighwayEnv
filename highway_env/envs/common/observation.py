@@ -203,11 +203,11 @@ class KinematicObservation(ObservationType):
         # Add ego-vehicle
         df = pd.DataFrame.from_records([self.observer_vehicle.to_dict()])[self.features]
         # Add nearby traffic
-        # sort = self.order == "sorted"
         close_vehicles = self.env.road.close_vehicles_to(self.observer_vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
                                                          count=self.vehicles_count - 1,
-                                                         see_behind=self.see_behind)
+                                                         see_behind=self.see_behind,
+                                                         sort=self.order == "sorted")
         if close_vehicles:
             origin = self.observer_vehicle if not self.absolute else None
             df = df.append(pd.DataFrame.from_records(
