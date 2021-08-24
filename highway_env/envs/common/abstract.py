@@ -225,7 +225,8 @@ class AbstractEnv(gym.Env):
 
     def _simulate(self, action: Optional[Action] = None) -> None:
         """Perform several steps of simulation with constant action."""
-        for _ in range(int(self.config["simulation_frequency"] // self.config["policy_frequency"])):
+        frames = int(self.config["simulation_frequency"] // self.config["policy_frequency"])
+        for frame in range(frames):
             # Forward action to the vehicle
             if action is not None \
                     and not self.config["manual_control"] \
@@ -238,7 +239,8 @@ class AbstractEnv(gym.Env):
 
             # Automatically render intermediate simulation steps if a viewer has been launched
             # Ignored if the rendering is done offscreen
-            self._automatic_rendering()
+            if frame < frames - 1:  # Last frame will be rendered through env.render() as usual
+                self._automatic_rendering()
 
         self.enable_auto_render = False
 
