@@ -42,16 +42,16 @@ if __name__ == '__main__':
                 target_update_interval=256,
                 batch_size=32,
                 verbose=1,
-                tensorboard_log="logs/")
+                tensorboard_log="highway_cnn/")
     model.learn(total_timesteps=int(2e5))
-    model.save("dqn_highway")
+    model.save("dqn_highway_cnn")
 
     # Record video
-    model = DQN.load("dqn_highway")
+    model = DQN.load("dqn_highway_cnn")
 
     env = DummyVecEnv([test_env])
     video_length = 2 * env.envs[0].config["duration"]
-    env = VecVideoRecorder(env, "videos/",
+    env = VecVideoRecorder(env, "highway_cnn/videos/",
                            record_video_trigger=lambda x: x == 0, video_length=video_length,
                            name_prefix="dqn-agent")
     obs = env.reset()
