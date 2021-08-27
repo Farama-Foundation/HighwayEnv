@@ -10,7 +10,12 @@ display.start()
 
 
 def record_videos(env, path="videos"):
-    return Monitor(env, path, force=True, video_callable=lambda episode: True)
+    monitor = Monitor(env, path, force=True, video_callable=lambda episode: True)
+
+    # Capture intermediate frames
+    env.unwrapped.set_monitor(monitor)
+
+    return monitor
 
 
 def show_videos(path="videos"):
@@ -22,7 +27,3 @@ def show_videos(path="videos"):
                       <source src="data:video/mp4;base64,{}" type="video/mp4" />
                  </video>'''.format(mp4, video_b64.decode('ascii')))
     ipythondisplay.display(ipythondisplay.HTML(data="<br>".join(html)))
-
-
-def capture_intermediate_frames(env):
-    env.unwrapped.set_rendering_callback(env.video_recorder.capture_frame)
