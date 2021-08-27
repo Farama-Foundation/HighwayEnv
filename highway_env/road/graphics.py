@@ -339,7 +339,7 @@ class RoadObjectGraphics:
         color = cls.DEFAULT_COLOR
 
         if isinstance(object_, Obstacle):
-            if object_.hit:
+            if object_.crashed:
                 # indicates failure
                 color = cls.RED
             else:

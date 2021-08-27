@@ -62,7 +62,7 @@ def test_collision():
     o = Obstacle(road=r, position=[23, 0])
     v3.handle_collisions(o)
 
-    assert v3.crashed and o.hit
+    assert v3.crashed and o.crashed
     # Collision between a vehicle and a landmark
     v4 = Vehicle(road=r, position=[40, 0], speed=10)
     l = Landmark(road=r, position=[43, 0])
