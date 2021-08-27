@@ -25,4 +25,4 @@ def show_videos(path="videos"):
 
 
 def capture_intermediate_frames(env):
-    env.unwrapped.automatic_rendering_callback = env.video_recorder.capture_frame
+    env.unwrapped.set_rendering_callback(env.video_recorder.capture_frame)
