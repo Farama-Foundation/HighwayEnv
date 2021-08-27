@@ -18,9 +18,6 @@ class Vehicle(RoadObject):
     It's state is propagated depending on its steering and acceleration actions.
     """
 
-    COLLISIONS_ENABLED = True
-    """ Enable collision detection between vehicles """
-
     LENGTH = 5.0
     """ Vehicle length [m] """
     WIDTH = 2.0
@@ -164,45 +161,6 @@ class Vehicle(RoadObject):
             self.lane = self.road.network.get_lane(self.lane_index)
             if self.road.record_history:
                 self.history.appendleft(self.create_from(self))
-
-    def check_collision(self, other: 'RoadObject', dt: float = 0) -> None:
-        """
-        Check for collision with another vehicle.
-
-        :param other: the other vehicle or object
-        :param dt: timestep to check for future collisions (at constant velocity)
-        """
-        if other is self:
-            return
-
-        if isinstance(other, Vehicle):
-            if not self.COLLISIONS_ENABLED or not other.COLLISIONS_ENABLED:
-                return
-            intersecting, will_intersect, transition = self._is_colliding(other, dt)
-            if will_intersect:
-                self.impact = transition / 2
-                other.impact = -transition / 2
-            if intersecting:
-                self.crashed = other.crashed = True
-        elif isinstance(other, Obstacle):
-            if not self.COLLISIONS_ENABLED:
-                return
-            intersecting, will_intersect, transition = self._is_colliding(other, dt)
-            if will_intersect:
-                self.impact = transition
-            if intersecting:
-                self.crashed = other.hit = True
-        elif isinstance(other, Landmark):
-            intersecting, will_intersect, transition = self._is_colliding(other, dt)
-            if intersecting:
-                other.hit = True
-
-    def _is_colliding(self, other, dt):
-        # Fast spherical pre-check
-        if np.linalg.norm(other.position - self.position) > self.LENGTH + self.speed * dt:
-            return False, False, np.zeros(2,)
-        # Accurate rectangular check
-        return utils.are_polygons_intersecting(self.polygon(), other.polygon(), self.velocity * dt, other.velocity * dt)
 
     def predict_trajectory_constant_speed(self, times: np.ndarray) -> Tuple[List[np.ndarray], List[float]]:
         if self.prediction_type == 'zero_steering':

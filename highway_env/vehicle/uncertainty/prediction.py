@@ -363,7 +363,7 @@ class IntervalVehicle(LinearVehicle):
         self.trajectory.append(LinearVehicle.create_from(self))
         self.interval_trajectory.append(copy.deepcopy(self.interval))
 
-    def check_collision(self, other: 'RoadObject', dt: float) -> None:
+    def handle_collisions(self, other: 'RoadObject', dt: float) -> None:
         """
         Worst-case collision check.
 
@@ -374,10 +374,10 @@ class IntervalVehicle(LinearVehicle):
         :param dt: a timestep
         """
         if not isinstance(other, MDPVehicle):
-            super().check_collision(other)
+            super().handle_collisions(other)
             return
 
-        if not self.COLLISIONS_ENABLED or self.crashed or other is self:
+        if not self.collidable or self.crashed or other is self:
             return
 
         # Fast rectangular pre-check

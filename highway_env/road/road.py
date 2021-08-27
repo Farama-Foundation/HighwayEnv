@@ -302,9 +302,9 @@ class Road(object):
             vehicle.step(dt)
         for i, vehicle in enumerate(self.vehicles):
             for other in self.vehicles[i+1:]:
-                vehicle.check_collision(other, dt)
+                vehicle.handle_collisions(other, dt)
             for other in self.objects:
-                vehicle.check_collision(other, dt)
+                vehicle.handle_collisions(other, dt)
 
     def neighbour_vehicles(self, vehicle: 'kinematics.Vehicle', lane_index: LaneIndex = None) \
             -> Tuple[Optional['kinematics.Vehicle'], Optional['kinematics.Vehicle']]:

@@ -54,19 +54,19 @@ def test_collision():
     r = Road(RoadNetwork.straight_road_network(1))
     v1 = Vehicle(road=r, position=[0, 0], speed=10)
     v2 = Vehicle(road=r, position=[4, 0], speed=20)
-    v1.check_collision(v2)
+    v1.handle_collisions(v2)
 
     assert v1.crashed and v2.crashed
     # Collision between a vehicle and an obstacle
     v3 = Vehicle(road=r, position=[20, 0], speed=10)
     o = Obstacle(road=r, position=[23, 0])
-    v3.check_collision(o)
+    v3.handle_collisions(o)
 
     assert v3.crashed and o.hit
     # Collision between a vehicle and a landmark
     v4 = Vehicle(road=r, position=[40, 0], speed=10)
     l = Landmark(road=r, position=[43, 0])
-    v4.check_collision(l)
+    v4.handle_collisions(l)
 
     assert v4.crashed is False
     assert l.hit

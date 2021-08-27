@@ -2,6 +2,8 @@ from abc import ABC
 from typing import Sequence, Tuple, TYPE_CHECKING
 import numpy as np
 
+from highway_env import utils
+
 if TYPE_CHECKING:
     from highway_env.road.lane import AbstractLane
     from highway_env.road.road import Road
@@ -34,6 +36,20 @@ class RoadObject(ABC):
         self.lane_index = self.road.network.get_closest_lane_index(self.position, self.heading) if self.road else np.nan
         self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
 
+        # Enable collision with other collidables
+        self.collidable = True
+
+        # Collisions have physical effects
+        self.solid = True
+
+        # If False, this object will not check its own collisions, but it can still collides with other objects that do
+        # check their collisions.
+        self.check_collisions = True
+
+        self.crashed = False
+        self.hit = False
+        self.impact = np.zeros(self.position.shape)
+
     @classmethod
     def make_on_lane(cls, road: 'Road', lane_index: LaneIndex, longitudinal: float):
         """
@@ -46,6 +62,38 @@ class RoadObject(ABC):
         """
         lane = road.network.get_lane(lane_index)
         return cls(road, position=lane.position(longitudinal, 0), heading=lane.heading_at(longitudinal))
+
+    def handle_collisions(self, other: 'RoadObject', dt: float = 0) -> None:
+        """
+        Check for collision with another vehicle.
+
+        :param other: the other vehicle or object
+        :param dt: timestep to check for future collisions (at constant velocity)
+        """
+        if other is self or not (self.check_collisions or other.check_collisions):
+            return
+        if not (self.collidable and other.collidable):
+            return
+        intersecting, will_intersect, transition = self._is_colliding(other, dt)
+        if will_intersect:
+            if self.solid and other.solid:
+                self.impact = transition / 2
+                other.impact = -transition / 2
+        if intersecting:
+            if self.solid and other.solid:
+                self.crashed = True
+                other.crashed = True
+            if not self.solid:
+                self.hit = True
+            if not other.solid:
+                other.hit = True
+
+    def _is_colliding(self, other, dt):
+        # Fast spherical pre-check
+        if np.linalg.norm(other.position - self.position) > self.LENGTH + self.speed * dt:
+            return False, False, np.zeros(2,)
+        # Accurate rectangular check
+        return utils.are_polygons_intersecting(self.polygon(), other.polygon(), self.velocity * dt, other.velocity * dt)
 
     # Just added for sake of compatibility
     def to_dict(self, origin_vehicle=None, observe_intentions=True):
@@ -126,8 +174,7 @@ class Obstacle(RoadObject):
 
     def __init__(self, road, position: Sequence[float], heading: float = 0, speed: float = 0):
         super().__init__(road, position, heading, speed)
-        # store whether object is hit by any vehicle
-        self.hit = False
+        self.solid = True
 
 
 class Landmark(RoadObject):
@@ -136,6 +183,5 @@ class Landmark(RoadObject):
 
     def __init__(self, road, position: Sequence[float], heading: float = 0, speed: float = 0):
         super().__init__(road, position, heading, speed)
-        # store whether object is hit by any vehicle
-        self.hit = False
+        self.solid = False
 
