@@ -32,7 +32,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "action": {
                 "type": "ContinuousAction"
             },
-            "reward_weights": np.array([1, 0.3, 0, 0, 0.02, 0.02]),
+            "reward_weights": [1, 0.3, 0, 0, 0.02, 0.02],
             "success_goal_reward": 0.12,
             "collision_reward": -5,
             "steering_range": np.deg2rad(45),
@@ -105,7 +105,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         :param p: the Lp^p norm used in the reward. Use p<1 to have high kurtosis for rewards in [0, 1]
         :return: the corresponding reward
         """
-        return -np.power(np.dot(np.abs(achieved_goal - desired_goal), self.config["reward_weights"]), p)
+        return -np.power(np.dot(np.abs(achieved_goal - desired_goal), np.array(self.config["reward_weights"])), p)
 
     def _reward(self, action: np.ndarray) -> float:
         obs = self.observation_type.observe()
