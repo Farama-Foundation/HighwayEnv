@@ -6,7 +6,7 @@ import highway_env
 
 if __name__ == '__main__':
     # Create the environment
-    env = gym.make("highway-v0")
+    env = gym.make("highway-fast-v0")
     obs = env.reset()
 
     # Create the model

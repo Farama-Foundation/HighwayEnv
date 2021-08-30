@@ -54,6 +54,18 @@ More specifically, it is defined in:
 
 .. automethod:: HighwayEnv.default_config
 
+Faster variant
+=====================
+
+A faster (x15 speedup) variant is also available with:
+
+.. code-block:: python
+
+    env = gym.make("highway-fast-v0")
+
+
+The details of this variant are described `here <https://github.com/eleurent/highway-env/issues/223>`_.
+
 API
 =====
 

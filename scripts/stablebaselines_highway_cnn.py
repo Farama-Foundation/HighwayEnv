@@ -6,10 +6,8 @@ import highway_env
 
 
 def train_env():
-    env = gym.make('highway-v0')
+    env = gym.make('highway-fast-v0')
     env.configure({
-        "lanes_count": 3,
-        "vehicles_count": 15,
         "observation": {
             "type": "GrayscaleObservation",
             "observation_shape": (128, 64),
@@ -17,8 +15,6 @@ def train_env():
             "weights": [0.2989, 0.5870, 0.1140],  # weights for RGB conversion
             "scaling": 1.75,
         },
-        "policy_frequency": 2,
-        "duration": 40,
     })
     env.reset()
     return env

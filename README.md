@@ -33,6 +33,8 @@ The agent's objective is to reach a high speed while avoiding collisions with ne
     <em>The highway-v0 environment.</em>
 </p>
 
+A faster variant, `highway-fast-v0` is also available, with a degraded simulation accuracy to improve speed for large-scale training.
+
 ### Merge
 
 ```python
