@@ -318,13 +318,13 @@ if __name__ == "__main__":
                     learning_rate=2e-3,
                     policy_kwargs=policy_kwargs,
                     verbose=2,
-                    tensorboard_log="./highway_attention_ppo/")
+                    tensorboard_log="highway_attention_ppo/")
         # Train the agent
         model.learn(total_timesteps=200*1000)
         # Save the agent
-        model.save("ppo-highway")
+        model.save("highway_attention_ppo/model")
 
-    model = PPO.load("ppo-highway")
+    model = PPO.load("highway_attention_ppo/model")
     env = make_configure_env(**env_kwargs)
     for _ in range(5):
         obs = env.reset()

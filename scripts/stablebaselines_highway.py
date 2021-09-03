@@ -5,6 +5,7 @@ import highway_env
 
 
 if __name__ == '__main__':
+    train = True
     # Create the environment
     env = gym.make("highway-fast-v0")
     obs = env.reset()
@@ -24,18 +25,19 @@ if __name__ == '__main__':
                 verbose=1,
                 tensorboard_log="highway_dqn/")
 
-    # Train the model
-    model.learn(total_timesteps=int(2e4))
-    model.save("dqn_highway")
+    # # Train the model
+    if train:
+        model.learn(total_timesteps=int(2e4))
+        model.save("highway_dqn/model")
 
     # Run the algorithm
-    model.load("dqn_highway")
-    for _ in range(10):
+    model.load("highway_dqn/model")
+    while True:
         done = False
         obs = env.reset()
         while not done:
             # Predict
-            action, _states = model.predict(obs)
+            action, _states = model.predict(obs, deterministic=True)
             # Get reward
             obs, reward, done, info = env.step(action)
             # Render

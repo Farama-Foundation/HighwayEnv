@@ -42,10 +42,10 @@ if __name__ == '__main__':
                 verbose=1,
                 tensorboard_log="highway_cnn/")
     model.learn(total_timesteps=int(1e5))
-    model.save("dqn_highway_cnn")
+    model.save("highway_cnn/model")
 
     # Record video
-    model = DQN.load("dqn_highway_cnn")
+    model = DQN.load("highway_cnn/model")
 
     env = DummyVecEnv([test_env])
     video_length = 2 * env.envs[0].config["duration"]
