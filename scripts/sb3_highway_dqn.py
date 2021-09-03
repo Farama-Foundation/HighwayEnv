@@ -25,7 +25,7 @@ if __name__ == '__main__':
                 verbose=1,
                 tensorboard_log="highway_dqn/")
 
-    # # Train the model
+    # Train the model
     if train:
         model.learn(total_timesteps=int(2e4))
         model.save("highway_dqn/model")
