@@ -104,7 +104,8 @@ class LaneGraphics(object):
 
     """A visualization of a lane."""
 
-    STRIPE_SPACING: float = 5
+    # See https://www.researchgate.net/figure/French-road-traffic-lane-description-and-specification_fig4_261170641
+    STRIPE_SPACING: float = 4.33
     """ Offset between stripes [m]"""
 
     STRIPE_LENGTH: float = 3
