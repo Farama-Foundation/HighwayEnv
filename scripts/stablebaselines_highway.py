@@ -11,17 +11,21 @@ if __name__ == '__main__':
 
     # Create the model
     model = DQN('MlpPolicy', env,
-                gamma=0.8,
+                policy_kwargs=dict(net_arch=[256, 256]),
                 learning_rate=5e-4,
-                buffer_size=40*1000,
+                buffer_size=15000,
                 learning_starts=200,
-                exploration_fraction=0.6,
-                batch_size=128,
+                batch_size=32,
+                gamma=0.8,
+                train_freq=1,
+                gradient_steps=1,
+                target_update_interval=50,
+                exploration_fraction=0.7,
                 verbose=1,
                 tensorboard_log="highway_dqn/")
 
     # Train the model
-    model.learn(total_timesteps=int(1e5))
+    model.learn(total_timesteps=int(2e4))
     model.save("dqn_highway")
 
     # Run the algorithm
@@ -31,7 +35,6 @@ if __name__ == '__main__':
         obs = env.reset()
         while not done:
             # Predict
-            print(obs)
             action, _states = model.predict(obs)
             # Get reward
             obs, reward, done, info = env.step(action)

@@ -30,16 +30,18 @@ def test_env():
 if __name__ == '__main__':
     # Train
     model = DQN('CnnPolicy', DummyVecEnv([train_env]),
-                gamma=0.8,
                 learning_rate=5e-4,
-                buffer_size=40*1000,
+                buffer_size=15000,
                 learning_starts=200,
-                exploration_fraction=0.6,
-                target_update_interval=256,
                 batch_size=32,
+                gamma=0.8,
+                train_freq=1,
+                gradient_steps=1,
+                target_update_interval=50,
+                exploration_fraction=0.7,
                 verbose=1,
                 tensorboard_log="highway_cnn/")
-    model.learn(total_timesteps=int(2e5))
+    model.learn(total_timesteps=int(1e5))
     model.save("dqn_highway_cnn")
 
     # Record video
