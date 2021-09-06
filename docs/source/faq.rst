@@ -8,8 +8,8 @@ Frequently Asked Questions
 This is a list of Frequently Asked Questions about highway-env.  Feel free to
 suggest new entries!
 
-I try to train an agent using the Kinematics Observation and an MLP model, but the agent does not learn anything useful. Why?
-    I have not managed to make it work either, using this observation-model pair.
+I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?
+    I also tend to get reasonable but sub-optimal policies using this observation-model pair.
     In :cite:`Leurent2019social`, we argued that a possible reason is that the MLP output depends on the order of
     vehicles in the observation. Indeed, if the agent revisits a given scene but observes vehicles described in a different
     order, it will see it as a novel state and will not be able to reuse past information. Thus, the agent struggles to
