@@ -4,8 +4,9 @@ from stable_baselines3 import DQN
 import highway_env
 
 
+TRAIN = True
+
 if __name__ == '__main__':
-    train = True
     # Create the environment
     env = gym.make("highway-fast-v0")
     obs = env.reset()
@@ -21,17 +22,18 @@ if __name__ == '__main__':
                 train_freq=1,
                 gradient_steps=1,
                 target_update_interval=50,
-                exploration_fraction=0.7,
                 verbose=1,
                 tensorboard_log="highway_dqn/")
 
     # Train the model
-    if train:
+    if TRAIN:
         model.learn(total_timesteps=int(2e4))
         model.save("highway_dqn/model")
+        del model
 
     # Run the algorithm
-    model.load("highway_dqn/model")
+    model = DQN.load("highway_dqn/model", env=env)
+
     while True:
         done = False
         obs = env.reset()

@@ -89,8 +89,6 @@ Reinforcement Learning agents can be trained using libraries such as `eleurent/r
   import highway_env
   from stable_baselines import DQN
 
-  env = gym.make("parking-v0")
-
   model = DQN('MlpPolicy', "highway-fast-v0",
                 policy_kwargs=dict(net_arch=[256, 256]),
                 learning_rate=5e-4,
@@ -101,15 +99,13 @@ Reinforcement Learning agents can be trained using libraries such as `eleurent/r
                 train_freq=1,
                 gradient_steps=1,
                 target_update_interval=50,
-                exploration_fraction=0.7,
                 verbose=1,
                 tensorboard_log="highway_dqn/")
-
   model.learn(int(2e4))
   model.save("highway_dqn/model")
 
   # Load and test saved model
-  model.load("highway_dqn/model")
+  model = DQN.load("highway_dqn/model")
   while True:
     done = False
     obs = env.reset()
