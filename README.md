@@ -89,9 +89,9 @@ An intersection negotiation task with dense traffic.
 
 ## Examples of agents
 
-Agents solving the `highway-env` environments are available in the [rl-agents](https://github.com/eleurent/rl-agents) and [stable-baselines](https://github.com/hill-a/stable-baselines) repositories.
+Agents solving the `highway-env` environments are available in the [eleurent/rl-agents](https://github.com/eleurent/rl-agents) and [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) repositories.
 
-`pip install --user git+https://github.com/eleurent/rl-agents`
+See the [documentation](https://highway-env.readthedocs.io/en/latest/quickstart.html#training-an-agent) for some examples and notebooks.
 
 ### [Deep Q-Network](https://github.com/eleurent/rl-agents/tree/master/rl_agents/agents/dqn)
 
