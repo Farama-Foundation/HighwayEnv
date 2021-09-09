@@ -170,34 +170,6 @@ class IDMVehicle(ControlledVehicle):
         d_star = d0 + ego_vehicle.speed * tau + ego_vehicle.speed * dv / (2 * np.sqrt(ab))
         return d_star
 
-    def maximum_speed(self, front_vehicle: Vehicle = None) -> Tuple[float, float]:
-        """
-        Compute the maximum allowed speed to avoid Inevitable Collision States.
-
-        Assume the front vehicle is going to brake at full deceleration and that
-        it will be noticed after a given delay, and compute the maximum speed
-        which allows the ego-vehicle to brake enough to avoid the collision.
-
-        :param front_vehicle: the preceding vehicle
-        :return: the maximum allowed speed, and suggested acceleration
-        """
-        if not front_vehicle:
-            return self.target_speed
-        d0 = self.DISTANCE_WANTED
-        a0 = self.COMFORT_ACC_MIN
-        a1 = self.COMFORT_ACC_MIN
-        tau = self.TIME_WANTED
-        d = max(self.lane_distance_to(front_vehicle) - self.LENGTH / 2 - front_vehicle.LENGTH / 2 - d0, 0)
-        v1_0 = front_vehicle.speed
-        delta = 4 * (a0 * a1 * tau) ** 2 + 8 * a0 * (a1 ** 2) * d + 4 * a0 * a1 * v1_0 ** 2
-        v_max = -a0 * tau + np.sqrt(delta) / (2 * a1)
-
-        # Speed control
-        self.target_speed = min(self.maximum_speed(front_vehicle), self.target_speed)
-        acceleration = self.speed_control(self.target_speed)
-
-        return v_max, acceleration
-
     def change_lane_policy(self) -> None:
         """
         Decide when to change lane.
