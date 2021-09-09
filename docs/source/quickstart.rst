@@ -87,7 +87,7 @@ Reinforcement Learning agents can be trained using libraries such as `eleurent/r
 
   import gym
   import highway_env
-  from stable_baselines import DQN
+  from stable_baselines3 import DQN
 
   model = DQN('MlpPolicy', "highway-fast-v0",
                 policy_kwargs=dict(net_arch=[256, 256]),
