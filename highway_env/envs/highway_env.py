@@ -121,7 +121,7 @@ class HighwayEnvFast(HighwayEnv):
             "simulation_frequency": 5,
             "lanes_count": 3,
             "vehicles_count": 20,
-            "duration": 20,  # [s]
+            "duration": 30,  # [s]
             "ego_spacing": 1.5,
         })
         return cfg
