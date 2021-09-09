@@ -114,7 +114,7 @@ Here is an example of SB3's DQN implementation trained on `highway-fast-v0` with
 
 .. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.png
 
-   The following training curves are obtained, with 5 random seeds.
+   A full run takes about 25mn on my laptop (fps=14). The following training curves are obtained, with 5 random seeds.
 
 .. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.gif
 
