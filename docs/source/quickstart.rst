@@ -78,10 +78,7 @@ Training an agent
 Reinforcement Learning agents can be trained using libraries such as `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_,
 `openai/baselines <https://github.com/openai/baselines>`_ or `Stable Baselines3 <https://github.com/DLR-RM/stable-baselines3>`_.
 
-
-.. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.gif
-
-   The highway-fast-v0 environment trained with DQN.
+Here is an example of SB3's DQN implementation trained on `highway-fast-v0` with its default kinematics observation and an MLP model.
 
 .. code-block:: python
 
@@ -114,6 +111,14 @@ Reinforcement Learning agents can be trained using libraries such as `eleurent/r
       action, _states = model.predict(obs, deterministic=True)
       obs, reward, done, info = env.step(action)
       env.render()
+
+.. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.png
+
+   The following training curves are obtained, with 5 random seeds.
+
+.. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.gif
+
+   And here is a video of the obtained policy.
 
 
 Examples on Google Colab
