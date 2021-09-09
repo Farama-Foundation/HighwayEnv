@@ -17,15 +17,15 @@ I try to train an agent using the Kinematics Observation and an MLP model, but t
 
     This can be addressed in two ways:
 
-    * Change the *model*, to use a permutation-invariant architecture which will not be sensitive to the vehicles order, such as *e.g.* :cite:`Qi2017pointnet` or :cite:`Leurent2019social`.
-    This example is implemented `here (DQN) <https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb>`_ or `here (SB3's PPO) <https://github.com/eleurent/highway-env/blob/master/scripts/stablebaselines_highway_attention_ppo.py>`_.
+    * - Change the *model*, to use a permutation-invariant architecture which will not be sensitive to the vehicles order, such as *e.g.* :cite:`Qi2017pointnet` or :cite:`Leurent2019social`.
+    This example is implemented `here (DQN) <https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb>`_ or `here (SB3's PPO) <https://github.com/eleurent/highway-env/blob/master/scripts/sb3_highway_ppo_transformer.py>`_.
 
-    * Change the *observation*. For example, the :ref:`Grayscale Image` does not depend on an ordering. In this case, a CNN model is more suitable than an MLP model.
-    This example is implemented `here (SB3's DQN) <https://github.com/eleurent/highway-env/blob/master/scripts/stablebaselines_highway_cnn.py>`_.
+    * - Change the *observation*. For example, the :ref:`Grayscale Image` does not depend on an ordering. In this case, a CNN model is more suitable than an MLP model.
+    This example is implemented `here (SB3's DQN) <https://github.com/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.py>`_.
 
 
-My videos are too fast / have a too low framerate.
-    This is because in openai/gym, a single video frame is generated at each call of `env.step(action)`. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (*e.g.* change lane) actually corresponds to several (typically, 15) simulation frames.
+My videos are too fast / have a low framerate.
+    This is because in openai/gym, a single video frame is generated at each call of ``env.step(action)``. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (*e.g.* change lane) actually corresponds to several (typically, 15) simulation frames.
     In order to also render these intermediate simulation frames, the following should be done:
 
 .. code-block:: python

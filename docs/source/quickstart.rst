@@ -78,7 +78,7 @@ Training an agent
 Reinforcement Learning agents can be trained using libraries such as `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_,
 `openai/baselines <https://github.com/openai/baselines>`_ or `Stable Baselines3 <https://github.com/DLR-RM/stable-baselines3>`_.
 
-Here is an example of SB3's DQN implementation trained on `highway-fast-v0` with its default kinematics observation and an MLP model.
+Here is an example of SB3's DQN implementation trained on ``highway-fast-v0`` with its default kinematics observation and an MLP model.
 
 .. code-block:: python
 
@@ -120,8 +120,8 @@ Here is an example of SB3's DQN implementation trained on `highway-fast-v0` with
 
    And here is a video of the obtained policy.
 
-There are several ways to get better performances. For instance, `provides only vanilla Deep Q-Learning and has no extensions such as Double-DQN, Dueling-DQN and Prioritized Experience Replay. <https://stable-baselines3.readthedocs.io/en/master/modules/dqn.html>`_.
-However, `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_'s implementation of DQN does, which yields better results. Better results can also be obtained by changing the observation type or the model, see the :ref:`FAQ <faq>`.
+There are several ways to get better performances. For instance, `SB3 provides only vanilla Deep Q-Learning and has no extensions such as Double-DQN, Dueling-DQN and Prioritized Experience Replay <https://stable-baselines3.readthedocs.io/en/master/modules/dqn.html#notes>`_.
+However, `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_'s implementation of DQN does provide those extensions, which yields better results. Improvements can also be obtained by changing the observation type or the model, see the :ref:`FAQ <faq>`.
 
 
 Examples on Google Colab
