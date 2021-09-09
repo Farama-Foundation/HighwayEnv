@@ -143,7 +143,7 @@ class IDMVehicle(ControlledVehicle):
         """
         if not ego_vehicle or not isinstance(ego_vehicle, Vehicle):
             return 0
-        ego_target_speed = utils.not_zero(getattr(ego_vehicle, "target_speed", 0))
+        ego_target_speed = abs(utils.not_zero(getattr(ego_vehicle, "target_speed", 0)))
         acceleration = self.COMFORT_ACC_MAX * (
                 1 - np.power(max(ego_vehicle.speed, 0) / ego_target_speed, self.DELTA))
 

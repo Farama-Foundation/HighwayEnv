@@ -30,7 +30,7 @@ def constrain(x: float, a: float, b: float) -> np.ndarray:
 def not_zero(x: float, eps: float = 1e-2) -> float:
     if abs(x) > eps:
         return x
-    elif x > 0:
+    elif x >= 0:
         return eps
     else:
         return -eps
