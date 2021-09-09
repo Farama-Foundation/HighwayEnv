@@ -79,7 +79,7 @@ Reinforcement Learning agents can be trained using libraries such as `eleurent/r
 `openai/baselines <https://github.com/openai/baselines>`_ or `Stable Baselines3 <https://github.com/DLR-RM/stable-baselines3>`_.
 
 
-.. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway.gif
+.. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.gif
 
    The highway-fast-v0 environment trained with DQN.
 
