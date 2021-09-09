@@ -65,7 +65,6 @@ class AbstractEnv(gym.Env):
         # Rendering
         self.viewer = None
         self._monitor = None
-        self.should_update_rendering = True
         self.rendering_mode = 'human'
         self.enable_auto_render = False
 
@@ -188,7 +187,6 @@ class AbstractEnv(gym.Env):
         self.define_spaces()  # First, to set the controlled vehicle class depending on action space
         self.time = self.steps = 0
         self.done = False
-        self.should_update_rendering = True
         self._reset()
         self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
         return self.observation_type.observe()
@@ -259,16 +257,13 @@ class AbstractEnv(gym.Env):
 
         self.enable_auto_render = True
 
-        # If the frame has already been rendered, do nothing
-        if self.should_update_rendering:
-            self.viewer.display()
+        self.viewer.display()
 
         if not self.viewer.offscreen:
             self.viewer.handle_events()
         if mode == 'rgb_array':
             image = self.viewer.get_image()
             return image
-        self.should_update_rendering = False
 
     def close(self) -> None:
         """
@@ -320,7 +315,6 @@ class AbstractEnv(gym.Env):
         If a monitor has been set, use its video recorder to capture intermediate frames.
         """
         if self.viewer is not None and self.enable_auto_render:
-            self.should_update_rendering = True
 
             if self._monitor and self._monitor.video_recorder:
                 self._monitor.video_recorder.capture_frame()
