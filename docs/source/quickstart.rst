@@ -80,6 +80,11 @@ Reinforcement Learning agents can be trained using libraries such as `eleurent/r
 
 Here is an example of SB3's DQN implementation trained on ``highway-fast-v0`` with its default kinematics observation and an MLP model.
 
+.. |highway_dqn|  image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn.ipynb
+
+|highway_dqn|
+
 .. code-block:: python
 
   import gym
@@ -112,16 +117,20 @@ Here is an example of SB3's DQN implementation trained on ``highway-fast-v0`` wi
       obs, reward, done, info = env.step(action)
       env.render()
 
+A full run takes about 25mn on my laptop (fps=14). The following results are obtained:
+
 .. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.png
 
-   A full run takes about 25mn on my laptop (fps=14). The following training curves are obtained, with 5 random seeds.
+   Training curves, for 5 random seeds.
 
 .. figure:: https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.gif
 
-   And here is a video of the obtained policy.
+   Video of an episode run with the trained policy.
 
-There are several ways to get better performances. For instance, `SB3 provides only vanilla Deep Q-Learning and has no extensions such as Double-DQN, Dueling-DQN and Prioritized Experience Replay <https://stable-baselines3.readthedocs.io/en/master/modules/dqn.html#notes>`_.
-However, `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_'s implementation of DQN does provide those extensions, which yields better results. Improvements can also be obtained by changing the observation type or the model, see the :ref:`FAQ <faq>`.
+.. note::
+
+    There are several ways to get better performances. For instance, `SB3 provides only vanilla Deep Q-Learning and has no extensions such as Double-DQN, Dueling-DQN and Prioritized Experience Replay <https://stable-baselines3.readthedocs.io/en/master/modules/dqn.html#notes>`_.
+    However, `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_'s implementation of DQN does provide those extensions, which yields better results. Improvements can also be obtained by changing the observation type or the model, see the :ref:`FAQ <faq>`.
 
 
 Examples on Google Colab
@@ -130,30 +139,24 @@ Examples on Google Colab
 Several scripts and notebooks to train driving policies on `highway-env` are available `on this page <https://github.com/eleurent/highway-env/tree/master/scripts>`_.
 Here are a few of them:
 
-.. |parking_mb|  image:: https://colab.research.google.com/assets/colab-badge.svg
-   :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb
+.. |highway_dqn_cnn|  image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.ipynb
 .. |planning_hw|  image:: https://colab.research.google.com/assets/colab-badge.svg
    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb
+.. |parking_mb|  image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb
 .. |parking_her|  image:: https://colab.research.google.com/assets/colab-badge.svg
    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb
 .. |dqn_social|  image:: https://colab.research.google.com/assets/colab-badge.svg
    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb
 
-- A Model-based Reinforcement Learning tutorial on Parking |parking_mb|
-
-  A tutorial written for `RLSS 2019 <https://rlss.inria.fr/>`_ and demonstrating the principle of model-based
-  reinforcement learning on the `parking-v0` task.
-
-- Trajectory Planning on Highway |planning_hw|
-
-  Plan a trajectory on `highway-v0` using the `OPD` :cite:`Hren2008` implementation from
-  `rl-agents <https://github.com/eleurent/rl-agents>`_.
-
-- Parking with Hindsight Experience Replay |parking_her|
-
-  Train a goal-conditioned `parking-v0` policy using the :cite:`Andrychowicz2017` implementation
-  from `stable-baselines <https://github.com/hill-a/stable-baselines>`_.
-
-- Intersection with DQN and social attention |dqn_social|
-
-  Train an `intersection-v0` crossing policy using the social attention architecture :cite:`Leurent2019social` and the DQN implementation from `rl-agents <https://github.com/eleurent/rl-agents>`_.
+- | Highway with image observations and a CNN model |highway_dqn_cnn|
+  | Train SB3's DQN on `highway-fast-v0` , but using :ref:`image observations <Grayscale Image>` and a CNN model for the value function.
+- | Trajectory Planning on Highway |planning_hw|
+  | Plan a trajectory on `highway-v0` using the `OPD` :cite:`Hren2008` implementation from `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_.
+- | A Model-based Reinforcement Learning tutorial on Parking |parking_mb|
+  | A tutorial written for `RLSS 2019 <https://rlss.inria.fr/>`_ and demonstrating the principle of model-based reinforcement learning on the `parking-v0` task.
+- | Parking with Hindsight Experience Replay |parking_her|
+  | Train a goal-conditioned `parking-v0` policy using the `HER` :cite:`Andrychowicz2017` implementation from `stable-baselines <https://github.com/hill-a/stable-baselines>`_.
+- | Intersection with DQN and social attention |dqn_social|
+  | Train an `intersection-v0` crossing policy using the social attention architecture :cite:`Leurent2019social` and the DQN implementation from `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_.
