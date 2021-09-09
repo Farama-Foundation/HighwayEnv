@@ -120,6 +120,9 @@ Here is an example of SB3's DQN implementation trained on `highway-fast-v0` with
 
    And here is a video of the obtained policy.
 
+There are several ways to get better performances. For instance, `provides only vanilla Deep Q-Learning and has no extensions such as Double-DQN, Dueling-DQN and Prioritized Experience Replay. <https://stable-baselines3.readthedocs.io/en/master/modules/dqn.html>`_.
+However, `eleurent/rl-agents <https://github.com/eleurent/rl-agents>`_'s implementation of DQN does, which yields better results. Better results can also be obtained by changing the observation type or the model, see the :ref:`FAQ <faq>`.
+
 
 Examples on Google Colab
 -------------------------
