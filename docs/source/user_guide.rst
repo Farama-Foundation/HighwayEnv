@@ -11,4 +11,5 @@ User Guide
   dynamics/index
   rewards/index
   graphics/index
+  multi_agent
   make_your_own
