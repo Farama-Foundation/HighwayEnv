@@ -25,8 +25,11 @@ class VehicleGraphics(object):
     EGO_COLOR = GREEN
 
     @classmethod
-    def display(cls, vehicle: Vehicle, surface: "WorldSurface", transparent: bool = False, offscreen: bool = False,
-                label: bool = False) -> None:
+    def display(cls, vehicle: Vehicle, surface: "WorldSurface",
+                transparent: bool = False,
+                offscreen: bool = False,
+                label: bool = False,
+                draw_roof: bool = False) -> None:
         """
         Display a vehicle on a pygame surface.
 
@@ -62,15 +65,16 @@ class VehicleGraphics(object):
                                 surface.pix(length / 2 + (0.6*v.WIDTH) / 5),
                                 surface.pix(headlight_length),
                                 surface.pix(headlight_width))
-        rect_roof = (surface.pix(v.LENGTH/2 - tire_length/2),
-                     surface.pix(0.999*length/ 2 - 0.38625*v.WIDTH),
-                     surface.pix(roof_length),
-                     surface.pix(roof_width))
         color = cls.get_color(v, transparent)
         pygame.draw.rect(vehicle_surface, color, rect, 0)
         pygame.draw.rect(vehicle_surface, cls.lighten(color), rect_headlight_left, 0)
         pygame.draw.rect(vehicle_surface, cls.lighten(color), rect_headlight_right, 0)
-        pygame.draw.rect(vehicle_surface, cls.darken(color), rect_roof, 0)
+        if draw_roof:
+            rect_roof = (surface.pix(v.LENGTH/2 - tire_length/2),
+                         surface.pix(0.999*length/ 2 - 0.38625*v.WIDTH),
+                         surface.pix(roof_length),
+                         surface.pix(roof_width))
+            pygame.draw.rect(vehicle_surface, cls.darken(color), rect_roof, 0)
         pygame.draw.rect(vehicle_surface, cls.BLACK, rect, 1)
 
         # Tires
