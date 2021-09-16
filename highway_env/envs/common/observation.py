@@ -234,7 +234,7 @@ class OccupancyGridObservation(ObservationType):
 
     """Observe an occupancy grid of nearby vehicles."""
 
-    FEATURES: List[str] = ['presence', 'vx', 'vy']
+    FEATURES: List[str] = ['presence', 'vx', 'vy', 'lanes']
     GRID_SIZE: List[List[float]] = [[-5.5*5, 5.5*5], [-5.5*5, 5.5*5]]
     GRID_STEP: List[int] = [5, 5]
 
@@ -245,6 +245,7 @@ class OccupancyGridObservation(ObservationType):
                  grid_step: Optional[List[int]] = None,
                  features_range: Dict[str, List[float]] = None,
                  absolute: bool = False,
+                 clip: bool = True,
                  **kwargs: dict) -> None:
         """
         :param env: The environment to observe
@@ -255,10 +256,11 @@ class OccupancyGridObservation(ObservationType):
         self.features = features if features is not None else self.FEATURES
         self.grid_size = np.array(grid_size) if grid_size is not None else np.array(self.GRID_SIZE)
         self.grid_step = np.array(grid_step) if grid_step is not None else np.array(self.GRID_STEP)
-        grid_shape = np.asarray(np.floor((self.grid_size[:, 1] - self.grid_size[:, 0]) / grid_step), dtype=np.int)
+        grid_shape = np.asarray(np.floor((self.grid_size[:, 1] - self.grid_size[:, 0]) / self.grid_step), dtype=np.int)
         self.grid = np.zeros((len(self.features), *grid_shape))
         self.features_range = features_range
         self.absolute = absolute
+        self.clip = clip
 
     def space(self) -> spaces.Space:
         return spaces.Box(shape=self.grid.shape, low=-np.inf, high=np.inf, dtype=np.float32)
@@ -295,20 +297,59 @@ class OccupancyGridObservation(ObservationType):
             df = self.normalize(df)
             # Fill-in features
             for layer, feature in enumerate(self.features):
-                for _, vehicle in df.iterrows():
-                    x, y = vehicle["x"], vehicle["y"]
-                    # Recover unnormalized coordinates for cell index
-                    if "x" in self.features_range:
-                        x = utils.lmap(x, [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
-                    if "y" in self.features_range:
-                        y = utils.lmap(y, [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
-                    cell = (int((x - self.grid_size[0, 0]) / self.grid_step[0]),
-                            int((y - self.grid_size[1, 0]) / self.grid_step[1]))
-                    if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
-                        self.grid[layer, cell[1], cell[0]] = vehicle[feature]
+                if feature in df.columns:  # A vehicle feature
+                    for _, vehicle in df.iterrows():
+                        x, y = vehicle["x"], vehicle["y"]
+                        # Recover unnormalized coordinates for cell index
+                        if "x" in self.features_range:
+                            x = utils.lmap(x, [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
+                        if "y" in self.features_range:
+                            y = utils.lmap(y, [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
+                        cell = self.pos_to_index((x, y))
+                        if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
+                            self.grid[layer, cell[1], cell[0]] = vehicle[feature]
+                elif feature == "lanes":
+                    self.grid[layer, :, :] = self.lane_layer()
             # Clip
-            obs = np.clip(self.grid, -1, 1)
+            if self.clip:
+                obs = np.clip(self.grid, -1, 1)
             return obs
+
+    def pos_to_index(self, position):
+        x, y = position
+        return int((x - self.grid_size[0, 0]) / self.grid_step[0]), int((y - self.grid_size[1, 0]) / self.grid_step[1])
+
+    def lane_layer(self, lane_perception_distance: float = 200):
+        """
+        A layer to encode the onroad (1) / offroad (0) information
+
+        Here, we iterate over lanes and regularly placed waypoints on these lanes to fill the corresponding cells.
+        An alternative approach would be to iterate the grid cells and check whether the corresponding world position
+        at the center of the cell is onroad/offroad. The former approach is faster if the grid is large and the road
+        network is small, otherwise the latter approach is faster.
+
+        :param lane_perception_distance: lanes are rendered +/- this distance from vehicle location
+        :return: the onroad/offroad grid layer
+        """
+        lane_waypoints_spacing = np.amin(self.grid_step) / 2
+        layer = np.zeros(self.grid.shape[1:])
+        road = self.env.road
+
+        for _from in road.network.graph.keys():
+            for _to in road.network.graph[_from].keys():
+                for lane in road.network.graph[_from][_to]:
+                    origin, _ = lane.local_coordinates(self.observer_vehicle.position)
+                    waypoints = np.arange(origin - lane_perception_distance,
+                                            origin + lane_perception_distance,
+                                            lane_waypoints_spacing).clip(0, lane.length)
+                    for waypoint in waypoints:
+                        delta = lane.position(waypoint, 0) - self.observer_vehicle.position
+                        if self.absolute:
+                            raise NotImplementedError
+                        cell = self.pos_to_index(delta)
+                        if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
+                            layer[cell[1], cell[0]] = 1
+        return layer
 
 
 class KinematicsGoalObservation(KinematicObservation):
