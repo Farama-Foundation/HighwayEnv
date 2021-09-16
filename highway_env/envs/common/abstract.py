@@ -90,7 +90,7 @@ class AbstractEnv(gym.Env):
         """
         return {
             "observation": {
-                "type": "TimeToCollision"
+                "type": "Kinematics"
             },
             "action": {
                 "type": "DiscreteMetaAction"
