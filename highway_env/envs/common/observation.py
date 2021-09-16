@@ -7,6 +7,7 @@ from highway_env import utils
 from highway_env.envs.common.finite_mdp import compute_ttc_grid
 from highway_env.envs.common.graphics import EnvViewer
 from highway_env.road.lane import AbstractLane
+from highway_env.types import Vector
 from highway_env.utils import distance_to_circle
 from highway_env.vehicle.controller import MDPVehicle
 
@@ -241,16 +242,24 @@ class OccupancyGridObservation(ObservationType):
     def __init__(self,
                  env: 'AbstractEnv',
                  features: Optional[List[str]] = None,
-                 grid_size: Optional[List[List[float]]] = None,
-                 grid_step: Optional[List[int]] = None,
+                 grid_size: Optional[Tuple[Tuple[float, float], Tuple[float, float]]] = None,
+                 grid_step: Optional[Tuple[float, float]] = None,
                  features_range: Dict[str, List[float]] = None,
                  absolute: bool = False,
+                 align_to_vehicle_axes: bool = True,
                  clip: bool = True,
+                 as_image: bool = False,
                  **kwargs: dict) -> None:
         """
         :param env: The environment to observe
         :param features: Names of features used in the observation
-        :param vehicles_count: Number of observed vehicles
+        :param grid_size: real world size of the grid [[min_x, max_x], [min_y, max_y]]
+        :param grid_step: steps between two cells of the grid [step_x, step_y]
+        :param features_range: a dict mapping a feature name to [min, max] values
+        :param absolute: use absolute or relative coordinates
+        :param align_to_vehicle_axes: if True, the grid axes are aligned with vehicle axes. Else, they are aligned
+               with world axes.
+        :param clip: clip the observation in [-1, 1]
         """
         super().__init__(env)
         self.features = features if features is not None else self.FEATURES
@@ -260,10 +269,15 @@ class OccupancyGridObservation(ObservationType):
         self.grid = np.zeros((len(self.features), *grid_shape))
         self.features_range = features_range
         self.absolute = absolute
+        self.align_to_vehicle_axes = align_to_vehicle_axes
         self.clip = clip
+        self.as_image = as_image
 
     def space(self) -> spaces.Space:
-        return spaces.Box(shape=self.grid.shape, low=-np.inf, high=np.inf, dtype=np.float32)
+        if self.as_image:
+            return spaces.Box(shape=self.grid.shape, low=0, high=255, dtype=np.uint8)
+        else:
+            return spaces.Box(shape=self.grid.shape, low=-np.inf, high=np.inf, dtype=np.float32)
 
     def normalize(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -289,8 +303,10 @@ class OccupancyGridObservation(ObservationType):
         if self.absolute:
             raise NotImplementedError()
         else:
-            # Add nearby traffic
-            self.grid.fill(0)
+            # Initialize empty data
+            self.grid.fill(np.nan)
+
+            # Get nearby traffic data
             df = pd.DataFrame.from_records(
                 [v.to_dict(self.observer_vehicle) for v in self.env.road.vehicles])
             # Normalize
@@ -305,21 +321,41 @@ class OccupancyGridObservation(ObservationType):
                             x = utils.lmap(x, [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
                         if "y" in self.features_range:
                             y = utils.lmap(y, [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
-                        cell = self.pos_to_index((x, y))
+                        cell = self.pos_to_index((x, y), self.observer_vehicle.heading)
                         if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
                             self.grid[layer, cell[1], cell[0]] = vehicle[feature]
                 elif feature == "lanes":
-                    self.grid[layer, :, :] = self.lane_layer()
-            # Clip
+                    self.fill_lane_layer(layer)
+
+            obs = self.grid
+
             if self.clip:
-                obs = np.clip(self.grid, -1, 1)
+                obs = np.clip(obs, -1, 1)
+
+            if self.as_image:
+                obs = ((np.clip(obs, -1, 1) + 1) / 2 * 255).astype(np.uint8)
+
+            obs = np.nan_to_num(obs)
+
             return obs
 
-    def pos_to_index(self, position):
-        x, y = position
-        return int((x - self.grid_size[0, 0]) / self.grid_step[0]), int((y - self.grid_size[1, 0]) / self.grid_step[1])
+    def pos_to_index(self, position: Vector, frame_heading: float = 0) -> Tuple[int, int]:
+        """
+        Convert a world position to a grid cell index
 
-    def lane_layer(self, lane_perception_distance: float = 200):
+        If align_to_vehicle_axes the cells are in the vehicle's frame, otherwise in the world frame.
+
+        :param position: a world position
+        :param frame_heading: the desired reference heading, e.g. that of the vehicle
+        :return: the pair (i,j) of the cell index
+        """
+        if self.align_to_vehicle_axes:
+            position = np.array([[np.cos(frame_heading), np.sin(frame_heading)],
+                                 [-np.sin(frame_heading), np.cos(frame_heading)]]) @ position
+        return int(np.floor((position[0] - self.grid_size[0, 0]) / self.grid_step[0])),\
+               int(np.floor((position[1] - self.grid_size[1, 0]) / self.grid_step[1]))
+
+    def fill_lane_layer(self, layer_index, lane_perception_distance: float = 100) -> np.ndarray:
         """
         A layer to encode the onroad (1) / offroad (0) information
 
@@ -331,8 +367,7 @@ class OccupancyGridObservation(ObservationType):
         :param lane_perception_distance: lanes are rendered +/- this distance from vehicle location
         :return: the onroad/offroad grid layer
         """
-        lane_waypoints_spacing = np.amin(self.grid_step) / 2
-        layer = np.zeros(self.grid.shape[1:])
+        lane_waypoints_spacing = np.amin(self.grid_step)
         road = self.env.road
 
         for _from in road.network.graph.keys():
@@ -346,10 +381,9 @@ class OccupancyGridObservation(ObservationType):
                         delta = lane.position(waypoint, 0) - self.observer_vehicle.position
                         if self.absolute:
                             raise NotImplementedError
-                        cell = self.pos_to_index(delta)
+                        cell = self.pos_to_index(delta, self.observer_vehicle.heading)
                         if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
-                            layer[cell[1], cell[0]] = 1
-        return layer
+                            self.grid[layer_index, cell[1], cell[0]] = 1
 
 
 class KinematicsGoalObservation(KinematicObservation):
