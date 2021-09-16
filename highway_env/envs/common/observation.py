@@ -1,3 +1,4 @@
+from itertools import product
 from typing import List, Dict, TYPE_CHECKING, Optional, Union, Tuple
 from gym import spaces
 import numpy as np
@@ -235,7 +236,7 @@ class OccupancyGridObservation(ObservationType):
 
     """Observe an occupancy grid of nearby vehicles."""
 
-    FEATURES: List[str] = ['presence', 'vx', 'vy', 'lanes']
+    FEATURES: List[str] = ['presence', 'vx', 'vy', 'on_road']
     GRID_SIZE: List[List[float]] = [[-5.5*5, 5.5*5], [-5.5*5, 5.5*5]]
     GRID_STEP: List[int] = [5, 5]
 
@@ -321,11 +322,11 @@ class OccupancyGridObservation(ObservationType):
                             x = utils.lmap(x, [-1, 1], [self.features_range["x"][0], self.features_range["x"][1]])
                         if "y" in self.features_range:
                             y = utils.lmap(y, [-1, 1], [self.features_range["y"][0], self.features_range["y"][1]])
-                        cell = self.pos_to_index((x, y), self.observer_vehicle.heading)
+                        cell = self.pos_to_index((x, y), relative=not self.absolute)
                         if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
                             self.grid[layer, cell[1], cell[0]] = vehicle[feature]
-                elif feature == "lanes":
-                    self.fill_lane_layer(layer)
+                elif feature == "on_road":
+                    self.fill_road_layer_by_lanes(layer)
 
             obs = self.grid
 
@@ -339,33 +340,46 @@ class OccupancyGridObservation(ObservationType):
 
             return obs
 
-    def pos_to_index(self, position: Vector, frame_heading: float = 0) -> Tuple[int, int]:
+    def pos_to_index(self, position: Vector, relative: bool = False) -> Tuple[int, int]:
         """
         Convert a world position to a grid cell index
 
         If align_to_vehicle_axes the cells are in the vehicle's frame, otherwise in the world frame.
 
         :param position: a world position
-        :param frame_heading: the desired reference heading, e.g. that of the vehicle
+        :param relative: whether the position is already relative to the observer's position
         :return: the pair (i,j) of the cell index
         """
+        if not relative:
+            position -= self.observer_vehicle.position
         if self.align_to_vehicle_axes:
-            position = np.array([[np.cos(frame_heading), np.sin(frame_heading)],
-                                 [-np.sin(frame_heading), np.cos(frame_heading)]]) @ position
+            c, s = np.cos(self.observer_vehicle.heading), np.sin(self.observer_vehicle.heading)
+            position = np.array([[c, s], [-s, c]]) @ position
         return int(np.floor((position[0] - self.grid_size[0, 0]) / self.grid_step[0])),\
                int(np.floor((position[1] - self.grid_size[1, 0]) / self.grid_step[1]))
 
-    def fill_lane_layer(self, layer_index, lane_perception_distance: float = 100) -> np.ndarray:
+    def index_to_pos(self, index: Tuple[int, int]) -> np.ndarray:
+
+        position = np.array([
+            (index[1] + 0.5) * self.grid_step[0] + self.grid_size[0, 0],
+            (index[0] + 0.5) * self.grid_step[1] + self.grid_size[1, 0]
+        ])
+        if self.align_to_vehicle_axes:
+            c, s = np.cos(-self.observer_vehicle.heading), np.sin(-self.observer_vehicle.heading)
+            position = np.array([[c, s], [-s, c]]) @ position
+
+        position += self.observer_vehicle.position
+        return position
+
+    def fill_road_layer_by_lanes(self, layer_index: int, lane_perception_distance: float = 100) -> None:
         """
         A layer to encode the onroad (1) / offroad (0) information
 
         Here, we iterate over lanes and regularly placed waypoints on these lanes to fill the corresponding cells.
-        An alternative approach would be to iterate the grid cells and check whether the corresponding world position
-        at the center of the cell is onroad/offroad. The former approach is faster if the grid is large and the road
-        network is small, otherwise the latter approach is faster.
+        This approach is faster if the grid is large and the road network is small.
 
+        :param layer_index: index of the layer in the grid
         :param lane_perception_distance: lanes are rendered +/- this distance from vehicle location
-        :return: the onroad/offroad grid layer
         """
         lane_waypoints_spacing = np.amin(self.grid_step)
         road = self.env.road
@@ -378,12 +392,24 @@ class OccupancyGridObservation(ObservationType):
                                             origin + lane_perception_distance,
                                             lane_waypoints_spacing).clip(0, lane.length)
                     for waypoint in waypoints:
-                        delta = lane.position(waypoint, 0) - self.observer_vehicle.position
-                        if self.absolute:
-                            raise NotImplementedError
-                        cell = self.pos_to_index(delta, self.observer_vehicle.heading)
+                        cell = self.pos_to_index(lane.position(waypoint, 0))
                         if 0 <= cell[1] < self.grid.shape[-2] and 0 <= cell[0] < self.grid.shape[-1]:
                             self.grid[layer_index, cell[1], cell[0]] = 1
+
+    def fill_road_layer_by_cell(self, layer_index) -> None:
+        """
+        A layer to encode the onroad (1) / offroad (0) information
+
+        In this implementation, we iterate the grid cells and check whether the corresponding world position
+        at the center of the cell is onroad/offroad. This approach is faster if the grid is small and the road network large.
+        """
+        road = self.env.road
+        for i, j in product(range(self.grid.shape[-2]), range(self.grid.shape[-1])):
+            for _from in road.network.graph.keys():
+                for _to in road.network.graph[_from].keys():
+                    for lane in road.network.graph[_from][_to]:
+                        if lane.on_lane(self.index_to_pos((i, j))):
+                            self.grid[layer_index, i, j] = 1
 
 
 class KinematicsGoalObservation(KinematicObservation):
