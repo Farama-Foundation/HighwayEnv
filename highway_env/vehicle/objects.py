@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Sequence, Tuple, TYPE_CHECKING
+from typing import Sequence, Tuple, TYPE_CHECKING, Optional
 import numpy as np
 
 from highway_env import utils
@@ -51,17 +51,21 @@ class RoadObject(ABC):
         self.impact = np.zeros(self.position.shape)
 
     @classmethod
-    def make_on_lane(cls, road: 'Road', lane_index: LaneIndex, longitudinal: float):
+    def make_on_lane(cls, road: 'Road', lane_index: LaneIndex, longitudinal: float, speed: Optional[float] = None) \
+            -> 'RoadObject':
         """
-        Create an object on a given lane at a longitudinal position.
+        Create a vehicle on a given lane at a longitudinal position.
 
-        :param road: the road instance where the object is placed in
-        :param lane_index: a tuple (origin node, destination node, lane id on the road).
+        :param road: a road object containing the road network
+        :param lane_index: index of the lane where the object is located
         :param longitudinal: longitudinal position along the lane
-        :return: An object with at the specified position
+        :param speed: initial speed in [m/s]
+        :return: a RoadObject at the specified position
         """
         lane = road.network.get_lane(lane_index)
-        return cls(road, position=lane.position(longitudinal, 0), heading=lane.heading_at(longitudinal))
+        if speed is None:
+            speed = lane.speed_limit
+        return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), speed)
 
     def handle_collisions(self, other: 'RoadObject', dt: float = 0) -> None:
         """

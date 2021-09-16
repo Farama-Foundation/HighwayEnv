@@ -44,22 +44,6 @@ class Vehicle(RoadObject):
         self.history = deque(maxlen=self.HISTORY_SIZE)
 
     @classmethod
-    def make_on_lane(cls, road: Road, lane_index: LaneIndex, longitudinal: float, speed: float = 0) -> "Vehicle":
-        """
-        Create a vehicle on a given lane at a longitudinal position.
-
-        :param road: the road where the vehicle is driving
-        :param lane_index: index of the lane where the vehicle is located
-        :param longitudinal: longitudinal position along the lane
-        :param speed: initial speed in [m/s]
-        :return: A vehicle with at the specified position
-        """
-        lane = road.network.get_lane(lane_index)
-        if speed is None:
-            speed = lane.speed_limit
-        return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), speed)
-
-    @classmethod
     def create_random(cls, road: Road,
                       speed: float = None,
                       lane_from: Optional[str] = None,
