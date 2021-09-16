@@ -131,7 +131,7 @@ class TimeToCollisionObservation(ObservationType):
         v0 = grid.shape[0] + self.observer_vehicle.speed_index - obs_speeds // 2
         vf = grid.shape[0] + self.observer_vehicle.speed_index + obs_speeds // 2
         clamped_grid = padded_grid[v0:vf + 1, :, :]
-        return clamped_grid
+        return clamped_grid.astype(np.float32)
 
 
 class KinematicObservation(ObservationType):
@@ -229,7 +229,7 @@ class KinematicObservation(ObservationType):
         if self.order == "shuffled":
             self.env.np_random.shuffle(obs[1:])
         # Flatten
-        return obs
+        return obs.astype(self.space().dtype)
 
 
 class OccupancyGridObservation(ObservationType):
@@ -421,9 +421,9 @@ class KinematicsGoalObservation(KinematicObservation):
         try:
             obs = self.observe()
             return spaces.Dict(dict(
-                desired_goal=spaces.Box(-np.inf, np.inf, shape=obs["desired_goal"].shape, dtype=np.float32),
-                achieved_goal=spaces.Box(-np.inf, np.inf, shape=obs["achieved_goal"].shape, dtype=np.float32),
-                observation=spaces.Box(-np.inf, np.inf, shape=obs["observation"].shape, dtype=np.float32),
+                desired_goal=spaces.Box(-np.inf, np.inf, shape=obs["desired_goal"].shape, dtype=np.float64),
+                achieved_goal=spaces.Box(-np.inf, np.inf, shape=obs["achieved_goal"].shape, dtype=np.float64),
+                observation=spaces.Box(-np.inf, np.inf, shape=obs["observation"].shape, dtype=np.float64),
             ))
         except AttributeError:
             return spaces.Space()
@@ -455,7 +455,7 @@ class AttributesObservation(ObservationType):
         try:
             obs = self.observe()
             return spaces.Dict({
-                attribute: spaces.Box(-np.inf, np.inf, shape=obs[attribute].shape, dtype=np.float32)
+                attribute: spaces.Box(-np.inf, np.inf, shape=obs[attribute].shape, dtype=np.float64)
                 for attribute in self.attributes
             })
         except AttributeError:
