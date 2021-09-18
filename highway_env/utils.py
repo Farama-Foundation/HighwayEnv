@@ -1,11 +1,20 @@
 import copy
 import importlib
 import itertools
-from typing import Tuple, Dict, Callable, List, Optional
+from typing import Tuple, Dict, Callable, List, Optional, Union, Sequence
 
 import numpy as np
 
-from highway_env.types import Vector, Interval
+# Useful types
+Vector = Union[np.ndarray, Sequence[float]]
+Matrix = Union[np.ndarray, Sequence[Sequence[float]]]
+Interval = Union[np.ndarray,
+                 Tuple[Vector, Vector],
+                 Tuple[Matrix, Matrix],
+                 Tuple[float, float],
+                 List[Vector],
+                 List[Matrix],
+                 List[float]]
 
 
 def do_every(duration: float, timer: float) -> bool:

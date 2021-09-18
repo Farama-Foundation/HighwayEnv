@@ -4,7 +4,7 @@ import numpy as np
 import copy
 from highway_env import utils
 from highway_env.road.road import Road, LaneIndex, Route
-from highway_env.types import Vector
+from highway_env.utils import Vector
 from highway_env.vehicle.kinematics import Vehicle
 
 

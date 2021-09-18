@@ -5,7 +5,7 @@ import pygame
 
 from highway_env.road.lane import LineType, AbstractLane
 from highway_env.road.road import Road
-from highway_env.types import Vector
+from highway_env.utils import Vector
 from highway_env.vehicle.graphics import VehicleGraphics
 from highway_env.vehicle.objects import Obstacle, Landmark
 

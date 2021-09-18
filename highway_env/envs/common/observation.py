@@ -8,8 +8,7 @@ from highway_env import utils
 from highway_env.envs.common.finite_mdp import compute_ttc_grid
 from highway_env.envs.common.graphics import EnvViewer
 from highway_env.road.lane import AbstractLane
-from highway_env.types import Vector
-from highway_env.utils import distance_to_circle
+from highway_env.utils import distance_to_circle, Vector
 from highway_env.vehicle.controller import MDPVehicle
 
 if TYPE_CHECKING:

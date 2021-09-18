@@ -3,8 +3,7 @@ from typing import Callable, Union
 import numpy as np
 
 from highway_env.road.road import Road, LaneIndex, Route
-from highway_env.types import Vector
-from highway_env.utils import confidence_polytope, is_consistent_dataset
+from highway_env.utils import confidence_polytope, is_consistent_dataset, Vector
 from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.uncertainty.prediction import IntervalVehicle, Polytope
 

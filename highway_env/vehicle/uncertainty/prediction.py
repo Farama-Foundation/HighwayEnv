@@ -7,7 +7,7 @@ from highway_env.interval import polytope, vector_interval_section, integrator_i
     interval_negative_part, intervals_diff, intervals_product, LPV, interval_absolute_to_local, \
     interval_local_to_absolute
 from highway_env.road.road import Route, LaneIndex, Road
-from highway_env.types import Vector
+from highway_env.utils import Vector
 from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.kinematics import Vehicle
