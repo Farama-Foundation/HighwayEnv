@@ -1,3 +1,4 @@
+from itertools import product
 from typing import TYPE_CHECKING, Optional, Union, Tuple, Callable
 from gym import spaces
 import numpy as np
@@ -103,11 +104,11 @@ class ContinuousAction(ActionType):
             raise ValueError("Either longitudinal and/or lateral control must be enabled")
         self.dynamical = dynamical
         self.clip = clip
-        self.last_action = np.zeros(self.space().shape)
+        self.size = 2 if self.lateral and self.longitudinal else 1
+        self.last_action = np.zeros(self.size)
 
     def space(self) -> spaces.Box:
-        size = 2 if self.lateral and self.longitudinal else 1
-        return spaces.Box(-1., 1., shape=(size,), dtype=np.float32)
+        return spaces.Box(-1., 1., shape=(self.size,), dtype=np.float32)
 
     @property
     def vehicle_class(self) -> Callable:
@@ -132,6 +133,31 @@ class ContinuousAction(ActionType):
                 "steering": utils.lmap(action[0], [-1, 1], self.steering_range)
             })
         self.last_action = action
+
+
+class DiscreteAction(ContinuousAction):
+    def __init__(self,
+                 env: 'AbstractEnv',
+                 acceleration_range: Optional[Tuple[float, float]] = None,
+                 steering_range: Optional[Tuple[float, float]] = None,
+                 longitudinal: bool = True,
+                 lateral: bool = True,
+                 dynamical: bool = False,
+                 clip: bool = True,
+                 actions_per_axis: int = 3,
+                 **kwargs) -> None:
+        super().__init__(env, acceleration_range=acceleration_range, steering_range=steering_range,
+                         longitudinal=longitudinal, lateral=lateral, dynamical=dynamical, clip=clip)
+        self.actions_per_axis = actions_per_axis
+
+    def space(self) -> spaces.Discrete:
+        return spaces.Discrete(self.actions_per_axis**self.size)
+
+    def act(self, action: int) -> None:
+        cont_space = super().space()
+        axes = np.linspace(cont_space.low, cont_space.high, self.actions_per_axis)
+        all_actions = list(product(axes))
+        super().act(all_actions[action])
 
 
 class DiscreteMetaAction(ActionType):
@@ -226,6 +252,8 @@ class MultiAgentAction(ActionType):
 def action_factory(env: 'AbstractEnv', config: dict) -> ActionType:
     if config["type"] == "ContinuousAction":
         return ContinuousAction(env, **config)
+    if config["type"] == "DiscreteAction":
+        return DiscreteAction(env, **config)
     elif config["type"] == "DiscreteMetaAction":
         return DiscreteMetaAction(env, **config)
     elif config["type"] == "MultiAgentAction":
