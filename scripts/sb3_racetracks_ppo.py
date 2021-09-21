@@ -35,10 +35,10 @@ if __name__ == '__main__':
     model = PPO.load("racetrack_ppo/model", env=env)
 
     env = gym.make("racetrack-v0")
-    env = Monitor(env, directory="racetrack_ppo/run", video_callable=lambda e: True)
+    env = Monitor(env, directory="racetrack_ppo/videos", video_callable=lambda e: True)
     env.unwrapped.set_monitor(env)
 
-    while True:
+    for video in range(10):
         done = False
         obs = env.reset()
         while not done:
@@ -48,4 +48,4 @@ if __name__ == '__main__':
             obs, reward, done, info = env.step(action)
             # Render
             env.render()
-
+    env.close()
