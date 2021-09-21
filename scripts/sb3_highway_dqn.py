@@ -1,4 +1,5 @@
 import gym
+from gym.wrappers import Monitor
 from stable_baselines3 import DQN
 
 import highway_env
@@ -31,10 +32,13 @@ if __name__ == '__main__':
         model.save("highway_dqn/model")
         del model
 
-    # Run the algorithm
+    # Run the trained model and record video
     model = DQN.load("highway_dqn/model", env=env)
+    env = Monitor(env, directory="highway_dqn/videos", video_callable=lambda e: True)
+    env.set_monitor(env)
+    env.configure({"simulation_frequency": 15})  # Higher FPS for rendering
 
-    while True:
+    for videos in range(10):
         done = False
         obs = env.reset()
         while not done:
@@ -44,5 +48,4 @@ if __name__ == '__main__':
             obs, reward, done, info = env.step(action)
             # Render
             env.render()
-
     env.close()
