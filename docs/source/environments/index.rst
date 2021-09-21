@@ -11,3 +11,4 @@ The Environments
   roundabout
   parking
   intersection
+  racetrack

@@ -38,6 +38,7 @@ Here is the list of all the environments available and their descriptions:
   environments/roundabout
   environments/parking
   environments/intersection
+  environments/racetrack
 
 .. _configuration:
 
