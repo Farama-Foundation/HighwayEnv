@@ -246,7 +246,7 @@ class OccupancyGridObservation(ObservationType):
                  grid_step: Optional[Tuple[float, float]] = None,
                  features_range: Dict[str, List[float]] = None,
                  absolute: bool = False,
-                 align_to_vehicle_axes: bool = True,
+                 align_to_vehicle_axes: bool = False,
                  clip: bool = True,
                  as_image: bool = False,
                  **kwargs: dict) -> None:
