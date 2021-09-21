@@ -12,6 +12,7 @@ envs = [
     "summon-v0",
     "two-way-v0",
     "lane-keeping-v0",
+    "racetrack-v0",
 ]
 
 

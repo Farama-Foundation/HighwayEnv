@@ -87,13 +87,27 @@ An intersection negotiation task with dense traffic.
     <em>The intersection-v0 environment.</em>
 </p>
 
+### Racetrack
+
+```python
+env = gym.make("racetrack-v0")
+```
+
+A continuous control task involving lane-keeping and obstacle avoidance.
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/racetrack-env.gif?raw=true"><br/>
+    <em>The racetrack-v0 environment.</em>
+</p>
+
+
 ## Examples of agents
 
 Agents solving the `highway-env` environments are available in the [eleurent/rl-agents](https://github.com/eleurent/rl-agents) and [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) repositories.
 
 See the [documentation](https://highway-env.readthedocs.io/en/latest/quickstart.html#training-an-agent) for some examples and notebooks.
 
-### [Deep Q-Network](https://github.com/eleurent/rl-agents/tree/master/rl_agents/agents/dqn)
+### [Deep Q-Network](https://github.com/eleurent/rl-agents/tree/master/rl_agents/agents/deep_q_network)
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/dqn.gif?raw=true"><br/>

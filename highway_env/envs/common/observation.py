@@ -246,7 +246,7 @@ class OccupancyGridObservation(ObservationType):
                  grid_step: Optional[Tuple[float, float]] = None,
                  features_range: Dict[str, List[float]] = None,
                  absolute: bool = False,
-                 align_to_vehicle_axes: bool = True,
+                 align_to_vehicle_axes: bool = False,
                  clip: bool = True,
                  as_image: bool = False,
                  **kwargs: dict) -> None:
@@ -335,7 +335,7 @@ class OccupancyGridObservation(ObservationType):
             if self.as_image:
                 obs = ((np.clip(obs, -1, 1) + 1) / 2 * 255).astype(np.uint8)
 
-            obs = np.nan_to_num(obs)
+            obs = np.nan_to_num(obs).astype(self.space().dtype)
 
             return obs
 

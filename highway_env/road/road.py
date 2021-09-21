@@ -248,6 +248,12 @@ class RoadNetwork(object):
             route = route[1:]
         return self.get_lane(route[0]).position(longitudinal, lateral), self.get_lane(route[0]).heading_at(longitudinal)
 
+    def random_lane_index(self, np_random: np.random.RandomState) -> LaneIndex:
+        _from = np_random.choice(list(self.graph.keys()))
+        _to = np_random.choice(list(self.graph[_from].keys()))
+        _id = np_random.randint(len(self.graph[_from][_to]))
+        return _from, _to, _id
+
 
 class Road(object):
 
