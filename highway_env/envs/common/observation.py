@@ -335,7 +335,7 @@ class OccupancyGridObservation(ObservationType):
             if self.as_image:
                 obs = ((np.clip(obs, -1, 1) + 1) / 2 * 255).astype(np.uint8)
 
-            obs = np.nan_to_num(obs)
+            obs = np.nan_to_num(obs).astype(self.space().dtype)
 
             return obs
 
