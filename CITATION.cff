@@ -3,7 +3,7 @@ message: "If you use this software, please cite it as below."
 authors:
 - family-names: "Leurent"
   given-names: "Edouard"
-title: "highway-env"
+title: "An Environment for Autonomous Driving Decision-Making"
 version: 1.4
 date-released: 2018-05-01
 url: "https://github.com/eleurent/highway-env"
