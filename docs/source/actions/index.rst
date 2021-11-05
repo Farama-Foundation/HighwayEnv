@@ -36,6 +36,15 @@ controls of the :ref:`vehicle kinematics <vehicle_kinematics>`, namely the throt
     :py:attr:`~highway_env.envs.common.action.ContinuousAction.longitudinal` and :py:attr:`~highway_env.envs.common.action.ContinuousAction.lateral`
     configurations, respectively. Thus, the action space can be either 1D or 2D.
 
+Discrete Actions
+-------------------
+
+The :py:class:`~highway_env.envs.common.action.DiscreteAction` is a uniform quantization of the :py:class:`~highway_env.envs.common.action.ContinuousAction` above.
+
+The :py:attr:`~highway_env.envs.common.action.DiscreteAction.actions_per_axis` parameter allows to set the quantization step. Similarly to continuous actions, the longitudinal and lateral axis can be enabled or disabled separately.
+
+
+
 Discrete Meta-Actions
 ----------------------
 
