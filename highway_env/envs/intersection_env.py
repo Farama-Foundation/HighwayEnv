@@ -42,7 +42,8 @@ class IntersectionEnv(AbstractEnv):
             "action": {
                 "type": "DiscreteMetaAction",
                 "longitudinal": True,
-                "lateral": False
+                "lateral": False,
+                "target_speeds": [0, 4.5, 9]
             },
             "duration": 13,  # [s]
             "destination": "o1",
@@ -194,9 +195,6 @@ class IntersectionEnv(AbstractEnv):
                              heading=ego_lane.heading_at(60))
             try:
                 ego_vehicle.plan_route_to(destination)
-                ego_vehicle.SPEED_MIN = 0
-                ego_vehicle.SPEED_MAX = self.config["reward_speed_range"][1]
-                ego_vehicle.SPEED_COUNT = 3
                 ego_vehicle.speed_index = ego_vehicle.speed_to_index(ego_lane.speed_limit)
                 ego_vehicle.target_speed = ego_vehicle.index_to_speed(ego_vehicle.speed_index)
             except AttributeError:

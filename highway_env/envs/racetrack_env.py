@@ -38,7 +38,8 @@ class RacetrackEnv(AbstractEnv):
             "action": {
                 "type": "ContinuousAction",
                 "longitudinal": False,
-                "lateral": True
+                "lateral": True,
+                "target_speeds": [0, 5, 10]
             },
             "simulation_frequency": 15,
             "policy_frequency": 5,
@@ -186,9 +187,6 @@ class RacetrackEnv(AbstractEnv):
                 self.road.network.random_lane_index(rng)
             controlled_vehicle = self.action_type.vehicle_class.make_on_lane(self.road, lane_index, speed=None,
                                                                              longitudinal=rng.uniform(20, 50))
-            controlled_vehicle.SPEED_MIN = 0
-            controlled_vehicle.SPEED_MAX = 10
-            controlled_vehicle.SPEED_COUNT = 3
 
             self.controlled_vehicles.append(controlled_vehicle)
             self.road.vehicles.append(controlled_vehicle)

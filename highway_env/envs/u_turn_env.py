@@ -26,6 +26,7 @@ class UTurnEnv(AbstractEnv):
             },
             "action": {
                 "type": "DiscreteMetaAction",
+                "target_speeds": [8, 16, 24]
             },
             "screen_width": 789,
             "screen_height": 289,
@@ -136,10 +137,6 @@ class UTurnEnv(AbstractEnv):
                                                      speed=16)
         # Stronger anticipation for the turn
         ego_vehicle.PURSUIT_TAU = MDPVehicle.TAU_HEADING
-        # Lower speed range
-        ego_vehicle.SPEED_MIN = 8
-        ego_vehicle.SPEED_MAX = 24
-        ego_vehicle.SPEED_COUNT = 3
         try:
             ego_vehicle.plan_route_to("d")
         except AttributeError:

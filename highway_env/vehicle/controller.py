@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Optional
 
 import numpy as np
 import copy
@@ -203,20 +203,31 @@ class ControlledVehicle(Vehicle):
 class MDPVehicle(ControlledVehicle):
 
     """A controlled vehicle with a specified discrete range of allowed target speeds."""
-
-    SPEED_COUNT: int = 3  # []
-    SPEED_MIN: float = 20  # [m/s]
-    SPEED_MAX: float = 30  # [m/s]
+    DEFAULT_TARGET_SPEEDS = np.linspace(20, 30, 3)
 
     def __init__(self,
                  road: Road,
                  position: List[float],
                  heading: float = 0,
                  speed: float = 0,
-                 target_lane_index: LaneIndex = None,
-                 target_speed: float = None,
-                 route: Route = None) -> None:
+                 target_lane_index: Optional[LaneIndex] = None,
+                 target_speed: Optional[float] = None,
+                 target_speeds: Optional[Vector] = None,
+                 route: Optional[Route] = None) -> None:
+        """
+        Initializes an MDPVehicle
+
+        :param road: the road on which the vehicle is driving
+        :param position: its position
+        :param heading: its heading angle
+        :param speed: its speed
+        :param target_lane_index: the index of the lane it is following
+        :param target_speed: the speed it is tracking
+        :param target_speeds: the discrete list of speeds the vehicle is able to track, through faster/slower actions
+        :param route: the planned route of the vehicle, to handle intersections
+        """
         super().__init__(road, position, heading, speed, target_lane_index, target_speed, route)
+        self.target_speeds = np.array(target_speeds) if target_speeds is not None else self.DEFAULT_TARGET_SPEEDS
         self.speed_index = self.speed_to_index(self.target_speed)
         self.target_speed = self.index_to_speed(self.speed_index)
 
@@ -236,7 +247,7 @@ class MDPVehicle(ControlledVehicle):
         else:
             super().act(action)
             return
-        self.speed_index = int(np.clip(self.speed_index, 0, self.SPEED_COUNT - 1))
+        self.speed_index = int(np.clip(self.speed_index, 0, self.target_speeds.size - 1))
         self.target_speed = self.index_to_speed(self.speed_index)
         super().act()
 
@@ -247,31 +258,33 @@ class MDPVehicle(ControlledVehicle):
         :param index: the speed index []
         :return: the corresponding speed [m/s]
         """
-        if self.SPEED_COUNT > 1:
-            return self.SPEED_MIN + index * (self.SPEED_MAX - self.SPEED_MIN) / (self.SPEED_COUNT - 1)
-        else:
-            return self.SPEED_MIN
+        return self.target_speeds[index]
 
     def speed_to_index(self, speed: float) -> int:
         """
         Find the index of the closest speed allowed to a given speed.
 
+        Assumes a uniform list of target speeds to avoid searching for the closest target speed
+
         :param speed: an input speed [m/s]
         :return: the index of the closest speed allowed []
         """
-        x = (speed - self.SPEED_MIN) / (self.SPEED_MAX - self.SPEED_MIN)
-        return np.int(np.clip(np.round(x * (self.SPEED_COUNT - 1)), 0, self.SPEED_COUNT - 1))
+        x = (speed - self.target_speeds[0]) / (self.target_speeds[-1] - self.target_speeds[0])
+        return np.int(np.clip(np.round(x * (self.target_speeds.size - 1)), 0, self.target_speeds.size - 1))
 
     @classmethod
     def speed_to_index_default(cls, speed: float) -> int:
         """
         Find the index of the closest speed allowed to a given speed.
 
+        Assumes a uniform list of target speeds to avoid searching for the closest target speed
+
         :param speed: an input speed [m/s]
         :return: the index of the closest speed allowed []
         """
-        x = (speed - cls.SPEED_MIN) / (cls.SPEED_MAX - cls.SPEED_MIN)
-        return np.int(np.clip(np.round(x * (cls.SPEED_COUNT - 1)), 0, cls.SPEED_COUNT - 1))
+        x = (speed - cls.DEFAULT_TARGET_SPEEDS[0]) / (cls.DEFAULT_TARGET_SPEEDS[-1] - cls.DEFAULT_TARGET_SPEEDS[0])
+        return np.int(np.clip(
+            np.round(x * (cls.DEFAULT_TARGET_SPEEDS.size - 1)), 0, cls.DEFAULT_TARGET_SPEEDS.size - 1))
 
     @classmethod
     def get_speed_index(cls, vehicle: Vehicle) -> int:

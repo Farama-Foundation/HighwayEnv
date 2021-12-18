@@ -10,6 +10,7 @@ from highway_env.envs.common.graphics import EnvViewer
 from highway_env.road.lane import AbstractLane
 from highway_env.utils import distance_to_circle, Vector
 from highway_env.vehicle.controller import MDPVehicle
+from highway_env.vehicle.kinematics import Vehicle
 
 if TYPE_CHECKING:
     from highway_env.envs.common.abstract import AbstractEnv
@@ -185,10 +186,10 @@ class KinematicObservation(ObservationType):
         if not self.features_range:
             side_lanes = self.env.road.network.all_side_lanes(self.observer_vehicle.lane_index)
             self.features_range = {
-                "x": [-5.0 * MDPVehicle.SPEED_MAX, 5.0 * MDPVehicle.SPEED_MAX],
+                "x": [-5.0 * Vehicle.MAX_SPEED, 5.0 * Vehicle.MAX_SPEED],
                 "y": [-AbstractLane.DEFAULT_WIDTH * len(side_lanes), AbstractLane.DEFAULT_WIDTH * len(side_lanes)],
-                "vx": [-2*MDPVehicle.SPEED_MAX, 2*MDPVehicle.SPEED_MAX],
-                "vy": [-2*MDPVehicle.SPEED_MAX, 2*MDPVehicle.SPEED_MAX]
+                "vx": [-2*Vehicle.MAX_SPEED, 2*Vehicle.MAX_SPEED],
+                "vy": [-2*Vehicle.MAX_SPEED, 2*Vehicle.MAX_SPEED]
             }
         for feature, f_range in self.features_range.items():
             if feature in df:
@@ -288,8 +289,8 @@ class OccupancyGridObservation(ObservationType):
         """
         if not self.features_range:
             self.features_range = {
-                "vx": [-2*MDPVehicle.SPEED_MAX, 2*MDPVehicle.SPEED_MAX],
-                "vy": [-2*MDPVehicle.SPEED_MAX, 2*MDPVehicle.SPEED_MAX]
+                "vx": [-2*Vehicle.MAX_SPEED, 2*Vehicle.MAX_SPEED],
+                "vy": [-2*Vehicle.MAX_SPEED, 2*Vehicle.MAX_SPEED]
             }
         for feature, f_range in self.features_range.items():
             if feature in df:

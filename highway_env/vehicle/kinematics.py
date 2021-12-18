@@ -22,7 +22,7 @@ class Vehicle(RoadObject):
     """ Vehicle length [m] """
     WIDTH = 2.0
     """ Vehicle width [m] """
-    DEFAULT_SPEEDS = [23, 25]
+    DEFAULT_INITIAL_SPEEDS = [23, 25]
     """ Range for random initial speeds [m/s] """
     MAX_SPEED = 40.
     """ Maximum reachable speed [m/s] """
@@ -73,7 +73,7 @@ class Vehicle(RoadObject):
             if lane.speed_limit is not None:
                 speed = road.np_random.uniform(0.7*lane.speed_limit, 0.8*lane.speed_limit)
             else:
-                speed = road.np_random.uniform(Vehicle.DEFAULT_SPEEDS[0], Vehicle.DEFAULT_SPEEDS[1])
+                speed = road.np_random.uniform(Vehicle.DEFAULT_INITIAL_SPEEDS[0], Vehicle.DEFAULT_INITIAL_SPEEDS[1])
         default_spacing = 12+1.0*speed
         offset = spacing * default_spacing * np.exp(-5 / 40 * len(road.network.graph[_from][_to]))
         x0 = np.max([lane.local_coordinates(v.position)[0] for v in road.vehicles]) \

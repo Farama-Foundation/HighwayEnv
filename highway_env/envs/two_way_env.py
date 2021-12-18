@@ -45,7 +45,7 @@ class TwoWayEnv(AbstractEnv):
         """
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
 
-        reward = self.config["high_speed_reward"] * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1) \
+        reward = self.config["high_speed_reward"] * self.vehicle.speed_index / (self.vehicle.target_speeds.size - 1) \
             + self.config["left_lane_reward"] \
                 * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
         return reward

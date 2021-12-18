@@ -1,9 +1,11 @@
+import functools
 from itertools import product
 from typing import TYPE_CHECKING, Optional, Union, Tuple, Callable
 from gym import spaces
 import numpy as np
 
 from highway_env import utils
+from highway_env.utils import Vector
 from highway_env.vehicle.dynamics import BicycleVehicle
 from highway_env.vehicle.kinematics import Vehicle
 from highway_env.vehicle.controller import MDPVehicle
@@ -193,6 +195,7 @@ class DiscreteMetaAction(ActionType):
                  env: 'AbstractEnv',
                  longitudinal: bool = True,
                  lateral: bool = True,
+                 target_speeds: Optional[Vector] = None,
                  **kwargs) -> None:
         """
         Create a discrete action space of meta-actions.
@@ -200,10 +203,12 @@ class DiscreteMetaAction(ActionType):
         :param env: the environment
         :param longitudinal: include longitudinal actions
         :param lateral: include lateral actions
+        :param target_speeds: the list of speeds the vehicle is able to track
         """
         super().__init__(env)
         self.longitudinal = longitudinal
         self.lateral = lateral
+        self.target_speeds = np.array(target_speeds) if target_speeds is not None else MDPVehicle.DEFAULT_TARGET_SPEEDS
         self.actions = self.ACTIONS_ALL if longitudinal and lateral \
             else self.ACTIONS_LONGI if longitudinal \
             else self.ACTIONS_LAT if lateral \
@@ -217,7 +222,7 @@ class DiscreteMetaAction(ActionType):
 
     @property
     def vehicle_class(self) -> Callable:
-        return MDPVehicle
+        return functools.partial(MDPVehicle, target_speeds=self.target_speeds)
 
     def act(self, action: int) -> None:
         self.controlled_vehicle.act(self.actions[action])

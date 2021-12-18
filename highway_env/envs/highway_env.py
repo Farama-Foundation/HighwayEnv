@@ -7,6 +7,7 @@ from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.utils import near_split
 from highway_env.vehicle.controller import ControlledVehicle
+from highway_env.vehicle.kinematics import Vehicle
 
 
 class HighwayEnv(AbstractEnv):
@@ -61,14 +62,15 @@ class HighwayEnv(AbstractEnv):
 
         self.controlled_vehicles = []
         for others in other_per_controlled:
-            controlled_vehicle = self.action_type.vehicle_class.create_random(
+            vehicle = Vehicle.create_random(
                 self.road,
                 speed=25,
                 lane_id=self.config["initial_lane_id"],
                 spacing=self.config["ego_spacing"]
             )
-            self.controlled_vehicles.append(controlled_vehicle)
-            self.road.vehicles.append(controlled_vehicle)
+            vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
+            self.controlled_vehicles.append(vehicle)
+            self.road.vehicles.append(vehicle)
 
             for _ in range(others):
                 vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])

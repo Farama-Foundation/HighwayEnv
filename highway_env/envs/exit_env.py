@@ -3,7 +3,7 @@ from typing import Tuple
 from gym.envs.registration import register
 
 from highway_env import utils
-from highway_env.envs import HighwayEnv, CircularLane
+from highway_env.envs import HighwayEnv, CircularLane, Vehicle
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
@@ -24,6 +24,7 @@ class ExitEnv(HighwayEnv):
             },
             "action": {
                 "type": "DiscreteMetaAction",
+                "target_speeds": [18, 24, 30]
             },
             "lanes_count": 6,
             "collision_reward": 0,
@@ -78,13 +79,13 @@ class ExitEnv(HighwayEnv):
         """Create some new random vehicles of a given type, and add them on the road."""
         self.controlled_vehicles = []
         for _ in range(self.config["controlled_vehicles"]):
-            vehicle = self.action_type.vehicle_class.create_random(self.road,
-                                                                   speed=25,
-                                                                   lane_from="0",
-                                                                   lane_to="1",
-                                                                   lane_id=0,
-                                                                   spacing=self.config["ego_spacing"])
-            vehicle.SPEED_MIN = 18
+            vehicle = Vehicle.create_random(self.road,
+                                            speed=25,
+                                            lane_from="0",
+                                            lane_to="1",
+                                            lane_id=0,
+                                            spacing=self.config["ego_spacing"])
+            vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
             self.controlled_vehicles.append(vehicle)
             self.road.vehicles.append(vehicle)
 

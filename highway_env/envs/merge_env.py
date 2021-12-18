@@ -47,7 +47,7 @@ class MergeEnv(AbstractEnv):
                          4: 0}
         reward = self.config["collision_reward"] * self.vehicle.crashed \
             + self.config["right_lane_reward"] * self.vehicle.lane_index[2] / 1 \
-            + self.config["high_speed_reward"] * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1)
+            + self.config["high_speed_reward"] * self.vehicle.speed_index / (self.vehicle.target_speeds.size - 1)
 
         # Altruistic penalty
         for vehicle in self.road.vehicles:

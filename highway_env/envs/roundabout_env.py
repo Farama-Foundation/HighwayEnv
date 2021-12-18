@@ -23,6 +23,7 @@ class RoundaboutEnv(AbstractEnv):
             },
             "action": {
                 "type": "DiscreteMetaAction",
+                "target_speeds": [0, 8, 16]
             },
             "incoming_vehicle_destination": None,
             "collision_reward": -1,
@@ -40,7 +41,7 @@ class RoundaboutEnv(AbstractEnv):
         lane_change = action == 0 or action == 2
         reward = self.config["collision_reward"] * self.vehicle.crashed \
             + self.config["high_speed_reward"] * \
-                 MDPVehicle.get_speed_index(self.vehicle) / max(MDPVehicle.SPEED_COUNT - 1, 1) \
+                 MDPVehicle.get_speed_index(self.vehicle) / (MDPVehicle.DEFAULT_TARGET_SPEEDS.size - 1) \
             + self.config["lane_change_reward"] * lane_change
         return utils.lmap(reward,
                           [self.config["collision_reward"] + self.config["lane_change_reward"],
@@ -140,9 +141,6 @@ class RoundaboutEnv(AbstractEnv):
             ego_vehicle.plan_route_to("nxs")
         except AttributeError:
             pass
-        MDPVehicle.SPEED_MIN = 0
-        MDPVehicle.SPEED_MAX = 16
-        MDPVehicle.SPEED_COUNT = 3
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 

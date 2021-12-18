@@ -34,7 +34,7 @@ class AbstractEnv(gym.Env):
         'render.modes': ['human', 'rgb_array'],
     }
 
-    PERCEPTION_DISTANCE = 6.0 * MDPVehicle.SPEED_MAX
+    PERCEPTION_DISTANCE = 5.0 * Vehicle.MAX_SPEED
     """The maximum distance of any vehicle present in the observation [m]"""
 
     def __init__(self, config: dict = None) -> None:
@@ -297,7 +297,7 @@ class AbstractEnv(gym.Env):
                     and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position) \
                     and self.action_type.lateral:
                 actions.append(self.action_type.actions_indexes['LANE_RIGHT'])
-        if self.vehicle.speed_index < self.vehicle.SPEED_COUNT - 1 and self.action_type.longitudinal:
+        if self.vehicle.speed_index < self.vehicle.target_speeds.size - 1 and self.action_type.longitudinal:
             actions.append(self.action_type.actions_indexes['FASTER'])
         if self.vehicle.speed_index > 0 and self.action_type.longitudinal:
             actions.append(self.action_type.actions_indexes['SLOWER'])
