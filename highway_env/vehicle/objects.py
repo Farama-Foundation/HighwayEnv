@@ -21,6 +21,7 @@ class RoadObject(ABC):
 
     LENGTH: float = 2  # Object length [m]
     WIDTH: float = 2  # Object width [m]
+    DIAGONAL: float = np.sqrt(LENGTH**2 + WIDTH**2)
 
     def __init__(self, road: 'Road', position: Sequence[float], heading: float = 0, speed: float = 0):
         """
@@ -94,7 +95,7 @@ class RoadObject(ABC):
 
     def _is_colliding(self, other, dt):
         # Fast spherical pre-check
-        if np.linalg.norm(other.position - self.position) > self.LENGTH + self.speed * dt:
+        if np.linalg.norm(other.position - self.position) > self.DIAGONAL + self.speed * dt:
             return False, False, np.zeros(2,)
         # Accurate rectangular check
         return utils.are_polygons_intersecting(self.polygon(), other.polygon(), self.velocity * dt, other.velocity * dt)
