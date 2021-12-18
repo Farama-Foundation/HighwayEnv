@@ -95,7 +95,7 @@ class GrayscaleObservation(ObservationType):
         return self.obs
 
     def _render_to_grayscale(self) -> np.ndarray:
-        # TODO: center rendering on the observer vehicle
+        self.viewer.observer_vehicle = self.observer_vehicle
         self.viewer.display()
         raw_rgb = self.viewer.get_image()  # H x W x C
         raw_rgb = np.moveaxis(raw_rgb, 0, 1)
