@@ -82,8 +82,13 @@ class RoadObject(ABC):
         intersecting, will_intersect, transition = self._is_colliding(other, dt)
         if will_intersect:
             if self.solid and other.solid:
-                self.impact = transition / 2
-                other.impact = -transition / 2
+                if isinstance(other, Obstacle):
+                    self.impact = transition
+                elif isinstance(self, Obstacle):
+                    other.impact = transition
+                else:
+                    self.impact = transition / 2
+                    other.impact = -transition / 2
         if intersecting:
             if self.solid and other.solid:
                 self.crashed = True
