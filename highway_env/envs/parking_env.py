@@ -3,7 +3,7 @@ from gym import GoalEnv
 import numpy as np
 
 from highway_env.envs.common.abstract import AbstractEnv
-from highway_env.envs.common.observation import MultiAgentObservation
+from highway_env.envs.common.observation import MultiAgentObservation, observation_factory
 from highway_env.road.lane import StraightLane, LineType
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.objects import Landmark
@@ -18,6 +18,20 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     Credits to Munir Jojo-Verge for the idea and initial implementation.
     """
+
+    # For parking env with GrayscaleObservation, the env need
+    # this PARKING_OBS to calculate the reward and the info.
+    # Bug fixed by Mcfly(https://github.com/McflyWZX)
+    PARKING_OBS = {"observation": {
+            "type": "KinematicsGoal",
+            "features": ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h'],
+            "scales": [100, 100, 5, 5, 1, 1],
+            "normalize": False
+        }}
+
+    def __init__(self, config: dict = None) -> None:
+        super().__init__(config)
+        self.observation_type_parking = None
 
     @classmethod
     def default_config(cls) -> dict:
@@ -46,6 +60,13 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "controlled_vehicles": 1
         })
         return config
+
+    def define_spaces(self) -> None:
+        """
+        Set the types and spaces of observation and action from config.
+        """
+        super().define_spaces()
+        self.observation_type_parking = observation_factory(self, self.PARKING_OBS["observation"])
 
     def _info(self, obs, action) -> dict:
         info = super(ParkingEnv, self)._info(obs, action)
