@@ -17,6 +17,15 @@ from highway_env.vehicle.kinematics import Vehicle
 
 Observation = np.ndarray
 
+# For parking env with GrayscaleObservation, the env need
+# this PARKING_OBS to calculate the reward and the info.
+# Bug fixed by Mcfly(https://github.com/McflyWZX)
+PARKING_OBS = {"observation": {
+        "type": "KinematicsGoal",
+        "features": ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h'],
+        "scales": [100, 100, 5, 5, 1, 1],
+        "normalize": False
+    }}
 
 class AbstractEnv(gym.Env):
 
@@ -54,6 +63,7 @@ class AbstractEnv(gym.Env):
         self.action_type = None
         self.action_space = None
         self.observation_type = None
+        self.observation_type_parking = None
         self.observation_space = None
         self.define_spaces()
 
@@ -126,6 +136,7 @@ class AbstractEnv(gym.Env):
         """
         Set the types and spaces of observation and action from config.
         """
+        self.observation_type_parking = observation_factory(self, PARKING_OBS["observation"])
         self.observation_type = observation_factory(self, self.config["observation"])
         self.action_type = action_factory(self, self.config["action"])
         self.observation_space = self.observation_type.space()
