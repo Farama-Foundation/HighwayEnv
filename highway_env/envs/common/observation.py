@@ -487,9 +487,24 @@ class MultiAgentObservation(ObservationType):
         return tuple(obs_type.observe() for obs_type in self.agents_observation_types)
 
 
+class TupleObservation(ObservationType):
+    def __init__(self,
+                 env: 'AbstractEnv',
+                 observation_configs: List[dict],
+                 **kwargs) -> None:
+        super().__init__(env)
+        self.observation_types = [observation_factory(self.env, obs_config) for obs_config in observation_configs]
+
+    def space(self) -> spaces.Space:
+        return spaces.Tuple([obs_type.space() for obs_type in self.observation_types])
+
+    def observe(self) -> tuple:
+        return tuple(obs_type.observe() for obs_type in self.observation_types)
+
+
 class ExitObservation(KinematicObservation):
 
-    """Observe the kinematics of nearby vehicles."""
+    """Specific to exit_env, observe the distance to the next exit lane as part of a KinematicObservation."""
 
     def observe(self) -> np.ndarray:
         if not self.env.road:
@@ -617,6 +632,8 @@ def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
         return AttributesObservation(env, **config)
     elif config["type"] == "MultiAgentObservation":
         return MultiAgentObservation(env, **config)
+    elif config["type"] == "TupleObservation":
+        return TupleObservation(env, **config)
     elif config["type"] == "LidarObservation":
         return LidarObservation(env, **config)
     elif config["type"] == "ExitObservation":
