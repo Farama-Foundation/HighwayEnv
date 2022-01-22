@@ -133,7 +133,7 @@ def rect_corners(center: np.ndarray, length: float, width: float, angle: float,
 
     c, s = np.cos(angle), np.sin(angle)
     rotation = np.array([[c, -s], [s, c]])
-    return (rotation @ np.array(corners).T).T + np.tile(center, (4, 1))
+    return (rotation @ np.array(corners).T).T + np.tile(center, (len(corners), 1))
 
 
 def has_corner_inside(rect1: Tuple[Vector, float, float, float],
