@@ -107,6 +107,35 @@ def rotated_rectangles_intersect(rect1: Tuple[Vector, float, float, float],
     return has_corner_inside(rect1, rect2) or has_corner_inside(rect2, rect1)
 
 
+def rect_corners(center: np.ndarray, length: float, width: float, angle: float,
+                 include_midpoints: bool = False, include_center: bool = False) -> List[np.ndarray]:
+    """
+    Returns the positions of the corners of a rectangle.
+    :param center: the rectangle center
+    :param length: the rectangle length
+    :param width: the rectangle width
+    :param angle: the rectangle angle
+    :param include_midpoints: include middle of edges
+    :param include_center: include the center of the rect
+    :return: a list of positions
+    """
+    center = np.array(center)
+    half_l = np.array([length/2, 0])
+    half_w = np.array([0, width/2])
+    corners = [- half_l - half_w,
+               - half_l + half_w,
+               + half_l + half_w,
+               + half_l - half_w]
+    if include_center:
+        corners += [[0, 0]]
+    if include_midpoints:
+        corners += [- half_l, half_l, -half_w, half_w]
+
+    c, s = np.cos(angle), np.sin(angle)
+    rotation = np.array([[c, -s], [s, c]])
+    return (rotation @ np.array(corners).T).T + np.tile(center, (4, 1))
+
+
 def has_corner_inside(rect1: Tuple[Vector, float, float, float],
                       rect2: Tuple[Vector, float, float, float]) -> bool:
     """
@@ -115,18 +144,8 @@ def has_corner_inside(rect1: Tuple[Vector, float, float, float],
     :param rect1: (center, length, width, angle)
     :param rect2: (center, length, width, angle)
     """
-    (c1, l1, w1, a1) = rect1
-    (c2, l2, w2, a2) = rect2
-    c1 = np.array(c1)
-    l1v = np.array([l1/2, 0])
-    w1v = np.array([0, w1/2])
-    r1_points = np.array([[0, 0],
-                          - l1v, l1v, -w1v, w1v,
-                          - l1v - w1v, - l1v + w1v, + l1v - w1v, + l1v + w1v])
-    c, s = np.cos(a1), np.sin(a1)
-    r = np.array([[c, -s], [s, c]])
-    rotated_r1_points = r.dot(r1_points.transpose()).transpose()
-    return any([point_in_rotated_rectangle(c1+np.squeeze(p), c2, l2, w2, a2) for p in rotated_r1_points])
+    return any([point_in_rotated_rectangle(p1, *rect2)
+                for p1 in rect_corners(*rect1, include_midpoints=True, include_center=True)])
 
 
 def project_polygon(polygon: Vector, axis: Vector) -> Tuple[float, float]:
@@ -313,6 +332,34 @@ def distance_to_circle(center, radius, direction):
     else:
         distance = np.infty
     return distance
+
+
+def distance_to_rect(line: Tuple[np.ndarray, np.ndarray], rect: List[np.ndarray]):
+    """
+    Compute the intersection between a line segment and a rectangle.
+
+    See https://math.stackexchange.com/a/2788041.
+    :param line: a line segment [R, Q]
+    :param rect: a rectangle [A, B, C, D]
+    :return: the distance between R and the intersection of the segment RQ with the rectangle ABCD
+    """
+    r, q = line
+    a, b, c, d = rect
+    u = b - a
+    v = d - a
+    u, v = u/np.linalg.norm(u), v/np.linalg.norm(v)
+    rqu = (q - r) @ u
+    rqv = (q - r) @ v
+    interval_1 = [(a - r) @ u / rqu, (b - r) @ u / rqu]
+    interval_2 = [(a - r) @ v / rqv, (d - r) @ v / rqv]
+    interval_1 = interval_1 if rqu >= 0 else list(reversed(interval_1))
+    interval_2 = interval_2 if rqv >= 0 else list(reversed(interval_2))
+    if interval_distance(*interval_1, *interval_2) <= 0 \
+            and interval_distance(0, 1, *interval_1) <= 0 \
+            and interval_distance(0, 1, *interval_2) <= 0:
+        return max(interval_1[0], interval_2[0]) * np.linalg.norm(q - r)
+    else:
+        return np.inf
 
 
 def solve_trinom(a, b, c):

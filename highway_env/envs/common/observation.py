@@ -581,24 +581,28 @@ class LidarObservation(ObservationType):
             if center_distance > self.maximum_range:
                 continue
             center_angle = self.position_to_angle(obstacle.position, origin)
-            half_angle = np.arccos(np.sqrt(max(1-(obstacle.WIDTH / 2 / center_distance)**2, 0)))
             center_index = self.angle_to_index(center_angle)
-            # self.grid[center_index, self.DISTANCE] = min(self.grid[center_index, self.DISTANCE], )
             distance = center_distance - obstacle.WIDTH / 2
             if distance <= self.grid[center_index, self.DISTANCE]:
                 direction = self.index_to_direction(center_index)
                 velocity = (obstacle.velocity - origin_velocity).dot(direction)
                 self.grid[center_index, :] = [distance, velocity]
 
-            start, end = self.angle_to_index(center_angle - half_angle), self.angle_to_index(center_angle + half_angle)
+            # Angular sector covered by the obstacle
+            corners = utils.rect_corners(obstacle.position, obstacle.LENGTH, obstacle.WIDTH, obstacle.heading)
+            angles = [self.position_to_angle(corner, origin) for corner in corners]
+            min_angle, max_angle = min(angles), max(angles)
+            start, end = self.angle_to_index(min_angle), self.angle_to_index(max_angle)
             if start < end:
                 indexes = np.arange(start, end+1)
             else:
                 indexes = np.hstack([np.arange(start, self.cells), np.arange(0, end + 1)])
 
+            # Actual distance computation for these sections
             for index in indexes:
                 direction = self.index_to_direction(index)
-                distance = distance_to_circle(obstacle.position - origin, obstacle.WIDTH / 2, direction)
+                ray = [origin, origin + self.maximum_range * direction]
+                distance = utils.distance_to_rect(ray, corners)
                 if distance <= self.grid[index, self.DISTANCE]:
                     velocity = (obstacle.velocity - origin_velocity).dot(direction)
                     self.grid[index, :] = [distance, velocity]
@@ -614,7 +618,7 @@ class LidarObservation(ObservationType):
         return int(np.floor(angle / self.angle)) % self.cells
 
     def index_to_direction(self, index: int) -> np.ndarray:
-        return np.array([[np.cos(index * self.angle)], [np.sin(index * self.angle)]])
+        return np.array([np.cos(index * self.angle), np.sin(index * self.angle)])
 
 
 def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
