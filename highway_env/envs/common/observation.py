@@ -575,7 +575,7 @@ class LidarObservation(ObservationType):
         self.grid = np.ones((self.cells, 2)) * self.maximum_range
 
         for obstacle in self.env.road.vehicles + self.env.road.objects:
-            if obstacle is self.observer_vehicle:
+            if obstacle is self.observer_vehicle or not obstacle.solid:
                 continue
             center_distance = np.linalg.norm(obstacle.position - origin)
             if center_distance > self.maximum_range:
