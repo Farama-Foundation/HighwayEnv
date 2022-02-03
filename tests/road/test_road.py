@@ -5,7 +5,8 @@ from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
 
 
-def test_network():
+@pytest.fixture
+def net() -> RoadNetwork:
     # Diamond
     net = RoadNetwork()
     net.add_lane(0, 1, StraightLane([0, 0], [10, 0]))
@@ -15,6 +16,10 @@ def test_network():
     net.add_lane(3, 0, StraightLane([5, -5], [0, 0]))
     print(net.graph)
 
+    return net
+
+
+def test_network(net):
     # Road
     road = Road(network=net)
     v = ControlledVehicle(road, [5, 0], heading=0, target_speed=2)
@@ -32,3 +37,9 @@ def test_network():
             lane_index = v.target_lane_index
             lane_changes += 1
     assert lane_changes >= 3
+
+
+def test_network_to_from_config(net):
+    config_dict = net.to_config()
+    net_2 = RoadNetwork.from_config(config_dict)
+    assert len(net.graph) == len(net_2.graph)
