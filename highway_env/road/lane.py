@@ -406,7 +406,8 @@ class PolyLane(PolyLaneFixedWidth):
     def __init__(
         self,
         lane_points: List[Tuple[float, float]],
-        ordered_boundary_points: List[Tuple[float, float]],
+        left_boundary_points: List[Tuple[float, float]],
+        right_boundary_points: List[Tuple[float, float]],
         line_types: Tuple[LineType, LineType] = None,
         forbidden: bool = False,
         speed_limit: float = 20,
@@ -419,9 +420,8 @@ class PolyLane(PolyLaneFixedWidth):
             speed_limit=speed_limit,
             priority=priority,
         )
-        self.right_boundary, self.left_boundary = self._separate_lane_boundaries(
-            ordered_boundary_points
-        )
+        self.right_boundary = LinearSpline2D(right_boundary_points)
+        self.left_boundary = LinearSpline2D(left_boundary_points)
         self._init_width()
 
     def width_at(self, longitudinal: float) -> float:
@@ -467,30 +467,6 @@ class PolyLane(PolyLaneFixedWidth):
             num=int(np.ceil(self.curve.length)) + 1,
         )
         self.width_samples = [self._width_at_s(s) for s in s_samples]
-
-    def _separate_lane_boundaries(self, ordered_boundary_points):
-        """
-        Separate list of ordered boundary points into right and left boundary.
-        Ordered boundary points start with left boundary points reversed and then right boundary points as illustrated:
-                0 x-------x 5
-                  |   ^   |
-          left  1 x   |   x 4  right
-                  |       |
-                2 x       x 3
-        """
-        boundary_points = deepcopy(ordered_boundary_points)
-        first_right_point_idx = np.where(
-            [self.local_coordinates(p)[1] > 0 for p in boundary_points]
-        )[0][0]
-
-        assert (
-            first_right_point_idx > 1
-            and first_right_point_idx < len(boundary_points) - 1
-        )
-        return (
-            LinearSpline2D(boundary_points[first_right_point_idx:]),
-            LinearSpline2D(list(reversed(boundary_points[:first_right_point_idx]))),
-        )
 
     def to_config(self) -> dict:
         config = super().to_config()
