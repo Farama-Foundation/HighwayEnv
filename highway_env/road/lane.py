@@ -1,9 +1,9 @@
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Union
 import numpy as np
 
 from highway_env import utils
-from highway_env.utils import wrap_to_pi, Vector
+from highway_env.utils import wrap_to_pi, Vector, get_class_path, class_from_path
 
 
 class AbstractLane(object):
@@ -54,6 +54,24 @@ class AbstractLane(object):
 
         :param longitudinal: longitudinal lane coordinate [m]
         :return: the lane width [m]
+        """
+        raise NotImplementedError()
+
+    @classmethod
+    def from_config(cls, config: dict):
+        """
+        Create lane instance from config
+
+        :param config: json dict with lane parameters
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def to_config(self) -> dict:
+        """
+        Write lane parameters to dict which can be serialized to json
+
+        :return: dict of lane parameters
         """
         raise NotImplementedError()
 
@@ -166,6 +184,26 @@ class StraightLane(AbstractLane):
         lateral = np.dot(delta, self.direction_lateral)
         return float(longitudinal), float(lateral)
 
+    @classmethod
+    def from_config(cls, config: dict):
+        config["start"] = np.array(config["start"])
+        config["end"] = np.array(config["end"])
+        return cls(**config)
+
+    def to_config(self) -> dict:
+        return {
+            "class_path": get_class_path(self.__class__),
+            "config": {
+                "start": _to_serializable(self.start),
+                "end": _to_serializable(self.end),
+                "width": self.width,
+                "line_types": self.line_types,
+                "forbidden": self.forbidden,
+                "speed_limit": self.speed_limit,
+                "priority": self.priority
+            }
+        }
+
 
 class SineLane(StraightLane):
 
@@ -208,6 +246,24 @@ class SineLane(StraightLane):
         longitudinal, lateral = super().local_coordinates(position)
         return longitudinal, lateral - self.amplitude * np.sin(self.pulsation * longitudinal + self.phase)
 
+    @classmethod
+    def from_config(cls, config: dict):
+        config["start"] = np.array(config["start"])
+        config["end"] = np.array(config["end"])
+        return cls(**config)
+
+    def to_config(self) -> dict:
+        config = super().to_config()
+        config.update({
+            "class_path": get_class_path(self.__class__),
+        })
+        config["config"].update({
+            "amplitude": self.amplitude,
+            "pulsation": self.pulsation,
+            "phase": self.phase
+        })
+        return config
+
 
 class CircularLane(AbstractLane):
 
@@ -229,6 +285,7 @@ class CircularLane(AbstractLane):
         self.radius = radius
         self.start_phase = start_phase
         self.end_phase = end_phase
+        self.clockwise = clockwise
         self.direction = 1 if clockwise else -1
         self.width = width
         self.line_types = line_types or [LineType.STRIPED, LineType.STRIPED]
@@ -257,3 +314,35 @@ class CircularLane(AbstractLane):
         longitudinal = self.direction*(phi - self.start_phase)*self.radius
         lateral = self.direction*(self.radius - r)
         return longitudinal, lateral
+
+    @classmethod
+    def from_config(cls, config: dict):
+        config["center"] = np.array(config["center"])
+        return cls(**config)
+
+    def to_config(self) -> dict:
+        return {
+            "class_path": get_class_path(self.__class__),
+            "config": {
+                "center": _to_serializable(self.center),
+                "radius": self.radius,
+                "start_phase": self.start_phase,
+                "end_phase": self.end_phase,
+                "clockwise": self.clockwise,
+                "width": self.width,
+                "line_types": self.line_types,
+                "forbidden": self.forbidden,
+                "speed_limit": self.speed_limit,
+                "priority": self.priority
+            }
+        }
+
+
+def _to_serializable(arg: Union[np.ndarray, List]) -> List:
+    if isinstance(arg, np.ndarray):
+        return arg.tolist()
+    return arg
+
+
+def lane_from_config(cfg: dict) -> AbstractLane:
+    return class_from_path(cfg["class_path"])(**cfg["config"])

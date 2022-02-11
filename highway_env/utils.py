@@ -26,6 +26,10 @@ def lmap(v: float, x: Interval, y: Interval) -> float:
     return y[0] + (v - x[0]) * (y[1] - y[0]) / (x[1] - x[0])
 
 
+def get_class_path(cls: Callable) -> str:
+    return cls.__module__ + "." + cls.__qualname__
+
+
 def class_from_path(path: str) -> Callable:
     module_name, class_name = path.rsplit(".", 1)
     class_object = getattr(importlib.import_module(module_name), class_name)
