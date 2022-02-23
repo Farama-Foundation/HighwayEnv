@@ -1,5 +1,5 @@
 from gym.envs.registration import register
-from gym import GoalEnv
+from gym_robotics import GoalEnv
 import numpy as np
 
 from highway_env.envs.common.abstract import AbstractEnv
