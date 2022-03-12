@@ -3,7 +3,7 @@ sphinx_rtd_theme
 sphinxcontrib-bibtex<2.0.0
 # jupyter-sphinx
 git+git://github.com/eleurent/jupyter-sphinx@master#egg=jupyter-sphinx
-gym
+gym==0.22.0
 git+https://github.com/Farama-Foundation/gym-robotics@main
 numpy
 pygame
