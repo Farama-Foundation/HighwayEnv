@@ -1,6 +1,6 @@
 from IPython import display as ipythondisplay
 from pyvirtualdisplay import Display
-from gym.wrappers import Monitor
+from gym.wrappers import RecordVideo
 from pathlib import Path
 import base64
 
@@ -10,12 +10,12 @@ display.start()
 
 
 def record_videos(env, path="videos"):
-    monitor = Monitor(env, path, force=True, video_callable=lambda episode: True)
+    wrapped = RecordVideo(env, path, force=True, video_callable=lambda episode: True)
 
     # Capture intermediate frames
-    env.unwrapped.set_monitor(monitor)
+    env.unwrapped.set_record_video_wrapper(wrapped)
 
-    return monitor
+    return wrapped
 
 
 def show_videos(path="videos"):

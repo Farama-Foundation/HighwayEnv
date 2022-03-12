@@ -1,6 +1,6 @@
 import numpy as np
 import gym
-from gym.wrappers import Monitor
+from gym.wrappers import RecordVideo
 from stable_baselines3 import DQN, DDPG, PPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.noise import NormalActionNoise
@@ -35,8 +35,8 @@ if __name__ == '__main__':
     model = PPO.load("racetrack_ppo/model", env=env)
 
     env = gym.make("racetrack-v0")
-    env = Monitor(env, directory="racetrack_ppo/videos", video_callable=lambda e: True)
-    env.unwrapped.set_monitor(env)
+    env = RecordVideo(env, video_folder="racetrack_ppo/videos", episode_trigger=lambda e: True)
+    env.unwrapped.set_record_video_wrapper(env)
 
     for video in range(10):
         done = False

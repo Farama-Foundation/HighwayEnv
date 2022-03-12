@@ -3,6 +3,7 @@ import os
 from typing import List, Tuple, Optional, Callable
 import gym
 from gym import Wrapper
+from gym.wrappers import RecordVideo
 from gym.utils import seeding
 import numpy as np
 
@@ -28,7 +29,7 @@ class AbstractEnv(gym.Env):
     """
     observation_type: ObservationType
     action_type: ActionType
-    _monitor: Optional[gym.wrappers.Monitor]
+    _record_video_wrapper: Optional[RecordVideo]
     metadata = {
         'render.modes': ['human', 'rgb_array'],
     }
@@ -63,7 +64,7 @@ class AbstractEnv(gym.Env):
 
         # Rendering
         self.viewer = None
-        self._monitor = None
+        self._record_video_wrapper = None
         self.rendering_mode = 'human'
         self.enable_auto_render = False
 
@@ -118,7 +119,7 @@ class AbstractEnv(gym.Env):
 
     def update_metadata(self, video_real_time_ratio=2):
         frames_freq = self.config["simulation_frequency"] \
-            if self._monitor else self.config["policy_frequency"]
+            if self._record_video_wrapper else self.config["policy_frequency"]
         self.metadata['video.frames_per_second'] = video_real_time_ratio * frames_freq
 
     def define_spaces(self) -> None:
@@ -302,8 +303,8 @@ class AbstractEnv(gym.Env):
             actions.append(self.action_type.actions_indexes['SLOWER'])
         return actions
 
-    def set_monitor(self, monitor: gym.wrappers.Monitor):
-        self._monitor = monitor
+    def set_record_video_wrapper(self, monitor: RecordVideo):
+        self._record_video_wrapper = monitor
         self.update_metadata()
 
     def _automatic_rendering(self) -> None:
@@ -315,8 +316,8 @@ class AbstractEnv(gym.Env):
         """
         if self.viewer is not None and self.enable_auto_render:
 
-            if self._monitor and self._monitor.video_recorder:
-                self._monitor.video_recorder.capture_frame()
+            if self._record_video_wrapper and self._record_video_wrapper.video_recorder:
+                self._record_video_wrapper.video_recorder.capture_frame()
             else:
                 self.render(self.rendering_mode)
 
