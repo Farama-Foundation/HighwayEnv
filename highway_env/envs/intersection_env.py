@@ -58,7 +58,8 @@ class IntersectionEnv(AbstractEnv):
             "high_speed_reward": 1,
             "arrived_reward": 1,
             "reward_speed_range": [7.0, 9.0],
-            "normalize_reward": False
+            "normalize_reward": False,
+            "offroad_terminal": True
         })
         return config
 
@@ -75,12 +76,14 @@ class IntersectionEnv(AbstractEnv):
         reward = self.config["arrived_reward"] if self.has_arrived(vehicle) else reward
         if self.config["normalize_reward"]:
             reward = utils.lmap(reward, [self.config["collision_reward"], self.config["arrived_reward"]], [0, 1])
+        reward = 0 if not vehicle.on_road else reward
         return reward
 
     def _is_terminal(self) -> bool:
         return any(vehicle.crashed for vehicle in self.controlled_vehicles) \
                or all(self.has_arrived(vehicle) for vehicle in self.controlled_vehicles) \
-               or self.steps >= self.config["duration"] * self.config["policy_frequency"]
+               or self.steps >= self.config["duration"] * self.config["policy_frequency"] \
+               or (self.config["offroad_terminal"] and not self.vehicle.on_road)
 
     def _agent_is_terminal(self, vehicle: Vehicle) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
