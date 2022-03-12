@@ -59,7 +59,7 @@ class IntersectionEnv(AbstractEnv):
             "arrived_reward": 1,
             "reward_speed_range": [7.0, 9.0],
             "normalize_reward": False,
-            "offroad_terminal": True
+            "offroad_terminal": False
         })
         return config
 
