@@ -303,8 +303,8 @@ class AbstractEnv(gym.Env):
             actions.append(self.action_type.actions_indexes['SLOWER'])
         return actions
 
-    def set_record_video_wrapper(self, monitor: RecordVideo):
-        self._record_video_wrapper = monitor
+    def set_record_video_wrapper(self, wrapper: RecordVideo):
+        self._record_video_wrapper = wrapper
         self.update_metadata()
 
     def _automatic_rendering(self) -> None:
@@ -312,7 +312,7 @@ class AbstractEnv(gym.Env):
         Automatically render the intermediate frames while an action is still ongoing.
 
         This allows to render the whole video and not only single steps corresponding to agent decision-making.
-        If a monitor has been set, use its video recorder to capture intermediate frames.
+        If a RecordVideo wrapper has been set, use it to capture intermediate frames.
         """
         if self.viewer is not None and self.enable_auto_render:
 
@@ -401,7 +401,7 @@ class AbstractEnv(gym.Env):
         result = cls.__new__(cls)
         memo[id(self)] = result
         for k, v in self.__dict__.items():
-            if k not in ['viewer', '_monitor']:
+            if k not in ['viewer', '_record_video_wrapper']:
                 setattr(result, k, copy.deepcopy(v, memo))
             else:
                 setattr(result, k, None)

@@ -1,5 +1,5 @@
 import gym
-from gym.wrappers import Monitor
+from gym.wrappers import RecordVideo
 from stable_baselines3 import DQN
 
 import highway_env
@@ -34,8 +34,8 @@ if __name__ == '__main__':
 
     # Run the trained model and record video
     model = DQN.load("highway_dqn/model", env=env)
-    env = Monitor(env, directory="highway_dqn/videos", video_callable=lambda e: True)
-    env.set_monitor(env)
+    env = RecordVideo(env, video_folder="racetrack_ppo/videos", episode_trigger=lambda e: True)
+    env.unwrapped.set_record_video_wrapper(env)
     env.configure({"simulation_frequency": 15})  # Higher FPS for rendering
 
     for videos in range(10):

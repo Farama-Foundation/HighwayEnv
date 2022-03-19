@@ -33,14 +33,14 @@ My videos are too fast / have a low framerate.
   import gym
   import highway_env
 
-  # Wrap the env by a Monitor, which will record videos
+  # Wrap the env by a RecordVideo wrapper
   env = gym.make("highway-v0")
-  env = Monitor(env, directory="run",
-                video_callable=lambda e: True)  # record all episodes
+  env = RecordVideo(env, video_folder="run",
+                episode_trigger=lambda e: True)  # record all episodes
 
-  # Feed the monitor to the wrapped environment, so it has access to the video recorder
-  # and can send it intermediate simulation frames.
-  env.unwrapped.set_monitor(env)
+  # Provide the video recorder to the wrapped environment
+  # so it can send it intermediate simulation frames.
+  env.unwrapped.set_record_video_wrapper(env)
 
   # Record a video as usual
   obs = env.reset()
