@@ -1,4 +1,4 @@
-pygments==2.4.1
+pygments==2.7.4
 sphinx_rtd_theme
 sphinxcontrib-bibtex<2.0.0
 jupyter-sphinx
