@@ -4,8 +4,6 @@ This page contains example notebooks to train RL agents on `highway-env` using s
 
 ## Using [Stable Baselines3](https://github.com/DLR-RM/stable-baselines3)
 
-**Warning**: following changes in the latest gym release, and to ensure compatibility this project now requires gym>=0.21. However, the latest SB3 release only supports ym<0.20,>=0.17. Thus, I recommend using their development version, which supports gym 0.21, as done in the example colabs below.
-
 ### Highway with DQN [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn.ipynb)
 
 Train a `highway-v0` policy with DQN.
