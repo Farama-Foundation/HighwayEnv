@@ -1,5 +1,9 @@
+import functools
 import gym
+import pygame
+import seaborn as sns
 import torch as th
+from highway_env.utils import lmap
 from stable_baselines3 import PPO
 from torch.distributions import Categorical
 import torch
@@ -300,6 +304,61 @@ env_kwargs = {
 
 
 # ==================================
+#        Display attention matrix
+# ==================================
+
+def display_vehicles_attention(agent_surface, sim_surface, env, model, min_attention=0.01):
+        v_attention = compute_vehicles_attention(env, model)
+        for head in range(list(v_attention.values())[0].shape[0]):
+            attention_surface = pygame.Surface(sim_surface.get_size(), pygame.SRCALPHA)
+            for vehicle, attention in v_attention.items():
+                if attention[head] < min_attention:
+                    continue
+                width = attention[head] * 5
+                desat = np.clip(lmap(attention[head], (0, 0.5), (0.7, 1)), 0.7, 1)
+                colors = sns.color_palette("dark", desat=desat)
+                color = np.array(colors[(2*head) % (len(colors) - 1)]) * 255
+                color = (*color, np.clip(lmap(attention[head], (0, 0.5), (100, 200)), 100, 200))
+                if vehicle is env.vehicle:
+                    pygame.draw.circle(attention_surface, color,
+                                       sim_surface.vec2pix(env.vehicle.position),
+                                       max(sim_surface.pix(width / 2), 1))
+                else:
+                    pygame.draw.line(attention_surface, color,
+                                     sim_surface.vec2pix(env.vehicle.position),
+                                     sim_surface.vec2pix(vehicle.position),
+                                     max(sim_surface.pix(width), 1))
+            sim_surface.blit(attention_surface, (0, 0))
+
+
+def compute_vehicles_attention(env, model):
+    obs = env.unwrapped.observation_type.observe()
+    obs_t = torch.tensor(obs[None, ...], dtype=torch.float)
+    attention = model.policy.features_extractor.extractor.get_attention_matrix(obs_t)
+    attention = attention.squeeze(0).squeeze(1).detach().cpu().numpy()
+    ego, others, mask = model.policy.features_extractor.extractor.split_input(obs_t)
+    mask = mask.squeeze()
+    v_attention = {}
+    obs_type = env.observation_type
+    if hasattr(obs_type, "agents_observation_types"):  # Handle multi-agent observation
+        obs_type = obs_type.agents_observation_types[0]
+    for v_index in range(obs.shape[0]):
+        if mask[v_index]:
+            continue
+        v_position = {}
+        for feature in ["x", "y"]:
+            v_feature = obs[v_index, obs_type.features.index(feature)]
+            v_feature = lmap(v_feature, [-1, 1], obs_type.features_range[feature])
+            v_position[feature] = v_feature
+        v_position = np.array([v_position["x"], v_position["y"]])
+        if not obs_type.absolute and v_index > 0:
+            v_position += env.unwrapped.vehicle.position
+        vehicle = min(env.unwrapped.road.vehicles, key=lambda v: np.linalg.norm(v.position - v_position))
+        v_attention[vehicle] = attention[:, v_index]
+    return v_attention
+
+
+# ==================================
 #        Main script
 # ==================================
 
@@ -326,6 +385,8 @@ if __name__ == "__main__":
 
     model = PPO.load("highway_attention_ppo/model")
     env = make_configure_env(**env_kwargs)
+    env.render()
+    env.viewer.set_agent_display(functools.partial(display_vehicles_attention, env=env, model=model))
     for _ in range(5):
         obs = env.reset()
         done = False
