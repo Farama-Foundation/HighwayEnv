@@ -38,8 +38,9 @@ class ControlledVehicle(Vehicle):
                  speed: float = 0,
                  target_lane_index: LaneIndex = None,
                  target_speed: float = None,
-                 route: Route = None):
-        super().__init__(road, position, heading, speed)
+                 route: Route = None,
+                 is_parked: bool = None):
+        super().__init__(road, position, heading, speed, is_parked=is_parked)
         self.target_lane_index = target_lane_index or self.lane_index
         self.target_speed = target_speed or self.speed
         self.route = route

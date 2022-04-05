@@ -40,6 +40,8 @@ class RegulatedRoad(Road):
         # Find new conflicts and resolve them
         for i in range(len(self.vehicles) - 1):
             for j in range(i+1, len(self.vehicles)):
+                if self.vehicles[i].is_parked or self.vehicles[j].is_parked:
+                    continue
                 if self.is_conflict_possible(self.vehicles[i], self.vehicles[j]):
                     yielding_vehicle = self.respect_priorities(self.vehicles[i], self.vehicles[j])
                     if yielding_vehicle is not None and \

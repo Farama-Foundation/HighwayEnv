@@ -54,8 +54,9 @@ class IDMVehicle(ControlledVehicle):
                  target_speed: float = None,
                  route: Route = None,
                  enable_lane_change: bool = True,
-                 timer: float = None):
-        super().__init__(road, position, heading, speed, target_lane_index, target_speed, route)
+                 timer: float = None,
+                 is_parked: bool = False):
+        super().__init__(road, position, heading, speed, target_lane_index, target_speed, route, is_parked)
         self.enable_lane_change = enable_lane_change
         self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
 
@@ -98,6 +99,10 @@ class IDMVehicle(ControlledVehicle):
 
         # Longitudinal: IDM
         front_vehicle, rear_vehicle = self.road.neighbour_vehicles(self, self.lane_index)
+        # Parked vehicles are ignored for regulation rules (not collision avoidance).
+        front_vehicle = None if isinstance(front_vehicle, Vehicle) and front_vehicle.is_parked else front_vehicle
+        rear_vehicle = None if isinstance(rear_vehicle, Vehicle) and rear_vehicle.is_parked else front_vehicle
+
         action['acceleration'] = self.acceleration(ego_vehicle=self,
                                                    front_vehicle=front_vehicle,
                                                    rear_vehicle=rear_vehicle)
