@@ -21,6 +21,7 @@ class VehicleGraphics(object):
     YELLOW = (200, 200, 0)
     BLACK = (60, 60, 60)
     PURPLE = (200, 0, 150)
+    GREY = (155, 155, 155)
     DEFAULT_COLOR = YELLOW
     EGO_COLOR = GREEN
 
@@ -178,6 +179,8 @@ class VehicleGraphics(object):
             color = cls.BLUE
         elif isinstance(vehicle, MDPVehicle):
             color = cls.EGO_COLOR
+        if vehicle.is_parked:
+            color = cls.GREY
         if transparent:
             color = (color[0], color[1], color[2], 30)
         return color
