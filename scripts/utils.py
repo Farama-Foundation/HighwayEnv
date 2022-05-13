@@ -9,8 +9,8 @@ display = Display(visible=0, size=(1400, 900))
 display.start()
 
 
-def record_videos(env, path="videos"):
-    wrapped = RecordVideo(env, path, force=True, video_callable=lambda episode: True)
+def record_videos(env, video_folder="videos"):
+    wrapped = RecordVideo(env, video_folder=video_folder, episode_trigger=lambda e: True)
 
     # Capture intermediate frames
     env.unwrapped.set_record_video_wrapper(wrapped)
