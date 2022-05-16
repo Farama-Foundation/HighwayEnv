@@ -187,6 +187,14 @@ class Vehicle(RoadObject):
         else:
             return np.zeros((2,))
 
+    @property
+    def lane_offset(self) -> np.ndarray:
+        if self.lane is not None:
+            long, lat = self.lane.local_coordinates(self.position)
+            return np.array([long, lat])
+        else:
+            return np.zeros((2,))
+
     def to_dict(self, origin_vehicle: "Vehicle" = None, observe_intentions: bool = True) -> dict:
         d = {
             'presence': 1,
@@ -198,7 +206,9 @@ class Vehicle(RoadObject):
             'cos_h': self.direction[0],
             'sin_h': self.direction[1],
             'cos_d': self.destination_direction[0],
-            'sin_d': self.destination_direction[1]
+            'sin_d': self.destination_direction[1],
+            'long_off': self.lane_offset[0],
+            'lat_off': self.lane_offset[1],
         }
         if not observe_intentions:
             d["cos_d"] = d["sin_d"] = 0

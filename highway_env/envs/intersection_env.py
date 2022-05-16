@@ -280,7 +280,7 @@ class ContinuousIntersectionEnv(IntersectionEnv):
             "observation": {
                 "type": "Kinematics",
                 "vehicles_count": 5,
-                "features": ["presence", "x", "y", "vx", "vy"]#, "lat_off", "ang_off"],
+                "features": ["presence", "x", "y", "vx", "vy", "long_off", "lat_off"],
             },
             "action": {
                 "type": "ContinuousAction",
