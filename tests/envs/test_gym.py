@@ -8,6 +8,7 @@ envs = [
     "merge-v0",
     "roundabout-v0",
     "intersection-v0",
+    "intersection-v1",
     "parking-v0",
     "summon-v0",
     "two-way-v0",

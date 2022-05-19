@@ -123,8 +123,12 @@ class AbstractLane(object):
         if heading is None:
             return self.distance(position)
         s, r = self.local_coordinates(position)
-        angle = np.abs(wrap_to_pi(heading - self.heading_at(s)))
+        angle = np.abs(self.local_angle(heading, s))
         return abs(r) + max(s - self.length, 0) + max(0 - s, 0) + heading_weight*angle
+
+    def local_angle(self, heading: float, long_offset: float):
+        """Compute non-normalised angle of heading to the lane."""
+        return wrap_to_pi(heading - self.heading_at(long_offset))
 
 
 class LineType:
