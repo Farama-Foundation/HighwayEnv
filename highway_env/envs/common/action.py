@@ -81,6 +81,7 @@ class ContinuousAction(ActionType):
                  env: 'AbstractEnv',
                  acceleration_range: Optional[Tuple[float, float]] = None,
                  steering_range: Optional[Tuple[float, float]] = None,
+                 speed_range: Optional[Tuple[float, float]] = None,
                  longitudinal: bool = True,
                  lateral: bool = True,
                  dynamical: bool = False,
@@ -92,6 +93,7 @@ class ContinuousAction(ActionType):
         :param env: the environment
         :param acceleration_range: the range of acceleration values [m/s²]
         :param steering_range: the range of steering values [rad]
+        :param speed_range: the range of reachable speeds [m/s]
         :param longitudinal: enable throttle control
         :param lateral: enable steering control
         :param dynamical: whether to simulate dynamics (i.e. friction) rather than kinematics
@@ -100,6 +102,7 @@ class ContinuousAction(ActionType):
         super().__init__(env)
         self.acceleration_range = acceleration_range if acceleration_range else self.ACCELERATION_RANGE
         self.steering_range = steering_range if steering_range else self.STEERING_RANGE
+        self.speed_range = speed_range
         self.lateral = lateral
         self.longitudinal = longitudinal
         if not self.lateral and not self.longitudinal:
@@ -119,6 +122,8 @@ class ContinuousAction(ActionType):
     def act(self, action: np.ndarray) -> None:
         if self.clip:
             action = np.clip(action, -1, 1)
+        if self.speed_range:
+            self.controlled_vehicle.MIN_SPEED, self.controlled_vehicle.MAX_SPEED = self.speed_range
         if self.longitudinal and self.lateral:
             self.controlled_vehicle.act({
                 "acceleration": utils.lmap(action[0], [-1, 1], self.acceleration_range),
