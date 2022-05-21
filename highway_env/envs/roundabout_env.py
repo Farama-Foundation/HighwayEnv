@@ -33,7 +33,8 @@ class RoundaboutEnv(AbstractEnv):
             "screen_width": 600,
             "screen_height": 600,
             "centering_position": [0.5, 0.6],
-            "duration": 11
+            "duration": 11,
+            "normalize_reward": True
         })
         return config
 
@@ -43,9 +44,10 @@ class RoundaboutEnv(AbstractEnv):
             + self.config["high_speed_reward"] * \
                  MDPVehicle.get_speed_index(self.vehicle) / (MDPVehicle.DEFAULT_TARGET_SPEEDS.size - 1) \
             + self.config["lane_change_reward"] * lane_change
-        return utils.lmap(reward,
-                          [self.config["collision_reward"] + self.config["lane_change_reward"],
-                           self.config["high_speed_reward"]], [0, 1])
+        if self.config["normalize_reward"]:
+            reward = utils.lmap(reward, [self.config["collision_reward"], self.config["high_speed_reward"]], [0, 1])
+        reward = 0 if not self.vehicle.on_road else reward
+        return reward
 
     def _is_terminal(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
