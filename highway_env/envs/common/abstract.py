@@ -277,31 +277,7 @@ class AbstractEnv(gym.Env):
         self.viewer = None
 
     def get_available_actions(self) -> List[int]:
-        """
-        Get the list of currently available actions.
-
-        Lane changes are not available on the boundary of the road, and speed changes are not available at
-        maximal or minimal speed.
-
-        :return: the list of available actions
-        """
-        if not isinstance(self.action_type, DiscreteMetaAction):
-            raise ValueError("Only discrete meta-actions can be unavailable.")
-        actions = [self.action_type.actions_indexes['IDLE']]
-        for l_index in self.road.network.side_lanes(self.vehicle.lane_index):
-            if l_index[2] < self.vehicle.lane_index[2] \
-                    and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position) \
-                    and self.action_type.lateral:
-                actions.append(self.action_type.actions_indexes['LANE_LEFT'])
-            if l_index[2] > self.vehicle.lane_index[2] \
-                    and self.road.network.get_lane(l_index).is_reachable_from(self.vehicle.position) \
-                    and self.action_type.lateral:
-                actions.append(self.action_type.actions_indexes['LANE_RIGHT'])
-        if self.vehicle.speed_index < self.vehicle.target_speeds.size - 1 and self.action_type.longitudinal:
-            actions.append(self.action_type.actions_indexes['FASTER'])
-        if self.vehicle.speed_index > 0 and self.action_type.longitudinal:
-            actions.append(self.action_type.actions_indexes['SLOWER'])
-        return actions
+        return self.action_type.get_available_actions()
 
     def set_record_video_wrapper(self, wrapper: RecordVideo):
         self._record_video_wrapper = wrapper

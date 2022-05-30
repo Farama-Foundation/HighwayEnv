@@ -1,11 +1,12 @@
 import functools
-from itertools import product
-from typing import TYPE_CHECKING, Optional, Union, Tuple, Callable
+import itertools
+from typing import TYPE_CHECKING, Optional, Union, Tuple, Callable, List
 from gym import spaces
 import numpy as np
 
 from highway_env import utils
 from highway_env.utils import Vector
+from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.dynamics import BicycleVehicle
 from highway_env.vehicle.kinematics import Vehicle
 from highway_env.vehicle.controller import MDPVehicle
@@ -46,6 +47,12 @@ class ActionType(object):
         Must some pre-processing can be applied to the action based on the ActionType configurations.
 
         :param action: the action to execute
+        """
+        raise NotImplementedError
+
+    def get_available_actions(self):
+        """
+        For discrete action space, return the list of available actions.
         """
         raise NotImplementedError
 
@@ -163,7 +170,7 @@ class DiscreteAction(ContinuousAction):
     def act(self, action: int) -> None:
         cont_space = super().space()
         axes = np.linspace(cont_space.low, cont_space.high, self.actions_per_axis).T
-        all_actions = list(product(*axes))
+        all_actions = list(itertools.product(*axes))
         super().act(all_actions[action])
 
 
@@ -232,6 +239,32 @@ class DiscreteMetaAction(ActionType):
     def act(self, action: int) -> None:
         self.controlled_vehicle.act(self.actions[action])
 
+    def get_available_actions(self) -> List[int]:
+        """
+        Get the list of currently available actions.
+
+        Lane changes are not available on the boundary of the road, and speed changes are not available at
+        maximal or minimal speed.
+
+        :return: the list of available actions
+        """
+        actions = [self.actions_indexes['IDLE']]
+        network = self.controlled_vehicle.road.network
+        for l_index in network.side_lanes(self.controlled_vehicle.lane_index):
+            if l_index[2] < self.controlled_vehicle.lane_index[2] \
+                    and network.get_lane(l_index).is_reachable_from(self.controlled_vehicle.position) \
+                    and self.lateral:
+                actions.append(self.actions_indexes['LANE_LEFT'])
+            if l_index[2] > self.controlled_vehicle.lane_index[2] \
+                    and network.get_lane(l_index).is_reachable_from(self.controlled_vehicle.position) \
+                    and self.lateral:
+                actions.append(self.actions_indexes['LANE_RIGHT'])
+        if self.controlled_vehicle.speed_index < self.controlled_vehicle.target_speeds.size - 1 and self.longitudinal:
+            actions.append(self.actions_indexes['FASTER'])
+        if self.controlled_vehicle.speed_index > 0 and self.longitudinal:
+            actions.append(self.actions_indexes['SLOWER'])
+        return actions
+
 
 class MultiAgentAction(ActionType):
     def __init__(self,
@@ -257,6 +290,9 @@ class MultiAgentAction(ActionType):
         assert isinstance(action, tuple)
         for agent_action, action_type in zip(action, self.agents_action_types):
             action_type.act(agent_action)
+
+    def get_available_actions(self):
+        return itertools.product(*[action_type.get_available_actions() for action_type in self.agents_action_types])
 
 
 def action_factory(env: 'AbstractEnv', config: dict) -> ActionType:
