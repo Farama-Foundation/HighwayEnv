@@ -31,7 +31,7 @@ class AbstractEnv(gym.Env):
     action_type: ActionType
     _record_video_wrapper: Optional[RecordVideo]
     metadata = {
-        'render.modes': ['human', 'rgb_array'],
+        'render_modes': ['human', 'rgb_array'],
     }
 
     PERCEPTION_DISTANCE = 5.0 * Vehicle.MAX_SPEED
