@@ -212,7 +212,7 @@ class AbstractEnv(gym.Env):
         if self.road is None or self.vehicle is None:
             raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
 
-        self.steps += 1
+        self.time += 1 / self.config["policy_frequency"]
         self._simulate(action)
 
         obs = self.observation_type.observe()
@@ -229,12 +229,12 @@ class AbstractEnv(gym.Env):
             # Forward action to the vehicle
             if action is not None \
                     and not self.config["manual_control"] \
-                    and self.time % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
+                    and self.steps % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
                 self.action_type.act(action)
 
             self.road.act()
             self.road.step(1 / self.config["simulation_frequency"])
-            self.time += 1
+            self.steps += 1
 
             # Automatically render intermediate simulation steps if a viewer has been launched
             # Ignored if the rendering is done offscreen

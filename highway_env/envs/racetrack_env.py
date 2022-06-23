@@ -67,7 +67,7 @@ class RacetrackEnv(AbstractEnv):
 
     def _is_terminal(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
-        return self.vehicle.crashed or self.steps >= self.config["duration"]
+        return self.vehicle.crashed or self.time >= self.config["duration"]
 
     def _reset(self) -> None:
         self._make_road()

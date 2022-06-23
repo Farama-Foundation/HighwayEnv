@@ -178,7 +178,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the goal is reached."""
-        time = self.steps >= self.config["duration"]
+        time = self.time >= self.config["duration"]
         crashed = any(vehicle.crashed for vehicle in self.controlled_vehicles)
         obs = self.observation_type_parking.observe()
         obs = obs if isinstance(obs, tuple) else (obs,)
