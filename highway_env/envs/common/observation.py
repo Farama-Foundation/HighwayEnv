@@ -72,7 +72,7 @@ class GrayscaleObservation(ObservationType):
         self.observation_shape = observation_shape
         self.shape = (stack_size, ) + self.observation_shape
         self.weights = weights
-        self.obs = np.zeros(self.shape, dtype=np.unit8)
+        self.obs = np.zeros(self.shape, dtype=np.uint8)
 
         # The viewer configuration can be different between this observation and env.render() (typically smaller)
         viewer_config = env.config.copy()
