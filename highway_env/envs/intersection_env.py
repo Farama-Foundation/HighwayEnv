@@ -82,13 +82,13 @@ class IntersectionEnv(AbstractEnv):
     def _is_terminal(self) -> bool:
         return any(vehicle.crashed for vehicle in self.controlled_vehicles) \
                or all(self.has_arrived(vehicle) for vehicle in self.controlled_vehicles) \
-               or self.steps >= self.config["duration"] * self.config["policy_frequency"] \
+               or self.time >= self.config["duration"] \
                or (self.config["offroad_terminal"] and not self.vehicle.on_road)
 
     def _agent_is_terminal(self, vehicle: Vehicle) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
         return vehicle.crashed \
-            or self.steps >= self.config["duration"] * self.config["policy_frequency"] \
+            or self.time >= self.config["duration"] \
             or self.has_arrived(vehicle)
 
     def _info(self, obs: np.ndarray, action: int) -> dict:

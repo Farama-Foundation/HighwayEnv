@@ -22,7 +22,7 @@ def train_env():
 
 def test_env():
     env = train_env()
-    env.configure({"policy_frequency": 15, "duration": 20 * 15})
+    env.configure({"policy_frequency": 15, "duration": 20})
     env.reset()
     return env
 

@@ -133,7 +133,7 @@ class ExitEnv(HighwayEnv):
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
-        return self.vehicle.crashed or self.steps >= self.config["duration"]
+        return self.vehicle.crashed or self.time >= self.config["duration"]
 
 
 # class DenseLidarExitEnv(DenseExitEnv):
