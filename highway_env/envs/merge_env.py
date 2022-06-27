@@ -62,7 +62,7 @@ class MergeEnv(AbstractEnv):
 
     def _is_terminal(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
-        return self.vehicle.crashed or self.vehicle.position[0] > 370
+        return self.vehicle.crashed or bool(self.vehicle.position[0] > 370)
 
     def _reset(self) -> None:
         self._make_road()

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from itertools import product
 from typing import List, Dict, TYPE_CHECKING, Optional, Union, Tuple
 from gym import spaces
@@ -430,19 +431,19 @@ class KinematicsGoalObservation(KinematicObservation):
 
     def observe(self) -> Dict[str, np.ndarray]:
         if not self.observer_vehicle:
-            return {
-            "observation": np.zeros((len(self.features),)),
-            "achieved_goal": np.zeros((len(self.features),)),
-            "desired_goal": np.zeros((len(self.features),))
-        }
+            return OrderedDict([
+                ("observation", np.zeros((len(self.features),))),
+                ("achieved_goal", np.zeros((len(self.features),))),
+                ("desired_goal", np.zeros((len(self.features),)))
+            ])
 
         obs = np.ravel(pd.DataFrame.from_records([self.observer_vehicle.to_dict()])[self.features])
         goal = np.ravel(pd.DataFrame.from_records([self.env.goal.to_dict()])[self.features])
-        obs = {
-            "observation": obs / self.scales,
-            "achieved_goal": obs / self.scales,
-            "desired_goal": goal / self.scales
-        }
+        obs = OrderedDict([
+            ("observation", obs / self.scales),
+            ("achieved_goal", obs / self.scales),
+            ("desired_goal", goal / self.scales)
+         ])
         return obs
 
 
@@ -462,9 +463,9 @@ class AttributesObservation(ObservationType):
             return spaces.Space()
 
     def observe(self) -> Dict[str, np.ndarray]:
-        return {
-            attribute: getattr(self.env, attribute) for attribute in self.attributes
-        }
+        return OrderedDict([
+            (attribute, getattr(self.env, attribute)) for attribute in self.attributes
+        ])
 
 
 class MultiAgentObservation(ObservationType):

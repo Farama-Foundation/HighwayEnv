@@ -183,7 +183,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         obs = self.observation_type_parking.observe()
         obs = obs if isinstance(obs, tuple) else (obs,)
         success = all(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
-        return time or crashed or success
+        return bool(time or crashed or success)
 
 
 class ParkingEnvActionRepeat(ParkingEnv):
