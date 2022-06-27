@@ -11,6 +11,7 @@ envs = ["highway-v0", "merge-v0"]
 def test_render(env_spec):
     env = gym.make(env_spec)
     env.configure({"offscreen_rendering": True})
+    env.reset()
     img = env.render(mode="rgb_array")
     env.close()
     assert isinstance(img, np.ndarray)
