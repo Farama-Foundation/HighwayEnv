@@ -101,7 +101,7 @@ class HighwayEnv(AbstractEnv):
 
         reward_vector = [speed_reward, right_reward, safe_reward]
 
-        reward = 0 if not self.vehicle.on_road else reward[0]
+        reward = 0 if not self.vehicle.on_road else reward_vector[0]
         return reward
 
     def _is_terminal(self) -> bool:
