@@ -1,3 +1,4 @@
+from turtle import speed
 import numpy as np
 from gym.envs.registration import register
 
@@ -83,22 +84,25 @@ class HighwayEnv(AbstractEnv):
         :param action: the last action performed
         :return: the corresponding reward
         """
+        # SPEED OBJECTIVE
+        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
+        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
+        speed_reward = utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
+
+        # RIGHT LANE OBJECTIVE
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
             else self.vehicle.lane_index[2]
-        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
-        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
-        scaled_speed = utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
-        reward = \
-            + self.config["collision_reward"] * self.vehicle.crashed \
-            + self.config["right_lane_reward"] * lane / max(len(neighbours) - 1, 1) \
-            + self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1)
-        reward = utils.lmap(reward,
-                          [self.config["collision_reward"],
-                           self.config["high_speed_reward"] + self.config["right_lane_reward"]],
-                          [0, 1])
-        reward = 0 if not self.vehicle.on_road else reward
-        return 0
+        right_reward = lane / max(len(neighbours) - 1, 1)
+
+        # DON'T CRASH OBJETIVE
+        safe_reward = 0 if self.vehicle.crashed \
+            else 1
+
+        reward_vector = [speed_reward, right_reward, safe_reward]
+
+        reward = 0 if not self.vehicle.on_road else reward[0]
+        return reward
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
