@@ -44,12 +44,6 @@ class MOHighwayEnv(AbstractEnv):
         self._create_road()
         self._create_vehicles()
 
-    # def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
-    #     if np.random.randint(0,10) == 0:
-    #         print("Adding new vehicle!") 
-    #         self._add_vehicle()
-    #     return AbstractEnv.step(self, action)
-
     def _create_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
         self.road = Road(network=RoadNetwork.straight_road_network(self.config["lanes_count"], speed_limit=30),
