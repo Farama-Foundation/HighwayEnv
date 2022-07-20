@@ -1,3 +1,4 @@
+from math import floor, ceil
 import numpy as np
 from typing import Tuple
 from gym.envs.registration import register
@@ -43,11 +44,11 @@ class MOHighwayEnv(AbstractEnv):
         self._create_road()
         self._create_vehicles()
 
-    def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
-        if np.random.randint(0,10) == 0:
-            print("Adding new vehicle!") 
-            self._add_vehicle()
-        return AbstractEnv.step(self, action)
+    # def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
+    #     if np.random.randint(0,10) == 0:
+    #         print("Adding new vehicle!") 
+    #         self._add_vehicle()
+    #     return AbstractEnv.step(self, action)
 
     def _create_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
@@ -69,33 +70,22 @@ class MOHighwayEnv(AbstractEnv):
         self.road.vehicles.append(vehicle)
 
         # Create other vehicles
-        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        for _ in range(self.config["vehicles_count"]):
-            vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
-            vehicle.randomize_behavior()
-            self.road.vehicles.append(vehicle)
+        for _ in range(ceil(self.config["vehicles_count"] * 0.5)):
+            self._add_vehicle_front()
+        for _ in range(floor(self.config["vehicles_count"] * 0.5)):
+            self._add_vehicle_behind()
     
-    def _add_vehicle(self) -> None:
-        """Add vehicles to the left of the screen if vehicle speed is too slow"""
-        _from = self.road.np_random.choice(list(self.road.network.graph.keys()))
-        _to = self.road.np_random.choice(list(self.road.network.graph[_from].keys()))
-
+    def _add_vehicle_front(self) -> None:
+        """Add vehicle in front of leading car"""
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        lanes = self.road.network.all_side_lanes(self.vehicle.lane_index)
-        lane_id = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
-            else self.vehicle.lane_index[2]
-        lane = self.road.network.get_lane((_from, _to, lane_id))
-        default_spacing = 12+1.0*self.vehicle.speed        
-        offset = default_spacing * np.exp(-5 / 40 * len(lanes))
-        x0 = lane.local_coordinates(self.vehicle.position)
-        x0 -= offset * self.road.np_random.uniform(0.9, 1.1)
+        vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
+        vehicle.randomize_behavior()
+        self.road.vehicles.append(vehicle)
 
-        spawn_lane_id = np.random.randint(0,max(len(lanes) - 1, 1))
-        spawn_lane = self.road.network.get_lane((_from, _to, spawn_lane_id))
-        spawn_position = spawn_lane.position(x0,0)
-        spawn_speed = self.vehicle.speed * 1.25
-
-        vehicle = other_vehicles_type(road=self.road, position=spawn_position, speed=spawn_speed)
+    def _add_vehicle_behind(self) -> None:
+        """Add vehicle behind last car"""
+        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        vehicle = other_vehicles_type.create_random_behind(self.road, spacing=1 / self.config["vehicles_density"])
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
 
@@ -129,10 +119,6 @@ class MOHighwayEnv(AbstractEnv):
         return self.vehicle.crashed or \
             self.time >= self.config["duration"] or \
             (self.config["offroad_terminal"] and not self.vehicle.on_road)
-
-    def _cost(self, action: int) -> float:
-        """The cost signal is the occurrence of collision."""
-        return float(self.vehicle.crashed)
 
 register(
     id='mo-highway-v0',
