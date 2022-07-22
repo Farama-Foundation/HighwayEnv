@@ -88,20 +88,25 @@ class MOHighwayEnv(AbstractEnv):
         :param action: the last action performed
         :return: the corresponding reward
         """
-        # SPEED OBJECTIVE
+        # SPEED
         # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
         forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
         speed_reward = utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
 
-        # RIGHT LANE OBJECTIVE
+        # RIGHT LANE
         lanes = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
             else self.vehicle.lane_index[2]
         right_reward = lane / max(len(lanes) - 1, 1)
 
-        # DON'T CRASH OBJECTIVE
+        # DON'T CRASH
         safe_reward = 0 if self.vehicle.crashed \
             else 1
+
+        # MINIMIZE ACCELERATION (fuel efficiency?)
+        
+        
+        # MAXIMIZE MIN DISTANCE
 
         reward_vector = [speed_reward, right_reward, safe_reward]
 
