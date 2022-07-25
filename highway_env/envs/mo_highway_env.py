@@ -7,7 +7,6 @@ from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
-from highway_env.utils import near_split
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
@@ -104,11 +103,29 @@ class MOHighwayEnv(AbstractEnv):
             else 1
 
         # MINIMIZE ACCELERATION (fuel efficiency?)
-        
+        acc_max = self.vehicle.ACC_MAX
+        front_vehicle, rear_vehicle = self.vehicle.road.neighbour_vehicles(self.vehicle, self.vehicle.target_lane_index)
+        acc = self.vehicle.acceleration(ego_vehicle=self.vehicle, front_vehicle=front_vehicle, rear_vehicle=rear_vehicle)
+        norm_accel = utils.lmap(acc, [0,acc_max], [0,1])
+        acc_reward = 1-norm_accel
         
         # MAXIMIZE MIN DISTANCE
+        dist_reward = np.min(
+                [   
+                    np.linalg.norm(v.position - self.vehicle.position) 
+                    for v in self.road.vehicles 
+                    if v is not self.vehicle
+                ]
+            )
+        
 
-        reward_vector = [speed_reward, right_reward, safe_reward]
+        reward_vector = [
+                        speed_reward, 
+                        right_reward,
+                        safe_reward,
+                        acc_reward,
+                        dist_reward
+                    ]
 
         reward = 0 if not self.vehicle.on_road else reward_vector[self.config["cur_reward"]]
         return reward
