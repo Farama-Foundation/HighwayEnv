@@ -21,3 +21,5 @@ _build
 
 # Outputs
 **/out/*
+
+.DS_Store
