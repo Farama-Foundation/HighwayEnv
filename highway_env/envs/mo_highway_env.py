@@ -137,7 +137,7 @@ class MOHighwayEnv(AbstractEnv):
         """The episode is over if the ego vehicle crashed or the time is out."""
         return self.vehicle.crashed or \
             self.time >= self.config["duration"] or \
-            (self.config["offroad_terminal"] and not self.vehicle.on_road)
+            not self.vehicle.on_road
 
 register(
     id='mo-highway-v0',
