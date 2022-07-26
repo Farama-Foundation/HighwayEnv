@@ -90,47 +90,46 @@ class MOHighwayEnv(AbstractEnv):
         if not self.vehicle.on_road: return 0
         
         reward = 0
-        match self.config["cur_reward"]:
-            case 0:
-                # SPEED
-                # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
-                forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
-                reward = utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
-            
-            case 1:
-                # RIGHT LANE
-                lanes = self.road.network.all_side_lanes(self.vehicle.lane_index)
-                lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
-                    else self.vehicle.lane_index[2]
-                reward = lane / max(len(lanes) - 1, 1)
-            
-            case 2:
-                # DON'T CRASH
-                reward = 0 if self.vehicle.crashed \
-                    else 1
+        if self.config["cur_reward"] == 0:
+            # SPEED
+            # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
+            forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
+            reward = utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
 
-            case 3:
-                # MINIMIZE ACCELERATION (fuel efficiency?)
-                acc_max = self.vehicle.ACC_MAX
-                front_vehicle, rear_vehicle = self.vehicle.road.neighbour_vehicles(self.vehicle, self.vehicle.target_lane_index)
-                acc = self.vehicle.acceleration(ego_vehicle=self.vehicle, front_vehicle=front_vehicle, rear_vehicle=rear_vehicle)
-                norm_accel = utils.lmap(acc, [0,acc_max], [0,1])
-                reward = 1-norm_accel
+        elif self.config["cur_reward"] == 1:
+            # RIGHT LANE
+            lanes = self.road.network.all_side_lanes(self.vehicle.lane_index)
+            lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
+                else self.vehicle.lane_index[2]
+            reward = lane / max(len(lanes) - 1, 1)
             
-            case 4:
-                # MAXIMIZE MIN DISTANCE
-                reward = np.min(
-                        [   
-                            np.linalg.norm(v.position - self.vehicle.position) 
-                            for v in self.road.vehicles 
-                            if v is not self.vehicle
-                        ]
-                    )
+        elif self.config["cur_reward"] == 2:
+            # DON'T CRASH
+            reward = 0 if self.vehicle.crashed \
+                else 1
+
+        elif self.config["cur_reward"] == 3:
+            # MINIMIZE ACCELERATION (fuel efficiency?)
+            acc_max = self.vehicle.ACC_MAX
+            front_vehicle, rear_vehicle = self.vehicle.road.neighbour_vehicles(self.vehicle, self.vehicle.target_lane_index)
+            acc = self.vehicle.acceleration(ego_vehicle=self.vehicle, front_vehicle=front_vehicle, rear_vehicle=rear_vehicle)
+            norm_accel = utils.lmap(acc, [0,acc_max], [0,1])
+            reward = 1-norm_accel
             
-            case _:
-                # REQUESTED REWARD IS NOT DEFINED
-                print('No reward function defined for requested reward num', self.config["cur_reward"])
-                raise NotImplementedError
+        elif self.config["cur_reward"] == 4:
+            # MAXIMIZE MIN DISTANCE
+            reward = np.min(
+                    [   
+                        np.linalg.norm(v.position - self.vehicle.position) 
+                        for v in self.road.vehicles 
+                        if v is not self.vehicle
+                    ]
+                )
+            
+        else:
+            # REQUESTED REWARD IS NOT DEFINED
+            print('No reward function defined for requested reward num', self.config["cur_reward"])
+            raise NotImplementedError
 
         return reward
 
