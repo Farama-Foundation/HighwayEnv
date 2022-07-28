@@ -438,6 +438,12 @@ class MOAbstractEnv(AbstractEnv):
         """
         return self.reward
 
+    def registered(self) -> list:
+        """
+        Return the list of registered reward keys
+        """
+        return list(self.reward_callbacks.keys())
+
 class MultiAgentWrapper(Wrapper):
     def step(self, action):
         obs, reward, done, info = super().step(action)
