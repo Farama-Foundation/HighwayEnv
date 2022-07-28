@@ -16,6 +16,12 @@ class MOHighwayEnv(AbstractEnv):
     """
     Multi-objective version of HighwayEnv
     """
+    def __init__(self, rewards: list = None, config: dict = None) -> None:
+        super().__init__(config)
+        self.reward = []
+        # assert all(isinstance(reward, str) for reward in rewards), "Expected a list of string reward names!"
+        # self.rewards = rewards
+        # self.num_rewards = len(rewards)
 
     @classmethod
     def default_config(cls) -> dict:
@@ -87,33 +93,31 @@ class MOHighwayEnv(AbstractEnv):
         :param action: the last action performed
         :return: the corresponding reward
         """
-        if not self.vehicle.on_road: return 0
-        
-        reward = []
+        self.reward = []
 
         # SPEED
         # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
         forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
-        reward.append(utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1]))
+        self.reward.append(utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1]))
 
         # RIGHT LANE
         lanes = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
             else self.vehicle.lane_index[2]
-        reward.append(lane / max(len(lanes) - 1, 1))
+        self.reward.append(lane / max(len(lanes) - 1, 1))
             
         # DON'T CRASH
-        reward.append(0) if self.vehicle.crashed else reward.append(1)
+        self.reward.append(0) if self.vehicle.crashed else self.reward.append(1)
 
         # MINIMIZE ACCELERATION (fuel efficiency?)
-        acc_max = self.vehicle.ACC_MAX
-        front_vehicle, rear_vehicle = self.vehicle.road.neighbour_vehicles(self.vehicle, self.vehicle.target_lane_index)
-        acc = self.vehicle.acceleration(ego_vehicle=self.vehicle, front_vehicle=front_vehicle, rear_vehicle=rear_vehicle)
-        norm_accel = utils.lmap(acc, [0,acc_max], [0,1])
-        reward.append(1-norm_accel)
+        # acc_max = self.vehicle.ACC_MAX
+        # front_vehicle, rear_vehicle = self.vehicle.road.neighbour_vehicles(self.vehicle, self.vehicle.target_lane_index)
+        # acc = self.vehicle.acceleration(ego_vehicle=self.vehicle, front_vehicle=front_vehicle, rear_vehicle=rear_vehicle)
+        # norm_accel = utils.lmap(acc, [0,acc_max], [0,1])
+        # self.reward.append(1-norm_accel)
         
         # MAXIMIZE MIN DISTANCE
-        reward.append(np.min(
+        self.reward.append(np.min(
                 [   
                     np.linalg.norm(v.position - self.vehicle.position) 
                     for v in self.road.vehicles 
@@ -121,7 +125,25 @@ class MOHighwayEnv(AbstractEnv):
                 ]
             ))
 
-        return reward
+        if not self.vehicle.on_road: self.reward[:] = 0
+
+        try:
+            return self.reward[self.config["cur_reward"]]
+        except:
+            return 0
+
+    def _info(self, obs: Observation, action: Action) -> dict:
+        """
+        Return a dictionary containg the reward vector
+
+        :param obs: current observation
+        :param action: current action
+        :return: a dict with reward vector
+        """
+        info = {
+            "reward": self.reward
+        }
+        return info
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
