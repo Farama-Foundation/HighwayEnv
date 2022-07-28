@@ -383,6 +383,60 @@ class AbstractEnv(gym.Env):
                 setattr(result, k, None)
         return result
 
+class MOAbstractEnv(AbstractEnv):
+    """
+    A multi-objective version of AbstractEnv. 
+    Environments should inherit from MOAbstractEnv and register new reward callbacks
+
+    Note: The vector of rewards is returned in info rather than reward. Reward returns the currently selected reward, set by "cur_reward" in the configurations
+    """
+    def __init__(self, config: dict = None) -> None:
+        super().__init__(config)
+        self.reward_callbacks = {}
+        self.num_rewards = len(self.reward_callbacks)
+        self.reward = {}
+
+    @classmethod
+    def default_config(cls) -> dict:
+        config = super().default_config()
+        config.update({
+            "cur_reward": None
+        })
+        return config
+
+    def _add_reward(self, key: str, callback) -> None:
+        """
+        Register a reward callback function
+
+        :param key: a string name for the reward
+        :param callback: the function calculating the reward
+        """
+        self.reward_callbacks[key] = callback
+        self.num_rewards += 1
+
+    def _reward(self, action: Action) -> float:
+        """
+        :param action: the last action performed
+        :return: the reward selected by "cur_reward" in config
+        """
+        for key, callback in self.reward_callbacks.items():
+            self.reward[key] = callback(action)
+
+        try:
+            return self.reward[self.config["cur_reward"]]
+        except:
+            print("No such reward defined! Configure cur_reward to match a registered reward.")
+            return 0
+
+    def _info(self, obs: Observation, action: Action) -> dict:
+        """
+        Return a dictionary containg the reward vector
+
+        :param obs: current observation
+        :param action: current action
+        :return: a dict with reward vector
+        """
+        return self.reward
 
 class MultiAgentWrapper(Wrapper):
     def step(self, action):

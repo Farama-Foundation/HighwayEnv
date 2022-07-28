@@ -4,7 +4,7 @@ from typing import Tuple
 from gym.envs.registration import register
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs.common.abstract import AbstractEnv, MOAbstractEnv
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
@@ -12,16 +12,17 @@ from highway_env.vehicle.kinematics import Vehicle
 
 Observation = np.ndarray
 
-class MOHighwayEnv(AbstractEnv):
+class MOHighwayEnv(MOAbstractEnv):
     """
     Multi-objective version of HighwayEnv
     """
-    def __init__(self, rewards: list = None, config: dict = None) -> None:
+    def __init__(self, config: dict = None) -> None:
         super().__init__(config)
-        self.reward = []
-        # assert all(isinstance(reward, str) for reward in rewards), "Expected a list of string reward names!"
-        # self.rewards = rewards
-        # self.num_rewards = len(rewards)
+        self._add_reward("speed", self._speed_reward)
+        self._add_reward("right", self._right_reward)
+        self._add_reward("nocrash", self._nocrash_reward)
+        # self._add_reward("acceleration", self._acc_reward)
+        self._add_reward("distance", self._dist_reward)
 
     @classmethod
     def default_config(cls) -> dict:
@@ -41,7 +42,6 @@ class MOHighwayEnv(AbstractEnv):
             "vehicles_density": 1,
             "reward_speed_range": [20, 30],
             "offroad_terminal": False,
-            "cur_reward": 0
         })
         return config
 
@@ -88,62 +88,40 @@ class MOHighwayEnv(AbstractEnv):
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
 
-    def _reward(self, action: Action) -> float:
-        """
-        :param action: the last action performed
-        :return: the corresponding reward
-        """
-        self.reward = []
-
+    def _speed_reward(self, action: Action) -> float:
         # SPEED
         # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
         forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
-        self.reward.append(utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1]))
+        return utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
 
+    def _right_reward(self, action: Action) -> float:
         # RIGHT LANE
         lanes = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
             else self.vehicle.lane_index[2]
-        self.reward.append(lane / max(len(lanes) - 1, 1))
-            
-        # DON'T CRASH
-        self.reward.append(0) if self.vehicle.crashed else self.reward.append(1)
+        return lane / max(len(lanes) - 1, 1)
 
+    def _nocrash_reward(self, action: Action) -> float:
+        # DON'T CRASH
+        return 0 if self.vehicle.crashed else 1
+
+    def _acc_reward(self, action: Action) -> float:
         # MINIMIZE ACCELERATION (fuel efficiency?)
-        # acc_max = self.vehicle.ACC_MAX
-        # front_vehicle, rear_vehicle = self.vehicle.road.neighbour_vehicles(self.vehicle, self.vehicle.target_lane_index)
-        # acc = self.vehicle.acceleration(ego_vehicle=self.vehicle, front_vehicle=front_vehicle, rear_vehicle=rear_vehicle)
-        # norm_accel = utils.lmap(acc, [0,acc_max], [0,1])
-        # self.reward.append(1-norm_accel)
-        
+        acc_max = self.vehicle.ACC_MAX
+        front_vehicle, rear_vehicle = self.vehicle.road.neighbour_vehicles(self.vehicle, self.vehicle.target_lane_index)
+        acc = self.vehicle.acceleration(ego_vehicle=self.vehicle, front_vehicle=front_vehicle, rear_vehicle=rear_vehicle)
+        norm_accel = utils.lmap(acc, [0,acc_max], [0,1])
+        return 1-norm_accel
+
+    def _dist_reward(self, action: Action) -> float:
         # MAXIMIZE MIN DISTANCE
-        self.reward.append(np.min(
+        return np.min(
                 [   
                     np.linalg.norm(v.position - self.vehicle.position) 
                     for v in self.road.vehicles 
                     if v is not self.vehicle
                 ]
-            ))
-
-        if not self.vehicle.on_road: self.reward[:] = 0
-
-        try:
-            return self.reward[self.config["cur_reward"]]
-        except:
-            return 0
-
-    def _info(self, obs: Observation, action: Action) -> dict:
-        """
-        Return a dictionary containg the reward vector
-
-        :param obs: current observation
-        :param action: current action
-        :return: a dict with reward vector
-        """
-        info = {
-            "reward": self.reward
-        }
-        return info
+            )
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
