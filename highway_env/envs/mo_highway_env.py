@@ -4,7 +4,7 @@ from typing import Tuple
 from gym.envs.registration import register
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv, MOAbstractEnv
+from highway_env.envs.common.abstract import MOAbstractEnv
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
@@ -77,14 +77,14 @@ class MOHighwayEnv(MOAbstractEnv):
     def _add_vehicle_front(self) -> None:
         """Add vehicle in front of leading car"""
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
+        vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"], front=True)
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
 
     def _add_vehicle_behind(self) -> None:
         """Add vehicle behind last car"""
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        vehicle = other_vehicles_type.create_random_behind(self.road, spacing=1 / self.config["vehicles_density"])
+        vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"], front=False)
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
 
