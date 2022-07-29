@@ -386,8 +386,8 @@ class AbstractEnv(gym.Env):
 class MOAbstractEnv(AbstractEnv):
     """
     A multi-objective version of AbstractEnv. 
-    Environments should inherit from MOAbstractEnv and register new reward callbacks
-    Inheriting classes must also define a utility function to produce a scalar reward from the reward vector
+    Environments should inherit from MOAbstractEnv and register new reward callbacks.
+    Inheriting classes must also define a utility function to produce a scalar reward from the reward vector.
 
     Note: The vector of rewards is returned by _info() and the scalar utility is return by _reward()
     """
