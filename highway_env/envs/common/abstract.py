@@ -405,7 +405,7 @@ class MOAbstractEnv(AbstractEnv):
         """
         raise NotImplementedError()
 
-    def _add_reward(self, key: str, callback: function) -> None:
+    def _add_reward(self, key: str, callback: Callable) -> None:
         """
         Register a reward callback function
 
