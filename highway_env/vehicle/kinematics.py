@@ -109,7 +109,7 @@ class Vehicle(RoadObject):
     def step(self, dt: float) -> None:
         """
         Propagate the vehicle state given its actions.
-        
+
         Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.
         If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.
         The vehicle's current lane is updated.
