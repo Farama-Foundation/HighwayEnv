@@ -56,6 +56,7 @@ class Vehicle(RoadObject):
         Create a random vehicle on the road.
         The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
         vehicle in the road with density based on the number of lanes.
+
         :param road: the road where the vehicle is driving
         :param speed: initial speed in [m/s]. If None, will be chosen randomly
         :param lane_from: start node of the lane to spawn in
@@ -86,6 +87,7 @@ class Vehicle(RoadObject):
         """
         Create a new vehicle from an existing one.
         Only the vehicle dynamics are copied, other properties are default.
+
         :param vehicle: a vehicle
         :return: a new vehicle at the same dynamical state
         """
@@ -95,6 +97,7 @@ class Vehicle(RoadObject):
     def act(self, action: Union[dict, str] = None) -> None:
         """
         Store an action to be repeated.
+
         :param action: the input action
         """
         if action:
@@ -106,6 +109,7 @@ class Vehicle(RoadObject):
         Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.
         If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.
         The vehicle's current lane is updated.
+        
         :param dt: timestep of integration of the model [s]
         """
         self.clip_actions()
