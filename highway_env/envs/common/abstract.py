@@ -440,7 +440,7 @@ class MOAbstractEnv(AbstractEnv):
 
     def registered(self) -> list:
         """
-        Return the list of registered reward keys
+        :return: the list of registered reward keys
         """
         return list(self.reward_callbacks.keys())
 
