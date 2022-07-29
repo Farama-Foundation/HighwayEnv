@@ -393,7 +393,6 @@ class MOAbstractEnv(AbstractEnv):
     def __init__(self, config: dict = None) -> None:
         super().__init__(config)
         self.reward_callbacks = {}
-        self.num_rewards = len(self.reward_callbacks)
         self.reward = {}
 
     @classmethod
@@ -412,7 +411,15 @@ class MOAbstractEnv(AbstractEnv):
         :param callback: the function calculating the reward
         """
         self.reward_callbacks[key] = callback
-        self.num_rewards += 1
+
+    def _remove_reward(self, key:str) -> None:
+        """
+        Remove a registered reward
+
+        :param key: the name of the reward to remove
+        """
+        self.reward_callbacks.pop(key, None)
+        self.reward.pop(key, None)
 
     def _reward(self, action: Action) -> float:
         """
