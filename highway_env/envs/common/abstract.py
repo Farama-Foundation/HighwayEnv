@@ -387,23 +387,25 @@ class MOAbstractEnv(AbstractEnv):
     """
     A multi-objective version of AbstractEnv. 
     Environments should inherit from MOAbstractEnv and register new reward callbacks
+    Inheriting classes must also define a utility function to produce a scalar reward from the reward vector
 
-    Note: The vector of rewards is returned in _info() rather than _reward(). reward() returns the currently selected reward, set by "cur_reward" in the configurations
+    Note: The vector of rewards is returned by _info() and the scalar utility is return by _reward()
     """
     def __init__(self, config: dict = None) -> None:
         super().__init__(config)
         self.reward_callbacks = {}
-        self.reward = {}
+        self.rewards = {}
 
-    @classmethod
-    def default_config(cls) -> dict:
-        config = super().default_config()
-        config.update({
-            "cur_reward": None
-        })
-        return config
+    def _utility(self, rewards: dict) -> float:
+        """
+        Utility (preference) function to combine multiple rewards into a scalar value.
 
-    def _add_reward(self, key: str, callback) -> None:
+        :param rewards: the vector reward input to the utility function
+        :return: a scalar value of utility calculated from the rewards
+        """
+        raise NotImplementedError()
+
+    def _add_reward(self, key: str, callback: Callable) -> None:
         """
         Register a reward callback function
 
@@ -412,28 +414,17 @@ class MOAbstractEnv(AbstractEnv):
         """
         self.reward_callbacks[key] = callback
 
-    def _remove_reward(self, key:str) -> None:
-        """
-        Remove a registered reward
-
-        :param key: the name of the reward to remove
-        """
-        self.reward_callbacks.pop(key, None)
-        self.reward.pop(key, None)
-
     def _reward(self, action: Action) -> float:
         """
+        Updates reward vector and evaulates utility
+
         :param action: the last action performed
-        :return: the reward selected by "cur_reward" in config
+        :return: the scalar reward calculated by the utility function
         """
         for key, callback in self.reward_callbacks.items():
-            self.reward[key] = callback(action)
+            self.rewards[key] = callback(action)
 
-        try:
-            return self.reward[self.config["cur_reward"]]
-        except:
-            print("No such reward defined! Configure cur_reward to match a registered reward.")
-            return 0
+        return self._utility(self.rewards)
 
     def _info(self, obs: Observation, action: Action) -> dict:
         """
@@ -443,7 +434,7 @@ class MOAbstractEnv(AbstractEnv):
         :param action: current action
         :return: a dict with reward vector
         """
-        return self.reward
+        return self.rewards
 
     def registered(self) -> list:
         """

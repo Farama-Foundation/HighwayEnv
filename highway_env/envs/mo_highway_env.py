@@ -119,6 +119,9 @@ class MOHighwayEnv(MOAbstractEnv):
                     if v is not self.vehicle
                 ]
             )
+    
+    def _utility(self, rewards: dict) -> float:
+        return rewards["speed"]
 
     def _is_terminal(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
