@@ -13,6 +13,7 @@ class Vehicle(RoadObject):
 
     """
     A moving vehicle on a road, and its kinematics.
+
     The vehicle is represented by a dynamical system: a modified bicycle model.
     It's state is propagated depending on its steering and acceleration actions.
     """
@@ -54,6 +55,7 @@ class Vehicle(RoadObject):
             -> "Vehicle":
         """
         Create a random vehicle on the road.
+
         The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
         vehicle in the road with density based on the number of lanes.
 
@@ -86,6 +88,7 @@ class Vehicle(RoadObject):
     def create_from(cls, vehicle: "Vehicle") -> "Vehicle":
         """
         Create a new vehicle from an existing one.
+
         Only the vehicle dynamics are copied, other properties are default.
 
         :param vehicle: a vehicle
@@ -106,10 +109,11 @@ class Vehicle(RoadObject):
     def step(self, dt: float) -> None:
         """
         Propagate the vehicle state given its actions.
+        
         Integrate a modified bicycle model with a 1st-order response on the steering wheel dynamics.
         If the vehicle is crashed, the actions are overridden with erratic steering and braking until complete stop.
         The vehicle's current lane is updated.
-        
+
         :param dt: timestep of integration of the model [s]
         """
         self.clip_actions()
