@@ -388,7 +388,7 @@ class MOAbstractEnv(AbstractEnv):
     A multi-objective version of AbstractEnv. 
     Environments should inherit from MOAbstractEnv and register new reward callbacks
 
-    Note: The vector of rewards is returned in info rather than reward. Reward returns the currently selected reward, set by "cur_reward" in the configurations
+    Note: The vector of rewards is returned in _info() rather than _reward(). reward() returns the currently selected reward, set by "cur_reward" in the configurations
     """
     def __init__(self, config: dict = None) -> None:
         super().__init__(config)
