@@ -383,65 +383,6 @@ class AbstractEnv(gym.Env):
                 setattr(result, k, None)
         return result
 
-class MOAbstractEnv(AbstractEnv):
-    """
-    A multi-objective version of AbstractEnv. 
-    Environments should inherit from MOAbstractEnv and register new reward callbacks.
-    Inheriting classes must also define a utility function to produce a scalar reward from the reward vector.
-
-    Note: The vector of rewards is returned by _info() and the scalar utility is return by _reward()
-    """
-    def __init__(self, config: dict = None) -> None:
-        super().__init__(config)
-        self.reward_callbacks = {}
-        self.rewards = {}
-
-    def _utility(self, rewards: dict) -> float:
-        """
-        Utility (preference) function to combine multiple rewards into a scalar value.
-
-        :param rewards: the vector reward input to the utility function
-        :return: a scalar value of utility calculated from the rewards
-        """
-        raise NotImplementedError()
-
-    def _add_reward(self, key: str, callback: Callable) -> None:
-        """
-        Register a reward callback function
-
-        :param key: a string name for the reward
-        :param callback: the function calculating the reward
-        """
-        self.reward_callbacks[key] = callback
-
-    def _reward(self, action: Action) -> float:
-        """
-        Updates reward vector and evaulates utility
-
-        :param action: the last action performed
-        :return: the scalar reward calculated by the utility function
-        """
-        for key, callback in self.reward_callbacks.items():
-            self.rewards[key] = callback(action)
-
-        return self._utility(self.rewards)
-
-    def _info(self, obs: Observation, action: Action) -> dict:
-        """
-        Return a dictionary containg the reward vector
-
-        :param obs: current observation
-        :param action: current action
-        :return: a dict with reward vector
-        """
-        return self.rewards
-
-    def registered(self) -> list:
-        """
-        :return: the list of registered reward keys
-        """
-        return list(self.reward_callbacks.keys())
-
 class MultiAgentWrapper(Wrapper):
     def step(self, action):
         obs, reward, done, info = super().step(action)

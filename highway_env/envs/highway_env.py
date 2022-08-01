@@ -9,6 +9,7 @@ from highway_env.utils import near_split
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
+Observation = np.ndarray
 
 class HighwayEnv(AbstractEnv):
     """
@@ -137,6 +138,64 @@ class HighwayEnvFast(HighwayEnv):
             if vehicle not in self.controlled_vehicles:
                 vehicle.check_collisions = False
 
+class MOHighwayEnv(HighwayEnv):
+    """
+    A multi-objective version of HighwayEnv
+    """
+
+    def _rewards(self, action: Action) -> dict:
+        """
+        In MORL, we consider multiple rewards like collision, right-keeping, and speed,
+        and the utility of these separate rewards is not always known a priori.
+        This function returns a dict of multiple reward criteria
+
+        :param action: the last action performed
+        :return: the reward vector
+        """
+        rewards = {}
+
+        rewards["collision"] = self.vehicle.crashed
+
+        neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
+        lane = self.vehicle.target_lane_index[2] if isinstance(self.vehicle, ControlledVehicle) \
+            else self.vehicle.lane_index[2]
+        rewards["right_lane"] = lane / max(len(neighbours) - 1, 1)
+
+        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
+        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
+        scaled_speed = utils.lmap(forward_speed, self.config["reward_speed_range"], [0, 1])
+        rewards["high_speed"] = np.clip(scaled_speed, 0, 1)
+
+        return rewards
+
+    def _reward(self, action: Action) -> float:
+        """
+        This scalarized reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
+        
+        :param action: the last action performed
+        :return: the reward
+        """
+        rewards = self._rewards(action)
+        reward = \
+            + self.config["collision_reward"] * rewards["collision"] \
+            + self.config["right_lane_reward"] * rewards["right_lane"] \
+            + self.config["high_speed_reward"] * rewards["high_speed"]
+        reward = utils.lmap(reward,
+                          [self.config["collision_reward"],
+                           self.config["high_speed_reward"] + self.config["right_lane_reward"]],
+                          [0, 1])
+        reward = 0 if not self.vehicle.on_road else reward
+        return reward
+
+    def _info(self, obs: Observation, action: Action) -> dict:
+        """
+        Return a dictionary of rewards
+
+        :param obs: current observation
+        :param action: current action
+        :return: reward dict
+        """
+        return self._rewards(action)
 
 register(
     id='highway-v0',
@@ -146,4 +205,9 @@ register(
 register(
     id='highway-fast-v0',
     entry_point='highway_env.envs:HighwayEnvFast',
+)
+
+register(
+    id='mo-highway-v0',
+    entry_point='highway_env.envs:MOHighwayEnv',
 )
