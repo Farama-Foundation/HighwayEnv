@@ -51,14 +51,13 @@ class Vehicle(RoadObject):
                       lane_from: Optional[str] = None,
                       lane_to: Optional[str] = None,
                       lane_id: Optional[int] = None,
-                      spacing: float = 1,
-                      front: bool = True) \
+                      spacing: float = 1) \
             -> "Vehicle":
         """
         Create a random vehicle on the road.
 
-        The lane and/or speed are chosen randomly, while longitudinal position is chosen in front of the leading
-        vehicle or behind the last vehicle in the road with density based on the number of lanes.
+        The lane and /or speed are chosen randomly, while longitudinal position is chosen behind the last
+        vehicle in the road with density based on the number of lanes.
 
         :param road: the road where the vehicle is driving
         :param speed: initial speed in [m/s]. If None, will be chosen randomly
@@ -66,7 +65,6 @@ class Vehicle(RoadObject):
         :param lane_to: end node of the lane to spawn in
         :param lane_id: id of the lane to spawn in
         :param spacing: ratio of spacing to the front vehicle, 1 being the default
-        :param: front: True to create in front of leading vehicle, False to create behind last vehicle
         :return: A vehicle with random position and/or speed
         """
         _from = lane_from or road.np_random.choice(list(road.network.graph.keys()))
@@ -80,14 +78,9 @@ class Vehicle(RoadObject):
                 speed = road.np_random.uniform(Vehicle.DEFAULT_INITIAL_SPEEDS[0], Vehicle.DEFAULT_INITIAL_SPEEDS[1])
         default_spacing = 12+1.0*speed
         offset = spacing * default_spacing * np.exp(-5 / 40 * len(road.network.graph[_from][_to]))
-        if front:
-            x0 = np.max([lane.local_coordinates(v.position)[0] for v in road.vehicles]) \
-                if len(road.vehicles) else 3*offset
-            x0 += offset * road.np_random.uniform(0.9, 1.1)
-        else:
-            x0 = np.min([lane.local_coordinates(v.position)[0] for v in road.vehicles]) \
-                if len(road.vehicles) else 3*offset
-            x0 -= offset * road.np_random.uniform(0.9, 1.1)
+        x0 = np.max([lane.local_coordinates(v.position)[0] for v in road.vehicles]) \
+            if len(road.vehicles) else 3*offset
+        x0 += offset * road.np_random.uniform(0.9, 1.1)
         v = cls(road, lane.position(x0, 0), lane.heading_at(x0), speed)
         return v
 
