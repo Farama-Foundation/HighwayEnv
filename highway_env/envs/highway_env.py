@@ -102,11 +102,14 @@ class HighwayEnv(AbstractEnv):
         reward = 0 if not self.vehicle.on_road else reward
         return reward
 
-    def _is_terminal(self) -> bool:
-        """The episode is over if the ego vehicle crashed or the time is out."""
+    def _is_terminated(self) -> bool:
+        """The episode is over if the ego vehicle crashed."""
         return self.vehicle.crashed or \
-            self.time >= self.config["duration"] or \
             (self.config["offroad_terminal"] and not self.vehicle.on_road)
+
+    def _is_truncated(self) -> bool:
+        """The episode is over if the ego vehicle crashed or the time is out."""
+        return self.time >= self.config["duration"]
 
     def _cost(self, action: int) -> float:
         """The cost signal is the occurrence of collision."""

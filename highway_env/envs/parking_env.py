@@ -170,20 +170,21 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     def _reward(self, action: np.ndarray) -> float:
         obs = self.observation_type_parking.observe()
         obs = obs if isinstance(obs, tuple) else (obs,)
-        return sum(self.compute_reward(agent_obs['achieved_goal'], agent_obs['desired_goal'], {})
-                     for agent_obs in obs)
+        return sum(self.compute_reward(agent_obs['achieved_goal'], agent_obs['desired_goal'], {}) for agent_obs in obs)
 
     def _is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> bool:
         return self.compute_reward(achieved_goal, desired_goal, {}) > -self.config["success_goal_reward"]
 
-    def _is_terminal(self) -> bool:
+    def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed or the goal is reached."""
-        time = self.time >= self.config["duration"]
         crashed = any(vehicle.crashed for vehicle in self.controlled_vehicles)
         obs = self.observation_type_parking.observe()
         obs = obs if isinstance(obs, tuple) else (obs,)
         success = all(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
-        return bool(time or crashed or success)
+        return bool(crashed or success)
+
+    def _is_truncated(self) -> bool:
+        return self.time >= self.config["duration"]
 
 
 class ParkingEnvActionRepeat(ParkingEnv):

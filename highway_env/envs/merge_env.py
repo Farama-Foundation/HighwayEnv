@@ -60,9 +60,12 @@ class MergeEnv(AbstractEnv):
                            self.config["high_speed_reward"] + self.config["right_lane_reward"]],
                           [0, 1])
 
-    def _is_terminal(self) -> bool:
+    def _is_terminated(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
         return self.vehicle.crashed or bool(self.vehicle.position[0] > 370)
+
+    def _is_truncated(self) -> bool:
+        return False
 
     def _reset(self) -> None:
         self._make_road()

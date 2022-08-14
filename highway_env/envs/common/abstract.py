@@ -135,11 +135,19 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def _is_terminal(self) -> bool:
+    def _is_terminated(self) -> bool:
         """
         Check whether the current state is a terminal state
 
         :return:is the state terminal
+        """
+        raise NotImplementedError
+
+    def _is_truncated(self) -> bool:
+        """
+        Check we truncate the episode at the current step
+
+        :return: is the episode truncated
         """
         raise NotImplementedError
 
@@ -201,7 +209,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError()
 
-    def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
+    def step(self, action: Action) -> Tuple[Observation, float, bool, bool, dict]:
         """
         Perform an action and step the environment dynamics.
 
@@ -209,7 +217,7 @@ class AbstractEnv(gym.Env):
         for several simulation timesteps until the next decision making step.
 
         :param action: the action performed by the ego-vehicle
-        :return: a tuple (observation, reward, terminal, info)
+        :return: a tuple (observation, reward, terminated, truncated, info)
         """
         if self.road is None or self.vehicle is None:
             raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
@@ -219,10 +227,11 @@ class AbstractEnv(gym.Env):
 
         obs = self.observation_type.observe()
         reward = self._reward(action)
-        terminal = self._is_terminal()
+        terminated = self._is_terminated()
+        truncated = self._is_truncated()
         info = self._info(obs, action)
 
-        return obs, reward, terminal, info
+        return obs, reward, terminated, truncated, info
 
     def _simulate(self, action: Optional[Action] = None) -> None:
         """Perform several steps of simulation with constant action."""
@@ -388,7 +397,8 @@ class AbstractEnv(gym.Env):
 
 class MultiAgentWrapper(Wrapper):
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, terminated, truncated, info = super().step(action)
         reward = info["agents_rewards"]
-        done = info["agents_dones"]
-        return obs, reward, done, info
+        terminated = info["agents_terminated"]
+        truncated = info["agents_truncated"]
+        return obs, reward, terminated, truncated, info

@@ -131,9 +131,14 @@ class ExitEnv(HighwayEnv):
         goal_reached = lane_index == ("1", "2", self.config["lanes_count"]) or lane_index == ("2", "exit", 0)
         return goal_reached
 
-    def _is_terminal(self) -> bool:
-        """The episode is over if the ego vehicle crashed or the time is out."""
-        return self.vehicle.crashed or self.time >= self.config["duration"]
+    def _is_terminated(self) -> bool:
+        """The episode is over if the ego vehicle crashed."""
+        return self.vehicle.crashed
+
+    def _is_truncated(self) -> bool:
+        """The episode is over if the time is out."""
+        return self.time >= self.config["duration"]
+
 
 
 # class DenseLidarExitEnv(DenseExitEnv):

@@ -58,12 +58,11 @@ class UTurnEnv(AbstractEnv):
         reward = 0 if not self.vehicle.on_road else reward
         return reward
 
-    def _is_terminal(self) -> bool:
-        """
-        The episode is over if the ego vehicle crashed or the time is out.
-        """
-        return self.vehicle.crashed or \
-            self.time >= self.config["duration"]
+    def _is_terminated(self) -> bool:
+        return self.vehicle.crashed
+
+    def _is_truncated(self) -> bool:
+        return self.time >= self.config["duration"]
 
     def _cost(self, action: int) -> float:
         """

@@ -79,17 +79,18 @@ class IntersectionEnv(AbstractEnv):
         reward = 0 if not vehicle.on_road else reward
         return reward
 
-    def _is_terminal(self) -> bool:
+    def _is_terminated(self) -> bool:
         return any(vehicle.crashed for vehicle in self.controlled_vehicles) \
                or all(self.has_arrived(vehicle) for vehicle in self.controlled_vehicles) \
-               or self.time >= self.config["duration"] \
                or (self.config["offroad_terminal"] and not self.vehicle.on_road)
 
     def _agent_is_terminal(self, vehicle: Vehicle) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
         return vehicle.crashed \
-            or self.time >= self.config["duration"] \
             or self.has_arrived(vehicle)
+
+    def _is_truncated(self) -> bool:
+        return self.time >= self.config["duration"]
 
     def _info(self, obs: np.ndarray, action: int) -> dict:
         info = super()._info(obs, action)
@@ -101,11 +102,11 @@ class IntersectionEnv(AbstractEnv):
         self._make_road()
         self._make_vehicles(self.config["initial_vehicle_count"])
 
-    def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
-        obs, reward, done, info = super().step(action)
+    def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, dict]:
+        obs, reward, terminated, truncated, info = super().step(action)
         self._clear_vehicles()
         self._spawn_vehicle(spawn_probability=self.config["spawn_probability"])
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info
 
     def _make_road(self) -> None:
         """

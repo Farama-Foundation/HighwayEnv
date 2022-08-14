@@ -50,7 +50,7 @@ class LaneKeepingEnv(AbstractEnv):
         })
         return config
 
-    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
+    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:
         if self.lanes and not self.lane.on_lane(self.vehicle.position):
             self.lane = self.lanes.pop(0)
         self.store_data()
@@ -65,15 +65,19 @@ class LaneKeepingEnv(AbstractEnv):
 
         info = {}
         reward = self._reward(action)
-        terminal = self._is_terminal()
-        return obs, reward, terminal, info
+        terminated = self._is_terminated()
+        truncated = self._is_truncated()
+        return obs, reward, terminated, truncated, info
 
     def _reward(self, action: np.ndarray) -> float:
         _, lat = self.lane.local_coordinates(self.vehicle.position)
         return 1 - (lat/self.lane.width)**2
 
-    def _is_terminal(self) -> bool:
-        return False  # not self.lane.on_lane(self.vehicle.position)
+    def _is_terminated(self) -> bool:
+        return False
+
+    def _is_truncated(self) -> bool:
+        return False
 
     def _reset(self) -> None:
         self._make_road()

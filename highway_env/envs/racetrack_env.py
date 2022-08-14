@@ -65,9 +65,11 @@ class RacetrackEnv(AbstractEnv):
         reward = reward if self.vehicle.on_road else self.config["collision_reward"]
         return utils.lmap(reward, [self.config["collision_reward"], 1], [0, 1])
 
-    def _is_terminal(self) -> bool:
-        """The episode is over when a collision occurs or when the access ramp has been passed."""
-        return self.vehicle.crashed or self.time >= self.config["duration"]
+    def _is_terminated(self) -> bool:
+        return self.vehicle.crashed
+
+    def _is_truncated(self) -> bool:
+        return self.time >= self.config["duration"]
 
     def _reset(self) -> None:
         self._make_road()

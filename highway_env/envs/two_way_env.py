@@ -50,9 +50,12 @@ class TwoWayEnv(AbstractEnv):
                 * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
         return reward
 
-    def _is_terminal(self) -> bool:
+    def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
         return self.vehicle.crashed
+
+    def _is_truncated(self) -> bool:
+        return False
 
     def _cost(self, action: int) -> float:
         """The constraint signal is the time spent driving on the opposite lane, and occurrence of collisions."""

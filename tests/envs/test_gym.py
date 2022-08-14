@@ -19,13 +19,15 @@ envs = [
 
 @pytest.mark.parametrize("env_spec", envs)
 def test_env_step(env_spec):
-    env = gym.make(env_spec)
+    env = gym.make(env_spec, new_step_api=True)
 
-    env.reset()
-    for _ in range(3):
-        action = env.action_space.sample()
-        obs, _, _, _ = env.step(action)
-    env.close()
-
+    obs, info = env.reset(return_info=True)
     assert env.observation_space.contains(obs)
+
+    terminated = truncated = False
+    while not (terminated or truncated):
+        action = env.action_space.sample()
+        obs, reward, terminated, truncated, info = env.step(action)
+        assert env.observation_space.contains(obs)
+    env.close()
 
