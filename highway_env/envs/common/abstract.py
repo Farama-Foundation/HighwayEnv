@@ -1,6 +1,6 @@
 import copy
 import os
-from typing import List, Tuple, Optional, Callable
+from typing import List, Tuple, Optional, Callable, TypeVar, Generic, Union
 import gym
 from gym import Wrapper
 from gym.wrappers import RecordVideo
@@ -16,7 +16,8 @@ from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
-Observation = np.ndarray
+Observation = TypeVar("Observation")
+
 
 class AbstractEnv(gym.Env):
 
@@ -37,14 +38,12 @@ class AbstractEnv(gym.Env):
     PERCEPTION_DISTANCE = 5.0 * Vehicle.MAX_SPEED
     """The maximum distance of any vehicle present in the observation [m]"""
 
-    def __init__(self, config: dict = None) -> None:
+    def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
+        super().__init__()
+
         # Configuration
         self.config = self.default_config()
         self.configure(config)
-
-        # Seeding
-        self.np_random = None
-        self.seed()
 
         # Scene
         self.road = None
@@ -109,10 +108,6 @@ class AbstractEnv(gym.Env):
             "real_time_rendering": False
         }
 
-    def seed(self, seed: int = None) -> List[int]:
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
-
     def configure(self, config: dict) -> None:
         if config:
             self.config.update(config)
@@ -148,7 +143,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def _info(self, obs: Observation, action: Action) -> dict:
+    def _info(self, obs: Observation, action: Optional[Action] = None) -> dict:
         """
         Return a dictionary of additional information
 
@@ -177,7 +172,12 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def reset(self) -> Observation:
+    def reset(self,
+              *,
+              seed: Optional[int] = None,
+              return_info: bool = False,
+              options: Optional[dict] = None,
+    ) -> Union[Observation, Tuple[Observation, dict]]:
         """
         Reset the environment to it's initial configuration
 
@@ -189,7 +189,9 @@ class AbstractEnv(gym.Env):
         self.done = False
         self._reset()
         self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
-        return self.observation_type.observe()
+        obs = self.observation_type.observe()
+        info = self._info(obs, action=None)
+        return (obs, info) if return_info else obs
 
     def _reset(self) -> None:
         """
@@ -382,8 +384,6 @@ class AbstractEnv(gym.Env):
             else:
                 setattr(result, k, None)
         return result
-
-
 
 
 class MultiAgentWrapper(Wrapper):
