@@ -1,3 +1,5 @@
+from typing import Dict, Text
+
 import numpy as np
 from gym.envs.registration import register
 
@@ -35,6 +37,7 @@ class UTurnEnv(AbstractEnv):
             "left_lane_reward": 0.1,  # Reward received for maintaining left most lane.
             "high_speed_reward": 0.4,  # Reward received for maintaining cruising speed.
             "reward_speed_range": [8, 24],
+            "normalize_reward": True,
             "offroad_terminal": False
         })
         return config
@@ -45,31 +48,30 @@ class UTurnEnv(AbstractEnv):
         :param action: the action performed
         :return: the reward of the state-action transition
         """
+        rewards = self._rewards(action)
+        reward = sum(self.config.get(name, 0) * reward for name, reward in rewards.items())
+        if self.config["normalize_reward"]:
+            reward = utils.lmap(reward, [self.config["collision_reward"],
+                                         self.config["high_speed_reward"] + self.config["left_lane_reward"]], [0, 1])
+        reward *= rewards["on_road_reward"]
+        return reward
+
+    def _rewards(self, action: int) -> Dict[Text, float]:
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = self.vehicle.lane_index[2]
         scaled_speed = utils.lmap(self.vehicle.speed, self.config["reward_speed_range"], [0, 1])
-        reward = \
-            + self.config["collision_reward"] * self.vehicle.crashed \
-            + self.config["left_lane_reward"] * lane / max(len(neighbours) - 1, 1) \
-            + self.config["high_speed_reward"] * np.clip(scaled_speed, 0, 1)
-        reward = utils.lmap(reward,
-                            [self.config["collision_reward"],
-                             self.config["high_speed_reward"] + self.config["left_lane_reward"]], [0, 1])
-        reward = 0 if not self.vehicle.on_road else reward
-        return reward
+        return {
+            "collision_reward": self.vehicle.crashed,
+            "left_lane_reward": lane / max(len(neighbours) - 1, 1),
+            "high_speed_reward": np.clip(scaled_speed, 0, 1),
+            "on_road_reward": self.vehicle.on_road
+        }
 
     def _is_terminated(self) -> bool:
         return self.vehicle.crashed
 
     def _is_truncated(self) -> bool:
         return self.time >= self.config["duration"]
-
-    def _cost(self, action: int) -> float:
-        """
-        The constraint signal is the time spent driving on the opposite lane
-        and occurrence of collisions.
-        """
-        return float(self.vehicle.crashed)
 
     def _reset(self) -> np.ndarray:
         self._make_road()

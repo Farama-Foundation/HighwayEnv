@@ -1,6 +1,6 @@
 import copy
 import os
-from typing import List, Tuple, Optional, Callable, TypeVar, Generic, Union
+from typing import List, Tuple, Optional, Callable, TypeVar, Generic, Union, Dict, Text
 import gym
 from gym import Wrapper
 from gym.wrappers import RecordVideo
@@ -135,6 +135,18 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
+    def _rewards(self, action: Action) -> Dict[Text, float]:
+        """
+        Returns a multi-objective vector of rewards.
+
+        If implemented, this reward vector should be aggregated into a scalar in _reward().
+        This vector value should only be returned inside the info dict.
+
+        :param action: the last action performed
+        :return: a dict of {'reward_name': reward_value}
+        """
+        raise NotImplementedError
+
     def _is_terminated(self) -> bool:
         """
         Check whether the current state is a terminal state
@@ -165,20 +177,10 @@ class AbstractEnv(gym.Env):
             "action": action,
         }
         try:
-            info["cost"] = self._cost(action)
+            info["rewards"] = self._rewards(action)
         except NotImplementedError:
             pass
         return info
-
-    def _cost(self, action: Action) -> float:
-        """
-        A constraint metric, for budgeted MDP.
-
-        If a constraint is defined, it must be used with an alternate reward that doesn't contain it as a penalty.
-        :param action: the last action performed
-        :return: the constraint signal, the alternate (constraint-free) reward
-        """
-        raise NotImplementedError
 
     def reset(self,
               *,
@@ -198,7 +200,7 @@ class AbstractEnv(gym.Env):
         self._reset()
         self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
         obs = self.observation_type.observe()
-        info = self._info(obs, action=None)
+        info = self._info(obs, action=self.action_space.sample())
         return (obs, info) if return_info else obs
 
     def _reset(self) -> None:

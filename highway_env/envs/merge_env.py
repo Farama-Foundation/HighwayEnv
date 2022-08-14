@@ -1,3 +1,5 @@
+from typing import Dict, Text
+
 import numpy as np
 from gym.envs.registration import register
 
@@ -40,25 +42,24 @@ class MergeEnv(AbstractEnv):
         :param action: the action performed
         :return: the reward of the state-action transition
         """
-        action_reward = {0: self.config["lane_change_reward"],
-                         1: 0,
-                         2: self.config["lane_change_reward"],
-                         3: 0,
-                         4: 0}
-        reward = self.config["collision_reward"] * self.vehicle.crashed \
-            + self.config["right_lane_reward"] * self.vehicle.lane_index[2] / 1 \
-            + self.config["high_speed_reward"] * self.vehicle.speed_index / (self.vehicle.target_speeds.size - 1)
-
-        # Altruistic penalty
-        for vehicle in self.road.vehicles:
-            if vehicle.lane_index == ("b", "c", 2) and isinstance(vehicle, ControlledVehicle):
-                reward += self.config["merging_speed_reward"] * \
-                          (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
-
-        return utils.lmap(action_reward[action] + reward,
+        reward = sum(self.config.get(name, 0) * reward for name, reward in self._rewards(action).items())
+        return utils.lmap(reward,
                           [self.config["collision_reward"] + self.config["merging_speed_reward"],
                            self.config["high_speed_reward"] + self.config["right_lane_reward"]],
                           [0, 1])
+
+    def _rewards(self, action: int) -> Dict[Text, float]:
+        return {
+            "collision_reward": self.vehicle.crashed,
+            "right_lane_reward": self.vehicle.lane_index[2] / 1,
+            "high_speed_reward": self.vehicle.speed_index / (self.vehicle.target_speeds.size - 1),
+            "lane_change_reward": action in [0, 2],
+            "merging_speed_reward": sum(  # Altruistic penalty
+                (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
+                for vehicle in self.road.vehicles
+                if vehicle.lane_index == ("b", "c", 2) and isinstance(vehicle, ControlledVehicle)
+            )
+        }
 
     def _is_terminated(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
