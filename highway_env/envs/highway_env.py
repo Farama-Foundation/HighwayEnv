@@ -221,13 +221,12 @@ class HighwayEnvObstacle(HighwayEnv):
         return vehicle.crashed or \
             (self.config["offroad_terminal"] and not vehicle.on_road)
 
-    # To terminate when the duration limit has reached.
     def _is_truncated(self) -> bool:
-        """The episode is over if the ego vehicle crashed or the time is out."""
+        """To terminate when the duration limit has reached."""
         return self.time >= self.config["duration"]
 
-    # To terminate training based on any or all agent has collided.
     def _is_terminated(self) -> bool:
+        """To terminate training based on any or all agent has collided."""
         # https://github.com/eleurent/highway-env/issues/35#issuecomment-1206427869
         agent_terminal = [self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles]
         agg_fn = {'any': any, 'all': all}[self.config['termination_agg_fn']]
@@ -245,7 +244,6 @@ class HighwayEnvObstacle(HighwayEnv):
             name: sum(agent_rewards[name] for agent_rewards in agents_rewards) / len(agents_rewards)
             for name in agents_rewards[0].keys()
         }
-
 
     def _agent_reward(self, action: int, vehicle: Vehicle) -> float:
         """Per-agent reward signal."""
