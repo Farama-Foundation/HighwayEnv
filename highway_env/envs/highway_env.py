@@ -168,8 +168,8 @@ class HighwayEnvObstacle(HighwayEnv):
         other_per_controlled = near_split(self.config["vehicles_count"], num_bins=self.config["controlled_vehicles"])
 
         self.controlled_vehicles = []
-        # vehicle_dist = 0.0
-        # lanes = [4 * lane for lane in range(self.config["lanes_count"])]
+        vehicle_dist = 0.0
+        lanes = [4 * lane for lane in range(self.config["lanes_count"])]
         for others in other_per_controlled:
             vehicle = Vehicle.create_random(
                 self.road,
@@ -179,10 +179,11 @@ class HighwayEnvObstacle(HighwayEnv):
             )
             vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
             if self.config['controlled_vehicles']:
-                # vehicle_lane = np.random.choice(lanes)
-                # To make sure the agents doesn't collide on the start itself because of the random obstacles.
-                # vehicle.position = np.array([vehicle_dist, vehicle_lane])
-                # vehicle_dist += 25
+                vehicle_lane = np.random.choice(lanes)
+                """To approximate the distance travelled by the agents and to make sure the agents doesn't collide on 
+                the start itself because of the random obstacles."""
+                vehicle.position = np.array([vehicle_dist, vehicle_lane])
+                vehicle_dist += 25
                 self.controlled_vehicles.append(vehicle)
                 self.road.vehicles.append(vehicle)
             else:
