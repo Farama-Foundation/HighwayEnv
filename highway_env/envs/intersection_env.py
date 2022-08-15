@@ -59,7 +59,9 @@ class IntersectionEnv(AbstractEnv):
             "arrived_reward": 1,
             "reward_speed_range": [7.0, 9.0],
             "normalize_reward": False,
-            "offroad_terminal": False
+            "offroad_terminal": False,
+            # https://github.com/eleurent/highway-env/issues/35#issuecomment-1206427869
+            "termination_agg_fn": 'any'
         })
         return config
 
@@ -97,8 +99,10 @@ class IntersectionEnv(AbstractEnv):
         }
 
     def _is_terminated(self) -> bool:
-        return any(vehicle.crashed for vehicle in self.controlled_vehicles) \
-               or all(self.has_arrived(vehicle) for vehicle in self.controlled_vehicles) \
+        # https://github.com/eleurent/highway-env/issues/35#issuecomment-1206427869
+        agent_terminal = [self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles]
+        agg_fn = {'any': any, 'all': all}[self.config['termination_agg_fn']]
+        return agg_fn(agent_terminal) or all(self.has_arrived(vehicle) for vehicle in self.controlled_vehicles) \
                or (self.config["offroad_terminal"] and not self.vehicle.on_road)
 
     def _agent_is_terminal(self, vehicle: Vehicle) -> bool:
@@ -111,8 +115,11 @@ class IntersectionEnv(AbstractEnv):
 
     def _info(self, obs: np.ndarray, action: int) -> dict:
         info = super()._info(obs, action)
+        info["other_vehicle_collision"] = \
+            sum(vehicle.crashed for vehicle in self.road.vehicles if vehicle not in self.controlled_vehicles)
         info["agents_rewards"] = tuple(self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles)
-        info["agents_dones"] = tuple(self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles)
+        info["agents_collided"] = tuple(vehicle.crashed for vehicle in self.controlled_vehicles)
+        info['distance_travelled'] = tuple(vehicle.position[0] for vehicle in self.controlled_vehicles)
         return info
 
     def _reset(self) -> None:
