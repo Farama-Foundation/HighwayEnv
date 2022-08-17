@@ -157,7 +157,7 @@ class HighwayEnvObstacle(HighwayEnv):
     def default_config(cls) -> dict:
         conf = super().default_config()
         conf.update({
-            "obstacle_count": 200,
+            "obstacle_count": 10,
             # https://github.com/eleurent/highway-env/issues/35#issuecomment-1206427869
             "termination_agg_fn": 'any'
         })
@@ -203,7 +203,7 @@ class HighwayEnvObstacle(HighwayEnv):
         for i in range(self.config['obstacle_count']):
             lanes = [4 * lane for lane in range(self.config["lanes_count"])]
             obstacle_lane = np.random.choice(lanes)
-            obstacle_dist = np.random.randint(300, 10000)
+            obstacle_dist = np.random.randint(200, 600)
             self.road.objects.append(Obstacle(self.road, [obstacle_dist, obstacle_lane]))
 
     def _info(self, obs: np.ndarray, action: int) -> dict:
