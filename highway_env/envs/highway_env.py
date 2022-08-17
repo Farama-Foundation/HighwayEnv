@@ -40,12 +40,12 @@ class HighwayEnv(AbstractEnv):
             "duration": 40,  # [s]
             "ego_spacing": 2,
             "vehicles_density": 1,
-            "collision_reward": -1,    # The reward received when colliding with a vehicle.
+            "collision_reward": -1,  # The reward received when colliding with a vehicle.
             "right_lane_reward": 0.1,  # The reward received when driving on the right-most lanes, linearly mapped to
-                                       # zero for other lanes.
+            # zero for other lanes.
             "high_speed_reward": 0.4,  # The reward received when driving at full speed, linearly mapped to zero for
-                                       # lower speeds according to config["reward_speed_range"].
-            "lane_change_reward": 0,   # The reward received at each lane change action.
+            # lower speeds according to config["reward_speed_range"].
+            "lane_change_reward": 0,  # The reward received at each lane change action.
             "reward_speed_range": [20, 30],
             "normalize_reward": True,
             "offroad_terminal": False
@@ -130,6 +130,7 @@ class HighwayEnvFast(HighwayEnv):
         - fewer vehicles in the scene (and fewer lanes, shorter episode duration)
         - only check collision of controlled vehicles with others
     """
+
     @classmethod
     def default_config(cls) -> dict:
         cfg = super().default_config()
@@ -198,7 +199,8 @@ class HighwayEnvObstacle(HighwayEnv):
         self.road = Road(network=RoadNetwork.straight_road_network(self.config["lanes_count"], speed_limit=30),
                          np_random=self.np_random, record_history=self.config["show_trajectories"])
         # Adding obstacles at random places on the lanes
-        for i in range(1, self.config['obstacle_count']):
+        np.random.seed(2)
+        for i in range(self.config['obstacle_count']):
             lanes = [4 * lane for lane in range(self.config["lanes_count"])]
             obstacle_lane = np.random.choice(lanes)
             obstacle_dist = np.random.randint(300, 10000)
@@ -234,8 +236,7 @@ class HighwayEnvObstacle(HighwayEnv):
 
     def _reward(self, action: int) -> float:
         """Aggregated reward, for cooperative agents"""
-        return sum(self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles) \
-               / len(self.controlled_vehicles)
+        return sum(self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles) / len(self.controlled_vehicles)
 
     def _rewards(self, action: int) -> Dict[Text, float]:
         """Multi-objective rewards, for cooperative agents."""
