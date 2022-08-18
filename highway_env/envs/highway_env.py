@@ -203,7 +203,7 @@ class HighwayEnvObstacle(HighwayEnv):
         for i in range(self.config['obstacle_count']):
             lanes = [4 * lane for lane in range(self.config["lanes_count"])]
             obstacle_lane = np.random.choice(lanes)
-            obstacle_dist = np.random.randint(200, 600)
+            obstacle_dist = np.random.randint(600)
             self.road.objects.append(Obstacle(self.road, [obstacle_dist, obstacle_lane]))
 
     def _info(self, obs: np.ndarray, action: int) -> dict:
