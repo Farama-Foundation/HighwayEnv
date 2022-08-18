@@ -199,11 +199,11 @@ class HighwayEnvObstacle(HighwayEnv):
         self.road = Road(network=RoadNetwork.straight_road_network(self.config["lanes_count"], speed_limit=30),
                          np_random=self.np_random, record_history=self.config["show_trajectories"])
         # Adding obstacles at random places on the lanes
-        np.random.seed(47)
+        np.random.seed(2)
         for i in range(self.config['obstacle_count']):
             lanes = [4 * lane for lane in range(self.config["lanes_count"])]
             obstacle_lane = np.random.choice(lanes)
-            obstacle_dist = np.random.randint(50, 600)
+            obstacle_dist = np.random.randint(200, 600)
             self.road.objects.append(Obstacle(self.road, [obstacle_dist, obstacle_lane]))
 
     def _info(self, obs: np.ndarray, action: int) -> dict:
