@@ -30,7 +30,7 @@ def test_obs_grayscale(env_spec, stack_size=4):
             "weights": [0.2989, 0.5870, 0.1140],
         }
     })
-    obs = env.reset()
+    obs, info = env.reset()
     env.close()
     assert isinstance(obs, np.ndarray)
     assert obs.shape == (stack_size, env.config["screen_width"], env.config["screen_height"])

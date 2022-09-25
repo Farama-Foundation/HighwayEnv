@@ -185,9 +185,8 @@ class AbstractEnv(gym.Env):
     def reset(self,
               *,
               seed: Optional[int] = None,
-              return_info: bool = False,
               options: Optional[dict] = None,
-    ) -> Union[Observation, Tuple[Observation, dict]]:
+    ) -> Tuple[Observation, dict]:
         """
         Reset the environment to it's initial configuration
 
@@ -201,7 +200,7 @@ class AbstractEnv(gym.Env):
         self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
         obs = self.observation_type.observe()
         info = self._info(obs, action=self.action_space.sample())
-        return (obs, info) if return_info else obs
+        return obs, info
 
     def _reset(self) -> None:
         """

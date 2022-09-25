@@ -15,8 +15,8 @@ def time_env(env_name, steps=20):
     env = gym.make(env_name)
     env.reset()
     for _ in range(steps):
-        _, _, done, _ = env.step(env.action_space.sample())
-        env.reset() if done else _
+        _, _, done, truncated, _ = env.step(env.action_space.sample())
+        env.reset() if done or truncated else _
     env.close()
 
 
