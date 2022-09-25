@@ -154,8 +154,8 @@ class UTurnEnv(AbstractEnv):
         # Vehicle 1: Blocking the ego vehicle
         vehicle = vehicles_type.make_on_lane(self.road,
                                                    ("a", "b", 0),
-                                                   longitudinal=25 + self.np_random.randn()*position_deviation,
-                                                   speed=13.5 + self.np_random.randn() * speed_deviation)
+                                                   longitudinal=25 + self.np_random.normal()*position_deviation,
+                                                   speed=13.5 + self.np_random.normal() * speed_deviation)
         vehicle.plan_route_to('d')
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
@@ -163,8 +163,8 @@ class UTurnEnv(AbstractEnv):
         # Vehicle 2: Forcing risky overtake
         vehicle = vehicles_type.make_on_lane(self.road,
                                                    ("a", "b", 1),
-                                                   longitudinal=56 + self.np_random.randn()*position_deviation,
-                                                   speed=14.5 + self.np_random.randn() * speed_deviation)
+                                                   longitudinal=56 + self.np_random.normal()*position_deviation,
+                                                   speed=14.5 + self.np_random.normal() * speed_deviation)
         vehicle.plan_route_to('d')
         # vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
@@ -172,8 +172,8 @@ class UTurnEnv(AbstractEnv):
         # Vehicle 3: Blocking the ego vehicle
         vehicle = vehicles_type.make_on_lane(self.road,
                                                    ("b", "c", 1),
-                                                   longitudinal=0.5 + self.np_random.randn()*position_deviation,
-                                                   speed=4.5 + self.np_random.randn() * speed_deviation)
+                                                   longitudinal=0.5 + self.np_random.normal()*position_deviation,
+                                                   speed=4.5 + self.np_random.normal() * speed_deviation)
         vehicle.plan_route_to('d')
         # vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
@@ -181,8 +181,8 @@ class UTurnEnv(AbstractEnv):
         # Vehicle 4: Forcing risky overtake
         vehicle = vehicles_type.make_on_lane(self.road,
                                                    ("b", "c", 0),
-                                                   longitudinal=17.5 + self.np_random.randn()*position_deviation,
-                                                   speed=5.5 + self.np_random.randn() * speed_deviation)
+                                                   longitudinal=17.5 + self.np_random.normal()*position_deviation,
+                                                   speed=5.5 + self.np_random.normal() * speed_deviation)
         vehicle.plan_route_to('d')
         # vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
@@ -190,8 +190,8 @@ class UTurnEnv(AbstractEnv):
         # Vehicle 5: Blocking the ego vehicle
         vehicle = vehicles_type.make_on_lane(self.road,
                                                    ("c", "d", 0),
-                                                   longitudinal=1 + self.np_random.randn()*position_deviation,
-                                                   speed=3.5 + self.np_random.randn() * speed_deviation)
+                                                   longitudinal=1 + self.np_random.normal()*position_deviation,
+                                                   speed=3.5 + self.np_random.normal() * speed_deviation)
         vehicle.plan_route_to('d')
         # vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
@@ -199,8 +199,8 @@ class UTurnEnv(AbstractEnv):
         # Vehicle 6: Forcing risky overtake
         vehicle = vehicles_type.make_on_lane(self.road,
                                                    ("c", "d", 1),
-                                                   longitudinal=30 + self.np_random.randn()*position_deviation,
-                                                   speed=5.5 + self.np_random.randn() * speed_deviation)
+                                                   longitudinal=30 + self.np_random.normal()*position_deviation,
+                                                   speed=5.5 + self.np_random.normal() * speed_deviation)
         vehicle.plan_route_to('d')
         # vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)

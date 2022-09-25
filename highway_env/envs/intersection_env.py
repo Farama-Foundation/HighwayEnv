@@ -211,7 +211,7 @@ class IntersectionEnv(AbstractEnv):
             destination = self.config["destination"] or "o" + str(self.np_random.randint(1, 4))
             ego_vehicle = self.action_type.vehicle_class(
                              self.road,
-                             ego_lane.position(60 + 5*self.np_random.randn(1), 0),
+                             ego_lane.position(60 + 5*self.np_random.normal(1), 0),
                              speed=ego_lane.speed_limit,
                              heading=ego_lane.heading_at(60))
             try:
@@ -233,15 +233,16 @@ class IntersectionEnv(AbstractEnv):
                        speed_deviation: float = 1.,
                        spawn_probability: float = 0.6,
                        go_straight: bool = False) -> None:
-        if self.np_random.rand() > spawn_probability:
+        if self.np_random.uniform() > spawn_probability:
             return
 
         route = self.np_random.choice(range(4), size=2, replace=False)
         route[1] = (route[0] + 2) % 4 if go_straight else route[1]
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
         vehicle = vehicle_type.make_on_lane(self.road, ("o" + str(route[0]), "ir" + str(route[0]), 0),
-                                            longitudinal=longitudinal + 5 + self.np_random.randn() * position_deviation,
-                                            speed=8 + self.np_random.randn() * speed_deviation)
+                                            longitudinal=(longitudinal + 5
+                                                          + self.np_random.normal() * position_deviation),
+                                            speed=8 + self.np_random.normal() * speed_deviation)
         for v in self.road.vehicles:
             if np.linalg.norm(v.position - vehicle.position) < 15:
                 return

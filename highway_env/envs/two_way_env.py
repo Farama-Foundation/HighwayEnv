@@ -102,17 +102,17 @@ class TwoWayEnv(AbstractEnv):
             self.road.vehicles.append(
                 vehicles_type(road,
                               position=road.network.get_lane(("a", "b", 1))
-                              .position(70+40*i + 10*self.np_random.randn(), 0),
+                              .position(70+40*i + 10*self.np_random.normal(), 0),
                               heading=road.network.get_lane(("a", "b", 1)).heading_at(70+40*i),
-                              speed=24 + 2*self.np_random.randn(),
+                              speed=24 + 2*self.np_random.normal(),
                               enable_lane_change=False)
             )
         for i in range(2):
             v = vehicles_type(road,
                               position=road.network.get_lane(("b", "a", 0))
-                              .position(200+100*i + 10*self.np_random.randn(), 0),
+                              .position(200+100*i + 10*self.np_random.normal(), 0),
                               heading=road.network.get_lane(("b", "a", 0)).heading_at(200+100*i),
-                              speed=20 + 5*self.np_random.randn(),
+                              speed=20 + 5*self.np_random.normal(),
                               enable_lane_change=False)
             v.target_lane_index = ("b", "a", 0)
             self.road.vehicles.append(v)

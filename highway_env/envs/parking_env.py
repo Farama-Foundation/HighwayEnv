@@ -145,7 +145,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         """Create some new random vehicles of a given type, and add them on the road."""
         self.controlled_vehicles = []
         for i in range(self.config["controlled_vehicles"]):
-            vehicle = self.action_type.vehicle_class(self.road, [i*20, 0], 2*np.pi*self.np_random.rand(), 0)
+            vehicle = self.action_type.vehicle_class(self.road, [i*20, 0], 2*np.pi*self.np_random.uniform(), 0)
             self.road.vehicles.append(vehicle)
             self.controlled_vehicles.append(vehicle)
 
