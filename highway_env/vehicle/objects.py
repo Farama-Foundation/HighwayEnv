@@ -100,7 +100,7 @@ class RoadObject(ABC):
 
     def _is_colliding(self, other, dt):
         # Fast spherical pre-check
-        if np.linalg.norm(other.position - self.position) > self.diagonal + self.speed * dt:
+        if np.linalg.norm(other.position - self.position) > (self.diagonal + other.diagonal) / 2 + self.speed * dt:
             return False, False, np.zeros(2,)
         # Accurate rectangular check
         return utils.are_polygons_intersecting(self.polygon(), other.polygon(), self.velocity * dt, other.velocity * dt)
