@@ -10,7 +10,6 @@ envs = [
     "intersection-v0",
     "intersection-v1",
     "parking-v0",
-    "summon-v0",
     "two-way-v0",
     "lane-keeping-v0",
     "racetrack-v0",
