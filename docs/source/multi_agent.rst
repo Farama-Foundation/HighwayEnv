@@ -15,11 +15,11 @@ To that end, update the :ref:`environment configuration <Configuring an environm
   import gym
   import highway_env
 
-  env = gym.make('highway-v0', seed=0)
+  env = gym.make('highway-v0')
 
   env.configure({"controlled_vehicles": 2})  # Two controlled vehicles
   env.configure({"vehicles_count": 1})  # A single other vehicle, for the sake of visualisation
-  env.reset()
+  env.reset(seed=0)
 
   from matplotlib import pyplot as plt
   %matplotlib inline
