@@ -78,7 +78,7 @@ The type of observations contained in the tuple must be described by a standard 
       }
     }
   })
-  obs = env.reset()
+  obs, info = env.reset()
 
   import pprint
   pprint.pprint(obs)
@@ -120,13 +120,13 @@ Here is a pseudo-code example of how a centralized multi-agent policy could be t
   model = Model()
 
   # A training episode
-  obs = env.reset()
-  done = False
-  while not done:
+  obs, info = env.reset()
+  done = truncated = False
+  while not (done or truncated):
     # Dispatch the observations to the model to get the tuple of actions
     action = tuple(model.predict(obs_i) for obs_i in obs)
     # Execute the actions
-    next_obs, reward, info, done, truncated = env.step(action)
+    next_obs, reward, done, truncated, info = env.step(action)
     # Update the model with the transitions observed by each agent
     for obs_i, action_i, next_obs_i in zip(obs, action, next_obs):
       model.update(obs_i, action_i, next_obs_i, reward, info, done, truncated)

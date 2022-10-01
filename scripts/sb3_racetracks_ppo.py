@@ -39,13 +39,13 @@ if __name__ == '__main__':
     env.unwrapped.set_record_video_wrapper(env)
 
     for video in range(10):
-        done = False
-        obs = env.reset()
-        while not done:
+        done = truncated = False
+        obs, info = env.reset()
+        while not (done or truncated):
             # Predict
             action, _states = model.predict(obs, deterministic=True)
             # Get reward
-            obs, reward, done, info = env.step(action)
+            obs, reward, done, truncated, info = env.step(action)
             # Render
             env.render()
     env.close()

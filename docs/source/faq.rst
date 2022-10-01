@@ -43,10 +43,10 @@ My videos are too fast / have a low framerate.
   env.unwrapped.set_record_video_wrapper(env)
 
   # Record a video as usual
-  obs = env.reset()
-  done = False:
-  while not done:
+  obs, info = env.reset()
+  done = truncated = False:
+  while not (done or truncated):
       action = env.action_space.sample()
-      obs, reward, done, info = env.step(action)
+      obs, reward, done, truncated, info = env.step(action)
       env.render()
   env.close()

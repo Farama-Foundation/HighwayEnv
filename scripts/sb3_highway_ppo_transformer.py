@@ -388,9 +388,9 @@ if __name__ == "__main__":
     env.render()
     env.viewer.set_agent_display(functools.partial(display_vehicles_attention, env=env, model=model))
     for _ in range(5):
-        obs = env.reset()
+        obs, info = env.reset()
         done = False
-        while not done:
+        while not (done or truncated):
             action, _ = model.predict(obs)
-            obs, reward, done, info = env.step(action)
+            obs, reward, done, truncated, info = env.step(action)
             env.render()

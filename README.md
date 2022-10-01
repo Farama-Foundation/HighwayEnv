@@ -157,10 +157,10 @@ import highway_env
 
 env = gym.make("highway-v0")
 
-done = False
-while not done:
+done = truncated = False
+while not (done or truncated):
     action = ... # Your agent code here
-    obs, reward, done, info = env.step(action)
+    obs, reward, done, truncated, info = env.step(action)
     env.render()
 ```
 

@@ -52,8 +52,8 @@ if __name__ == '__main__':
     env = VecVideoRecorder(env, "highway_cnn/videos/",
                            record_video_trigger=lambda x: x == 0, video_length=video_length,
                            name_prefix="dqn-agent")
-    obs = env.reset()
+    obs, info = env.reset()
     for _ in range(video_length + 1):
         action, _ = model.predict(obs)
-        obs, _, _, _ = env.step(action)
+        obs, _, _, _, _ = env.step(action)
     env.close()

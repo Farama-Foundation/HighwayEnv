@@ -10,7 +10,7 @@ TRAIN = True
 if __name__ == '__main__':
     # Create the environment
     env = gym.make("highway-fast-v0")
-    obs = env.reset()
+    obs, info = env.reset()
 
     # Create the model
     model = DQN('MlpPolicy', env,
@@ -39,13 +39,13 @@ if __name__ == '__main__':
     env.configure({"simulation_frequency": 15})  # Higher FPS for rendering
 
     for videos in range(10):
-        done = False
-        obs = env.reset()
-        while not done:
+        done = truncated = False
+        obs, info = env.reset()
+        while not (done or truncated):
             # Predict
             action, _states = model.predict(obs, deterministic=True)
             # Get reward
-            obs, reward, done, info = env.step(action)
+            obs, reward, done, truncated, info = env.step(action)
             # Render
             env.render()
     env.close()

@@ -80,8 +80,8 @@ You should now be able to run the environment:
     import highway_env
 
     env = gym.make('your-env-v0')
-    obs = env.reset()
-    obs, reward, done, info = env.step(env.action_space.sample())
+    obs, info = env.reset()
+    obs, reward, done, trucated, info = env.step(env.action_space.sample())
     env.render()
 
 API

@@ -40,9 +40,9 @@ if __name__ == "__main__":
     model = PPO.load("highway_ppo/model")
     env = gym.make("highway-fast-v0")
     for _ in range(5):
-        obs = env.reset()
-        done = False
-        while not done:
+        obs, info = env.reset()
+        done = truncated = False
+        while not (done or truncated):
             action, _ = model.predict(obs)
-            obs, reward, done, info = env.step(action)
+            obs, reward, done, truncated, info = env.step(action)
             env.render()

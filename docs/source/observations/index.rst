@@ -134,7 +134,7 @@ Example configuration
     }
     env = gym.make('highway-v0')
     env.configure(config)
-    obs = env.reset()
+    obs, info = env.reset()
     print(obs)
 
 
@@ -164,7 +164,7 @@ Example configuration
         "policy_frequency": 2
     }
     env.configure(config)
-    obs = env.reset()
+    obs, info = env.reset()
 
     _, axes = plt.subplots(ncols=4, figsize=(12, 5))
     for i, ax in enumerate(axes.flat):
