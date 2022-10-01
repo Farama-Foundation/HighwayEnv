@@ -95,6 +95,8 @@ class Vehicle(RoadObject):
         :return: a new vehicle at the same dynamical state
         """
         v = cls(vehicle.road, vehicle.position, vehicle.heading, vehicle.speed)
+        if hasattr(vehicle, 'color'):
+            v.color = vehicle.color
         return v
 
     def act(self, action: Union[dict, str] = None) -> None:
