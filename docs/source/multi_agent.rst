@@ -115,7 +115,7 @@ Here is a pseudo-code example of how a centralized multi-agent policy could be t
     def predict(self, obs):
       return 0
 
-    def update(self, obs, action, next_obs, reward, info, done):
+    def update(self, obs, action, next_obs, reward, info, done, truncated):
       pass
   model = Model()
 
@@ -126,10 +126,10 @@ Here is a pseudo-code example of how a centralized multi-agent policy could be t
     # Dispatch the observations to the model to get the tuple of actions
     action = tuple(model.predict(obs_i) for obs_i in obs)
     # Execute the actions
-    next_obs, reward, info, done = env.step(action)
+    next_obs, reward, info, done, truncated = env.step(action)
     # Update the model with the transitions observed by each agent
     for obs_i, action_i, next_obs_i in zip(obs, action, next_obs):
-      model.update(obs_i, action_i, next_obs_i, reward, info, done)
+      model.update(obs_i, action_i, next_obs_i, reward, info, done, truncated)
     obs = next_obs
 
 
