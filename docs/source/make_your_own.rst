@@ -81,7 +81,7 @@ You should now be able to run the environment:
 
     env = gym.make('your-env-v0')
     obs, info = env.reset()
-    obs, reward, done, trucated, info = env.step(env.action_space.sample())
+    obs, reward, done, truncated, info = env.step(env.action_space.sample())
     env.render()
 
 API
