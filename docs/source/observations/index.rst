@@ -166,7 +166,7 @@ Example configuration
     env.configure(config)
     obs, info = env.reset()
 
-    _, axes = plt.subplots(ncols=4, figsize=(12, 5))
+    fig, axes = plt.subplots(ncols=4, figsize=(12, 5))
     for i, ax in enumerate(axes.flat):
         ax.imshow(obs[i, ...].T, cmap=plt.get_cmap('gray'))
     plt.show()
@@ -179,9 +179,9 @@ We illustrate the stack update by performing three steps in the environment.
 .. jupyter-execute::
 
     for _ in range(3):
-        obs, _, _, _, _ = env.step(env.action_type.actions_indexes["IDLE"])
+        obs, reward, done, truncated, info = env.step(env.action_type.actions_indexes["IDLE"])
 
-        _, axes = plt.subplots(ncols=4, figsize=(12, 5))
+        fig, axes = plt.subplots(ncols=4, figsize=(12, 5))
         for i, ax in enumerate(axes.flat):
             ax.imshow(obs[i, ...].T, cmap=plt.get_cmap('gray'))
     plt.show()
