@@ -20,7 +20,7 @@ Here is a quick example of how to create an environment:
   env.reset()
   for _ in range(3):
       action = env.action_type.actions_indexes["IDLE"]
-      obs, reward, done, info = env.step(action)
+      obs, reward, done, truncated, info = env.step(action)
       env.render()
 
   plt.imshow(env.render(mode="rgb_array"))
