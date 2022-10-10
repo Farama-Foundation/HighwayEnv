@@ -213,6 +213,7 @@ List of publications & preprints using `highway-env` (please open a pull request
 *   [Accelerated Policy Evaluation: Learning Adversarial Environments with Adaptive Importance Sampling](https://arxiv.org/abs/2106.10566) (Jun 2021)
 *   [Learning Interaction-aware Guidance Policies for Motion Planning in Dense Traffic Scenarios](https://arxiv.org/abs/2107.04538) (Jul 2021)
 *   [Robust Predictable Control](https://arxiv.org/abs/2109.03214) (Sep 2021)
+*   [Improving Robustness of Deep Reinforcement Learning Agents: Environment Attack based on the Critic Network](https://ieeexplore.ieee.org/document/9892901) (Jul 2022)
 
 PhD theses
 *   [Reinforcement learning for Dialogue Systems optimization with user adaptation](https://hal.inria.fr/tel-02422691/) (2019)
