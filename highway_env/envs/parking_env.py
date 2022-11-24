@@ -1,6 +1,5 @@
 from abc import abstractmethod
 from gym import Env
-from gym.envs.registration import register
 import numpy as np
 
 from highway_env.envs.common.abstract import AbstractEnv
@@ -227,19 +226,3 @@ class ParkingEnvActionRepeat(ParkingEnv):
 class ParkingEnvParkedVehicles(ParkingEnv):
     def __init__(self):
         super().__init__({"vehicles_count": 10})
-
-
-register(
-    id='parking-v0',
-    entry_point='highway_env.envs:ParkingEnv',
-)
-
-register(
-    id='parking-ActionRepeat-v0',
-    entry_point='highway_env.envs:ParkingEnvActionRepeat'
-)
-
-register(
-    id='parking-parked-v0',
-    entry_point='highway_env.envs:ParkingEnvParkedVehicles'
-)

@@ -1,7 +1,6 @@
 from typing import Dict, Text
 
 import numpy as np
-from gym.envs.registration import register
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
@@ -116,10 +115,3 @@ class TwoWayEnv(AbstractEnv):
                               enable_lane_change=False)
             v.target_lane_index = ("b", "a", 0)
             self.road.vehicles.append(v)
-
-
-register(
-    id='two-way-v0',
-    entry_point='highway_env.envs:TwoWayEnv',
-    max_episode_steps=15
-)

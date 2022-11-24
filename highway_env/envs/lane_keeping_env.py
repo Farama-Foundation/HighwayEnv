@@ -4,7 +4,6 @@ import copy
 from typing import Tuple
 
 import numpy as np
-from gym.envs.registration import register
 
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import LineType, SineLane, StraightLane
@@ -149,10 +148,3 @@ class LaneKeepingEnv(AbstractEnv):
                 interval.append(state.squeeze(-1).copy())
             self.interval_trajectory.append(interval)
         self.trajectory.append(copy.deepcopy(self.vehicle.state))
-
-
-register(
-    id='lane-keeping-v0',
-    entry_point='highway_env.envs:LaneKeepingEnv',
-    max_episode_steps=200
-)

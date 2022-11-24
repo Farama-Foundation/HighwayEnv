@@ -1,6 +1,5 @@
 import numpy as np
 from typing import Tuple, Dict, Text
-from gym.envs.registration import register
 
 from highway_env import utils
 from highway_env.envs import HighwayEnv, CircularLane, Vehicle
@@ -151,10 +150,3 @@ class ExitEnv(HighwayEnv):
 #         return dict(super().default_config(),
 #                     observation=dict(type="LidarObservation"))
 
-
-
-
-register(
-    id='exit-v0',
-    entry_point='highway_env.envs:ExitEnv',
-)
