@@ -192,6 +192,9 @@ class AbstractEnv(gym.Env):
 
         :return: the observation of the reset state
         """
+        if options and "config" in options:
+            self.configure(options["config"])
+
         self.update_metadata()
         self.define_spaces()  # First, to set the controlled vehicle class depending on action space
         self.time = self.steps = 0
