@@ -190,6 +190,8 @@ class AbstractEnv(gym.Env):
         """
         Reset the environment to it's initial configuration
 
+        :param seed: not implemented
+        :param options: Allows the environment configuration to specified through `options["config"]`
         :return: the observation of the reset state
         """
         if options and "config" in options:
