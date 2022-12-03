@@ -11,9 +11,15 @@ Increase the number of controlled vehicles
 To that end, update the :ref:`environment configuration <Configuring an environment>` to increase ``controlled_vehicles``
 
 .. jupyter-execute::
+  :hide-code:
+
+  # This is needed when highway-env is not installed but cloned locally
+  import highway_env
+  highway_env.register_highway_envs()
+
+.. jupyter-execute::
 
   import gym
-  import highway_env
 
   env = gym.make('highway-v0')
 
