@@ -1,9 +1,9 @@
 import gym
 import numpy as np
 import pytest
-
 import highway_env
 
+highway_env.register_highway_envs()
 envs = ["highway-v0", "merge-v0"]
 
 

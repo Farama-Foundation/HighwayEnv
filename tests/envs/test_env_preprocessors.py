@@ -1,7 +1,7 @@
 import gym
-
 import highway_env
 
+highway_env.register_highway_envs()
 
 def test_preprocessors():
     env = gym.make('highway-v0')

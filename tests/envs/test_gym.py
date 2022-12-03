@@ -1,8 +1,9 @@
 import gym
 import pytest
-
 import highway_env
 from highway_env.envs.highway_env import HighwayEnv
+
+highway_env.register_highway_envs()
 
 envs = [
     "highway-v0",

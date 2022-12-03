@@ -1,8 +1,9 @@
 import pytest
 import timeit
 import gym
-
 import highway_env
+
+highway_env.register_highway_envs()
 
 
 def wrapper(func, *args, **kwargs):

@@ -1,7 +1,8 @@
 import gym
 import pytest
-
 import highway_env
+
+highway_env.register_highway_envs()
 
 action_configs = [
     {"type": "ContinuousAction"},
