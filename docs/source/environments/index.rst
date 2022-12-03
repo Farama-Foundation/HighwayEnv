@@ -1,7 +1,7 @@
 .. _environments:
 
-The Environments
-############
+The environments
+####################
 
 .. toctree::
   :maxdepth: 1

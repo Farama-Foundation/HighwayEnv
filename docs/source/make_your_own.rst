@@ -31,7 +31,7 @@ This should be achieved in a ``YourEnv._make_road()`` method, called from ``Your
 See :ref:`Roads <road_road>` for reference, and existing environments as examples.
 
 Create the vehicles
-------------------
+--------------------
 
 The second step is to populate your road network with vehicles. This should be achieved in a ``YourEnv._make_road()``
 method, called from ``YourEnv.reset()`` to set the ``self.road.vehicles`` list of :py:class:`~highway_env.vehicle.kinematics.Vehicle`.
@@ -53,7 +53,7 @@ environment implementation with ``self.config["config_key"]``, and once the envi
 Register the environment
 ---------------------------
 
-In ``highway_env/envs/your_env.py``, add the following line:
+In ``highway_env/envs/__init__.py``, add the following line:
 
 .. code-block:: python
 
@@ -61,13 +61,6 @@ In ``highway_env/envs/your_env.py``, add the following line:
         id='your-env-v0',
         entry_point='highway_env.envs:YourEnv',
     )
-
-and import it from ``highway_env/envs/__init__.py``:
-
-.. code-block:: python
-
-    from highway_env.envs.your_env import *
-
 
 Profit
 --------
@@ -77,7 +70,6 @@ You should now be able to run the environment:
 .. code-block:: python
 
     import gym
-    import highway_env
 
     env = gym.make('your-env-v0')
     obs, info = env.reset()

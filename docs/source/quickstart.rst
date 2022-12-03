@@ -10,9 +10,15 @@ Making an environment
 Here is a quick example of how to create an environment:
 
 .. jupyter-execute::
+  :hide-code:
+
+  # This is needed when highway-env is not installed but cloned locally
+  import highway_env
+  highway_env.register_highway_envs()
+
+.. jupyter-execute::
 
   import gym
-  import highway_env
   from matplotlib import pyplot as plt
   %matplotlib inline
 

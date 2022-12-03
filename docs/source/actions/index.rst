@@ -14,7 +14,6 @@ Each environment comes with a *default* action type, which can be changed or cus
 .. code-block:: python
 
     import gym
-    import highway_env
 
     env = gym.make('highway-v0')
     env.configure({
