@@ -1,7 +1,6 @@
 from typing import Dict, Text
 
 import numpy as np
-from gym.envs.registration import register
 
 
 from highway_env import utils
@@ -206,7 +205,4 @@ class UTurnEnv(AbstractEnv):
         self.road.vehicles.append(vehicle)
 
 
-register(
-    id='u-turn-v0',
-    entry_point='highway_env.envs:UTurnEnv'
-)
+

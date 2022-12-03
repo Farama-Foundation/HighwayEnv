@@ -1,7 +1,6 @@
 from itertools import repeat, product
 from typing import Tuple, Dict, Text
 
-from gym.envs.registration import register
 import numpy as np
 
 from highway_env import utils
@@ -224,9 +223,3 @@ class RacetrackEnv(AbstractEnv):
                     break
             else:
                 self.road.vehicles.append(vehicle)
-
-
-register(
-    id='racetrack-v0',
-    entry_point='highway_env.envs:RacetrackEnv',
-)

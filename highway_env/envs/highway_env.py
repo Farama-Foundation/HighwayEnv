@@ -1,7 +1,6 @@
 from typing import Dict, Text
 
 import numpy as np
-from gym.envs.registration import register
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
@@ -147,14 +146,3 @@ class HighwayEnvFast(HighwayEnv):
         for vehicle in self.road.vehicles:
             if vehicle not in self.controlled_vehicles:
                 vehicle.check_collisions = False
-
-
-register(
-    id='highway-v0',
-    entry_point='highway_env.envs:HighwayEnv',
-)
-
-register(
-    id='highway-fast-v0',
-    entry_point='highway_env.envs:HighwayEnvFast',
-)
