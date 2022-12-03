@@ -55,10 +55,10 @@ class RoundaboutEnv(AbstractEnv):
         }
 
     def _is_terminated(self) -> bool:
-        return self.vehicle.crashed
+        return self.vehicle.crashed or self.time >= self.config["duration"]
 
     def _is_truncated(self) -> bool:
-        return self.time >= self.config["duration"]
+        return False
 
     def _reset(self) -> None:
         self._make_road()

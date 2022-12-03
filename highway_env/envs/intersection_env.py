@@ -102,11 +102,12 @@ class IntersectionEnv(AbstractEnv):
 
     def _agent_is_terminal(self, vehicle: Vehicle) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
-        return vehicle.crashed \
-            or self.has_arrived(vehicle)
+        return (vehicle.crashed or
+                self.has_arrived(vehicle) or
+                self.time >= self.config["duration"])
 
     def _is_truncated(self) -> bool:
-        return self.time >= self.config["duration"]
+        return
 
     def _info(self, obs: np.ndarray, action: int) -> dict:
         info = super()._info(obs, action)

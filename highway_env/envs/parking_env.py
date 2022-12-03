@@ -207,15 +207,16 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         return self.compute_reward(achieved_goal, desired_goal, {}) > -self.config["success_goal_reward"]
 
     def _is_terminated(self) -> bool:
-        """The episode is over if the ego vehicle crashed or the goal is reached."""
+        """The episode is over if the ego vehicle crashed or the goal is reached or time is over."""
         crashed = any(vehicle.crashed for vehicle in self.controlled_vehicles)
         obs = self.observation_type_parking.observe()
         obs = obs if isinstance(obs, tuple) else (obs,)
         success = all(self._is_success(agent_obs['achieved_goal'], agent_obs['desired_goal']) for agent_obs in obs)
-        return bool(crashed or success)
+        timeout = self.time >= self.config["duration"]
+        return bool(crashed or success or timeout)
 
     def _is_truncated(self) -> bool:
-        return self.time >= self.config["duration"]
+        return False
 
 
 class ParkingEnvActionRepeat(ParkingEnv):
