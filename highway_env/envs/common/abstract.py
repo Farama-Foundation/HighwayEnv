@@ -64,7 +64,7 @@ class AbstractEnv(gym.Env):
         # Rendering
         self.viewer = None
         self._record_video_wrapper = None
-        self.rendering_mode = 'human'
+        self.render_mode = render_mode
         self.enable_auto_render = False
 
         self.reset()
@@ -260,15 +260,13 @@ class AbstractEnv(gym.Env):
 
         self.enable_auto_render = False
 
-    def render(self, mode: str = 'human') -> Optional[np.ndarray]:
+    def render(self, mode: str = 'rgb_array') -> Optional[np.ndarray]:
         """
         Render the environment.
 
         Create a viewer if none exists, and use it to render an image.
         :param mode: the rendering mode
         """
-        self.rendering_mode = mode
-
         if self.viewer is None:
             self.viewer = EnvViewer(self)
 
@@ -312,7 +310,7 @@ class AbstractEnv(gym.Env):
             if self._record_video_wrapper and self._record_video_wrapper.video_recorder:
                 self._record_video_wrapper.video_recorder.capture_frame()
             else:
-                self.render(self.rendering_mode)
+                self.render(self.render_mode)
 
     def simplify(self) -> 'AbstractEnv':
         """
