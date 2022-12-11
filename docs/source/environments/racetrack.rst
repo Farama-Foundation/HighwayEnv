@@ -52,7 +52,7 @@ Default configuration
         "screen_width": 600,
         "screen_height": 600,
         "centering_position": [0.5, 0.5],
-        "scaling": 7
+        "scaling": 7,
         "show_trajectories": False,
         "render_agent": True,
         "offscreen_rendering": False
