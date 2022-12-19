@@ -267,7 +267,8 @@ class OccupancyGridObservation(ObservationType):
         self.features = features if features is not None else self.FEATURES
         self.grid_size = np.array(grid_size) if grid_size is not None else np.array(self.GRID_SIZE)
         self.grid_step = np.array(grid_step) if grid_step is not None else np.array(self.GRID_STEP)
-        grid_shape = np.asarray(np.floor((self.grid_size[:, 1] - self.grid_size[:, 0]) / self.grid_step), dtype=np.int)
+        grid_shape = np.asarray(np.floor((self.grid_size[:, 1] - self.grid_size[:, 0]) / self.grid_step),
+                                dtype=np.uint8)
         self.grid = np.zeros((len(self.features), *grid_shape))
         self.features_range = features_range
         self.absolute = absolute

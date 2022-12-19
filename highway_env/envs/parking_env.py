@@ -1,4 +1,6 @@
 from abc import abstractmethod
+from typing import Optional
+
 from gym import Env
 import numpy as np
 
@@ -68,8 +70,8 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             "normalize": False
         }}
 
-    def __init__(self, config: dict = None) -> None:
-        super().__init__(config)
+    def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
+        super().__init__(config, render_mode)
         self.observation_type_parking = None
 
     @classmethod
