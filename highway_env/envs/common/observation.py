@@ -317,7 +317,7 @@ class OccupancyGridObservation(ObservationType):
             # Fill-in features
             for layer, feature in enumerate(self.features):
                 if feature in df.columns:  # A vehicle feature
-                    for _, vehicle in df.iterrows():
+                    for _, vehicle in reversed(df.iterrows()):
                         x, y = vehicle["x"], vehicle["y"]
                         # Recover unnormalized coordinates for cell index
                         if "x" in self.features_range:
