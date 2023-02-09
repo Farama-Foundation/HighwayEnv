@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Callable
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,6 +6,25 @@ import matplotlib.pyplot as plt
 from highway_env.road.road import Road
 from highway_env.utils import Vector
 from highway_env.vehicle.kinematics import Vehicle
+
+
+def rk4(func: Callable, state: np.ndarray, dt: float = 0.01, t: float = 0, **kwargs):
+    """
+    single-step fourth-order numerical integration (RK4) method
+    func: system of first order ODEs
+    state: current state vector [y1, y2, y3, ...]
+    dt: discrete time step size
+    t: current time
+    **kwargs: additional parameters for ODE system
+    returns: y evaluated at time k+1
+    """
+
+    # evaluate derivative at several stages within time interval
+    f1 = func(t, state, **kwargs)
+    f2 = func(t + dt / 2, state + (f1 * (dt / 2)), **kwargs)
+    f3 = func(t + dt / 2, state + (f2 * (dt / 2)), **kwargs)
+    f4 = func(t + dt, state + (f3 * dt), **kwargs)
+    return state + (dt / 6) * (f1 + (2 * f2) + (2 * f3) + f4)
 
 
 class BicycleVehicle(Vehicle):
@@ -41,29 +60,34 @@ class BicycleVehicle(Vehicle):
                          [self.yaw_rate]])
 
     @property
-    def derivative(self) -> np.ndarray:
+    def derivative(self):
+        return self.derivative_func(None, self.state)
+
+    def derivative_func(self, time: float, state: np.ndarray, **kwargs) -> np.ndarray:
         """
         See Chapter 2 of Lateral Vehicle Dynamics. Vehicle Dynamics and Control. Rajamani, R. (2011)
 
         :return: the state derivative
         """
+        del time
+        heading, speed, lateral_speed, yaw_rate = state[2:, 0]
         delta_f = self.action["steering"]
         delta_r = 0
-        theta_vf = np.arctan2(self.lateral_speed + self.LENGTH_A * self.yaw_rate, self.speed)  # (2.27)
-        theta_vr = np.arctan2(self.lateral_speed - self.LENGTH_B * self.yaw_rate, self.speed)  # (2.28)
+        theta_vf = np.arctan2(lateral_speed + self.LENGTH_A * yaw_rate, speed)  # (2.27)
+        theta_vr = np.arctan2(lateral_speed - self.LENGTH_B * yaw_rate, speed)  # (2.28)
         f_yf = 2*self.FRICTION_FRONT * (delta_f - theta_vf)  # (2.25)
         f_yr = 2*self.FRICTION_REAR * (delta_r - theta_vr)  # (2.26)
-        if abs(self.speed) < 1:  # Low speed dynamics: damping of lateral speed and yaw rate
-            f_yf = - self.MASS * self.lateral_speed - self.INERTIA_Z/self.LENGTH_A * self.yaw_rate
-            f_yr = - self.MASS * self.lateral_speed + self.INERTIA_Z/self.LENGTH_A * self.yaw_rate
-        d_lateral_speed = 1/self.MASS * (f_yf + f_yr) - self.yaw_rate * self.speed  # (2.21)
+        if abs(speed) < 1:  # Low speed dynamics: damping of lateral speed and yaw rate
+            f_yf = - self.MASS * lateral_speed - self.INERTIA_Z/self.LENGTH_A * yaw_rate
+            f_yr = - self.MASS * lateral_speed + self.INERTIA_Z/self.LENGTH_A * yaw_rate
+        d_lateral_speed = 1/self.MASS * (f_yf + f_yr) - yaw_rate * speed  # (2.21)
         d_yaw_rate = 1/self.INERTIA_Z * (self.LENGTH_A * f_yf - self.LENGTH_B * f_yr)  # (2.22)
-        c, s = np.cos(self.heading), np.sin(self.heading)
+        c, s = np.cos(heading), np.sin(heading)
         R = np.array(((c, -s), (s, c)))
-        speed = R @ np.array([self.speed, self.lateral_speed])
+        speed = R @ np.array([speed, lateral_speed])
         return np.array([[speed[0]],
                          [speed[1]],
-                         [self.yaw_rate],
+                         [yaw_rate],
                          [self.action['acceleration']],
                          [d_lateral_speed],
                          [d_yaw_rate]])
@@ -90,12 +114,12 @@ class BicycleVehicle(Vehicle):
 
     def step(self, dt: float) -> None:
         self.clip_actions()
-        derivative = self.derivative
-        self.position += derivative[0:2, 0] * dt
-        self.heading += self.yaw_rate * dt
-        self.speed += self.action['acceleration'] * dt
-        self.lateral_speed += derivative[4, 0] * dt
-        self.yaw_rate += derivative[5, 0] * dt
+        new_state = rk4(self.derivative_func, self.state, dt=dt)
+        self.position = new_state[0:2, 0]
+        self.heading = new_state[2, 0]
+        self.speed = new_state[3, 0]
+        self.lateral_speed = new_state[4, 0]
+        self.yaw_rate = new_state[5, 0]
 
         self.on_state_update()
 
