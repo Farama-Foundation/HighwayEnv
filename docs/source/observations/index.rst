@@ -19,7 +19,7 @@ Each environment comes with a *default* observation, which can be changed or cus
 
 .. code-block:: python
 
-    import gym
+    import gymnasium as gym
     import highway_env
 
     env = gym.make('highway-v0')
@@ -121,7 +121,7 @@ Example configuration
 
 .. jupyter-execute::
 
-    import gym
+    import gymnasium as gym
     import highway_env
 
     config = {

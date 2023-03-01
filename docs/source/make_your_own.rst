@@ -69,11 +69,11 @@ You should now be able to run the environment:
 
 .. code-block:: python
 
-    import gym
+    import gymnasium as gym
 
     env = gym.make('your-env-v0')
     obs, info = env.reset()
-    obs, reward, done, truncated, info = env.step(env.action_space.sample())
+    obs, reward, terminated, truncated, info = env.step(env.action_space.sample())
     env.render()
 
 API

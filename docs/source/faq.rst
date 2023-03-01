@@ -8,7 +8,7 @@ Frequently Asked Questions
 This is a list of Frequently Asked Questions about highway-env.  Feel free to
 suggest new entries!
 
-When I try to make an environment, I get an error ``gym.error.NameNotFound: Environment highway doesn't exist.``
+When I try to make an environment, I get an error ``gymnasium.error.NameNotFound: Environment highway doesn't exist.``
     This is probably because you do not have highway-env installed, but are instead working with a local copy of the
     repository. In that case, you need to run the following code first to register the environments.
 
@@ -34,12 +34,12 @@ I try to train an agent using the Kinematics Observation and an MLP model, but t
 
 
 My videos are too fast / have a low framerate.
-    This is because in openai/gym, a single video frame is generated at each call of ``env.step(action)``. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (*e.g.* change lane) actually corresponds to several (typically, 15) simulation frames.
+    This is because in gymnasium, a single video frame is generated at each call of ``env.step(action)``. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (*e.g.* change lane) actually corresponds to several (typically, 15) simulation frames.
     In order to also render these intermediate simulation frames, the following should be done:
 
 .. code-block:: python
 
-  import gym
+  import gymnasium as gym
 
   # Wrap the env by a RecordVideo wrapper
   env = gym.make("highway-v0")
