@@ -140,7 +140,7 @@ class EnvViewer(object):
         """
         The rendered image as a rgb array.
 
-        OpenAI gym's channel convention is H x W x C
+        Gymnasium's channel convention is H x W x C
         """
         surface = self.screen if self.config["render_agent"] and not self.offscreen else self.sim_surface
         data = pygame.surfarray.array3d(surface)  # in W x H x C channel convention

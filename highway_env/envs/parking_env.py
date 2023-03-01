@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Optional
 
-from gym import Env
+from gymnasium import Env
 import numpy as np
 
 from highway_env.envs.common.abstract import AbstractEnv

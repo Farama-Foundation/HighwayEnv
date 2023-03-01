@@ -1,6 +1,6 @@
 from IPython import display as ipythondisplay
 from pyvirtualdisplay import Display
-from gym.wrappers import RecordVideo
+from gymnasium.wrappers import RecordVideo
 from pathlib import Path
 import base64
 

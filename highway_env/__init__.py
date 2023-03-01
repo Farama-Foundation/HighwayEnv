@@ -3,7 +3,7 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
 
-from gym.envs.registration import register
+from gymnasium.envs.registration import register
 
 
 def register_highway_envs():
