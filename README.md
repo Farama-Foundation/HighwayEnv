@@ -22,7 +22,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
 ### Highway
 
 ```python
-env = gym.make("highway-v0")
+env = gymnasium.make("highway-v0")
 ```
 
 In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles.
@@ -38,7 +38,7 @@ A faster variant, `highway-fast-v0` is also available, with a degraded simulatio
 ### Merge
 
 ```python
-env = gym.make("merge-v0")
+env = gymnasium.make("merge-v0")
 ```
 
 In this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high speed while making room for the vehicles so that they can safely merge in the traffic.
@@ -51,7 +51,7 @@ In this task, the ego-vehicle starts on a main highway but soon approaches a roa
 ### Roundabout
 
 ```python
-env = gym.make("roundabout-v0")
+env = gymnasium.make("roundabout-v0")
 ```
 
 In this task, the ego-vehicle if approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.
@@ -64,7 +64,7 @@ In this task, the ego-vehicle if approaching a roundabout with flowing traffic. 
 ### Parking
 
 ```python
-env = gym.make("parking-v0")
+env = gymnasium.make("parking-v0")
 ```
 
 A goal-conditioned continuous control task in which the ego-vehicle must park in a given space with the appropriate heading.
@@ -77,7 +77,7 @@ A goal-conditioned continuous control task in which the ego-vehicle must park in
 ### Intersection
 
 ```python
-env = gym.make("intersection-v0")
+env = gymnasium.make("intersection-v0")
 ```
 
 An intersection negotiation task with dense traffic.
@@ -90,7 +90,7 @@ An intersection negotiation task with dense traffic.
 ### Racetrack
 
 ```python
-env = gym.make("racetrack-v0")
+env = gymnasium.make("racetrack-v0")
 ```
 
 A continuous control task involving lane-keeping and obstacle avoidance.
@@ -152,7 +152,7 @@ This agent leverages a transition and reward models to perform a stochastic tree
 ## Usage
 
 ```python
-import gym
+import gymnasium as gym
 
 env = gym.make("highway-v0")
 

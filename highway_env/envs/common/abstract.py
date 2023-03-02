@@ -1,10 +1,10 @@
 import copy
 import os
 from typing import List, Tuple, Optional, Callable, TypeVar, Generic, Union, Dict, Text
-import gym
-from gym import Wrapper
-from gym.wrappers import RecordVideo
-from gym.utils import seeding
+import gymnasium as gym
+from gymnasium import Wrapper
+from gymnasium.wrappers import RecordVideo
+from gymnasium.utils import seeding
 import numpy as np
 
 from highway_env import utils

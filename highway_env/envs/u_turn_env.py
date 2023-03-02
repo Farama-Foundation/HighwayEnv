@@ -67,10 +67,10 @@ class UTurnEnv(AbstractEnv):
         }
 
     def _is_terminated(self) -> bool:
-        return self.vehicle.crashed or self.time >= self.config["duration"]
+        return self.vehicle.crashed
 
     def _is_truncated(self) -> bool:
-        return False
+        return self.time >= self.config["duration"]
 
     def _reset(self) -> np.ndarray:
         self._make_road()

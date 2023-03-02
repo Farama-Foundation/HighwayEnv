@@ -112,13 +112,13 @@ class HighwayEnv(AbstractEnv):
         }
 
     def _is_terminated(self) -> bool:
-        """The episode is over if the ego vehicle crashed or the time is out."""
+        """The episode is over if the ego vehicle crashed."""
         return (self.vehicle.crashed or
-                self.config["offroad_terminal"] and not self.vehicle.on_road or
-                self.time >= self.config["duration"])
+                self.config["offroad_terminal"] and not self.vehicle.on_road)
 
     def _is_truncated(self) -> bool:
-        return False
+        """The episode is truncated if the time limit is reached."""
+        return self.time >= self.config["duration"]
 
 
 class HighwayEnvFast(HighwayEnv):

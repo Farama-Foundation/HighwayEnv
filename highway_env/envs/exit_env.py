@@ -135,11 +135,12 @@ class ExitEnv(HighwayEnv):
         return goal_reached
 
     def _is_terminated(self) -> bool:
-        """The episode is over if the ego vehicle crashed or if the time is out."""
-        return self.vehicle.crashed or self.time >= self.config["duration"]
+        """The episode is over if the ego vehicle crashed."""
+        return self.vehicle.crashed
 
     def _is_truncated(self) -> bool:
-        return False
+        """The episode is truncated if the time limit is reached."""
+        return self.time >= self.config["duration"]
 
 
 

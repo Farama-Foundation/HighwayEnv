@@ -1,7 +1,7 @@
 import functools
 import itertools
 from typing import TYPE_CHECKING, Optional, Union, Tuple, Callable, List
-from gym import spaces
+from gymnasium import spaces
 import numpy as np
 
 from highway_env import utils

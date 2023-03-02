@@ -2,7 +2,7 @@ pygments==2.4.1
 sphinx_rtd_theme
 sphinxcontrib-bibtex<2.0.0
 jupyter-sphinx
-gym
+gymnasium
 numpy
 pygame
 matplotlib
