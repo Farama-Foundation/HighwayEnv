@@ -21,7 +21,7 @@ To that end, update the :ref:`environment configuration <Configuring an environm
 
   import gymnasium as gym
 
-  env = gym.make('highway-v0')
+  env = gym.make('highway-v0', render_mode='rgb_array')
 
   env.configure({"controlled_vehicles": 2})  # Two controlled vehicles
   env.configure({"vehicles_count": 1})  # A single other vehicle, for the sake of visualisation
@@ -29,7 +29,7 @@ To that end, update the :ref:`environment configuration <Configuring an environm
 
   from matplotlib import pyplot as plt
   %matplotlib inline
-  plt.imshow(env.render(mode="rgb_array"))
+  plt.imshow(env.render())
   plt.title("Controlled vehicles are in green")
   plt.show()
 
@@ -53,14 +53,14 @@ The type of actions contained in the tuple must be described by a standard :ref:
   env.reset()
 
   _, (ax1, ax2) = plt.subplots(nrows=2)
-  ax1.imshow(env.render(mode="rgb_array"))
+  ax1.imshow(env.render())
   ax1.set_title("Initial state")
 
   # Make the first vehicle change to the left lane, and the second one to the right
   action_1, action_2 = 0, 2  # See highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_ALL
   env.step((action_1, action_2))
 
-  ax2.imshow(env.render(mode="rgb_array"))
+  ax2.imshow(env.render())
   ax2.set_title("After sending actions to each vehicle")
   plt.show()
 
