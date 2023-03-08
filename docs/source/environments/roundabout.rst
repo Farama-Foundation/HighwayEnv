@@ -33,7 +33,7 @@ Default configuration
             "type": "DiscreteMetaAction"
         },
         "incoming_vehicle_destination": None,
-        "duration": 11
+        "duration": 11,  # [s]
         "simulation_frequency": 15,  # [Hz]
         "policy_frequency": 1,  # [Hz]
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
