@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import torch as th
 from stable_baselines3 import PPO
 from torch.distributions import Categorical

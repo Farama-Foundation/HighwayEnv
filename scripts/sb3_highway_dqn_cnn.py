@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import VecVideoRecorder, DummyVecEnv
 

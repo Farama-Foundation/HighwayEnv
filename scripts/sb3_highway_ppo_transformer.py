@@ -1,5 +1,5 @@
 import functools
-import gym
+import gymnasium as gym
 import pygame
 import seaborn as sns
 import torch as th

@@ -1,6 +1,6 @@
 import numpy as np
-import gym
-from gym.wrappers import RecordVideo
+import gymnasium as gym
+from gymnasium.wrappers import RecordVideo
 from stable_baselines3 import DQN, DDPG, PPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.noise import NormalActionNoise

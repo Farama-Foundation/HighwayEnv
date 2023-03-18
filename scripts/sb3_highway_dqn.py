@@ -1,5 +1,5 @@
-import gym
-from gym.wrappers import RecordVideo
+import gymnasium as gym
+from gymnasium.wrappers import RecordVideo
 from stable_baselines3 import DQN
 
 import highway_env
