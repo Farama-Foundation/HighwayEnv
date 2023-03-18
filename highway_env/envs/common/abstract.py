@@ -115,7 +115,7 @@ class AbstractEnv(gym.Env):
     def update_metadata(self, video_real_time_ratio=2):
         frames_freq = self.config["simulation_frequency"] \
             if self._record_video_wrapper else self.config["policy_frequency"]
-        self.metadata['video.frames_per_second'] = video_real_time_ratio * frames_freq
+        self.metadata['render_fps'] = video_real_time_ratio * frames_freq
 
     def define_spaces(self) -> None:
         """
