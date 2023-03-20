@@ -621,34 +621,7 @@ class LidarObservation(ObservationType):
 
     def index_to_direction(self, index: int) -> np.ndarray:
         return np.array([np.cos(index * self.angle), np.sin(index * self.angle)])
-
-
-def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
-    if config["type"] == "TimeToCollision":
-        return TimeToCollisionObservation(env, **config)
-    elif config["type"] == "Kinematics":
-        return KinematicObservation(env, **config)
-    elif config["type"] == "OccupancyGrid":
-        return OccupancyGridObservation(env, **config)
-    elif config["type"] == "KinematicsGoal":
-        return KinematicsGoalObservation(env, **config)
-    elif config["type"] == "GrayscaleObservation":
-        return GrayscaleObservation(env, **config)
-    elif config["type"] == "AttributesObservation":
-        return AttributesObservation(env, **config)
-    elif config["type"] == "MultiAgentObservation":
-        return MultiAgentObservation(env, **config)
-    elif config["type"] == "TupleObservation":
-        return TupleObservation(env, **config)
-    elif config["type"] == "LidarObservation":
-        return LidarObservation(env, **config)
-    elif config["type"] == "ExitObservation":
-        return ExitObservation(env, **config)
-    elif config["type"] == "AEB":
-        return AEBObservation(env, **config)
-    else:
-        raise ValueError("Unknown observation type")
-
+    
 class AEBObservation(ObservationType):
 
     """Observe the kinematics of nearby vehicles."""
@@ -721,5 +694,31 @@ class AEBObservation(ObservationType):
                             self.normalize_obs(agent_vx - subject_vx, -40.0, 40.0),
                         ])
         return obs.astype(self.space().dtype)
+
+def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
+    if config["type"] == "TimeToCollision":
+        return TimeToCollisionObservation(env, **config)
+    elif config["type"] == "Kinematics":
+        return KinematicObservation(env, **config)
+    elif config["type"] == "OccupancyGrid":
+        return OccupancyGridObservation(env, **config)
+    elif config["type"] == "KinematicsGoal":
+        return KinematicsGoalObservation(env, **config)
+    elif config["type"] == "GrayscaleObservation":
+        return GrayscaleObservation(env, **config)
+    elif config["type"] == "AttributesObservation":
+        return AttributesObservation(env, **config)
+    elif config["type"] == "MultiAgentObservation":
+        return MultiAgentObservation(env, **config)
+    elif config["type"] == "TupleObservation":
+        return TupleObservation(env, **config)
+    elif config["type"] == "LidarObservation":
+        return LidarObservation(env, **config)
+    elif config["type"] == "ExitObservation":
+        return ExitObservation(env, **config)
+    elif config["type"] == "AEB":
+        return AEBObservation(env, **config)
+    else:
+        raise ValueError("Unknown observation type")
         
         

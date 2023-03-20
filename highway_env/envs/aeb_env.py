@@ -1,4 +1,4 @@
-from typing import Dict, Text, Tuple
+from typing import Dict, Text, Tuple, Optional
 
 import numpy as np
 
@@ -45,6 +45,10 @@ class AEBEnv(AbstractEnv):
             "centering_position": [0.7, 0.5],
         })
         return config
+    
+    def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
+        super().__init__(config, render_mode)
+        self.headway = 0
 
     def _reset(self) -> None:
         self._create_road()
@@ -106,6 +110,7 @@ class AEBEnv(AbstractEnv):
         
         if self._is_terminated():
             reward = r_min
+            self.headway = 0.0
         else:
             nrd = 25.0    # no reward distance threshold [m]
             safe_margin = 1.0 # [m]
@@ -114,6 +119,7 @@ class AEBEnv(AbstractEnv):
             subject_vehicle = self.road.vehicles[1]
             
             headway = agent_vehicle.position[0] - subject_vehicle.position[0] - agent_vehicle.LENGTH
+            self.headway = headway
             
             if headway < safe_headway:
                 reward = r_min
