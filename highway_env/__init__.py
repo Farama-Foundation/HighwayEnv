@@ -101,3 +101,9 @@ def register_highway_envs():
         entry_point='highway_env.envs:UTurnEnv'
     )
 
+    # aeb_env.py
+    register(
+        id='aeb-v0',
+        entry_point='highway_env.envs:AEBEnv'
+    )
+
