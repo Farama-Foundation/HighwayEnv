@@ -1,4 +1,4 @@
-from typing import Dict, Text
+from typing import Dict, Text, Tuple
 
 import numpy as np
 
@@ -7,7 +7,7 @@ from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
 # from highway_env.utils import near_split
-from highway_env.vehicle.controller import ControlledVehicle
+from highway_env.vehicle.controller_aeb import AEBControlledVehicle
 # from highway_env.vehicle.kinematics import Vehicle
 from highway_env.vehicle.behavior import IDMVehicle
 
@@ -27,10 +27,12 @@ class AEBEnv(AbstractEnv):
         config = super().default_config()
         config.update({
             "observation": {
-                "type": "Kinematics"
+                "type": "AEB"
             },
             "action": {
-                "type": "DiscreteMetaAction",
+                "type": "AEBAction",
+                "longitudinal": True,
+                "lateral": False,
             },
             "lanes_count": 1,
             "duration": 15,  # [s]
@@ -38,7 +40,8 @@ class AEBEnv(AbstractEnv):
             "vehicles_density": 1,
             "normalize_reward": True,
             "offroad_terminal": False,
-            "simulation_frequency": 5,
+            "simulation_frequency": 15,
+            "policy_frequency": 1,
             "centering_position": [0.7, 0.5],
         })
         return config
@@ -53,40 +56,40 @@ class AEBEnv(AbstractEnv):
                          np_random=self.np_random, record_history=self.config["show_trajectories"])
 
     def _create_vehicles(self) -> None:
+        init_speed_range = [25.0, 35.0]
+        init_x_range = [15.0, 50.0]
+        
+        agent_init_x = np.random.sample() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
+        agent_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+        subject_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+        
+        while True:
+            spd_diff = subject_init_spd - agent_init_spd
+            t = spd_diff / 6.0
+            if spd_diff * 0.5 * t < agent_init_x:
+                break
+            
+            agent_init_x = np.random.sample() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
+            agent_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            subject_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+        
         self.controlled_vehicles = []
-        agent_vehicle = ControlledVehicle(
+        agent_vehicle = AEBControlledVehicle(
             self.road,
-            position=(100, 0),
-            speed=30,
+            position=(agent_init_x, 0),
+            speed=agent_init_spd,
+            target_speed=agent_init_spd,
         )
         self.controlled_vehicles.append(agent_vehicle)
         self.road.vehicles.append(agent_vehicle)
         subject_vehicle = IDMVehicle(
             self.road,
-            position=(70, 0),
-            speed=32,
+            position=(0, 0),
+            speed=subject_init_spd,
+            target_speed=subject_init_spd,
         )
         self.road.vehicles.append(subject_vehicle)
-        # """Create some new random vehicles of a given type, and add them on the road."""
-        # other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        # other_per_controlled = near_split(self.config["vehicles_count"], num_bins=self.config["controlled_vehicles"])
-
-        # self.controlled_vehicles = []
-        # for others in other_per_controlled:
-        #     vehicle = Vehicle.create_random(
-        #         self.road,
-        #         speed=25,
-        #         lane_id=self.config["initial_lane_id"],
-        #         spacing=self.config["ego_spacing"]
-        #     )
-        #     vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
-        #     self.controlled_vehicles.append(vehicle)
-        #     self.road.vehicles.append(vehicle)
-
-        #     for _ in range(others):
-        #         vehicle = other_vehicles_type.create_random(self.road, spacing=1 / self.config["vehicles_density"])
-        #         vehicle.randomize_behavior()
-        #         self.road.vehicles.append(vehicle)
+        # print(f'initial condition *** agent: pos - {agent_init_x}, spd - {agent_init_spd}; subject: spd - {subject_init_spd}')
 
     def _reward(self, action: Action) -> float:
         """
@@ -94,16 +97,31 @@ class AEBEnv(AbstractEnv):
         :param action: the last action performed
         :return: the corresponding reward
         """
-        # rewards = self._rewards(action)
-        # reward = sum(self.config.get(name, 0) * reward for name, reward in rewards.items())
-        # if self.config["normalize_reward"]:
-        #     reward = utils.lmap(reward,
-        #                         [self.config["collision_reward"],
-        #                          self.config["high_speed_reward"] + self.config["right_lane_reward"]],
-        #                         [0, 1])
-        # reward *= rewards['on_road_reward']
-        # return reward
-        return 0
+        r_max = 1.0
+        r_min = -1.0
+        
+        def normalize(r, r_min, r_max):
+            r = (r - r_min) / (r_max - r_min)
+            return np.clip(r, 0, 1.0)
+        
+        if self._is_terminated():
+            reward = r_min
+        else:
+            nrd = 25.0    # no reward distance threshold [m]
+            safe_margin = 1.0 # [m]
+            safe_headway = 0.5
+            agent_vehicle = self.road.vehicles[0]
+            subject_vehicle = self.road.vehicles[1]
+            
+            headway = agent_vehicle.position[0] - subject_vehicle.position[0] - agent_vehicle.LENGTH
+            
+            if headway < safe_headway:
+                reward = r_min
+            elif headway < safe_headway + safe_margin:
+                reward = (r_max - r_min) / safe_margin * headway + r_min - safe_headway / safe_margin * (r_max - r_min)
+            else:
+                reward = max(0.0, r_max * (headway - nrd) / (safe_headway + safe_margin - nrd))
+        return normalize(reward, r_min, r_max)
 
     def _rewards(self, action: Action) -> Dict[Text, float]:
         # neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
