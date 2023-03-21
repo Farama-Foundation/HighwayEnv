@@ -47,10 +47,12 @@ class AEBEnv(AbstractEnv):
         return config
     
     def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
-        super().__init__(config, render_mode)
         self.headway = 0
+        self.seed = None
+        super().__init__(config, render_mode)
 
     def _reset(self) -> None:
+        np.random.seed(self.seed)
         self._create_road()
         self._create_vehicles()
 
@@ -152,3 +154,6 @@ class AEBEnv(AbstractEnv):
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
         return self.time >= self.config["duration"]
+    
+    def set_seed(self, seed):
+        self.seed = seed
