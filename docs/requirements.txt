@@ -1,6 +1,7 @@
 pygments==2.4.1
 sphinx_rtd_theme
 sphinxcontrib-bibtex<2.0.0
+ipykernel
 jupyter-sphinx
 gymnasium
 numpy
