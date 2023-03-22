@@ -106,4 +106,10 @@ def register_highway_envs():
         id='aeb-v0',
         entry_point='highway_env.envs:AEBEnv'
     )
+    
+    # trap_env.py
+    register(
+        id='trap-v0',
+        entry_point='highway_env.envs:TrapEnv'
+    )
 

@@ -687,12 +687,12 @@ class AEBObservation(ObservationType):
         subject_x = subject_vehicle.position[0]
         subject_vx = subject_vehicle.velocity[0]
         
-        obs = np.array([
+        obs = np.array([[
                             self.normalize_obs(agent_vx, 0.0, 40.0), 
                             self.normalize_obs(agent_target_vx, 0.0, 40.0), 
                             self.normalize_obs(agent_x - subject_x, -100.0, 100.0), 
                             self.normalize_obs(agent_vx - subject_vx, -40.0, 40.0),
-                        ])
+                        ]])
         return obs.astype(self.space().dtype)
 
 def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
