@@ -254,23 +254,28 @@ These predictions are performed for :math:`V` different values of the ego-vehicl
 
 For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using :math:`V=3,\, L = 3\,H = 10`, with ego-speed of {:math:`15` m/s, :math:`20` m/s and :math:`25` m/s}, the predicted time-to-collisions are :math:`\infty,\,5s,\,2.5s` and the corresponding observation is
 
+:math:`15` m/s
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 
+:math:`20` m/s
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   1   0   0   0   0   0
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 
+:math:`25` m/s
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0
 0   0   1   0   0   0   0   0   0   0
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+
+The top row corresponds to the left-lane, the middle row corresponds to the lane where ego-vehicle is located, and the bottom row to the right-lane.
 
 Example configuration
 ~~~~~~~~~~~~~~~~~~~~~~
