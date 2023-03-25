@@ -17,11 +17,17 @@ class EnvViewer(object):
     """A viewer to render a highway driving environment."""
 
     SAVE_IMAGES = False
+    agent_display = None
 
     def __init__(self, env: 'AbstractEnv', config: Optional[dict] = None) -> None:
         self.env = env
         self.config = config or env.config
         self.offscreen = self.config["offscreen_rendering"]
+        self.observer_vehicle = None
+        self.agent_surface = None
+        self.vehicle_trajectory = None
+        self.frame = 0
+        self.directory = None
 
         pygame.init()
         pygame.display.set_caption("Highway-env")
@@ -32,6 +38,8 @@ class EnvViewer(object):
         # handling a screen display, useful for e.g. cloud computing
         if not self.offscreen:
             self.screen = pygame.display.set_mode([self.config["screen_width"], self.config["screen_height"]])
+        if self.agent_display:
+            self.extend_display()
         self.sim_surface = WorldSurface(panel_size, 0, pygame.Surface(panel_size))
         self.sim_surface.scaling = self.config.get("scaling", self.sim_surface.INITIAL_SCALING)
         self.sim_surface.centering_position = self.config.get("centering_position", self.sim_surface.INITIAL_CENTERING)
@@ -41,13 +49,6 @@ class EnvViewer(object):
         if os.environ.get("SDL_VIDEODRIVER", None) == "dummy":
             self.enabled = False
 
-        self.observer_vehicle = None
-        self.agent_display = None
-        self.agent_surface = None
-        self.vehicle_trajectory = None
-        self.frame = 0
-        self.directory = None
-
     def set_agent_display(self, agent_display: Callable) -> None:
         """
         Set a display callback provided by an agent
@@ -56,16 +57,19 @@ class EnvViewer(object):
 
         :param agent_display: a callback provided by the agent to display on surfaces
         """
-        if self.agent_display is None:
-            if not self.offscreen:
-                if self.config["screen_width"] > self.config["screen_height"]:
-                    self.screen = pygame.display.set_mode((self.config["screen_width"],
-                                                           2 * self.config["screen_height"]))
-                else:
-                    self.screen = pygame.display.set_mode((2 * self.config["screen_width"],
-                                                           self.config["screen_height"]))
-            self.agent_surface = pygame.Surface((self.config["screen_width"], self.config["screen_height"]))
-        self.agent_display = agent_display
+        if EnvViewer.agent_display is None:
+            self.extend_display()
+        EnvViewer.agent_display = agent_display
+
+    def extend_display(self) -> None:
+        if not self.offscreen:
+            if self.config["screen_width"] > self.config["screen_height"]:
+                self.screen = pygame.display.set_mode((self.config["screen_width"],
+                                                       2 * self.config["screen_height"]))
+            else:
+                self.screen = pygame.display.set_mode((2 * self.config["screen_width"],
+                                                       self.config["screen_height"]))
+        self.agent_surface = pygame.Surface((self.config["screen_width"], self.config["screen_height"]))
 
     def set_agent_action_sequence(self, actions: List['Action']) -> None:
         """
@@ -110,8 +114,8 @@ class EnvViewer(object):
             offscreen=self.offscreen
         )
 
-        if self.agent_display:
-            self.agent_display(self.agent_surface, self.sim_surface)
+        if EnvViewer.agent_display:
+            EnvViewer.agent_display(self.agent_surface, self.sim_surface)
             if not self.offscreen:
                 if self.config["screen_width"] > self.config["screen_height"]:
                     self.screen.blit(self.agent_surface, (0, self.config["screen_height"]))
