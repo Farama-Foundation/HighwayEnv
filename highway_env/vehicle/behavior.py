@@ -59,7 +59,7 @@ class IDMVehicle(ControlledVehicle):
         super().__init__(road, position, heading, speed, target_lane_index, target_speed, route)
         self.enable_lane_change = enable_lane_change
         self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
-        if longi_aggr:
+        if not longi_aggr:
             self.DISTANCE_WANTED = 10.0 + ControlledVehicle.LENGTH
 
     def randomize_behavior(self):

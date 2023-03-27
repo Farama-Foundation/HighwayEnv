@@ -43,7 +43,7 @@ class AEBEnv(AbstractEnv):
             "simulation_frequency": 15,
             "policy_frequency": 1,
             "centering_position": [0.7, 0.5],
-            "longi_aggr": False,
+            "longi_aggr": True,
         })
         return config
     
