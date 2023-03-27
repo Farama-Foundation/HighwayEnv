@@ -14,7 +14,7 @@ from highway_env.vehicle.behavior import IDMVehicle
 Observation = np.ndarray
 
 
-class AEBEnv(AbstractEnv):
+class TrapEnv(AbstractEnv):
     """
     A highway driving environment.
 
@@ -43,12 +43,13 @@ class AEBEnv(AbstractEnv):
             "simulation_frequency": 15,
             "policy_frequency": 1,
             "centering_position": [0.7, 0.5],
+            "longi_aggr": False,
         })
         return config
     
     def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
-        self.headway = 0
         super().__init__(config, render_mode)
+        self.headway = 0
 
     def _reset(self) -> None:
         self._create_road()
@@ -91,6 +92,7 @@ class AEBEnv(AbstractEnv):
             position=(0, 0),
             speed=subject_init_spd,
             target_speed=subject_init_spd,
+            longi_aggr=self.config["longi_aggr"],
         )
         self.road.vehicles.append(subject_vehicle)
         # print(f'initial condition *** agent: pos - {agent_init_x}, spd - {agent_init_spd}; subject: spd - {subject_init_spd}')
