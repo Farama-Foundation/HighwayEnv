@@ -1,16 +1,8 @@
-pygments==2.4.1
-sphinx_rtd_theme
-sphinxcontrib-bibtex<2.0.0
+sphinx
+sphinx-autobuild
+myst-parser
+git+https://github.com/Farama-Foundation/Celshast#egg=furo
+sphinx_github_changelog
+sphinxcontrib-bibtex
 ipykernel
 jupyter-sphinx
-gymnasium
-numpy
-pygame
-matplotlib
-pandas
-
-# =========
-# Optionals
-# =========
-pytest
-scipy
