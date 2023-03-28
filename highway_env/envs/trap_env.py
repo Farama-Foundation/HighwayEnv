@@ -7,9 +7,10 @@ from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
 # from highway_env.utils import near_split
-from highway_env.vehicle.controller_aeb import AEBControlledVehicle
+from highway_env.vehicle.controller_trap import TrapControlledVehicle
 # from highway_env.vehicle.kinematics import Vehicle
-from highway_env.vehicle.behavior import IDMVehicle
+from highway_env.vehicle.behavior import LinearVehicle
+from highway_env.envs.common.graphics import EnvViewer
 
 Observation = np.ndarray
 
@@ -30,11 +31,11 @@ class TrapEnv(AbstractEnv):
                 "type": "AEB"
             },
             "action": {
-                "type": "AEBAction",
+                "type": "TrapAction",
                 "longitudinal": True,
                 "lateral": False,
             },
-            "lanes_count": 1,
+            "lanes_count": 3,
             "duration": 15,  # [s]
             "ego_spacing": 2,
             "vehicles_density": 1,
@@ -42,8 +43,9 @@ class TrapEnv(AbstractEnv):
             "offroad_terminal": False,
             "simulation_frequency": 15,
             "policy_frequency": 1,
-            "centering_position": [0.7, 0.5],
-            "longi_aggr": False,
+            "centering_position": [0.5, 0.5],
+            "longi_aggr": True,
+            "lateral_aggr": True,
         })
         return config
     
@@ -54,6 +56,9 @@ class TrapEnv(AbstractEnv):
     def _reset(self) -> None:
         self._create_road()
         self._create_vehicles()
+        if self.viewer is None:
+            self.viewer = EnvViewer(self)
+        self.viewer.observer_vehicle = self.road.vehicles[0]    # set focus vehicle
 
     def _create_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
@@ -61,41 +66,92 @@ class TrapEnv(AbstractEnv):
                          np_random=self.np_random, record_history=self.config["show_trajectories"])
 
     def _create_vehicles(self) -> None:
-        init_speed_range = [25.0, 35.0]
-        init_x_range = [15.0, 50.0]
+        veh_len_ = 5.0 # [m]
+        max_decel_ = 6.0 # [m/(s^2)]
         
-        agent_init_x = self.np_random.random() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
-        agent_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+        init_speed_range = [25.0, 35.0]
+        init_rear_x_range = [0.0, 25.0 + veh_len_] # vehicle length = 5.0 [m]
+        init_front_x_range = [25.0 + veh_len_, 50.0] # vehicle length = 5.0 [m]
+        
+        subject_init_x = 25 # m
+        subject_init_lane = self.np_random.integers(0, 3)
         subject_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
         
-        while True:
-            spd_diff = subject_init_spd - agent_init_spd
-            t = spd_diff / 6.0
-            if spd_diff * 0.5 * t < agent_init_x:
-                break
-            
-            agent_init_x = np.random.sample() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
-            agent_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-            subject_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+        lane_0 = self.road.network.get_lane(("0", "1", 0))
+        lane_1 = self.road.network.get_lane(("0", "1", 1))
+        lane_2 = self.road.network.get_lane(("0", "1", 2))
+        lanes = [lane_0, lane_1, lane_2]
         
-        self.controlled_vehicles = []
-        agent_vehicle = AEBControlledVehicle(
+        vehicles = [[], [], []] # list of (init_x, init_spd) tuples of each lane [0-2]
+        
+        subject_vehicle = LinearVehicle(
             self.road,
-            position=(agent_init_x, 0),
-            speed=agent_init_spd,
-            target_speed=agent_init_spd,
-        )
-        self.controlled_vehicles.append(agent_vehicle)
-        self.road.vehicles.append(agent_vehicle)
-        subject_vehicle = IDMVehicle(
-            self.road,
-            position=(0, 0),
+            position=lanes[subject_init_lane].position(subject_init_x, 0),
             speed=subject_init_spd,
             target_speed=subject_init_spd,
-            longi_aggr=self.config["longi_aggr"],
         )
+        subject_vehicle.color = (100, 200, 255) # BLUE
         self.road.vehicles.append(subject_vehicle)
-        # print(f'initial condition *** agent: pos - {agent_init_x}, spd - {agent_init_spd}; subject: spd - {subject_init_spd}')
+        vehicles[subject_init_lane].append((subject_init_x, subject_init_spd))
+        
+        def reinit_ttc_check(vehs: list, init_x: float, init_spd: float):
+            if len(vehs) == 0:
+                return False
+            for v in vehs:
+                x = v[0]
+                spd = v[1]
+                x_diff = x - init_x - veh_len_
+                spd_diff = spd - init_spd
+                if abs(x - init_x) < veh_len_: 
+                    return True
+                if x_diff * spd_diff >= 0.0:
+                    continue
+                elif init_x > x and (spd ** 2 - init_spd ** 2) / 2 / max_decel_ > init_x - x - veh_len_:
+                    return True
+                elif init_x < x and (init_spd ** 2 - spd ** 2) / 2 / max_decel_ > x - init_x - veh_len_:
+                    return True
+            return False
+        
+        self.controlled_vehicles = []
+        # front vehicle number [1, 3]
+        front_agent_num = self.np_random.integers(1, 4)
+        for _ in range(front_agent_num):
+            init_x = self.np_random.random() * (init_front_x_range[1] - init_front_x_range[0]) + init_front_x_range[0]
+            init_lane = self.np_random.integers(0, 3)
+            init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            while reinit_ttc_check(vehicles[init_lane], init_x, init_speed):
+                init_x = self.np_random.random() * (init_front_x_range[1] - init_front_x_range[0]) + init_front_x_range[0]
+                init_lane = self.np_random.integers(0, 3)
+                init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            veh = TrapControlledVehicle(
+                self.road,
+                position=lanes[init_lane].position(init_x, 0),
+                speed=init_speed,
+                target_speed=init_speed,
+            )
+            vehicles[init_lane].append((init_x, init_speed))
+            self.controlled_vehicles.append(veh)
+            self.road.vehicles.append(veh)
+        # rear/parallel vehicle number [1, 3]
+        rear_agent_num = self.np_random.integers(1, 4)
+        for _ in range(rear_agent_num):
+            init_x = self.np_random.random() * (init_rear_x_range[1] - init_rear_x_range[0]) + init_rear_x_range[0]
+            init_lane = self.np_random.integers(0, 3)
+            init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            while reinit_ttc_check(vehicles[init_lane], init_x, init_speed):
+                init_x = self.np_random.random() * (init_rear_x_range[1] - init_rear_x_range[0]) + init_rear_x_range[0]
+                init_lane = self.np_random.integers(0, 3)
+                init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            veh = TrapControlledVehicle(
+                self.road,
+                position=lanes[init_lane].position(init_x, 0),
+                speed=init_speed,
+                target_speed=init_speed,
+            )
+            vehicles[init_lane].append((init_x, init_speed))
+            self.controlled_vehicles.append(veh)
+            self.road.vehicles.append(veh)
+        print(f"generated {front_agent_num} front agent(s) and {rear_agent_num} rear agent(s)")
 
     def _reward(self, action: Action) -> float:
         """
