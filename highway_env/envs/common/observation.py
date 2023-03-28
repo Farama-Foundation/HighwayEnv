@@ -694,6 +694,79 @@ class AEBObservation(ObservationType):
                             self.normalize_obs(agent_vx - subject_vx, -40.0, 40.0),
                         ]])
         return obs.astype(self.space().dtype)
+    
+class TrapObservation(ObservationType):
+
+    """Observe the kinematics of nearby vehicles."""
+
+    FEATURES: List[str] = ['presence', 'x', 'y', 'vx', 'vy']
+
+    def __init__(self, env: 'AbstractEnv',
+                 features: List[str] = None,
+                 vehicles_count: int = 5,
+                 features_range: Dict[str, List[float]] = None,
+                 absolute: bool = False,
+                 order: str = "sorted",
+                 normalize: bool = True,
+                 clip: bool = True,
+                 see_behind: bool = False,
+                 observe_intentions: bool = False,
+                 **kwargs: dict) -> None:
+        """
+        :param env: The environment to observe
+        :param features: Names of features used in the observation
+        :param vehicles_count: Number of observed vehicles
+        :param absolute: Use absolute coordinates
+        :param order: Order of observed vehicles. Values: sorted, shuffled
+        :param normalize: Should the observation be normalized
+        :param clip: Should the value be clipped in the desired range
+        :param see_behind: Should the observation contains the vehicles behind
+        :param observe_intentions: Observe the destinations of other vehicles
+        """
+        super().__init__(env)
+        self.features = features or self.FEATURES
+        self.vehicles_count = vehicles_count
+        self.features_range = features_range
+        self.absolute = absolute
+        self.order = order
+        self.normalize = normalize
+        self.clip = clip
+        self.see_behind = see_behind
+        self.observe_intentions = observe_intentions
+
+    def space(self) -> spaces.Space:
+        return spaces.Box(shape=(1, 4), low=-np.inf, high=np.inf, dtype=np.float32)
+
+    def normalize_obs(self, obs, min, max) -> pd.DataFrame:
+        """
+        Normalize the observation values.
+
+        For now, assume that the road is straight along the x axis.
+        :param Dataframe df: observation data
+        """
+        obs = (obs - min) / (max - min)
+        return np.clip(obs, 0.0, 1.0)
+
+    def observe(self) -> np.ndarray:
+        if not self.env.road:
+            return np.zeros(self.space().shape)
+        
+        agent_vehicle = self.env.road.vehicles[0]
+        subject_vehicle = self.env.road.vehicles[1]
+        
+        agent_x = agent_vehicle.position[0]
+        agent_vx = agent_vehicle.velocity[0]
+        agent_target_vx = agent_vehicle.target_speed * agent_vehicle.direction[0]
+        subject_x = subject_vehicle.position[0]
+        subject_vx = subject_vehicle.velocity[0]
+        
+        obs = np.array([[
+                            self.normalize_obs(agent_vx, 0.0, 40.0), 
+                            self.normalize_obs(agent_target_vx, 0.0, 40.0), 
+                            self.normalize_obs(agent_x - subject_x, -100.0, 100.0), 
+                            self.normalize_obs(agent_vx - subject_vx, -40.0, 40.0),
+                        ]])
+        return obs.astype(self.space().dtype)
 
 def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
     if config["type"] == "TimeToCollision":
@@ -718,6 +791,8 @@ def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
         return ExitObservation(env, **config)
     elif config["type"] == "AEB":
         return AEBObservation(env, **config)
+    elif config["type"] == "Trap":
+        return TrapObservation(env, **config)
     else:
         raise ValueError("Unknown observation type")
         

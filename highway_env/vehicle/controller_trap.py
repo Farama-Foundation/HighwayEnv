@@ -20,22 +20,17 @@ class TrapControlledVehicle(ControlledVehicle):
         :param action: a high-level action
         """
         self.follow_road()
-        # if action == "FASTER":
-        #     self.target_speed += self.DELTA_SPEED
-        # elif action == "SLOWER":
-        #     self.target_speed -= self.DELTA_SPEED
-        # elif action == "LANE_RIGHT":
-        #     _from, _to, _id = self.target_lane_index
-        #     target_lane_index = _from, _to, np.clip(_id + 1, 0, len(self.road.network.graph[_from][_to]) - 1)
-        #     if self.road.network.get_lane(target_lane_index).is_reachable_from(self.position):
-        #         self.target_lane_index = target_lane_index
-        # elif action == "LANE_LEFT":
-        #     _from, _to, _id = self.target_lane_index
-        #     target_lane_index = _from, _to, np.clip(_id - 1, 0, len(self.road.network.graph[_from][_to]) - 1)
-        #     if self.road.network.get_lane(target_lane_index).is_reachable_from(self.position):
-        #         self.target_lane_index = target_lane_index
-        
-        if action is not None:
+        if action == "LANE_RIGHT":
+            _from, _to, _id = self.target_lane_index
+            target_lane_index = _from, _to, np.clip(_id + 1, 0, len(self.road.network.graph[_from][_to]) - 1)
+            if self.road.network.get_lane(target_lane_index).is_reachable_from(self.position):
+                self.target_lane_index = target_lane_index
+        elif action == "LANE_LEFT":
+            _from, _to, _id = self.target_lane_index
+            target_lane_index = _from, _to, np.clip(_id - 1, 0, len(self.road.network.graph[_from][_to]) - 1)
+            if self.road.network.get_lane(target_lane_index).is_reachable_from(self.position):
+                self.target_lane_index = target_lane_index
+        elif action is not None:
             self.target_speed = action
 
         action = {"steering": self.steering_control(self.target_lane_index),

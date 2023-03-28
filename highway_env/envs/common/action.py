@@ -271,24 +271,10 @@ class AEBMetaAction(ActionType):
     An discrete action space of meta-actions: lane changes, and cruise control set-point.
     """
 
-    ACTIONS_ALL = {
-        0: 'LANE_LEFT',
-        1: 'IDLE',
-        2: 'LANE_RIGHT',
-        3: 'FASTER',
-        4: 'SLOWER'
-    }
-    """A mapping of action indexes to labels."""
-
-    ACTIONS_LONGI = np.arange(0, 40, 2.5)
+    ACTIONS_LONGI_ = np.arange(0, 40, 2.5)
+    ACTIONS_LONGI = {k: v for k, v in enumerate(ACTIONS_LONGI_)}
     """A mapping of longitudinal action indexes to labels."""
 
-    ACTIONS_LAT = {
-        0: 'LANE_LEFT',
-        1: 'IDLE',
-        2: 'LANE_RIGHT'
-    }
-    """A mapping of lateral action indexes to labels."""
 
     def __init__(self,
                  env: 'AbstractEnv',
@@ -308,13 +294,10 @@ class AEBMetaAction(ActionType):
         self.longitudinal = longitudinal
         self.lateral = lateral
         self.target_speeds = np.array(target_speeds) if target_speeds is not None else MDPVehicle.DEFAULT_TARGET_SPEEDS
-        self.actions = self.ACTIONS_ALL if longitudinal and lateral \
-            else self.ACTIONS_LONGI if longitudinal \
-            else self.ACTIONS_LAT if lateral \
-            else None
+        self.actions = self.ACTIONS_LONGI
         if self.actions is None:
             raise ValueError("At least longitudinal or lateral actions must be included")
-        self.actions_indexes = {v: k for k, v in enumerate(self.actions)}
+        self.actions_indexes = {v: k for k, v in self.actions.items()}
 
     def space(self) -> spaces.Space:
         return spaces.Discrete(len(self.actions))
@@ -335,21 +318,6 @@ class AEBMetaAction(ActionType):
 
         :return: the list of available actions
         """
-        # actions = [self.actions_indexes['IDLE']]
-        # network = self.controlled_vehicle.road.network
-        # for l_index in network.side_lanes(self.controlled_vehicle.lane_index):
-        #     if l_index[2] < self.controlled_vehicle.lane_index[2] \
-        #             and network.get_lane(l_index).is_reachable_from(self.controlled_vehicle.position) \
-        #             and self.lateral:
-        #         actions.append(self.actions_indexes['LANE_LEFT'])
-        #     if l_index[2] > self.controlled_vehicle.lane_index[2] \
-        #             and network.get_lane(l_index).is_reachable_from(self.controlled_vehicle.position) \
-        #             and self.lateral:
-        #         actions.append(self.actions_indexes['LANE_RIGHT'])
-        # if self.controlled_vehicle.speed_index < self.controlled_vehicle.target_speeds.size - 1 and self.longitudinal:
-        #     actions.append(self.actions_indexes['FASTER'])
-        # if self.controlled_vehicle.speed_index > 0 and self.longitudinal:
-        #     actions.append(self.actions_indexes['SLOWER'])
         return list(range(len(self.actions)))
     
 class TrapMetaAction(ActionType):
@@ -358,24 +326,20 @@ class TrapMetaAction(ActionType):
     An discrete action space of meta-actions: lane changes, and cruise control set-point.
     """
 
-    ACTIONS_ALL = {
-        0: 'LANE_LEFT',
-        1: 'IDLE',
-        2: 'LANE_RIGHT',
-        3: 'FASTER',
-        4: 'SLOWER'
-    }
-    """A mapping of action indexes to labels."""
 
-    ACTIONS_LONGI = np.arange(0, 40, 2.5)
+    ACTIONS_LONGI_ = np.arange(0, 40, 2.5)
+    ACTIONS_LONGI = {k: v for k, v in enumerate(ACTIONS_LONGI_)}
     """A mapping of longitudinal action indexes to labels."""
 
     ACTIONS_LAT = {
-        0: 'LANE_LEFT',
-        1: 'IDLE',
-        2: 'LANE_RIGHT'
+        len(ACTIONS_LONGI): 'LANE_LEFT',
+        len(ACTIONS_LONGI) + 1: 'LANE_RIGHT'
     }
     """A mapping of lateral action indexes to labels."""
+    
+    ACTIONS_ALL = {k: v for k, v in enumerate(ACTIONS_LONGI_)}
+    ACTIONS_ALL.update(ACTIONS_LAT)
+    """A mapping of action indexes to labels."""
 
     def __init__(self,
                  env: 'AbstractEnv',
@@ -401,7 +365,7 @@ class TrapMetaAction(ActionType):
             else None
         if self.actions is None:
             raise ValueError("At least longitudinal or lateral actions must be included")
-        self.actions_indexes = {v: k for k, v in enumerate(self.actions)}
+        self.actions_indexes = {v: k for k, v in self.actions.items()}
 
     def space(self) -> spaces.Space:
         return spaces.Discrete(len(self.actions))
@@ -412,6 +376,8 @@ class TrapMetaAction(ActionType):
 
     def act(self, action: Union[int, np.ndarray]) -> None:
         # self.controlled_vehicle.act(self.actions[int(action)])
+        for idx, cv in enumerate(self.env.controlled_vehicles):
+            cv.act(self.actions[int(action[idx])])
         pass
 
     def get_available_actions(self) -> List[int]:
@@ -423,7 +389,7 @@ class TrapMetaAction(ActionType):
 
         :return: the list of available actions
         """
-        # actions = [self.actions_indexes['IDLE']]
+        # actions = [k for k in self.ACTIONS_LONGI.keys()]
         # network = self.controlled_vehicle.road.network
         # for l_index in network.side_lanes(self.controlled_vehicle.lane_index):
         #     if l_index[2] < self.controlled_vehicle.lane_index[2] \

@@ -189,8 +189,12 @@ class TrapEnv(AbstractEnv):
 
     def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed."""
-        return (self.vehicle.crashed or
-                self.config["offroad_terminal"] and not self.vehicle.on_road)
+        # return (self.vehicle.crashed or
+        #         self.config["offroad_terminal"] and not self.vehicle.on_road)
+        for v in self.road.vehicles:
+            if v.crashed:
+                return True
+        return False
 
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
