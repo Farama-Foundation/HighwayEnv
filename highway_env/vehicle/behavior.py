@@ -301,9 +301,10 @@ class LinearVehicle(IDMVehicle):
                  route: Route = None,
                  enable_lane_change: bool = True,
                  timer: float = None,
-                 data: dict = None):
+                 data: dict = None,
+                 longi_aggr: bool = True):
         super().__init__(road, position, heading, speed, target_lane_index, target_speed, route,
-                         enable_lane_change, timer)
+                         enable_lane_change, timer, longi_aggr)
         self.data = data if data is not None else {}
         self.collecting_data = True
 

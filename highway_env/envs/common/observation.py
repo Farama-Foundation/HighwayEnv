@@ -735,7 +735,7 @@ class TrapObservation(ObservationType):
         self.observe_intentions = observe_intentions
 
     def space(self) -> spaces.Space:
-        return spaces.Box(shape=(1, 4), low=-np.inf, high=np.inf, dtype=np.float32)
+        return spaces.Box(shape=(1, 38), low=-np.inf, high=np.inf, dtype=np.float32)
 
     def normalize_obs(self, obs, min, max) -> pd.DataFrame:
         """
@@ -751,21 +751,56 @@ class TrapObservation(ObservationType):
         if not self.env.road:
             return np.zeros(self.space().shape)
         
-        agent_vehicle = self.env.road.vehicles[0]
-        subject_vehicle = self.env.road.vehicles[1]
+        subject_vehicle = self.env.road.vehicles[0]
+        sv_x, sv_y = subject_vehicle.position[0], subject_vehicle.position[1]
+        sv_vx, sv_vy = subject_vehicle.velocity[0], subject_vehicle.velocity[1]
+        _, _, sv_lane = subject_vehicle.lane_index
         
-        agent_x = agent_vehicle.position[0]
-        agent_vx = agent_vehicle.velocity[0]
-        agent_target_vx = agent_vehicle.target_speed * agent_vehicle.direction[0]
-        subject_x = subject_vehicle.position[0]
-        subject_vx = subject_vehicle.velocity[0]
+        # [ego_vx, ego_vy, ego_lane, sv_dx, sv_dy, sv_dvx, sv_dvy, sv_dlane, ...]
+        obs_all = []
         
-        obs = np.array([[
-                            self.normalize_obs(agent_vx, 0.0, 40.0), 
-                            self.normalize_obs(agent_target_vx, 0.0, 40.0), 
-                            self.normalize_obs(agent_x - subject_x, -100.0, 100.0), 
-                            self.normalize_obs(agent_vx - subject_vx, -40.0, 40.0),
-                        ]])
+        for ego_veh in self.env.controlled_vehicles:
+            obs = []
+            
+            ego_x, ego_y = ego_veh.position[0], ego_veh.position[1]
+            ego_vx, ego_vy = ego_veh.velocity[0], ego_veh.velocity[1]
+            _, _, ego_lane = ego_veh.lane_index
+            obs += [self.normalize_obs(ego_vx, 0., 40.0),
+                    self.normalize_obs(ego_vy, 0., 5.0),
+                    self.normalize_obs(ego_lane, 0., 2.),]
+            
+            dx, dy = ego_x - sv_x, ego_y - sv_y
+            dvx, dvy = ego_vx - sv_vx, ego_vy - sv_vy
+            dlane = ego_lane - sv_lane
+            obs += [self.normalize_obs(dx, -100., 100.), 
+                    self.normalize_obs(dy, -15., 15.),
+                    self.normalize_obs(dvx, -40., 40.), 
+                    self.normalize_obs(dvy, -10., 10.),
+                    self.normalize_obs(dlane, -2.0, 2.0),]
+            
+            for veh in self.env.controlled_vehicles:
+                if ego_veh == veh:
+                    continue
+                veh_x, veh_y = veh.position[0], veh.position[1]
+                veh_vx, veh_vy = veh.velocity[0], veh.velocity[1]
+                _, _, veh_lane = veh.lane_index
+                
+                dx, dy = ego_x - veh_x, ego_y - veh_y
+                dvx, dvy = ego_vx - veh_vx, ego_vy - veh_vy
+                dlane = ego_lane - veh_lane
+                obs += [1, 
+                        self.normalize_obs(dx, -100., 100.),
+                        self.normalize_obs(dy, -15., 15.), 
+                        self.normalize_obs(dvx, -40., 40.), 
+                        self.normalize_obs(dvy, -10., 10.),
+                        self.normalize_obs(dlane, -2.0, 2.0),]
+                
+            for _ in range(6 - len(self.env.controlled_vehicles)):
+                obs += [0, 0.0, 0.0, 0.0, 0.0, 0.0]
+            
+            obs_all.append(obs)
+        
+        obs = np.array(obs_all)
         return obs.astype(self.space().dtype)
 
 def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:

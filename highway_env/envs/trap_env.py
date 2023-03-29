@@ -28,7 +28,7 @@ class TrapEnv(AbstractEnv):
         config = super().default_config()
         config.update({
             "observation": {
-                "type": "AEB"
+                "type": "Trap"
             },
             "action": {
                 "type": "TrapAction",
@@ -48,17 +48,10 @@ class TrapEnv(AbstractEnv):
             "lateral_aggr": True,
         })
         return config
-    
-    def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
-        super().__init__(config, render_mode)
-        self.headway = 0
 
     def _reset(self) -> None:
         self._create_road()
         self._create_vehicles()
-        if self.viewer is None:
-            self.viewer = EnvViewer(self)
-        self.viewer.observer_vehicle = self.road.vehicles[0]    # set focus vehicle
 
     def _create_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
@@ -74,7 +67,7 @@ class TrapEnv(AbstractEnv):
         init_front_x_range = [25.0 + veh_len_, 50.0] # vehicle length = 5.0 [m]
         
         subject_init_x = 25 # m
-        subject_init_lane = self.np_random.integers(0, 3)
+        subject_init_lane = self.np_random.integers(0, 1)
         subject_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
         
         lane_0 = self.road.network.get_lane(("0", "1", 0))
@@ -89,6 +82,7 @@ class TrapEnv(AbstractEnv):
             position=lanes[subject_init_lane].position(subject_init_x, 0),
             speed=subject_init_spd,
             target_speed=subject_init_spd,
+            longi_aggr=self.config["longi_aggr"]
         )
         subject_vehicle.color = (100, 200, 255) # BLUE
         self.road.vehicles.append(subject_vehicle)
@@ -154,6 +148,12 @@ class TrapEnv(AbstractEnv):
         print(f"generated {front_agent_num} front agent(s) and {rear_agent_num} rear agent(s)")
 
     def _reward(self, action: Action) -> float:
+        reward = []
+        for veh in self.controlled_vehicles:
+            reward.append(self._rewards(veh))
+        return reward
+
+    def _rewards(self, veh: TrapControlledVehicle) -> float:
         """
         The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
         :param action: the last action performed
@@ -162,22 +162,23 @@ class TrapEnv(AbstractEnv):
         r_max = 1.0
         r_min = -1.0
         
+        reward = 0.
+        
+        agent_vehicle = veh
+        subject_vehicle = self.road.vehicles[0]
+        
         def normalize(r, r_min, r_max):
             r = (r - r_min) / (r_max - r_min)
             return np.clip(r, 0, 1.0)
         
-        if self._is_terminated():
+        if agent_vehicle.crashed:
             reward = r_min
-            self.headway = 0.0
-        else:
+        elif agent_vehicle.lane_index[-1] == subject_vehicle.lane_index[-1] and agent_vehicle.position[0] > subject_vehicle.position[0]:
             nrd = 25.0    # no reward distance threshold [m]
             safe_margin = 1.0 # [m]
-            safe_headway = 0.5
-            agent_vehicle = self.road.vehicles[0]
-            subject_vehicle = self.road.vehicles[1]
+            safe_headway = 2.0 # [m]
             
             headway = agent_vehicle.position[0] - subject_vehicle.position[0] - agent_vehicle.LENGTH
-            self.headway = headway
             
             if headway < safe_headway:
                 reward = r_min
@@ -185,12 +186,13 @@ class TrapEnv(AbstractEnv):
                 reward = (r_max - r_min) / safe_margin * headway + r_min - safe_headway / safe_margin * (r_max - r_min)
             else:
                 reward = max(0.0, r_max * (headway - nrd) / (safe_headway + safe_margin - nrd))
+        elif abs(agent_vehicle.lane_index[-1] - subject_vehicle.lane_index[-1]) == 1 and abs(agent_vehicle.position[0] - subject_vehicle.position[0]) < agent_vehicle.LENGTH:
+            reward = r_max
+                
         return normalize(reward, r_min, r_max)
 
     def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed."""
-        # return (self.vehicle.crashed or
-        #         self.config["offroad_terminal"] and not self.vehicle.on_road)
         for v in self.road.vehicles:
             if v.crashed:
                 return True
@@ -199,4 +201,23 @@ class TrapEnv(AbstractEnv):
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
         return self.time >= self.config["duration"]
+    
+    def _info(self, obs: Observation, action: Optional[Action] = None) -> dict:
+        """
+        Return a dictionary of additional information
+
+        :param obs: current observation
+        :param action: current action
+        :return: info dict
+        """
+        info = {
+            "crashed": [v.crashed for v in self.controlled_vehicles]
+        }
+        return info
+    
+    def render(self, mode: str = 'rgb_array') -> Optional[np.ndarray]:
+        if self.viewer is None:
+            self.viewer = EnvViewer(self)
+        self.viewer.observer_vehicle = self.road.vehicles[0]    # set focus vehicle
+        super().render(mode=mode)
     
