@@ -187,7 +187,7 @@ class TrapEnv(AbstractEnv):
             else:
                 reward = max(0.0, r_max * (headway - nrd) / (safe_headway + safe_margin - nrd))
         elif abs(agent_vehicle.lane_index[-1] - subject_vehicle.lane_index[-1]) == 1 and abs(agent_vehicle.position[0] - subject_vehicle.position[0]) < agent_vehicle.LENGTH:
-            reward = r_max
+            reward = r_max * 0.75
                 
         return normalize(reward, r_min, r_max)
 
