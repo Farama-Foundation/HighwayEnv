@@ -735,7 +735,7 @@ class TrapObservation(ObservationType):
         self.observe_intentions = observe_intentions
 
     def space(self) -> spaces.Space:
-        return spaces.Box(shape=(1, 38), low=-np.inf, high=np.inf, dtype=np.float32)
+        return spaces.Box(shape=(1, 24), low=-np.inf, high=np.inf, dtype=np.float32)
 
     def normalize_obs(self, obs, min, max) -> pd.DataFrame:
         """
@@ -766,16 +766,17 @@ class TrapObservation(ObservationType):
             ego_vx, ego_vy = ego_veh.velocity[0], ego_veh.velocity[1]
             _, _, ego_lane = ego_veh.lane_index
             obs += [self.normalize_obs(ego_vx, 0., 40.0),
-                    self.normalize_obs(ego_vy, 0., 5.0),
-                    self.normalize_obs(ego_lane, 0., 2.),]
+                    # self.normalize_obs(ego_vy, 0., 5.0),
+                    # self.normalize_obs(ego_lane, 0., 2.),
+                    ]
             
             dx, dy = ego_x - sv_x, ego_y - sv_y
             dvx, dvy = ego_vx - sv_vx, ego_vy - sv_vy
             dlane = ego_lane - sv_lane
             obs += [self.normalize_obs(dx, -100., 100.), 
-                    self.normalize_obs(dy, -15., 15.),
+                    # self.normalize_obs(dy, -15., 15.),
                     self.normalize_obs(dvx, -40., 40.), 
-                    self.normalize_obs(dvy, -10., 10.),
+                    # self.normalize_obs(dvy, -10., 10.),
                     self.normalize_obs(dlane, -2.0, 2.0),]
             
             for veh in self.env.controlled_vehicles:
@@ -790,13 +791,14 @@ class TrapObservation(ObservationType):
                 dlane = ego_lane - veh_lane
                 obs += [1, 
                         self.normalize_obs(dx, -100., 100.),
-                        self.normalize_obs(dy, -15., 15.), 
+                        # self.normalize_obs(dy, -15., 15.), 
                         self.normalize_obs(dvx, -40., 40.), 
-                        self.normalize_obs(dvy, -10., 10.),
+                        # self.normalize_obs(dvy, -10., 10.),
                         self.normalize_obs(dlane, -2.0, 2.0),]
                 
             for _ in range(6 - len(self.env.controlled_vehicles)):
-                obs += [0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                # obs += [0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                obs += [0, 0.0, 0.0, 0.0]
             
             obs_all.append(obs)
         
