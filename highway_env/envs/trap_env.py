@@ -67,7 +67,7 @@ class TrapEnv(AbstractEnv):
         init_front_x_range = [25.0 + veh_len_, 50.0] # vehicle length = 5.0 [m]
         
         subject_init_x = 25 # m
-        subject_init_lane = self.np_random.integers(0, 1)
+        subject_init_lane = self.np_random.integers(0, 3)
         subject_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
         
         lane_0 = self.road.network.get_lane(("0", "1", 0))
