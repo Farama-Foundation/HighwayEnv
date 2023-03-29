@@ -33,7 +33,7 @@ class TrapEnv(AbstractEnv):
             "action": {
                 "type": "TrapAction",
                 "longitudinal": True,
-                "lateral": False,
+                "lateral": True,
             },
             "lanes_count": 3,
             "duration": 15,  # [s]
