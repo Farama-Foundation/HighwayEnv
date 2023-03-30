@@ -55,12 +55,17 @@ class IDMVehicle(ControlledVehicle):
                  route: Route = None,
                  enable_lane_change: bool = True,
                  timer: float = None,
-                 longi_aggr: bool = False):
+                 longi_aggr: bool = True,
+                 lateral_aggr: bool = True):
         super().__init__(road, position, heading, speed, target_lane_index, target_speed, route)
         self.enable_lane_change = enable_lane_change
         self.timer = timer or (np.sum(self.position)*np.pi) % self.LANE_CHANGE_DELAY
         if not longi_aggr:
             self.DISTANCE_WANTED = 10.0 + ControlledVehicle.LENGTH
+        if not lateral_aggr:
+            self.POLITENESS = 0.5
+        else:
+            self.LANE_CHANGE_MAX_BRAKING_IMPOSED = 6.0
 
     def randomize_behavior(self):
         self.DELTA = self.road.np_random.uniform(low=self.DELTA_RANGE[0], high=self.DELTA_RANGE[1])

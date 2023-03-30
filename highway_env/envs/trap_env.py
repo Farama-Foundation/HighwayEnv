@@ -9,7 +9,7 @@ from highway_env.road.road import Road, RoadNetwork
 # from highway_env.utils import near_split
 from highway_env.vehicle.controller_trap import TrapControlledVehicle
 # from highway_env.vehicle.kinematics import Vehicle
-from highway_env.vehicle.behavior import LinearVehicle
+from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.envs.common.graphics import EnvViewer
 
 Observation = np.ndarray
@@ -77,12 +77,13 @@ class TrapEnv(AbstractEnv):
         
         vehicles = [[], [], []] # list of (init_x, init_spd) tuples of each lane [0-2]
         
-        subject_vehicle = LinearVehicle(
+        subject_vehicle = IDMVehicle(
             self.road,
             position=lanes[subject_init_lane].position(subject_init_x, 0),
             speed=subject_init_spd,
             target_speed=subject_init_spd,
-            longi_aggr=self.config["longi_aggr"]
+            longi_aggr=self.config["longi_aggr"],
+            lateral_aggr=self.config["lateral_aggr"],
         )
         subject_vehicle.color = (100, 200, 255) # BLUE
         self.road.vehicles.append(subject_vehicle)
