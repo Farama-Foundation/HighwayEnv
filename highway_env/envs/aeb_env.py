@@ -44,6 +44,10 @@ class AEBEnv(AbstractEnv):
             "policy_frequency": 1,
             "centering_position": [0.7, 0.5],
             "longi_aggr": True,
+            "reward_min": -1.0,
+            "reward_max": 1.0,
+            "reward_adversarial": False,
+            "reward_collision": False,
         })
         return config
     
@@ -97,14 +101,14 @@ class AEBEnv(AbstractEnv):
         self.road.vehicles.append(subject_vehicle)
         # print(f'initial condition *** agent: pos - {agent_init_x}, spd - {agent_init_spd}; subject: spd - {subject_init_spd}')
 
-    def _reward(self, action: Action) -> float:
+    def _reward_default(self, action: Action) -> float:
         """
         The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
         :param action: the last action performed
         :return: the corresponding reward
         """
-        r_max = 1.0
-        r_min = -1.0
+        r_max = self.config["reward_max"]
+        r_min = self.config["reward_min"]
         
         def normalize(r, r_min, r_max):
             r = (r - r_min) / (r_max - r_min)
@@ -130,6 +134,45 @@ class AEBEnv(AbstractEnv):
             else:
                 reward = max(0.0, r_max * (headway - nrd) / (safe_headway + safe_margin - nrd))
         return normalize(reward, r_min, r_max)
+    
+    def _reward(self, action: Action) -> float:
+        
+        def normalize(r, r_min, r_max):
+            r = (r - r_min) / (r_max - r_min)
+            return np.clip(r, 0, 1.0)
+        
+        if self.config["reward_adversarial"] and self.config["reward_collision"]:
+            # raise NotImplementedError
+            reward = normalize(self._reward_adversarial() + (self._reward_collision() - 1.0) * 2.0, -1.0, 1.0)
+            return reward
+        elif self.config["reward_adversarial"]:
+            return self._reward_adversarial()
+        elif self.config["reward_collision"]:
+            return self._reward_collision()
+        else:
+            return self._reward_default()
+        
+    def _reward_collision(self) -> float:
+        rew_collison = 0.0
+        rew_nocollision = 1.0
+        if self._is_terminated():
+            return rew_collison
+        else:
+            return rew_nocollision
+        
+    def _reward_adversarial(self) -> float:
+        rew_max = 1.0
+        rew_min = 0.0
+        no_reward_dist = 5.0 # [m]
+        
+        agent_vehicle = self.road.vehicles[0]
+        subject_vehicle = self.road.vehicles[1]
+        
+        headway = agent_vehicle.position[0] - subject_vehicle.position[0] - agent_vehicle.LENGTH
+        self.headway = headway
+        
+        reward = max(rew_min, min(rew_max, -rew_max / no_reward_dist * headway + rew_max))
+        return reward
 
     def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed."""
