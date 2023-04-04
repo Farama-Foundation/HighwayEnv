@@ -46,6 +46,7 @@ class TrapEnv(AbstractEnv):
             "centering_position": [0.5, 0.5],
             "longi_aggr": True,
             "lateral_aggr": True,
+            "init_state": None,
         })
         return config
 
@@ -59,94 +60,126 @@ class TrapEnv(AbstractEnv):
                          np_random=self.np_random, record_history=self.config["show_trajectories"])
 
     def _create_vehicles(self) -> None:
-        veh_len_ = 5.0 # [m]
-        max_decel_ = 6.0 # [m/(s^2)]
-        
-        init_speed_range = [25.0, 35.0]
-        init_rear_x_range = [0.0, 25.0 + veh_len_] # vehicle length = 5.0 [m]
-        init_front_x_range = [25.0 + veh_len_, 50.0] # vehicle length = 5.0 [m]
-        
-        subject_init_x = 25 # m
-        subject_init_lane = self.np_random.integers(0, 3)
-        subject_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-        
-        lane_0 = self.road.network.get_lane(("0", "1", 0))
-        lane_1 = self.road.network.get_lane(("0", "1", 1))
-        lane_2 = self.road.network.get_lane(("0", "1", 2))
-        lanes = [lane_0, lane_1, lane_2]
-        
-        vehicles = [[], [], []] # list of (init_x, init_spd) tuples of each lane [0-2]
-        
-        subject_vehicle = IDMVehicle(
-            self.road,
-            position=lanes[subject_init_lane].position(subject_init_x, 0),
-            speed=subject_init_spd,
-            target_speed=subject_init_spd,
-            longi_aggr=self.config["longi_aggr"],
-            lateral_aggr=self.config["lateral_aggr"],
-        )
-        subject_vehicle.color = (100, 200, 255) # BLUE
-        self.road.vehicles.append(subject_vehicle)
-        vehicles[subject_init_lane].append((subject_init_x, subject_init_spd))
-        
-        def reinit_ttc_check(vehs: list, init_x: float, init_spd: float):
-            if len(vehs) == 0:
+        if self.config["init_state"] is None:
+            veh_len_ = 5.0 # [m]
+            max_decel_ = 6.0 # [m/(s^2)]
+            
+            init_speed_range = [25.0, 35.0]
+            init_rear_x_range = [0.0, 25.0 + veh_len_] # vehicle length = 5.0 [m]
+            init_front_x_range = [25.0 + veh_len_, 50.0] # vehicle length = 5.0 [m]
+            
+            subject_init_x = 25 # m
+            subject_init_lane = self.np_random.integers(0, 3)
+            subject_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            
+            lane_0 = self.road.network.get_lane(("0", "1", 0))
+            lane_1 = self.road.network.get_lane(("0", "1", 1))
+            lane_2 = self.road.network.get_lane(("0", "1", 2))
+            lanes = [lane_0, lane_1, lane_2]
+            
+            vehicles = [[], [], []] # list of (init_x, init_spd) tuples of each lane [0-2]
+            
+            subject_vehicle = IDMVehicle(
+                self.road,
+                position=lanes[subject_init_lane].position(subject_init_x, 0),
+                speed=subject_init_spd,
+                target_speed=subject_init_spd,
+                longi_aggr=self.config["longi_aggr"],
+                lateral_aggr=self.config["lateral_aggr"],
+            )
+            subject_vehicle.color = (100, 200, 255) # BLUE
+            self.road.vehicles.append(subject_vehicle)
+            vehicles[subject_init_lane].append((subject_init_x, subject_init_spd))
+            
+            def reinit_ttc_check(vehs: list, init_x: float, init_spd: float):
+                if len(vehs) == 0:
+                    return False
+                for v in vehs:
+                    x = v[0]
+                    spd = v[1]
+                    x_diff = x - init_x - veh_len_
+                    spd_diff = spd - init_spd
+                    if abs(x - init_x) < veh_len_: 
+                        return True
+                    if x_diff * spd_diff >= 0.0:
+                        continue
+                    elif init_x > x and (spd ** 2 - init_spd ** 2) / 2 / max_decel_ > init_x - x - veh_len_:
+                        return True
+                    elif init_x < x and (init_spd ** 2 - spd ** 2) / 2 / max_decel_ > x - init_x - veh_len_:
+                        return True
                 return False
-            for v in vehs:
-                x = v[0]
-                spd = v[1]
-                x_diff = x - init_x - veh_len_
-                spd_diff = spd - init_spd
-                if abs(x - init_x) < veh_len_: 
-                    return True
-                if x_diff * spd_diff >= 0.0:
-                    continue
-                elif init_x > x and (spd ** 2 - init_spd ** 2) / 2 / max_decel_ > init_x - x - veh_len_:
-                    return True
-                elif init_x < x and (init_spd ** 2 - spd ** 2) / 2 / max_decel_ > x - init_x - veh_len_:
-                    return True
-            return False
-        
-        self.controlled_vehicles = []
-        # front vehicle number [1, 3]
-        front_agent_num = self.np_random.integers(1, 4)
-        for _ in range(front_agent_num):
-            init_x = self.np_random.random() * (init_front_x_range[1] - init_front_x_range[0]) + init_front_x_range[0]
-            init_lane = self.np_random.integers(0, 3)
-            init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-            while reinit_ttc_check(vehicles[init_lane], init_x, init_speed):
+            
+            self.controlled_vehicles = []
+            # front vehicle number [1, 3]
+            front_agent_num = self.np_random.integers(1, 4)
+            for _ in range(front_agent_num):
                 init_x = self.np_random.random() * (init_front_x_range[1] - init_front_x_range[0]) + init_front_x_range[0]
                 init_lane = self.np_random.integers(0, 3)
                 init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-            veh = TrapControlledVehicle(
-                self.road,
-                position=lanes[init_lane].position(init_x, 0),
-                speed=init_speed,
-                target_speed=init_speed,
-            )
-            vehicles[init_lane].append((init_x, init_speed))
-            self.controlled_vehicles.append(veh)
-            self.road.vehicles.append(veh)
-        # rear/parallel vehicle number [1, 3]
-        rear_agent_num = self.np_random.integers(1, 4)
-        for _ in range(rear_agent_num):
-            init_x = self.np_random.random() * (init_rear_x_range[1] - init_rear_x_range[0]) + init_rear_x_range[0]
-            init_lane = self.np_random.integers(0, 3)
-            init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-            while reinit_ttc_check(vehicles[init_lane], init_x, init_speed):
+                while reinit_ttc_check(vehicles[init_lane], init_x, init_speed):
+                    init_x = self.np_random.random() * (init_front_x_range[1] - init_front_x_range[0]) + init_front_x_range[0]
+                    init_lane = self.np_random.integers(0, 3)
+                    init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+                veh = TrapControlledVehicle(
+                    self.road,
+                    position=lanes[init_lane].position(init_x, 0),
+                    speed=init_speed,
+                    target_speed=init_speed,
+                )
+                vehicles[init_lane].append((init_x, init_speed))
+                self.controlled_vehicles.append(veh)
+                self.road.vehicles.append(veh)
+            # rear/parallel vehicle number [1, 3]
+            rear_agent_num = self.np_random.integers(1, 4)
+            for _ in range(rear_agent_num):
                 init_x = self.np_random.random() * (init_rear_x_range[1] - init_rear_x_range[0]) + init_rear_x_range[0]
                 init_lane = self.np_random.integers(0, 3)
                 init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-            veh = TrapControlledVehicle(
+                while reinit_ttc_check(vehicles[init_lane], init_x, init_speed):
+                    init_x = self.np_random.random() * (init_rear_x_range[1] - init_rear_x_range[0]) + init_rear_x_range[0]
+                    init_lane = self.np_random.integers(0, 3)
+                    init_speed = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+                veh = TrapControlledVehicle(
+                    self.road,
+                    position=lanes[init_lane].position(init_x, 0),
+                    speed=init_speed,
+                    target_speed=init_speed,
+                )
+                vehicles[init_lane].append((init_x, init_speed))
+                self.controlled_vehicles.append(veh)
+                self.road.vehicles.append(veh)
+            print(f"generated {front_agent_num} front agent(s) and {rear_agent_num} rear agent(s)")
+        else:
+            lane_0 = self.road.network.get_lane(("0", "1", 0))
+            lane_1 = self.road.network.get_lane(("0", "1", 1))
+            lane_2 = self.road.network.get_lane(("0", "1", 2))
+            lanes = [lane_0, lane_1, lane_2]
+            
+            init_states = self.config["init_state"]
+            sv_init_state = init_states["sv"]
+            pov_init_state = init_states["pov"]
+            
+            subject_vehicle = IDMVehicle(
                 self.road,
-                position=lanes[init_lane].position(init_x, 0),
-                speed=init_speed,
-                target_speed=init_speed,
+                position=lanes[sv_init_state["lane"]].position(sv_init_state["x"], 0),
+                speed=sv_init_state["speed"],
+                target_speed=sv_init_state["target_speed"],
+                longi_aggr=self.config["longi_aggr"],
+                lateral_aggr=self.config["lateral_aggr"],
             )
-            vehicles[init_lane].append((init_x, init_speed))
-            self.controlled_vehicles.append(veh)
-            self.road.vehicles.append(veh)
-        print(f"generated {front_agent_num} front agent(s) and {rear_agent_num} rear agent(s)")
+            subject_vehicle.color = (100, 200, 255) # BLUE
+            self.road.vehicles.append(subject_vehicle)
+            
+            self.controlled_vehicles = []
+            for init_state in pov_init_state:
+                veh = TrapControlledVehicle(
+                    self.road,
+                    position=lanes[init_state["lane"]].position(init_state["x"], 0),
+                    speed=init_state["speed"],
+                    target_speed=init_state["speed"],
+                )
+                self.controlled_vehicles.append(veh)
+                self.road.vehicles.append(veh)
 
     def _reward(self, action: Action) -> float:
         reward = []
