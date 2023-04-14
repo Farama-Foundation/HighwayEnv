@@ -1,179 +1,310 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="A collection of environments for autonomous driving and tactical decision-making tasks">
+    <meta property="og:title" content="highway-env Documentation" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
+    <meta property="og:url" content="None" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="The Multi-Agent setting" href="../multi_agent/" /><link rel="prev" title="Rewards" href="../rewards/" />
 
-
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Graphics &mdash; highway-env  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/jupyter-sphinx.css" type="text/css" />
-
-  
-  
-  
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07.dev1 -->
+        <title>Graphics - highway-env Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=4297ed78bc2370ec4493f1a6639f04addebc5da5" />
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-    
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Make your own environment" href="../make_your_own.html" />
-    <link rel="prev" title="Rewards" href="../rewards/index.html" /> 
-</head>
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> highway-env
-          
-
-          
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    <header class="farama-header" aria-label="Farama header">
+      <div class="farama-header__container">
+        <div class="farama-header__left--mobile">
+          <label class="nav-overlay-icon" for="__navigation">
+            <div class="visually-hidden">Toggle site navigation sidebar</div>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs></defs>
+              <line x1="0.5" y1="4" x2="23.5" y2="4"></line>
+              <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
+              <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
+            </svg>
+            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
+              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
+              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
+              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
+            </svg> -->
+            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
+              <defs></defs>
+              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
+              <line x1="8" y1="1" x2="8" y2="23"></line>
+              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
+            </svg> -->
+          </label>
+        </div>
+        <div class="farama-header__left farama-header__center--mobile">
+          <a href="../">
+            <span class="farama-header__title">highway-env Documentation</span>
           </a>
-
-          
-            
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
         </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Getting Started</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">User Guide</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../observations/index.html">Observations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../actions/index.html">Actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dynamics/index.html">Dynamics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../rewards/index.html">Rewards</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Graphics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#world-surface">World surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#scene-graphics">Scene graphics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-highway_env.envs.common.graphics">API</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../make_your_own.html">Make your own environment</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../bibliography/index.html">Bibliography</a></li>
-</ul>
-
-            
-          
+        <div class="farama-header__right">
+          <div class="farama-header-menu">
+            <button class="farama-header-menu__btn" aria-label="Open Farama Menu" aria-expanded="false" aria-haspopup="true" aria-controls="farama-menu">
+              <img class="farama-black-logo-invert" src="../_static/img/farama-logo-header.svg">
+              <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polyline style="stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-width: 2px;" points="1 7 12 18 23 7"></polyline>
+              </svg>
+            </button>
+            <div class="farama-header-menu-container farama-hidden" aria-hidden="true" id="farama-menu">
+              <div class="farama-header-menu__header">
+                <a href="https://farama.org">
+                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
+                  <span>Farama Foundation</span>
+                </a>
+                <div class="farama-header-menu-header__right">
+                  <button id="farama-close-menu">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+                      <line x1="3" y1="21" x2="21" y2="3"></line>
+                      <line x1="3" y1="3" x2="21" y2="21"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="farama-header-menu__body">
+                <!-- Response from farama.org/api/projects.json -->
+              </div>
+            </div>
+          </div>
         </div>
-        
       </div>
-    </nav>
+    </header>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<div class="page">
+  <!--<header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../"><div class="brand">highway-env Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>-->
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
       
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">highway-env</a>
-        
-      </nav>
+      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../">
+    <span class="farama-header__title">highway-env Documentation</span>
+  </a><form class="sidebar-search-container" method="get" action="../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/parking/">Parking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/intersection/">Intersection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../actions/">Actions</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/lane/">Lane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/behavior/">Behavior</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../rewards/">Rewards</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multi_agent/">The Multi-Agent setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../make_your_own/">Make your own environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+</ul>
 
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../user_guide.html">User Guide</a> &raquo;</li>
-        
-      <li>Graphics</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="../_sources/graphics/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main-container">
+
+    
+
+    
+
+    <div class="main">
+      <div class="content">
+        <div class="article-container">
+          <a href="#" class="back-to-top muted-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+            </svg>
+            <span>Back to top</span>
+          </a>
+          <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+              <button class="theme-toggle" title="Toggle color theme">
+                <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+                <svg class="theme-icon-when-auto">
+                  <use href="#svg-sun-half"></use>
+                </svg>
+                <svg class="theme-icon-when-dark">
+                  <use href="#svg-moon"></use>
+                </svg>
+                <svg class="theme-icon-when-light">
+                  <use href="#svg-sun"></use>
+                </svg>
+              </button>
+            </div>
+            <label class="toc-overlay-icon toc-content-icon" for="__toc">
+              <div class="visually-hidden">Toggle table of contents sidebar</div>
+              <i class="icon"><svg>
+                  <use href="#svg-toc"></use>
+                </svg></i>
+            </label>
+          </div>
+          <article role="main">
             
-  <span class="target" id="graphics"></span><div class="section" id="id1">
-<h1>Graphics<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>Environment rendering is done with <a class="reference external" href="https://www.pygame.org/news">pygame</a>, which must be <a class="reference internal" href="../installation.html#installation"><span class="std std-ref">installed separately</span></a>.</p>
+            <span class="target" id="graphics"></span><section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>Graphics<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p>Environment rendering is done with <a class="reference external" href="https://www.pygame.org/news">pygame</a>, which must be <a class="reference internal" href="../installation/#installation"><span class="std std-ref">installed separately</span></a>.</p>
 <p>A window is created at the first call of <code class="docutils literal notranslate"><span class="pre">env.render()</span></code>. Its dimensions can be configured:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;roundabout-v0&quot;</span><span class="p">)</span>
 <span class="n">env</span><span class="o">.</span><span class="n">configure</span><span class="p">({</span>
@@ -184,317 +315,192 @@
 <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="section" id="world-surface">
-<h2>World surface<a class="headerlink" href="#world-surface" title="Permalink to this headline">¶</a></h2>
+<section id="world-surface">
+<h2>World surface<a class="headerlink" href="#world-surface" title="Permalink to this heading">#</a></h2>
 <p>The simulation is rendered in a <code class="xref py py-class docutils literal notranslate"><span class="pre">RoadSurface</span></code> pygame surface, which defines the location and zoom of the rendered location.
 By default, the rendered area is always centered on the ego-vehicle.
 Its initial scale and offset can be set with the <code class="docutils literal notranslate"><span class="pre">&quot;scaling&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;centering_position&quot;</span></code> configurations, and can also be
 updated during simulation using the O,L keys and K,M keys, respectively.</p>
-</div>
-<div class="section" id="scene-graphics">
-<h2>Scene graphics<a class="headerlink" href="#scene-graphics" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="scene-graphics">
+<h2>Scene graphics<a class="headerlink" href="#scene-graphics" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Roads are rendered in the <a class="reference internal" href="#highway_env.road.graphics.RoadGraphics" title="highway_env.road.graphics.RoadGraphics"><code class="xref py py-class docutils literal notranslate"><span class="pre">RoadGraphics</span></code></a> class.</p></li>
-<li><p>Vehicles are rendered in the <a class="reference internal" href="#highway_env.vehicle.graphics.VehicleGraphics" title="highway_env.vehicle.graphics.VehicleGraphics"><code class="xref py py-class docutils literal notranslate"><span class="pre">VehicleGraphics</span></code></a> class.</p></li>
+<li><p>Vehicles are rendered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">VehicleGraphics</span></code> class.</p></li>
 </ul>
-</div>
-<div class="section" id="module-highway_env.envs.common.graphics">
-<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.envs.common.graphics" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="highway_env.envs.common.graphics.EnvViewer">
-<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.graphics.</code><code class="sig-name descname">EnvViewer</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer" title="Permalink to this definition">¶</a></dt>
+</section>
+<section id="module-highway_env.envs.common.graphics">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.envs.common.graphics" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="highway_env.envs.common.graphics.EnvViewer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.graphics.</span></span><span class="sig-name descname"><span class="pre">EnvViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics/#EnvViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer" title="Permalink to this definition">#</a></dt>
 <dd><p>A viewer to render a highway driving environment.</p>
-<dl class="attribute">
-<dt id="highway_env.envs.common.graphics.EnvViewer.SAVE_IMAGES">
-<code class="sig-name descname">SAVE_IMAGES</code><em class="property"> = False</em><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.SAVE_IMAGES" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EnvViewer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">env: AbstractEnv</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EnvViewer.set_agent_display">
-<code class="sig-name descname">set_agent_display</code><span class="sig-paren">(</span><em class="sig-param">agent_display: Callable</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer.set_agent_display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.set_agent_display" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.graphics.EnvViewer.set_agent_display">
+<span class="sig-name descname"><span class="pre">set_agent_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_display</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics/#EnvViewer.set_agent_display"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.set_agent_display" title="Permalink to this definition">#</a></dt>
 <dd><p>Set a display callback provided by an agent</p>
 <p>So that they can render their behaviour on a dedicated agent surface, or even on the simulation surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>agent_display</strong> – a callback provided by the agent to display on surfaces</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EnvViewer.set_agent_action_sequence">
-<code class="sig-name descname">set_agent_action_sequence</code><span class="sig-paren">(</span><em class="sig-param">actions: List[Action]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer.set_agent_action_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.set_agent_action_sequence" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.graphics.EnvViewer.set_agent_action_sequence">
+<span class="sig-name descname"><span class="pre">set_agent_action_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Action</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics/#EnvViewer.set_agent_action_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.set_agent_action_sequence" title="Permalink to this definition">#</a></dt>
 <dd><p>Set the sequence of actions chosen by the agent, so that it can be displayed</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>actions</strong> – list of action, following the env’s action space specification</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EnvViewer.handle_events">
-<code class="sig-name descname">handle_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer.handle_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.handle_events" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.graphics.EnvViewer.handle_events">
+<span class="sig-name descname"><span class="pre">handle_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics/#EnvViewer.handle_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.handle_events" title="Permalink to this definition">#</a></dt>
 <dd><p>Handle pygame events by forwarding them to the display and environment vehicle.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EnvViewer.display">
-<code class="sig-name descname">display</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer.display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.display" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.graphics.EnvViewer.display">
+<span class="sig-name descname"><span class="pre">display</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics/#EnvViewer.display"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.display" title="Permalink to this definition">#</a></dt>
 <dd><p>Display the road and vehicles on a pygame window.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EnvViewer.get_image">
-<code class="sig-name descname">get_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer.get_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.get_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>the rendered image as a rbg array.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.graphics.EnvViewer.get_image">
+<span class="sig-name descname"><span class="pre">get_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics/#EnvViewer.get_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.get_image" title="Permalink to this definition">#</a></dt>
+<dd><p>The rendered image as a rgb array.</p>
+<p>Gymnasium’s channel convention is H x W x C</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EnvViewer.window_position">
-<code class="sig-name descname">window_position</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer.window_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.window_position" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.graphics.EnvViewer.window_position">
+<span class="sig-name descname"><span class="pre">window_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics/#EnvViewer.window_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.window_position" title="Permalink to this definition">#</a></dt>
 <dd><p>the world position of the center of the displayed window.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EnvViewer.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EnvViewer.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.close" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.graphics.EnvViewer.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/graphics/#EnvViewer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.close" title="Permalink to this definition">#</a></dt>
 <dd><p>Close the pygame window.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="highway_env.envs.common.graphics.EnvViewer.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.graphics', '__doc__': 'A viewer to render a highway driving environment.', 'SAVE_IMAGES': False, '__init__': &lt;function EnvViewer.__init__&gt;, 'set_agent_display': &lt;function EnvViewer.set_agent_display&gt;, 'set_agent_action_sequence': &lt;function EnvViewer.set_agent_action_sequence&gt;, 'handle_events': &lt;function EnvViewer.handle_events&gt;, 'display': &lt;function EnvViewer.display&gt;, 'get_image': &lt;function EnvViewer.get_image&gt;, 'window_position': &lt;function EnvViewer.window_position&gt;, 'close': &lt;function EnvViewer.close&gt;, '__dict__': &lt;attribute '__dict__' of 'EnvViewer' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'EnvViewer' objects&gt;})</em><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.graphics.EnvViewer.__module__">
-<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.graphics'</em><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.graphics.EnvViewer.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.graphics.EnvViewer.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="highway_env.envs.common.graphics.EventHandler">
-<em class="property">class </em><code class="sig-prename descclassname">highway_env.envs.common.graphics.</code><code class="sig-name descname">EventHandler</code><a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EventHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EventHandler" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="highway_env.envs.common.graphics.EventHandler.handle_event">
-<em class="property">classmethod </em><code class="sig-name descname">handle_event</code><span class="sig-paren">(</span><em class="sig-param">action_type: highway_env.envs.common.action.ActionType</em>, <em class="sig-param">event: Event</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EventHandler.handle_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EventHandler.handle_event" title="Permalink to this definition">¶</a></dt>
-<dd><p>Map the pygame keyboard events to control decisions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>action_type</strong> – the ActionType that defines how the vehicle is controlled</p></li>
-<li><p><strong>event</strong> – the pygame event</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EventHandler.handle_discrete_action_event">
-<em class="property">classmethod </em><code class="sig-name descname">handle_discrete_action_event</code><span class="sig-paren">(</span><em class="sig-param">action_type: highway_env.envs.common.action.DiscreteMetaAction</em>, <em class="sig-param">event: Event</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EventHandler.handle_discrete_action_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EventHandler.handle_discrete_action_event" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.graphics.EventHandler.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.envs.common.graphics', 'handle_event': &lt;classmethod object&gt;, 'handle_discrete_action_event': &lt;classmethod object&gt;, 'handle_continuous_action_event': &lt;classmethod object&gt;, '__dict__': &lt;attribute '__dict__' of 'EventHandler' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'EventHandler' objects&gt;, '__doc__': None})</em><a class="headerlink" href="#highway_env.envs.common.graphics.EventHandler.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.graphics.EventHandler.__module__">
-<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.envs.common.graphics'</em><a class="headerlink" href="#highway_env.envs.common.graphics.EventHandler.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.envs.common.graphics.EventHandler.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.envs.common.graphics.EventHandler.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.envs.common.graphics.EventHandler.handle_continuous_action_event">
-<em class="property">classmethod </em><code class="sig-name descname">handle_continuous_action_event</code><span class="sig-paren">(</span><em class="sig-param">action_type: highway_env.envs.common.action.ContinuousAction</em>, <em class="sig-param">event: Event</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/envs/common/graphics.html#EventHandler.handle_continuous_action_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.envs.common.graphics.EventHandler.handle_continuous_action_event" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<span class="target" id="module-highway_env.road.graphics"></span><dl class="class">
-<dt id="highway_env.road.graphics.WorldSurface">
-<em class="property">class </em><code class="sig-prename descclassname">highway_env.road.graphics.</code><code class="sig-name descname">WorldSurface</code><span class="sig-paren">(</span><em class="sig-param">size: Tuple[int, int], flags: object, surf: pygame.Surface</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/road/graphics.html#WorldSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-highway_env.road.graphics"></span><dl class="py class">
+<dt class="sig sig-object py" id="highway_env.road.graphics.WorldSurface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.road.graphics.</span></span><span class="sig-name descname"><span class="pre">WorldSurface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/road/graphics/#WorldSurface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface" title="Permalink to this definition">#</a></dt>
 <dd><p>A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area.</p>
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.BLACK">
-<code class="sig-name descname">BLACK</code><em class="property"> = (0, 0, 0)</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.BLACK" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.GREY">
-<code class="sig-name descname">GREY</code><em class="property"> = (100, 100, 100)</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.GREY" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.GREEN">
-<code class="sig-name descname">GREEN</code><em class="property"> = (50, 200, 0)</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.GREEN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.YELLOW">
-<code class="sig-name descname">YELLOW</code><em class="property"> = (200, 200, 0)</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.YELLOW" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.WHITE">
-<code class="sig-name descname">WHITE</code><em class="property"> = (255, 255, 255)</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.WHITE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.INITIAL_SCALING">
-<code class="sig-name descname">INITIAL_SCALING</code><em class="property"> = 5.5</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.INITIAL_SCALING" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.INITIAL_CENTERING">
-<code class="sig-name descname">INITIAL_CENTERING</code><em class="property"> = [0.5, 0.5]</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.INITIAL_CENTERING" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.SCALING_FACTOR">
-<code class="sig-name descname">SCALING_FACTOR</code><em class="property"> = 1.3</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.SCALING_FACTOR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.MOVING_FACTOR">
-<code class="sig-name descname">MOVING_FACTOR</code><em class="property"> = 0.1</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.MOVING_FACTOR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.graphics.WorldSurface.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">size: Tuple[int, int], flags: object, surf: pygame.Surface</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#WorldSurface.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.graphics.WorldSurface.pix">
-<code class="sig-name descname">pix</code><span class="sig-paren">(</span><em class="sig-param">length: float</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/highway_env/road/graphics.html#WorldSurface.pix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.pix" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.WorldSurface.pix">
+<span class="sig-name descname"><span class="pre">pix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#WorldSurface.pix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.pix" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert a distance [m] to pixels [px].</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>length</strong> – the input distance [m]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the corresponding size [px]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.WorldSurface.pos2pix">
-<code class="sig-name descname">pos2pix</code><span class="sig-paren">(</span><em class="sig-param">x: float</em>, <em class="sig-param">y: float</em><span class="sig-paren">)</span> &#x2192; Tuple[int, int]<a class="reference internal" href="../_modules/highway_env/road/graphics.html#WorldSurface.pos2pix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.pos2pix" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.WorldSurface.pos2pix">
+<span class="sig-name descname"><span class="pre">pos2pix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#WorldSurface.pos2pix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.pos2pix" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert two world coordinates [m] into a position in the surface [px]</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> – x world coordinate [m]</p></li>
 <li><p><strong>y</strong> – y world coordinate [m]</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the coordinates of the corresponding pixel [px]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.WorldSurface.vec2pix">
-<code class="sig-name descname">vec2pix</code><span class="sig-paren">(</span><em class="sig-param">vec: Union[Tuple[float, float], numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Tuple[int, int]<a class="reference internal" href="../_modules/highway_env/road/graphics.html#WorldSurface.vec2pix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.vec2pix" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Convert a world position [m] into a position in the surface [px].</p>
-</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.WorldSurface.vec2pix">
+<span class="sig-name descname"><span class="pre">vec2pix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#WorldSurface.vec2pix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.vec2pix" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert a world position [m] into a position in the surface [px].</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>vec</strong> – a world position [m]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the coordinates of the corresponding pixel [px]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.WorldSurface.move_display_window_to">
-<code class="sig-name descname">move_display_window_to</code><span class="sig-paren">(</span><em class="sig-param">position: Union[Tuple[float, float], numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#WorldSurface.move_display_window_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.move_display_window_to" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.WorldSurface.is_visible">
+<span class="sig-name descname"><span class="pre">is_visible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#WorldSurface.is_visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.is_visible" title="Permalink to this definition">#</a></dt>
+<dd><p>Is a position visible in the surface?
+:param vec: a position
+:param margin: margins around the frame to test for visibility
+:return: whether the position is visible</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.WorldSurface.move_display_window_to">
+<span class="sig-name descname"><span class="pre">move_display_window_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#WorldSurface.move_display_window_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.move_display_window_to" title="Permalink to this definition">#</a></dt>
 <dd><p>Set the origin of the displayed area to center on a given world position.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>position</strong> – a world position [m]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.WorldSurface.handle_event">
-<code class="sig-name descname">handle_event</code><span class="sig-paren">(</span><em class="sig-param">event: Event</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#WorldSurface.handle_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.handle_event" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.WorldSurface.handle_event">
+<span class="sig-name descname"><span class="pre">handle_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#WorldSurface.handle_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.handle_event" title="Permalink to this definition">#</a></dt>
 <dd><p>Handle pygame events for moving and zooming in the displayed area.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>event</strong> – a pygame event</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.graphics', '__doc__': 'A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area.', 'BLACK': (0, 0, 0), 'GREY': (100, 100, 100), 'GREEN': (50, 200, 0), 'YELLOW': (200, 200, 0), 'WHITE': (255, 255, 255), 'INITIAL_SCALING': 5.5, 'INITIAL_CENTERING': [0.5, 0.5], 'SCALING_FACTOR': 1.3, 'MOVING_FACTOR': 0.1, '__init__': &lt;function WorldSurface.__init__&gt;, 'pix': &lt;function WorldSurface.pix&gt;, 'pos2pix': &lt;function WorldSurface.pos2pix&gt;, 'vec2pix': &lt;function WorldSurface.vec2pix&gt;, 'move_display_window_to': &lt;function WorldSurface.move_display_window_to&gt;, 'handle_event': &lt;function WorldSurface.handle_event&gt;, '__dict__': &lt;attribute '__dict__' of 'WorldSurface' objects&gt;})</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.WorldSurface.__module__">
-<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.graphics'</em><a class="headerlink" href="#highway_env.road.graphics.WorldSurface.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
-<dl class="class">
-<dt id="highway_env.road.graphics.LaneGraphics">
-<em class="property">class </em><code class="sig-prename descclassname">highway_env.road.graphics.</code><code class="sig-name descname">LaneGraphics</code><a class="reference internal" href="../_modules/highway_env/road/graphics.html#LaneGraphics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.road.graphics.</span></span><span class="sig-name descname"><span class="pre">LaneGraphics</span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#LaneGraphics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics" title="Permalink to this definition">#</a></dt>
 <dd><p>A visualization of a lane.</p>
-<dl class="attribute">
-<dt id="highway_env.road.graphics.LaneGraphics.STRIPE_SPACING">
-<code class="sig-name descname">STRIPE_SPACING</code><em class="property">: float</em><em class="property"> = 5</em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.STRIPE_SPACING" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics.STRIPE_SPACING">
+<span class="sig-name descname"><span class="pre">STRIPE_SPACING</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4.33</span></em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.STRIPE_SPACING" title="Permalink to this definition">#</a></dt>
 <dd><p>Offset between stripes [m]</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="highway_env.road.graphics.LaneGraphics.STRIPE_LENGTH">
-<code class="sig-name descname">STRIPE_LENGTH</code><em class="property">: float</em><em class="property"> = 3</em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.STRIPE_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics.STRIPE_LENGTH">
+<span class="sig-name descname"><span class="pre">STRIPE_LENGTH</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.STRIPE_LENGTH" title="Permalink to this definition">#</a></dt>
 <dd><p>Length of a stripe [m]</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="highway_env.road.graphics.LaneGraphics.STRIPE_WIDTH">
-<code class="sig-name descname">STRIPE_WIDTH</code><em class="property">: float</em><em class="property"> = 0.3</em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.STRIPE_WIDTH" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics.STRIPE_WIDTH">
+<span class="sig-name descname"><span class="pre">STRIPE_WIDTH</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.3</span></em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.STRIPE_WIDTH" title="Permalink to this definition">#</a></dt>
 <dd><p>Width of a stripe [m]</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.LaneGraphics.display">
-<em class="property">classmethod </em><code class="sig-name descname">display</code><span class="sig-paren">(</span><em class="sig-param">lane: highway_env.road.lane.AbstractLane</em>, <em class="sig-param">surface: highway_env.road.graphics.WorldSurface</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#LaneGraphics.display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.display" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics.display">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lane</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/road/lane/#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><span class="pre">AbstractLane</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#LaneGraphics.display"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.display" title="Permalink to this definition">#</a></dt>
 <dd><p>Display a lane on a surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lane</strong> – the lane to be displayed</p></li>
 <li><p><strong>surface</strong> – the pygame surface</p></li>
@@ -503,12 +509,12 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.LaneGraphics.striped_line">
-<em class="property">classmethod </em><code class="sig-name descname">striped_line</code><span class="sig-paren">(</span><em class="sig-param">lane: highway_env.road.lane.AbstractLane</em>, <em class="sig-param">surface: highway_env.road.graphics.WorldSurface</em>, <em class="sig-param">stripes_count: int</em>, <em class="sig-param">longitudinal: float</em>, <em class="sig-param">side: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#LaneGraphics.striped_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.striped_line" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics.striped_line">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">striped_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lane</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/road/lane/#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><span class="pre">AbstractLane</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stripes_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#LaneGraphics.striped_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.striped_line" title="Permalink to this definition">#</a></dt>
 <dd><p>Draw a striped line on one side of a lane, on a surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lane</strong> – the lane</p></li>
 <li><p><strong>surface</strong> – the pygame surface</p></li>
@@ -520,12 +526,12 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.LaneGraphics.continuous_curve">
-<em class="property">classmethod </em><code class="sig-name descname">continuous_curve</code><span class="sig-paren">(</span><em class="sig-param">lane: highway_env.road.lane.AbstractLane</em>, <em class="sig-param">surface: highway_env.road.graphics.WorldSurface</em>, <em class="sig-param">stripes_count: int</em>, <em class="sig-param">longitudinal: float</em>, <em class="sig-param">side: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#LaneGraphics.continuous_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.continuous_curve" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics.continuous_curve">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">continuous_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lane</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/road/lane/#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><span class="pre">AbstractLane</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stripes_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#LaneGraphics.continuous_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.continuous_curve" title="Permalink to this definition">#</a></dt>
 <dd><p>Draw a striped line on one side of a lane, on a surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lane</strong> – the lane</p></li>
 <li><p><strong>surface</strong> – the pygame surface</p></li>
@@ -537,12 +543,12 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.LaneGraphics.continuous_line">
-<em class="property">classmethod </em><code class="sig-name descname">continuous_line</code><span class="sig-paren">(</span><em class="sig-param">lane: highway_env.road.lane.AbstractLane</em>, <em class="sig-param">surface: highway_env.road.graphics.WorldSurface</em>, <em class="sig-param">stripes_count: int</em>, <em class="sig-param">longitudinal: float</em>, <em class="sig-param">side: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#LaneGraphics.continuous_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.continuous_line" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics.continuous_line">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">continuous_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lane</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/road/lane/#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><span class="pre">AbstractLane</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stripes_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#LaneGraphics.continuous_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.continuous_line" title="Permalink to this definition">#</a></dt>
 <dd><p>Draw a continuous line on one side of a lane, on a surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lane</strong> – the lane</p></li>
 <li><p><strong>surface</strong> – the pygame surface</p></li>
@@ -554,12 +560,12 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.LaneGraphics.draw_stripes">
-<em class="property">classmethod </em><code class="sig-name descname">draw_stripes</code><span class="sig-paren">(</span><em class="sig-param">lane: highway_env.road.lane.AbstractLane, surface: highway_env.road.graphics.WorldSurface, starts: List[float], ends: List[float], lats: List[float]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#LaneGraphics.draw_stripes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.draw_stripes" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.LaneGraphics.draw_stripes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">draw_stripes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lane</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/road/lane/#highway_env.road.lane.AbstractLane" title="highway_env.road.lane.AbstractLane"><span class="pre">AbstractLane</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">starts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ends</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#LaneGraphics.draw_stripes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.draw_stripes" title="Permalink to this definition">#</a></dt>
 <dd><p>Draw a set of stripes along a lane.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lane</strong> – the lane</p></li>
 <li><p><strong>surface</strong> – the surface to draw on</p></li>
@@ -571,44 +577,18 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.LaneGraphics.draw_ground">
-<em class="property">classmethod </em><code class="sig-name descname">draw_ground</code><span class="sig-paren">(</span><em class="sig-param">lane: highway_env.road.lane.AbstractLane, surface: highway_env.road.graphics.WorldSurface, color: Tuple[float], width: float, draw_surface: pygame.Surface = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#LaneGraphics.draw_ground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.draw_ground" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.LaneGraphics.__annotations__">
-<code class="sig-name descname">__annotations__</code><em class="property"> = {'STRIPE_LENGTH': &lt;class 'float'&gt;, 'STRIPE_SPACING': &lt;class 'float'&gt;, 'STRIPE_WIDTH': &lt;class 'float'&gt;}</em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.__annotations__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.LaneGraphics.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.graphics', '__annotations__': {'STRIPE_SPACING': &lt;class 'float'&gt;, 'STRIPE_LENGTH': &lt;class 'float'&gt;, 'STRIPE_WIDTH': &lt;class 'float'&gt;}, '__doc__': 'A visualization of a lane.', 'STRIPE_SPACING': 5, 'STRIPE_LENGTH': 3, 'STRIPE_WIDTH': 0.3, 'display': &lt;classmethod object&gt;, 'striped_line': &lt;classmethod object&gt;, 'continuous_curve': &lt;classmethod object&gt;, 'continuous_line': &lt;classmethod object&gt;, 'draw_stripes': &lt;classmethod object&gt;, 'draw_ground': &lt;classmethod object&gt;, '__dict__': &lt;attribute '__dict__' of 'LaneGraphics' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'LaneGraphics' objects&gt;})</em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.LaneGraphics.__module__">
-<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.graphics'</em><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.LaneGraphics.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.graphics.LaneGraphics.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="highway_env.road.graphics.RoadGraphics">
-<em class="property">class </em><code class="sig-prename descclassname">highway_env.road.graphics.</code><code class="sig-name descname">RoadGraphics</code><a class="reference internal" href="../_modules/highway_env/road/graphics.html#RoadGraphics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="highway_env.road.graphics.RoadGraphics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.road.graphics.</span></span><span class="sig-name descname"><span class="pre">RoadGraphics</span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#RoadGraphics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics" title="Permalink to this definition">#</a></dt>
 <dd><p>A visualization of a road lanes and vehicles.</p>
-<dl class="method">
-<dt id="highway_env.road.graphics.RoadGraphics.display">
-<em class="property">static </em><code class="sig-name descname">display</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road</em>, <em class="sig-param">surface: highway_env.road.graphics.WorldSurface</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#RoadGraphics.display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.display" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.RoadGraphics.display">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">road</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/road/road/#highway_env.road.road.Road" title="highway_env.road.road.Road"><span class="pre">Road</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#RoadGraphics.display"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.display" title="Permalink to this definition">#</a></dt>
 <dd><p>Display the road lanes on a surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>road</strong> – the road to be displayed</p></li>
 <li><p><strong>surface</strong> – the pygame surface</p></li>
@@ -617,12 +597,12 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.RoadGraphics.display_traffic">
-<em class="property">static </em><code class="sig-name descname">display_traffic</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road</em>, <em class="sig-param">surface: highway_env.road.graphics.WorldSurface</em>, <em class="sig-param">simulation_frequency: int = 15</em>, <em class="sig-param">offscreen: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#RoadGraphics.display_traffic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.display_traffic" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.RoadGraphics.display_traffic">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display_traffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">road</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/road/road/#highway_env.road.road.Road" title="highway_env.road.road.Road"><span class="pre">Road</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offscreen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#RoadGraphics.display_traffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.display_traffic" title="Permalink to this definition">#</a></dt>
 <dd><p>Display the road vehicles on a surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>road</strong> – the road to be displayed</p></li>
 <li><p><strong>surface</strong> – the pygame surface</p></li>
@@ -633,12 +613,12 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.RoadGraphics.display_road_objects">
-<em class="property">static </em><code class="sig-name descname">display_road_objects</code><span class="sig-paren">(</span><em class="sig-param">road: highway_env.road.road.Road</em>, <em class="sig-param">surface: highway_env.road.graphics.WorldSurface</em>, <em class="sig-param">offscreen: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#RoadGraphics.display_road_objects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.display_road_objects" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.RoadGraphics.display_road_objects">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display_road_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">road</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/road/road/#highway_env.road.road.Road" title="highway_env.road.road.Road"><span class="pre">Road</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">offscreen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#RoadGraphics.display_road_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.display_road_objects" title="Permalink to this definition">#</a></dt>
 <dd><p>Display the road objects on a surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>road</strong> – the road to be displayed</p></li>
 <li><p><strong>surface</strong> – the pygame surface</p></li>
@@ -648,81 +628,19 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadGraphics.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.graphics', '__doc__': 'A visualization of a road lanes and vehicles.', 'display': &lt;staticmethod object&gt;, 'display_traffic': &lt;staticmethod object&gt;, 'display_road_objects': &lt;staticmethod object&gt;, '__dict__': &lt;attribute '__dict__' of 'RoadGraphics' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'RoadGraphics' objects&gt;})</em><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadGraphics.__module__">
-<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.graphics'</em><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadGraphics.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.graphics.RoadGraphics.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="highway_env.road.graphics.RoadObjectGraphics">
-<em class="property">class </em><code class="sig-prename descclassname">highway_env.road.graphics.</code><code class="sig-name descname">RoadObjectGraphics</code><a class="reference internal" href="../_modules/highway_env/road/graphics.html#RoadObjectGraphics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="highway_env.road.graphics.RoadObjectGraphics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.road.graphics.</span></span><span class="sig-name descname"><span class="pre">RoadObjectGraphics</span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#RoadObjectGraphics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics" title="Permalink to this definition">#</a></dt>
 <dd><p>A visualization of objects on the road.</p>
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.YELLOW">
-<code class="sig-name descname">YELLOW</code><em class="property"> = (200, 200, 0)</em><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.YELLOW" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.BLUE">
-<code class="sig-name descname">BLUE</code><em class="property"> = (100, 200, 255)</em><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.BLUE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.RED">
-<code class="sig-name descname">RED</code><em class="property"> = (255, 100, 100)</em><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.RED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.GREEN">
-<code class="sig-name descname">GREEN</code><em class="property"> = (50, 200, 0)</em><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.GREEN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.BLACK">
-<code class="sig-name descname">BLACK</code><em class="property"> = (60, 60, 60)</em><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.BLACK" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.DEFAULT_COLOR">
-<code class="sig-name descname">DEFAULT_COLOR</code><em class="property"> = (200, 200, 0)</em><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.DEFAULT_COLOR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.road.graphics', '__doc__': 'A visualization of objects on the road.', 'YELLOW': (200, 200, 0), 'BLUE': (100, 200, 255), 'RED': (255, 100, 100), 'GREEN': (50, 200, 0), 'BLACK': (60, 60, 60), 'DEFAULT_COLOR': (200, 200, 0), 'display': &lt;classmethod object&gt;, 'blit_rotate': &lt;staticmethod object&gt;, 'get_color': &lt;classmethod object&gt;, '__dict__': &lt;attribute '__dict__' of 'RoadObjectGraphics' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'RoadObjectGraphics' objects&gt;})</em><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.__module__">
-<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.road.graphics'</em><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.display">
-<em class="property">classmethod </em><code class="sig-name descname">display</code><span class="sig-paren">(</span><em class="sig-param">object_: RoadObject</em>, <em class="sig-param">surface: highway_env.road.graphics.WorldSurface</em>, <em class="sig-param">transparent: bool = False</em>, <em class="sig-param">offscreen: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/road/graphics.html#RoadObjectGraphics.display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.display" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.RoadObjectGraphics.display">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RoadObject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#highway_env.road.graphics.WorldSurface" title="highway_env.road.graphics.WorldSurface"><span class="pre">WorldSurface</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transparent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offscreen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/road/graphics/#RoadObjectGraphics.display"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.display" title="Permalink to this definition">#</a></dt>
 <dd><p>Display a road objects on a pygame surface.</p>
 <p>The objects is represented as a colored rotated rectangle</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> – the vehicle to be drawn</p></li>
 <li><p><strong>surface</strong> – the surface to draw the object on</p></li>
@@ -733,199 +651,337 @@ updated during simulation using the O,L keys and K,M keys, respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.blit_rotate">
-<em class="property">static </em><code class="sig-name descname">blit_rotate</code><span class="sig-paren">(</span><em class="sig-param">surf: pygame.Surface, image: pygame.Surface, pos: Union[numpy.ndarray, Sequence[float]], angle: float, origin_pos: Union[numpy.ndarray, Sequence[float]] = None, show_rect: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/road/graphics.html#RoadObjectGraphics.blit_rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.blit_rotate" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.road.graphics.RoadObjectGraphics.blit_rotate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">blit_rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_rect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/road/graphics/#RoadObjectGraphics.blit_rotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.blit_rotate" title="Permalink to this definition">#</a></dt>
 <dd><p>Many thanks to <a class="reference external" href="https://stackoverflow.com/a/54714144">https://stackoverflow.com/a/54714144</a>.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="highway_env.road.graphics.RoadObjectGraphics.get_color">
-<em class="property">classmethod </em><code class="sig-name descname">get_color</code><span class="sig-paren">(</span><em class="sig-param">object_: RoadObject</em>, <em class="sig-param">transparent: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/road/graphics.html#RoadObjectGraphics.get_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.road.graphics.RoadObjectGraphics.get_color" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
-<span class="target" id="module-highway_env.vehicle.graphics"></span><dl class="class">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics">
-<em class="property">class </em><code class="sig-prename descclassname">highway_env.vehicle.graphics.</code><code class="sig-name descname">VehicleGraphics</code><a class="reference internal" href="../_modules/highway_env/vehicle/graphics.html#VehicleGraphics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.RED">
-<code class="sig-name descname">RED</code><em class="property"> = (255, 100, 100)</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.RED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="target" id="module-highway_env.vehicle.graphics"></span></section>
+</section>
 
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.GREEN">
-<code class="sig-name descname">GREEN</code><em class="property"> = (50, 200, 0)</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.GREEN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.BLUE">
-<code class="sig-name descname">BLUE</code><em class="property"> = (100, 200, 255)</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.BLUE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.YELLOW">
-<code class="sig-name descname">YELLOW</code><em class="property"> = (200, 200, 0)</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.YELLOW" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.BLACK">
-<code class="sig-name descname">BLACK</code><em class="property"> = (60, 60, 60)</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.BLACK" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.PURPLE">
-<code class="sig-name descname">PURPLE</code><em class="property"> = (200, 0, 150)</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.PURPLE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.DEFAULT_COLOR">
-<code class="sig-name descname">DEFAULT_COLOR</code><em class="property"> = (200, 200, 0)</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.DEFAULT_COLOR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.EGO_COLOR">
-<code class="sig-name descname">EGO_COLOR</code><em class="property"> = (50, 200, 0)</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.EGO_COLOR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.display">
-<em class="property">classmethod </em><code class="sig-name descname">display</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">surface: WorldSurface</em>, <em class="sig-param">transparent: bool = False</em>, <em class="sig-param">offscreen: bool = False</em>, <em class="sig-param">label: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/vehicle/graphics.html#VehicleGraphics.display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.display" title="Permalink to this definition">¶</a></dt>
-<dd><p>Display a vehicle on a pygame surface.</p>
-<p>The vehicle is represented as a colored rotated rectangle.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>vehicle</strong> – the vehicle to be drawn</p></li>
-<li><p><strong>surface</strong> – the surface to draw the vehicle on</p></li>
-<li><p><strong>transparent</strong> – whether the vehicle should be drawn slightly transparent</p></li>
-<li><p><strong>offscreen</strong> – whether the rendering should be done offscreen or not</p></li>
-<li><p><strong>label</strong> – whether a text label should be rendered</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.blit_rotate">
-<em class="property">static </em><code class="sig-name descname">blit_rotate</code><span class="sig-paren">(</span><em class="sig-param">surf: pygame.Surface, image: pygame.Surface, pos: Union[numpy.ndarray, Sequence[float]], angle: float, origin_pos: Union[numpy.ndarray, Sequence[float]] = None, show_rect: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/vehicle/graphics.html#VehicleGraphics.blit_rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.blit_rotate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Many thanks to <a class="reference external" href="https://stackoverflow.com/a/54714144">https://stackoverflow.com/a/54714144</a>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.display_trajectory">
-<em class="property">classmethod </em><code class="sig-name descname">display_trajectory</code><span class="sig-paren">(</span><em class="sig-param">states: List[highway_env.vehicle.kinematics.Vehicle], surface: WorldSurface, offscreen: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/vehicle/graphics.html#VehicleGraphics.display_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.display_trajectory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Display the whole trajectory of a vehicle on a pygame surface.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>states</strong> – the list of vehicle states within the trajectory to be displayed</p></li>
-<li><p><strong>surface</strong> – the surface to draw the vehicle future states on</p></li>
-<li><p><strong>offscreen</strong> – whether the rendering should be done offscreen or not</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.display_history">
-<em class="property">classmethod </em><code class="sig-name descname">display_history</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">surface: WorldSurface</em>, <em class="sig-param">frequency: float = 3</em>, <em class="sig-param">duration: float = 2</em>, <em class="sig-param">simulation: int = 15</em>, <em class="sig-param">offscreen: bool = False</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/highway_env/vehicle/graphics.html#VehicleGraphics.display_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.display_history" title="Permalink to this definition">¶</a></dt>
-<dd><p>Display the whole trajectory of a vehicle on a pygame surface.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>vehicle</strong> – the vehicle states within the trajectory to be displayed</p></li>
-<li><p><strong>surface</strong> – the surface to draw the vehicle future states on</p></li>
-<li><p><strong>frequency</strong> – frequency of displayed positions in history</p></li>
-<li><p><strong>duration</strong> – length of displayed history</p></li>
-<li><p><strong>simulation</strong> – simulation frequency</p></li>
-<li><p><strong>offscreen</strong> – whether the rendering should be done offscreen or not</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.get_color">
-<em class="property">classmethod </em><code class="sig-name descname">get_color</code><span class="sig-paren">(</span><em class="sig-param">vehicle: highway_env.vehicle.kinematics.Vehicle</em>, <em class="sig-param">transparent: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[int]<a class="reference internal" href="../_modules/highway_env/vehicle/graphics.html#VehicleGraphics.get_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.get_color" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.__dict__">
-<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'highway_env.vehicle.graphics', 'RED': (255, 100, 100), 'GREEN': (50, 200, 0), 'BLUE': (100, 200, 255), 'YELLOW': (200, 200, 0), 'BLACK': (60, 60, 60), 'PURPLE': (200, 0, 150), 'DEFAULT_COLOR': (200, 200, 0), 'EGO_COLOR': (50, 200, 0), 'display': &lt;classmethod object&gt;, 'blit_rotate': &lt;staticmethod object&gt;, 'display_trajectory': &lt;classmethod object&gt;, 'display_history': &lt;classmethod object&gt;, 'get_color': &lt;classmethod object&gt;, '__dict__': &lt;attribute '__dict__' of 'VehicleGraphics' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'VehicleGraphics' objects&gt;, '__doc__': None})</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.__dict__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.__module__">
-<code class="sig-name descname">__module__</code><em class="property"> = 'highway_env.vehicle.graphics'</em><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.__module__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="highway_env.vehicle.graphics.VehicleGraphics.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#highway_env.vehicle.graphics.VehicleGraphics.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-</div>
-
-
-           </div>
-           
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../make_your_own.html" class="btn btn-neutral float-right" title="Make your own environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../rewards/index.html" class="btn btn-neutral float-left" title="Rewards" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        
-        &copy; Copyright 2018, Edouard Leurent
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
+          </article>
         </div>
+        <footer>
+          
+          <div class="related-pages">
+            <a class="next-page" href="../multi_agent/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">The Multi-Agent setting</div>
+              </div>
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+            </a>
+            <a class="prev-page" href="../rewards/">
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Rewards</div>
+                
+              </div>
+            </a>
+          </div>
+          <div class="bottom-of-page">
+            <div class="left-details">
+              <div class="copyright">
+                Copyright &#169; 2023 Farama Foundation
+              </div>
+              <!--
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            -->
+            </div>
+            <div class="right-details">
+              <div class="icons">
+                
+              </div>
+            </div>
+          </div>
+          
+        </footer>
       </div>
+      <aside class="toc-drawer">
+        
+        
+        <div class="toc-sticky toc-scroll">
+          <div class="toc-title-container">
+            <span class="toc-title">
+              On this page
+            </span>
+          </div>
+          <div class="toc-tree-container">
+            <div class="toc-tree">
+              <ul>
+<li><a class="reference internal" href="#">Graphics</a><ul>
+<li><a class="reference internal" href="#world-surface">World surface</a></li>
+<li><a class="reference internal" href="#scene-graphics">Scene graphics</a></li>
+<li><a class="reference internal" href="#module-highway_env.envs.common.graphics">API</a><ul>
+<li><a class="reference internal" href="#highway_env.envs.common.graphics.EnvViewer"><code class="docutils literal notranslate"><span class="pre">EnvViewer</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.envs.common.graphics.EnvViewer.set_agent_display"><code class="docutils literal notranslate"><span class="pre">EnvViewer.set_agent_display()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.graphics.EnvViewer.set_agent_action_sequence"><code class="docutils literal notranslate"><span class="pre">EnvViewer.set_agent_action_sequence()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.graphics.EnvViewer.handle_events"><code class="docutils literal notranslate"><span class="pre">EnvViewer.handle_events()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.graphics.EnvViewer.display"><code class="docutils literal notranslate"><span class="pre">EnvViewer.display()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.graphics.EnvViewer.get_image"><code class="docutils literal notranslate"><span class="pre">EnvViewer.get_image()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.graphics.EnvViewer.window_position"><code class="docutils literal notranslate"><span class="pre">EnvViewer.window_position()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.graphics.EnvViewer.close"><code class="docutils literal notranslate"><span class="pre">EnvViewer.close()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.road.graphics.WorldSurface"><code class="docutils literal notranslate"><span class="pre">WorldSurface</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.road.graphics.WorldSurface.pix"><code class="docutils literal notranslate"><span class="pre">WorldSurface.pix()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.WorldSurface.pos2pix"><code class="docutils literal notranslate"><span class="pre">WorldSurface.pos2pix()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.WorldSurface.vec2pix"><code class="docutils literal notranslate"><span class="pre">WorldSurface.vec2pix()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.WorldSurface.is_visible"><code class="docutils literal notranslate"><span class="pre">WorldSurface.is_visible()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.WorldSurface.move_display_window_to"><code class="docutils literal notranslate"><span class="pre">WorldSurface.move_display_window_to()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.WorldSurface.handle_event"><code class="docutils literal notranslate"><span class="pre">WorldSurface.handle_event()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics"><code class="docutils literal notranslate"><span class="pre">LaneGraphics</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics.STRIPE_SPACING"><code class="docutils literal notranslate"><span class="pre">LaneGraphics.STRIPE_SPACING</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics.STRIPE_LENGTH"><code class="docutils literal notranslate"><span class="pre">LaneGraphics.STRIPE_LENGTH</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics.STRIPE_WIDTH"><code class="docutils literal notranslate"><span class="pre">LaneGraphics.STRIPE_WIDTH</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics.display"><code class="docutils literal notranslate"><span class="pre">LaneGraphics.display()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics.striped_line"><code class="docutils literal notranslate"><span class="pre">LaneGraphics.striped_line()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics.continuous_curve"><code class="docutils literal notranslate"><span class="pre">LaneGraphics.continuous_curve()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics.continuous_line"><code class="docutils literal notranslate"><span class="pre">LaneGraphics.continuous_line()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.LaneGraphics.draw_stripes"><code class="docutils literal notranslate"><span class="pre">LaneGraphics.draw_stripes()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.road.graphics.RoadGraphics"><code class="docutils literal notranslate"><span class="pre">RoadGraphics</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.road.graphics.RoadGraphics.display"><code class="docutils literal notranslate"><span class="pre">RoadGraphics.display()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.RoadGraphics.display_traffic"><code class="docutils literal notranslate"><span class="pre">RoadGraphics.display_traffic()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.RoadGraphics.display_road_objects"><code class="docutils literal notranslate"><span class="pre">RoadGraphics.display_road_objects()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.road.graphics.RoadObjectGraphics"><code class="docutils literal notranslate"><span class="pre">RoadObjectGraphics</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.road.graphics.RoadObjectGraphics.display"><code class="docutils literal notranslate"><span class="pre">RoadObjectGraphics.display()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.road.graphics.RoadObjectGraphics.blit_rotate"><code class="docutils literal notranslate"><span class="pre">RoadObjectGraphics.blit_rotate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-    </section>
-
+            </div>
+          </div>
+        </div>
+        
+        
+      </aside>
+    </div>
   </div>
-  
+</div>
+    <script>
+      const toggleMenu = () => {
+        const menuBtn = document.querySelector(".farama-header-menu__btn");
+        const menuContainer = document.querySelector(".farama-header-menu-container");
+        if (document.querySelector(".farama-header-menu").classList.contains("active")) {
+          menuBtn.setAttribute("aria-expanded", "false");
+          menuContainer.setAttribute("aria-hidden", "true");
+        } else {
+          menuBtn.setAttribute("aria-expanded", "true");
+          menuContainer.setAttribute("aria-hidden", "false");
+        }
+        document.querySelector(".farama-header-menu").classList.toggle("active");
+      }
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+      document.querySelector(".farama-header-menu__btn").addEventListener("click", toggleMenu);
+      document.getElementById("farama-close-menu").addEventListener("click", toggleMenu);
+    </script>
 
-  
-  
     
-   
+    <script>
+          (() => {
+              if (!localStorage.getItem("shownCookieAlert")) {
+                  const boxElem = document.createElement("div");
+                  boxElem.classList.add("cookie-alert");
+                  const containerElem = document.createElement("div");
+                  containerElem.classList.add("cookie-alert__container");
+                  const textElem = document.createElement("p");
+                  textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
+                                      Google Analytics</a> to collect statistics. You can disable it by blocking
+                                      the JavaScript coming from www.google-analytics.com.`;
+                                      containerElem.appendChild(textElem);
+                  const closeBtn = document.createElement("button");
+                  closeBtn.innerHTML = `<?xml version="1.0" ?><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>`
+                  closeBtn.onclick = () => {
+                      localStorage.setItem("shownCookieAlert", "true");
+                      boxElem.style.display = "none";
+                  }
+                  containerElem.appendChild(closeBtn);
+                  boxElem.appendChild(containerElem);
+                  document.body.appendChild(boxElem);
+              }
+          })()
+      </script>
 
-</body>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H9C8TWXZ8"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-6H9C8TWXZ8');
+      </script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+    <script>
+      const createCORSRequest = (method, url) => {
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = 'json';
+
+        if ("withCredentials" in xhr) {
+          xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+          // IE8 & IE9
+          xhr = new XDomainRequest();
+          xhr.open(method, url);
+        } else {
+          // CORS not supported.
+          xhr = null;
+        }
+        return xhr;
+      };
+
+      const url = 'https://farama.org/api/projects.json';
+      const imagesBasepath = "https://farama.org/assets/images"
+      const method = 'GET';
+      let xhr = createCORSRequest(method, url);
+
+      xhr.onload = () => {
+        const jsonResponse = xhr.response;
+        const sections = {
+          "Documentation": [],
+          "Mature Projects": [],
+          "Incubating Projects": [],
+          "Foundation": [
+            {
+              name: "About",
+              link: "https://farama.org/about"
+            },
+            {
+              name: "Standards",
+              link: "https://farama.org/project_standards",
+            },
+            {
+              name: "Donate",
+              link: "https://farama.org/donations"
+            }
+          ]
+        }
+        Object.keys(jsonResponse).forEach(key => {
+          projectJson = jsonResponse[key];
+          if (projectJson.website !== null) {
+            projectJson.link = projectJson.website;
+            sections["Documentation"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            projectJson.link = projectJson.github;
+            sections["Mature Projects"].push(projectJson)
+          } else {
+            projectJson.link = projectJson.github;
+            sections["Incubating Projects"].push(projectJson)
+          }
+        })
+
+        const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        Object.keys(sections).forEach((key, i) => {
+          projects = sections[key];
+          const sectionElem = Object.assign(
+            document.createElement('div'), {
+              className:'farama-header-menu__section',
+              style: "padding-left: 24px"
+            }
+          )
+          sectionElem.appendChild(Object.assign(document.createElement('span'),
+            {
+              className:'farama-header-menu__section-title' ,
+              innerText: key
+            }
+          ))
+          const ulElem = Object.assign(document.createElement('ul'),
+            {
+              className:'farama-header-menu-list',
+            }
+          )
+          for (let project of projects) {
+            const liElem = document.createElement("li");
+            const aElem = Object.assign(document.createElement("a"),
+              {
+                href: project.link
+              }
+            );
+            liElem.appendChild(aElem);
+            if (key !== "Foundation") {
+              const imgElem = Object.assign(document.createElement("img"),
+                {
+                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                  alt: `${project.name} logo`,
+                  className: "farama-black-logo-invert"
+                }
+              );
+              aElem.appendChild(imgElem);
+            }
+            aElem.appendChild(document.createTextNode(project.name));
+            ulElem.appendChild(liElem);
+          }
+          sectionElem.appendChild(ulElem);
+          menuContainer.appendChild(sectionElem)
+        });
+      }
+
+      xhr.onerror = function() {
+        console.error("Unable to load projects");
+      };
+
+      xhr.send();
+    </script>
+
+    
+    <script>
+      const versioningConfig = {
+        githubUser: 'Farama-Foundation',
+        githubRepo: 'highway-env',
+      };
+      fetch('/main/_static/versioning/versioning_menu.html').then(response => {
+        if (response.status === 200) {
+            response.text().then(text => {
+                const container = document.createElement("div");
+                container.innerHTML = text;
+                document.querySelector("body").appendChild(container);
+                // innerHtml doenst evaluate scripts, we need to add them dynamically
+                Array.from(container.querySelectorAll("script")).forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+            });
+        } else {
+            console.warn("Unable to load versioning menu", response);
+        }
+      });
+    </script>
+
+    </body>
 </html>

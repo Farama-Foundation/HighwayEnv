@@ -1,7 +1,0 @@
-highway\_env.road.regulation module
-===================================
-
-.. automodule:: highway_env.road.regulation
-    :members:
-    :undoc-members:
-    :show-inheritance:
