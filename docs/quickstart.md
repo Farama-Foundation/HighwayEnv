@@ -1,33 +1,4 @@
----
-substitutions:
-  dqn_social: |-
-    ```{image} https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb
-    ```
-  highway_dqn: |-
-    ```{image} https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn.ipynb
-    ```
-  highway_dqn_cnn: |-
-    ```{image} https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.ipynb
-    ```
-  parking_her: |-
-    ```{image} https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb
-    ```
-  parking_mb: |-
-    ```{image} https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb
-    ```
-  planning_hw: |-
-    ```{image} https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb
-    ```
-  _quickstart:
----
-
-
+(quickstart)=
 # Getting Started
 
 ## Making an environment
@@ -172,48 +143,29 @@ However, [eleurent/rl-agents](https://github.com/eleurent/rl-agents)'s implement
 Several scripts and notebooks to train driving policies on `highway-env` are available [on this page](https://github.com/eleurent/highway-env/tree/master/scripts).
 Here are a few of them:
 
-- Highway with image observations and a CNN model
-  {{ highway_dqn_cnn }}
-  Train SB3's DQN on
-  `highway-fast-v0`
-   , but using
-  {ref}`image observations <Grayscale Image>`
-   and a CNN model for the value function.
-- Trajectory Planning on Highway
-  {{ planning_hw }}
-  Plan a trajectory on
-  `highway-v0`
-   using the
-  `OPD`
+[colab-badge]: https://colab.research.google.com/assets/colab-badge.svg
+[highway_dqn_cnn]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.ipynb
+[planning_hw]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb
+[parking_mb]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb
+[parking_her]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb
+[dqn_social]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb
 
-  {cite}`Hren2008`
-   implementation from
-  [eleurent/rl-agents](https://github.com/eleurent/rl-agents)
-  .
-- A Model-based Reinforcement Learning tutorial on Parking
-  {{ parking_mb }}
-  A tutorial written for
-  [RLSS 2019](https://rlss.inria.fr/)
-   and demonstrating the principle of model-based reinforcement learning on the
-  `parking-v0`
-   task.
-- Parking with Hindsight Experience Replay
-  {{ parking_her }}
-  Train a goal-conditioned
-  `parking-v0`
-   policy using the
-  `HER`
 
-  {cite}`Andrychowicz2017`
-   implementation from
-  [stable-baselines](https://github.com/hill-a/stable-baselines)
-  .
-- Intersection with DQN and social attention
-  {{ dqn_social }}
-  Train an
-  `intersection-v0`
-   crossing policy using the social attention architecture
-  {cite}`Leurent2019social`
-   and the DQN implementation from
-  [eleurent/rl-agents](https://github.com/eleurent/rl-agents)
-  .
+Highway with image observations and a CNN model [![Colab][colab-badge]][highway_dqn_cnn]
+Train SB3's DQN on `highway-fast-v0` , but using [image observations](#grayscale-image) and a CNN model for the value function.
+
+
+Trajectory Planning on Highway [![Colab][colab-badge]][planning_hw]
+Plan a trajectory on `highway-v0` using the `OPD` {cite}`Hren2008` implementation from [eleurent/rl-agents](<https://github.com/eleurent/rl-agents>).
+
+
+A Model-based Reinforcement Learning tutorial on Parking [![Colab][colab-badge]][parking_mb]
+A tutorial written for [RLSS 2019](<https://rlss.inria.fr/>) and demonstrating the principle of model-based reinforcement learning on the `parking-v0` task.
+
+
+Parking with Hindsight Experience Replay [![Colab][colab-badge]][parking_her]
+Train a goal-conditioned `parking-v0` policy using the `HER` {cite}`Andrychowicz2017` implementation from [stable-baselines](<https://github.com/hill-a/stable-baselines>).
+
+
+Intersection with DQN and social attention [![Colab][colab-badge]][dqn_social]
+Train an `intersection-v0` crossing policy using the social attention architecture {cite}`Leurent2019social` and the DQN implementation from [eleurent/rl-agents](<https://github.com/eleurent/rl-agents>).

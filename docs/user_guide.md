@@ -1,7 +1,4 @@
----
-_user_guide:
----
-
+(user_guide)=
 # User Guide
 
 ```{toctree}

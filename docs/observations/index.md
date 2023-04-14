@@ -140,6 +140,7 @@ vehicle and 0 for placeholders.
 
 ```
 
+(grayscale-image)=
 ## Grayscale Image
 
 The {py:class}`~highway_env.envs.common.observation.GrayscaleObservation` is a $W\times H$ grayscale image of the scene, where $W,H$ are set with the `observation_shape` parameter.

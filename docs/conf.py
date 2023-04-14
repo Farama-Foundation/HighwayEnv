@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.autosectionlabel',
     'sphinxcontrib.bibtex',
+    "jupyter_sphinx",
     "myst_parser",
 ]
 
@@ -67,6 +68,10 @@ napoleon_custom_sections = [("Returns", "params_style")]
 autoclass_content = "both"
 autodoc_preserve_defaults = True
 
+# -- MyST configuration -----------------------------------------------------
+myst_enable_extensions = [
+    "dollarmath",
+]
 
 # -- Options for HTML output -------------------------------------------------
 
