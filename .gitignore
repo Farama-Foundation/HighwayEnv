@@ -21,3 +21,7 @@ _build
 
 # Outputs
 **/out/*
+
+# Docs
+docs/_build
+docs/jupyter_execute
