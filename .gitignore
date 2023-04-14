@@ -24,4 +24,4 @@ _build
 
 # Docs
 docs/_build
-docs/jupyter_execute
+**jupyter_execute
