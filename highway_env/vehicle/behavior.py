@@ -143,9 +143,11 @@ class IDMVehicle(ControlledVehicle):
         """
         if not ego_vehicle or not isinstance(ego_vehicle, Vehicle):
             return 0
-        ego_target_speed = abs(utils.not_zero(getattr(ego_vehicle, "target_speed", 0)))
-        acceleration = self.COMFORT_ACC_MAX * (
-                1 - np.power(max(ego_vehicle.speed, 0) / ego_target_speed, self.DELTA))
+        ego_target_speed = getattr(ego_vehicle, "target_speed", 0)
+        if ego_vehicle.lane and ego_vehicle.lane.speed_limit is not None:
+            ego_target_speed = np.clip(ego_target_speed, 0, ego_vehicle.lane.speed_limit)
+        acceleration = self.COMFORT_ACC_MAX * (1 - np.power(
+            max(ego_vehicle.speed, 0) / abs(utils.not_zero(ego_target_speed)), self.DELTA))
 
         if front_vehicle:
             d = ego_vehicle.lane_distance_to(front_vehicle)
