@@ -307,10 +307,6 @@
 <section id="making-an-environment">
 <h2>Making an environment<a class="headerlink" href="#making-an-environment" title="Permalink to this heading">#</a></h2>
 <p>Here is a quick example of how to create an environment:</p>
-<div class="jupyter_cell docutils container">
-<div class="cell_output docutils container">
-</div>
-</div>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
@@ -330,7 +326,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/quickstart_1_1.png" src="../_images/quickstart_1_1.png" />
+<img alt="../_images/quickstart_0_1.png" src="../_images/quickstart_0_1.png" />
 </div>
 </div>
 <section id="all-the-environments">
@@ -408,7 +404,7 @@ After environment creation, the configuration can be accessed using the
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/quickstart_3_0.png" src="../_images/quickstart_3_0.png" />
+<img alt="../_images/quickstart_2_0.png" src="../_images/quickstart_2_0.png" />
 </div>
 </div>
 <div class="admonition note">
@@ -422,7 +418,7 @@ to be effective.</p>
 <p>Reinforcement Learning agents can be trained using libraries such as <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>,
 <a class="reference external" href="https://github.com/openai/baselines">openai/baselines</a> or <a class="reference external" href="https://github.com/DLR-RM/stable-baselines3">Stable Baselines3</a>.</p>
 <p>Here is an example of SB3’s DQN implementation trained on <code class="docutils literal notranslate"><span class="pre">highway-fast-v0</span></code> with its default kinematics observation and an MLP model.</p>
-<p>{{ highway_dqn }}</p>
+<p><a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">highway_env</span>
 <span class="kn">from</span> <span class="nn">stable_baselines3</span> <span class="kn">import</span> <span class="n">DQN</span>
