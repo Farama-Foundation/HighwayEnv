@@ -80,7 +80,11 @@ Reinforcement Learning agents can be trained using libraries such as [eleurent/r
 
 Here is an example of SB3's DQN implementation trained on `highway-fast-v0` with its default kinematics observation and an MLP model.
 
-{{ highway_dqn }}
+[colab-badge]: https://colab.research.google.com/assets/colab-badge.svg
+[highway_dqn]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn.ipynb
+
+
+[![Colab][colab-badge]][highway_dqn]
 
 ```python
 import gymnasium as gym
@@ -134,7 +138,6 @@ However, [eleurent/rl-agents](https://github.com/eleurent/rl-agents)'s implement
 Several scripts and notebooks to train driving policies on `highway-env` are available [on this page](https://github.com/eleurent/highway-env/tree/master/scripts).
 Here are a few of them:
 
-[colab-badge]: https://colab.research.google.com/assets/colab-badge.svg
 [highway_dqn_cnn]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.ipynb
 [planning_hw]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb
 [parking_mb]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb
