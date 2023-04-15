@@ -9,15 +9,6 @@ For all environments, **several types of observations** can be used. They are de
 Each environment comes with a *default* observation, which can be changed or customised using
 {ref}`environment configurations <configuration>`. For instance,
 
-```{eval-rst}
-.. jupyter-execute::
-    :hide-code:
-
-    # This is needed when highway-env is not installed but cloned locally
-    import highway_env
-    highway_env.register_highway_envs()
-```
-
 ```python
 import gymnasium as gym
 import highway_env

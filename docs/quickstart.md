@@ -7,15 +7,6 @@ Here is a quick example of how to create an environment:
 
 ```{eval-rst}
 .. jupyter-execute::
-  :hide-code:
-
-  # This is needed when highway-env is not installed but cloned locally
-  import highway_env
-  highway_env.register_highway_envs()
-```
-
-```{eval-rst}
-.. jupyter-execute::
 
   import gymnasium as gym
   from matplotlib import pyplot as plt

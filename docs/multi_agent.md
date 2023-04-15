@@ -10,15 +10,6 @@ To that end, update the {ref}`environment configuration <Configuring an environm
 
 ```{eval-rst}
 .. jupyter-execute::
-  :hide-code:
-
-  # This is needed when highway-env is not installed but cloned locally
-  import highway_env
-  highway_env.register_highway_envs()
-```
-
-```{eval-rst}
-.. jupyter-execute::
 
   import gymnasium as gym
 
