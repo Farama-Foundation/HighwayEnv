@@ -202,7 +202,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -293,7 +293,7 @@
                 </svg>
               </button>
             </div>
-            <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <label class="toc-overlay-icon toc-content-icon" for="__toc">
               <div class="visually-hidden">Toggle table of contents sidebar</div>
               <i class="icon"><svg>
                   <use href="#svg-toc"></use>
@@ -306,15 +306,18 @@
 <span id="faq"></span><h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this heading">#</a></h1>
 <p>This is a list of Frequently Asked Questions about highway-env.  Feel free to
 suggest new entries!</p>
-<p>When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code></p>
-<p>: This is probably because you do not have highway-env installed, but are instead working with a local copy of the
+<section id="when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist">
+<h2>When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code><a class="headerlink" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist" title="Permalink to this heading">#</a></h2>
+<p>This is probably because you do not have highway-env installed, but are instead working with a local copy of the
 repository. In that case, you need to run the following code first to register the environments.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">highway_env</span>
 <span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?</p>
-<p>: I also tend to get reasonable but sub-optimal policies using this observation-model pair.
+</section>
+<section id="i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why">
+<h2>I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?<a class="headerlink" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why" title="Permalink to this heading">#</a></h2>
+<p>I also tend to get reasonable but sub-optimal policies using this observation-model pair.
 In <span id="id1">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>, we argued that a possible reason is that the MLP output depends on the order of
 vehicles in the observation. Indeed, if the agent revisits a given scene but observes vehicles described in a different
 order, it will see it as a novel state and will not be able to reuse past information. Thus, the agent struggles to
@@ -334,8 +337,10 @@ make use of its observation.</p>
 </li>
 </ul>
 <p>This example is implemented <a class="reference external" href="https://github.com/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.py">here (SB3’s DQN)</a>.</p>
-<p>My videos are too fast / have a low framerate.</p>
-<p>: This is because in gymnasium, a single video frame is generated at each call of <code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code>. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (<em>e.g.</em> change lane) actually corresponds to several (typically, 15) simulation frames.
+</section>
+<section id="my-videos-are-too-fast-have-a-low-framerate">
+<h2>My videos are too fast / have a low framerate.<a class="headerlink" href="#my-videos-are-too-fast-have-a-low-framerate" title="Permalink to this heading">#</a></h2>
+<p>This is because in gymnasium, a single video frame is generated at each call of <code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code>. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (<em>e.g.</em> change lane) actually corresponds to several (typically, 15) simulation frames.
 In order to also render these intermediate simulation frames, the following should be done:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 
@@ -358,6 +363,7 @@ In order to also render these intermediate simulation frames, the following shou
 <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
+</section>
 </section>
 
           </article>
@@ -410,8 +416,29 @@ In order to also render these intermediate simulation frames, the following shou
           
         </footer>
       </div>
-      <aside class="toc-drawer no-toc">
+      <aside class="toc-drawer">
         
+        
+        <div class="toc-sticky toc-scroll">
+          <div class="toc-title-container">
+            <span class="toc-title">
+              On this page
+            </span>
+          </div>
+          <div class="toc-tree-container">
+            <div class="toc-tree">
+              <ul>
+<li><a class="reference internal" href="#">Frequently Asked Questions</a><ul>
+<li><a class="reference internal" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist">When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code></a></li>
+<li><a class="reference internal" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why">I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?</a></li>
+<li><a class="reference internal" href="#my-videos-are-too-fast-have-a-low-framerate">My videos are too fast / have a low framerate.</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+          </div>
+        </div>
         
         
       </aside>
