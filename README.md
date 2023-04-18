@@ -104,7 +104,7 @@ A continuous control task involving lane-keeping and obstacle avoidance.
 
 Agents solving the `highway-env` environments are available in the [eleurent/rl-agents](https://github.com/eleurent/rl-agents) and [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) repositories.
 
-See the [documentation](https://highway-env.readthedocs.io/en/latest/quickstart.html#training-an-agent) for some examples and notebooks.
+See the [documentation](https://farama-foundation.github.io/HighwayEnv/quickstart/#training-an-agent) for some examples and notebooks.
 
 ### [Deep Q-Network](https://github.com/eleurent/rl-agents/tree/master/rl_agents/agents/deep_q_network)
 
@@ -164,7 +164,7 @@ while not (done or truncated):
 
 ## Documentation
 
-Read the [documentation online](https://highway-env.readthedocs.io/).
+Read the [documentation online](https://farama-foundation.github.io/HighwayEnv/).
 
 ## Citing
 
