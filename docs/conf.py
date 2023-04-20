@@ -80,7 +80,7 @@ myst_enable_extensions = [
 #
 html_theme = "furo"
 html_title = "highway-env Documentation"
-# html_baseurl = "https://<PROJECT_LOW>.farama.org"
+html_baseurl = "https://highway-env.farama.org"
 html_copy_source = False
 html_favicon = "_static/img/favicon.png"
 html_theme_options = {
