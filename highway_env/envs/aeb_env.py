@@ -8,6 +8,7 @@ from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork
 # from highway_env.utils import near_split
 from highway_env.vehicle.controller_aeb import AEBControlledVehicle
+from highway_env.vehicle.controller_aeb_ncap import AEBNCAPControlledVehicle
 # from highway_env.vehicle.kinematics import Vehicle
 from highway_env.vehicle.behavior import IDMVehicle
 
@@ -48,6 +49,8 @@ class AEBEnv(AbstractEnv):
             "reward_max": 1.0,
             "reward_adversarial": False,
             "reward_collision": False,
+            "init_state": None,
+            "ncap": False,
         })
         return config
     
@@ -65,43 +68,76 @@ class AEBEnv(AbstractEnv):
                          np_random=self.np_random, record_history=self.config["show_trajectories"])
 
     def _create_vehicles(self) -> None:
-        init_speed_range = [25.0, 35.0]
-        init_x_range = [15.0, 50.0]
-        
-        agent_init_x = self.np_random.random() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
-        agent_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-        subject_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-        
-        while True:
-            spd_diff = subject_init_spd - agent_init_spd
-            t = spd_diff / 6.0
-            if spd_diff * 0.5 * t < agent_init_x:
-                break
+        if self.config["init_state"] is None:
+            init_speed_range = [25.0, 35.0]
+            init_x_range = [15.0, 50.0]
             
-            agent_init_x = np.random.sample() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
-            agent_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-            subject_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            agent_init_x = self.np_random.random() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
+            agent_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            subject_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            
+            while True:
+                spd_diff = subject_init_spd - agent_init_spd
+                t = spd_diff / 6.0
+                if spd_diff * 0.5 * t < agent_init_x:
+                    break
+                
+                agent_init_x = np.random.sample() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
+                agent_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+                subject_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            
+            self.controlled_vehicles = []
+            agent_vehicle = AEBControlledVehicle(
+                self.road,
+                position=(agent_init_x, 0),
+                speed=agent_init_spd,
+                target_speed=agent_init_spd,
+            )
+            self.controlled_vehicles.append(agent_vehicle)
+            self.road.vehicles.append(agent_vehicle)
+            subject_vehicle = IDMVehicle(
+                self.road,
+                position=(0, 0),
+                speed=subject_init_spd,
+                target_speed=subject_init_spd,
+                longi_aggr=self.config["longi_aggr"],
+            )
+            self.road.vehicles.append(subject_vehicle)
+            # print(f'initial condition *** agent: pos - {agent_init_x}, spd - {agent_init_spd}; subject: spd - {subject_init_spd}')
+        else:
+            init_state = self.config["init_state"] # [dhw, sv_v, agent_v, agent_a if ncap else sv_target_v]
+            agent_init_x = init_state[0] + 5.0
+            agent_init_spd = init_state[2]
+            subject_init_spd = init_state[1]
+            subject_target_spd = init_state[3]
+            
+            self.controlled_vehicles = []
+            if not self.config["ncap"]:
+                agent_vehicle = AEBControlledVehicle(
+                    self.road,
+                    position=(agent_init_x, 0),
+                    speed=agent_init_spd,
+                    target_speed=agent_init_spd,
+                )
+            else:
+                agent_vehicle = AEBNCAPControlledVehicle(
+                    self.road,
+                    position=(agent_init_x, 0),
+                    speed=agent_init_spd,
+                    target_speed=agent_init_spd,
+                )
+            self.controlled_vehicles.append(agent_vehicle)
+            self.road.vehicles.append(agent_vehicle)
+            subject_vehicle = IDMVehicle(
+                self.road,
+                position=(0, 0),
+                speed=subject_init_spd,
+                target_speed=subject_init_spd if not self.config["ncap"] else 30.0,
+                longi_aggr=self.config["longi_aggr"],
+            )
+            self.road.vehicles.append(subject_vehicle)
         
-        self.controlled_vehicles = []
-        agent_vehicle = AEBControlledVehicle(
-            self.road,
-            position=(agent_init_x, 0),
-            speed=agent_init_spd,
-            target_speed=agent_init_spd,
-        )
-        self.controlled_vehicles.append(agent_vehicle)
-        self.road.vehicles.append(agent_vehicle)
-        subject_vehicle = IDMVehicle(
-            self.road,
-            position=(0, 0),
-            speed=subject_init_spd,
-            target_speed=subject_init_spd,
-            longi_aggr=self.config["longi_aggr"],
-        )
-        self.road.vehicles.append(subject_vehicle)
-        # print(f'initial condition *** agent: pos - {agent_init_x}, spd - {agent_init_spd}; subject: spd - {subject_init_spd}')
-
-    def _reward_default(self, action: Action) -> float:
+    def _reward_default(self) -> float:
         """
         The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
         :param action: the last action performed

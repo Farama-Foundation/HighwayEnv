@@ -18,7 +18,7 @@ class IDMVehicle(ControlledVehicle):
     """
 
     # Longitudinal policy parameters
-    ACC_MAX = 6.0  # [m/s2]
+    ACC_MAX = 8.0  # [m/s2]
     """Maximum acceleration."""
 
     COMFORT_ACC_MAX = 3.0  # [m/s2]
