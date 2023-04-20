@@ -148,7 +148,7 @@ class TrapEnv(AbstractEnv):
                 vehicles[init_lane].append((init_x, init_speed))
                 self.controlled_vehicles.append(veh)
                 self.road.vehicles.append(veh)
-            print(f"generated {front_agent_num} front agent(s) and {rear_agent_num} rear agent(s)")
+            # print(f"generated {front_agent_num} front agent(s) and {rear_agent_num} rear agent(s)")
         else:
             lane_0 = self.road.network.get_lane(("0", "1", 0))
             lane_1 = self.road.network.get_lane(("0", "1", 1))
