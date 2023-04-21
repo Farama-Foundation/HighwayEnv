@@ -42,7 +42,9 @@ class AEBControlledVehicle(ControlledVehicle):
                   "acceleration": self.speed_control(self.target_speed)}
         action['steering'] = np.clip(action['steering'], -self.MAX_STEERING_ANGLE, self.MAX_STEERING_ANGLE)
         action['acceleration'] = np.clip(action['acceleration'], -self.MAX_ACCELERATION, self.MAX_ACCELERATION)
-        super().act(action)
+        
+        if action:
+            self.action = action
 
     def follow_road(self) -> None:
         """At the end of a lane, automatically switch to a next one."""

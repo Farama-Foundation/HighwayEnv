@@ -132,7 +132,7 @@ class AEBEnv(AbstractEnv):
                 self.road,
                 position=(0, 0),
                 speed=subject_init_spd,
-                target_speed=subject_init_spd if not self.config["ncap"] else 30.0,
+                target_speed=subject_target_spd if not self.config["ncap"] else 30.0,
                 longi_aggr=self.config["longi_aggr"],
             )
             self.road.vehicles.append(subject_vehicle)
