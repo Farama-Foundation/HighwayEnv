@@ -18,6 +18,8 @@ class ControlledVehicle(Vehicle):
 
     target_speed: float
     """ Desired velocity."""
+    
+    MAX_ACCELERATION = 10.0  # [m/s^2]
 
     """Characteristic time"""
     TAU_ACC = 0.6  # [s]
