@@ -173,16 +173,18 @@ class ParkingEnv(AbstractEnv, GoalEnv):
                 self.road.vehicles.remove(v)
 
         # Walls
-        for y in [-21, 21]:
-            obstacle = Obstacle(self.road, [0, y])
-            obstacle.LENGTH, obstacle.WIDTH = (70, 1)
-            obstacle.diagonal = np.sqrt(obstacle.LENGTH**2 + obstacle.WIDTH**2)
-            self.road.objects.append(obstacle)
-        for x in [-35, 35]:
-            obstacle = Obstacle(self.road, [x, 0], heading=np.pi / 2)
-            obstacle.LENGTH, obstacle.WIDTH = (42, 1)
-            obstacle.diagonal = np.sqrt(obstacle.LENGTH**2 + obstacle.WIDTH**2)
-            self.road.objects.append(obstacle)
+        if self.config['add_walls']:
+            width, height = 70, 42
+            for y in [-height / 2, height / 2]:
+                obstacle = Obstacle(self.road, [0, y])
+                obstacle.LENGTH, obstacle.WIDTH = (width, 1)
+                obstacle.diagonal = np.sqrt(obstacle.LENGTH**2 + obstacle.WIDTH**2)
+                self.road.objects.append(obstacle)
+            for x in [-width / 2, width / 2]:
+                obstacle = Obstacle(self.road, [x, 0], heading=np.pi / 2)
+                obstacle.LENGTH, obstacle.WIDTH = (height, 1)
+                obstacle.diagonal = np.sqrt(obstacle.LENGTH**2 + obstacle.WIDTH**2)
+                self.road.objects.append(obstacle)
 
     def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict, p: float = 0.5) -> float:
         """
