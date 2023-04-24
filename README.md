@@ -5,7 +5,7 @@
 [![Downloads](https://img.shields.io/pypi/dm/highway-env)](https://pypi.org/project/highway-env/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/63847d9328f64fce9c137b03fcafcc27)](https://app.codacy.com/manual/eleurent/highway-env?utm_source=github.com&utm_medium=referral&utm_content=eleurent/highway-env&utm_campaign=Badge_Grade_Dashboard)
 [![GitHub contributors](https://img.shields.io/github/contributors/eleurent/highway-env)](https://github.com/eleurent/highway-env/graphs/contributors)
-[![Environments](https://img.shields.io/github/search/Farama-Foundation/HighwayEnv/import%20filename:*_env%20path:highway_env/envs?label=environments)](#the-environments)
+
 
 A collection of environments for *autonomous driving* and tactical decision-making tasks
 
