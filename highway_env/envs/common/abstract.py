@@ -322,7 +322,7 @@ class AbstractEnv(gym.Env):
             if self._record_video_wrapper and self._record_video_wrapper.video_recorder:
                 self._record_video_wrapper.video_recorder.capture_frame()
             else:
-                self.render(self.render_mode)
+                self.render()
 
     def simplify(self) -> 'AbstractEnv':
         """
