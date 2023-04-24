@@ -153,13 +153,12 @@ This agent leverages a transition and reward models to perform a stochastic tree
 ```python
 import gymnasium as gym
 
-env = gym.make("highway-v0")
+env = gym.make('highway-v0', render_mode='human')
 
 done = truncated = False
 while not (done or truncated):
     action = ... # Your agent code here
     obs, reward, done, truncated, info = env.step(action)
-    env.render()
 ```
 
 ## Documentation
