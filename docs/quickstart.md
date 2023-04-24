@@ -53,7 +53,7 @@ After environment creation, the configuration can be accessed using the
 
   import pprint
 
-  env = gym.make("highway-v0")
+  env = gym.make("highway-v0", render_mode='rgb_array')
   pprint.pprint(env.config)
 ```
 
