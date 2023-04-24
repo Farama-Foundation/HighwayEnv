@@ -64,6 +64,7 @@ class AbstractEnv(gym.Env):
         # Rendering
         self.viewer = None
         self._record_video_wrapper = None
+        assert render_mode is None or render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
         self.enable_auto_render = False
 
@@ -205,6 +206,8 @@ class AbstractEnv(gym.Env):
         self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
         obs = self.observation_type.observe()
         info = self._info(obs, action=self.action_space.sample())
+        if self.render_mode == 'human':
+            self.render()
         return obs, info
 
     def _reset(self) -> None:
@@ -236,6 +239,8 @@ class AbstractEnv(gym.Env):
         terminated = self._is_terminated()
         truncated = self._is_truncated()
         info = self._info(obs, action)
+        if self.render_mode == 'human':
+            self.render()
 
         return obs, reward, terminated, truncated, info
 
@@ -260,13 +265,20 @@ class AbstractEnv(gym.Env):
 
         self.enable_auto_render = False
 
-    def render(self, mode: str = 'rgb_array') -> Optional[np.ndarray]:
+    def render(self) -> Optional[np.ndarray]:
         """
         Render the environment.
 
         Create a viewer if none exists, and use it to render an image.
-        :param mode: the rendering mode
         """
+        if self.render_mode is None:
+            assert self.spec is not None
+            gym.logger.warn(
+                "You are calling render method without specifying any render mode. "
+                "You can specify the render_mode at initialization, "
+                f'e.g. gym.make("{self.spec.id}", render_mode="rgb_array")'
+            )
+            return
         if self.viewer is None:
             self.viewer = EnvViewer(self)
 
@@ -276,7 +288,7 @@ class AbstractEnv(gym.Env):
 
         if not self.viewer.offscreen:
             self.viewer.handle_events()
-        if mode == 'rgb_array':
+        if self.render_mode == 'rgb_array':
             image = self.viewer.get_image()
             return image
 
