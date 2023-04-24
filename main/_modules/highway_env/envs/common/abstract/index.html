@@ -368,6 +368,7 @@
         <span class="c1"># Rendering</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">render_mode</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">render_mode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;render_modes&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">=</span> <span class="n">render_mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enable_auto_render</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -509,6 +510,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">define_spaces</span><span class="p">()</span>  <span class="c1"># Second, to link the obs and actions to the vehicles once the scene is created</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_type</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span>
         <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s1">&#39;human&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">info</span></div>
 
 <div class="viewcode-block" id="AbstractEnv._reset"><a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv._reset">[docs]</a>    <span class="k">def</span> <span class="nf">_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -540,6 +543,8 @@
         <span class="n">terminated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_terminated</span><span class="p">()</span>
         <span class="n">truncated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_truncated</span><span class="p">()</span>
         <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s1">&#39;human&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span></div>
 
@@ -564,13 +569,20 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">enable_auto_render</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="AbstractEnv.render"><a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractEnv.render"><a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Render the environment.</span>
 
 <span class="sd">        Create a viewer if none exists, and use it to render an image.</span>
-<span class="sd">        :param mode: the rendering mode</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">gym</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;You are calling render method without specifying any render mode. &quot;</span>
+                <span class="s2">&quot;You can specify the render_mode at initialization, &quot;</span>
+                <span class="sa">f</span><span class="s1">&#39;e.g. gym.make(&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&quot;, render_mode=&quot;rgb_array&quot;)&#39;</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="n">EnvViewer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -580,7 +592,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">offscreen</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">handle_events</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">:</span>
             <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">get_image</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">image</span></div>
 
@@ -614,7 +626,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="o">.</span><span class="n">video_recorder</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="o">.</span><span class="n">video_recorder</span><span class="o">.</span><span class="n">capture_frame</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AbstractEnv.simplify"><a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.simplify">[docs]</a>    <span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
