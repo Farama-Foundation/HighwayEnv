@@ -51,6 +51,7 @@ class AEBEnv(AbstractEnv):
             "reward_collision": False,
             "init_state": None,
             "ncap": False,
+            "speed_limit": 30,
         })
         return config
     
@@ -70,21 +71,21 @@ class AEBEnv(AbstractEnv):
     def _create_vehicles(self) -> None:
         if self.config["init_state"] is None:
             init_speed_range = [25.0, 35.0]
-            init_x_range = [15.0, 50.0]
+            init_x_range = [5.01, 50.0] # vehicle length: 5 [m]
             
             agent_init_x = self.np_random.random() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
             agent_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
             subject_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
             
-            while True:
-                spd_diff = subject_init_spd - agent_init_spd
-                t = spd_diff / 6.0
-                if spd_diff * 0.5 * t < agent_init_x:
-                    break
+            # while True:
+            #     spd_diff = subject_init_spd - agent_init_spd
+            #     t = spd_diff / 6.0
+            #     if spd_diff * 0.5 * t < agent_init_x:
+            #         break
                 
-                agent_init_x = np.random.sample() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
-                agent_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
-                subject_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            #     agent_init_x = np.random.sample() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
+            #     agent_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
+            #     subject_init_spd = np.random.sample() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
             
             self.controlled_vehicles = []
             agent_vehicle = AEBControlledVehicle(
@@ -99,7 +100,7 @@ class AEBEnv(AbstractEnv):
                 self.road,
                 position=(0, 0),
                 speed=subject_init_spd,
-                target_speed=subject_init_spd,
+                target_speed=self.config["speed_limit"],
                 longi_aggr=self.config["longi_aggr"],
             )
             self.road.vehicles.append(subject_vehicle)
@@ -132,7 +133,7 @@ class AEBEnv(AbstractEnv):
                 self.road,
                 position=(0, 0),
                 speed=subject_init_spd,
-                target_speed=subject_target_spd if not self.config["ncap"] else 30.0,
+                target_speed=self.config["speed_limit"],
                 longi_aggr=self.config["longi_aggr"],
             )
             self.road.vehicles.append(subject_vehicle)

@@ -18,7 +18,8 @@ class IDMVehicle(ControlledVehicle):
     """
 
     # Longitudinal policy parameters
-    ACC_MAX = 8.0  # [m/s2]
+    ACC_MAX = 3.0  # [m/s2]
+    ACC_MIN = -8.0 # [m/s2]
     """Maximum acceleration."""
 
     COMFORT_ACC_MAX = 3.0  # [m/s2]
@@ -117,7 +118,7 @@ class IDMVehicle(ControlledVehicle):
                                                         rear_vehicle=rear_vehicle)
             action['acceleration'] = min(action['acceleration'], target_idm_acceleration)
         # action['acceleration'] = self.recover_from_stop(action['acceleration'])
-        action['acceleration'] = np.clip(action['acceleration'], -self.ACC_MAX, self.ACC_MAX)
+        action['acceleration'] = np.clip(action['acceleration'], self.ACC_MIN, self.ACC_MAX)
         Vehicle.act(self, action)  # Skip ControlledVehicle.act(), or the command will be overriden.
 
     def step(self, dt: float):
