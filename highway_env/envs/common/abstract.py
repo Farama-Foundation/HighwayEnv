@@ -106,7 +106,8 @@ class AbstractEnv(gym.Env):
             "render_agent": True,
             "offscreen_rendering": os.environ.get("OFFSCREEN_RENDERING", "0") == "1",
             "manual_control": False,
-            "real_time_rendering": False
+            "real_time_rendering": False,
+            "center_window": True
         }
 
     def configure(self, config: dict) -> None:
@@ -284,7 +285,7 @@ class AbstractEnv(gym.Env):
 
         self.enable_auto_render = True
 
-        self.viewer.display()
+        self.viewer.display(self.config["center_window"])
 
         if not self.viewer.offscreen:
             self.viewer.handle_events()
