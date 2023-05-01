@@ -36,7 +36,8 @@ class AEBControlledVehicle(ControlledVehicle):
         #         self.target_lane_index = target_lane_index
         
         if action is not None:
-            self.target_speed = action
+            # self.target_speed = action * self.target_speed # AEBBrakeAction
+            self.target_speed = action # AEBAction
 
         action = {"steering": self.steering_control(self.target_lane_index),
                   "acceleration": self.speed_control(self.target_speed)}

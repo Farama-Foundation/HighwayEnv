@@ -71,7 +71,7 @@ class AEBEnv(AbstractEnv):
     def _create_vehicles(self) -> None:
         if self.config["init_state"] is None:
             init_speed_range = [25.0, 35.0]
-            init_x_range = [5.01, 50.0] # vehicle length: 5 [m]
+            init_x_range = [15, 50.0] # vehicle length: 5 [m]
             
             agent_init_x = self.np_random.random() * (init_x_range[1] - init_x_range[0]) + init_x_range[0]
             agent_init_spd = self.np_random.random() * (init_speed_range[1] - init_speed_range[0]) + init_speed_range[0]
@@ -198,18 +198,41 @@ class AEBEnv(AbstractEnv):
             return rew_nocollision
         
     def _reward_adversarial(self) -> float:
-        rew_max = 1.0
-        rew_min = 0.0
-        no_reward_dist = 5.0 # [m]
+        # rew_max = 1.0
+        # rew_min = 0.0
+        # no_reward_dist = 5.0 # [m]
         
+        # agent_vehicle = self.road.vehicles[0]
+        # subject_vehicle = self.road.vehicles[1]
+        
+        # headway = agent_vehicle.position[0] - subject_vehicle.position[0] - agent_vehicle.LENGTH
+        # self.headway = headway
+        
+        # reward = max(rew_min, min(rew_max, -rew_max / no_reward_dist * headway + rew_max))
+        # return reward
+        
+        def normalize(r, r_min, r_max):
+            r = (r - r_min) / (r_max - r_min)
+            return np.clip(r, 0, 1.0)
+        
+        r_min = 0.0
+        r_max = 1.0
+        nrd = 25.0    # no reward distance threshold [m]
+        safe_margin = 1.0 # [m]
+        safe_headway = 0.5
         agent_vehicle = self.road.vehicles[0]
         subject_vehicle = self.road.vehicles[1]
         
         headway = agent_vehicle.position[0] - subject_vehicle.position[0] - agent_vehicle.LENGTH
         self.headway = headway
         
-        reward = max(rew_min, min(rew_max, -rew_max / no_reward_dist * headway + rew_max))
-        return reward
+        if headway < safe_headway:
+            reward = r_min
+        elif headway < safe_headway + safe_margin:
+            reward = (r_max - r_min) / safe_margin * headway + r_min - safe_headway / safe_margin * (r_max - r_min)
+        else:
+            reward = max(0.0, r_max * (headway - nrd) / (safe_headway + safe_margin - nrd))
+        return normalize(reward, r_min, r_max)
 
     def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed."""

@@ -320,6 +320,61 @@ class AEBMetaAction(ActionType):
         """
         return list(range(len(self.actions)))
     
+class AEBBrakeMetaAction(ActionType):
+
+    """
+    An discrete action space of meta-actions: lane changes, and cruise control set-point.
+    """
+
+    ACTIONS_LONGI_ = np.arange(0, 1.01, 0.05)
+    ACTIONS_LONGI = {k: v for k, v in enumerate(ACTIONS_LONGI_)}
+    """A mapping of longitudinal action indexes to labels."""
+
+
+    def __init__(self,
+                 env: 'AbstractEnv',
+                 longitudinal: bool = True,
+                 lateral: bool = True,
+                 target_speeds: Optional[Vector] = None,
+                 **kwargs) -> None:
+        """
+        Create a discrete action space of meta-actions.
+
+        :param env: the environment
+        :param longitudinal: include longitudinal actions
+        :param lateral: include lateral actions
+        :param target_speeds: the list of speeds the vehicle is able to track
+        """
+        super().__init__(env)
+        self.longitudinal = longitudinal
+        self.lateral = lateral
+        self.target_speeds = np.array(target_speeds) if target_speeds is not None else MDPVehicle.DEFAULT_TARGET_SPEEDS
+        self.actions = self.ACTIONS_LONGI
+        if self.actions is None:
+            raise ValueError("At least longitudinal or lateral actions must be included")
+        self.actions_indexes = {v: k for k, v in self.actions.items()}
+
+    def space(self) -> spaces.Space:
+        return spaces.Discrete(len(self.actions))
+
+    @property
+    def vehicle_class(self) -> Callable:
+        return functools.partial(MDPVehicle, target_speeds=self.target_speeds)
+
+    def act(self, action: Union[int, np.ndarray]) -> None:
+        self.controlled_vehicle.act(self.actions[int(action)])
+
+    def get_available_actions(self) -> List[int]:
+        """
+        Get the list of currently available actions.
+
+        Lane changes are not available on the boundary of the road, and speed changes are not available at
+        maximal or minimal speed.
+
+        :return: the list of available actions
+        """
+        return list(range(len(self.actions)))
+    
 class AEBNCAPMetaAction(ActionType):
 
     """
@@ -505,5 +560,7 @@ def action_factory(env: 'AbstractEnv', config: dict) -> ActionType:
         return TrapMetaAction(env, **config)
     elif config["type"] == "AEBNCAPAction":
         return AEBNCAPMetaAction(env, **config)
+    elif config["type"] == "AEBBrakeAction":
+        return AEBBrakeMetaAction(env, **config)
     else:
         raise ValueError("Unknown action type")
