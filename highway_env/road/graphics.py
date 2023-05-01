@@ -125,13 +125,22 @@ class LaneGraphics(object):
         stripes_count = int(2 * (surface.get_height() + surface.get_width()) / (cls.STRIPE_SPACING * surface.scaling))
         s_origin, _ = lane.local_coordinates(surface.origin)
         s0 = (int(s_origin) // cls.STRIPE_SPACING - stripes_count // 2) * cls.STRIPE_SPACING
+
+        last_pixel = [] # Store the pixel coordinates of the last pixel of a lane
         for side in range(2):
             if lane.line_types[side] == LineType.STRIPED:
                 cls.striped_line(lane, surface, stripes_count, s0, side)
             elif lane.line_types[side] == LineType.CONTINUOUS:
-                cls.continuous_curve(lane, surface, stripes_count, s0, side)
+                last_pixel.append(cls.continuous_curve(lane, surface, stripes_count, s0, side, return_last_pixel=True))
             elif lane.line_types[side] == LineType.CONTINUOUS_LINE:
                 cls.continuous_line(lane, surface, stripes_count, s0, side)
+
+        if lane.display_font_size != None:
+            x = (last_pixel[0][0] + last_pixel[1][0]) // 2 - 8
+            y = last_pixel[0][1]
+            font1 = pygame.font.SysFont('arial', lane.display_font_size)
+            text_surface = font1.render(str(lane.identifier), True, (0, 0, 0))
+            surface.blit(text_surface, (x,y))
 
     @classmethod
     def striped_line(cls, lane: AbstractLane, surface: WorldSurface, stripes_count: int, longitudinal: float,
@@ -152,7 +161,7 @@ class LaneGraphics(object):
 
     @classmethod
     def continuous_curve(cls, lane: AbstractLane, surface: WorldSurface, stripes_count: int,
-                         longitudinal: float, side: int) -> None:
+                         longitudinal: float, side: int, return_last_pixel: bool = False) -> None:
         """
         Draw a striped line on one side of a lane, on a surface.
 
@@ -161,11 +170,12 @@ class LaneGraphics(object):
         :param stripes_count: the number of stripes to draw
         :param longitudinal: the longitudinal position of the first stripe [m]
         :param side: which side of the road to draw [0:left, 1:right]
+        :param return_last_pixel: returns the last pixel coordinate of line
         """
         starts = longitudinal + np.arange(stripes_count) * cls.STRIPE_SPACING
         ends = longitudinal + np.arange(stripes_count) * cls.STRIPE_SPACING + cls.STRIPE_SPACING
         lats = [(side - 0.5) * lane.width_at(s) for s in starts]
-        cls.draw_stripes(lane, surface, starts, ends, lats)
+        return cls.draw_stripes(lane, surface, starts, ends, lats, return_last_pixel)
 
     @classmethod
     def continuous_line(cls, lane: AbstractLane, surface: WorldSurface, stripes_count: int, longitudinal: float,
@@ -186,7 +196,8 @@ class LaneGraphics(object):
 
     @classmethod
     def draw_stripes(cls, lane: AbstractLane, surface: WorldSurface,
-                     starts: List[float], ends: List[float], lats: List[float]) -> None:
+                     starts: List[float], ends: List[float], lats: List[float],
+                     return_last_pixel: bool = False) -> None:
         """
         Draw a set of stripes along a lane.
 
@@ -195,6 +206,7 @@ class LaneGraphics(object):
         :param starts: a list of starting longitudinal positions for each stripe [m]
         :param ends: a list of ending longitudinal positions for each stripe [m]
         :param lats: a list of lateral positions for each stripe [m]
+        :param return_last_pixel: returns the last pixel coordinate of line
         """
         starts = np.clip(starts, 0, lane.length)
         ends = np.clip(ends, 0, lane.length)
@@ -204,6 +216,10 @@ class LaneGraphics(object):
                                  (surface.vec2pix(lane.position(starts[k], lats[k]))),
                                  (surface.vec2pix(lane.position(ends[k], lats[k]))),
                                  max(surface.pix(cls.STRIPE_WIDTH), 1))
+                last_coordinate = (surface.vec2pix(lane.position(ends[k], lats[k])))
+                
+        if return_last_pixel:
+            return last_coordinate
 
     @classmethod
     def draw_ground(cls, lane: AbstractLane, surface: WorldSurface, color: Tuple[float], width: float,
