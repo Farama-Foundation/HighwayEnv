@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=4297ed78bc2370ec4493f1a6639f04addebc5da5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=67ddc8aaa908fff6a8eb5c854d313935a27431d3" />
     
     
 
@@ -901,6 +901,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
     <script>
+      // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
         xhr.responseType = 'json';
@@ -1013,30 +1014,7 @@
     </script>
 
     
-    <script>
-      const versioningConfig = {
-        githubUser: 'Farama-Foundation',
-        githubRepo: 'highway-env',
-      };
-      fetch('/main/_static/versioning/versioning_menu.html').then(response => {
-        if (response.status === 200) {
-            response.text().then(text => {
-                const container = document.createElement("div");
-                container.innerHTML = text;
-                document.querySelector("body").appendChild(container);
-                // innerHtml doenst evaluate scripts, we need to add them dynamically
-                Array.from(container.querySelectorAll("script")).forEach(oldScript => {
-                    const newScript = document.createElement("script");
-                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                    oldScript.parentNode.replaceChild(newScript, oldScript);
-                });
-            });
-        } else {
-            console.warn("Unable to load versioning menu", response);
-        }
-      });
-    </script>
+    
 
     </body>
 </html>

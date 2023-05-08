@@ -17,7 +17,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=4297ed78bc2370ec4493f1a6639f04addebc5da5" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=67ddc8aaa908fff6a8eb5c854d313935a27431d3" />
     
     
 
@@ -569,25 +569,25 @@ vehicle and 0 for placeholders.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.08        1.          0.          1.
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.04        1.          0.          1.
    0.        ]
- [ 1.          0.19811496  0.         -0.119081    0.          1.
+ [ 1.          0.19180655  0.         -0.19841526  0.          1.
    0.        ]
- [ 1.          0.40754107  0.04       -0.10404758  0.          1.
+ [ 1.          0.40578184 -0.04       -0.13825902  0.          1.
    0.        ]
- [ 1.          0.63302165  0.         -0.12932171  0.          1.
+ [ 1.          0.62179744  0.08       -0.10155953  0.          1.
    0.        ]
- [ 1.          0.84218097 -0.04       -0.08550888  0.          1.
+ [ 1.          0.8322727   0.04       -0.09693051  0.          1.
    0.        ]
- [ 1.          1.         -0.08       -0.1790612   0.          1.
+ [ 1.          1.         -0.04       -0.07562295  0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.06647547  0.          1.
+ [ 1.          1.          0.08       -0.05180239  0.          1.
    0.        ]
- [ 1.          1.         -0.08       -0.12901911  0.          1.
+ [ 1.          1.          0.04       -0.12869136  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.13483916  0.          1.
+ [ 1.          1.          0.04       -0.17634486  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.19432898  0.          1.
+ [ 1.          1.          0.08       -0.11512789  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -1208,6 +1208,7 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script>
+      // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
         xhr.responseType = 'json';
@@ -1320,30 +1321,7 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
     </script>
 
     
-    <script>
-      const versioningConfig = {
-        githubUser: 'Farama-Foundation',
-        githubRepo: 'highway-env',
-      };
-      fetch('/main/_static/versioning/versioning_menu.html').then(response => {
-        if (response.status === 200) {
-            response.text().then(text => {
-                const container = document.createElement("div");
-                container.innerHTML = text;
-                document.querySelector("body").appendChild(container);
-                // innerHtml doenst evaluate scripts, we need to add them dynamically
-                Array.from(container.querySelectorAll("script")).forEach(oldScript => {
-                    const newScript = document.createElement("script");
-                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                    oldScript.parentNode.replaceChild(newScript, oldScript);
-                });
-            });
-        } else {
-            console.warn("Unable to load versioning menu", response);
-        }
-      });
-    </script>
+    
 
     </body>
 </html>
