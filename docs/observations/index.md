@@ -242,26 +242,33 @@ These predictions are performed for $V$ different values of the ego-vehicle spee
 
 For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using $V=3,\, L = 3\,H = 10$, with ego-speed of {$15$ m/s, $20$ m/s and $25$ m/s}, the predicted time-to-collisions are $\infty,\,5s,\,2.5s$ and the corresponding observation is
 
-$15$ m/s
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==
-0   0   0   0   0   0   0   0   0   0
-0   0   0   0   0   0   0   0   0   0
-0   0   0   0   0   0   0   0   0   0
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+```{eval-rst}
+.. table:: $15$ m/s
 
-$20$ m/s
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==  
+0   0   0   0   0   0   0   0   0   0  
+0   0   0   0   0   0   0   0   0   0  
+0   0   0   0   0   0   0   0   0   0  
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+```
+
+```{eval-rst}
+.. table:: $20$ m/s  
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   1   0   0   0   0   0
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+```
 
-$25$ m/s
+```{eval-rst}
+.. table:: $25$ m/s  
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0
 0   0   1   0   0   0   0   0   0   0
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+```
 
 The top row corresponds to the left-lane, the middle row corresponds to the lane where ego-vehicle is located, and the bottom row to the right-lane.
 
