@@ -253,7 +253,8 @@ For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and
 ```
 
 ```{eval-rst}
-.. table:: $20$ m/s  
+.. table:: $20$ m/s
+
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0
@@ -262,7 +263,8 @@ For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and
 ```
 
 ```{eval-rst}
-.. table:: $25$ m/s  
+.. table:: $25$ m/s
+
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 0   0   0   0   0   0   0   0   0   0
 0   0   0   0   0   0   0   0   0   0
