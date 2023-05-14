@@ -31,7 +31,7 @@ env = gym.make("roundabout-v0")
         "type": "DiscreteMetaAction"
     },
     "incoming_vehicle_destination": None,
-    "duration": 11, # [s]
+    "duration": 11, # [s] If the environment run is not done at 11s, it will be forcibly truncated.
     "simulation_frequency": 15,  # [Hz]
     "policy_frequency": 1,  # [Hz]
     "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
