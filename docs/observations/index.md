@@ -53,7 +53,7 @@ For instance:
 | vehicle V   | 22.2  | 10.5 | 18.0  | 0.5   |
 
 ```{note}
-The ego-vehicle is always described in the first row
+The ego-vehicle is always described in the first row. The default is 'presence', 'x', 'y', 'vx', 'vy', five features.
 ```
 
 If configured with `normalize=True` (default), the observation is normalized within a fixed range, which gives for
