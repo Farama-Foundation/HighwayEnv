@@ -31,7 +31,7 @@ env = gym.make("roundabout-v0")
         "type": "DiscreteMetaAction"
     },
     "incoming_vehicle_destination": None,
-    "duration": 11, # [s] If the environment runs for 11 seconds and still hasn't done(vehicle is crashed), it will be truncated.
+    "duration": 11, # [s] If the environment runs for 11 seconds and still hasn't done(vehicle is crashed), it will be truncated. "Second" is expressed as the variable "time", equal to "the number of calls to the step method" / policy_frequency.
     "simulation_frequency": 15,  # [Hz]
     "policy_frequency": 1,  # [Hz]
     "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
