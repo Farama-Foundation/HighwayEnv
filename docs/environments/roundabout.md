@@ -35,8 +35,8 @@ env = gym.make("roundabout-v0")
     "simulation_frequency": 15,  # [Hz]
     "policy_frequency": 1,  # [Hz]
     "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
-    "screen_width": 600,  # [px]
-    "screen_height": 600,  # [px]
+    "screen_width": 600,  # [px] width of the pygame window
+    "screen_height": 600,  # [px] height of the pygame window
     "centering_position": [0.5, 0.6],
     "scaling": 5.5,
     "show_trajectories": False,
