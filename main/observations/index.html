@@ -14,10 +14,10 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
         <title>Observations - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=67ddc8aaa908fff6a8eb5c854d313935a27431d3" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
     
     
 
@@ -569,25 +569,25 @@ vehicle and 0 for placeholders.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.04        1.          0.          1.
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.12        1.          0.          1.
    0.        ]
- [ 1.          0.19180655  0.         -0.19841526  0.          1.
+ [ 1.          0.19929318 -0.12       -0.19000699  0.          1.
    0.        ]
- [ 1.          0.40578184 -0.04       -0.13825902  0.          1.
+ [ 1.          0.4282046  -0.08       -0.11075553  0.          1.
    0.        ]
- [ 1.          0.62179744  0.08       -0.10155953  0.          1.
+ [ 1.          0.6347119   0.         -0.19964074  0.          1.
    0.        ]
- [ 1.          0.8322727   0.04       -0.09693051  0.          1.
+ [ 1.          0.8280253  -0.12       -0.14968735  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.07562295  0.          1.
+ [ 1.          1.         -0.12       -0.19632868  0.          1.
    0.        ]
- [ 1.          1.          0.08       -0.05180239  0.          1.
+ [ 1.          1.         -0.04       -0.11645403  0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.12869136  0.          1.
+ [ 1.          1.         -0.04       -0.17342895  0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.17634486  0.          1.
+ [ 1.          1.         -0.04       -0.07422685  0.          1.
    0.        ]
- [ 1.          1.          0.08       -0.11512789  0.          1.
+ [ 1.          1.          0.         -0.09367479  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -770,24 +770,123 @@ The grid size and resolution is defined by the <code class="docutils literal not
 <p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeToCollisionObservation</span></code> is a <span class="math notranslate nohighlight">\(V\times L\times H\)</span> array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
 These predictions are performed for <span class="math notranslate nohighlight">\(V\)</span> different values of the ego-vehicle speed, <span class="math notranslate nohighlight">\(L\)</span> lanes on the road around the current lane, and represented as one-hot encodings over <span class="math notranslate nohighlight">\(H\)</span> discretised time values (bins), with 1s steps.</p>
 <p>For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using <span class="math notranslate nohighlight">\(V=3,\, L = 3\,H = 10\)</span>, with ego-speed of {<span class="math notranslate nohighlight">\(15\)</span> m/s, <span class="math notranslate nohighlight">\(20\)</span> m/s and <span class="math notranslate nohighlight">\(25\)</span> m/s}, the predicted time-to-collisions are <span class="math notranslate nohighlight">\(\infty,\,5s,\,2.5s\)</span> and the corresponding observation is</p>
-<p><span class="math notranslate nohighlight">\(15\)</span> m/s
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==
-0   0   0   0   0   0   0   0   0   0
-0   0   0   0   0   0   0   0   0   0
-0   0   0   0   0   0   0   0   0   0
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==</p>
-<p><span class="math notranslate nohighlight">\(20\)</span> m/s
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==
-0   0   0   0   0   0   0   0   0   0
-0   0   0   0   0   0   0   0   0   0
-0   0   0   0   1   0   0   0   0   0
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==</p>
-<p><span class="math notranslate nohighlight">\(25\)</span> m/s
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==
-0   0   0   0   0   0   0   0   0   0
-0   0   0   0   0   0   0   0   0   0
-0   0   1   0   0   0   0   0   0   0
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>The top row corresponds to the left-lane, the middle row corresponds to the lane where ego-vehicle is located, and the bottom row to the right-lane.</p>
 <section id="id5">
 <h3>Example configuration<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>

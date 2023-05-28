@@ -14,10 +14,10 @@
     <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
         <title>Roundabout - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
     <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=67ddc8aaa908fff6a8eb5c854d313935a27431d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
     
     
 
@@ -325,13 +325,13 @@
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span>
     <span class="p">},</span>
     <span class="s2">&quot;incoming_vehicle_destination&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">11</span>
+    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="c1"># [s] If the environment runs for 11 seconds and still hasn&#39;t done(vehicle is crashed), it will be truncated. &quot;Second&quot; is expressed as the variable &quot;time&quot;, equal to &quot;the number of calls to the step method&quot; / policy_frequency.</span>
     <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
     <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
     <span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">:</span> <span class="s2">&quot;highway_env.vehicle.behavior.IDMVehicle&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px]</span>
-    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px]</span>
-    <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+    <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px] width of the pygame window</span>
+    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px] height of the pygame window</span>
+    <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>  <span class="c1"># The smaller the value, the more southeast the displayed area is. K key and M key can change centering_position[0].</span>
     <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mf">5.5</span><span class="p">,</span>
     <span class="s2">&quot;show_trajectories&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s2">&quot;render_agent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
