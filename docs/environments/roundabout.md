@@ -37,7 +37,7 @@ env = gym.make("roundabout-v0")
     "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
     "screen_width": 600,  # [px] width of the pygame window
     "screen_height": 600,  # [px] height of the pygame window
-    "centering_position": [0.5, 0.6],  # The smaller the value, the more southeast the displayed area is.
+    "centering_position": [0.5, 0.6],  # The smaller the value, the more southeast the displayed area is. K key and M key can change centering_position[0].
     "scaling": 5.5,
     "show_trajectories": False,
     "render_agent": True,
