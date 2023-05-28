@@ -156,6 +156,7 @@ class KinematicObservation(ObservationType):
         :param env: The environment to observe
         :param features: Names of features used in the observation
         :param vehicles_count: Number of observed vehicles
+        :param features_range: a dict mapping a feature name to [min, max] values
         :param absolute: Use absolute coordinates
         :param order: Order of observed vehicles. Values: sorted, shuffled
         :param normalize: Should the observation be normalized
