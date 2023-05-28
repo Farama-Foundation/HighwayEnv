@@ -571,23 +571,23 @@ vehicle and 0 for placeholders.</p>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.12        1.          0.          1.
    0.        ]
- [ 1.          0.19929318 -0.12       -0.19000699  0.          1.
+ [ 1.          0.21854842 -0.04       -0.06112193  0.          1.
    0.        ]
- [ 1.          0.4282046  -0.08       -0.11075553  0.          1.
+ [ 1.          0.4231094  -0.12       -0.10286016  0.          1.
    0.        ]
- [ 1.          0.6347119   0.         -0.19964074  0.          1.
+ [ 1.          0.6180195  -0.12       -0.19441615  0.          1.
    0.        ]
- [ 1.          0.8280253  -0.12       -0.14968735  0.          1.
+ [ 1.          0.8154635  -0.12       -0.07426415  0.          1.
    0.        ]
- [ 1.          1.         -0.12       -0.19632868  0.          1.
+ [ 1.          1.         -0.04       -0.05037494  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.11645403  0.          1.
+ [ 1.          1.          0.         -0.0799225   0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.17342895  0.          1.
+ [ 1.          1.         -0.12       -0.08817179  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.07422685  0.          1.
+ [ 1.          1.         -0.08       -0.10745364  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.09367479  0.          1.
+ [ 1.          1.         -0.12       -0.18324475  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -942,6 +942,7 @@ Example of observation dictionary in the environment config:</p>
 <li><p><strong>env</strong> – The environment to observe</p></li>
 <li><p><strong>features</strong> – Names of features used in the observation</p></li>
 <li><p><strong>vehicles_count</strong> – Number of observed vehicles</p></li>
+<li><p><strong>features_range</strong> – a dict mapping a feature name to [min, max] values</p></li>
 <li><p><strong>absolute</strong> – Use absolute coordinates</p></li>
 <li><p><strong>order</strong> – Order of observed vehicles. Values: sorted, shuffled</p></li>
 <li><p><strong>normalize</strong> – Should the observation be normalized</p></li>
@@ -1065,6 +1066,7 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 <li><p><strong>env</strong> – The environment to observe</p></li>
 <li><p><strong>features</strong> – Names of features used in the observation</p></li>
 <li><p><strong>vehicles_count</strong> – Number of observed vehicles</p></li>
+<li><p><strong>features_range</strong> – a dict mapping a feature name to [min, max] values</p></li>
 <li><p><strong>absolute</strong> – Use absolute coordinates</p></li>
 <li><p><strong>order</strong> – Order of observed vehicles. Values: sorted, shuffled</p></li>
 <li><p><strong>normalize</strong> – Should the observation be normalized</p></li>
@@ -1098,6 +1100,7 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 <li><p><strong>env</strong> – The environment to observe</p></li>
 <li><p><strong>features</strong> – Names of features used in the observation</p></li>
 <li><p><strong>vehicles_count</strong> – Number of observed vehicles</p></li>
+<li><p><strong>features_range</strong> – a dict mapping a feature name to [min, max] values</p></li>
 <li><p><strong>absolute</strong> – Use absolute coordinates</p></li>
 <li><p><strong>order</strong> – Order of observed vehicles. Values: sorted, shuffled</p></li>
 <li><p><strong>normalize</strong> – Should the observation be normalized</p></li>
