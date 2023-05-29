@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     # Run the trained model and record video
     model = DQN.load("highway_dqn/model", env=env)
-    env = RecordVideo(env, video_folder="racetrack_ppo/videos", episode_trigger=lambda e: True)
+    env = RecordVideo(env, video_folder="highway_dqn/videos", episode_trigger=lambda e: True)
     env.unwrapped.set_record_video_wrapper(env)
     env.configure({"simulation_frequency": 15})  # Higher FPS for rendering
 
