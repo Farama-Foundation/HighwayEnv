@@ -126,7 +126,8 @@ class EnvViewer(object):
             self.env.road,
             self.sim_surface,
             simulation_frequency=self.env.config["simulation_frequency"],
-            offscreen=self.offscreen)
+            offscreen=self.offscreen,
+            observer=self.observer_vehicle)
 
         ObservationGraphics.display(self.env.observation_type, self.sim_surface)
 

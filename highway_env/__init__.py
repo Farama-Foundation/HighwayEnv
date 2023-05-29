@@ -2,8 +2,7 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
-
-from gym.envs.registration import register
+from gymnasium.envs.registration import register
 
 
 def register_highway_envs():
@@ -29,6 +28,11 @@ def register_highway_envs():
     register(
         id='highway-custom-v0',
         entry_point='highway_env.envs:HighwayEnvCustom',
+    )
+
+    register(
+        id='highway-custom-fast-v0',
+        entry_point='highway_env.envs:HighwayEnvCustomFast',
     )
 
     # intersection_env.py

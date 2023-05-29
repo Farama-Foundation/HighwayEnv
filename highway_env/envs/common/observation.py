@@ -233,6 +233,41 @@ class KinematicObservation(ObservationType):
         return obs.astype(self.space().dtype)
 
 
+class AttackerKinematicObservation(KinematicObservation):
+    def observe(self) -> np.ndarray:
+        if not self.env.road:
+            return np.zeros(self.space().shape)
+
+        # Add ego-vehicle
+        df = pd.DataFrame.from_records([self.observer_vehicle.to_dict()])[self.features]
+        # Add nearby traffic
+        close_vehicles = self.env.road.close_vehicles_to(self.observer_vehicle,
+                                                         self.env.PERCEPTION_DISTANCE,
+                                                         count=self.vehicles_count - 1,
+                                                         see_behind=self.see_behind,
+                                                         sort=False)
+        # the victim position for a close vehicle is the same
+        if close_vehicles:
+            origin = self.observer_vehicle if not self.absolute else None
+            df = pd.concat([df, pd.DataFrame.from_records(
+                [v.to_dict(origin, observe_intentions=self.observe_intentions)
+                 for v in close_vehicles[-self.vehicles_count + 1:]])[self.features]],
+                           ignore_index=True)
+        # Normalize and clip
+        if self.normalize:
+            df = self.normalize_obs(df)
+        # Fill missing rows
+        if df.shape[0] < self.vehicles_count:
+            rows = np.zeros((self.vehicles_count - df.shape[0], len(self.features)))
+            df = pd.concat([df, pd.DataFrame(data=rows, columns=self.features)], ignore_index=True)
+        # Reorder
+        df = df[self.features]
+        obs = df.values.copy()
+        if self.order == "shuffled":
+            self.env.np_random.shuffle(obs[1:])
+        # Flatten
+        return obs.astype(self.space().dtype)
+
 class OccupancyGridObservation(ObservationType):
 
     """Observe an occupancy grid of nearby vehicles."""
@@ -481,6 +516,7 @@ class MultiAgentObservation(ObservationType):
             obs_type = observation_factory(self.env, self.observation_config)
             obs_type.observer_vehicle = vehicle
             self.agents_observation_types.append(obs_type)
+        print("observation vehicle #" + str(len(self.agents_observation_types)))
 
     def space(self) -> spaces.Space:
         return spaces.Tuple([obs_type.space() for obs_type in self.agents_observation_types])
@@ -628,6 +664,8 @@ def observation_factory(env: 'AbstractEnv', config: dict) -> ObservationType:
         return TimeToCollisionObservation(env, **config)
     elif config["type"] == "Kinematics":
         return KinematicObservation(env, **config)
+    elif config["type"] == "AttackerKinematics":
+        return AttackerKinematicObservation(env, **config)
     elif config["type"] == "OccupancyGrid":
         return OccupancyGridObservation(env, **config)
     elif config["type"] == "KinematicsGoal":
