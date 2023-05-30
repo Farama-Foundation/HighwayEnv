@@ -1,0 +1,1007 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="A collection of environments for autonomous driving and tactical decision-making tasks">
+    <meta property="og:title" content="highway-env Documentation" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
+    <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/vehicle/behavior.html" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
+        <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/vehicle/behavior.html" />
+
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
+        <title>highway_env.vehicle.behavior - highway-env Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    <header class="farama-header" aria-label="Farama header">
+      <div class="farama-header__container">
+        <div class="farama-header__left--mobile">
+          <label class="nav-overlay-icon" for="__navigation">
+            <div class="visually-hidden">Toggle site navigation sidebar</div>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs></defs>
+              <line x1="0.5" y1="4" x2="23.5" y2="4"></line>
+              <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
+              <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
+            </svg>
+            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
+              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
+              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
+              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
+            </svg> -->
+            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
+              <defs></defs>
+              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
+              <line x1="8" y1="1" x2="8" y2="23"></line>
+              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
+            </svg> -->
+          </label>
+        </div>
+        <div class="farama-header__left farama-header__center--mobile">
+          <a href="../../../../">
+            <span class="farama-header__title">highway-env Documentation</span>
+          </a>
+        </div>
+        <div class="farama-header__right">
+          <div class="farama-header-menu">
+            <button class="farama-header-menu__btn" aria-label="Open Farama Menu" aria-expanded="false" aria-haspopup="true" aria-controls="farama-menu">
+              <img class="farama-black-logo-invert" src="../../../../_static/img/farama-logo-header.svg">
+              <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polyline style="stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-width: 2px;" points="1 7 12 18 23 7"></polyline>
+              </svg>
+            </button>
+            <div class="farama-header-menu-container farama-hidden" aria-hidden="true" id="farama-menu">
+              <div class="farama-header-menu__header">
+                <a href="https://farama.org">
+                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../../../../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
+                  <span>Farama Foundation</span>
+                </a>
+                <div class="farama-header-menu-header__right">
+                  <button id="farama-close-menu">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+                      <line x1="3" y1="21" x2="21" y2="3"></line>
+                      <line x1="3" y1="3" x2="21" y2="21"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="farama-header-menu__body">
+                <!-- Response from farama.org/api/projects.json -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<div class="page">
+  <!--<header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../"><div class="brand">highway-env Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>-->
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../../../">
+    <span class="farama-header__title">highway-env Documentation</span>
+  </a><form class="sidebar-search-container" method="get" action="../../../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/highway/">Highway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/merge/">Merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/roundabout/">Roundabout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/parking/">Parking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/intersection/">Intersection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/racetrack/">Racetrack</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../observations/">Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../actions/">Actions</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/lane/">Lane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/controller/">Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/behavior/">Behavior</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../rewards/">Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../graphics/">Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../multi_agent/">The Multi-Agent setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../make_your_own/">Make your own environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq/">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../bibliography/">Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main-container">
+
+    
+
+    
+
+    <div class="main">
+      <div class="content">
+        <div class="article-container">
+          <a href="#" class="back-to-top muted-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+            </svg>
+            <span>Back to top</span>
+          </a>
+          <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+              <button class="theme-toggle" title="Toggle color theme">
+                <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+                <svg class="theme-icon-when-auto">
+                  <use href="#svg-sun-half"></use>
+                </svg>
+                <svg class="theme-icon-when-dark">
+                  <use href="#svg-moon"></use>
+                </svg>
+                <svg class="theme-icon-when-light">
+                  <use href="#svg-sun"></use>
+                </svg>
+              </button>
+            </div>
+            <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+              <div class="visually-hidden">Toggle table of contents sidebar</div>
+              <i class="icon"><svg>
+                  <use href="#svg-toc"></use>
+                </svg></i>
+            </label>
+          </div>
+          <article role="main">
+            
+            <h1>Source code for highway_env.vehicle.behavior</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">Road</span><span class="p">,</span> <span class="n">Route</span><span class="p">,</span> <span class="n">LaneIndex</span>
+<span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.controller</span> <span class="kn">import</span> <span class="n">ControlledVehicle</span>
+<span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.kinematics</span> <span class="kn">import</span> <span class="n">Vehicle</span>
+
+
+<div class="viewcode-block" id="IDMVehicle"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle">[docs]</a><span class="k">class</span> <span class="nc">IDMVehicle</span><span class="p">(</span><span class="n">ControlledVehicle</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A vehicle using both a longitudinal and a lateral decision policies.</span>
+
+<span class="sd">    - Longitudinal: the IDM model computes an acceleration given the preceding vehicle&#39;s distance and speed.</span>
+<span class="sd">    - Lateral: the MOBIL model decides when to change lane by maximizing the acceleration of nearby vehicles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Longitudinal policy parameters</span>
+    <span class="n">ACC_MAX</span> <span class="o">=</span> <span class="mf">6.0</span>  <span class="c1"># [m/s2]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Maximum acceleration.&quot;&quot;&quot;</span>
+
+    <span class="n">COMFORT_ACC_MAX</span> <span class="o">=</span> <span class="mf">3.0</span>  <span class="c1"># [m/s2]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Desired maximum acceleration.&quot;&quot;&quot;</span>
+
+    <span class="n">COMFORT_ACC_MIN</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span>  <span class="c1"># [m/s2]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Desired maximum deceleration.&quot;&quot;&quot;</span>
+
+    <span class="n">DISTANCE_WANTED</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">+</span> <span class="n">ControlledVehicle</span><span class="o">.</span><span class="n">LENGTH</span>  <span class="c1"># [m]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Desired jam distance to the front vehicle.&quot;&quot;&quot;</span>
+
+    <span class="n">TIME_WANTED</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># [s]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Desired time gap to the front vehicle.&quot;&quot;&quot;</span>
+
+    <span class="n">DELTA</span> <span class="o">=</span> <span class="mf">4.0</span>  <span class="c1"># []</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exponent of the velocity term.&quot;&quot;&quot;</span>
+
+    <span class="n">DELTA_RANGE</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Range of delta when chosen randomly.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Lateral policy parameters</span>
+    <span class="n">POLITENESS</span> <span class="o">=</span> <span class="mf">0.</span>  <span class="c1"># in [0, 1]</span>
+    <span class="n">LANE_CHANGE_MIN_ACC_GAIN</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># [m/s2]</span>
+    <span class="n">LANE_CHANGE_MAX_BRAKING_IMPOSED</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># [m/s2]</span>
+    <span class="n">LANE_CHANGE_DELAY</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [s]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
+                 <span class="n">position</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+                 <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">target_lane_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">target_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">enable_lane_change</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">timer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">road</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">,</span> <span class="n">target_speed</span><span class="p">,</span> <span class="n">route</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enable_lane_change</span> <span class="o">=</span> <span class="n">enable_lane_change</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="n">timer</span> <span class="ow">or</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">LANE_CHANGE_DELAY</span>
+
+    <span class="k">def</span> <span class="nf">randomize_behavior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DELTA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">DELTA_RANGE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">high</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">DELTA_RANGE</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<div class="viewcode-block" id="IDMVehicle.create_from"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.create_from">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;IDMVehicle&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new vehicle from an existing one.</span>
+
+<span class="sd">        The vehicle dynamics and target dynamics are copied, other properties are default.</span>
+
+<span class="sd">        :param vehicle: a vehicle</span>
+<span class="sd">        :return: a new vehicle at the same dynamical state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">heading</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span>
+                <span class="n">target_lane_index</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">,</span> <span class="n">target_speed</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_speed</span><span class="p">,</span>
+                <span class="n">route</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">route</span><span class="p">,</span> <span class="n">timer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="s1">&#39;timer&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="IDMVehicle.act"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.act">[docs]</a>    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute an action.</span>
+
+<span class="sd">        For now, no action is supported because the vehicle takes all decisions</span>
+<span class="sd">        of acceleration and lane changes on its own, based on the IDM and MOBIL models.</span>
+
+<span class="sd">        :param action: the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">crashed</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Lateral: MOBIL</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">follow_road</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enable_lane_change</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">change_lane_policy</span><span class="p">()</span>
+        <span class="n">action</span><span class="p">[</span><span class="s1">&#39;steering&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_control</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">)</span>
+        <span class="n">action</span><span class="p">[</span><span class="s1">&#39;steering&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s1">&#39;steering&#39;</span><span class="p">],</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span><span class="p">)</span>
+
+        <span class="c1"># Longitudinal: IDM</span>
+        <span class="n">front_vehicle</span><span class="p">,</span> <span class="n">rear_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span><span class="p">)</span>
+        <span class="n">action</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                                   <span class="n">front_vehicle</span><span class="o">=</span><span class="n">front_vehicle</span><span class="p">,</span>
+                                                   <span class="n">rear_vehicle</span><span class="o">=</span><span class="n">rear_vehicle</span><span class="p">)</span>
+        <span class="c1"># When changing lane, check both current and target lanes</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">:</span>
+            <span class="n">front_vehicle</span><span class="p">,</span> <span class="n">rear_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">)</span>
+            <span class="n">target_idm_acceleration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                                        <span class="n">front_vehicle</span><span class="o">=</span><span class="n">front_vehicle</span><span class="p">,</span>
+                                                        <span class="n">rear_vehicle</span><span class="o">=</span><span class="n">rear_vehicle</span><span class="p">)</span>
+            <span class="n">action</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">],</span> <span class="n">target_idm_acceleration</span><span class="p">)</span>
+        <span class="c1"># action[&#39;acceleration&#39;] = self.recover_from_stop(action[&#39;acceleration&#39;])</span>
+        <span class="n">action</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">],</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ACC_MAX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACC_MAX</span><span class="p">)</span>
+        <span class="n">Vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>  <span class="c1"># Skip ControlledVehicle.act(), or the command will be overriden.</span></div>
+
+<div class="viewcode-block" id="IDMVehicle.step"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Step the simulation.</span>
+
+<span class="sd">        Increases a timer used for decision policies, and step the vehicle dynamics.</span>
+
+<span class="sd">        :param dt: timestep</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">+=</span> <span class="n">dt</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IDMVehicle.acceleration"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.acceleration">[docs]</a>    <span class="k">def</span> <span class="nf">acceleration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                     <span class="n">ego_vehicle</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">,</span>
+                     <span class="n">front_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">rear_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute an acceleration command with the Intelligent Driver Model.</span>
+
+<span class="sd">        The acceleration is chosen so as to:</span>
+<span class="sd">        - reach a target speed;</span>
+<span class="sd">        - maintain a minimum safety distance (and safety time) w.r.t the front vehicle.</span>
+
+<span class="sd">        :param ego_vehicle: the vehicle whose desired acceleration is to be computed. It does not have to be an</span>
+<span class="sd">                            IDM vehicle, which is why this method is a class method. This allows an IDM vehicle to</span>
+<span class="sd">                            reason about other vehicles behaviors even though they may not IDMs.</span>
+<span class="sd">        :param front_vehicle: the vehicle preceding the ego-vehicle</span>
+<span class="sd">        :param rear_vehicle: the vehicle following the ego-vehicle</span>
+<span class="sd">        :return: the acceleration command for the ego-vehicle [m/s2]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ego_vehicle</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="p">,</span> <span class="n">Vehicle</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">ego_target_speed</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="p">,</span> <span class="s2">&quot;target_speed&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">lane</span> <span class="ow">and</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">lane</span><span class="o">.</span><span class="n">speed_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ego_target_speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">ego_target_speed</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">lane</span><span class="o">.</span><span class="n">speed_limit</span><span class="p">)</span>
+        <span class="n">acceleration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">COMFORT_ACC_MAX</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">not_zero</span><span class="p">(</span><span class="n">ego_target_speed</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">DELTA</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">front_vehicle</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">front_vehicle</span><span class="p">)</span>
+            <span class="n">acceleration</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">COMFORT_ACC_MAX</span> <span class="o">*</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">desired_gap</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="p">)</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">not_zero</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">acceleration</span></div>
+
+<div class="viewcode-block" id="IDMVehicle.desired_gap"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.desired_gap">[docs]</a>    <span class="k">def</span> <span class="nf">desired_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ego_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">projected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the desired distance between a vehicle and its leading vehicle.</span>
+
+<span class="sd">        :param ego_vehicle: the vehicle being controlled</span>
+<span class="sd">        :param front_vehicle: its leading vehicle</span>
+<span class="sd">        :param projected: project 2D velocities in 1D space</span>
+<span class="sd">        :return: the desired distance between the two [m]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DISTANCE_WANTED</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TIME_WANTED</span>
+        <span class="n">ab</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">COMFORT_ACC_MAX</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">COMFORT_ACC_MIN</span>
+        <span class="n">dv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">.</span><span class="n">velocity</span> <span class="o">-</span> <span class="n">front_vehicle</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span> <span class="k">if</span> <span class="n">projected</span> \
+            <span class="k">else</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span> <span class="o">-</span> <span class="n">front_vehicle</span><span class="o">.</span><span class="n">speed</span>
+        <span class="n">d_star</span> <span class="o">=</span> <span class="n">d0</span> <span class="o">+</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">tau</span> <span class="o">+</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">dv</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ab</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">d_star</span></div>
+
+<div class="viewcode-block" id="IDMVehicle.change_lane_policy"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.change_lane_policy">[docs]</a>    <span class="k">def</span> <span class="nf">change_lane_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decide when to change lane.</span>
+
+<span class="sd">        Based on:</span>
+<span class="sd">        - frequency;</span>
+<span class="sd">        - closeness of the target lane;</span>
+<span class="sd">        - MOBIL model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If a lane change is already ongoing</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">:</span>
+            <span class="c1"># If we are on correct route but bad lane: abort it if someone else is already changing into the same lane</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">[:</span><span class="mi">2</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span> \
+                            <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">lane_index</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> \
+                            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="p">)</span> \
+                            <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">:</span>
+                        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                        <span class="n">d_star</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">desired_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">d_star</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span>
+                            <span class="k">break</span>
+            <span class="k">return</span>
+
+        <span class="c1"># else, at a given frequency,</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">do_every</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LANE_CHANGE_DELAY</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># decide to make a lane change</span>
+        <span class="k">for</span> <span class="n">lane_index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">side_lanes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span><span class="p">):</span>
+            <span class="c1"># Is the candidate lane close enough?</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="c1"># Only change lane when the vehicle is moving</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># Does the MOBIL model recommend a lane change?</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mobil</span><span class="p">(</span><span class="n">lane_index</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">=</span> <span class="n">lane_index</span></div>
+
+<div class="viewcode-block" id="IDMVehicle.mobil"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.mobil">[docs]</a>    <span class="k">def</span> <span class="nf">mobil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        MOBIL lane change model: Minimizing Overall Braking Induced by a Lane change</span>
+
+<span class="sd">            The vehicle should change lane only if:</span>
+<span class="sd">            - after changing it (and/or following vehicles) can accelerate more;</span>
+<span class="sd">            - it doesn&#39;t impose an unsafe braking on its new following vehicle.</span>
+
+<span class="sd">        :param lane_index: the candidate lane for the change</span>
+<span class="sd">        :return: whether the lane change should be performed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Is the maneuver unsafe for the new following vehicle?</span>
+        <span class="n">new_preceding</span><span class="p">,</span> <span class="n">new_following</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">)</span>
+        <span class="n">new_following_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">=</span><span class="n">new_following</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="o">=</span><span class="n">new_preceding</span><span class="p">)</span>
+        <span class="n">new_following_pred_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">=</span><span class="n">new_following</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_following_pred_a</span> <span class="o">&lt;</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LANE_CHANGE_MAX_BRAKING_IMPOSED</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Do I have a planned route for a specific lane which is safe for me to access?</span>
+        <span class="n">old_preceding</span><span class="p">,</span> <span class="n">old_following</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">self_pred_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="o">=</span><span class="n">new_preceding</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Wrong direction</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="c1"># Unsafe braking required</span>
+            <span class="k">elif</span> <span class="n">self_pred_a</span> <span class="o">&lt;</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LANE_CHANGE_MAX_BRAKING_IMPOSED</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Is there an acceleration advantage for me and/or my followers to change lane?</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">self_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="o">=</span><span class="n">old_preceding</span><span class="p">)</span>
+            <span class="n">old_following_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">=</span><span class="n">old_following</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">old_following_pred_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">=</span><span class="n">old_following</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="o">=</span><span class="n">old_preceding</span><span class="p">)</span>
+            <span class="n">jerk</span> <span class="o">=</span> <span class="n">self_pred_a</span> <span class="o">-</span> <span class="n">self_a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">POLITENESS</span> <span class="o">*</span> <span class="p">(</span><span class="n">new_following_pred_a</span> <span class="o">-</span> <span class="n">new_following_a</span>
+                                                             <span class="o">+</span> <span class="n">old_following_pred_a</span> <span class="o">-</span> <span class="n">old_following_a</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">jerk</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">LANE_CHANGE_MIN_ACC_GAIN</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># All clear, let&#39;s go!</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="IDMVehicle.recover_from_stop"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.recover_from_stop">[docs]</a>    <span class="k">def</span> <span class="nf">recover_from_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acceleration</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If stopped on the wrong lane, try a reversing maneuver.</span>
+
+<span class="sd">        :param acceleration: desired acceleration from IDM</span>
+<span class="sd">        :return: suggested acceleration to recover from being stuck</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stopped_speed</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">safe_distance</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="c1"># Is the vehicle stopped on the wrong lane?</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">&lt;</span> <span class="n">stopped_speed</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">rear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">new_rear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">))</span>
+            <span class="c1"># Check for free room behind on both lanes</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">rear</span> <span class="ow">or</span> <span class="n">rear</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">safe_distance</span><span class="p">)</span> <span class="ow">and</span> \
+                    <span class="p">(</span><span class="ow">not</span> <span class="n">new_rear</span> <span class="ow">or</span> <span class="n">new_rear</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">safe_distance</span><span class="p">):</span>
+                <span class="c1"># Reverse</span>
+                <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">COMFORT_ACC_MAX</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">acceleration</span></div></div>
+
+
+<div class="viewcode-block" id="LinearVehicle"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle">[docs]</a><span class="k">class</span> <span class="nc">LinearVehicle</span><span class="p">(</span><span class="n">IDMVehicle</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters.&quot;&quot;&quot;</span>
+
+    <span class="n">ACCELERATION_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
+    <span class="n">STEERING_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="n">ControlledVehicle</span><span class="o">.</span><span class="n">KP_HEADING</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="o">.</span><span class="n">KP_HEADING</span> <span class="o">*</span> <span class="n">ControlledVehicle</span><span class="o">.</span><span class="n">KP_LATERAL</span><span class="p">]</span>
+
+    <span class="n">ACCELERATION_RANGE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ACCELERATION_PARAMETERS</span><span class="p">),</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ACCELERATION_PARAMETERS</span><span class="p">)])</span>
+    <span class="n">STEERING_RANGE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">STEERING_PARAMETERS</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]),</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">STEERING_PARAMETERS</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])])</span>
+
+    <span class="n">TIME_WANTED</span> <span class="o">=</span> <span class="mf">2.5</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
+                 <span class="n">position</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+                 <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">target_lane_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">target_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">enable_lane_change</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">timer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">road</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">,</span> <span class="n">target_speed</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span>
+                         <span class="n">enable_lane_change</span><span class="p">,</span> <span class="n">timer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collecting_data</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="LinearVehicle.act"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.act">[docs]</a>    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">collecting_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collect_data</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">randomize_behavior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ua</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_PARAMETERS</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_PARAMETERS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_RANGE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">ua</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_RANGE</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
+                                                                        <span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_RANGE</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STEERING_PARAMETERS</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">STEERING_PARAMETERS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">STEERING_RANGE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">ub</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STEERING_RANGE</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">STEERING_RANGE</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<div class="viewcode-block" id="LinearVehicle.acceleration"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.acceleration">[docs]</a>    <span class="k">def</span> <span class="nf">acceleration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                     <span class="n">ego_vehicle</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">,</span>
+                     <span class="n">front_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">rear_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute an acceleration command with a Linear Model.</span>
+
+<span class="sd">        The acceleration is chosen so as to:</span>
+<span class="sd">        - reach a target speed;</span>
+<span class="sd">        - reach the speed of the leading (resp following) vehicle, if it is lower (resp higher) than ego&#39;s;</span>
+<span class="sd">        - maintain a minimum safety distance w.r.t the leading vehicle.</span>
+
+<span class="sd">        :param ego_vehicle: the vehicle whose desired acceleration is to be computed. It does not have to be an</span>
+<span class="sd">                            Linear vehicle, which is why this method is a class method. This allows a Linear vehicle to</span>
+<span class="sd">                            reason about other vehicles behaviors even though they may not Linear.</span>
+<span class="sd">        :param front_vehicle: the vehicle preceding the ego-vehicle</span>
+<span class="sd">        :param rear_vehicle: the vehicle following the ego-vehicle</span>
+<span class="sd">        :return: the acceleration command for the ego-vehicle [m/s2]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_PARAMETERS</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_features</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="p">,</span> <span class="n">rear_vehicle</span><span class="p">)))</span></div>
+
+    <span class="k">def</span> <span class="nf">acceleration_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ego_vehicle</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">,</span>
+                              <span class="n">front_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="n">rear_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">vt</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">dp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">ego_vehicle</span><span class="p">:</span>
+            <span class="n">vt</span> <span class="o">=</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">-</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span>
+            <span class="n">d_safe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DISTANCE_WANTED</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">TIME_WANTED</span>
+            <span class="k">if</span> <span class="n">front_vehicle</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">front_vehicle</span><span class="p">)</span>
+                <span class="n">dv</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">front_vehicle</span><span class="o">.</span><span class="n">speed</span> <span class="o">-</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">dp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">d_safe</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vt</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">dp</span><span class="p">])</span>
+
+<div class="viewcode-block" id="LinearVehicle.steering_control"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.steering_control">[docs]</a>    <span class="k">def</span> <span class="nf">steering_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Linear controller with respect to parameters.</span>
+
+<span class="sd">        Overrides the non-linear controller ControlledVehicle.steering_control()</span>
+
+<span class="sd">        :param target_lane_index: index of the lane to follow</span>
+<span class="sd">        :return: a steering wheel angle command [rad]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STEERING_PARAMETERS</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_features</span><span class="p">(</span><span class="n">target_lane_index</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="LinearVehicle.steering_features"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.steering_features">[docs]</a>    <span class="k">def</span> <span class="nf">steering_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A collection of features used to follow a lane</span>
+
+<span class="sd">        :param target_lane_index: index of the lane to follow</span>
+<span class="sd">        :return: a array of features</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">target_lane_index</span><span class="p">)</span>
+        <span class="n">lane_coords</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">lane_next_coords</span> <span class="o">=</span> <span class="n">lane_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">TAU_PURSUIT</span>
+        <span class="n">lane_future_heading</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">lane_next_coords</span><span class="p">)</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">utils</span><span class="o">.</span><span class="n">wrap_to_pi</span><span class="p">(</span><span class="n">lane_future_heading</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span> <span class="o">*</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">not_zero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">),</span>
+                             <span class="o">-</span><span class="n">lane_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">/</span> <span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">not_zero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">features</span></div>
+
+    <span class="k">def</span> <span class="nf">longitudinal_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Nominal dynamics: integrate speed</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">])</span>
+        <span class="c1"># Target speed dynamics</span>
+        <span class="n">phi0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">])</span>
+        <span class="c1"># Front speed control</span>
+        <span class="n">phi1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">])</span>
+        <span class="c1"># Front position control</span>
+        <span class="n">phi2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">TIME_WANTED</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">])</span>
+        <span class="c1"># Disable speed control</span>
+        <span class="n">front_vehicle</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">front_vehicle</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">&lt;</span> <span class="n">front_vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">:</span>
+            <span class="n">phi1</span> <span class="o">*=</span> <span class="mi">0</span>
+
+        <span class="c1"># Disable front position control</span>
+        <span class="k">if</span> <span class="n">front_vehicle</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">front_vehicle</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DISTANCE_WANTED</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">TIME_WANTED</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">:</span>
+                <span class="n">phi2</span> <span class="o">*=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">phi2</span> <span class="o">*=</span> <span class="mi">0</span>
+
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">phi0</span><span class="p">,</span> <span class="n">phi1</span><span class="p">,</span> <span class="n">phi2</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">phi</span>
+
+    <span class="k">def</span> <span class="nf">lateral_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">])</span>
+        <span class="n">phi0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">])</span>
+        <span class="n">phi1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">])</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">phi0</span><span class="p">,</span> <span class="n">phi1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">phi</span>
+
+<div class="viewcode-block" id="LinearVehicle.collect_data"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.collect_data">[docs]</a>    <span class="k">def</span> <span class="nf">collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store features and outputs for parameter regression.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_features</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">add_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">,</span> <span class="n">output_lane</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">front_vehicle</span><span class="p">,</span> <span class="n">rear_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">front_vehicle</span><span class="p">,</span> <span class="n">rear_vehicle</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_PARAMETERS</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;longitudinal&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;longitudinal&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;longitudinal&quot;</span><span class="p">][</span><span class="s2">&quot;features&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;longitudinal&quot;</span><span class="p">][</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output_lane</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_lane</span> <span class="o">=</span> <span class="n">lane_index</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_features</span><span class="p">(</span><span class="n">lane_index</span><span class="p">)</span>
+        <span class="n">out_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_features</span><span class="p">(</span><span class="n">output_lane</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STEERING_PARAMETERS</span><span class="p">,</span> <span class="n">out_features</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;lateral&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;lateral&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;lateral&quot;</span><span class="p">][</span><span class="s2">&quot;features&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;lateral&quot;</span><span class="p">][</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AggressiveVehicle"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.AggressiveVehicle">[docs]</a><span class="k">class</span> <span class="nc">AggressiveVehicle</span><span class="p">(</span><span class="n">LinearVehicle</span><span class="p">):</span>
+    <span class="n">LANE_CHANGE_MIN_ACC_GAIN</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [m/s2]</span>
+    <span class="n">MERGE_ACC_GAIN</span> <span class="o">=</span> <span class="mf">0.8</span>
+    <span class="n">MERGE_VEL_RATIO</span> <span class="o">=</span> <span class="mf">0.75</span>
+    <span class="n">MERGE_TARGET_VEL</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">ACCELERATION_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MERGE_ACC_GAIN</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">MERGE_VEL_RATIO</span><span class="p">)</span> <span class="o">*</span> <span class="n">MERGE_TARGET_VEL</span><span class="p">),</span>
+                               <span class="n">MERGE_ACC_GAIN</span> <span class="o">/</span> <span class="p">(</span><span class="n">MERGE_VEL_RATIO</span> <span class="o">*</span> <span class="n">MERGE_TARGET_VEL</span><span class="p">),</span>
+                               <span class="mf">0.5</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DefensiveVehicle"><a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.DefensiveVehicle">[docs]</a><span class="k">class</span> <span class="nc">DefensiveVehicle</span><span class="p">(</span><span class="n">LinearVehicle</span><span class="p">):</span>
+    <span class="n">LANE_CHANGE_MIN_ACC_GAIN</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [m/s2]</span>
+    <span class="n">MERGE_ACC_GAIN</span> <span class="o">=</span> <span class="mf">1.2</span>
+    <span class="n">MERGE_VEL_RATIO</span> <span class="o">=</span> <span class="mf">0.75</span>
+    <span class="n">MERGE_TARGET_VEL</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">ACCELERATION_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MERGE_ACC_GAIN</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">MERGE_VEL_RATIO</span><span class="p">)</span> <span class="o">*</span> <span class="n">MERGE_TARGET_VEL</span><span class="p">),</span>
+                               <span class="n">MERGE_ACC_GAIN</span> <span class="o">/</span> <span class="p">(</span><span class="n">MERGE_VEL_RATIO</span> <span class="o">*</span> <span class="n">MERGE_TARGET_VEL</span><span class="p">),</span>
+                               <span class="mf">2.0</span><span class="p">]</span></div>
+</pre></div>
+          </article>
+        </div>
+        <footer>
+          
+          <div class="related-pages">
+            
+            
+          </div>
+          <div class="bottom-of-page">
+            <div class="left-details">
+              <div class="copyright">
+                Copyright &#169; 2023 Farama Foundation
+              </div>
+              <!--
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            -->
+            </div>
+            <div class="right-details">
+              <div class="icons">
+                
+              </div>
+            </div>
+          </div>
+          
+        </footer>
+      </div>
+      <aside class="toc-drawer no-toc">
+        
+        
+        
+      </aside>
+    </div>
+  </div>
+</div>
+    <script>
+      const toggleMenu = () => {
+        const menuBtn = document.querySelector(".farama-header-menu__btn");
+        const menuContainer = document.querySelector(".farama-header-menu-container");
+        if (document.querySelector(".farama-header-menu").classList.contains("active")) {
+          menuBtn.setAttribute("aria-expanded", "false");
+          menuContainer.setAttribute("aria-hidden", "true");
+        } else {
+          menuBtn.setAttribute("aria-expanded", "true");
+          menuContainer.setAttribute("aria-hidden", "false");
+        }
+        document.querySelector(".farama-header-menu").classList.toggle("active");
+      }
+
+      document.querySelector(".farama-header-menu__btn").addEventListener("click", toggleMenu);
+      document.getElementById("farama-close-menu").addEventListener("click", toggleMenu);
+    </script>
+
+    
+    <script>
+          (() => {
+              if (!localStorage.getItem("shownCookieAlert")) {
+                  const boxElem = document.createElement("div");
+                  boxElem.classList.add("cookie-alert");
+                  const containerElem = document.createElement("div");
+                  containerElem.classList.add("cookie-alert__container");
+                  const textElem = document.createElement("p");
+                  textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
+                                      Google Analytics</a> to collect statistics. You can disable it by blocking
+                                      the JavaScript coming from www.google-analytics.com.`;
+                                      containerElem.appendChild(textElem);
+                  const closeBtn = document.createElement("button");
+                  closeBtn.innerHTML = `<?xml version="1.0" ?><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>`
+                  closeBtn.onclick = () => {
+                      localStorage.setItem("shownCookieAlert", "true");
+                      boxElem.style.display = "none";
+                  }
+                  containerElem.appendChild(closeBtn);
+                  boxElem.appendChild(containerElem);
+                  document.body.appendChild(boxElem);
+              }
+          })()
+      </script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H9C8TWXZ8"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-6H9C8TWXZ8');
+      </script>
+
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/scripts/furo.js"></script>
+    <script src="../../../../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+    <script>
+      // Create menu with Farama projects by using the API at farama.org/api/projects.json
+      const createCORSRequest = (method, url) => {
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = 'json';
+
+        if ("withCredentials" in xhr) {
+          xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+          // IE8 & IE9
+          xhr = new XDomainRequest();
+          xhr.open(method, url);
+        } else {
+          // CORS not supported.
+          xhr = null;
+        }
+        return xhr;
+      };
+
+      const url = 'https://farama.org/api/projects.json';
+      const imagesBasepath = "https://farama.org/assets/images"
+      const method = 'GET';
+      let xhr = createCORSRequest(method, url);
+
+      xhr.onload = () => {
+        const jsonResponse = xhr.response;
+        const sections = {
+          "Documentation": [],
+          "Mature Projects": [],
+          "Incubating Projects": [],
+          "Foundation": [
+            {
+              name: "About",
+              link: "https://farama.org/about"
+            },
+            {
+              name: "Standards",
+              link: "https://farama.org/project_standards",
+            },
+            {
+              name: "Donate",
+              link: "https://farama.org/donations"
+            }
+          ]
+        }
+        Object.keys(jsonResponse).forEach(key => {
+          projectJson = jsonResponse[key];
+          if (projectJson.website !== null) {
+            projectJson.link = projectJson.website;
+            sections["Documentation"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            projectJson.link = projectJson.github;
+            sections["Mature Projects"].push(projectJson)
+          } else {
+            projectJson.link = projectJson.github;
+            sections["Incubating Projects"].push(projectJson)
+          }
+        })
+
+        const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        Object.keys(sections).forEach((key, i) => {
+          projects = sections[key];
+          const sectionElem = Object.assign(
+            document.createElement('div'), {
+              className:'farama-header-menu__section',
+              style: "padding-left: 24px"
+            }
+          )
+          sectionElem.appendChild(Object.assign(document.createElement('span'),
+            {
+              className:'farama-header-menu__section-title' ,
+              innerText: key
+            }
+          ))
+          const ulElem = Object.assign(document.createElement('ul'),
+            {
+              className:'farama-header-menu-list',
+            }
+          )
+          for (let project of projects) {
+            const liElem = document.createElement("li");
+            const aElem = Object.assign(document.createElement("a"),
+              {
+                href: project.link
+              }
+            );
+            liElem.appendChild(aElem);
+            if (key !== "Foundation") {
+              const imgElem = Object.assign(document.createElement("img"),
+                {
+                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                  alt: `${project.name} logo`,
+                  className: "farama-black-logo-invert"
+                }
+              );
+              aElem.appendChild(imgElem);
+            }
+            aElem.appendChild(document.createTextNode(project.name));
+            ulElem.appendChild(liElem);
+          }
+          sectionElem.appendChild(ulElem);
+          menuContainer.appendChild(sectionElem)
+        });
+      }
+
+      xhr.onerror = function() {
+        console.error("Unable to load projects");
+      };
+
+      xhr.send();
+    </script>
+
+    
+    
+
+    </body>
+</html>

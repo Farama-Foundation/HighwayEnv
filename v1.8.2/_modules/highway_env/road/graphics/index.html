@@ -1,0 +1,879 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="A collection of environments for autonomous driving and tactical decision-making tasks">
+    <meta property="og:title" content="highway-env Documentation" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
+    <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/road/graphics.html" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
+        <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/road/graphics.html" />
+
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
+        <title>highway_env.road.graphics - highway-env Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    <header class="farama-header" aria-label="Farama header">
+      <div class="farama-header__container">
+        <div class="farama-header__left--mobile">
+          <label class="nav-overlay-icon" for="__navigation">
+            <div class="visually-hidden">Toggle site navigation sidebar</div>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs></defs>
+              <line x1="0.5" y1="4" x2="23.5" y2="4"></line>
+              <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
+              <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
+            </svg>
+            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
+              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
+              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
+              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
+            </svg> -->
+            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
+              <defs></defs>
+              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
+              <line x1="8" y1="1" x2="8" y2="23"></line>
+              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
+            </svg> -->
+          </label>
+        </div>
+        <div class="farama-header__left farama-header__center--mobile">
+          <a href="../../../../">
+            <span class="farama-header__title">highway-env Documentation</span>
+          </a>
+        </div>
+        <div class="farama-header__right">
+          <div class="farama-header-menu">
+            <button class="farama-header-menu__btn" aria-label="Open Farama Menu" aria-expanded="false" aria-haspopup="true" aria-controls="farama-menu">
+              <img class="farama-black-logo-invert" src="../../../../_static/img/farama-logo-header.svg">
+              <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polyline style="stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-width: 2px;" points="1 7 12 18 23 7"></polyline>
+              </svg>
+            </button>
+            <div class="farama-header-menu-container farama-hidden" aria-hidden="true" id="farama-menu">
+              <div class="farama-header-menu__header">
+                <a href="https://farama.org">
+                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../../../../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
+                  <span>Farama Foundation</span>
+                </a>
+                <div class="farama-header-menu-header__right">
+                  <button id="farama-close-menu">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+                      <line x1="3" y1="21" x2="21" y2="3"></line>
+                      <line x1="3" y1="3" x2="21" y2="21"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="farama-header-menu__body">
+                <!-- Response from farama.org/api/projects.json -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<div class="page">
+  <!--<header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../"><div class="brand">highway-env Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>-->
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../../../">
+    <span class="farama-header__title">highway-env Documentation</span>
+  </a><form class="sidebar-search-container" method="get" action="../../../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/highway/">Highway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/merge/">Merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/roundabout/">Roundabout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/parking/">Parking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/intersection/">Intersection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/racetrack/">Racetrack</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../observations/">Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../actions/">Actions</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/lane/">Lane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/controller/">Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/behavior/">Behavior</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../rewards/">Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../graphics/">Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../multi_agent/">The Multi-Agent setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../make_your_own/">Make your own environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq/">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../bibliography/">Bibliography</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main-container">
+
+    
+
+    
+
+    <div class="main">
+      <div class="content">
+        <div class="article-container">
+          <a href="#" class="back-to-top muted-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+            </svg>
+            <span>Back to top</span>
+          </a>
+          <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+              <button class="theme-toggle" title="Toggle color theme">
+                <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+                <svg class="theme-icon-when-auto">
+                  <use href="#svg-sun-half"></use>
+                </svg>
+                <svg class="theme-icon-when-dark">
+                  <use href="#svg-moon"></use>
+                </svg>
+                <svg class="theme-icon-when-light">
+                  <use href="#svg-sun"></use>
+                </svg>
+              </button>
+            </div>
+            <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+              <div class="visually-hidden">Toggle table of contents sidebar</div>
+              <i class="icon"><svg>
+                  <use href="#svg-toc"></use>
+                </svg></i>
+            </label>
+          </div>
+          <article role="main">
+            
+            <h1>Source code for highway_env.road.graphics</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="kn">from</span> <span class="nn">highway_env.road.lane</span> <span class="kn">import</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">AbstractLane</span>
+<span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">Road</span>
+<span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.graphics</span> <span class="kn">import</span> <span class="n">VehicleGraphics</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">Obstacle</span><span class="p">,</span> <span class="n">Landmark</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">RoadObject</span>
+
+<span class="n">PositionType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="WorldSurface"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface">[docs]</a><span class="k">class</span> <span class="nc">WorldSurface</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area.&quot;&quot;&quot;</span>
+
+    <span class="n">BLACK</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">GREY</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">WHITE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+    <span class="n">INITIAL_SCALING</span> <span class="o">=</span> <span class="mf">5.5</span>
+    <span class="n">INITIAL_CENTERING</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+    <span class="n">SCALING_FACTOR</span> <span class="o">=</span> <span class="mf">1.3</span>
+    <span class="n">MOVING_FACTOR</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">surf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">INITIAL_SCALING</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">INITIAL_CENTERING</span>
+
+<div class="viewcode-block" id="WorldSurface.pix"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.pix">[docs]</a>    <span class="k">def</span> <span class="nf">pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a distance [m] to pixels [px].</span>
+
+<span class="sd">        :param length: the input distance [m]</span>
+<span class="sd">        :return: the corresponding size [px]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WorldSurface.pos2pix"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.pos2pix">[docs]</a>    <span class="k">def</span> <span class="nf">pos2pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert two world coordinates [m] into a position in the surface [px]</span>
+
+<span class="sd">        :param x: x world coordinate [m]</span>
+<span class="sd">        :param y: y world coordinate [m]</span>
+<span class="sd">        :return: the coordinates of the corresponding pixel [px]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="WorldSurface.vec2pix"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.vec2pix">[docs]</a>    <span class="k">def</span> <span class="nf">vec2pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a world position [m] into a position in the surface [px].</span>
+
+<span class="sd">        :param vec: a world position [m]</span>
+<span class="sd">        :return: the coordinates of the corresponding pixel [px]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="WorldSurface.is_visible"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.is_visible">[docs]</a>    <span class="k">def</span> <span class="nf">is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Is a position visible in the surface?</span>
+<span class="sd">        :param vec: a position</span>
+<span class="sd">        :param margin: margins around the frame to test for visibility</span>
+<span class="sd">        :return: whether the position is visible</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">margin</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">+</span> <span class="n">margin</span> <span class="ow">and</span> <span class="o">-</span><span class="n">margin</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">margin</span></div>
+
+<div class="viewcode-block" id="WorldSurface.move_display_window_to"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.move_display_window_to">[docs]</a>    <span class="k">def</span> <span class="nf">move_display_window_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the origin of the displayed area to center on a given world position.</span>
+
+<span class="sd">        :param position: a world position [m]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">position</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="WorldSurface.handle_event"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.handle_event">[docs]</a>    <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle pygame events for moving and zooming in the displayed area.</span>
+
+<span class="sd">        :param event: a pygame event</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_l</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span> <span class="o">*=</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">SCALING_FACTOR</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_o</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SCALING_FACTOR</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_m</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MOVING_FACTOR</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_k</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MOVING_FACTOR</span></div></div>
+
+
+<div class="viewcode-block" id="LaneGraphics"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics">[docs]</a><span class="k">class</span> <span class="nc">LaneGraphics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A visualization of a lane.&quot;&quot;&quot;</span>
+
+    <span class="c1"># See https://www.researchgate.net/figure/French-road-traffic-lane-description-and-specification_fig4_261170641</span>
+    <span class="n">STRIPE_SPACING</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">4.33</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Offset between stripes [m]&quot;&quot;&quot;</span>
+
+    <span class="n">STRIPE_LENGTH</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Length of a stripe [m]&quot;&quot;&quot;</span>
+
+    <span class="n">STRIPE_WIDTH</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Width of a stripe [m]&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LaneGraphics.display"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.display">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display a lane on a surface.</span>
+
+<span class="sd">        :param lane: the lane to be displayed</span>
+<span class="sd">        :param surface: the pygame surface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stripes_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">*</span> <span class="n">surface</span><span class="o">.</span><span class="n">scaling</span><span class="p">))</span>
+        <span class="n">s_origin</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
+        <span class="n">s0</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">s_origin</span><span class="p">)</span> <span class="o">//</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">-</span> <span class="n">stripes_count</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">lane</span><span class="o">.</span><span class="n">line_types</span><span class="p">[</span><span class="n">side</span><span class="p">]</span> <span class="o">==</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">striped_line</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">side</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">lane</span><span class="o">.</span><span class="n">line_types</span><span class="p">[</span><span class="n">side</span><span class="p">]</span> <span class="o">==</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">continuous_curve</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">side</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">lane</span><span class="o">.</span><span class="n">line_types</span><span class="p">[</span><span class="n">side</span><span class="p">]</span> <span class="o">==</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">continuous_line</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">side</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LaneGraphics.striped_line"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.striped_line">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">striped_line</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                     <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a striped line on one side of a lane, on a surface.</span>
+
+<span class="sd">        :param lane: the lane</span>
+<span class="sd">        :param surface: the pygame surface</span>
+<span class="sd">        :param stripes_count: the number of stripes to draw</span>
+<span class="sd">        :param longitudinal: the longitudinal position of the first stripe [m]</span>
+<span class="sd">        :param side: which side of the road to draw [0:left, 1:right]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">starts</span> <span class="o">=</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_LENGTH</span>
+        <span class="n">lats</span> <span class="o">=</span> <span class="p">[(</span><span class="n">side</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">lane</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">]</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">draw_stripes</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="n">lats</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LaneGraphics.continuous_curve"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.continuous_curve">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">continuous_curve</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                         <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a striped line on one side of a lane, on a surface.</span>
+
+<span class="sd">        :param lane: the lane</span>
+<span class="sd">        :param surface: the pygame surface</span>
+<span class="sd">        :param stripes_count: the number of stripes to draw</span>
+<span class="sd">        :param longitudinal: the longitudinal position of the first stripe [m]</span>
+<span class="sd">        :param side: which side of the road to draw [0:left, 1:right]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">starts</span> <span class="o">=</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="n">lats</span> <span class="o">=</span> <span class="p">[(</span><span class="n">side</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">lane</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">]</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">draw_stripes</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="n">lats</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LaneGraphics.continuous_line"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.continuous_line">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">continuous_line</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                        <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a continuous line on one side of a lane, on a surface.</span>
+
+<span class="sd">        :param lane: the lane</span>
+<span class="sd">        :param surface: the pygame surface</span>
+<span class="sd">        :param stripes_count: the number of stripes that would be drawn if the line was striped</span>
+<span class="sd">        :param longitudinal: the longitudinal position of the start of the line [m]</span>
+<span class="sd">        :param side: which side of the road to draw [0:left, 1:right]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">starts</span> <span class="o">=</span> <span class="p">[</span><span class="n">longitudinal</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span><span class="p">]</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="p">[</span><span class="n">longitudinal</span> <span class="o">+</span> <span class="n">stripes_count</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_LENGTH</span><span class="p">]</span>
+        <span class="n">lats</span> <span class="o">=</span> <span class="p">[(</span><span class="n">side</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">lane</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">]</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">draw_stripes</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="n">lats</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LaneGraphics.draw_stripes"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.draw_stripes">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">draw_stripes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
+                     <span class="n">starts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">ends</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">lats</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a set of stripes along a lane.</span>
+
+<span class="sd">        :param lane: the lane</span>
+<span class="sd">        :param surface: the surface to draw on</span>
+<span class="sd">        :param starts: a list of starting longitudinal positions for each stripe [m]</span>
+<span class="sd">        :param ends: a list of ending longitudinal positions for each stripe [m]</span>
+<span class="sd">        :param lats: a list of lateral positions for each stripe [m]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">starts</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">starts</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">starts</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">ends</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_LENGTH</span><span class="p">:</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span>
+                                 <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">starts</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">lats</span><span class="p">[</span><span class="n">k</span><span class="p">]))),</span>
+                                 <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">lats</span><span class="p">[</span><span class="n">k</span><span class="p">]))),</span>
+                                 <span class="nb">max</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_WIDTH</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">draw_ground</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                    <span class="n">draw_surface</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">draw_surface</span> <span class="o">=</span> <span class="n">draw_surface</span> <span class="ow">or</span> <span class="n">surface</span>
+        <span class="n">stripes_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">*</span> <span class="n">surface</span><span class="o">.</span><span class="n">scaling</span><span class="p">))</span>
+        <span class="n">s_origin</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
+        <span class="n">s0</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">s_origin</span><span class="p">)</span> <span class="o">//</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">-</span> <span class="n">stripes_count</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="n">dots</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">longis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">s0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+            <span class="n">lats</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">side</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">longis</span><span class="p">]</span>
+            <span class="n">new_dots</span> <span class="o">=</span> <span class="p">[</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">longi</span><span class="p">,</span> <span class="n">lat</span><span class="p">))</span> <span class="k">for</span> <span class="n">longi</span><span class="p">,</span> <span class="n">lat</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">longis</span><span class="p">,</span> <span class="n">lats</span><span class="p">)]</span>
+            <span class="n">new_dots</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">new_dots</span><span class="p">)</span> <span class="k">if</span> <span class="n">side</span> <span class="k">else</span> <span class="n">new_dots</span>
+            <span class="n">dots</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_dots</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">draw_surface</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">dots</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RoadGraphics"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics">[docs]</a><span class="k">class</span> <span class="nc">RoadGraphics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A visualization of a road lanes and vehicles.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RoadGraphics.display"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics.display">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display the road lanes on a surface.</span>
+
+<span class="sd">        :param road: the road to be displayed</span>
+<span class="sd">        :param surface: the pygame surface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">surface</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">GREY</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_from</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">_to</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]:</span>
+                    <span class="n">LaneGraphics</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RoadGraphics.display_traffic"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics.display_traffic">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">display_traffic</span><span class="p">(</span><span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">simulation_frequency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display the road vehicles on a surface.</span>
+
+<span class="sd">        :param road: the road to be displayed</span>
+<span class="sd">        :param surface: the pygame surface</span>
+<span class="sd">        :param simulation_frequency: simulation frequency</span>
+<span class="sd">        :param offscreen: render without displaying on a screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">road</span><span class="o">.</span><span class="n">record_history</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
+                <span class="n">VehicleGraphics</span><span class="o">.</span><span class="n">display_history</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">simulation</span><span class="o">=</span><span class="n">simulation_frequency</span><span class="p">,</span> <span class="n">offscreen</span><span class="o">=</span><span class="n">offscreen</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
+            <span class="n">VehicleGraphics</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">offscreen</span><span class="o">=</span><span class="n">offscreen</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RoadGraphics.display_road_objects"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics.display_road_objects">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">display_road_objects</span><span class="p">(</span><span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display the road objects on a surface.</span>
+
+<span class="sd">        :param road: the road to be displayed</span>
+<span class="sd">        :param surface: the pygame surface</span>
+<span class="sd">        :param offscreen: whether the rendering should be done offscreen or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+            <span class="n">RoadObjectGraphics</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">offscreen</span><span class="o">=</span><span class="n">offscreen</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RoadObjectGraphics"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics">[docs]</a><span class="k">class</span> <span class="nc">RoadObjectGraphics</span><span class="p">:</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A visualization of objects on the road.&quot;&quot;&quot;</span>
+
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">BLACK</span> <span class="o">=</span> <span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">DEFAULT_COLOR</span> <span class="o">=</span> <span class="n">YELLOW</span>
+
+<div class="viewcode-block" id="RoadObjectGraphics.display"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics.display">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_</span><span class="p">:</span> <span class="s1">&#39;RoadObject&#39;</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">transparent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display a road objects on a pygame surface.</span>
+
+<span class="sd">        The objects is represented as a colored rotated rectangle</span>
+
+<span class="sd">        :param object_: the vehicle to be drawn</span>
+<span class="sd">        :param surface: the surface to draw the object on</span>
+<span class="sd">        :param transparent: whether the object should be drawn slightly transparent</span>
+<span class="sd">        :param offscreen: whether the rendering should be done offscreen or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">object_</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">),</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">)),</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">)</span>  <span class="c1"># per-pixel alpha</span>
+        <span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">),</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">))</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_color</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">transparent</span><span class="p">),</span> <span class="n">rect</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">BLACK</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">offscreen</span><span class="p">:</span>  <span class="c1"># convert_alpha throws errors in offscreen mode TODO() Explain why</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">heading</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="c1"># Centered rotation</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">o</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">blit_rotate</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="o">-</span><span class="n">h</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="RoadObjectGraphics.blit_rotate"><a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics.blit_rotate">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">blit_rotate</span><span class="p">(</span><span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                    <span class="n">origin_pos</span><span class="p">:</span> <span class="n">Vector</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">show_rect</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Many thanks to https://stackoverflow.com/a/54714144.&quot;&quot;&quot;</span>
+        <span class="c1"># calculate the axis aligned bounding box of the rotated image</span>
+        <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="o">-</span><span class="n">h</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">h</span><span class="p">)]]</span>
+        <span class="n">box_rotate</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">box</span><span class="p">]</span>
+        <span class="n">min_box</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">max_box</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">max</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># calculate the translation of the pivot</span>
+        <span class="k">if</span> <span class="n">origin_pos</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">origin_pos</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">pivot</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span><span class="p">(</span><span class="n">origin_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">origin_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">pivot_rotate</span> <span class="o">=</span> <span class="n">pivot</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">pivot_move</span> <span class="o">=</span> <span class="n">pivot_rotate</span> <span class="o">-</span> <span class="n">pivot</span>
+
+        <span class="c1"># calculate the upper left origin of the rotated image</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">min_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pivot_move</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                  <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pivot_move</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># get a rotated image</span>
+        <span class="n">rotated_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
+        <span class="c1"># rotate and blit the image</span>
+        <span class="n">surf</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">rotated_image</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span>
+        <span class="c1"># draw rectangle around the image</span>
+        <span class="k">if</span> <span class="n">show_rect</span><span class="p">:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">*</span><span class="n">origin</span><span class="p">,</span> <span class="o">*</span><span class="n">rotated_image</span><span class="o">.</span><span class="n">get_size</span><span class="p">()),</span> <span class="mi">2</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_color</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_</span><span class="p">:</span> <span class="s1">&#39;RoadObject&#39;</span><span class="p">,</span> <span class="n">transparent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_COLOR</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_</span><span class="p">,</span> <span class="n">Obstacle</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">object_</span><span class="o">.</span><span class="n">crashed</span><span class="p">:</span>
+                <span class="c1"># indicates failure</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">RED</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">YELLOW</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_</span><span class="p">,</span> <span class="n">Landmark</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">object_</span><span class="o">.</span><span class="n">hit</span><span class="p">:</span>
+                <span class="c1"># indicates success</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">GREEN</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">BLUE</span>
+
+        <span class="k">if</span> <span class="n">transparent</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">30</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">color</span></div>
+</pre></div>
+          </article>
+        </div>
+        <footer>
+          
+          <div class="related-pages">
+            
+            
+          </div>
+          <div class="bottom-of-page">
+            <div class="left-details">
+              <div class="copyright">
+                Copyright &#169; 2023 Farama Foundation
+              </div>
+              <!--
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            -->
+            </div>
+            <div class="right-details">
+              <div class="icons">
+                
+              </div>
+            </div>
+          </div>
+          
+        </footer>
+      </div>
+      <aside class="toc-drawer no-toc">
+        
+        
+        
+      </aside>
+    </div>
+  </div>
+</div>
+    <script>
+      const toggleMenu = () => {
+        const menuBtn = document.querySelector(".farama-header-menu__btn");
+        const menuContainer = document.querySelector(".farama-header-menu-container");
+        if (document.querySelector(".farama-header-menu").classList.contains("active")) {
+          menuBtn.setAttribute("aria-expanded", "false");
+          menuContainer.setAttribute("aria-hidden", "true");
+        } else {
+          menuBtn.setAttribute("aria-expanded", "true");
+          menuContainer.setAttribute("aria-hidden", "false");
+        }
+        document.querySelector(".farama-header-menu").classList.toggle("active");
+      }
+
+      document.querySelector(".farama-header-menu__btn").addEventListener("click", toggleMenu);
+      document.getElementById("farama-close-menu").addEventListener("click", toggleMenu);
+    </script>
+
+    
+    <script>
+          (() => {
+              if (!localStorage.getItem("shownCookieAlert")) {
+                  const boxElem = document.createElement("div");
+                  boxElem.classList.add("cookie-alert");
+                  const containerElem = document.createElement("div");
+                  containerElem.classList.add("cookie-alert__container");
+                  const textElem = document.createElement("p");
+                  textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
+                                      Google Analytics</a> to collect statistics. You can disable it by blocking
+                                      the JavaScript coming from www.google-analytics.com.`;
+                                      containerElem.appendChild(textElem);
+                  const closeBtn = document.createElement("button");
+                  closeBtn.innerHTML = `<?xml version="1.0" ?><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>`
+                  closeBtn.onclick = () => {
+                      localStorage.setItem("shownCookieAlert", "true");
+                      boxElem.style.display = "none";
+                  }
+                  containerElem.appendChild(closeBtn);
+                  boxElem.appendChild(containerElem);
+                  document.body.appendChild(boxElem);
+              }
+          })()
+      </script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H9C8TWXZ8"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-6H9C8TWXZ8');
+      </script>
+
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/scripts/furo.js"></script>
+    <script src="../../../../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+    <script>
+      // Create menu with Farama projects by using the API at farama.org/api/projects.json
+      const createCORSRequest = (method, url) => {
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = 'json';
+
+        if ("withCredentials" in xhr) {
+          xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+          // IE8 & IE9
+          xhr = new XDomainRequest();
+          xhr.open(method, url);
+        } else {
+          // CORS not supported.
+          xhr = null;
+        }
+        return xhr;
+      };
+
+      const url = 'https://farama.org/api/projects.json';
+      const imagesBasepath = "https://farama.org/assets/images"
+      const method = 'GET';
+      let xhr = createCORSRequest(method, url);
+
+      xhr.onload = () => {
+        const jsonResponse = xhr.response;
+        const sections = {
+          "Documentation": [],
+          "Mature Projects": [],
+          "Incubating Projects": [],
+          "Foundation": [
+            {
+              name: "About",
+              link: "https://farama.org/about"
+            },
+            {
+              name: "Standards",
+              link: "https://farama.org/project_standards",
+            },
+            {
+              name: "Donate",
+              link: "https://farama.org/donations"
+            }
+          ]
+        }
+        Object.keys(jsonResponse).forEach(key => {
+          projectJson = jsonResponse[key];
+          if (projectJson.website !== null) {
+            projectJson.link = projectJson.website;
+            sections["Documentation"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            projectJson.link = projectJson.github;
+            sections["Mature Projects"].push(projectJson)
+          } else {
+            projectJson.link = projectJson.github;
+            sections["Incubating Projects"].push(projectJson)
+          }
+        })
+
+        const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        Object.keys(sections).forEach((key, i) => {
+          projects = sections[key];
+          const sectionElem = Object.assign(
+            document.createElement('div'), {
+              className:'farama-header-menu__section',
+              style: "padding-left: 24px"
+            }
+          )
+          sectionElem.appendChild(Object.assign(document.createElement('span'),
+            {
+              className:'farama-header-menu__section-title' ,
+              innerText: key
+            }
+          ))
+          const ulElem = Object.assign(document.createElement('ul'),
+            {
+              className:'farama-header-menu-list',
+            }
+          )
+          for (let project of projects) {
+            const liElem = document.createElement("li");
+            const aElem = Object.assign(document.createElement("a"),
+              {
+                href: project.link
+              }
+            );
+            liElem.appendChild(aElem);
+            if (key !== "Foundation") {
+              const imgElem = Object.assign(document.createElement("img"),
+                {
+                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                  alt: `${project.name} logo`,
+                  className: "farama-black-logo-invert"
+                }
+              );
+              aElem.appendChild(imgElem);
+            }
+            aElem.appendChild(document.createTextNode(project.name));
+            ulElem.appendChild(liElem);
+          }
+          sectionElem.appendChild(ulElem);
+          menuContainer.appendChild(sectionElem)
+        });
+      }
+
+      xhr.onerror = function() {
+        console.error("Unable to load projects");
+      };
+
+      xhr.send();
+    </script>
+
+    
+    
+
+    </body>
+</html>
