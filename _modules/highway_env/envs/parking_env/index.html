@@ -7,15 +7,16 @@
     <meta property="og:title" content="highway-env Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="None" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
+    <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/envs/parking_env.html" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
+        <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/envs/parking_env.html" />
 
-    <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07.dev1 -->
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
         <title>highway_env.envs.parking_env - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=4297ed78bc2370ec4493f1a6639f04addebc5da5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
     
     
 
@@ -393,7 +394,7 @@
             <span class="p">},</span>
             <span class="s2">&quot;reward_weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">],</span>
             <span class="s2">&quot;success_goal_reward&quot;</span><span class="p">:</span> <span class="mf">0.12</span><span class="p">,</span>
-            <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">500</span><span class="p">,</span>
+            <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
             <span class="s2">&quot;steering_range&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">45</span><span class="p">),</span>
             <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
             <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
@@ -477,16 +478,18 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
         <span class="c1"># Walls</span>
-        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">]:</span>
-            <span class="n">obstacle</span> <span class="o">=</span> <span class="n">Obstacle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
-            <span class="n">obstacle</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">,</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">=</span> <span class="p">(</span><span class="mi">70</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">obstacle</span><span class="o">.</span><span class="n">diagonal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">obstacle</span><span class="o">.</span><span class="n">LENGTH</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">WIDTH</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obstacle</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">35</span><span class="p">,</span> <span class="mi">35</span><span class="p">]:</span>
-            <span class="n">obstacle</span> <span class="o">=</span> <span class="n">Obstacle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">heading</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">obstacle</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">,</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">=</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">obstacle</span><span class="o">.</span><span class="n">diagonal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">obstacle</span><span class="o">.</span><span class="n">LENGTH</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">WIDTH</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obstacle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;add_walls&#39;</span><span class="p">]:</span>
+            <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">42</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]:</span>
+                <span class="n">obstacle</span> <span class="o">=</span> <span class="n">Obstacle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+                <span class="n">obstacle</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">,</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">obstacle</span><span class="o">.</span><span class="n">diagonal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">obstacle</span><span class="o">.</span><span class="n">LENGTH</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">WIDTH</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obstacle</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]:</span>
+                <span class="n">obstacle</span> <span class="o">=</span> <span class="n">Obstacle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">heading</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">obstacle</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">,</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">obstacle</span><span class="o">.</span><span class="n">diagonal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">obstacle</span><span class="o">.</span><span class="n">LENGTH</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">WIDTH</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obstacle</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ParkingEnv.compute_reward"><a class="viewcode-back" href="../../../../environments/parking/#highway_env.envs.parking_env.ParkingEnv.compute_reward">[docs]</a>    <span class="k">def</span> <span class="nf">compute_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">achieved_goal</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">desired_goal</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -632,6 +635,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
     <script>
+      // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
         xhr.responseType = 'json';
@@ -744,30 +748,7 @@
     </script>
 
     
-    <script>
-      const versioningConfig = {
-        githubUser: 'Farama-Foundation',
-        githubRepo: 'highway-env',
-      };
-      fetch('/main/_static/versioning/versioning_menu.html').then(response => {
-        if (response.status === 200) {
-            response.text().then(text => {
-                const container = document.createElement("div");
-                container.innerHTML = text;
-                document.querySelector("body").appendChild(container);
-                // innerHtml doenst evaluate scripts, we need to add them dynamically
-                Array.from(container.querySelectorAll("script")).forEach(oldScript => {
-                    const newScript = document.createElement("script");
-                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                    oldScript.parentNode.replaceChild(newScript, oldScript);
-                });
-            });
-        } else {
-            console.warn("Unable to load versioning menu", response);
-        }
-      });
-    </script>
+    
 
     </body>
 </html>
