@@ -89,7 +89,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             },
             "reward_weights": [1, 0.3, 0, 0, 0.02, 0.02],
             "success_goal_reward": 0.12,
-            "collision_reward": -500,
+            "collision_reward": -5,
             "steering_range": np.deg2rad(45),
             "simulation_frequency": 15,
             "policy_frequency": 5,
