@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Sequence, Tuple, TYPE_CHECKING, Optional
+from typing import Sequence, Tuple, TYPE_CHECKING, Optional, Union
 import numpy as np
 
 from highway_env import utils
@@ -51,8 +51,11 @@ class RoadObject(ABC):
         self.hit = False
         self.impact = np.zeros(self.position.shape)
 
+        # Option to set line color of the object manually
+        self.line_color = None
+
     @classmethod
-    def make_on_lane(cls, road: 'Road', lane_index: LaneIndex, longitudinal: float, speed: Optional[float] = None) \
+    def make_on_lane(cls, road: 'Road', lane: Union['AbstractLane', LaneIndex], longitudinal: float, speed: Optional[float] = None) \
             -> 'RoadObject':
         """
         Create a vehicle on a given lane at a longitudinal position.
@@ -63,7 +66,8 @@ class RoadObject(ABC):
         :param speed: initial speed in [m/s]
         :return: a RoadObject at the specified position
         """
-        lane = road.network.get_lane(lane_index)
+        if type(lane) is LaneIndex:
+            lane = road.network.get_lane(lane)
         if speed is None:
             speed = lane.speed_limit
         return cls(road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), speed)
