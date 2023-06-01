@@ -211,6 +211,10 @@ class RoadNetwork(object):
     def lanes_list(self) -> List[AbstractLane]:
         return [lane for to in self.graph.values() for ids in to.values() for lane in ids]
 
+    def lanes_dict(self) -> Dict[str, AbstractLane]:
+        return {(from_, to_, i): lane
+                for from_, tos in self.graph.items() for to_, ids in tos.items() for i, lane in enumerate(ids)}
+
     @staticmethod
     def straight_road_network(lanes: int = 4,
                               start: float = 0,
