@@ -8,3 +8,8 @@ from highway_env.envs.lane_keeping_env import *
 from highway_env.envs.u_turn_env import *
 from highway_env.envs.exit_env import *
 from highway_env.envs.racetrack_env import *
+
+# Use to register a new custom env
+# from gymnasium.envs.registration import register 
+
+# from highway_env.envs.your_env import *
