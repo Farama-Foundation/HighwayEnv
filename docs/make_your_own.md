@@ -48,23 +48,46 @@ environment implementation with `self.config["config_key"]`, and once the enviro
 
 ## Register the environment
 
-In `highway_env/envs/__init__.py`, add the following line:
+In `highway_env/envs/__init__.py`, add the following import:
 
 ```python
+from highway_env.envs.your_env import *
+```
+
+so you can register your env in the `register_highway_envs()` method of `highway_env/__init__.py`
+
+```python
+# your_env.py
 register(
     id='your-env-v0',
-    entry_point='highway_env.envs:YourEnv',
+    entry_point='highway_env.envs:YourEnv'
 )
+```
+
+This registration will be performed automatically as a hook if you reinstall the highway_env module with
+```shell
+python setup.py install
+```
+
+Alternatively, you can call it manually with
+
+```python
+import highway_env
+highway_env.register_highway_envs()
 ```
 
 ## Profit
 
 That's it!
-You should now be able to run the environment:
+You should now be able to run the environment.
+
 
 ```python
-import gymnasium as gym
+# Only required if you did not reinstall highway_env
+import highway_env
+highway_env.register_highway_envs()
 
+import gymnasium as gym
 env = gym.make('your-env-v0')
 obs, info = env.reset()
 obs, reward, terminated, truncated, info = env.step(env.action_space.sample())
@@ -72,6 +95,12 @@ env.render()
 ```
 
 ## API
+
+```{eval-rst}
+.. automodule:: highway_env.__init__
+    :members:
+    :private-members:
+```
 
 ```{eval-rst}
 .. automodule:: highway_env.envs.common.abstract
