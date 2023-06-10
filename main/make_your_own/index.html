@@ -349,20 +349,37 @@ environment implementation with <code class="docutils literal notranslate"><span
 </section>
 <section id="register-the-environment">
 <h2>Register the environment<a class="headerlink" href="#register-the-environment" title="Permalink to this heading">#</a></h2>
-<p>In <code class="docutils literal notranslate"><span class="pre">highway_env/envs/__init__.py</span></code>, add the following line:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">register</span><span class="p">(</span>
+<p>In <code class="docutils literal notranslate"><span class="pre">highway_env/envs/__init__.py</span></code>, add the following import:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">highway_env.envs.your_env</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>so you can register your env in the <code class="docutils literal notranslate"><span class="pre">register_highway_envs()</span></code> method of <code class="docutils literal notranslate"><span class="pre">highway_env/__init__.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your_env.py</span>
+<span class="n">register</span><span class="p">(</span>
     <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;your-env-v0&#39;</span><span class="p">,</span>
-    <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:YourEnv&#39;</span><span class="p">,</span>
+    <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:YourEnv&#39;</span>
 <span class="p">)</span>
+</pre></div>
+</div>
+<p>This registration will be performed automatically as a hook if you reinstall the highway_env module with</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup.py<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Alternatively, you can call it manually with</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">highway_env</span>
+<span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
 <section id="profit">
 <h2>Profit<a class="headerlink" href="#profit" title="Permalink to this heading">#</a></h2>
 <p>That’s it!
-You should now be able to run the environment:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+You should now be able to run the environment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only required if you did not reinstall highway_env</span>
+<span class="kn">import</span> <span class="nn">highway_env</span>
+<span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 
+<span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;your-env-v0&#39;</span><span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
@@ -370,9 +387,15 @@ You should now be able to run the environment:</p>
 </pre></div>
 </div>
 </section>
-<section id="module-highway_env.envs.common.abstract">
-<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.envs.common.abstract" title="Permalink to this heading">#</a></h2>
-<dl class="py class">
+<section id="module-highway_env.__init__">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.__init__" title="Permalink to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="highway_env.__init__.register_highway_envs">
+<span class="sig-prename descclassname"><span class="pre">highway_env.__init__.</span></span><span class="sig-name descname"><span class="pre">register_highway_envs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/__init__/#register_highway_envs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.__init__.register_highway_envs" title="Permalink to this definition">#</a></dt>
+<dd><p>Import the envs module so that envs register themselves.</p>
+</dd></dl>
+
+<span class="target" id="module-highway_env.envs.common.abstract"></span><dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">AbstractEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv" title="Permalink to this definition">#</a></dt>
 <dd><p>A generic environment for various tasks involving a vehicle driving on a road.</p>
@@ -656,7 +679,8 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 <li><a class="reference internal" href="#make-the-environment-configurable">Make the environment configurable</a></li>
 <li><a class="reference internal" href="#register-the-environment">Register the environment</a></li>
 <li><a class="reference internal" href="#profit">Profit</a></li>
-<li><a class="reference internal" href="#module-highway_env.envs.common.abstract">API</a><ul>
+<li><a class="reference internal" href="#module-highway_env.__init__">API</a><ul>
+<li><a class="reference internal" href="#highway_env.__init__.register_highway_envs"><code class="docutils literal notranslate"><span class="pre">register_highway_envs()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv"><code class="docutils literal notranslate"><span class="pre">AbstractEnv</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE"><code class="docutils literal notranslate"><span class="pre">AbstractEnv.PERCEPTION_DISTANCE</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.vehicle"><code class="docutils literal notranslate"><span class="pre">AbstractEnv.vehicle</span></code></a></li>
