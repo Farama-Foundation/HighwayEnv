@@ -283,6 +283,66 @@ The top row corresponds to the left-lane, the middle row corresponds to the lane
 },
 ```
 
+## Lidar
+
+The {py:class}`~highway_env.envs.common.observation.LidarObservation` divides the space around the vehicle into angular sectors, and returns an array with one row per angular sector and two columns:
+  - distance to the nearest collidable object (vehicles or obstacles)
+  - component of the objects's relative velocity along that direction 
+
+The angular sector of index 0 corresponds to an angle 0 (east), and then each index/sector increases the angle (south, west, north). 
+
+For example, for a grid of 8 cells, an obstacle 10 meters away in the south and moving towards the north at 1m/s would lead to the following observation:
+    
+```{eval-rst}
+.. table:: the Lidar observation 
+
+    ===   ===
+    0     0 
+    0     0 
+    10    -1
+    0     0
+    0     0
+    0     0
+    0     0
+    0     0
+    ===   ===
+```
+
+Here is an example of what the distance grid may look like in the parking env:
+
+```{eval-rst}
+.. jupyter-execute::
+
+    env = gym.make(
+        'parking-v0',
+        render_mode='rgb_array',
+        config={
+            "observation": {
+                "type": "LidarObservation",
+                "cells": 128,
+            },
+            "vehicles_count": 3,
+        })
+    env.reset()
+    
+    plt.imshow(env.render())
+    plt.show()
+```
+
+You can configure the number of cells in the angular grid with the `cells` parameter, the maximum range with `maximum_range`, and if you enable `normalize`, then distances and relative speeds are both divided by the maximum range.
+
+
+### Example configuration
+
+```python
+"observation": {
+    "type": "LidarObservation",
+    "cells": 128,
+    "maximum_range": 64,
+    "normalise": True,
+}
+```
+
 ## API
 
 ```{eval-rst}
