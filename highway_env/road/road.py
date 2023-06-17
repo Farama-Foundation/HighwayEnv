@@ -309,18 +309,27 @@ class Road(object):
         self.np_random = np_random if np_random else np.random.RandomState()
         self.record_history = record_history
 
-    def close_vehicles_to(self, vehicle: 'kinematics.Vehicle', distance: float, count: Optional[int] = None,
-                          see_behind: bool = True, sort: bool = True) -> object:
+    def close_objects_to(self, vehicle: 'kinematics.Vehicle', distance: float, count: Optional[int] = None,
+                         see_behind: bool = True, sort: bool = True, vehicles_only: bool = False) -> object:
         vehicles = [v for v in self.vehicles
                     if np.linalg.norm(v.position - vehicle.position) < distance
                     and v is not vehicle
                     and (see_behind or -2 * vehicle.LENGTH < vehicle.lane_distance_to(v))]
+        obstacles = [o for o in self.objects
+                     if np.linalg.norm(o.position - vehicle.position) < distance
+                     and -2 * vehicle.LENGTH < vehicle.lane_distance_to(o)]
+
+        objects_ = vehicles if vehicles_only else vehicle + obstacles
 
         if sort:
-            vehicles = sorted(vehicles, key=lambda v: abs(vehicle.lane_distance_to(v)))
+            objects_ = sorted(objects_, key=lambda o: abs(vehicle.lane_distance_to(o)))
         if count:
-            vehicles = vehicles[:count]
-        return vehicles
+            objects_ = objects_[:count]
+        return objects_
+
+    def close_vehicles_to(self, vehicle: 'kinematics.Vehicle', distance: float, count: Optional[int] = None,
+                          see_behind: bool = True, sort: bool = True) -> object:
+        return self.close_objects_to(vehicle, distance, count, see_behind, sort, vehicles_only=True)
 
     def act(self) -> None:
         """Decide the actions of each entity on the road."""

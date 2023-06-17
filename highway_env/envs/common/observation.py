@@ -209,24 +209,18 @@ class KinematicObservation(ObservationType):
         # Add ego-vehicle
         df = pd.DataFrame.from_records([self.observer_vehicle.to_dict()])
         # Add nearby traffic
-        close_vehicles = self.env.road.close_vehicles_to(self.observer_vehicle,
-                                                         self.env.PERCEPTION_DISTANCE,
-                                                         count=self.vehicles_count - 1,
-                                                         see_behind=self.see_behind,
-                                                         sort=self.order == "sorted")
+        close_vehicles = self.env.road.close_objects_to(self.observer_vehicle,
+                                                        self.env.PERCEPTION_DISTANCE,
+                                                        count=self.vehicles_count - 1,
+                                                        see_behind=self.see_behind,
+                                                        sort=self.order == "sorted",
+                                                        vehicles_only=not self.include_obstacles)
         if close_vehicles:
             origin = self.observer_vehicle if not self.absolute else None
             vehicles_df = pd.DataFrame.from_records(
                 [v.to_dict(origin, observe_intentions=self.observe_intentions)
                  for v in close_vehicles[-self.vehicles_count + 1:]])
             df = pd.concat([df, vehicles_df], ignore_index=True)
-
-        if self.include_obstacles:
-            origin = self.observer_vehicle if not self.absolute else None
-            obstacles_df = pd.DataFrame.from_records(
-                [obstacle.to_dict(origin) for obstacle in self.env.road.objects if obstacle.solid])
-            obstacles_df = obstacles_df.iloc[:(self.vehicles_count - df.shape[0])]
-            df = pd.concat([df, obstacles_df], ignore_index=True)
 
         df = df[self.features]
 
