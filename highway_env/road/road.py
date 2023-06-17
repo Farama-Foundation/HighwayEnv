@@ -319,7 +319,7 @@ class Road(object):
                      if np.linalg.norm(o.position - vehicle.position) < distance
                      and -2 * vehicle.LENGTH < vehicle.lane_distance_to(o)]
 
-        objects_ = vehicles if vehicles_only else vehicle + obstacles
+        objects_ = vehicles if vehicles_only else vehicles + obstacles
 
         if sort:
             objects_ = sorted(objects_, key=lambda o: abs(vehicle.lane_distance_to(o)))
