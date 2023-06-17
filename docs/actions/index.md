@@ -16,19 +16,28 @@ Each environment comes with a *default* action type, which can be changed or cus
 ```python
 import gymnasium as gym
 
-env = gym.make('highway-v0')
-env.configure({
+env = gym.make('highway-v0', config={
     "action": {
         "type": "ContinuousAction"
     }
 })
-env.reset()
 ```
 
 ## Continuous Actions
 
 The {py:class}`~highway_env.envs.common.action.ContinuousAction` type allows the agent to directly set the low-level
 controls of the {ref}`vehicle kinematics <vehicle_kinematics>`, namely the throttle $a$ and steering angle $\delta$.
+
+
+```python
+import gymnasium as gym
+
+env = gym.make('highway-v0', config={
+    "action": {
+        "type": "ContinuousAction"
+    }
+})
+```
 
 ```{note}
 The control of throttle and steering can be enabled or disabled through the
@@ -40,6 +49,16 @@ configurations, respectively. Thus, the action space can be either 1D or 2D.
 
 The {py:class}`~highway_env.envs.common.action.DiscreteAction` is a uniform quantization of the {py:class}`~highway_env.envs.common.action.ContinuousAction` above.
 
+```python
+import gymnasium as gym
+
+env = gym.make('highway-v0', config={
+    "action": {
+        "type": "DiscreteAction"
+    }
+})
+```
+
 The {py:attr}`~highway_env.envs.common.action.DiscreteAction.actions_per_axis` parameter allows to set the quantization step. Similarly to continuous actions, the longitudinal and lateral axis can be enabled or disabled separately.
 
 ## Discrete Meta-Actions
@@ -47,6 +66,16 @@ The {py:attr}`~highway_env.envs.common.action.DiscreteAction.actions_per_axis` p
 The {py:class}`~highway_env.envs.common.action.DiscreteMetaAction` type adds a layer of {ref}`speed and steering controllers <vehicle_controller>`
 on top of the continuous low-level control, so that the ego-vehicle can automatically follow the road at a desired velocity.
 Then, the available **meta-actions** consist in *changing the target lane and speed* that are used as setpoints for the low-level controllers.
+
+```python
+import gymnasium as gym
+
+env = gym.make('highway-v0', config={
+    "action": {
+        "type": "DiscreteMetaAction"
+    }
+})
+```
 
 The full corresponding action space is defined in {py:attr}`~highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_ALL`
 
@@ -74,8 +103,7 @@ while the lateral control of the vehicle is automatically performed by a {ref}`s
 The environments can be used as a simulation:
 
 ```python
-env = gym.make("highway-v0")
-env.configure({
+env = gym.make("highway-v0", config={
     "manual_control": True
 })
 env.reset()
