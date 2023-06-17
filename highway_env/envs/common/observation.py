@@ -601,10 +601,12 @@ class LidarObservation(ObservationType):
             corners = utils.rect_corners(obstacle.position, obstacle.LENGTH, obstacle.WIDTH, obstacle.heading)
             angles = [self.position_to_angle(corner, origin) for corner in corners]
             min_angle, max_angle = min(angles), max(angles)
+            if min_angle < -np.pi/2 < np.pi/2 < max_angle:  # Object's corners are wrapping around +pi
+                min_angle, max_angle = max_angle, min_angle + 2*np.pi
             start, end = self.angle_to_index(min_angle), self.angle_to_index(max_angle)
             if start < end:
                 indexes = np.arange(start, end+1)
-            else:
+            else:  # Object's corners are wrapping around 0
                 indexes = np.hstack([np.arange(start, self.cells), np.arange(0, end + 1)])
 
             # Actual distance computation for these sections
