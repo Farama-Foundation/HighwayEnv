@@ -7,7 +7,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/eleurent/highway-env)](https://github.com/eleurent/highway-env/graphs/contributors)
 
 
-A collection of environments for *autonomous driving* and tactical decision-making tasks
+A collection of environments for *autonomous driving* and tactical decision-making tasks, maintained by [Edouard Leurent](https://github.com/eleurent)
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/highway-env.gif?raw=true"><br/>
