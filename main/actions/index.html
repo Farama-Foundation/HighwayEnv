@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -11,13 +11,13 @@
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Dynamics" href="../dynamics/" /><link rel="prev" title="Observations" href="../observations/" />
         <link rel="canonical" href="https://highway-env.farama.org/actions/index.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.2.3 and Furo 2023.08.19.dev1 -->
         <title>Actions - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a022fd11c0d7e10ac71ac296890386cea7a2fa24" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=093e2efd5a2c7b46ab7c7157e45f5f05a1e0a463" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -55,18 +55,6 @@
               <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
               <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
             </svg>
-            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
-              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
-              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
-              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
-            </svg> -->
-            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
-              <defs></defs>
-              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
-              <line x1="8" y1="1" x2="8" y2="23"></line>
-              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
-            </svg> -->
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
@@ -303,8 +291,8 @@
           </div>
           <article role="main">
             
-            <span class="target" id="module-highway_env.envs.common.action"></span><section class="tex2jax_ignore mathjax_ignore" id="actions">
-<h1>Actions<a class="headerlink" href="#actions" title="Permalink to this heading">#</a></h1>
+            <section class="tex2jax_ignore mathjax_ignore" id="actions">
+<span id="module-highway_env.envs.common.action"></span><h1>Actions<a class="headerlink" href="#actions" title="Link to this heading">#</a></h1>
 <p>Similarly to <a class="reference internal" href="../observations/#id1"><span class="std std-ref">observations</span></a>, <strong>several types of actions</strong> can be used in every environment. They are defined in the
 <a class="reference internal" href="#module-highway_env.envs.common.action" title="highway_env.envs.common.action"><code class="xref py py-mod docutils literal notranslate"><span class="pre">action</span></code></a> module.
 Each environment comes with a <em>default</em> action type, which can be changed or customised using
@@ -319,7 +307,7 @@ Each environment comes with a <em>default</em> action type, which can be changed
 </pre></div>
 </div>
 <section id="continuous-actions">
-<h2>Continuous Actions<a class="headerlink" href="#continuous-actions" title="Permalink to this heading">#</a></h2>
+<h2>Continuous Actions<a class="headerlink" href="#continuous-actions" title="Link to this heading">#</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.action.ContinuousAction" title="highway_env.envs.common.action.ContinuousAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousAction</span></code></a> type allows the agent to directly set the low-level
 controls of the <a class="reference internal" href="../dynamics/vehicle/kinematics/#vehicle-kinematics"><span class="std std-ref">vehicle kinematics</span></a>, namely the throttle <span class="math notranslate nohighlight">\(a\)</span> and steering angle <span class="math notranslate nohighlight">\(\delta\)</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
@@ -339,7 +327,7 @@ configurations, respectively. Thus, the action space can be either 1D or 2D.</p>
 </div>
 </section>
 <section id="discrete-actions">
-<h2>Discrete Actions<a class="headerlink" href="#discrete-actions" title="Permalink to this heading">#</a></h2>
+<h2>Discrete Actions<a class="headerlink" href="#discrete-actions" title="Link to this heading">#</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.action.DiscreteAction" title="highway_env.envs.common.action.DiscreteAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteAction</span></code></a> is a uniform quantization of the <a class="reference internal" href="#highway_env.envs.common.action.ContinuousAction" title="highway_env.envs.common.action.ContinuousAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousAction</span></code></a> above.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 
@@ -353,7 +341,7 @@ configurations, respectively. Thus, the action space can be either 1D or 2D.</p>
 <p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">actions_per_axis</span></code> parameter allows to set the quantization step. Similarly to continuous actions, the longitudinal and lateral axis can be enabled or disabled separately.</p>
 </section>
 <section id="discrete-meta-actions">
-<h2>Discrete Meta-Actions<a class="headerlink" href="#discrete-meta-actions" title="Permalink to this heading">#</a></h2>
+<h2>Discrete Meta-Actions<a class="headerlink" href="#discrete-meta-actions" title="Link to this heading">#</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.action.DiscreteMetaAction" title="highway_env.envs.common.action.DiscreteMetaAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteMetaAction</span></code></a> type adds a layer of <span class="xref std std-ref">speed and steering controllers</span>
 on top of the continuous low-level control, so that the ego-vehicle can automatically follow the road at a desired velocity.
 Then, the available <strong>meta-actions</strong> consist in <em>changing the target lane and speed</em> that are used as setpoints for the low-level controllers.</p>
@@ -385,7 +373,7 @@ For instance, in the default configuration of the <span class="xref std std-ref"
 while the lateral control of the vehicle is automatically performed by a <span class="xref std std-ref">steering controller</span> to track a desired lane.</p>
 </section>
 <section id="manual-control">
-<h2>Manual control<a class="headerlink" href="#manual-control" title="Permalink to this heading">#</a></h2>
+<h2>Manual control<a class="headerlink" href="#manual-control" title="Link to this heading">#</a></h2>
 <p>The environments can be used as a simulation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span>
     <span class="s2">&quot;manual_control&quot;</span><span class="p">:</span> <span class="kc">True</span>
@@ -399,28 +387,28 @@ while the lateral control of the vehicle is automatically performed by a <span c
 <p>The ego-vehicle is controlled by directional arrows keys, as defined in
 <code class="xref py py-class docutils literal notranslate"><span class="pre">EventHandler</span></code></p>
 </section>
-<section id="module-highway_env.envs.common.action">
-<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.envs.common.action" title="Permalink to this heading">#</a></h2>
-<dl class="py class">
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h2>
+<dl class="py class" id="module-highway_env.envs.common.action">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ActionType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">ActionType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ActionType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">ActionType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ActionType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType" title="Link to this definition">#</a></dt>
 <dd><p>A type of action specifies its definition space, and how actions are executed in the environment</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ActionType.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ActionType.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType.space" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ActionType.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType.space" title="Link to this definition">#</a></dt>
 <dd><p>The action space.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ActionType.vehicle_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#highway_env.envs.common.action.ActionType.vehicle_class" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#highway_env.envs.common.action.ActionType.vehicle_class" title="Link to this definition">#</a></dt>
 <dd><p>The class of a vehicle able to execute the action.</p>
 <p>Must return a subclass of <a class="reference internal" href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.kinematics.Vehicle</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ActionType.act">
-<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ActionType.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType.act" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ActionType.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType.act" title="Link to this definition">#</a></dt>
 <dd><p>Execute the action on the ego-vehicle.</p>
 <p>Most of the action mechanics are actually implemented in vehicle.act(action), where
 vehicle is an instance of the specified <a class="reference internal" href="#highway_env.envs.common.action.ActionType.vehicle_class" title="highway_env.envs.common.action.ActionType.vehicle_class"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.action.ActionType.vehicle_class</span></code></a>.
@@ -434,13 +422,13 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ActionType.get_available_actions">
-<span class="sig-name descname"><span class="pre">get_available_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ActionType.get_available_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType.get_available_actions" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_available_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ActionType.get_available_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ActionType.get_available_actions" title="Link to this definition">#</a></dt>
 <dd><p>For discrete action space, return the list of available actions.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ActionType.controlled_vehicle">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">controlled_vehicle</span></span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.controlled_vehicle" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">controlled_vehicle</span></span><a class="headerlink" href="#highway_env.envs.common.action.ActionType.controlled_vehicle" title="Link to this definition">#</a></dt>
 <dd><p>The vehicle acted upon.</p>
 <p>If not set, the first controlled vehicle is used by default.</p>
 </dd></dl>
@@ -449,7 +437,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ContinuousAction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">ContinuousAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceleration_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steering_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lateral</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ContinuousAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">ContinuousAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceleration_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steering_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lateral</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ContinuousAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction" title="Link to this definition">#</a></dt>
 <dd><p>An continuous action space for throttle and/or steering angle.</p>
 <p>If both throttle and steering are enabled, they are set in this order: [throttle, steering]</p>
 <p>The space intervals are always [-1, 1], but are mapped to throttle/steering intervals through configurations.</p>
@@ -470,7 +458,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ContinuousAction.ACCELERATION_RANGE">
-<span class="sig-name descname"><span class="pre">ACCELERATION_RANGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(-5,</span> <span class="pre">5.0)</span></em><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.ACCELERATION_RANGE" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ACCELERATION_RANGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(-5,</span> <span class="pre">5.0)</span></em><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.ACCELERATION_RANGE" title="Link to this definition">#</a></dt>
 <dd><p>[-x, x], in m/s².</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -481,7 +469,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ContinuousAction.STEERING_RANGE">
-<span class="sig-name descname"><span class="pre">STEERING_RANGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(-0.7853981633974483,</span> <span class="pre">0.7853981633974483)</span></em><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.STEERING_RANGE" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">STEERING_RANGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(-0.7853981633974483,</span> <span class="pre">0.7853981633974483)</span></em><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.STEERING_RANGE" title="Link to this definition">#</a></dt>
 <dd><p>[-x, x], in rad.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -492,20 +480,20 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ContinuousAction.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ContinuousAction.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.space" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ContinuousAction.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.space" title="Link to this definition">#</a></dt>
 <dd><p>The action space.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ContinuousAction.vehicle_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.vehicle_class" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.vehicle_class" title="Link to this definition">#</a></dt>
 <dd><p>The class of a vehicle able to execute the action.</p>
 <p>Must return a subclass of <a class="reference internal" href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.kinematics.Vehicle</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.ContinuousAction.act">
-<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ContinuousAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.act" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#ContinuousAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.ContinuousAction.act" title="Link to this definition">#</a></dt>
 <dd><p>Execute the action on the ego-vehicle.</p>
 <p>Most of the action mechanics are actually implemented in vehicle.act(action), where
 vehicle is an instance of the specified <a class="reference internal" href="#highway_env.envs.common.action.ActionType.vehicle_class" title="highway_env.envs.common.action.ActionType.vehicle_class"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.action.ActionType.vehicle_class</span></code></a>.
@@ -521,7 +509,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteAction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">DiscreteAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceleration_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steering_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lateral</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_per_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteAction" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">DiscreteAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceleration_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steering_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lateral</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_per_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteAction" title="Link to this definition">#</a></dt>
 <dd><p>Create a continuous action space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -539,13 +527,13 @@ Must some pre-processing can be applied to the action based on the ActionType co
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteAction.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Discrete</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteAction.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteAction.space" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Discrete</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteAction.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteAction.space" title="Link to this definition">#</a></dt>
 <dd><p>The action space.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteAction.act">
-<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteAction.act" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteAction.act" title="Link to this definition">#</a></dt>
 <dd><p>Execute the action on the ego-vehicle.</p>
 <p>Most of the action mechanics are actually implemented in vehicle.act(action), where
 vehicle is an instance of the specified <a class="reference internal" href="#highway_env.envs.common.action.ActionType.vehicle_class" title="highway_env.envs.common.action.ActionType.vehicle_class"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.action.ActionType.vehicle_class</span></code></a>.
@@ -561,7 +549,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">DiscreteMetaAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lateral</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_speeds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">DiscreteMetaAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lateral</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_speeds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction" title="Link to this definition">#</a></dt>
 <dd><p>An discrete action space of meta-actions: lane changes, and cruise control set-point.</p>
 <p>Create a discrete action space of meta-actions.</p>
 <dl class="field-list simple">
@@ -576,38 +564,38 @@ Must some pre-processing can be applied to the action based on the ActionType co
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_ALL">
-<span class="sig-name descname"><span class="pre">ACTIONS_ALL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{0:</span> <span class="pre">'LANE_LEFT',</span> <span class="pre">1:</span> <span class="pre">'IDLE',</span> <span class="pre">2:</span> <span class="pre">'LANE_RIGHT',</span> <span class="pre">3:</span> <span class="pre">'FASTER',</span> <span class="pre">4:</span> <span class="pre">'SLOWER'}</span></em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_ALL" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ACTIONS_ALL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{0:</span> <span class="pre">'LANE_LEFT',</span> <span class="pre">1:</span> <span class="pre">'IDLE',</span> <span class="pre">2:</span> <span class="pre">'LANE_RIGHT',</span> <span class="pre">3:</span> <span class="pre">'FASTER',</span> <span class="pre">4:</span> <span class="pre">'SLOWER'}</span></em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_ALL" title="Link to this definition">#</a></dt>
 <dd><p>A mapping of action indexes to labels.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_LONGI">
-<span class="sig-name descname"><span class="pre">ACTIONS_LONGI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{0:</span> <span class="pre">'SLOWER',</span> <span class="pre">1:</span> <span class="pre">'IDLE',</span> <span class="pre">2:</span> <span class="pre">'FASTER'}</span></em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_LONGI" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ACTIONS_LONGI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{0:</span> <span class="pre">'SLOWER',</span> <span class="pre">1:</span> <span class="pre">'IDLE',</span> <span class="pre">2:</span> <span class="pre">'FASTER'}</span></em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_LONGI" title="Link to this definition">#</a></dt>
 <dd><p>A mapping of longitudinal action indexes to labels.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_LAT">
-<span class="sig-name descname"><span class="pre">ACTIONS_LAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{0:</span> <span class="pre">'LANE_LEFT',</span> <span class="pre">1:</span> <span class="pre">'IDLE',</span> <span class="pre">2:</span> <span class="pre">'LANE_RIGHT'}</span></em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_LAT" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ACTIONS_LAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{0:</span> <span class="pre">'LANE_LEFT',</span> <span class="pre">1:</span> <span class="pre">'IDLE',</span> <span class="pre">2:</span> <span class="pre">'LANE_RIGHT'}</span></em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.ACTIONS_LAT" title="Link to this definition">#</a></dt>
 <dd><p>A mapping of lateral action indexes to labels.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.space" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.space" title="Link to this definition">#</a></dt>
 <dd><p>The action space.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction.vehicle_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.vehicle_class" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.vehicle_class" title="Link to this definition">#</a></dt>
 <dd><p>The class of a vehicle able to execute the action.</p>
 <p>Must return a subclass of <a class="reference internal" href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.kinematics.Vehicle</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction.act">
-<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.act" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.act" title="Link to this definition">#</a></dt>
 <dd><p>Execute the action on the ego-vehicle.</p>
 <p>Most of the action mechanics are actually implemented in vehicle.act(action), where
 vehicle is an instance of the specified <a class="reference internal" href="#highway_env.envs.common.action.ActionType.vehicle_class" title="highway_env.envs.common.action.ActionType.vehicle_class"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.action.ActionType.vehicle_class</span></code></a>.
@@ -621,7 +609,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction.get_available_actions">
-<span class="sig-name descname"><span class="pre">get_available_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction.get_available_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.get_available_actions" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_available_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction.get_available_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.get_available_actions" title="Link to this definition">#</a></dt>
 <dd><p>Get the list of currently available actions.</p>
 <p>Lane changes are not available on the boundary of the road, and speed changes are not available at
 maximal or minimal speed.</p>
@@ -636,23 +624,23 @@ maximal or minimal speed.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.MultiAgentAction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">MultiAgentAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#MultiAgentAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.action.</span></span><span class="sig-name descname"><span class="pre">MultiAgentAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#MultiAgentAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction" title="Link to this definition">#</a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.MultiAgentAction.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#MultiAgentAction.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction.space" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#MultiAgentAction.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction.space" title="Link to this definition">#</a></dt>
 <dd><p>The action space.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.MultiAgentAction.vehicle_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction.vehicle_class" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction.vehicle_class" title="Link to this definition">#</a></dt>
 <dd><p>The class of a vehicle able to execute the action.</p>
 <p>Must return a subclass of <a class="reference internal" href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.vehicle.kinematics.Vehicle</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.MultiAgentAction.act">
-<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#MultiAgentAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction.act" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#MultiAgentAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction.act" title="Link to this definition">#</a></dt>
 <dd><p>Execute the action on the ego-vehicle.</p>
 <p>Most of the action mechanics are actually implemented in vehicle.act(action), where
 vehicle is an instance of the specified <a class="reference internal" href="#highway_env.envs.common.action.ActionType.vehicle_class" title="highway_env.envs.common.action.ActionType.vehicle_class"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.action.ActionType.vehicle_class</span></code></a>.
@@ -666,7 +654,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.MultiAgentAction.get_available_actions">
-<span class="sig-name descname"><span class="pre">get_available_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#MultiAgentAction.get_available_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction.get_available_actions" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_available_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#MultiAgentAction.get_available_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.MultiAgentAction.get_available_actions" title="Link to this definition">#</a></dt>
 <dd><p>For discrete action space, return the list of available actions.</p>
 </dd></dl>
 
@@ -742,7 +730,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 <li><a class="reference internal" href="#discrete-actions">Discrete Actions</a></li>
 <li><a class="reference internal" href="#discrete-meta-actions">Discrete Meta-Actions</a></li>
 <li><a class="reference internal" href="#manual-control">Manual control</a></li>
-<li><a class="reference internal" href="#module-highway_env.envs.common.action">API</a><ul>
+<li><a class="reference internal" href="#api">API</a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.action.ActionType"><code class="docutils literal notranslate"><span class="pre">ActionType</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.action.ActionType.space"><code class="docutils literal notranslate"><span class="pre">ActionType.space()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.action.ActionType.vehicle_class"><code class="docutils literal notranslate"><span class="pre">ActionType.vehicle_class</span></code></a></li>
@@ -815,44 +803,64 @@ Must some pre-processing can be applied to the action based on the ActionType co
     </script>
 
     
-    <script>
-          (() => {
-              if (!localStorage.getItem("shownCookieAlert")) {
-                  const boxElem = document.createElement("div");
-                  boxElem.classList.add("cookie-alert");
-                  const containerElem = document.createElement("div");
-                  containerElem.classList.add("cookie-alert__container");
-                  const textElem = document.createElement("p");
-                  textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
-                                      Google Analytics</a> to collect statistics. You can disable it by blocking
-                                      the JavaScript coming from www.google-analytics.com.`;
-                                      containerElem.appendChild(textElem);
-                  const closeBtn = document.createElement("button");
-                  closeBtn.innerHTML = `<?xml version="1.0" ?><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>`
-                  closeBtn.onclick = () => {
-                      localStorage.setItem("shownCookieAlert", "true");
-                      boxElem.style.display = "none";
-                  }
-                  containerElem.appendChild(closeBtn);
-                  boxElem.appendChild(containerElem);
-                  document.body.appendChild(boxElem);
-              }
-          })()
-      </script>
-
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H9C8TWXZ8"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H9C8TWXZ8"></script>
       <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+        const enableGtag = () => {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-6H9C8TWXZ8');
+        }
+        (() => {
+            if (!localStorage.getItem("acceptedCookieAlert")) {
+                const boxElem = document.createElement("div");
+                boxElem.classList.add("cookie-alert");
+                const containerElem = document.createElement("div");
+                containerElem.classList.add("cookie-alert__container");
+                const textElem = document.createElement("p");
+                textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
+                                    Google Analytics</a> to collect statistics.`;
+                                    containerElem.appendChild(textElem);
 
-        gtag('config', 'G-6H9C8TWXZ8');
+                const declineBtn = Object.assign(document.createElement("button"),
+                  {
+                    innerText: "Deny",
+                    className: "farama-btn cookie-alert__button",
+                    id: "cookie-alert__decline",
+                  }
+                );
+                declineBtn.addEventListener("click", () => {
+                  localStorage.setItem("acceptedCookieAlert", false);
+                  boxElem.remove();
+                });
+
+                const acceptBtn = Object.assign(document.createElement("button"),
+                  {
+                    innerText: "Allow",
+                    className: "farama-btn cookie-alert__button",
+                    id: "cookie-alert__accept",
+                  }
+                );
+                acceptBtn.addEventListener("click", () => {
+                  localStorage.setItem("acceptedCookieAlert", true);
+                  boxElem.remove();
+                  enableGtag();
+                });
+
+                containerElem.appendChild(declineBtn);
+                containerElem.appendChild(acceptBtn);
+                boxElem.appendChild(containerElem);
+                document.body.appendChild(boxElem);
+            } else if (localStorage.getItem("acceptedCookieAlert") === "true") {
+              enableGtag();
+            }
+        })()
       </script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/documentation_options.js?v=a5603611"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=7660844c"></script>
     <script src="../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
@@ -860,6 +868,37 @@ Must some pre-processing can be applied to the action based on the ActionType co
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script>
+
+      const createProjectsList = (projects, displayImages) => {
+        const ulElem = Object.assign(document.createElement('ul'),
+          {
+            className:'farama-header-menu-list',
+          }
+        )
+        for (let project of projects) {
+          const liElem = document.createElement("li");
+          const aElem = Object.assign(document.createElement("a"),
+            {
+              href: project.link
+            }
+          );
+          liElem.appendChild(aElem);
+          if (displayImages) {
+            const imgElem = Object.assign(document.createElement("img"),
+              {
+                src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                alt: `${project.name} logo`,
+                className: "farama-black-logo-invert"
+              }
+            );
+            aElem.appendChild(imgElem);
+          }
+          aElem.appendChild(document.createTextNode(project.name));
+          ulElem.appendChild(liElem);
+        }
+        return ulElem;
+      }
+
       // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
@@ -886,9 +925,15 @@ Must some pre-processing can be applied to the action based on the ActionType co
       xhr.onload = () => {
         const jsonResponse = xhr.response;
         const sections = {
-          "Documentation": [],
-          "Mature Projects": [],
-          "Incubating Projects": [],
+          "Core Projects": [],
+          "Mature Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
           "Foundation": [
             {
               name: "About",
@@ -904,28 +949,38 @@ Must some pre-processing can be applied to the action based on the ActionType co
             }
           ]
         }
+
+        // Categorize projects
         Object.keys(jsonResponse).forEach(key => {
           projectJson = jsonResponse[key];
           if (projectJson.website !== null) {
             projectJson.link = projectJson.website;
-            sections["Documentation"].push(projectJson)
-          } else if (projectJson.type == "mature") {
-            projectJson.link = projectJson.github;
-            sections["Mature Projects"].push(projectJson)
           } else {
             projectJson.link = projectJson.github;
-            sections["Incubating Projects"].push(projectJson)
+          }
+          if (projectJson.type === "core") {
+            sections["Core Projects"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            if (projectJson.website !== null) {
+              sections["Mature Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Mature Projects"]["Repositories"].push(projectJson)
+            }
+          } else {
+            if (projectJson.website !== null) {
+              sections["Incubating Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Incubating Projects"]["Repositories"].push(projectJson)
+            }
           }
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
 
         Object.keys(sections).forEach((key, i) => {
-          projects = sections[key];
           const sectionElem = Object.assign(
             document.createElement('div'), {
               className:'farama-header-menu__section',
-              style: "padding-left: 24px"
             }
           )
           sectionElem.appendChild(Object.assign(document.createElement('span'),
@@ -934,33 +989,37 @@ Must some pre-processing can be applied to the action based on the ActionType co
               innerText: key
             }
           ))
-          const ulElem = Object.assign(document.createElement('ul'),
-            {
-              className:'farama-header-menu-list',
-            }
-          )
-          for (let project of projects) {
-            const liElem = document.createElement("li");
-            const aElem = Object.assign(document.createElement("a"),
-              {
-                href: project.link
-              }
-            );
-            liElem.appendChild(aElem);
-            if (key !== "Foundation") {
-              const imgElem = Object.assign(document.createElement("img"),
-                {
-                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
-                  alt: `${project.name} logo`,
-                  className: "farama-black-logo-invert"
+          // is not a list
+          if (sections[key].constructor !== Array) {
+            const subSections = sections[key];
+            const subSectionContainerElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsections-container',
+                  style: 'display: flex'
                 }
-              );
-              aElem.appendChild(imgElem);
-            }
-            aElem.appendChild(document.createTextNode(project.name));
-            ulElem.appendChild(liElem);
+            )
+            Object.keys(subSections).forEach((subKey, i) => {
+              const subSectionElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsection',
+                }
+              )
+              subSectionElem.appendChild(Object.assign(document.createElement('span'),
+                {
+                  className:'farama-header-menu__subsection-title' ,
+                  innerText: subKey
+                }
+              ))
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
+              subSectionElem.appendChild(ulElem);
+              subSectionContainerElem.appendChild(subSectionElem);
+            })
+            sectionElem.appendChild(subSectionContainerElem);
+          } else {
+            const projects = sections[key];
+            const ulElem = createProjectsList(projects, true);
+            sectionElem.appendChild(ulElem);
           }
-          sectionElem.appendChild(ulElem);
           menuContainer.appendChild(sectionElem)
         });
       }
