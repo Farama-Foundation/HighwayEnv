@@ -255,7 +255,7 @@ class RoadNetwork(object):
     def random_lane_index(self, np_random: np.random.RandomState) -> LaneIndex:
         _from = np_random.choice(list(self.graph.keys()))
         _to = np_random.choice(list(self.graph[_from].keys()))
-        _id = np_random.randint(len(self.graph[_from][_to]))
+        _id = np_random.integers(len(self.graph[_from][_to]))
         return _from, _to, _id
 
     @classmethod
