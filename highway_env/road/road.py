@@ -237,7 +237,8 @@ class RoadNetwork(object):
             net.add_lane(*nodes_str, StraightLane(origin, end, line_types=line_types, speed_limit=speed_limit))
         return net
 
-    def position_heading_along_route(self, route: Route, longitudinal: float, lateral: float) \
+    def position_heading_along_route(self, route: Route, longitudinal: float, lateral: float,
+                                     current_lane_index: LaneIndex) \
             -> Tuple[np.ndarray, float]:
         """
         Get the absolute position and heading along a route composed of several lanes at some local coordinates.
@@ -245,12 +246,21 @@ class RoadNetwork(object):
         :param route: a planned route, list of lane indexes
         :param longitudinal: longitudinal position
         :param lateral: : lateral position
+        :param current_lane_index: current lane index of the vehicle
         :return: position, heading
         """
         while len(route) > 1 and longitudinal > self.get_lane(route[0]).length:
             longitudinal -= self.get_lane(route[0]).length
             route = route[1:]
-        return self.get_lane(route[0]).position(longitudinal, lateral), self.get_lane(route[0]).heading_at(longitudinal)
+        lane_index = route[0]
+        if lane_index[2] is None:
+            # We know which road segment will be followed by the vehicle, but not which lane.
+            # Hypothesis: the vehicle will keep the same lane_id as the current one.
+            id_ = (current_lane_index[2]
+                   if current_lane_index[2] < len(self.graph[current_lane_index[0]][current_lane_index[1]]) else 0)
+            lane_index = (lane_index[0], lane_index[1], id_)
+        return self.get_lane(lane_index).position(longitudinal, lateral),\
+               self.get_lane(lane_index).heading_at(longitudinal)
 
     def random_lane_index(self, np_random: np.random.RandomState) -> LaneIndex:
         _from = np_random.choice(list(self.graph.keys()))
