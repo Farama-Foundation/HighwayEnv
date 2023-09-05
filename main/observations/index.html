@@ -11,7 +11,7 @@
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Actions" href="../actions/" /><link rel="prev" title="User Guide" href="../user_guide/" />
         <link rel="canonical" href="https://highway-env.farama.org/observations/index.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.2.3 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.2.5 and Furo 2023.08.19.dev1 -->
         <title>Observations - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
@@ -557,25 +557,25 @@ vehicle and 0 for placeholders.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.08        1.          0.          1.
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.          1.          0.          1.
    0.        ]
- [ 1.          0.20605168  0.04       -0.08710428  0.          1.
+ [ 1.          0.20315151  0.08       -0.19715188  0.          1.
    0.        ]
- [ 1.          0.40771025 -0.08       -0.19960807  0.          1.
+ [ 1.          0.4202482   0.12       -0.17383526  0.          1.
    0.        ]
- [ 1.          0.61127096  0.         -0.12820873  0.          1.
+ [ 1.          0.61331505  0.08       -0.17723162  0.          1.
    0.        ]
- [ 1.          0.8206216   0.04       -0.17219344  0.          1.
+ [ 1.          0.8364609   0.         -0.09597496  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.12064209  0.          1.
+ [ 1.          1.          0.12       -0.05625895  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.15745267  0.          1.
+ [ 1.          1.          0.08       -0.16412789  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.17762141  0.          1.
+ [ 1.          1.          0.04       -0.13831076  0.          1.
    0.        ]
- [ 1.          1.         -0.08       -0.09315097  0.          1.
+ [ 1.          1.          0.04       -0.06528039  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.17064632  0.          1.
+ [ 1.          1.          0.08       -0.14529839  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -963,9 +963,9 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </div>
 </section>
 </section>
-<section id="api">
-<h2>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h2>
-<dl class="py class" id="module-highway_env.envs.common.observation">
+<section id="module-highway_env.envs.common.observation">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.envs.common.observation" title="Link to this heading">#</a></h2>
+<dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.GrayscaleObservation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">GrayscaleObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stack_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centering_position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#GrayscaleObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation" title="Link to this definition">#</a></dt>
 <dd><p>An observation class that collects directly what the simulator renders.</p>
@@ -1270,7 +1270,7 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 <li><a class="reference internal" href="#id6">Example configuration</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#module-highway_env.envs.common.observation">API</a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.GrayscaleObservation"><code class="docutils literal notranslate"><span class="pre">GrayscaleObservation</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.GrayscaleObservation.space"><code class="docutils literal notranslate"><span class="pre">GrayscaleObservation.space()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.GrayscaleObservation.observe"><code class="docutils literal notranslate"><span class="pre">GrayscaleObservation.observe()</span></code></a></li>
