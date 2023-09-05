@@ -196,8 +196,12 @@ class ControlledVehicle(Vehicle):
         """
         coordinates = self.lane.local_coordinates(self.position)
         route = self.route or [self.lane_index]
-        return tuple(zip(*[self.road.network.position_heading_along_route(route, coordinates[0] + self.speed * t, 0)
-                     for t in times]))
+        pos_heads = [self.road.network.position_heading_along_route(route,
+                                                                    coordinates[0] + self.speed * t,
+                                                                    0,
+                                                                    self.lane_index)
+                     for t in times]
+        return tuple(zip(*pos_heads))
 
 
 class MDPVehicle(ControlledVehicle):
