@@ -62,6 +62,8 @@ class MergeEnv(AbstractEnv):
 
     def _is_terminated(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
+        print("crash" + str(self.vehicle.crashed))
+        print("over"  + str(self.vehicle.position[0] > 370))
         return self.vehicle.crashed or bool(self.vehicle.position[0] > 370)
 
     def _is_truncated(self) -> bool:
@@ -117,9 +119,12 @@ class MergeEnv(AbstractEnv):
         road.vehicles.append(ego_vehicle)
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(90, 0), speed=29))
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 1)).position(70, 0), speed=31))
-        road.vehicles.append(other_vehicles_type(road, road.network.get_lane(("a", "b", 0)).position(5, 0), speed=31.5))
+
+        for position, speed in [(90, 29), (70, 31), (5, 31.5)]:
+            lane = road.network.get_lane(("a", "b", self.np_random.integers(2)))
+            position = lane.position(position + self.np_random.uniform(-5, 5), 0)
+            speed += self.np_random.uniform(-1, 1)
+            road.vehicles.append(other_vehicles_type(road, position, speed=speed))
 
         merging_v = other_vehicles_type(road, road.network.get_lane(("j", "k", 0)).position(110, 0), speed=20)
         merging_v.target_speed = 30
