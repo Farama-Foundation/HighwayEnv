@@ -42,6 +42,8 @@ class RoadNetwork(object):
         :return: the corresponding lane geometry.
         """
         _from, _to, _id = index
+        if _id is None:
+            pass
         if _id is None and len(self.graph[_from][_to]) == 1:
             _id = 0
         return self.graph[_from][_to][_id]
@@ -249,16 +251,22 @@ class RoadNetwork(object):
         :param current_lane_index: current lane index of the vehicle
         :return: position, heading
         """
-        while len(route) > 1 and longitudinal > self.get_lane(route[0]).length:
-            longitudinal -= self.get_lane(route[0]).length
+        def _get_route_head_with_id(route_):
+            lane_index_ = route_[0]
+            if lane_index_[2] is None:
+                # We know which road segment will be followed by the vehicle, but not which lane.
+                # Hypothesis: the vehicle will keep the same lane_id as the current one.
+                id_ = (current_lane_index[2]
+                       if current_lane_index[2] < len(self.graph[current_lane_index[0]][current_lane_index[1]]) else 0)
+                lane_index_ = (lane_index_[0], lane_index_[1], id_)
+            return lane_index_
+
+        lane_index = _get_route_head_with_id(route)
+        while len(route) > 1 and longitudinal > self.get_lane(lane_index).length:
+            longitudinal -= self.get_lane(lane_index).length
             route = route[1:]
-        lane_index = route[0]
-        if lane_index[2] is None:
-            # We know which road segment will be followed by the vehicle, but not which lane.
-            # Hypothesis: the vehicle will keep the same lane_id as the current one.
-            id_ = (current_lane_index[2]
-                   if current_lane_index[2] < len(self.graph[current_lane_index[0]][current_lane_index[1]]) else 0)
-            lane_index = (lane_index[0], lane_index[1], id_)
+            lane_index = _get_route_head_with_id(route)
+
         return self.get_lane(lane_index).position(longitudinal, lateral),\
                self.get_lane(lane_index).heading_at(longitudinal)
 
