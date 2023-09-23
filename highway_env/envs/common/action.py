@@ -126,26 +126,29 @@ class ContinuousAction(ActionType):
     def vehicle_class(self) -> Callable:
         return Vehicle if not self.dynamical else BicycleVehicle
 
-    def act(self, action: np.ndarray) -> None:
+    def get_action(self, action: np.ndarray):
         if self.clip:
             action = np.clip(action, -1, 1)
         if self.speed_range:
             self.controlled_vehicle.MIN_SPEED, self.controlled_vehicle.MAX_SPEED = self.speed_range
         if self.longitudinal and self.lateral:
-            self.controlled_vehicle.act({
+            return {
                 "acceleration": utils.lmap(action[0], [-1, 1], self.acceleration_range),
                 "steering": utils.lmap(action[1], [-1, 1], self.steering_range),
-            })
+            }
         elif self.longitudinal:
-            self.controlled_vehicle.act({
+            return {
                 "acceleration": utils.lmap(action[0], [-1, 1], self.acceleration_range),
                 "steering": 0,
-            })
+            }
         elif self.lateral:
-            self.controlled_vehicle.act({
+            return {
                 "acceleration": 0,
                 "steering": utils.lmap(action[0], [-1, 1], self.steering_range)
-            })
+            }
+
+    def act(self, action: np.ndarray) -> None:
+        self.controlled_vehicle.act(self.get_action(action))
         self.last_action = action
 
 
