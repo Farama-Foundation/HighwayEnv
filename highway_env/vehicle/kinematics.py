@@ -229,3 +229,26 @@ class Vehicle(RoadObject):
 
     def __repr__(self):
         return self.__str__()
+
+    def predict_trajectory(self, actions: List, action_duration: float, trajectory_timestep: float, dt: float) \
+            -> List['Vehicle']:
+        """
+        Predict the future trajectory of the vehicle given a sequence of actions.
+
+        :param actions: a sequence of future actions.
+        :param action_duration: the duration of each action.
+        :param trajectory_timestep: the duration between each save of the vehicle state.
+        :param dt: the timestep of the simulation
+        :return: the sequence of future states
+        """
+        states = []
+        v = copy.deepcopy(self)
+        t = 0
+        for action in actions:
+            v.act(action)  # Low-level control action
+            for _ in range(int(action_duration / dt)):
+                t += 1
+                v.step(dt)
+                if (t % int(trajectory_timestep / dt)) == 0:
+                    states.append(copy.deepcopy(v))
+        return states
