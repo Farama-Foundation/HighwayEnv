@@ -11,7 +11,7 @@
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Control" href="../controller/" /><link rel="prev" title="Road regulation" href="../../road/regulation/" />
         <link rel="canonical" href="https://highway-env.farama.org/dynamics/vehicle/kinematics.html" />
 
-    <link rel="shortcut icon" href="../../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.5 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
         <title>Kinematics - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
@@ -427,6 +427,25 @@ The vehicle’s current lane is updated.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.vehicle.kinematics.Vehicle.predict_trajectory">
+<span class="sig-name descname"><span class="pre">predict_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory_timestep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><span class="pre">Vehicle</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/highway_env/vehicle/kinematics/#Vehicle.predict_trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.vehicle.kinematics.Vehicle.predict_trajectory" title="Link to this definition">#</a></dt>
+<dd><p>Predict the future trajectory of the vehicle given a sequence of actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actions</strong> – a sequence of future actions.</p></li>
+<li><p><strong>action_duration</strong> – the duration of each action.</p></li>
+<li><p><strong>trajectory_timestep</strong> – the duration between each save of the vehicle state.</p></li>
+<li><p><strong>dt</strong> – the timestep of the simulation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the sequence of future states</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -507,6 +526,7 @@ The vehicle’s current lane is updated.</p>
 <li><a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle.create_from"><code class="docutils literal notranslate"><span class="pre">Vehicle.create_from()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle.act"><code class="docutils literal notranslate"><span class="pre">Vehicle.act()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle.step"><code class="docutils literal notranslate"><span class="pre">Vehicle.step()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle.predict_trajectory"><code class="docutils literal notranslate"><span class="pre">Vehicle.predict_trajectory()</span></code></a></li>
 </ul>
 </li>
 </ul>

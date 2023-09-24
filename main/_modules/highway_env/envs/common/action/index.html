@@ -10,7 +10,7 @@
     <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/envs/common/action.html" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../../genindex/" /><link rel="search" title="Search" href="../../../../../search/" />
         <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/envs/common/action.html" />
 
-    <link rel="shortcut icon" href="../../../../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.5 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../../../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
         <title>highway_env.envs.common.action - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo.css?v=3e7f4c72" />
@@ -436,28 +436,31 @@
     <span class="k">def</span> <span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Vehicle</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamical</span> <span class="k">else</span> <span class="n">BicycleVehicle</span>
 
-<div class="viewcode-block" id="ContinuousAction.act">
-<a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ContinuousAction.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip</span><span class="p">:</span>
             <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">MIN_SPEED</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">MAX_SPEED</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">({</span>
+            <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;acceleration&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_range</span><span class="p">),</span>
                 <span class="s2">&quot;steering&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_range</span><span class="p">),</span>
-            <span class="p">})</span>
+            <span class="p">}</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">({</span>
+            <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;acceleration&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_range</span><span class="p">),</span>
                 <span class="s2">&quot;steering&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="p">})</span>
+            <span class="p">}</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">({</span>
+            <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;acceleration&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
                 <span class="s2">&quot;steering&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_range</span><span class="p">)</span>
-            <span class="p">})</span>
+            <span class="p">}</span>
+
+<div class="viewcode-block" id="ContinuousAction.act">
+<a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ContinuousAction.act">[docs]</a>
+    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_action</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_action</span> <span class="o">=</span> <span class="n">action</span></div>
 </div>
 
