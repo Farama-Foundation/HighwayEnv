@@ -6,7 +6,7 @@ import gymnasium as gym
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action, action_factory
-from highway_env.envs.common.agents import AttackerAgent, VictimAgent
+from highway_env.envs.common.agents import AttackerAgent
 # from highway_env.envs.common.action import action_factory, Action, DiscreteMetaAction, ActionType
 from highway_env.envs.common.observation import observation_factory, ObservationType
 from highway_env.road.road import Road, RoadNetwork
@@ -44,7 +44,7 @@ class HighwayEnvPerfectTarget(AbstractEnv):
     #     self.attacker_agent_set = set()
     #     for i in range(attacker_num):
     #         self.attacker_agent_set.add(AttackerAgent(attacker_net_cls, i))
-    def load_agents(self, attacker_num, victim_agent: VictimAgent):
+    def load_agents(self, attacker_num, victim_agent: AttackerAgent):
         self.victim_agent = victim_agent
         
         # self.attacker_agent_set = set()
@@ -117,7 +117,9 @@ class HighwayEnvPerfectTarget(AbstractEnv):
             "invalid_action_cost": 3,
             "diving_beside": 3,
             "vis": False,
-            "victim_index": 2
+            "victim_index": 2,
+            "testing": False,
+            "victim_lane_id": 1
         })
         return config
     
@@ -152,7 +154,7 @@ class HighwayEnvPerfectTarget(AbstractEnv):
                     v = Vehicle.create_random(
                             self.road,
                             speed=25,
-                            lane_id=1,
+                            lane_id=self.config["victim_lane_id"],
                             spacing=self.config["ego_spacing"]
                         )
                     self.victim = self.victim_action_type.vehicle_class(self.road, v.position, v.heading, v.speed)
@@ -192,35 +194,6 @@ class HighwayEnvPerfectTarget(AbstractEnv):
         if self.config["constraint_env"]:
             costs = self.calc_cost(action)
             self.c_sum += sum(costs)
-        # # insert vulneralbility here
-        # vehicle_ahead = vehicle_behind = vehicle_left = vehicle_right = False
-        # victim_l_index = self.road.vehicles[self.victim_index].lane_index
-        # for i in range(len(self.controlled_vehicles)):
-        #     other_l_index = self.controlled_vehicles[i].lane_index
-        #     if other_l_index[2] == victim_l_index[2]:
-        #         # attacker is the same lane as the victim
-        #         victim_local_x = self.road.network.get_lane(victim_l_index).local_coordinates(self.victim.position)[0]
-        #         attacker_local_x = self.road.network.get_lane(victim_l_index).local_coordinates(self.controlled_vehicles[i].position)[0]
-        #         if attacker_local_x > victim_local_x and (attacker_local_x - victim_local_x) <= self.config["close_vehicle_threshold"]:
-        #             vehicle_ahead = True
-        #         elif attacker_local_x < victim_local_x and (victim_local_x - attacker_local_x) <= self.config["close_vehicle_threshold"]:
-        #             vehicle_behind = True
-        #     elif other_l_index[2] < victim_l_index[2] and self.road.network.get_lane(other_l_index).is_reachable_from(self.victim.position):
-        #         # attacker is on the left lane of the victim
-        #         victim_local_x = self.road.network.get_lane(other_l_index).local_coordinates(self.victim.position)[0]
-        #         attacker_local_x = self.road.network.get_lane(other_l_index).local_coordinates(self.controlled_vehicles[i].position)[0]
-        #         if abs(victim_local_x - attacker_local_x) <= self.config["diving_beside"]:
-        #             vehicle_left = True
-        #     elif other_l_index[2] > victim_l_index[2] and self.road.network.get_lane(other_l_index).is_reachable_from(self.victim.position):
-        #         # attacker is on the right lane of the victim
-        #         victim_local_x = self.road.network.get_lane(other_l_index).local_coordinates(self.victim.position)[0]
-        #         attacker_local_x = self.road.network.get_lane(other_l_index).local_coordinates(self.controlled_vehicles[i].position)[0]
-        #         if abs(victim_local_x - attacker_local_x) <= self.config["diving_beside"]:
-        #             vehicle_right = True
-        # if vehicle_right and vehicle_left:
-        #     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        #     print("victim action overrided")
-        #     self.victim_action = 0
 
         self.time += 1 / self.config["policy_frequency"]
         self._simulate(action)
@@ -506,9 +479,10 @@ class HighwayEnvPerfectTarget(AbstractEnv):
             info = {'episode':{'r': self.r_sum,
                                'l': self.steps,
                                'c': self.c_sum}}
-            if self.r_sum - self.c_sum == 10:
-                self.solved.add(tuple(self.initial_lanes))
-            print("Number of scenarios solved: ", len(self.solved))
+            if self.config["testing"]:
+                if self.r_sum - self.c_sum == 10:
+                    self.solved.add(tuple(self.initial_lanes))
+                print("Number of scenarios solved: ", len(self.solved))
             return info
         else:
             return {}

@@ -26,16 +26,6 @@ def register_highway_envs():
     )
 
     register(
-        id='highway-custom-v0',
-        entry_point='highway_env.envs:HighwayEnvCustom',
-    )
-
-    register(
-        id='highway-custom-fast-v0',
-        entry_point='highway_env.envs:HighwayEnvCustomFast',
-    )
-
-    register(
         id='highway-perfect-target-v0',
         entry_point='highway_env.envs:HighwayEnvPerfectTarget',
     )
@@ -63,15 +53,7 @@ def register_highway_envs():
         id='highway-centralized-perfect-target-penalty-fast-v0',
         entry_point='highway_env.envs:HighwayEnvCentralizedPerfectTargetPenaltyFast',
     )
-    register(
-        id='highway-custom-penalty-v0',
-        entry_point='highway_env.envs:HighwayEnvCustomPenalty',
-    )
 
-    register(
-        id='highway-custom-penalty-fast-v0',
-        entry_point='highway_env.envs:HighwayEnvCustomPenaltyFast',
-    )
     register(
         id='highway-perfect-target-penalty-v0',
         entry_point='highway_env.envs:HighwayEnvPerfectTargetPenalty',
@@ -80,15 +62,6 @@ def register_highway_envs():
     register(
         id='highway-perfect-target-penalty-fast-v0',
         entry_point='highway_env.envs:HighwayEnvPerfectTargetPenaltyFast',
-    )
-    register(
-        id='highway-perfect-target-penalty-cpo-v0',
-        entry_point='highway_env.envs:HighwayEnvPerfectTargetPenaltyCPO',
-    )
-
-    register(
-        id='highway-perfect-target-penalty-cpo-fast-v0',
-        entry_point='highway_env.envs:HighwayEnvPerfectTargetPenaltyCPOFast',
     )
 
     register(
@@ -101,25 +74,6 @@ def register_highway_envs():
         entry_point='highway_env.envs:HighwayEnvCentralizedPenaltyFast',
     )
 
-    register(
-        id='highway-centralized-v0',
-        entry_point='highway_env.envs:HighwayEnvCentralized',
-    )
-
-    register(
-        id='highway-centralized-fast-v0',
-        entry_point='highway_env.envs:HighwayEnvCentralizedFast',
-    )
-
-    register(
-        id='highway-rand-start-v0',
-        entry_point='highway_env.envs:HighwayEnvRandomStart',
-    )
-
-    register(
-        id='highway-rand-start-fast-v0',
-        entry_point='highway_env.envs:HighwayEnvRandomStartFast',
-    )
     # intersection_env.py
     register(
         id='intersection-v0',

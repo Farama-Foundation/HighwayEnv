@@ -6,7 +6,7 @@ import gymnasium as gym
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action, action_factory
-from highway_env.envs.common.agents import AttackerAgent, VictimAgent
+from highway_env.envs.common.agents import AttackerAgent
 # from highway_env.envs.common.action import action_factory, Action, DiscreteMetaAction, ActionType
 from highway_env.envs.common.observation import observation_factory, ObservationType
 from highway_env.road.road import Road, RoadNetwork
@@ -28,7 +28,8 @@ class HighwayEnvCentralizedPerfectTarget(AbstractEnv):
     victim_action = None
     r_sum = 0
     c_sum = 0
-    
+    np_random = np.random.RandomState(5)
+    solved = set()
     """
     A highway driving environment.
 
@@ -43,7 +44,7 @@ class HighwayEnvCentralizedPerfectTarget(AbstractEnv):
     #     self.attacker_agent_set = set()
     #     for i in range(attacker_num):
     #         self.attacker_agent_set.add(AttackerAgent(attacker_net_cls, i))
-    def load_agents(self, attacker_num, victim_agent: VictimAgent):
+    def load_agents(self, attacker_num, victim_agent: AttackerAgent):
         self.victim_agent = victim_agent
         
         # self.attacker_agent_set = set()
@@ -119,7 +120,9 @@ class HighwayEnvCentralizedPerfectTarget(AbstractEnv):
             "invalid_action_cost": 3,
             "diving_beside": 3,
             "vis": False,
-            "victim_index": 2
+            "victim_index": 2,
+            "testing": False,
+            "victim_lane_id": 1
         })
         return config
     
@@ -138,35 +141,66 @@ class HighwayEnvCentralizedPerfectTarget(AbstractEnv):
 
     def _create_vehicles(self) -> None:
         """Create some new random vehicles of a given type, and add them on the road."""
-        self.controlled_vehicles = []
-        # victim_index = (self.config["controlled_vehicles"]+1)//2
+
         if self.config["randomize_starting_position"] == False:
+            # self.victim_index = (self.config["controlled_vehicles"]+1)//2
             self.victim_index = self.config["victim_index"]
             # self.victim_index = 0
         else:
             self.victim_index = random.randint(0, self.config["controlled_vehicles"])
-        for i in range(self.config["controlled_vehicles"]+1):
-            if i == self.victim_index:
-                v = Vehicle.create_random(
+        if not self.config["testing"]:
+            for i in range(self.config["controlled_vehicles"]+1):
+                if i == self.victim_index:
+                    v = Vehicle.create_random(
+                            self.road,
+                            speed=25,
+                            lane_id=self.config["victim_lane_id"],
+                            spacing=self.config["ego_spacing"]
+                        )
+                    self.victim = self.victim_action_type.vehicle_class(self.road, v.position, v.heading, v.speed)
+                    self.road.vehicles.append(self.victim)
+                    # self.victim_observation_type.observer_vehicle = self.victim
+                    self.victim_action_type.controlled_vehicle = self.victim
+                else:
+                    vehicle = Vehicle.create_random(
                         self.road,
                         speed=25,
                         lane_id=self.config["initial_lane_id"],
                         spacing=self.config["ego_spacing"]
                     )
-                self.victim = self.victim_action_type.vehicle_class(self.road, v.position, v.heading, v.speed)
-                self.road.vehicles.append(self.victim)
-                # self.victim_observation_type.observer_vehicle = self.victim
-                self.victim_action_type.controlled_vehicle = self.victim
-            else:
-                vehicle = Vehicle.create_random(
-                    self.road,
-                    speed=25,
-                    lane_id=self.config["initial_lane_id"],
-                    spacing=self.config["ego_spacing"]
-                )
-                vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
-                self.controlled_vehicles.append(vehicle)
-                self.road.vehicles.append(vehicle)
+                    vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
+                    self.controlled_vehicles.append(vehicle)
+                    self.road.vehicles.append(vehicle)
+        else:
+            while True:
+                self.initial_lanes =[]
+                self.controlled_vehicles = []
+                self.road.vehicles = []
+                for i in range(self.config["controlled_vehicles"]+1):
+                    if i == self.victim_index:
+                        v = Vehicle.create_random(
+                                self.road,
+                                speed=25,
+                                lane_id=1,
+                                spacing=self.config["ego_spacing"]
+                            )
+                        self.victim = self.victim_action_type.vehicle_class(self.road, v.position, v.heading, v.speed)
+                        self.road.vehicles.append(self.victim)
+                        # self.victim_observation_type.observer_vehicle = self.victim
+                        self.victim_action_type.controlled_vehicle = self.victim
+                    else:
+                        vehicle = Vehicle.create_random(
+                            self.road,
+                            speed=25,
+                            lane_id=self.config["initial_lane_id"],
+                            spacing=self.config["ego_spacing"]
+                        )
+                        vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
+                        self.initial_lanes.append(vehicle.lane_index[2])
+                        self.controlled_vehicles.append(vehicle)
+                        self.road.vehicles.append(vehicle)
+                if tuple(self.initial_lanes) not in self.solved:
+                    break
             
     def step(self, action: Action) -> Tuple[Observation, float, bool, bool, dict]:
         """
@@ -181,44 +215,11 @@ class HighwayEnvCentralizedPerfectTarget(AbstractEnv):
         if self.road is None or self.vehicle is None:
             raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
 
-        
-
-        # TODO: calculate cost; we need to iterate every pair of vehicles
         if self.config["vis"]:
             print("action to take: ", action)
         if self.config["constraint_env"]:
             cost = self.calc_cost(action)
             self.c_sum += cost
-
-        # # insert vulneralbility here
-        # vehicle_ahead = vehicle_behind = vehicle_left = vehicle_right = False
-        # victim_l_index = self.road.vehicles[self.victim_index].lane_index
-        # for i in range(len(self.controlled_vehicles)):
-        #     other_l_index = self.controlled_vehicles[i].lane_index
-        #     if other_l_index[2] == victim_l_index[2]:
-        #         # attacker is the same lane as the victim
-        #         victim_local_x = self.road.network.get_lane(victim_l_index).local_coordinates(self.victim.position)[0]
-        #         attacker_local_x = self.road.network.get_lane(victim_l_index).local_coordinates(self.controlled_vehicles[i].position)[0]
-        #         if attacker_local_x > victim_local_x and (attacker_local_x - victim_local_x) <= self.config["close_vehicle_threshold"]:
-        #             vehicle_ahead = True
-        #         elif attacker_local_x < victim_local_x and (victim_local_x - attacker_local_x) <= self.config["close_vehicle_threshold"]:
-        #             vehicle_behind = True
-        #     elif other_l_index[2] < victim_l_index[2] and self.road.network.get_lane(other_l_index).is_reachable_from(self.victim.position):
-        #         # attacker is on the left lane of the victim
-        #         victim_local_x = self.road.network.get_lane(other_l_index).local_coordinates(self.victim.position)[0]
-        #         attacker_local_x = self.road.network.get_lane(other_l_index).local_coordinates(self.controlled_vehicles[i].position)[0]
-        #         if abs(victim_local_x - attacker_local_x) <= self.config["diving_beside"]:
-        #             vehicle_left = True
-        #     elif other_l_index[2] > victim_l_index[2] and self.road.network.get_lane(other_l_index).is_reachable_from(self.victim.position):
-        #         # attacker is on the right lane of the victim
-        #         victim_local_x = self.road.network.get_lane(other_l_index).local_coordinates(self.victim.position)[0]
-        #         attacker_local_x = self.road.network.get_lane(other_l_index).local_coordinates(self.controlled_vehicles[i].position)[0]
-        #         if abs(victim_local_x - attacker_local_x) <= self.config["diving_beside"]:
-        #             vehicle_right = True
-        # if vehicle_right and vehicle_left:
-        #     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        #     print("victim action overrided")
-        #     self.victim_action = 0
         
         self.time += 1 / self.config["policy_frequency"]
         self._simulate(action)
@@ -234,8 +235,8 @@ class HighwayEnvCentralizedPerfectTarget(AbstractEnv):
         info = self._info(None, action, terminated)
         if self.render_mode == 'human':
             self.render()
-        # if self.config["constraint_env"]:
-        #     reward = (reward, cost)
+        if self.config["constraint_env"]:
+            reward = reward - cost
         return obs, reward, terminated, truncated, info
     
     def calc_cost(self, action):
@@ -491,6 +492,10 @@ class HighwayEnvCentralizedPerfectTarget(AbstractEnv):
             info = {'episode':{'r': self.r_sum,
                                'l': self.steps,
                                'c': self.c_sum}}
+            if self.config["testing"]:
+                if self.r_sum - self.c_sum == 10:
+                    self.solved.add(tuple(self.initial_lanes))
+                print("Number of scenarios solved: ", len(self.solved))
             return info
         else:
             return {}
