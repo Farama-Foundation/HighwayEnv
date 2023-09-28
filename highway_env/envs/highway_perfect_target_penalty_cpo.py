@@ -23,7 +23,7 @@ import time
 Observation = np.ndarray
 
 
-class HighwayEnvCustom(AbstractEnv):
+class HighwayEnvPerfectTargetPenaltyCPO(AbstractEnv):
     victim = None
     victim_action = None
     r_sum = 0
@@ -55,9 +55,9 @@ class HighwayEnvCustom(AbstractEnv):
         """
         self.observation_type = observation_factory(self, self.config["observation"])
         self.victim_action_type = action_factory(self, self.config["victim_action"])
-        self.victim_observation_type = observation_factory(self, self.config["victim_observation"])
+        # self.victim_observation_type = observation_factory(self, self.config["victim_observation"])
         if self.victim:
-            self.victim_observation_type.observer_vehicle = self.victim
+            # self.victim_observation_type.observer_vehicle = self.victim
             self.victim_action_type.controlled_vehicle = self.victim
         self.observation_space = self.observation_type.space()
         # self.action_space = spaces.MultiDiscrete([len(self.attacker_action_type.actions) for _ in range(self.config["attacker_num"])])
@@ -84,9 +84,6 @@ class HighwayEnvCustom(AbstractEnv):
             },
             "victim_action": {
                 "type": "DiscreteMetaAction",
-            },
-            "victim_observation": {
-                    "type": "Kinematics",
             },
             "attacker_action": {
                 "type": "DiscreteMetaAction",
@@ -153,7 +150,7 @@ class HighwayEnvCustom(AbstractEnv):
                     )
                 self.victim = self.victim_action_type.vehicle_class(self.road, v.position, v.heading, v.speed)
                 self.road.vehicles.append(self.victim)
-                self.victim_observation_type.observer_vehicle = self.victim
+                # self.victim_observation_type.observer_vehicle = self.victim
                 self.victim_action_type.controlled_vehicle = self.victim
             else:
                 vehicle = Vehicle.create_random(
@@ -216,11 +213,7 @@ class HighwayEnvCustom(AbstractEnv):
 
         self.time += 1 / self.config["policy_frequency"]
         self._simulate(action)
-
-
         obs = self.observation_type.observe()
-        victim_obs = self.victim_observation_type.observe()
-        self.victim_action = self.victim_agent.select_action(victim_obs)
         if self.config["vis"]:
             print("victim action: {}".format(self.victim_action))
         rewards = self._reward(action)
@@ -230,6 +223,8 @@ class HighwayEnvCustom(AbstractEnv):
         if self.render_mode == 'human':
             self.render()
         if self.config["constraint_env"]:
+            for i in range(len(rewards)):
+                rewards[i] -= costs[i]
             rewards = (rewards, costs)
         return obs, rewards, terminated, truncated, info
     
@@ -355,17 +350,12 @@ class HighwayEnvCustom(AbstractEnv):
         # print("frames: {}".format(frames))
         for frame in range(frames):
             # Forward action to the vehicle
-            if self.steps % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
-                if self.victim_action:
-                    self.victim_action_type.act(self.victim_action)
-                else:
-                    victim_obs = self.victim_observation_type.observe()
-                    self.victim_action = self.victim_agent.select_action(victim_obs)
-                    self.victim_action_type.act(self.victim_action)
-            
             if action is not None \
                     and not self.config["manual_control"] \
                     and self.steps % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
+                self.victim_action = self.victim_agent.select_action(action)
+                print("victim action: ", self.victim_action)
+                self.victim_action_type.act(self.victim_action)
                 self.action_type.act(action)
             
 
@@ -517,7 +507,7 @@ class HighwayEnvCustom(AbstractEnv):
 
 
 
-class HighwayEnvCustomFast(HighwayEnvCustom):
+class HighwayEnvPerfectTargetPenaltyCPOFast(HighwayEnvPerfectTargetPenaltyCPO):
     """
     A variant of highway-v0 with faster execution:
         - lower simulation frequency

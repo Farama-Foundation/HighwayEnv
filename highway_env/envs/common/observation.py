@@ -187,7 +187,7 @@ class KinematicObservation(ObservationType):
         if not self.features_range:
             side_lanes = self.env.road.network.all_side_lanes(self.observer_vehicle.lane_index)
             self.features_range = {
-                "x": [-5.0 * Vehicle.MAX_SPEED, 5.0 * Vehicle.MAX_SPEED],
+                "x": [-10.0 * Vehicle.MAX_SPEED, 10.0 * Vehicle.MAX_SPEED],
                 "y": [-AbstractLane.DEFAULT_WIDTH * len(side_lanes), AbstractLane.DEFAULT_WIDTH * len(side_lanes)],
                 "vx": [-2*Vehicle.MAX_SPEED, 2*Vehicle.MAX_SPEED],
                 "vy": [-2*Vehicle.MAX_SPEED, 2*Vehicle.MAX_SPEED]
@@ -239,7 +239,7 @@ class AttackerKinematicObservation(KinematicObservation):
             return np.zeros(self.space().shape)
 
         # Add ego-vehicle
-        df = pd.DataFrame.from_records([self.observer_vehicle.to_dict()])[self.features]
+        df = pd.DataFrame.from_records([self.observer_vehicle.to_dict(), self.env.victim.to_dict()])[self.features]
         # Add nearby traffic
         close_vehicles = self.env.road.close_vehicles_to(self.observer_vehicle,
                                                          self.env.PERCEPTION_DISTANCE,
@@ -247,11 +247,11 @@ class AttackerKinematicObservation(KinematicObservation):
                                                          see_behind=self.see_behind,
                                                          sort=False)
         # the victim position for a close vehicle is the same
-        if close_vehicles:
+        if close_vehicles and not (len(close_vehicles)==1 and close_vehicles[0] is self.env.victim):
             origin = self.observer_vehicle if not self.absolute else None
             df = pd.concat([df, pd.DataFrame.from_records(
                 [v.to_dict(origin, observe_intentions=self.observe_intentions)
-                 for v in close_vehicles[-self.vehicles_count + 1:]])[self.features]],
+                 for v in close_vehicles[-self.vehicles_count + 1:] if v is not self.env.victim])[self.features]],
                            ignore_index=True)
         # Normalize and clip
         if self.normalize:
@@ -516,7 +516,7 @@ class MultiAgentObservation(ObservationType):
             obs_type = observation_factory(self.env, self.observation_config)
             obs_type.observer_vehicle = vehicle
             self.agents_observation_types.append(obs_type)
-        print("observation vehicle #" + str(len(self.agents_observation_types)))
+            
 
     def space(self) -> spaces.Space:
         return spaces.Tuple([obs_type.space() for obs_type in self.agents_observation_types])

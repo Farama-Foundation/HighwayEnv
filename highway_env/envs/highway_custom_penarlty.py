@@ -23,7 +23,7 @@ import time
 Observation = np.ndarray
 
 
-class HighwayEnvCustom(AbstractEnv):
+class HighwayEnvCustomPenalty(AbstractEnv):
     victim = None
     victim_action = None
     r_sum = 0
@@ -224,13 +224,14 @@ class HighwayEnvCustom(AbstractEnv):
         if self.config["vis"]:
             print("victim action: {}".format(self.victim_action))
         rewards = self._reward(action)
+        for i in range(len(rewards)):
+            rewards[i] -= costs[i]
         terminated = self._is_terminated()
         truncated = self._is_truncated()
         info = self._info(obs, action, terminated)
         if self.render_mode == 'human':
             self.render()
-        if self.config["constraint_env"]:
-            rewards = (rewards, costs)
+        # print("rewards: ", rewards)
         return obs, rewards, terminated, truncated, info
     
     def calc_cost(self, action):
@@ -517,7 +518,7 @@ class HighwayEnvCustom(AbstractEnv):
 
 
 
-class HighwayEnvCustomFast(HighwayEnvCustom):
+class HighwayEnvCustomPenaltyFast(HighwayEnvCustomPenalty):
     """
     A variant of highway-v0 with faster execution:
         - lower simulation frequency

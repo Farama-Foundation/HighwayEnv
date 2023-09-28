@@ -42,7 +42,9 @@ class Vehicle(RoadObject):
         self.action = {'steering': 0, 'acceleration': 0}
         self.crashed = False
         self.impact = None
+        self.forbid_actions = {}
         self.log = []
+        self.destroyed = False
         self.history = deque(maxlen=self.HISTORY_SIZE)
 
     @classmethod

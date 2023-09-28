@@ -38,6 +38,7 @@ class RoadObject(ABC):
 
         # Enable collision with other collidables
         self.collidable = True
+        self.collide_with = None
 
         # Collisions have physical effects
         self.solid = True
@@ -89,6 +90,8 @@ class RoadObject(ABC):
                 else:
                     self.impact = transition / 2
                     other.impact = -transition / 2
+                self.collide_with = other
+                other.collide_with = self
         if intersecting:
             if self.solid and other.solid:
                 self.crashed = True
@@ -97,6 +100,8 @@ class RoadObject(ABC):
                 self.hit = True
             if not other.solid:
                 other.hit = True
+            self.collide_with = other
+            other.collide_with = self
 
     def _is_colliding(self, other, dt):
         # Fast spherical pre-check

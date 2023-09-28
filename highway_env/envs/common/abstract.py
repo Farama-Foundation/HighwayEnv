@@ -35,7 +35,7 @@ class AbstractEnv(gym.Env):
         'render_modes': ['human', 'rgb_array'],
     }
 
-    PERCEPTION_DISTANCE = 5.0 * Vehicle.MAX_SPEED
+    PERCEPTION_DISTANCE = 10.0 * Vehicle.MAX_SPEED
     """The maximum distance of any vehicle present in the observation [m]"""
 
     def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
@@ -195,7 +195,7 @@ class AbstractEnv(gym.Env):
         :param options: Allows the environment configuration to specified through `options["config"]`
         :return: the observation of the reset state
         """
-        super().reset(seed=seed, options=options)
+        super().reset(seed=5, options=options)
         if options and "config" in options:
             self.configure(options["config"])
         self.update_metadata()

@@ -23,11 +23,13 @@ import time
 Observation = np.ndarray
 
 
-class HighwayEnvCustom(AbstractEnv):
+class HighwayEnvCentralizedPerfectTargetPenalty(AbstractEnv):
     victim = None
     victim_action = None
     r_sum = 0
-    r_sum = 0
+    c_sum = 0
+    np_random = np.random.RandomState(5)
+    solved = set()
     """
     A highway driving environment.
 
@@ -55,27 +57,30 @@ class HighwayEnvCustom(AbstractEnv):
         """
         self.observation_type = observation_factory(self, self.config["observation"])
         self.victim_action_type = action_factory(self, self.config["victim_action"])
-        self.victim_observation_type = observation_factory(self, self.config["victim_observation"])
+        # self.victim_observation_type = observation_factory(self, self.config["victim_observation"])
+        
         if self.victim:
-            self.victim_observation_type.observer_vehicle = self.victim
+            # self.victim_observation_type.observer_vehicle = self.victim
+            self.observation_type.observer_vehicle = self.victim
             self.victim_action_type.controlled_vehicle = self.victim
         self.observation_space = self.observation_type.space()
-        # self.action_space = spaces.MultiDiscrete([len(self.attacker_action_type.actions) for _ in range(self.config["attacker_num"])])
+        # print("self.observation_space: {}".format(self.observation_space))
+        # TODO: make 5 configurable
+        self.action_space = spaces.MultiDiscrete([5 for _ in range(self.config["attacker_num"])])
         
         self.action_type = action_factory(self, self.config["action"])
-        self.action_space = self.action_type.space()
+        # self.action_space = self.action_type.space()
 
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
         config.update({
             "observation": {
-                "type": "MultiAgentObservation",
-                "observation_config": {
-                    "type": "AttackerKinematics",
-                    "see_behind": True
-                }
+                "type": "Kinematics",
+                "see_behind": True,
+                "vehicles_count": 5
             },
+
             "action": {
                 "type": "MultiAgentAction",
                 "action_config": {
@@ -84,9 +89,6 @@ class HighwayEnvCustom(AbstractEnv):
             },
             "victim_action": {
                 "type": "DiscreteMetaAction",
-            },
-            "victim_observation": {
-                    "type": "Kinematics",
             },
             "attacker_action": {
                 "type": "DiscreteMetaAction",
@@ -109,15 +111,16 @@ class HighwayEnvCustom(AbstractEnv):
             "normalize_reward": True,
             "offroad_terminal": False,
             "randomize_starting_position": False,
-            "time_penalty": -0.025,
-            "attacker_collide_each_other_reward": -2.5,
-            "vicitm_collision_reward": 2.5,
+            "time_penalty": -0.1,
+            "attacker_collide_each_other_reward": -5,
+            "vicitm_collision_reward": 10,
             "constraint_env": False,
             "close_vehicle_threshold": 12,
             "close_vehicle_cost": 5,
             "invalid_action_cost": 3,
             "diving_beside": 3,
-            "vis": False
+            "vis": False,
+            "victim_index": 2
         })
         return config
     
@@ -136,35 +139,42 @@ class HighwayEnvCustom(AbstractEnv):
 
     def _create_vehicles(self) -> None:
         """Create some new random vehicles of a given type, and add them on the road."""
-        self.controlled_vehicles = []
+
         if self.config["randomize_starting_position"] == False:
-            self.victim_index = (self.config["controlled_vehicles"]+1)//2
+            # self.victim_index = (self.config["controlled_vehicles"]+1)//2
+            self.victim_index = self.config["victim_index"]
             # self.victim_index = 0
         else:
             self.victim_index = random.randint(0, self.config["controlled_vehicles"])
-        
-        for i in range(self.config["controlled_vehicles"]+1):
-            if i == self.victim_index:
-                v = Vehicle.create_random(
+        while True:
+            self.initial_lanes =[]
+            self.controlled_vehicles = []
+            self.road.vehicles = []
+            for i in range(self.config["controlled_vehicles"]+1):
+                if i == self.victim_index:
+                    v = Vehicle.create_random(
+                            self.road,
+                            speed=25,
+                            lane_id=1,
+                            spacing=self.config["ego_spacing"]
+                        )
+                    self.victim = self.victim_action_type.vehicle_class(self.road, v.position, v.heading, v.speed)
+                    self.road.vehicles.append(self.victim)
+                    # self.victim_observation_type.observer_vehicle = self.victim
+                    self.victim_action_type.controlled_vehicle = self.victim
+                else:
+                    vehicle = Vehicle.create_random(
                         self.road,
                         speed=25,
                         lane_id=self.config["initial_lane_id"],
                         spacing=self.config["ego_spacing"]
                     )
-                self.victim = self.victim_action_type.vehicle_class(self.road, v.position, v.heading, v.speed)
-                self.road.vehicles.append(self.victim)
-                self.victim_observation_type.observer_vehicle = self.victim
-                self.victim_action_type.controlled_vehicle = self.victim
-            else:
-                vehicle = Vehicle.create_random(
-                    self.road,
-                    speed=25,
-                    lane_id=self.config["initial_lane_id"],
-                    spacing=self.config["ego_spacing"]
-                )
-                vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
-                self.controlled_vehicles.append(vehicle)
-                self.road.vehicles.append(vehicle)
+                    vehicle = self.action_type.vehicle_class(self.road, vehicle.position, vehicle.heading, vehicle.speed)
+                    self.initial_lanes.append(vehicle.lane_index[2])
+                    self.controlled_vehicles.append(vehicle)
+                    self.road.vehicles.append(vehicle)
+            if tuple(self.initial_lanes) not in self.solved:
+                break
             
     def step(self, action: Action) -> Tuple[Observation, float, bool, bool, dict]:
         """
@@ -178,12 +188,16 @@ class HighwayEnvCustom(AbstractEnv):
         """
         if self.road is None or self.vehicle is None:
             raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
+
         
+
+        # TODO: calculate cost; we need to iterate every pair of vehicles
         if self.config["vis"]:
             print("action to take: ", action)
         if self.config["constraint_env"]:
-            costs = self.calc_cost(action)
-            self.c_sum += sum(costs)
+            cost = self.calc_cost(action)
+            self.c_sum += cost
+
         # # insert vulneralbility here
         # vehicle_ahead = vehicle_behind = vehicle_left = vehicle_right = False
         # victim_l_index = self.road.vehicles[self.victim_index].lane_index
@@ -210,33 +224,33 @@ class HighwayEnvCustom(AbstractEnv):
         #         if abs(victim_local_x - attacker_local_x) <= self.config["diving_beside"]:
         #             vehicle_right = True
         # if vehicle_right and vehicle_left:
-        #     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        #     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         #     print("victim action overrided")
         #     self.victim_action = 0
-
+        
         self.time += 1 / self.config["policy_frequency"]
         self._simulate(action)
-
-
+        
         obs = self.observation_type.observe()
-        victim_obs = self.victim_observation_type.observe()
-        self.victim_action = self.victim_agent.select_action(victim_obs)
+        # victim_obs = self.victim_observation_type.observe()
+        # self.victim_action = self.victim_agent.select_action(victim_obs)
         if self.config["vis"]:
             print("victim action: {}".format(self.victim_action))
-        rewards = self._reward(action)
+        reward = self._reward(action)
         terminated = self._is_terminated()
         truncated = self._is_truncated()
-        info = self._info(obs, action, terminated)
+        info = self._info(None, action, terminated)
         if self.render_mode == 'human':
             self.render()
         if self.config["constraint_env"]:
-            rewards = (rewards, costs)
-        return obs, rewards, terminated, truncated, info
+            # reward = reward - cost
+            reward = (reward, cost)
+        return obs, reward, terminated, truncated, info
     
     def calc_cost(self, action):
         victim_skipped = False
         j = 0
-        costs = [0 for _ in range(len(self.controlled_vehicles))]
+        cost = 0
         for i in range(len(self.road.vehicles)):
             if victim_skipped:
                 j = i - 1
@@ -253,7 +267,7 @@ class HighwayEnvCustom(AbstractEnv):
                     # change lane is forbidden
                     if self.config["vis"]:
                         print("invalid action")
-                    costs[j] += self.config["invalid_action_cost"]
+                    cost += self.config["invalid_action_cost"]
                     continue
                 for k in range(len(self.road.vehicles)):
                     if k == i:
@@ -264,7 +278,7 @@ class HighwayEnvCustom(AbstractEnv):
                         other_x = self.road.network.get_lane(other_l_index).local_coordinates(self.road.vehicles[k].position)[0]
                         # print("d : ", abs(x - other_x))
                         if abs(x - other_x) <= self.config["close_vehicle_threshold"]:
-                            costs[j] += self.config["close_vehicle_cost"]
+                            cost += self.config["close_vehicle_cost"]
                             if self.config["vis"]:
                                 print("0 triggered")
                             break
@@ -272,7 +286,7 @@ class HighwayEnvCustom(AbstractEnv):
                         x = self.road.network.get_lane(other_l_index).local_coordinates(self.road.vehicles[i].position)[0]
                         other_x = self.road.network.get_lane(other_l_index).local_coordinates(self.road.vehicles[k].position)[0]
                         if x > other_x and (x - other_x <= self.config["close_vehicle_threshold"]):
-                            costs[j] += self.config["close_vehicle_cost"]
+                            cost += self.config["close_vehicle_cost"]
                             if self.config["vis"]:
                                 print("0 triggered")
                             break
@@ -284,7 +298,7 @@ class HighwayEnvCustom(AbstractEnv):
                 
                 if l_index == self.config["lanes_count"]-1:
                     # change lane is forbidden
-                    costs[j] += self.config["invalid_action_cost"]
+                    cost += self.config["invalid_action_cost"]
                     continue
                 for k in range(len(self.road.vehicles)):
                     if k == i:
@@ -294,7 +308,7 @@ class HighwayEnvCustom(AbstractEnv):
                         x = self.road.network.get_lane(other_l_index).local_coordinates(self.road.vehicles[i].position)[0]
                         other_x = self.road.network.get_lane(other_l_index).local_coordinates(self.road.vehicles[k].position)[0]
                         if abs(x - other_x) <= self.config["close_vehicle_threshold"]:
-                            costs[j] += self.config["close_vehicle_cost"]
+                            cost += self.config["close_vehicle_cost"]
                             if self.config["vis"]:
                                 print("2 triggered")
                             break
@@ -302,7 +316,7 @@ class HighwayEnvCustom(AbstractEnv):
                         x = self.road.network.get_lane(other_l_index).local_coordinates(self.road.vehicles[i].position)[0]
                         other_x = self.road.network.get_lane(other_l_index).local_coordinates(self.road.vehicles[k].position)[0]
                         if x > other_x and (x - other_x) <= self.config["close_vehicle_threshold"]:
-                            costs[j] += self.config["close_vehicle_cost"]
+                            cost += self.config["close_vehicle_cost"]
                             if self.config["vis"]:
                                 print("2 triggered")
                             break
@@ -320,7 +334,7 @@ class HighwayEnvCustom(AbstractEnv):
                         other_x = self.road.network.get_lane(other_l_index).local_coordinates(self.road.vehicles[k].position)[0]
                         if other_x > x:
                             if (other_x - x) <= self.config["close_vehicle_threshold"]:
-                                costs[j] += self.config["close_vehicle_cost"]
+                                cost += self.config["close_vehicle_cost"]
                                 if self.config["vis"]:
                                     print("3 triggered")
                                 break
@@ -339,33 +353,26 @@ class HighwayEnvCustom(AbstractEnv):
                         if other_x < x:
                             # TODO: incorporate speed in close vehicle threshold
                             if (x - other_x) <= self.config["close_vehicle_threshold"]:
-                                costs[j] += self.config["close_vehicle_cost"]
+                                cost += self.config["close_vehicle_cost"]
                                 if self.config["vis"]:
                                     print("4 triggered")
                                 break
                         else:
                             continue
         if self.config["vis"]:
-            print("cost: ", costs)
-        return costs
-
+            print("cost: ", cost)
+        return cost
     def _simulate(self, action: Optional[Action] = None) -> None:
         """Perform several steps of simulation with constant action."""
         frames = int(self.config["simulation_frequency"] // self.config["policy_frequency"])
-        # print("frames: {}".format(frames))
         for frame in range(frames):
             # Forward action to the vehicle
-            if self.steps % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
-                if self.victim_action:
-                    self.victim_action_type.act(self.victim_action)
-                else:
-                    victim_obs = self.victim_observation_type.observe()
-                    self.victim_action = self.victim_agent.select_action(victim_obs)
-                    self.victim_action_type.act(self.victim_action)
-            
             if action is not None \
                     and not self.config["manual_control"] \
                     and self.steps % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
+                self.victim_action = self.victim_agent.select_action(action)
+                print("victim action: ", self.victim_action)
+                self.victim_action_type.act(self.victim_action)
                 self.action_type.act(action)
             
 
@@ -426,36 +433,28 @@ class HighwayEnvCustom(AbstractEnv):
         # reward *= rewards['on_road_reward']
         # print(rewards)
 
-        self.r_sum += sum(rewards)
+        self.r_sum += rewards
         return rewards
 
     def _rewards(self, action: Action) -> Dict[Text, float]:
         # self.vehicle originally is controlled vehicle [0]
-        rewards = []
-        self.victim_crashed = False
-        # print("number of controlled vehicles: {}".format(len(self.controlled_vehicles)))
+        reward = 0.0
         for vehicle in self.controlled_vehicles:
-            reward = 0.0
             if vehicle.destroyed:
-                rewards.append(0)
                 continue
             if vehicle.crashed:
                 vehicle.destroyed = True
                 if vehicle.collide_with != self.victim:
                     print("attacker crashed with each other")
                     reward += self.config["attacker_collide_each_other_reward"]
-                # else:
-                #     reward += self.config["vicitm_collision_reward"]
-            # reward = reward*self.config["on_road_reward"] if vehicle.on_road else reward
-            reward += self.config["time_penalty"] * self.time
-            rewards.append(reward)
+        reward += self.config["time_penalty"] * self.time
         if self.victim.crashed:
             print("################################################")
             print("victim crashed")
             print("################################################")
-            rewards = [r+self.config["vicitm_collision_reward"] for r in rewards]
+            reward += self.config["vicitm_collision_reward"]
         
-        return rewards
+        return reward
             
 
         # neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
@@ -486,15 +485,9 @@ class HighwayEnvCustom(AbstractEnv):
         if (self.victim.crashed or
                 self.config["offroad_terminal"] and not self.victim.on_road or
                 self.time >= self.config["duration"]):
-            return [True for _ in range(self.config["attacker_num"])]
+            return True
         else:
-            dones = []
-            for vehicle in self.controlled_vehicles:
-                if vehicle.crashed or vehicle.destroyed:
-                    dones.append(True)
-                else:
-                    dones.append(False)
-            return dones
+            return False
         # return (self.victim.crashed or
         #         self.config["offroad_terminal"] and not self.victim.on_road or
         #         self.time >= self.config["duration"])
@@ -502,11 +495,14 @@ class HighwayEnvCustom(AbstractEnv):
     def _is_truncated(self) -> bool:
         return False
     
-    def _info(self, obs: Observation, action: Optional[Action] = None, dones: List[bool]=None) -> dict:
-        if dones is not None and all(dones):
+    def _info(self, obs: Observation, action: Optional[Action] = None, done: List[bool]=None) -> dict:
+        if done is not None and done:
             info = {'episode':{'r': self.r_sum,
                                'l': self.steps,
                                'c': self.c_sum}}
+            if self.r_sum - self.c_sum == 10:
+                self.solved.add(tuple(self.initial_lanes))
+            print("Number of scenarios solved: ", len(self.solved))
             return info
         else:
             return {}
@@ -517,7 +513,7 @@ class HighwayEnvCustom(AbstractEnv):
 
 
 
-class HighwayEnvCustomFast(HighwayEnvCustom):
+class HighwayEnvCentralizedPerfectTargetPenaltyFast(HighwayEnvCentralizedPerfectTargetPenalty):
     """
     A variant of highway-v0 with faster execution:
         - lower simulation frequency
