@@ -27,6 +27,7 @@ class MergeEnv(AbstractEnv):
             "collision_reward": -1,
             "right_lane_reward": 0.1,
             "high_speed_reward": 0.2,
+            "reward_speed_range": [20, 30],
             "merging_speed_reward": -0.5,
             "lane_change_reward": -0.05,
         })
@@ -48,10 +49,11 @@ class MergeEnv(AbstractEnv):
                           [0, 1])
 
     def _rewards(self, action: int) -> Dict[Text, float]:
+        scaled_speed = utils.lmap(self.vehicle.speed, self.config["reward_speed_range"], [0, 1])
         return {
             "collision_reward": self.vehicle.crashed,
             "right_lane_reward": self.vehicle.lane_index[2] / 1,
-            "high_speed_reward": self.vehicle.speed_index / (self.vehicle.target_speeds.size - 1),
+            "high_speed_reward": scaled_speed,
             "lane_change_reward": action in [0, 2],
             "merging_speed_reward": sum(  # Altruistic penalty
                 (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
