@@ -184,7 +184,7 @@ class ControlledVehicle(Vehicle):
         routes = self.get_routes_at_intersection()
         if routes:
             if _to == "random":
-                _to = self.road.np_random.randint(len(routes))
+                _to = self.road.np_random.integers(len(routes))
             self.route = routes[_to % len(routes)]
 
     def predict_trajectory_constant_speed(self, times: np.ndarray) -> Tuple[List[np.ndarray], List[float]]:
