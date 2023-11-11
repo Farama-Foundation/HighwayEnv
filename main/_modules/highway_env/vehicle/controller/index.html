@@ -502,7 +502,7 @@
         <span class="n">routes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_routes_at_intersection</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">routes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">_to</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
-                <span class="n">_to</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">routes</span><span class="p">))</span>
+                <span class="n">_to</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">routes</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">route</span> <span class="o">=</span> <span class="n">routes</span><span class="p">[</span><span class="n">_to</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">routes</span><span class="p">)]</span></div>
 
 
