@@ -5,16 +5,23 @@ import numpy as np
 from highway_env import utils
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle, MDPVehicle
-from highway_env.vehicle.kinematics import Vehicle, Obstacle
+from highway_env.vehicle.objects import Obstacle
+from highway_env.vehicle.kinematics import Vehicle
 
 
 class RegulatedRoad(Road):
     YIELDING_COLOR: Tuple[float, float, float] = None
     REGULATION_FREQUENCY: int = 2
-    YIELD_DURATION: float = 0.
+    YIELD_DURATION: float = 0.0
 
-    def __init__(self, network: RoadNetwork = None, vehicles: List[Vehicle] = None, obstacles: List[Obstacle] = None,
-                 np_random: np.random.RandomState = None, record_history: bool = False) -> None:
+    def __init__(
+        self,
+        network: RoadNetwork = None,
+        vehicles: List[Vehicle] = None,
+        obstacles: List[Obstacle] = None,
+        np_random: np.random.RandomState = None,
+        record_history: bool = False,
+    ) -> None:
         super().__init__(network, vehicles, obstacles, np_random, record_history)
         self.steps = 0
 
@@ -39,12 +46,16 @@ class RegulatedRoad(Road):
 
         # Find new conflicts and resolve them
         for i in range(len(self.vehicles) - 1):
-            for j in range(i+1, len(self.vehicles)):
+            for j in range(i + 1, len(self.vehicles)):
                 if self.is_conflict_possible(self.vehicles[i], self.vehicles[j]):
-                    yielding_vehicle = self.respect_priorities(self.vehicles[i], self.vehicles[j])
-                    if yielding_vehicle is not None and \
-                            isinstance(yielding_vehicle, ControlledVehicle) and \
-                            not isinstance(yielding_vehicle, MDPVehicle):
+                    yielding_vehicle = self.respect_priorities(
+                        self.vehicles[i], self.vehicles[j]
+                    )
+                    if (
+                        yielding_vehicle is not None
+                        and isinstance(yielding_vehicle, ControlledVehicle)
+                        and not isinstance(yielding_vehicle, MDPVehicle)
+                    ):
                         yielding_vehicle.color = self.YIELDING_COLOR
                         yielding_vehicle.target_speed = 0
                         yielding_vehicle.is_yielding = True
@@ -67,17 +78,26 @@ class RegulatedRoad(Road):
             return v1 if v1.front_distance_to(v2) > v2.front_distance_to(v1) else v2
 
     @staticmethod
-    def is_conflict_possible(v1: ControlledVehicle, v2: ControlledVehicle, horizon: int = 3, step: float = 0.25) -> bool:
+    def is_conflict_possible(
+        v1: ControlledVehicle,
+        v2: ControlledVehicle,
+        horizon: int = 3,
+        step: float = 0.25,
+    ) -> bool:
         times = np.arange(step, horizon, step)
         positions_1, headings_1 = v1.predict_trajectory_constant_speed(times)
         positions_2, headings_2 = v2.predict_trajectory_constant_speed(times)
 
-        for position_1, heading_1, position_2, heading_2 in zip(positions_1, headings_1, positions_2, headings_2):
+        for position_1, heading_1, position_2, heading_2 in zip(
+            positions_1, headings_1, positions_2, headings_2
+        ):
             # Fast spherical pre-check
             if np.linalg.norm(position_2 - position_1) > v1.LENGTH:
                 continue
 
             # Accurate rectangular check
-            if utils.rotated_rectangles_intersect((position_1, 1.5*v1.LENGTH, 0.9*v1.WIDTH, heading_1),
-                                                  (position_2, 1.5*v2.LENGTH, 0.9*v2.WIDTH, heading_2)):
+            if utils.rotated_rectangles_intersect(
+                (position_1, 1.5 * v1.LENGTH, 0.9 * v1.WIDTH, heading_1),
+                (position_2, 1.5 * v2.LENGTH, 0.9 * v2.WIDTH, heading_2),
+            ):
                 return True

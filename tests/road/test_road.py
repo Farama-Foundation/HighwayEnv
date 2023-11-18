@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from highway_env.road.lane import StraightLane, CircularLane, PolyLane
+from highway_env.road.lane import CircularLane, PolyLane, StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
 
@@ -28,10 +28,10 @@ def test_network(net):
     assert v.lane_index == (0, 1, 0)
 
     # Lane changes
-    dt = 1/15
+    dt = 1 / 15
     lane_index = v.target_lane_index
     lane_changes = 0
-    for _ in range(int(20/dt)):
+    for _ in range(int(20 / dt)):
         road.act()
         road.step(dt)
         if lane_index != v.target_lane_index:

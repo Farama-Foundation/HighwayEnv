@@ -1,20 +1,22 @@
 import copy
 import importlib
 import itertools
-from typing import Tuple, Dict, Callable, List, Optional, Union, Sequence
+from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
 # Useful types
 Vector = Union[np.ndarray, Sequence[float]]
 Matrix = Union[np.ndarray, Sequence[Sequence[float]]]
-Interval = Union[np.ndarray,
-                 Tuple[Vector, Vector],
-                 Tuple[Matrix, Matrix],
-                 Tuple[float, float],
-                 List[Vector],
-                 List[Matrix],
-                 List[float]]
+Interval = Union[
+    np.ndarray,
+    Tuple[Vector, Vector],
+    Tuple[Matrix, Matrix],
+    Tuple[float, float],
+    List[Vector],
+    List[Matrix],
+    List[float],
+]
 
 
 def do_every(duration: float, timer: float) -> bool:
@@ -61,11 +63,15 @@ def point_in_rectangle(point: Vector, rect_min: Vector, rect_max: Vector) -> boo
     :param rect_min: x_min, y_min
     :param rect_max: x_max, y_max
     """
-    return rect_min[0] <= point[0] <= rect_max[0] and rect_min[1] <= point[1] <= rect_max[1]
+    return (
+        rect_min[0] <= point[0] <= rect_max[0]
+        and rect_min[1] <= point[1] <= rect_max[1]
+    )
 
 
-def point_in_rotated_rectangle(point: np.ndarray, center: np.ndarray, length: float, width: float, angle: float) \
-        -> bool:
+def point_in_rotated_rectangle(
+    point: np.ndarray, center: np.ndarray, length: float, width: float, angle: float
+) -> bool:
     """
     Check if a point is inside a rotated rectangle
 
@@ -79,10 +85,12 @@ def point_in_rotated_rectangle(point: np.ndarray, center: np.ndarray, length: fl
     c, s = np.cos(angle), np.sin(angle)
     r = np.array([[c, -s], [s, c]])
     ru = r.dot(point - center)
-    return point_in_rectangle(ru, (-length/2, -width/2), (length/2, width/2))
+    return point_in_rectangle(ru, (-length / 2, -width / 2), (length / 2, width / 2))
 
 
-def point_in_ellipse(point: Vector, center: Vector, angle: float, length: float, width: float) -> bool:
+def point_in_ellipse(
+    point: Vector, center: Vector, angle: float, length: float, width: float
+) -> bool:
     """
     Check if a point is inside an ellipse
 
@@ -99,8 +107,9 @@ def point_in_ellipse(point: Vector, center: Vector, angle: float, length: float,
     return np.sum(np.square(ru / np.array([length, width]))) < 1
 
 
-def rotated_rectangles_intersect(rect1: Tuple[Vector, float, float, float],
-                                 rect2: Tuple[Vector, float, float, float]) -> bool:
+def rotated_rectangles_intersect(
+    rect1: Tuple[Vector, float, float, float], rect2: Tuple[Vector, float, float, float]
+) -> bool:
     """
     Do two rotated rectangles intersect?
 
@@ -111,8 +120,14 @@ def rotated_rectangles_intersect(rect1: Tuple[Vector, float, float, float],
     return has_corner_inside(rect1, rect2) or has_corner_inside(rect2, rect1)
 
 
-def rect_corners(center: np.ndarray, length: float, width: float, angle: float,
-                 include_midpoints: bool = False, include_center: bool = False) -> List[np.ndarray]:
+def rect_corners(
+    center: np.ndarray,
+    length: float,
+    width: float,
+    angle: float,
+    include_midpoints: bool = False,
+    include_center: bool = False,
+) -> List[np.ndarray]:
     """
     Returns the positions of the corners of a rectangle.
     :param center: the rectangle center
@@ -124,32 +139,34 @@ def rect_corners(center: np.ndarray, length: float, width: float, angle: float,
     :return: a list of positions
     """
     center = np.array(center)
-    half_l = np.array([length/2, 0])
-    half_w = np.array([0, width/2])
-    corners = [- half_l - half_w,
-               - half_l + half_w,
-               + half_l + half_w,
-               + half_l - half_w]
+    half_l = np.array([length / 2, 0])
+    half_w = np.array([0, width / 2])
+    corners = [-half_l - half_w, -half_l + half_w, +half_l + half_w, +half_l - half_w]
     if include_center:
         corners += [[0, 0]]
     if include_midpoints:
-        corners += [- half_l, half_l, -half_w, half_w]
+        corners += [-half_l, half_l, -half_w, half_w]
 
     c, s = np.cos(angle), np.sin(angle)
     rotation = np.array([[c, -s], [s, c]])
     return (rotation @ np.array(corners).T).T + np.tile(center, (len(corners), 1))
 
 
-def has_corner_inside(rect1: Tuple[Vector, float, float, float],
-                      rect2: Tuple[Vector, float, float, float]) -> bool:
+def has_corner_inside(
+    rect1: Tuple[Vector, float, float, float], rect2: Tuple[Vector, float, float, float]
+) -> bool:
     """
     Check if rect1 has a corner inside rect2
 
     :param rect1: (center, length, width, angle)
     :param rect2: (center, length, width, angle)
     """
-    return any([point_in_rotated_rectangle(p1, *rect2)
-                for p1 in rect_corners(*rect1, include_midpoints=True, include_center=True)])
+    return any(
+        [
+            point_in_rotated_rectangle(p1, *rect2)
+            for p1 in rect_corners(*rect1, include_midpoints=True, include_center=True)
+        ]
+    )
 
 
 def project_polygon(polygon: Vector, axis: Vector) -> Tuple[float, float]:
@@ -171,9 +188,9 @@ def interval_distance(min_a: float, max_a: float, min_b: float, max_b: float):
     return min_b - max_a if min_a < min_b else min_a - max_b
 
 
-def are_polygons_intersecting(a: Vector, b: Vector,
-                              displacement_a: Vector, displacement_b: Vector) \
-        -> Tuple[bool, bool, Optional[np.ndarray]]:
+def are_polygons_intersecting(
+    a: Vector, b: Vector, displacement_a: Vector, displacement_b: Vector
+) -> Tuple[bool, bool, Optional[np.ndarray]]:
     """
     Checks if the two polygons are intersecting.
 
@@ -219,8 +236,13 @@ def are_polygons_intersecting(a: Vector, b: Vector,
     return intersecting, will_intersect, translation
 
 
-def confidence_ellipsoid(data: Dict[str, np.ndarray], lambda_: float = 1e-5, delta: float = 0.1, sigma: float = 0.1,
-                         param_bound: float = 1.0) -> Tuple[np.ndarray, np.ndarray, float]:
+def confidence_ellipsoid(
+    data: Dict[str, np.ndarray],
+    lambda_: float = 1e-5,
+    delta: float = 0.1,
+    sigma: float = 0.1,
+    param_bound: float = 1.0,
+) -> Tuple[np.ndarray, np.ndarray, float]:
     """
     Compute a confidence ellipsoid over the parameter theta, where y = theta^T phi
 
@@ -233,15 +255,21 @@ def confidence_ellipsoid(data: Dict[str, np.ndarray], lambda_: float = 1e-5, del
     """
     phi = np.array(data["features"])
     y = np.array(data["outputs"])
-    g_n_lambda = 1/sigma * np.transpose(phi) @ phi + lambda_ * np.identity(phi.shape[-1])
+    g_n_lambda = 1 / sigma * np.transpose(phi) @ phi + lambda_ * np.identity(
+        phi.shape[-1]
+    )
     theta_n_lambda = np.linalg.inv(g_n_lambda) @ np.transpose(phi) @ y / sigma
     d = theta_n_lambda.shape[0]
-    beta_n = np.sqrt(2*np.log(np.sqrt(np.linalg.det(g_n_lambda) / lambda_ ** d) / delta)) + \
-        np.sqrt(lambda_*d) * param_bound
+    beta_n = (
+        np.sqrt(2 * np.log(np.sqrt(np.linalg.det(g_n_lambda) / lambda_**d) / delta))
+        + np.sqrt(lambda_ * d) * param_bound
+    )
     return theta_n_lambda, g_n_lambda, beta_n
 
 
-def confidence_polytope(data: dict, parameter_box: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float]:
+def confidence_polytope(
+    data: dict, parameter_box: np.ndarray
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float]:
     """
     Compute a confidence polytope over the parameter theta, where y = theta^T phi
 
@@ -250,7 +278,9 @@ def confidence_polytope(data: dict, parameter_box: np.ndarray) -> Tuple[np.ndarr
     :return: estimated theta, polytope vertices, Gramian matrix G_N_lambda, radius beta_N
     """
     param_bound = np.amax(np.abs(parameter_box))
-    theta_n_lambda, g_n_lambda, beta_n = confidence_ellipsoid(data, param_bound=param_bound)
+    theta_n_lambda, g_n_lambda, beta_n = confidence_ellipsoid(
+        data, param_bound=param_bound
+    )
 
     values, pp = np.linalg.eig(g_n_lambda)
     radius_matrix = np.sqrt(beta_n) * np.linalg.inv(pp) @ np.diag(np.sqrt(1 / values))
@@ -260,12 +290,22 @@ def confidence_polytope(data: dict, parameter_box: np.ndarray) -> Tuple[np.ndarr
     # Clip the parameter and confidence region within the prior parameter box.
     theta_n_lambda = np.clip(theta_n_lambda, parameter_box[0], parameter_box[1])
     for k, _ in enumerate(d_theta):
-        d_theta[k] = np.clip(d_theta[k], parameter_box[0] - theta_n_lambda, parameter_box[1] - theta_n_lambda)
+        d_theta[k] = np.clip(
+            d_theta[k],
+            parameter_box[0] - theta_n_lambda,
+            parameter_box[1] - theta_n_lambda,
+        )
     return theta_n_lambda, d_theta, g_n_lambda, beta_n
 
 
-def is_valid_observation(y: np.ndarray, phi: np.ndarray, theta: np.ndarray, gramian: np.ndarray,
-                         beta: float, sigma: float = 0.1) -> bool:
+def is_valid_observation(
+    y: np.ndarray,
+    phi: np.ndarray,
+    theta: np.ndarray,
+    gramian: np.ndarray,
+    beta: float,
+    sigma: float = 0.1,
+) -> bool:
     """
     Check if a new observation (phi, y) is valid according to a confidence ellipsoid on theta.
 
@@ -299,7 +339,9 @@ def is_consistent_dataset(data: dict, parameter_box: np.ndarray = None) -> bool:
     y, phi = train_set["outputs"].pop(-1), train_set["features"].pop(-1)
     y, phi = np.array(y)[..., np.newaxis], np.array(phi)[..., np.newaxis]
     if train_set["outputs"] and train_set["features"]:
-        theta, _, gramian, beta = confidence_polytope(train_set, parameter_box=parameter_box)
+        theta, _, gramian, beta = confidence_polytope(
+            train_set, parameter_box=parameter_box
+        )
         return is_valid_observation(y, phi, theta, gramian, beta)
     else:
         return True
@@ -351,23 +393,25 @@ def distance_to_rect(line: Tuple[np.ndarray, np.ndarray], rect: List[np.ndarray]
     a, b, c, d = rect
     u = b - a
     v = d - a
-    u, v = u/np.linalg.norm(u), v/np.linalg.norm(v)
+    u, v = u / np.linalg.norm(u), v / np.linalg.norm(v)
     rqu = (q - r) @ u
     rqv = (q - r) @ v
     interval_1 = [(a - r) @ u / rqu, (b - r) @ u / rqu]
     interval_2 = [(a - r) @ v / rqv, (d - r) @ v / rqv]
     interval_1 = interval_1 if rqu >= 0 else list(reversed(interval_1))
     interval_2 = interval_2 if rqv >= 0 else list(reversed(interval_2))
-    if interval_distance(*interval_1, *interval_2) <= 0 \
-            and interval_distance(0, 1, *interval_1) <= 0 \
-            and interval_distance(0, 1, *interval_2) <= 0:
+    if (
+        interval_distance(*interval_1, *interval_2) <= 0
+        and interval_distance(0, 1, *interval_1) <= 0
+        and interval_distance(0, 1, *interval_2) <= 0
+    ):
         return max(interval_1[0], interval_2[0]) * np.linalg.norm(q - r)
     else:
         return np.inf
 
 
 def solve_trinom(a, b, c):
-    delta = b ** 2 - 4 * a * c
+    delta = b**2 - 4 * a * c
     if delta >= 0:
         return (-b - np.sqrt(delta)) / (2 * a), (-b + np.sqrt(delta)) / (2 * a)
     else:

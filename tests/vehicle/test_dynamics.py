@@ -2,15 +2,15 @@ import pytest
 
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.kinematics import Vehicle
-from highway_env.vehicle.objects import Obstacle, Landmark
+from highway_env.vehicle.objects import Landmark, Obstacle
 
 FPS = 15
 
 
 def test_step():
     v = Vehicle(road=None, position=[0, 0], speed=20, heading=0)
-    for _ in range(2*FPS):
-        v.step(dt=1/FPS)
+    for _ in range(2 * FPS):
+        v.step(dt=1 / FPS)
     assert v.position[0] == pytest.approx(40)
     assert v.position[1] == pytest.approx(0)
     assert v.speed == pytest.approx(20)
@@ -19,14 +19,14 @@ def test_step():
 
 def test_act():
     v = Vehicle(road=None, position=[0, 0], speed=20, heading=0)
-    v.act({'acceleration': 1, 'steering': 0})
+    v.act({"acceleration": 1, "steering": 0})
     for _ in range(1 * FPS):
-        v.step(dt=1/FPS)
+        v.step(dt=1 / FPS)
     assert v.speed == pytest.approx(21)
 
-    v.act({'acceleration': 0, 'steering': 0.5})
+    v.act({"acceleration": 0, "steering": 0.5})
     for _ in range(1 * FPS):
-        v.step(dt=1/FPS)
+        v.step(dt=1 / FPS)
     assert v.speed == pytest.approx(21)
     assert v.position[1] > 0
 
@@ -34,8 +34,8 @@ def test_act():
 def test_brake():
     v = Vehicle(road=None, position=[0, 0], speed=20, heading=0)
     for _ in range(10 * FPS):
-        v.act({'acceleration': min(max(-1 * v.speed, -6), 6), 'steering': 0})
-        v.step(dt=1/FPS)
+        v.act({"acceleration": min(max(-1 * v.speed, -6), 6), "steering": 0})
+        v.step(dt=1 / FPS)
     assert v.speed == pytest.approx(0, abs=0.01)
 
 

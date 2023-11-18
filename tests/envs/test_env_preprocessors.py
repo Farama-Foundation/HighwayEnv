@@ -1,10 +1,12 @@
 import gymnasium as gym
+
 import highway_env
 
 highway_env.register_highway_envs()
 
+
 def test_preprocessors():
-    env = gym.make('highway-v0')
+    env = gym.make("highway-v0")
     env = env.simplify()
     env = env.change_vehicles("highway_env.vehicle.behavior.IDMVehicle")
     env = env.set_preferred_lane(0)
@@ -21,4 +23,3 @@ def test_preprocessors():
 
     assert env.observation_space.contains(obs)
     assert 0 <= reward <= 1
-

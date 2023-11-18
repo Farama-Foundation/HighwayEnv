@@ -17,7 +17,7 @@ repos:
     hooks:
       - id: isort
         args: ["--profile", "black"]
-      - skip: ["**/__init__.py"]
+        exclude: "__init__.py"
   - repo: https://github.com/python/black
     rev: 23.3.0
     hooks:

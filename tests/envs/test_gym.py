@@ -1,5 +1,6 @@
 import gymnasium as gym
 import pytest
+
 import highway_env
 from highway_env.envs.highway_env import HighwayEnv
 
