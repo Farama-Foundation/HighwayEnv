@@ -14,7 +14,7 @@ from stable_baselines3.common.vec_env import SubprocVecEnv
 from torch.distributions import Categorical
 from torch.nn import functional as F
 
-import highway_env
+import highway_env  # noqa: F401
 from highway_env.utils import lmap
 
 # ==================================

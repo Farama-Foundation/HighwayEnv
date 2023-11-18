@@ -1,10 +1,22 @@
-# Hide pygame support prompt
 import os
+import sys
 
+__version__ = "1.8.2"
 
+try:
+    from farama_notifications import notifications
+
+    if "highway_env" in notifications and __version__ in notifications["gymnasium"]:
+        print(notifications["highway_env"][__version__], file=sys.stderr)
+
+except Exception:  # nosec
+    pass
+
+# Hide pygame support prompt
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 from gymnasium.envs.registration import register
+
 
 def register_highway_envs():
     """Import the envs module so that envs register themselves."""

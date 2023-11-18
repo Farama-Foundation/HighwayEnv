@@ -2,7 +2,7 @@ import gymnasium as gym
 from gymnasium.wrappers import RecordVideo
 from stable_baselines3 import DQN
 
-import highway_env
+import highway_env  # noqa: F401
 
 TRAIN = True
 
