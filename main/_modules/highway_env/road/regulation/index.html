@@ -298,7 +298,8 @@
 <span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">Road</span><span class="p">,</span> <span class="n">RoadNetwork</span>
 <span class="kn">from</span> <span class="nn">highway_env.vehicle.controller</span> <span class="kn">import</span> <span class="n">ControlledVehicle</span><span class="p">,</span> <span class="n">MDPVehicle</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.kinematics</span> <span class="kn">import</span> <span class="n">Vehicle</span><span class="p">,</span> <span class="n">Obstacle</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.kinematics</span> <span class="kn">import</span> <span class="n">Vehicle</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">Obstacle</span>
 
 
 <div class="viewcode-block" id="RegulatedRoad">
@@ -306,10 +307,16 @@
 <span class="k">class</span> <span class="nc">RegulatedRoad</span><span class="p">(</span><span class="n">Road</span><span class="p">):</span>
     <span class="n">YIELDING_COLOR</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">REGULATION_FREQUENCY</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">YIELD_DURATION</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">YIELD_DURATION</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">:</span> <span class="n">RoadNetwork</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">vehicles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Vehicle</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">obstacles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Obstacle</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">np_random</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">record_history</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">network</span><span class="p">:</span> <span class="n">RoadNetwork</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">vehicles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Vehicle</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">obstacles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Obstacle</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">np_random</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">record_history</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">vehicles</span><span class="p">,</span> <span class="n">obstacles</span><span class="p">,</span> <span class="n">np_random</span><span class="p">,</span> <span class="n">record_history</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -339,12 +346,16 @@
 
         <span class="c1"># Find new conflicts and resolve them</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_conflict_possible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span>
-                    <span class="n">yielding_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">respect_priorities</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-                    <span class="k">if</span> <span class="n">yielding_vehicle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
-                            <span class="nb">isinstance</span><span class="p">(</span><span class="n">yielding_vehicle</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="p">)</span> <span class="ow">and</span> \
-                            <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">yielding_vehicle</span><span class="p">,</span> <span class="n">MDPVehicle</span><span class="p">):</span>
+                    <span class="n">yielding_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">respect_priorities</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">yielding_vehicle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">yielding_vehicle</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="p">)</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">yielding_vehicle</span><span class="p">,</span> <span class="n">MDPVehicle</span><span class="p">)</span>
+                    <span class="p">):</span>
                         <span class="n">yielding_vehicle</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">YIELDING_COLOR</span>
                         <span class="n">yielding_vehicle</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">=</span> <span class="mi">0</span>
                         <span class="n">yielding_vehicle</span><span class="o">.</span><span class="n">is_yielding</span> <span class="o">=</span> <span class="kc">True</span>
@@ -371,19 +382,28 @@
 
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_conflict_possible</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">,</span> <span class="n">v2</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">,</span> <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_conflict_possible</span><span class="p">(</span>
+        <span class="n">v1</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">,</span>
+        <span class="n">v2</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">,</span>
+        <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
         <span class="n">positions_1</span><span class="p">,</span> <span class="n">headings_1</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="n">predict_trajectory_constant_speed</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
         <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">predict_trajectory_constant_speed</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">position_1</span><span class="p">,</span> <span class="n">heading_1</span><span class="p">,</span> <span class="n">position_2</span><span class="p">,</span> <span class="n">heading_2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">positions_1</span><span class="p">,</span> <span class="n">headings_1</span><span class="p">,</span> <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">position_1</span><span class="p">,</span> <span class="n">heading_1</span><span class="p">,</span> <span class="n">position_2</span><span class="p">,</span> <span class="n">heading_2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">positions_1</span><span class="p">,</span> <span class="n">headings_1</span><span class="p">,</span> <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span>
+        <span class="p">):</span>
             <span class="c1"># Fast spherical pre-check</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">position_2</span> <span class="o">-</span> <span class="n">position_1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">v1</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">:</span>
                 <span class="k">continue</span>
 
             <span class="c1"># Accurate rectangular check</span>
-            <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">rotated_rectangles_intersect</span><span class="p">((</span><span class="n">position_1</span><span class="p">,</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">v1</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">,</span> <span class="mf">0.9</span><span class="o">*</span><span class="n">v1</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">heading_1</span><span class="p">),</span>
-                                                  <span class="p">(</span><span class="n">position_2</span><span class="p">,</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">v2</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">,</span> <span class="mf">0.9</span><span class="o">*</span><span class="n">v2</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">heading_2</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">rotated_rectangles_intersect</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">position_1</span><span class="p">,</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">v1</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">,</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">v1</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">heading_1</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">position_2</span><span class="p">,</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">v2</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">,</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">v2</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">heading_2</span><span class="p">),</span>
+            <span class="p">):</span>
                 <span class="k">return</span> <span class="kc">True</span></div>
 
 </pre></div>

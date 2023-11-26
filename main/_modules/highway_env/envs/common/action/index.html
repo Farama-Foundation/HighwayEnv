@@ -293,16 +293,16 @@
             <h1>Source code for highway_env.envs.common.action</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">gymnasium</span> <span class="kn">import</span> <span class="n">spaces</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">gymnasium</span> <span class="kn">import</span> <span class="n">spaces</span>
 
 <span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.behavior</span> <span class="kn">import</span> <span class="n">IDMVehicle</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.controller</span> <span class="kn">import</span> <span class="n">MDPVehicle</span>
 <span class="kn">from</span> <span class="nn">highway_env.vehicle.dynamics</span> <span class="kn">import</span> <span class="n">BicycleVehicle</span>
 <span class="kn">from</span> <span class="nn">highway_env.vehicle.kinematics</span> <span class="kn">import</span> <span class="n">Vehicle</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.controller</span> <span class="kn">import</span> <span class="n">MDPVehicle</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">highway_env.envs.common.abstract</span> <span class="kn">import</span> <span class="n">AbstractEnv</span>
@@ -316,7 +316,7 @@
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A type of action specifies its definition space, and how actions are executed in the environment&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__controlled_vehicle</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -391,16 +391,18 @@
     <span class="n">STEERING_RANGE</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Steering angle range: [-x, x], in rad.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">env</span><span class="p">:</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">,</span>
-                 <span class="n">acceleration_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">steering_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">speed_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">lateral</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">dynamical</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">:</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">,</span>
+        <span class="n">acceleration_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">steering_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">speed_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">lateral</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">dynamical</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a continuous action space.</span>
 
@@ -414,13 +416,17 @@
 <span class="sd">        :param clip: clip action to the defined range</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_range</span> <span class="o">=</span> <span class="n">acceleration_range</span> <span class="k">if</span> <span class="n">acceleration_range</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_RANGE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_range</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">acceleration_range</span> <span class="k">if</span> <span class="n">acceleration_range</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACCELERATION_RANGE</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steering_range</span> <span class="o">=</span> <span class="n">steering_range</span> <span class="k">if</span> <span class="n">steering_range</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">STEERING_RANGE</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span> <span class="o">=</span> <span class="n">speed_range</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span> <span class="o">=</span> <span class="n">lateral</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span> <span class="o">=</span> <span class="n">longitudinal</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either longitudinal and/or lateral control must be enabled&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Either longitudinal and/or lateral control must be enabled&quot;</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dynamical</span> <span class="o">=</span> <span class="n">dynamical</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clip</span> <span class="o">=</span> <span class="n">clip</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span> <span class="k">else</span> <span class="mi">1</span>
@@ -429,7 +435,7 @@
 <div class="viewcode-block" id="ContinuousAction.space">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ContinuousAction.space">[docs]</a>
     <span class="k">def</span> <span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -440,7 +446,10 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip</span><span class="p">:</span>
             <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">MIN_SPEED</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">MAX_SPEED</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span>
+            <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">MIN_SPEED</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">MAX_SPEED</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;acceleration&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_range</span><span class="p">),</span>
@@ -454,7 +463,7 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;acceleration&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="s2">&quot;steering&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_range</span><span class="p">)</span>
+                <span class="s2">&quot;steering&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_range</span><span class="p">),</span>
             <span class="p">}</span>
 
 <div class="viewcode-block" id="ContinuousAction.act">
@@ -469,18 +478,27 @@
 <div class="viewcode-block" id="DiscreteAction">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.DiscreteAction">[docs]</a>
 <span class="k">class</span> <span class="nc">DiscreteAction</span><span class="p">(</span><span class="n">ContinuousAction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">env</span><span class="p">:</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">,</span>
-                 <span class="n">acceleration_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">steering_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">lateral</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">dynamical</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">actions_per_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">acceleration_range</span><span class="o">=</span><span class="n">acceleration_range</span><span class="p">,</span> <span class="n">steering_range</span><span class="o">=</span><span class="n">steering_range</span><span class="p">,</span>
-                         <span class="n">longitudinal</span><span class="o">=</span><span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span><span class="o">=</span><span class="n">lateral</span><span class="p">,</span> <span class="n">dynamical</span><span class="o">=</span><span class="n">dynamical</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="n">clip</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">:</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">,</span>
+        <span class="n">acceleration_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">steering_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">lateral</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">dynamical</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">actions_per_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">env</span><span class="p">,</span>
+            <span class="n">acceleration_range</span><span class="o">=</span><span class="n">acceleration_range</span><span class="p">,</span>
+            <span class="n">steering_range</span><span class="o">=</span><span class="n">steering_range</span><span class="p">,</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="n">longitudinal</span><span class="p">,</span>
+            <span class="n">lateral</span><span class="o">=</span><span class="n">lateral</span><span class="p">,</span>
+            <span class="n">dynamical</span><span class="o">=</span><span class="n">dynamical</span><span class="p">,</span>
+            <span class="n">clip</span><span class="o">=</span><span class="n">clip</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actions_per_axis</span> <span class="o">=</span> <span class="n">actions_per_axis</span>
 
 <div class="viewcode-block" id="DiscreteAction.space">
@@ -508,35 +526,23 @@
 <span class="sd">    An discrete action space of meta-actions: lane changes, and cruise control set-point.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">ACTIONS_ALL</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;LANE_LEFT&#39;</span><span class="p">,</span>
-        <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;IDLE&#39;</span><span class="p">,</span>
-        <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;LANE_RIGHT&#39;</span><span class="p">,</span>
-        <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;FASTER&#39;</span><span class="p">,</span>
-        <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;SLOWER&#39;</span>
-    <span class="p">}</span>
+    <span class="n">ACTIONS_ALL</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;LANE_LEFT&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;IDLE&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;LANE_RIGHT&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;FASTER&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;SLOWER&quot;</span><span class="p">}</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A mapping of action indexes to labels.&quot;&quot;&quot;</span>
 
-    <span class="n">ACTIONS_LONGI</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;SLOWER&#39;</span><span class="p">,</span>
-        <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;IDLE&#39;</span><span class="p">,</span>
-        <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;FASTER&#39;</span>
-    <span class="p">}</span>
+    <span class="n">ACTIONS_LONGI</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;SLOWER&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;IDLE&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;FASTER&quot;</span><span class="p">}</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A mapping of longitudinal action indexes to labels.&quot;&quot;&quot;</span>
 
-    <span class="n">ACTIONS_LAT</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;LANE_LEFT&#39;</span><span class="p">,</span>
-        <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;IDLE&#39;</span><span class="p">,</span>
-        <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;LANE_RIGHT&#39;</span>
-    <span class="p">}</span>
+    <span class="n">ACTIONS_LAT</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;LANE_LEFT&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;IDLE&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;LANE_RIGHT&quot;</span><span class="p">}</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A mapping of lateral action indexes to labels.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">env</span><span class="p">:</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">,</span>
-                 <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">lateral</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">target_speeds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Vector</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">:</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">,</span>
+        <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">lateral</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">target_speeds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Vector</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a discrete action space of meta-actions.</span>
 
@@ -548,13 +554,24 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span> <span class="o">=</span> <span class="n">longitudinal</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span> <span class="o">=</span> <span class="n">lateral</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">target_speeds</span><span class="p">)</span> <span class="k">if</span> <span class="n">target_speeds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">MDPVehicle</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS_ALL</span> <span class="k">if</span> <span class="n">longitudinal</span> <span class="ow">and</span> <span class="n">lateral</span> \
-            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS_LONGI</span> <span class="k">if</span> <span class="n">longitudinal</span> \
-            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS_LAT</span> <span class="k">if</span> <span class="n">lateral</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">target_speeds</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">target_speeds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">MDPVehicle</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS_ALL</span>
+            <span class="k">if</span> <span class="n">longitudinal</span> <span class="ow">and</span> <span class="n">lateral</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS_LONGI</span>
+            <span class="k">if</span> <span class="n">longitudinal</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACTIONS_LAT</span>
+            <span class="k">if</span> <span class="n">lateral</span>
             <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;At least longitudinal or lateral actions must be included&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;At least longitudinal or lateral actions must be included&quot;</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
 <div class="viewcode-block" id="DiscreteMetaAction.space">
@@ -584,21 +601,33 @@
 
 <span class="sd">        :return: the list of available actions</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s1">&#39;IDLE&#39;</span><span class="p">]]</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s2">&quot;IDLE&quot;</span><span class="p">]]</span>
         <span class="n">network</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span>
         <span class="k">for</span> <span class="n">l_index</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">side_lanes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">l_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> \
-                    <span class="ow">and</span> <span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">l_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> \
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span><span class="p">:</span>
-                <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s1">&#39;LANE_LEFT&#39;</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">l_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> \
-                    <span class="ow">and</span> <span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">l_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> \
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span><span class="p">:</span>
-                <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s1">&#39;LANE_RIGHT&#39;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">speed_index</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">target_speeds</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span><span class="p">:</span>
-            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s1">&#39;FASTER&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">l_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">l_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">position</span>
+                <span class="p">)</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span>
+            <span class="p">):</span>
+                <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s2">&quot;LANE_LEFT&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">l_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">l_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">position</span>
+                <span class="p">)</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lateral</span>
+            <span class="p">):</span>
+                <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s2">&quot;LANE_RIGHT&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">speed_index</span>
+            <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">target_speeds</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span>
+        <span class="p">):</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s2">&quot;FASTER&quot;</span><span class="p">])</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">speed_index</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitudinal</span><span class="p">:</span>
-            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s1">&#39;SLOWER&#39;</span><span class="p">])</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_indexes</span><span class="p">[</span><span class="s2">&quot;SLOWER&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">actions</span></div>
 </div>
 
@@ -607,10 +636,7 @@
 <div class="viewcode-block" id="MultiAgentAction">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.MultiAgentAction">[docs]</a>
 <span class="k">class</span> <span class="nc">MultiAgentAction</span><span class="p">(</span><span class="n">ActionType</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">env</span><span class="p">:</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">,</span>
-                 <span class="n">action_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">,</span> <span class="n">action_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_config</span> <span class="o">=</span> <span class="n">action_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents_action_types</span> <span class="o">=</span> <span class="p">[]</span>
@@ -622,7 +648,9 @@
 <div class="viewcode-block" id="MultiAgentAction.space">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.MultiAgentAction.space">[docs]</a>
     <span class="k">def</span> <span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">([</span><span class="n">action_type</span><span class="o">.</span><span class="n">space</span><span class="p">()</span> <span class="k">for</span> <span class="n">action_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_action_types</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">action_type</span><span class="o">.</span><span class="n">space</span><span class="p">()</span> <span class="k">for</span> <span class="n">action_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_action_types</span><span class="p">]</span>
+        <span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -640,12 +668,17 @@
 <div class="viewcode-block" id="MultiAgentAction.get_available_actions">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.MultiAgentAction.get_available_actions">[docs]</a>
     <span class="k">def</span> <span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">action_type</span><span class="o">.</span><span class="n">get_available_actions</span><span class="p">()</span> <span class="k">for</span> <span class="n">action_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_action_types</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
+            <span class="o">*</span><span class="p">[</span>
+                <span class="n">action_type</span><span class="o">.</span><span class="n">get_available_actions</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">action_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_action_types</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
 </div>
 
 
 
-<span class="k">def</span> <span class="nf">action_factory</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ActionType</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">action_factory</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ActionType</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ContinuousAction&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ContinuousAction</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DiscreteAction&quot;</span><span class="p">:</span>

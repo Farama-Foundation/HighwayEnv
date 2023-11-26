@@ -321,30 +321,30 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-            <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-            <span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;initial_lane_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>  <span class="c1"># [s]</span>
-            <span class="s2">&quot;ego_spacing&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;vehicles_density&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>    <span class="c1"># The reward received when colliding with a vehicle.</span>
-            <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># The reward received when driving on the right-most lanes, linearly mapped to</span>
-                                       <span class="c1"># zero for other lanes.</span>
-            <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>  <span class="c1"># The reward received when driving at full speed, linearly mapped to zero for</span>
-                                       <span class="c1"># lower speeds according to config[&quot;reward_speed_range&quot;].</span>
-            <span class="s2">&quot;lane_change_reward&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>   <span class="c1"># The reward received at each lane change action.</span>
-            <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
-            <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">&quot;offroad_terminal&quot;</span><span class="p">:</span> <span class="kc">False</span>
-        <span class="p">})</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">},</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                <span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;initial_lane_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>  <span class="c1"># [s]</span>
+                <span class="s2">&quot;ego_spacing&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;vehicles_density&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># The reward received when colliding with a vehicle.</span>
+                <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># The reward received when driving on the right-most lanes, linearly mapped to</span>
+                <span class="c1"># zero for other lanes.</span>
+                <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>  <span class="c1"># The reward received when driving at full speed, linearly mapped to zero for</span>
+                <span class="c1"># lower speeds according to config[&quot;reward_speed_range&quot;].</span>
+                <span class="s2">&quot;lane_change_reward&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># The reward received at each lane change action.</span>
+                <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+                <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;offroad_terminal&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
 
 
@@ -354,13 +354,20 @@
 
     <span class="k">def</span> <span class="nf">_create_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a road composed of straight adjacent lanes.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">RoadNetwork</span><span class="o">.</span><span class="n">straight_road_network</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">],</span> <span class="n">speed_limit</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
-                         <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span> <span class="n">record_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_trajectories&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span>
+            <span class="n">network</span><span class="o">=</span><span class="n">RoadNetwork</span><span class="o">.</span><span class="n">straight_road_network</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">],</span> <span class="n">speed_limit</span><span class="o">=</span><span class="mi">30</span>
+            <span class="p">),</span>
+            <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span>
+            <span class="n">record_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_trajectories&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create some new random vehicles of a given type, and add them on the road.&quot;&quot;&quot;</span>
         <span class="n">other_vehicles_type</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">])</span>
-        <span class="n">other_per_controlled</span> <span class="o">=</span> <span class="n">near_split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicles_count&quot;</span><span class="p">],</span> <span class="n">num_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">])</span>
+        <span class="n">other_per_controlled</span> <span class="o">=</span> <span class="n">near_split</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicles_count&quot;</span><span class="p">],</span> <span class="n">num_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicles</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">others</span> <span class="ow">in</span> <span class="n">other_per_controlled</span><span class="p">:</span>
@@ -368,14 +375,18 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
                 <span class="n">speed</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
                 <span class="n">lane_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;initial_lane_id&quot;</span><span class="p">],</span>
-                <span class="n">spacing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;ego_spacing&quot;</span><span class="p">]</span>
+                <span class="n">spacing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;ego_spacing&quot;</span><span class="p">],</span>
             <span class="p">)</span>
-            <span class="n">vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+            <span class="n">vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">vehicle_class</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">others</span><span class="p">):</span>
-                <span class="n">vehicle</span> <span class="o">=</span> <span class="n">other_vehicles_type</span><span class="o">.</span><span class="n">create_random</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicles_density&quot;</span><span class="p">])</span>
+                <span class="n">vehicle</span> <span class="o">=</span> <span class="n">other_vehicles_type</span><span class="o">.</span><span class="n">create_random</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicles_density&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
                 <span class="n">vehicle</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
 
@@ -386,33 +397,47 @@
 <span class="sd">        :return: the corresponding reward</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rewards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewards</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
-        <span class="n">reward</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">reward</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">reward</span> <span class="ow">in</span> <span class="n">rewards</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">reward</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">reward</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">reward</span> <span class="ow">in</span> <span class="n">rewards</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;normalize_reward&quot;</span><span class="p">]:</span>
-            <span class="n">reward</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">reward</span><span class="p">,</span>
-                                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;collision_reward&quot;</span><span class="p">],</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;high_speed_reward&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;right_lane_reward&quot;</span><span class="p">]],</span>
-                                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-        <span class="n">reward</span> <span class="o">*=</span> <span class="n">rewards</span><span class="p">[</span><span class="s1">&#39;on_road_reward&#39;</span><span class="p">]</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span>
+                <span class="n">reward</span><span class="p">,</span>
+                <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;collision_reward&quot;</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;high_speed_reward&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;right_lane_reward&quot;</span><span class="p">],</span>
+                <span class="p">],</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="n">reward</span> <span class="o">*=</span> <span class="n">rewards</span><span class="p">[</span><span class="s2">&quot;on_road_reward&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">reward</span>
 
     <span class="k">def</span> <span class="nf">_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">neighbours</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">all_side_lanes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">)</span>
-        <span class="n">lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="p">)</span> \
+        <span class="n">lane</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="p">)</span>
             <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="c1"># Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268</span>
         <span class="n">forward_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span>
-        <span class="n">scaled_speed</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span><span class="n">forward_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reward_speed_range&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">scaled_speed</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span>
+            <span class="n">forward_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reward_speed_range&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span><span class="p">),</span>
             <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="n">lane</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">neighbours</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
             <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">scaled_speed</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="s2">&quot;on_road_reward&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">on_road</span><span class="p">)</span>
+            <span class="s2">&quot;on_road_reward&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">on_road</span><span class="p">),</span>
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">_is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The episode is over if the ego vehicle crashed.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span> <span class="ow">or</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;offroad_terminal&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">on_road</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;offroad_terminal&quot;</span><span class="p">]</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">on_road</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_is_truncated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The episode is truncated if the time limit is reached.&quot;&quot;&quot;</span>
@@ -427,16 +452,19 @@
 <span class="sd">        - fewer vehicles in the scene (and fewer lanes, shorter episode duration)</span>
 <span class="sd">        - only check collision of controlled vehicles with others</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-            <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-            <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>  <span class="c1"># [s]</span>
-            <span class="s2">&quot;ego_spacing&quot;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
-        <span class="p">})</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>  <span class="c1"># [s]</span>
+                <span class="s2">&quot;ego_spacing&quot;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">cfg</span>
 
     <span class="k">def</span> <span class="nf">_create_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

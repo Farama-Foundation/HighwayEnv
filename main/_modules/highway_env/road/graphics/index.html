@@ -291,16 +291,16 @@
           <article role="main">
             
             <h1>Source code for highway_env.road.graphics</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pygame</span>
 
-<span class="kn">from</span> <span class="nn">highway_env.road.lane</span> <span class="kn">import</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">AbstractLane</span>
+<span class="kn">from</span> <span class="nn">highway_env.road.lane</span> <span class="kn">import</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">LineType</span>
 <span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">Road</span>
 <span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span>
 <span class="kn">from</span> <span class="nn">highway_env.vehicle.graphics</span> <span class="kn">import</span> <span class="n">VehicleGraphics</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">Obstacle</span><span class="p">,</span> <span class="n">Landmark</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">Landmark</span><span class="p">,</span> <span class="n">Obstacle</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">RoadObject</span>
@@ -324,7 +324,9 @@
     <span class="n">SCALING_FACTOR</span> <span class="o">=</span> <span class="mf">1.3</span>
     <span class="n">MOVING_FACTOR</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">surf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">INITIAL_SCALING</span>
@@ -377,7 +379,10 @@
 <span class="sd">        :return: whether the position is visible</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
-        <span class="k">return</span> <span class="o">-</span><span class="n">margin</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">+</span> <span class="n">margin</span> <span class="ow">and</span> <span class="o">-</span><span class="n">margin</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">margin</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="o">-</span><span class="n">margin</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">+</span> <span class="n">margin</span>
+            <span class="ow">and</span> <span class="o">-</span><span class="n">margin</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">margin</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="WorldSurface.move_display_window_to">
@@ -389,8 +394,11 @@
 <span class="sd">        :param position: a world position [m]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">position</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span><span class="p">,</span>
-             <span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span><span class="p">])</span></div>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">centering_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="WorldSurface.handle_event">
@@ -440,9 +448,15 @@
 <span class="sd">        :param lane: the lane to be displayed</span>
 <span class="sd">        :param surface: the pygame surface</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">stripes_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">*</span> <span class="n">surface</span><span class="o">.</span><span class="n">scaling</span><span class="p">))</span>
+        <span class="n">stripes_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="mi">2</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">())</span>
+            <span class="o">/</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">*</span> <span class="n">surface</span><span class="o">.</span><span class="n">scaling</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">s_origin</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
-        <span class="n">s0</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">s_origin</span><span class="p">)</span> <span class="o">//</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">-</span> <span class="n">stripes_count</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="n">s0</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">s_origin</span><span class="p">)</span> <span class="o">//</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">-</span> <span class="n">stripes_count</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
         <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">lane</span><span class="o">.</span><span class="n">line_types</span><span class="p">[</span><span class="n">side</span><span class="p">]</span> <span class="o">==</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">:</span>
                 <span class="bp">cls</span><span class="o">.</span><span class="n">striped_line</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">side</span><span class="p">)</span>
@@ -455,8 +469,14 @@
 <div class="viewcode-block" id="LaneGraphics.striped_line">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.striped_line">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">striped_line</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                     <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">striped_line</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
+        <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
+        <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw a striped line on one side of a lane, on a surface.</span>
 
@@ -467,7 +487,11 @@
 <span class="sd">        :param side: which side of the road to draw [0:left, 1:right]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">starts</span> <span class="o">=</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
-        <span class="n">ends</span> <span class="o">=</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_LENGTH</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">longitudinal</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+            <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_LENGTH</span>
+        <span class="p">)</span>
         <span class="n">lats</span> <span class="o">=</span> <span class="p">[(</span><span class="n">side</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">lane</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">]</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">draw_stripes</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="n">lats</span><span class="p">)</span></div>
 
@@ -475,8 +499,14 @@
 <div class="viewcode-block" id="LaneGraphics.continuous_curve">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.continuous_curve">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">continuous_curve</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                         <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">continuous_curve</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
+        <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
+        <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw a striped line on one side of a lane, on a surface.</span>
 
@@ -487,7 +517,11 @@
 <span class="sd">        :param side: which side of the road to draw [0:left, 1:right]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">starts</span> <span class="o">=</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
-        <span class="n">ends</span> <span class="o">=</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">longitudinal</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+            <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="p">)</span>
         <span class="n">lats</span> <span class="o">=</span> <span class="p">[(</span><span class="n">side</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">lane</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">]</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">draw_stripes</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="n">lats</span><span class="p">)</span></div>
 
@@ -495,8 +529,14 @@
 <div class="viewcode-block" id="LaneGraphics.continuous_line">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.continuous_line">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">continuous_line</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                        <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">continuous_line</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
+        <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
+        <span class="n">stripes_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">side</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw a continuous line on one side of a lane, on a surface.</span>
 
@@ -515,8 +555,14 @@
 <div class="viewcode-block" id="LaneGraphics.draw_stripes">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.draw_stripes">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">draw_stripes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
-                     <span class="n">starts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">ends</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">lats</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">draw_stripes</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
+        <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
+        <span class="n">starts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">ends</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">lats</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw a set of stripes along a lane.</span>
 
@@ -530,24 +576,44 @@
         <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">starts</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">starts</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">ends</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_LENGTH</span><span class="p">:</span>
-                <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span>
-                                 <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">starts</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">lats</span><span class="p">[</span><span class="n">k</span><span class="p">]))),</span>
-                                 <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">lats</span><span class="p">[</span><span class="n">k</span><span class="p">]))),</span>
-                                 <span class="nb">max</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_WIDTH</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span></div>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+                    <span class="n">surface</span><span class="p">,</span>
+                    <span class="n">surface</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">starts</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">lats</span><span class="p">[</span><span class="n">k</span><span class="p">]))),</span>
+                    <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">lats</span><span class="p">[</span><span class="n">k</span><span class="p">]))),</span>
+                    <span class="nb">max</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_WIDTH</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="p">)</span></div>
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">draw_ground</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                    <span class="n">draw_surface</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">draw_ground</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
+        <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
+        <span class="n">color</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">draw_surface</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">draw_surface</span> <span class="o">=</span> <span class="n">draw_surface</span> <span class="ow">or</span> <span class="n">surface</span>
-        <span class="n">stripes_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">*</span> <span class="n">surface</span><span class="o">.</span><span class="n">scaling</span><span class="p">))</span>
+        <span class="n">stripes_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="mi">2</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">())</span>
+            <span class="o">/</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">*</span> <span class="n">surface</span><span class="o">.</span><span class="n">scaling</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">s_origin</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
-        <span class="n">s0</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">s_origin</span><span class="p">)</span> <span class="o">//</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">-</span> <span class="n">stripes_count</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
+        <span class="n">s0</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">s_origin</span><span class="p">)</span> <span class="o">//</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span> <span class="o">-</span> <span class="n">stripes_count</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span>
         <span class="n">dots</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
-            <span class="n">longis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">s0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+            <span class="n">longis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                <span class="n">s0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stripes_count</span><span class="p">)</span> <span class="o">*</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_SPACING</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">length</span>
+            <span class="p">)</span>
             <span class="n">lats</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">side</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">longis</span><span class="p">]</span>
-            <span class="n">new_dots</span> <span class="o">=</span> <span class="p">[</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">longi</span><span class="p">,</span> <span class="n">lat</span><span class="p">))</span> <span class="k">for</span> <span class="n">longi</span><span class="p">,</span> <span class="n">lat</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">longis</span><span class="p">,</span> <span class="n">lats</span><span class="p">)]</span>
+            <span class="n">new_dots</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">longi</span><span class="p">,</span> <span class="n">lat</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">longi</span><span class="p">,</span> <span class="n">lat</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">longis</span><span class="p">,</span> <span class="n">lats</span><span class="p">)</span>
+            <span class="p">]</span>
             <span class="n">new_dots</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">new_dots</span><span class="p">)</span> <span class="k">if</span> <span class="n">side</span> <span class="k">else</span> <span class="n">new_dots</span>
             <span class="n">dots</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_dots</span><span class="p">)</span>
         <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">draw_surface</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">dots</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
@@ -580,8 +646,12 @@
 <div class="viewcode-block" id="RoadGraphics.display_traffic">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics.display_traffic">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">display_traffic</span><span class="p">(</span><span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">simulation_frequency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">display_traffic</span><span class="p">(</span>
+        <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
+        <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
+        <span class="n">simulation_frequency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the road vehicles on a surface.</span>
 
@@ -592,7 +662,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">road</span><span class="o">.</span><span class="n">record_history</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
-                <span class="n">VehicleGraphics</span><span class="o">.</span><span class="n">display_history</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">simulation</span><span class="o">=</span><span class="n">simulation_frequency</span><span class="p">,</span> <span class="n">offscreen</span><span class="o">=</span><span class="n">offscreen</span><span class="p">)</span>
+                <span class="n">VehicleGraphics</span><span class="o">.</span><span class="n">display_history</span><span class="p">(</span>
+                    <span class="n">v</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">simulation</span><span class="o">=</span><span class="n">simulation_frequency</span><span class="p">,</span> <span class="n">offscreen</span><span class="o">=</span><span class="n">offscreen</span>
+                <span class="p">)</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="n">VehicleGraphics</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">offscreen</span><span class="o">=</span><span class="n">offscreen</span><span class="p">)</span></div>
 
@@ -600,7 +672,9 @@
 <div class="viewcode-block" id="RoadGraphics.display_road_objects">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics.display_road_objects">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">display_road_objects</span><span class="p">(</span><span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">display_road_objects</span><span class="p">(</span>
+        <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the road objects on a surface.</span>
 
@@ -630,8 +704,13 @@
 <div class="viewcode-block" id="RoadObjectGraphics.display">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics.display">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_</span><span class="p">:</span> <span class="s1">&#39;RoadObject&#39;</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">transparent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">object_</span><span class="p">:</span> <span class="s2">&quot;RoadObject&quot;</span><span class="p">,</span>
+        <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
+        <span class="n">transparent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a road objects on a pygame surface.</span>
 
@@ -643,30 +722,51 @@
 <span class="sd">        :param offscreen: whether the rendering should be done offscreen or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">o</span> <span class="o">=</span> <span class="n">object_</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">),</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">)),</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">)</span>  <span class="c1"># per-pixel alpha</span>
-        <span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">),</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">))</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">),</span> <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">)),</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SRCALPHA</span>
+        <span class="p">)</span>  <span class="c1"># per-pixel alpha</span>
+        <span class="n">rect</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">),</span>
+            <span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">),</span>
+        <span class="p">)</span>
         <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_color</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">transparent</span><span class="p">),</span> <span class="n">rect</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">BLACK</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">offscreen</span><span class="p">:</span>  <span class="c1"># convert_alpha throws errors in offscreen mode TODO() Explain why</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">offscreen</span>
+        <span class="p">):</span>  <span class="c1"># convert_alpha throws errors in offscreen mode TODO() Explain why</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">heading</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="c1"># Centered rotation</span>
-        <span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">o</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">o</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">blit_rotate</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="o">-</span><span class="n">h</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="RoadObjectGraphics.blit_rotate">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics.blit_rotate">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">blit_rotate</span><span class="p">(</span><span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                    <span class="n">origin_pos</span><span class="p">:</span> <span class="n">Vector</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">show_rect</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">blit_rotate</span><span class="p">(</span>
+        <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span>
+        <span class="n">image</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span>
+        <span class="n">pos</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+        <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">origin_pos</span><span class="p">:</span> <span class="n">Vector</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">show_rect</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Many thanks to https://stackoverflow.com/a/54714144.&quot;&quot;&quot;</span>
         <span class="c1"># calculate the axis aligned bounding box of the rotated image</span>
         <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
         <span class="n">box</span> <span class="o">=</span> <span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Vector2</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="o">-</span><span class="n">h</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">h</span><span class="p">)]]</span>
         <span class="n">box_rotate</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">box</span><span class="p">]</span>
-        <span class="n">min_box</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">max_box</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">max</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">min_box</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">max_box</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">box_rotate</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">)</span>
 
         <span class="c1"># calculate the translation of the pivot</span>
         <span class="k">if</span> <span class="n">origin_pos</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -676,8 +776,10 @@
         <span class="n">pivot_move</span> <span class="o">=</span> <span class="n">pivot_rotate</span> <span class="o">-</span> <span class="n">pivot</span>
 
         <span class="c1"># calculate the upper left origin of the rotated image</span>
-        <span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">min_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pivot_move</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                  <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pivot_move</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">min_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pivot_move</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pivot_move</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">)</span>
         <span class="c1"># get a rotated image</span>
         <span class="n">rotated_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
         <span class="c1"># rotate and blit the image</span>
@@ -688,7 +790,7 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_color</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_</span><span class="p">:</span> <span class="s1">&#39;RoadObject&#39;</span><span class="p">,</span> <span class="n">transparent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_color</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_</span><span class="p">:</span> <span class="s2">&quot;RoadObject&quot;</span><span class="p">,</span> <span class="n">transparent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="n">color</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_COLOR</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_</span><span class="p">,</span> <span class="n">Obstacle</span><span class="p">):</span>

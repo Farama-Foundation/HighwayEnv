@@ -291,11 +291,12 @@
           <article role="main">
             
             <h1>Source code for highway_env.road.road</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">highway_env.road.lane</span> <span class="kn">import</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">StraightLane</span><span class="p">,</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">lane_from_config</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">highway_env.road.lane</span> <span class="kn">import</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">StraightLane</span><span class="p">,</span> <span class="n">lane_from_config</span>
 <span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">Landmark</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -341,7 +342,9 @@
             <span class="n">_id</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">][</span><span class="n">_id</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">get_closest_lane_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">heading</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LaneIndex</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_closest_lane_index</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">heading</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LaneIndex</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of the lane closest to a world position.</span>
 
@@ -357,8 +360,13 @@
                     <span class="n">indexes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">indexes</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">))]</span>
 
-    <span class="k">def</span> <span class="nf">next_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                  <span class="n">np_random</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LaneIndex</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">next_lane</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">current_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">np_random</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LaneIndex</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of the next lane that should be followed after finishing the current lane.</span>
 
@@ -376,12 +384,20 @@
         <span class="n">next_to</span> <span class="o">=</span> <span class="n">next_id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Pick next road according to planned route</span>
         <span class="k">if</span> <span class="n">route</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_index</span><span class="p">[:</span><span class="mi">2</span><span class="p">]:</span>  <span class="c1"># We just finished the first step of the route, drop it.</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_index</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="p">):</span>  <span class="c1"># We just finished the first step of the route, drop it.</span>
                 <span class="n">route</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">route</span> <span class="ow">and</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">_to</span><span class="p">:</span>  <span class="c1"># Next road in route is starting at the end of current road.</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">route</span> <span class="ow">and</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">_to</span>
+            <span class="p">):</span>  <span class="c1"># Next road in route is starting at the end of current road.</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">next_id</span> <span class="o">=</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">route</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Route </span><span class="si">{}</span><span class="s2"> does not start after current road </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">current_index</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;Route </span><span class="si">{}</span><span class="s2"> does not start after current road </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">current_index</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
 
         <span class="c1"># Compute current projected (desired) position</span>
         <span class="n">long</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">current_index</span><span class="p">)</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
@@ -390,19 +406,34 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">next_to</span><span class="p">:</span>
             <span class="c1"># Pick the one with the closest lane to projected target position</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">lanes_dists</span> <span class="o">=</span> <span class="p">[(</span><span class="n">next_to</span><span class="p">,</span>
-                                <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">next_lane_given_next_road</span><span class="p">(</span><span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">next_id</span><span class="p">,</span> <span class="n">projected_position</span><span class="p">))</span>
-                               <span class="k">for</span> <span class="n">next_to</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_to</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>  <span class="c1"># (next_to, next_id, distance)</span>
+                <span class="n">lanes_dists</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">(</span>
+                        <span class="n">next_to</span><span class="p">,</span>
+                        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">next_lane_given_next_road</span><span class="p">(</span>
+                            <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">next_id</span><span class="p">,</span> <span class="n">projected_position</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">next_to</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_to</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="p">]</span>  <span class="c1"># (next_to, next_id, distance)</span>
                 <span class="n">next_to</span><span class="p">,</span> <span class="n">next_id</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lanes_dists</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">current_index</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># If it is known, follow it and get the closest lane</span>
-            <span class="n">next_id</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_lane_given_next_road</span><span class="p">(</span><span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">next_id</span><span class="p">,</span> <span class="n">projected_position</span><span class="p">)</span>
+            <span class="n">next_id</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_lane_given_next_road</span><span class="p">(</span>
+                <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">next_id</span><span class="p">,</span> <span class="n">projected_position</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">_to</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">next_id</span>
 
-    <span class="k">def</span> <span class="nf">next_lane_given_next_road</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_from</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                                  <span class="n">next_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">next_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">next_lane_given_next_road</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">_from</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">next_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">next_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="c1"># If next road has same number of lane, stay on the same lane</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_to</span><span class="p">][</span><span class="n">next_to</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">next_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -410,8 +441,9 @@
         <span class="c1"># Else, pick closest lane</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">lanes</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_to</span><span class="p">][</span><span class="n">next_to</span><span class="p">]))</span>
-            <span class="n">next_id</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lanes</span><span class="p">,</span>
-                          <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lane</span><span class="p">((</span><span class="n">_to</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">position</span><span class="p">))</span>
+            <span class="n">next_id</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                <span class="n">lanes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lane</span><span class="p">((</span><span class="n">_to</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">next_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lane</span><span class="p">((</span><span class="n">_to</span><span class="p">,</span> <span class="n">next_to</span><span class="p">,</span> <span class="n">next_id</span><span class="p">))</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">bfs_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">goal</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
@@ -427,7 +459,9 @@
             <span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">_next</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">_next</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
+            <span class="p">):</span>
                 <span class="k">if</span> <span class="n">_next</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="n">_next</span><span class="p">]</span>
                 <span class="k">elif</span> <span class="n">_next</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">:</span>
@@ -448,13 +482,16 @@
 <span class="sd">        :param lane_index: the index of a lane.</span>
 <span class="sd">        :return: all lanes belonging to the same road.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))]</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+        <span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">side_lanes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">LaneIndex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">                :param lane_index: the index of a lane.</span>
-<span class="sd">                :return: indexes of lanes next to a an input lane, to its right or left.</span>
-<span class="sd">                &quot;&quot;&quot;</span>
+<span class="sd">        :param lane_index: the index of a lane.</span>
+<span class="sd">        :return: indexes of lanes next to a an input lane, to its right or left.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span> <span class="o">=</span> <span class="n">lane_index</span>
         <span class="n">lanes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -464,17 +501,31 @@
         <span class="k">return</span> <span class="n">lanes</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_same_road</span><span class="p">(</span><span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_same_road</span><span class="p">(</span>
+        <span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Is lane 1 in the same road as lane 2?&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lane_index_1</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">same_lane</span> <span class="ow">or</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">lane_index_1</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">same_lane</span> <span class="ow">or</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_leading_to_road</span><span class="p">(</span><span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_leading_to_road</span><span class="p">(</span>
+        <span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Is lane 1 leading to of lane 2?&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">same_lane</span> <span class="ow">or</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">same_lane</span> <span class="ow">or</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">is_connected_road</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                          <span class="n">same_lane</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_connected_road</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">lane_index_1</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span>
+        <span class="n">lane_index_2</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">same_lane</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Is the lane 2 leading to a road within lane 1&#39;s route?</span>
 
@@ -486,55 +537,86 @@
 <span class="sd">        :param depth: search depth from lane 1 along its route</span>
 <span class="sd">        :return: whether the roads are connected</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">RoadNetwork</span><span class="o">.</span><span class="n">is_same_road</span><span class="p">(</span><span class="n">lane_index_2</span><span class="p">,</span> <span class="n">lane_index_1</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">)</span> \
-                <span class="ow">or</span> <span class="n">RoadNetwork</span><span class="o">.</span><span class="n">is_leading_to_road</span><span class="p">(</span><span class="n">lane_index_2</span><span class="p">,</span> <span class="n">lane_index_1</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">RoadNetwork</span><span class="o">.</span><span class="n">is_same_road</span><span class="p">(</span>
+            <span class="n">lane_index_2</span><span class="p">,</span> <span class="n">lane_index_1</span><span class="p">,</span> <span class="n">same_lane</span>
+        <span class="p">)</span> <span class="ow">or</span> <span class="n">RoadNetwork</span><span class="o">.</span><span class="n">is_leading_to_road</span><span class="p">(</span><span class="n">lane_index_2</span><span class="p">,</span> <span class="n">lane_index_1</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">depth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">route</span> <span class="ow">and</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_1</span><span class="p">[:</span><span class="mi">2</span><span class="p">]:</span>
                 <span class="c1"># Route is starting at current road, skip it</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected_road</span><span class="p">(</span><span class="n">lane_index_1</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">,</span> <span class="n">route</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">same_lane</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected_road</span><span class="p">(</span>
+                    <span class="n">lane_index_1</span><span class="p">,</span> <span class="n">lane_index_2</span><span class="p">,</span> <span class="n">route</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">same_lane</span><span class="p">,</span> <span class="n">depth</span>
+                <span class="p">)</span>
             <span class="k">elif</span> <span class="n">route</span> <span class="ow">and</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">lane_index_1</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="c1"># Route is continuing from current road, follow it</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected_road</span><span class="p">(</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lane_index_2</span><span class="p">,</span> <span class="n">route</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">same_lane</span><span class="p">,</span> <span class="n">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected_road</span><span class="p">(</span>
+                    <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lane_index_2</span><span class="p">,</span> <span class="n">route</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">same_lane</span><span class="p">,</span> <span class="n">depth</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Recursively search all roads at intersection</span>
                 <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span> <span class="o">=</span> <span class="n">lane_index_1</span>
-                <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">is_connected_road</span><span class="p">((</span><span class="n">_to</span><span class="p">,</span> <span class="n">l1_to</span><span class="p">,</span> <span class="n">_id</span><span class="p">),</span> <span class="n">lane_index_2</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">,</span> <span class="n">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-                            <span class="k">for</span> <span class="n">l1_to</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_to</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+                <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">is_connected_road</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">_to</span><span class="p">,</span> <span class="n">l1_to</span><span class="p">,</span> <span class="n">_id</span><span class="p">),</span> <span class="n">lane_index_2</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">same_lane</span><span class="p">,</span> <span class="n">depth</span> <span class="o">-</span> <span class="mi">1</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">l1_to</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_to</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">lanes_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">AbstractLane</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">lane</span> <span class="k">for</span> <span class="n">to</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">to</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">lane</span> <span class="k">for</span> <span class="n">to</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">to</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="n">ids</span>
+        <span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">lanes_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AbstractLane</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">{(</span><span class="n">from_</span><span class="p">,</span> <span class="n">to_</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span> <span class="n">lane</span>
-                <span class="k">for</span> <span class="n">from_</span><span class="p">,</span> <span class="n">tos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">to_</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">tos</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">lane</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ids</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">to_</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span> <span class="n">lane</span>
+            <span class="k">for</span> <span class="n">from_</span><span class="p">,</span> <span class="n">tos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">to_</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">tos</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">lane</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+        <span class="p">}</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">straight_road_network</span><span class="p">(</span><span class="n">lanes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-                              <span class="n">start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                              <span class="n">length</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
-                              <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                              <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-                              <span class="n">nodes_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                              <span class="n">net</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;RoadNetwork&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="s1">&#39;RoadNetwork&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">straight_road_network</span><span class="p">(</span>
+        <span class="n">lanes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">length</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">nodes_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">net</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;RoadNetwork&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RoadNetwork&quot;</span><span class="p">:</span>
         <span class="n">net</span> <span class="o">=</span> <span class="n">net</span> <span class="ow">or</span> <span class="n">RoadNetwork</span><span class="p">()</span>
         <span class="n">nodes_str</span> <span class="o">=</span> <span class="n">nodes_str</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lanes</span><span class="p">):</span>
             <span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">start</span><span class="p">,</span> <span class="n">lane</span> <span class="o">*</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">])</span>
             <span class="n">end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">start</span> <span class="o">+</span> <span class="n">length</span><span class="p">,</span> <span class="n">lane</span> <span class="o">*</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">])</span>
-            <span class="n">rotation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)],</span> <span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)]])</span>
+            <span class="n">rotation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)],</span> <span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)]]</span>
+            <span class="p">)</span>
             <span class="n">origin</span> <span class="o">=</span> <span class="n">rotation</span> <span class="o">@</span> <span class="n">origin</span>
             <span class="n">end</span> <span class="o">=</span> <span class="n">rotation</span> <span class="o">@</span> <span class="n">end</span>
-            <span class="n">line_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span> <span class="k">if</span> <span class="n">lane</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span>
-                          <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span> <span class="k">if</span> <span class="n">lane</span> <span class="o">==</span> <span class="n">lanes</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">]</span>
-            <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span><span class="o">*</span><span class="n">nodes_str</span><span class="p">,</span> <span class="n">StraightLane</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">line_types</span><span class="o">=</span><span class="n">line_types</span><span class="p">,</span> <span class="n">speed_limit</span><span class="o">=</span><span class="n">speed_limit</span><span class="p">))</span>
+            <span class="n">line_types</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span> <span class="k">if</span> <span class="n">lane</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span>
+                <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span> <span class="k">if</span> <span class="n">lane</span> <span class="o">==</span> <span class="n">lanes</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">nodes_str</span><span class="p">,</span>
+                <span class="n">StraightLane</span><span class="p">(</span>
+                    <span class="n">origin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">line_types</span><span class="o">=</span><span class="n">line_types</span><span class="p">,</span> <span class="n">speed_limit</span><span class="o">=</span><span class="n">speed_limit</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">net</span>
 
-    <span class="k">def</span> <span class="nf">position_heading_along_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                                     <span class="n">current_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">position_heading_along_route</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Route</span><span class="p">,</span>
+        <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">current_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the absolute position and heading along a route composed of several lanes at some local coordinates.</span>
 
@@ -544,13 +626,18 @@
 <span class="sd">        :param current_lane_index: current lane index of the vehicle</span>
 <span class="sd">        :return: position, heading</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">def</span> <span class="nf">_get_route_head_with_id</span><span class="p">(</span><span class="n">route_</span><span class="p">):</span>
             <span class="n">lane_index_</span> <span class="o">=</span> <span class="n">route_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">lane_index_</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># We know which road segment will be followed by the vehicle, but not which lane.</span>
                 <span class="c1"># Hypothesis: the vehicle will keep the same lane_id as the current one.</span>
-                <span class="n">id_</span> <span class="o">=</span> <span class="p">(</span><span class="n">current_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-                       <span class="k">if</span> <span class="n">current_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">current_lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">current_lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">id_</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">current_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">current_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">current_lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">current_lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                    <span class="k">else</span> <span class="mi">0</span>
+                <span class="p">)</span>
                 <span class="n">lane_index_</span> <span class="o">=</span> <span class="p">(</span><span class="n">lane_index_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lane_index_</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">id_</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">lane_index_</span>
 
@@ -560,8 +647,9 @@
             <span class="n">route</span> <span class="o">=</span> <span class="n">route</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">lane_index</span> <span class="o">=</span> <span class="n">_get_route_head_with_id</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span><span class="p">),</span>\
-               <span class="bp">self</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span>
+            <span class="n">lane_index</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">random_lane_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">np_random</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LaneIndex</span><span class="p">:</span>
         <span class="n">_from</span> <span class="o">=</span> <span class="n">np_random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
@@ -577,9 +665,7 @@
             <span class="k">for</span> <span class="n">_to</span><span class="p">,</span> <span class="n">lanes_dict</span> <span class="ow">in</span> <span class="n">to_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">lane_dict</span> <span class="ow">in</span> <span class="n">lanes_dict</span><span class="p">:</span>
-                    <span class="n">net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">lane_from_config</span><span class="p">(</span><span class="n">lane_dict</span><span class="p">)</span>
-                    <span class="p">)</span>
+                    <span class="n">net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lane_from_config</span><span class="p">(</span><span class="n">lane_dict</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">net</span>
 
     <span class="k">def</span> <span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -589,9 +675,7 @@
             <span class="k">for</span> <span class="n">_to</span><span class="p">,</span> <span class="n">lanes</span> <span class="ow">in</span> <span class="n">to_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">graph_dict</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="n">lanes</span><span class="p">:</span>
-                    <span class="n">graph_dict</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">lane</span><span class="o">.</span><span class="n">to_config</span><span class="p">()</span>
-                    <span class="p">)</span>
+                    <span class="n">graph_dict</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">to_config</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">graph_dict</span>
 
 
@@ -601,12 +685,14 @@
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A road is a set of lanes, and a set of vehicles driving on these lanes.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">network</span><span class="p">:</span> <span class="n">RoadNetwork</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">vehicles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;kinematics.Vehicle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">road_objects</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;objects.RoadObject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">np_random</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">record_history</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">network</span><span class="p">:</span> <span class="n">RoadNetwork</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">vehicles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;kinematics.Vehicle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">road_objects</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;objects.RoadObject&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">np_random</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">record_history</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        New road.</span>
 
@@ -622,15 +708,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span> <span class="o">=</span> <span class="n">np_random</span> <span class="k">if</span> <span class="n">np_random</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">record_history</span> <span class="o">=</span> <span class="n">record_history</span>
 
-    <span class="k">def</span> <span class="nf">close_objects_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="s1">&#39;kinematics.Vehicle&#39;</span><span class="p">,</span> <span class="n">distance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                         <span class="n">see_behind</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">vehicles_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-        <span class="n">vehicles</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span>
-                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">distance</span>
-                    <span class="ow">and</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">vehicle</span>
-                    <span class="ow">and</span> <span class="p">(</span><span class="n">see_behind</span> <span class="ow">or</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">&lt;</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">v</span><span class="p">))]</span>
-        <span class="n">obstacles</span> <span class="o">=</span> <span class="p">[</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span>
-                     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">distance</span>
-                     <span class="ow">and</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">&lt;</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">o</span><span class="p">)]</span>
+    <span class="k">def</span> <span class="nf">close_objects_to</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">vehicle</span><span class="p">:</span> <span class="s2">&quot;kinematics.Vehicle&quot;</span><span class="p">,</span>
+        <span class="n">distance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">see_behind</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">vehicles_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="n">vehicles</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">v</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">distance</span>
+            <span class="ow">and</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">vehicle</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">see_behind</span> <span class="ow">or</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">&lt;</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+        <span class="p">]</span>
+        <span class="n">obstacles</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">o</span>
+            <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">distance</span>
+            <span class="ow">and</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">&lt;</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+        <span class="p">]</span>
 
         <span class="n">objects_</span> <span class="o">=</span> <span class="n">vehicles</span> <span class="k">if</span> <span class="n">vehicles_only</span> <span class="k">else</span> <span class="n">vehicles</span> <span class="o">+</span> <span class="n">obstacles</span>
 
@@ -640,9 +739,17 @@
             <span class="n">objects_</span> <span class="o">=</span> <span class="n">objects_</span><span class="p">[:</span><span class="n">count</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">objects_</span>
 
-    <span class="k">def</span> <span class="nf">close_vehicles_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="s1">&#39;kinematics.Vehicle&#39;</span><span class="p">,</span> <span class="n">distance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                          <span class="n">see_behind</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_objects_to</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">see_behind</span><span class="p">,</span> <span class="n">sort</span><span class="p">,</span> <span class="n">vehicles_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">close_vehicles_to</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">vehicle</span><span class="p">:</span> <span class="s2">&quot;kinematics.Vehicle&quot;</span><span class="p">,</span>
+        <span class="n">distance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">see_behind</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_objects_to</span><span class="p">(</span>
+            <span class="n">vehicle</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">see_behind</span><span class="p">,</span> <span class="n">sort</span><span class="p">,</span> <span class="n">vehicles_only</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="Road.act">
 <a class="viewcode-back" href="../../../../dynamics/road/road/#highway_env.road.road.Road.act">[docs]</a>
@@ -663,7 +770,7 @@
         <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="n">vehicle</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]:</span>
                 <span class="n">vehicle</span><span class="o">.</span><span class="n">handle_collisions</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
                 <span class="n">vehicle</span><span class="o">.</span><span class="n">handle_collisions</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span></div>
@@ -671,8 +778,9 @@
 
 <div class="viewcode-block" id="Road.neighbour_vehicles">
 <a class="viewcode-back" href="../../../../dynamics/road/road/#highway_env.road.road.Road.neighbour_vehicles">[docs]</a>
-    <span class="k">def</span> <span class="nf">neighbour_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="s1">&#39;kinematics.Vehicle&#39;</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;kinematics.Vehicle&#39;</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;kinematics.Vehicle&#39;</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">neighbour_vehicles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="s2">&quot;kinematics.Vehicle&quot;</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;kinematics.Vehicle&quot;</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;kinematics.Vehicle&quot;</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the preceding and following vehicles of a given vehicle.</span>
 
@@ -690,7 +798,9 @@
         <span class="n">s_front</span> <span class="o">=</span> <span class="n">s_rear</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">v_front</span> <span class="o">=</span> <span class="n">v_rear</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">vehicle</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Landmark</span><span class="p">):</span>  <span class="c1"># self.network.is_connected_road(v.lane_index,</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">vehicle</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">v</span><span class="p">,</span> <span class="n">Landmark</span>
+            <span class="p">):</span>  <span class="c1"># self.network.is_connected_road(v.lane_index,</span>
                 <span class="c1"># lane_index, same_lane=True):</span>
                 <span class="n">s_v</span><span class="p">,</span> <span class="n">lat_v</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">lane</span><span class="o">.</span><span class="n">on_lane</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">s_v</span><span class="p">,</span> <span class="n">lat_v</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>

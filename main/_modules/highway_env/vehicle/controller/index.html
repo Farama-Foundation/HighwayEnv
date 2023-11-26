@@ -291,12 +291,13 @@
           <article role="main">
             
             <h1>Source code for highway_env.vehicle.controller</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+
 <span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">Road</span><span class="p">,</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">Route</span>
+<span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">Road</span><span class="p">,</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span>
 <span class="kn">from</span> <span class="nn">highway_env.vehicle.kinematics</span> <span class="kn">import</span> <span class="n">Vehicle</span>
 
@@ -326,14 +327,16 @@
     <span class="n">MAX_STEERING_ANGLE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">3</span>  <span class="c1"># [rad]</span>
     <span class="n">DELTA_SPEED</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># [m/s]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
-                 <span class="n">position</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
-                 <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                 <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                 <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">target_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+        <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">target_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">road</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">=</span> <span class="n">target_lane_index</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">=</span> <span class="n">target_speed</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span>
@@ -351,9 +354,15 @@
 <span class="sd">        :param vehicle: a vehicle</span>
 <span class="sd">        :return: a new vehicle at the same dynamical state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">heading</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span>
-                <span class="n">target_lane_index</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">,</span> <span class="n">target_speed</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_speed</span><span class="p">,</span>
-                <span class="n">route</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">route</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">vehicle</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+            <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+            <span class="n">heading</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">,</span>
+            <span class="n">speed</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span>
+            <span class="n">target_lane_index</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">,</span>
+            <span class="n">target_speed</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_speed</span><span class="p">,</span>
+            <span class="n">route</span><span class="o">=</span><span class="n">vehicle</span><span class="o">.</span><span class="n">route</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">v</span></div>
 
 
@@ -370,7 +379,9 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">route</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">path</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">route</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">route</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -394,18 +405,34 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DELTA_SPEED</span>
         <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;LANE_RIGHT&quot;</span><span class="p">:</span>
             <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span>
-            <span class="n">target_lane_index</span> <span class="o">=</span> <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">target_lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">):</span>
+            <span class="n">target_lane_index</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">_from</span><span class="p">,</span>
+                <span class="n">_to</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">target_lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">position</span>
+            <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">=</span> <span class="n">target_lane_index</span>
         <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;LANE_LEFT&quot;</span><span class="p">:</span>
             <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span>
-            <span class="n">target_lane_index</span> <span class="o">=</span> <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">_id</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">target_lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">):</span>
+            <span class="n">target_lane_index</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">_from</span><span class="p">,</span>
+                <span class="n">_to</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">_id</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">target_lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">is_reachable_from</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">position</span>
+            <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">=</span> <span class="n">target_lane_index</span>
 
-        <span class="n">action</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;steering&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_control</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">),</span>
-                  <span class="s2">&quot;acceleration&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_control</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span><span class="p">)}</span>
-        <span class="n">action</span><span class="p">[</span><span class="s1">&#39;steering&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s1">&#39;steering&#39;</span><span class="p">],</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;steering&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">steering_control</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">),</span>
+            <span class="s2">&quot;acceleration&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_control</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="n">action</span><span class="p">[</span><span class="s2">&quot;steering&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+            <span class="n">action</span><span class="p">[</span><span class="s2">&quot;steering&quot;</span><span class="p">],</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span>
+        <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
 
 
@@ -414,10 +441,12 @@
     <span class="k">def</span> <span class="nf">follow_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;At the end of a lane, automatically switch to a next one.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">)</span><span class="o">.</span><span class="n">after_end</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">next_lane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">,</span>
-                                                                 <span class="n">route</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">,</span>
-                                                                 <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
-                                                                 <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">np_random</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">next_lane</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">,</span>
+                <span class="n">route</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">,</span>
+                <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ControlledVehicle.steering_control">
@@ -440,16 +469,30 @@
         <span class="n">lane_future_heading</span> <span class="o">=</span> <span class="n">target_lane</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">lane_next_coords</span><span class="p">)</span>
 
         <span class="c1"># Lateral position control</span>
-        <span class="n">lateral_speed_command</span> <span class="o">=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">KP_LATERAL</span> <span class="o">*</span> <span class="n">lane_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">lateral_speed_command</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">KP_LATERAL</span> <span class="o">*</span> <span class="n">lane_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="c1"># Lateral speed to heading</span>
-        <span class="n">heading_command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lateral_speed_command</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">not_zero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">heading_ref</span> <span class="o">=</span> <span class="n">lane_future_heading</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">heading_command</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">heading_command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lateral_speed_command</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">not_zero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">heading_ref</span> <span class="o">=</span> <span class="n">lane_future_heading</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+            <span class="n">heading_command</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span>
+        <span class="p">)</span>
         <span class="c1"># Heading control</span>
-        <span class="n">heading_rate_command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">KP_HEADING</span> <span class="o">*</span> <span class="n">utils</span><span class="o">.</span><span class="n">wrap_to_pi</span><span class="p">(</span><span class="n">heading_ref</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span>
+        <span class="n">heading_rate_command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">KP_HEADING</span> <span class="o">*</span> <span class="n">utils</span><span class="o">.</span><span class="n">wrap_to_pi</span><span class="p">(</span>
+            <span class="n">heading_ref</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span>
+        <span class="p">)</span>
         <span class="c1"># Heading rate to steering angle</span>
-        <span class="n">slip_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">not_zero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span> <span class="o">*</span> <span class="n">heading_rate_command</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">slip_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">LENGTH</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">not_zero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span> <span class="o">*</span> <span class="n">heading_rate_command</span><span class="p">,</span>
+                <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">steering_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">slip_angle</span><span class="p">))</span>
-        <span class="n">steering_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">steering_angle</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span><span class="p">)</span>
+        <span class="n">steering_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+            <span class="n">steering_angle</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_STEERING_ANGLE</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">steering_angle</span><span class="p">)</span></div>
 
 
@@ -483,8 +526,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">]</span>
         <span class="n">next_destinations_from</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">next_destinations</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">routes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">destination</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">2</span><span class="p">])]</span>
-                  <span class="k">for</span> <span class="n">destination</span> <span class="ow">in</span> <span class="n">next_destinations_from</span><span class="p">]</span>
+        <span class="n">routes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">destination</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">2</span><span class="p">])]</span>
+            <span class="k">for</span> <span class="n">destination</span> <span class="ow">in</span> <span class="n">next_destinations_from</span>
+        <span class="p">]</span>
         <span class="k">return</span> <span class="n">routes</span></div>
 
 
@@ -508,7 +554,9 @@
 
 <div class="viewcode-block" id="ControlledVehicle.predict_trajectory_constant_speed">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/controller/#highway_env.vehicle.controller.ControlledVehicle.predict_trajectory_constant_speed">[docs]</a>
-    <span class="k">def</span> <span class="nf">predict_trajectory_constant_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">times</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">predict_trajectory_constant_speed</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">times</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict the future positions of the vehicle along its planned route, under constant speed</span>
 
@@ -517,11 +565,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
         <span class="n">route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span> <span class="ow">or</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span><span class="p">]</span>
-        <span class="n">pos_heads</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">position_heading_along_route</span><span class="p">(</span><span class="n">route</span><span class="p">,</span>
-                                                                    <span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">t</span><span class="p">,</span>
-                                                                    <span class="mi">0</span><span class="p">,</span>
-                                                                    <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span><span class="p">)</span>
-                     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">times</span><span class="p">]</span>
+        <span class="n">pos_heads</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">position_heading_along_route</span><span class="p">(</span>
+                <span class="n">route</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">times</span>
+        <span class="p">]</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">pos_heads</span><span class="p">))</span></div>
 </div>
 
@@ -532,17 +581,20 @@
 <span class="k">class</span> <span class="nc">MDPVehicle</span><span class="p">(</span><span class="n">ControlledVehicle</span><span class="p">):</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A controlled vehicle with a specified discrete range of allowed target speeds.&quot;&quot;&quot;</span>
+
     <span class="n">DEFAULT_TARGET_SPEEDS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
-                 <span class="n">position</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-                 <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                 <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                 <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LaneIndex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">target_speed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">target_speeds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Vector</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">target_lane_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LaneIndex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">target_speed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">target_speeds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Vector</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes an MDPVehicle</span>
 
@@ -555,8 +607,14 @@
 <span class="sd">        :param target_speeds: the discrete list of speeds the vehicle is able to track, through faster/slower actions</span>
 <span class="sd">        :param route: the planned route of the vehicle, to handle intersections</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">road</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">,</span> <span class="n">target_speed</span><span class="p">,</span> <span class="n">route</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">target_speeds</span><span class="p">)</span> <span class="k">if</span> <span class="n">target_speeds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">road</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">target_lane_index</span><span class="p">,</span> <span class="n">target_speed</span><span class="p">,</span> <span class="n">route</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">target_speeds</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">target_speeds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_to_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_to_speed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_index</span><span class="p">)</span>
 
@@ -578,7 +636,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">speed_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_to_speed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_index</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">act</span><span class="p">()</span></div>
 
@@ -606,8 +666,16 @@
 <span class="sd">        :param speed: an input speed [m/s]</span>
 <span class="sd">        :return: the index of the closest speed allowed []</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">speed</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">speed</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MDPVehicle.speed_to_index_default">
@@ -622,19 +690,33 @@
 <span class="sd">        :param speed: an input speed [m/s]</span>
 <span class="sd">        :return: the index of the closest speed allowed []</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">speed</span> <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">speed</span> <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_TARGET_SPEEDS</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
 
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_speed_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">Vehicle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="s2">&quot;speed_index&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">speed_to_index_default</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">vehicle</span><span class="p">,</span> <span class="s2">&quot;speed_index&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">speed_to_index_default</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="MDPVehicle.predict_trajectory">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/controller/#highway_env.vehicle.controller.MDPVehicle.predict_trajectory">[docs]</a>
-    <span class="k">def</span> <span class="nf">predict_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">action_duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">trajectory_timestep</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ControlledVehicle</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">predict_trajectory</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
+        <span class="n">action_duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">trajectory_timestep</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ControlledVehicle</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict the future trajectory of the vehicle given a sequence of actions.</span>
 

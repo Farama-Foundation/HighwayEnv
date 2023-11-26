@@ -293,20 +293,19 @@
             <h1>Source code for highway_env.envs.common.abstract</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypeVar</span>
+
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">gymnasium</span> <span class="kn">import</span> <span class="n">Wrapper</span>
 <span class="kn">from</span> <span class="nn">gymnasium.wrappers</span> <span class="kn">import</span> <span class="n">RecordVideo</span>
-<span class="kn">from</span> <span class="nn">gymnasium.utils</span> <span class="kn">import</span> <span class="n">seeding</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">highway_env.envs.common.action</span> <span class="kn">import</span> <span class="n">action_factory</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">DiscreteMetaAction</span><span class="p">,</span> <span class="n">ActionType</span>
-<span class="kn">from</span> <span class="nn">highway_env.envs.common.observation</span> <span class="kn">import</span> <span class="n">observation_factory</span><span class="p">,</span> <span class="n">ObservationType</span>
+<span class="kn">from</span> <span class="nn">highway_env.envs.common.action</span> <span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">ActionType</span><span class="p">,</span> <span class="n">action_factory</span>
 <span class="kn">from</span> <span class="nn">highway_env.envs.common.finite_mdp</span> <span class="kn">import</span> <span class="n">finite_mdp</span>
 <span class="kn">from</span> <span class="nn">highway_env.envs.common.graphics</span> <span class="kn">import</span> <span class="n">EnvViewer</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.behavior</span> <span class="kn">import</span> <span class="n">IDMVehicle</span><span class="p">,</span> <span class="n">LinearVehicle</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.controller</span> <span class="kn">import</span> <span class="n">MDPVehicle</span>
+<span class="kn">from</span> <span class="nn">highway_env.envs.common.observation</span> <span class="kn">import</span> <span class="n">ObservationType</span><span class="p">,</span> <span class="n">observation_factory</span>
+<span class="kn">from</span> <span class="nn">highway_env.vehicle.behavior</span> <span class="kn">import</span> <span class="n">IDMVehicle</span>
 <span class="kn">from</span> <span class="nn">highway_env.vehicle.kinematics</span> <span class="kn">import</span> <span class="n">Vehicle</span>
 
 <span class="n">Observation</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;Observation&quot;</span><span class="p">)</span>
@@ -323,11 +322,12 @@
 <span class="sd">    speed. The action space is fixed, but the observation space and reward function must be defined in the</span>
 <span class="sd">    environment implementations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">observation_type</span><span class="p">:</span> <span class="n">ObservationType</span>
     <span class="n">action_type</span><span class="p">:</span> <span class="n">ActionType</span>
     <span class="n">_record_video_wrapper</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RecordVideo</span><span class="p">]</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;render_modes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">],</span>
+        <span class="s2">&quot;render_modes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;rgb_array&quot;</span><span class="p">],</span>
     <span class="p">}</span>
 
     <span class="n">PERCEPTION_DISTANCE</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">Vehicle</span><span class="o">.</span><span class="n">MAX_SPEED</span>
@@ -386,12 +386,8 @@
 <span class="sd">        :return: a configuration dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span>
-            <span class="p">},</span>
+            <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">},</span>
             <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
             <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
             <span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">:</span> <span class="s2">&quot;highway_env.vehicle.behavior.IDMVehicle&quot;</span><span class="p">,</span>
@@ -403,7 +399,7 @@
             <span class="s2">&quot;render_agent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="s2">&quot;offscreen_rendering&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;OFFSCREEN_RENDERING&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
             <span class="s2">&quot;manual_control&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s2">&quot;real_time_rendering&quot;</span><span class="p">:</span> <span class="kc">False</span>
+            <span class="s2">&quot;real_time_rendering&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
@@ -412,9 +408,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">update_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_real_time_ratio</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="n">frames_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">]</span> \
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;render_fps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">video_real_time_ratio</span> <span class="o">*</span> <span class="n">frames_freq</span>
+        <span class="n">frames_freq</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;render_fps&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">video_real_time_ratio</span> <span class="o">*</span> <span class="n">frames_freq</span>
 
 <div class="viewcode-block" id="AbstractEnv.define_spaces">
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.define_spaces">[docs]</a>
@@ -501,10 +500,11 @@
 
 <div class="viewcode-block" id="AbstractEnv.reset">
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-              <span class="o">*</span><span class="p">,</span>
-              <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-              <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Observation</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the environment to it&#39;s initial configuration</span>
@@ -524,7 +524,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">define_spaces</span><span class="p">()</span>  <span class="c1"># Second, to link the obs and actions to the vehicles once the scene is created</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_type</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span>
         <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s1">&#39;human&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">info</span></div>
 
@@ -553,7 +553,9 @@
 <span class="sd">        :return: a tuple (observation, reward, terminated, truncated, info)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The road and vehicle must be initialized in the environment implementation&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s2">&quot;The road and vehicle must be initialized in the environment implementation&quot;</span>
+            <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_simulate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
@@ -563,7 +565,7 @@
         <span class="n">terminated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_terminated</span><span class="p">()</span>
         <span class="n">truncated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_truncated</span><span class="p">()</span>
         <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s1">&#39;human&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span></div>
@@ -573,12 +575,21 @@
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv._simulate">[docs]</a>
     <span class="k">def</span> <span class="nf">_simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform several steps of simulation with constant action.&quot;&quot;&quot;</span>
-        <span class="n">frames</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">]</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">]</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
             <span class="c1"># Forward action to the vehicle</span>
-            <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
-                    <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;manual_control&quot;</span><span class="p">]</span> \
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">]</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;manual_control&quot;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span>
+                <span class="o">%</span> <span class="nb">int</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">]</span>
+                    <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="o">==</span> <span class="mi">0</span>
+            <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">act</span><span class="p">()</span>
@@ -587,7 +598,9 @@
 
             <span class="c1"># Automatically render intermediate simulation steps if a viewer has been launched</span>
             <span class="c1"># Ignored if the rendering is done offscreen</span>
-            <span class="k">if</span> <span class="n">frame</span> <span class="o">&lt;</span> <span class="n">frames</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Last frame will be rendered through env.render() as usual</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">frame</span> <span class="o">&lt;</span> <span class="n">frames</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="p">):</span>  <span class="c1"># Last frame will be rendered through env.render() as usual</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_automatic_rendering</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">enable_auto_render</span> <span class="o">=</span> <span class="kc">False</span></div>
@@ -618,7 +631,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">offscreen</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">handle_events</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s2">&quot;rgb_array&quot;</span><span class="p">:</span>
             <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">get_image</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">image</span></div>
 
@@ -654,7 +667,6 @@
 <span class="sd">        If a RecordVideo wrapper has been set, use it to capture intermediate frames.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">enable_auto_render</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="o">.</span><span class="n">video_recorder</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="o">.</span><span class="n">video_recorder</span><span class="o">.</span><span class="n">capture_frame</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
@@ -663,7 +675,7 @@
 
 <div class="viewcode-block" id="AbstractEnv.simplify">
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.simplify">[docs]</a>
-    <span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a simplified copy of the environment where distant vehicles have been removed from the road.</span>
 
@@ -672,15 +684,18 @@
 <span class="sd">        :return: a simplified environment state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">state_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">state_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span> <span class="o">=</span> <span class="p">[</span><span class="n">state_copy</span><span class="o">.</span><span class="n">vehicle</span><span class="p">]</span> <span class="o">+</span> <span class="n">state_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">close_vehicles_to</span><span class="p">(</span>
-            <span class="n">state_copy</span><span class="o">.</span><span class="n">vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PERCEPTION_DISTANCE</span><span class="p">)</span>
+        <span class="n">state_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">state_copy</span><span class="o">.</span><span class="n">vehicle</span>
+        <span class="p">]</span> <span class="o">+</span> <span class="n">state_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">close_vehicles_to</span><span class="p">(</span>
+            <span class="n">state_copy</span><span class="o">.</span><span class="n">vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PERCEPTION_DISTANCE</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">state_copy</span></div>
 
 
 <div class="viewcode-block" id="AbstractEnv.change_vehicles">
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.change_vehicles">[docs]</a>
-    <span class="k">def</span> <span class="nf">change_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_class_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">change_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_class_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the type of all vehicles on the road</span>
 
@@ -698,7 +713,7 @@
         <span class="k">return</span> <span class="n">env_copy</span></div>
 
 
-    <span class="k">def</span> <span class="nf">set_preferred_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preferred_lane</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_preferred_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preferred_lane</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">:</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">preferred_lane</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
@@ -708,14 +723,14 @@
                     <span class="n">v</span><span class="o">.</span><span class="n">LANE_CHANGE_MAX_BRAKING_IMPOSED</span> <span class="o">=</span> <span class="mi">1000</span>
         <span class="k">return</span> <span class="n">env_copy</span>
 
-    <span class="k">def</span> <span class="nf">set_route_at_intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_route_at_intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">:</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">IDMVehicle</span><span class="p">):</span>
                 <span class="n">v</span><span class="o">.</span><span class="n">set_route_at_intersection</span><span class="p">(</span><span class="n">_to</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env_copy</span>
 
-    <span class="k">def</span> <span class="nf">set_vehicle_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_vehicle_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">:</span>
         <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">args</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
@@ -723,7 +738,7 @@
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env_copy</span>
 
-    <span class="k">def</span> <span class="nf">call_vehicle_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">object</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">call_vehicle_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">object</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">:</span>
         <span class="n">method</span><span class="p">,</span> <span class="n">method_args</span> <span class="o">=</span> <span class="n">args</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">):</span>
@@ -731,7 +746,7 @@
                 <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="p">)(</span><span class="o">*</span><span class="n">method_args</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env_copy</span>
 
-    <span class="k">def</span> <span class="nf">randomize_behavior</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEnv&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">randomize_behavior</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">:</span>
         <span class="n">env_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">env_copy</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">IDMVehicle</span><span class="p">):</span>
@@ -739,7 +754,7 @@
         <span class="k">return</span> <span class="n">env_copy</span>
 
     <span class="k">def</span> <span class="nf">to_finite_mdp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">finite_mdp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_quantization</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">finite_mdp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_quantization</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform a deep copy but without copying the environment viewer.&quot;&quot;&quot;</span>
@@ -747,7 +762,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">memo</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="n">result</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;viewer&#39;</span><span class="p">,</span> <span class="s1">&#39;_record_video_wrapper&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;viewer&quot;</span><span class="p">,</span> <span class="s2">&quot;_record_video_wrapper&quot;</span><span class="p">]:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">memo</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>

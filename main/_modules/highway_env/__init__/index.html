@@ -291,10 +291,22 @@
           <article role="main">
             
             <h1>Source code for highway_env.__init__</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Hide pygame support prompt</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYGAME_HIDE_SUPPORT_PROMPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.8.2&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">farama_notifications</span> <span class="kn">import</span> <span class="n">notifications</span>
+
+    <span class="k">if</span> <span class="s2">&quot;highway_env&quot;</span> <span class="ow">in</span> <span class="n">notifications</span> <span class="ow">and</span> <span class="n">__version__</span> <span class="ow">in</span> <span class="n">notifications</span><span class="p">[</span><span class="s2">&quot;gymnasium&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">notifications</span><span class="p">[</span><span class="s2">&quot;highway_env&quot;</span><span class="p">][</span><span class="n">__version__</span><span class="p">],</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># nosec</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Hide pygame support prompt</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYGAME_HIDE_SUPPORT_PROMPT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
 
 <span class="kn">from</span> <span class="nn">gymnasium.envs.registration</span> <span class="kn">import</span> <span class="n">register</span>
 
@@ -306,96 +318,89 @@
 
     <span class="c1"># exit_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;exit-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:ExitEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;exit-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:ExitEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># highway_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:HighwayEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:HighwayEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;highway-fast-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:HighwayEnvFast&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;highway-fast-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:HighwayEnvFast&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># intersection_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;intersection-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:IntersectionEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:IntersectionEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;intersection-v1&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:ContinuousIntersectionEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:ContinuousIntersectionEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;intersection-multi-agent-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:MultiAgentIntersectionEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-multi-agent-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:MultiAgentIntersectionEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;intersection-multi-agent-v1&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:TupleMultiAgentIntersectionEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-multi-agent-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:TupleMultiAgentIntersectionEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># lane_keeping_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;lane-keeping-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:LaneKeepingEnv&#39;</span><span class="p">,</span>
-        <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">200</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;lane-keeping-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:LaneKeepingEnv&quot;</span><span class="p">,</span>
+        <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># merge_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;merge-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:MergeEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;merge-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:MergeEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># parking_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;parking-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:ParkingEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;parking-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:ParkingEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;parking-ActionRepeat-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:ParkingEnvActionRepeat&#39;</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;parking-ActionRepeat-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:ParkingEnvActionRepeat&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;parking-parked-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:ParkingEnvParkedVehicles&#39;</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;parking-parked-v0&quot;</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:ParkingEnvParkedVehicles&quot;</span>
     <span class="p">)</span>
 
     <span class="c1"># racetrack_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;racetrack-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:RacetrackEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;racetrack-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:RacetrackEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># roundabout_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;roundabout-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:RoundaboutEnv&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;roundabout-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:RoundaboutEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># two_way_env.py</span>
     <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;two-way-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:TwoWayEnv&#39;</span><span class="p">,</span>
-        <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">15</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;two-way-v0&quot;</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:TwoWayEnv&quot;</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">15</span>
     <span class="p">)</span>
 
     <span class="c1"># u_turn_env.py</span>
-    <span class="n">register</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;u-turn-v0&#39;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:UTurnEnv&#39;</span>
-    <span class="p">)</span></div>
-
+    <span class="n">register</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;u-turn-v0&quot;</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:UTurnEnv&quot;</span><span class="p">)</span></div>
 
 </pre></div>
           </article>

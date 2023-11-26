@@ -292,13 +292,13 @@
             
             <h1>Source code for highway_env.road.lane</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">highway_env.road.spline</span> <span class="kn">import</span> <span class="n">LinearSpline2D</span>
-<span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">wrap_to_pi</span><span class="p">,</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">get_class_path</span><span class="p">,</span> <span class="n">class_from_path</span>
+<span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">class_from_path</span><span class="p">,</span> <span class="n">get_class_path</span><span class="p">,</span> <span class="n">wrap_to_pi</span>
 
 
 <div class="viewcode-block" id="AbstractLane">
@@ -392,8 +392,13 @@
 
 <div class="viewcode-block" id="AbstractLane.on_lane">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.on_lane">[docs]</a>
-    <span class="k">def</span> <span class="nf">on_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">on_lane</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Whether a given world position is on the lane.</span>
 
@@ -405,8 +410,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">longitudinal</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">lateral</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
-        <span class="n">is_on</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lateral</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">margin</span> <span class="ow">and</span> \
-            <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">VEHICLE_LENGTH</span> <span class="o">&lt;=</span> <span class="n">longitudinal</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">VEHICLE_LENGTH</span>
+        <span class="n">is_on</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lateral</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">margin</span>
+            <span class="ow">and</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">VEHICLE_LENGTH</span> <span class="o">&lt;=</span> <span class="n">longitudinal</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">VEHICLE_LENGTH</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">is_on</span></div>
 
 
@@ -422,12 +429,16 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">forbidden</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
-        <span class="n">is_close</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lateral</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span> <span class="ow">and</span> \
-            <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">longitudinal</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">VEHICLE_LENGTH</span>
+        <span class="n">is_close</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lateral</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">longitudinal</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">VEHICLE_LENGTH</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">is_close</span></div>
 
 
-    <span class="k">def</span> <span class="nf">after_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">after_end</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">longitudinal</span><span class="p">:</span>
             <span class="n">longitudinal</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">longitudinal</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">VEHICLE_LENGTH</span> <span class="o">/</span> <span class="mi">2</span>
@@ -442,13 +453,18 @@
 
 <div class="viewcode-block" id="AbstractLane.distance_with_heading">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.distance_with_heading">[docs]</a>
-    <span class="k">def</span> <span class="nf">distance_with_heading</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">heading</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">heading_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">distance_with_heading</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">heading</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">heading_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a weighted distance in position and heading to the lane.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">heading</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="n">s</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_angle</span><span class="p">(</span><span class="n">heading</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
-        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">heading_weight</span><span class="o">*</span><span class="n">angle</span></div>
+        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">heading_weight</span> <span class="o">*</span> <span class="n">angle</span></div>
 
 
 <div class="viewcode-block" id="AbstractLane.local_angle">
@@ -479,14 +495,16 @@
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A lane going in straight line.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">start</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
-                 <span class="n">end</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
-                 <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">AbstractLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">,</span>
-                 <span class="n">line_types</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">LineType</span><span class="p">,</span> <span class="n">LineType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">forbidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-                 <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">AbstractLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">,</span>
+        <span class="n">line_types</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">LineType</span><span class="p">,</span> <span class="n">LineType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">forbidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        New straight lane.</span>
 
@@ -500,7 +518,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">heading</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heading</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">line_types</span> <span class="o">=</span> <span class="n">line_types</span> <span class="ow">or</span> <span class="p">[</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span>
@@ -512,7 +532,11 @@
 <div class="viewcode-block" id="StraightLane.position">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.StraightLane.position">[docs]</a>
     <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">longitudinal</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">+</span> <span class="n">lateral</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction_lateral</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
+            <span class="o">+</span> <span class="n">longitudinal</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
+            <span class="o">+</span> <span class="n">lateral</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction_lateral</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="StraightLane.heading_at">
@@ -557,8 +581,8 @@
                 <span class="s2">&quot;line_types&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_types</span><span class="p">,</span>
                 <span class="s2">&quot;forbidden&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">forbidden</span><span class="p">,</span>
                 <span class="s2">&quot;speed_limit&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span><span class="p">,</span>
-                <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span>
-            <span class="p">}</span>
+                <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span><span class="p">,</span>
+            <span class="p">},</span>
         <span class="p">}</span></div>
 </div>
 
@@ -570,17 +594,19 @@
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A sinusoidal lane.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">start</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
-                 <span class="n">end</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
-                 <span class="n">amplitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">pulsation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">phase</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">,</span>
-                 <span class="n">line_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LineType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">forbidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-                 <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+        <span class="n">amplitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">pulsation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">phase</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">,</span>
+        <span class="n">line_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LineType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">forbidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        New sinusoidal lane.</span>
 
@@ -590,7 +616,9 @@
 <span class="sd">        :param pulsation: the lane pulsation [rad/m]</span>
 <span class="sd">        :param phase: the lane initial phase [rad]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span>  <span class="n">width</span><span class="p">,</span> <span class="n">line_types</span><span class="p">,</span> <span class="n">forbidden</span><span class="p">,</span> <span class="n">speed_limit</span><span class="p">,</span> <span class="n">priority</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">line_types</span><span class="p">,</span> <span class="n">forbidden</span><span class="p">,</span> <span class="n">speed_limit</span><span class="p">,</span> <span class="n">priority</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">amplitude</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">=</span> <span class="n">pulsation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">phase</span>
@@ -598,22 +626,30 @@
 <div class="viewcode-block" id="SineLane.position">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.position">[docs]</a>
     <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">,</span>
-                                <span class="n">lateral</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">position</span><span class="p">(</span>
+            <span class="n">longitudinal</span><span class="p">,</span>
+            <span class="n">lateral</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">),</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SineLane.heading_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.heading_at">[docs]</a>
     <span class="k">def</span> <span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span>
+            <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SineLane.local_coordinates">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.local_coordinates">[docs]</a>
     <span class="k">def</span> <span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SineLane.from_config">
@@ -629,14 +665,18 @@
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.to_config">[docs]</a>
     <span class="k">def</span> <span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to_config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-            <span class="s2">&quot;class_path&quot;</span><span class="p">:</span> <span class="n">get_class_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">),</span>
-        <span class="p">})</span>
-        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-            <span class="s2">&quot;amplitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span>
-            <span class="s2">&quot;pulsation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span><span class="p">,</span>
-            <span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span>
-        <span class="p">})</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;class_path&quot;</span><span class="p">:</span> <span class="n">get_class_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;amplitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span>
+                <span class="s2">&quot;pulsation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span><span class="p">,</span>
+                <span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
 </div>
 
@@ -648,17 +688,19 @@
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A lane going in circle arc.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">center</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
-                 <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">start_phase</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">end_phase</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">clockwise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">AbstractLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">,</span>
-                 <span class="n">line_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LineType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">forbidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-                 <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">center</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
+        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">start_phase</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">end_phase</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">clockwise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">AbstractLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">,</span>
+        <span class="n">line_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LineType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">forbidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
@@ -669,7 +711,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">line_types</span> <span class="o">=</span> <span class="n">line_types</span> <span class="ow">or</span> <span class="p">[</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">forbidden</span> <span class="o">=</span> <span class="n">forbidden</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">radius</span><span class="o">*</span><span class="p">(</span><span class="n">end_phase</span> <span class="o">-</span> <span class="n">start_phase</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="p">(</span><span class="n">end_phase</span> <span class="o">-</span> <span class="n">start_phase</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priority</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="n">speed_limit</span>
 
@@ -677,14 +719,16 @@
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane.position">[docs]</a>
     <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">-</span> <span class="n">lateral</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)])</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">-</span> <span class="n">lateral</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)]</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CircularLane.heading_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane.heading_at">[docs]</a>
     <span class="k">def</span> <span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span>
-        <span class="n">psi</span> <span class="o">=</span> <span class="n">phi</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
+        <span class="n">psi</span> <span class="o">=</span> <span class="n">phi</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
         <span class="k">return</span> <span class="n">psi</span></div>
 
 
@@ -701,8 +745,8 @@
         <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">delta</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">delta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span> <span class="o">+</span> <span class="n">utils</span><span class="o">.</span><span class="n">wrap_to_pi</span><span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
-        <span class="n">longitudinal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">*</span><span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
-        <span class="n">lateral</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span>
+        <span class="n">longitudinal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">*</span> <span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+        <span class="n">lateral</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span></div>
 
 
@@ -729,8 +773,8 @@
                 <span class="s2">&quot;line_types&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_types</span><span class="p">,</span>
                 <span class="s2">&quot;forbidden&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">forbidden</span><span class="p">,</span>
                 <span class="s2">&quot;speed_limit&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span><span class="p">,</span>
-                <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span>
-            <span class="p">}</span>
+                <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span><span class="p">,</span>
+            <span class="p">},</span>
         <span class="p">}</span></div>
 </div>
 
