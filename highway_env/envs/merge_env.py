@@ -4,7 +4,7 @@ import numpy as np
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
-from highway_env.road.lane import LineType, StraightLane, SineLane
+from highway_env.road.lane import LineType, SineLane, StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.objects import Obstacle
@@ -23,14 +23,16 @@ class MergeEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         cfg = super().default_config()
-        cfg.update({
-            "collision_reward": -1,
-            "right_lane_reward": 0.1,
-            "high_speed_reward": 0.2,
-            "reward_speed_range": [20, 30],
-            "merging_speed_reward": -0.5,
-            "lane_change_reward": -0.05,
-        })
+        cfg.update(
+            {
+                "collision_reward": -1,
+                "right_lane_reward": 0.1,
+                "high_speed_reward": 0.2,
+                "reward_speed_range": [20, 30],
+                "merging_speed_reward": -0.5,
+                "lane_change_reward": -0.05,
+            }
+        )
         return cfg
 
     def _reward(self, action: int) -> float:
@@ -42,14 +44,23 @@ class MergeEnv(AbstractEnv):
         :param action: the action performed
         :return: the reward of the state-action transition
         """
-        reward = sum(self.config.get(name, 0) * reward for name, reward in self._rewards(action).items())
-        return utils.lmap(reward,
-                          [self.config["collision_reward"] + self.config["merging_speed_reward"],
-                           self.config["high_speed_reward"] + self.config["right_lane_reward"]],
-                          [0, 1])
+        reward = sum(
+            self.config.get(name, 0) * reward
+            for name, reward in self._rewards(action).items()
+        )
+        return utils.lmap(
+            reward,
+            [
+                self.config["collision_reward"] + self.config["merging_speed_reward"],
+                self.config["high_speed_reward"] + self.config["right_lane_reward"],
+            ],
+            [0, 1],
+        )
 
     def _rewards(self, action: int) -> Dict[Text, float]:
-        scaled_speed = utils.lmap(self.vehicle.speed, self.config["reward_speed_range"], [0, 1])
+        scaled_speed = utils.lmap(
+            self.vehicle.speed, self.config["reward_speed_range"], [0, 1]
+        )
         return {
             "collision_reward": self.vehicle.crashed,
             "right_lane_reward": self.vehicle.lane_index[2] / 1,
@@ -58,14 +69,15 @@ class MergeEnv(AbstractEnv):
             "merging_speed_reward": sum(  # Altruistic penalty
                 (vehicle.target_speed - vehicle.speed) / vehicle.target_speed
                 for vehicle in self.road.vehicles
-                if vehicle.lane_index == ("b", "c", 2) and isinstance(vehicle, ControlledVehicle)
-            )
+                if vehicle.lane_index == ("b", "c", 2)
+                and isinstance(vehicle, ControlledVehicle)
+            ),
         }
 
     def _is_terminated(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
         print("crash" + str(self.vehicle.crashed))
-        print("over"  + str(self.vehicle.position[0] > 370))
+        print("over" + str(self.vehicle.position[0] > 370))
         return self.vehicle.crashed or bool(self.vehicle.position[0] > 370)
 
     def _is_truncated(self) -> bool:
@@ -90,21 +102,56 @@ class MergeEnv(AbstractEnv):
         line_type = [[c, s], [n, c]]
         line_type_merge = [[c, s], [n, s]]
         for i in range(2):
-            net.add_lane("a", "b", StraightLane([0, y[i]], [sum(ends[:2]), y[i]], line_types=line_type[i]))
-            net.add_lane("b", "c", StraightLane([sum(ends[:2]), y[i]], [sum(ends[:3]), y[i]], line_types=line_type_merge[i]))
-            net.add_lane("c", "d", StraightLane([sum(ends[:3]), y[i]], [sum(ends), y[i]], line_types=line_type[i]))
+            net.add_lane(
+                "a",
+                "b",
+                StraightLane([0, y[i]], [sum(ends[:2]), y[i]], line_types=line_type[i]),
+            )
+            net.add_lane(
+                "b",
+                "c",
+                StraightLane(
+                    [sum(ends[:2]), y[i]],
+                    [sum(ends[:3]), y[i]],
+                    line_types=line_type_merge[i],
+                ),
+            )
+            net.add_lane(
+                "c",
+                "d",
+                StraightLane(
+                    [sum(ends[:3]), y[i]], [sum(ends), y[i]], line_types=line_type[i]
+                ),
+            )
 
         # Merging lane
         amplitude = 3.25
-        ljk = StraightLane([0, 6.5 + 4 + 4], [ends[0], 6.5 + 4 + 4], line_types=[c, c], forbidden=True)
-        lkb = SineLane(ljk.position(ends[0], -amplitude), ljk.position(sum(ends[:2]), -amplitude),
-                       amplitude, 2 * np.pi / (2*ends[1]), np.pi / 2, line_types=[c, c], forbidden=True)
-        lbc = StraightLane(lkb.position(ends[1], 0), lkb.position(ends[1], 0) + [ends[2], 0],
-                           line_types=[n, c], forbidden=True)
+        ljk = StraightLane(
+            [0, 6.5 + 4 + 4], [ends[0], 6.5 + 4 + 4], line_types=[c, c], forbidden=True
+        )
+        lkb = SineLane(
+            ljk.position(ends[0], -amplitude),
+            ljk.position(sum(ends[:2]), -amplitude),
+            amplitude,
+            2 * np.pi / (2 * ends[1]),
+            np.pi / 2,
+            line_types=[c, c],
+            forbidden=True,
+        )
+        lbc = StraightLane(
+            lkb.position(ends[1], 0),
+            lkb.position(ends[1], 0) + [ends[2], 0],
+            line_types=[n, c],
+            forbidden=True,
+        )
         net.add_lane("j", "k", ljk)
         net.add_lane("k", "b", lkb)
         net.add_lane("b", "c", lbc)
-        road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
+        road = Road(
+            network=net,
+            np_random=self.np_random,
+            record_history=self.config["show_trajectories"],
+        )
         road.objects.append(Obstacle(road, lbc.position(ends[2], 0)))
         self.road = road
 
@@ -115,9 +162,9 @@ class MergeEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         road = self.road
-        ego_vehicle = self.action_type.vehicle_class(road,
-                                                     road.network.get_lane(("a", "b", 1)).position(30, 0),
-                                                     speed=30)
+        ego_vehicle = self.action_type.vehicle_class(
+            road, road.network.get_lane(("a", "b", 1)).position(30, 0), speed=30
+        )
         road.vehicles.append(ego_vehicle)
 
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
@@ -128,7 +175,9 @@ class MergeEnv(AbstractEnv):
             speed += self.np_random.uniform(-1, 1)
             road.vehicles.append(other_vehicles_type(road, position, speed=speed))
 
-        merging_v = other_vehicles_type(road, road.network.get_lane(("j", "k", 0)).position(110, 0), speed=20)
+        merging_v = other_vehicles_type(
+            road, road.network.get_lane(("j", "k", 0)).position(110, 0), speed=20
+        )
         merging_v.target_speed = 30
         road.vehicles.append(merging_v)
         self.vehicle = ego_vehicle

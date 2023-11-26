@@ -1,19 +1,18 @@
 import copy
 import os
-from typing import List, Tuple, Optional, Callable, TypeVar, Generic, Union, Dict, Text
+from typing import Dict, List, Optional, Text, Tuple, TypeVar
+
 import gymnasium as gym
+import numpy as np
 from gymnasium import Wrapper
 from gymnasium.wrappers import RecordVideo
-from gymnasium.utils import seeding
-import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.action import action_factory, Action, DiscreteMetaAction, ActionType
-from highway_env.envs.common.observation import observation_factory, ObservationType
+from highway_env.envs.common.action import Action, ActionType, action_factory
 from highway_env.envs.common.finite_mdp import finite_mdp
 from highway_env.envs.common.graphics import EnvViewer
-from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
-from highway_env.vehicle.controller import MDPVehicle
+from highway_env.envs.common.observation import ObservationType, observation_factory
+from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
 Observation = TypeVar("Observation")
@@ -28,11 +27,12 @@ class AbstractEnv(gym.Env):
     speed. The action space is fixed, but the observation space and reward function must be defined in the
     environment implementations.
     """
+
     observation_type: ObservationType
     action_type: ActionType
     _record_video_wrapper: Optional[RecordVideo]
     metadata = {
-        'render_modes': ['human', 'rgb_array'],
+        "render_modes": ["human", "rgb_array"],
     }
 
     PERCEPTION_DISTANCE = 5.0 * Vehicle.MAX_SPEED
@@ -89,12 +89,8 @@ class AbstractEnv(gym.Env):
         :return: a configuration dict
         """
         return {
-            "observation": {
-                "type": "Kinematics"
-            },
-            "action": {
-                "type": "DiscreteMetaAction"
-            },
+            "observation": {"type": "Kinematics"},
+            "action": {"type": "DiscreteMetaAction"},
             "simulation_frequency": 15,  # [Hz]
             "policy_frequency": 1,  # [Hz]
             "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
@@ -106,7 +102,7 @@ class AbstractEnv(gym.Env):
             "render_agent": True,
             "offscreen_rendering": os.environ.get("OFFSCREEN_RENDERING", "0") == "1",
             "manual_control": False,
-            "real_time_rendering": False
+            "real_time_rendering": False,
         }
 
     def configure(self, config: dict) -> None:
@@ -114,9 +110,12 @@ class AbstractEnv(gym.Env):
             self.config.update(config)
 
     def update_metadata(self, video_real_time_ratio=2):
-        frames_freq = self.config["simulation_frequency"] \
-            if self._record_video_wrapper else self.config["policy_frequency"]
-        self.metadata['render_fps'] = video_real_time_ratio * frames_freq
+        frames_freq = (
+            self.config["simulation_frequency"]
+            if self._record_video_wrapper
+            else self.config["policy_frequency"]
+        )
+        self.metadata["render_fps"] = video_real_time_ratio * frames_freq
 
     def define_spaces(self) -> None:
         """
@@ -183,10 +182,11 @@ class AbstractEnv(gym.Env):
             pass
         return info
 
-    def reset(self,
-              *,
-              seed: Optional[int] = None,
-              options: Optional[dict] = None,
+    def reset(
+        self,
+        *,
+        seed: Optional[int] = None,
+        options: Optional[dict] = None,
     ) -> Tuple[Observation, dict]:
         """
         Reset the environment to it's initial configuration
@@ -206,7 +206,7 @@ class AbstractEnv(gym.Env):
         self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
         obs = self.observation_type.observe()
         info = self._info(obs, action=self.action_space.sample())
-        if self.render_mode == 'human':
+        if self.render_mode == "human":
             self.render()
         return obs, info
 
@@ -229,7 +229,9 @@ class AbstractEnv(gym.Env):
         :return: a tuple (observation, reward, terminated, truncated, info)
         """
         if self.road is None or self.vehicle is None:
-            raise NotImplementedError("The road and vehicle must be initialized in the environment implementation")
+            raise NotImplementedError(
+                "The road and vehicle must be initialized in the environment implementation"
+            )
 
         self.time += 1 / self.config["policy_frequency"]
         self._simulate(action)
@@ -239,19 +241,28 @@ class AbstractEnv(gym.Env):
         terminated = self._is_terminated()
         truncated = self._is_truncated()
         info = self._info(obs, action)
-        if self.render_mode == 'human':
+        if self.render_mode == "human":
             self.render()
 
         return obs, reward, terminated, truncated, info
 
     def _simulate(self, action: Optional[Action] = None) -> None:
         """Perform several steps of simulation with constant action."""
-        frames = int(self.config["simulation_frequency"] // self.config["policy_frequency"])
+        frames = int(
+            self.config["simulation_frequency"] // self.config["policy_frequency"]
+        )
         for frame in range(frames):
             # Forward action to the vehicle
-            if action is not None \
-                    and not self.config["manual_control"] \
-                    and self.steps % int(self.config["simulation_frequency"] // self.config["policy_frequency"]) == 0:
+            if (
+                action is not None
+                and not self.config["manual_control"]
+                and self.steps
+                % int(
+                    self.config["simulation_frequency"]
+                    // self.config["policy_frequency"]
+                )
+                == 0
+            ):
                 self.action_type.act(action)
 
             self.road.act()
@@ -260,7 +271,9 @@ class AbstractEnv(gym.Env):
 
             # Automatically render intermediate simulation steps if a viewer has been launched
             # Ignored if the rendering is done offscreen
-            if frame < frames - 1:  # Last frame will be rendered through env.render() as usual
+            if (
+                frame < frames - 1
+            ):  # Last frame will be rendered through env.render() as usual
                 self._automatic_rendering()
 
         self.enable_auto_render = False
@@ -288,7 +301,7 @@ class AbstractEnv(gym.Env):
 
         if not self.viewer.offscreen:
             self.viewer.handle_events()
-        if self.render_mode == 'rgb_array':
+        if self.render_mode == "rgb_array":
             image = self.viewer.get_image()
             return image
 
@@ -318,13 +331,12 @@ class AbstractEnv(gym.Env):
         If a RecordVideo wrapper has been set, use it to capture intermediate frames.
         """
         if self.viewer is not None and self.enable_auto_render:
-
             if self._record_video_wrapper and self._record_video_wrapper.video_recorder:
                 self._record_video_wrapper.video_recorder.capture_frame()
             else:
                 self.render()
 
-    def simplify(self) -> 'AbstractEnv':
+    def simplify(self) -> "AbstractEnv":
         """
         Return a simplified copy of the environment where distant vehicles have been removed from the road.
 
@@ -333,12 +345,15 @@ class AbstractEnv(gym.Env):
         :return: a simplified environment state
         """
         state_copy = copy.deepcopy(self)
-        state_copy.road.vehicles = [state_copy.vehicle] + state_copy.road.close_vehicles_to(
-            state_copy.vehicle, self.PERCEPTION_DISTANCE)
+        state_copy.road.vehicles = [
+            state_copy.vehicle
+        ] + state_copy.road.close_vehicles_to(
+            state_copy.vehicle, self.PERCEPTION_DISTANCE
+        )
 
         return state_copy
 
-    def change_vehicles(self, vehicle_class_path: str) -> 'AbstractEnv':
+    def change_vehicles(self, vehicle_class_path: str) -> "AbstractEnv":
         """
         Change the type of all vehicles on the road
 
@@ -355,7 +370,7 @@ class AbstractEnv(gym.Env):
                 vehicles[i] = vehicle_class.create_from(v)
         return env_copy
 
-    def set_preferred_lane(self, preferred_lane: int = None) -> 'AbstractEnv':
+    def set_preferred_lane(self, preferred_lane: int = None) -> "AbstractEnv":
         env_copy = copy.deepcopy(self)
         if preferred_lane:
             for v in env_copy.road.vehicles:
@@ -365,14 +380,14 @@ class AbstractEnv(gym.Env):
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
 
-    def set_route_at_intersection(self, _to: str) -> 'AbstractEnv':
+    def set_route_at_intersection(self, _to: str) -> "AbstractEnv":
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
             if isinstance(v, IDMVehicle):
                 v.set_route_at_intersection(_to)
         return env_copy
 
-    def set_vehicle_field(self, args: Tuple[str, object]) -> 'AbstractEnv':
+    def set_vehicle_field(self, args: Tuple[str, object]) -> "AbstractEnv":
         field, value = args
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
@@ -380,7 +395,7 @@ class AbstractEnv(gym.Env):
                 setattr(v, field, value)
         return env_copy
 
-    def call_vehicle_method(self, args: Tuple[str, Tuple[object]]) -> 'AbstractEnv':
+    def call_vehicle_method(self, args: Tuple[str, Tuple[object]]) -> "AbstractEnv":
         method, method_args = args
         env_copy = copy.deepcopy(self)
         for i, v in enumerate(env_copy.road.vehicles):
@@ -388,7 +403,7 @@ class AbstractEnv(gym.Env):
                 env_copy.road.vehicles[i] = getattr(v, method)(*method_args)
         return env_copy
 
-    def randomize_behavior(self) -> 'AbstractEnv':
+    def randomize_behavior(self) -> "AbstractEnv":
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
             if isinstance(v, IDMVehicle):
@@ -396,7 +411,7 @@ class AbstractEnv(gym.Env):
         return env_copy
 
     def to_finite_mdp(self):
-        return finite_mdp(self, time_quantization=1/self.config["policy_frequency"])
+        return finite_mdp(self, time_quantization=1 / self.config["policy_frequency"])
 
     def __deepcopy__(self, memo):
         """Perform a deep copy but without copying the environment viewer."""
@@ -404,7 +419,7 @@ class AbstractEnv(gym.Env):
         result = cls.__new__(cls)
         memo[id(self)] = result
         for k, v in self.__dict__.items():
-            if k not in ['viewer', '_record_video_wrapper']:
+            if k not in ["viewer", "_record_video_wrapper"]:
                 setattr(result, k, copy.deepcopy(v, memo))
             else:
                 setattr(result, k, None)
