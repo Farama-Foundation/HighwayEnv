@@ -166,6 +166,10 @@ while not (done or truncated):
 
 Read the [documentation online](https://farama-foundation.github.io/HighwayEnv/).
 
+## Development Roadmap
+
+Here is the [roadmap](https://github.com/Farama-Foundation/HighwayEnv/issues/539) for future development work.
+
 ## Citing
 
 If you use the project in your work, please consider citing it with:
