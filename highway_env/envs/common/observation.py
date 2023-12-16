@@ -392,10 +392,10 @@ class OccupancyGridObservation(ObservationType):
                             )
                         cell = self.pos_to_index((x, y), relative=not self.absolute)
                         if (
-                            0 <= cell[1] < self.grid.shape[-2]
-                            and 0 <= cell[0] < self.grid.shape[-1]
+                            0 <= cell[0] < self.grid.shape[-2]
+                            and 0 <= cell[1] < self.grid.shape[-1]
                         ):
-                            self.grid[layer, cell[1], cell[0]] = vehicle[feature]
+                            self.grid[layer, cell[0], cell[1]] = vehicle[feature]
                 elif feature == "on_road":
                     self.fill_road_layer_by_lanes(layer)
 
@@ -428,17 +428,19 @@ class OccupancyGridObservation(ObservationType):
                 self.observer_vehicle.heading
             )
             position = np.array([[c, s], [-s, c]]) @ position
-        return int(
-            np.floor((position[0] - self.grid_size[0, 0]) / self.grid_step[0])
-        ), int(np.floor((position[1] - self.grid_size[1, 0]) / self.grid_step[1]))
+        return (
+            int(np.floor((position[0] - self.grid_size[0, 0]) / self.grid_step[0])),
+            int(np.floor((position[1] - self.grid_size[1, 0]) / self.grid_step[1])),
+        )
 
     def index_to_pos(self, index: Tuple[int, int]) -> np.ndarray:
         position = np.array(
             [
-                (index[1] + 0.5) * self.grid_step[0] + self.grid_size[0, 0],
-                (index[0] + 0.5) * self.grid_step[1] + self.grid_size[1, 0],
+                (index[0] + 0.5) * self.grid_step[0] + self.grid_size[0, 0],
+                (index[1] + 0.5) * self.grid_step[1] + self.grid_size[1, 0],
             ]
         )
+
         if self.align_to_vehicle_axes:
             c, s = np.cos(-self.observer_vehicle.heading), np.sin(
                 -self.observer_vehicle.heading
@@ -475,10 +477,10 @@ class OccupancyGridObservation(ObservationType):
                     for waypoint in waypoints:
                         cell = self.pos_to_index(lane.position(waypoint, 0))
                         if (
-                            0 <= cell[1] < self.grid.shape[-2]
-                            and 0 <= cell[0] < self.grid.shape[-1]
+                            0 <= cell[0] < self.grid.shape[-2]
+                            and 0 <= cell[1] < self.grid.shape[-1]
                         ):
-                            self.grid[layer_index, cell[1], cell[0]] = 1
+                            self.grid[layer_index, cell[0], cell[1]] = 1
 
     def fill_road_layer_by_cell(self, layer_index) -> None:
         """
