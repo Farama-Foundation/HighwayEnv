@@ -137,7 +137,7 @@ class Vehicle(RoadObject):
 
         :param dt: timestep of integration of the model [s]
         """
-        self.clip_actions()
+        self.clip_actions(dt)
         delta_f = self.action["steering"]
         beta = np.arctan(1 / 2 * np.tan(delta_f))
         v = self.speed * np.array(
@@ -152,20 +152,23 @@ class Vehicle(RoadObject):
         self.speed += self.action["acceleration"] * dt
         self.on_state_update()
 
-    def clip_actions(self) -> None:
+    def clip_actions(self, dt: float) -> None:
+        """
+        1. Modify action if action would make vehicle state outside of its operation range. 
+        2. Handle acceleration when crashed (speed is set to 0 immediately)
+        
+        :param dt: timestep of integration of the model [s]
+        """
         if self.crashed:
             self.action["steering"] = 0
-            self.action["acceleration"] = -1.0 * self.speed
+            self.action["acceleration"] = -1.0 * self.speed/dt
         self.action["steering"] = float(self.action["steering"])
         self.action["acceleration"] = float(self.action["acceleration"])
-        if self.speed > self.MAX_SPEED:
-            self.action["acceleration"] = min(
-                self.action["acceleration"], 1.0 * (self.MAX_SPEED - self.speed)
-            )
-        elif self.speed < self.MIN_SPEED:
-            self.action["acceleration"] = max(
-                self.action["acceleration"], 1.0 * (self.MIN_SPEED - self.speed)
-            )
+        # change acceleration if current action would make speed outside operation range
+        if self.speed + self.action["acceleration"] * dt > self.MAX_SPEED:
+            self.action["acceleration"] = (self.MAX_SPEED - self.speed) / dt
+        elif self.speed + self.action["acceleration"] * dt < self.MIN_SPEED:
+            self.action["acceleration"] = (self.MIN_SPEED - self.speed) / dt
 
     def on_state_update(self) -> None:
         if self.road:
