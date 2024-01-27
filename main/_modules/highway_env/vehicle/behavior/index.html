@@ -779,7 +779,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="n">vt</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">dp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">ego_vehicle</span><span class="p">:</span>
-            <span class="n">vt</span> <span class="o">=</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">-</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span>
+            <span class="n">vt</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="p">,</span> <span class="s2">&quot;target_speed&quot;</span><span class="p">,</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+                <span class="o">-</span> <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span>
+            <span class="p">)</span>
             <span class="n">d_safe</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">DISTANCE_WANTED</span>
                 <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">TIME_WANTED</span>
