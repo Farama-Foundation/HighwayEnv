@@ -451,7 +451,7 @@ class LinearVehicle(IDMVehicle):
     ) -> np.ndarray:
         vt, dv, dp = 0, 0, 0
         if ego_vehicle:
-            vt = ego_vehicle.target_speed - ego_vehicle.speed
+            vt = getattr(ego_vehicle, "target_speed", ego_vehicle.speed) - ego_vehicle.speed
             d_safe = (
                 self.DISTANCE_WANTED
                 + np.maximum(ego_vehicle.speed, 0) * self.TIME_WANTED
