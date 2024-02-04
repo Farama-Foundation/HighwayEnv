@@ -6,7 +6,7 @@ import highway_env  # noqa: F401
 
 
 def train_env():
-    env = gym.make("highway-fast-v0")
+    env = gym.make("highway-fast-v0", render_mode="rgb_array")
     env.configure(
         {
             "observation": {
