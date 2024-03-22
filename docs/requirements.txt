@@ -1,16 +1,8 @@
-pygments==2.4.1
-sphinx_rtd_theme
-sphinxcontrib-bibtex<2.0.0
-# jupyter-sphinx
-git+git://github.com/eleurent/jupyter-sphinx@master#egg=jupyter-sphinx
-gym
-numpy
-pygame
-matplotlib
-pandas
-
-# =========
-# Optionals
-# =========
-pytest
-scipy
+sphinx
+sphinx-autobuild
+myst-parser
+git+https://github.com/Farama-Foundation/Celshast#egg=furo
+sphinx_github_changelog
+sphinxcontrib-bibtex
+ipykernel
+jupyter-sphinx

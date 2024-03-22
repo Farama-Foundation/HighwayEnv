@@ -1,6 +1,7 @@
+from typing import List, Tuple
+
 import numpy as np
 from scipy import interpolate
-from typing import List, Tuple
 
 
 class LinearSpline2D:

@@ -1,13 +1,16 @@
-import pytest
 import timeit
-import gym
+
+import gymnasium as gym
 
 import highway_env
+
+highway_env.register_highway_envs()
 
 
 def wrapper(func, *args, **kwargs):
     def wrapped():
         return func(*args, **kwargs)
+
     return wrapped
 
 
@@ -15,8 +18,8 @@ def time_env(env_name, steps=20):
     env = gym.make(env_name)
     env.reset()
     for _ in range(steps):
-        _, _, done, _ = env.step(env.action_space.sample())
-        env.reset() if done else _
+        _, _, done, truncated, _ = env.step(env.action_space.sample())
+        env.reset() if done or truncated else _
     env.close()
 
 
@@ -24,7 +27,7 @@ def test_running_time(repeat=1):
     for env_name, steps in [
         ("highway-v0", 10),
         ("highway-fast-v0", 10),
-        ("parking-v0", 20)
+        ("parking-v0", 20),
     ]:
         env_time = wrapper(time_env, env_name, steps)
         time_spent = timeit.timeit(env_time, number=repeat) / repeat

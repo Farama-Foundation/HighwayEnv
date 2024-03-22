@@ -4,6 +4,8 @@ This page contains example notebooks to train RL agents on `highway-env` using s
 
 ## Using [Stable Baselines3](https://github.com/DLR-RM/stable-baselines3)
 
+> :warning: **Stable Baselines3 does not currently support `gymnasium`**. As of now, these notebooks are only compatible with previous versions of highway-env, such as `highway-env==1.5`
+
 ### Highway with DQN [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn.ipynb)
 
 Train a `highway-v0` policy with DQN.

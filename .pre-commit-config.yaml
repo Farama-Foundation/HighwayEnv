@@ -1,0 +1,24 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args:
+          - '--per-file-ignores=**/__init__.py:F401,F403,E402'
+          - --ignore=E203,W503,E741,E731
+          - --max-complexity=30
+          - --max-line-length=456
+          - --show-source
+          - --statistics
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+        exclude: "__init__.py"
+  - repo: https://github.com/python/black
+    rev: 23.3.0
+    hooks:
+      - id: black

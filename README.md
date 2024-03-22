@@ -1,14 +1,13 @@
 # highway-env
 
 [![build](https://github.com/eleurent/highway-env/workflows/build/badge.svg)](https://github.com/eleurent/highway-env/actions?query=workflow%3Abuild)
-[![Documentation Status](https://readthedocs.org/projects/highway-env/badge/?version=latest)](https://highway-env.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://github.com/Farama-Foundation/HighwayEnv/actions/workflows/build-docs-dev.yml/badge.svg)](https://farama-foundation.github.io/HighwayEnv/)
 [![Downloads](https://img.shields.io/pypi/dm/highway-env)](https://pypi.org/project/highway-env/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/63847d9328f64fce9c137b03fcafcc27)](https://app.codacy.com/manual/eleurent/highway-env?utm_source=github.com&utm_medium=referral&utm_content=eleurent/highway-env&utm_campaign=Badge_Grade_Dashboard)
-[![Coverage](https://codecov.io/gh/eleurent/highway-env/branch/master/graph/badge.svg)](https://codecov.io/gh/eleurent/highway-env)
 [![GitHub contributors](https://img.shields.io/github/contributors/eleurent/highway-env)](https://github.com/eleurent/highway-env/graphs/contributors)
-[![Environments](https://img.shields.io/github/search/eleurent/highway-env/import%20filename:*_env%20path:highway_env/envs?label=environments)](#the-environments)
 
-A collection of environments for *autonomous driving* and tactical decision-making tasks
+
+A collection of environments for *autonomous driving* and tactical decision-making tasks, developed and maintained by [Edouard Leurent](https://github.com/eleurent).
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/highway-env.gif?raw=true"><br/>
@@ -22,7 +21,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
 ### Highway
 
 ```python
-env = gym.make("highway-v0")
+env = gymnasium.make("highway-v0")
 ```
 
 In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles.
@@ -38,7 +37,7 @@ A faster variant, `highway-fast-v0` is also available, with a degraded simulatio
 ### Merge
 
 ```python
-env = gym.make("merge-v0")
+env = gymnasium.make("merge-v0")
 ```
 
 In this task, the ego-vehicle starts on a main highway but soon approaches a road junction with incoming vehicles on the access ramp. The agent's objective is now to maintain a high speed while making room for the vehicles so that they can safely merge in the traffic.
@@ -51,7 +50,7 @@ In this task, the ego-vehicle starts on a main highway but soon approaches a roa
 ### Roundabout
 
 ```python
-env = gym.make("roundabout-v0")
+env = gymnasium.make("roundabout-v0")
 ```
 
 In this task, the ego-vehicle if approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.
@@ -64,7 +63,7 @@ In this task, the ego-vehicle if approaching a roundabout with flowing traffic. 
 ### Parking
 
 ```python
-env = gym.make("parking-v0")
+env = gymnasium.make("parking-v0")
 ```
 
 A goal-conditioned continuous control task in which the ego-vehicle must park in a given space with the appropriate heading.
@@ -77,7 +76,7 @@ A goal-conditioned continuous control task in which the ego-vehicle must park in
 ### Intersection
 
 ```python
-env = gym.make("intersection-v0")
+env = gymnasium.make("intersection-v0")
 ```
 
 An intersection negotiation task with dense traffic.
@@ -90,7 +89,7 @@ An intersection negotiation task with dense traffic.
 ### Racetrack
 
 ```python
-env = gym.make("racetrack-v0")
+env = gymnasium.make("racetrack-v0")
 ```
 
 A continuous control task involving lane-keeping and obstacle avoidance.
@@ -105,7 +104,7 @@ A continuous control task involving lane-keeping and obstacle avoidance.
 
 Agents solving the `highway-env` environments are available in the [eleurent/rl-agents](https://github.com/eleurent/rl-agents) and [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) repositories.
 
-See the [documentation](https://highway-env.readthedocs.io/en/latest/quickstart.html#training-an-agent) for some examples and notebooks.
+See the [documentation](https://farama-foundation.github.io/HighwayEnv/quickstart/#training-an-agent) for some examples and notebooks.
 
 ### [Deep Q-Network](https://github.com/eleurent/rl-agents/tree/master/rl_agents/agents/deep_q_network)
 
@@ -152,21 +151,24 @@ This agent leverages a transition and reward models to perform a stochastic tree
 ## Usage
 
 ```python
-import gym
-import highway_env
+import gymnasium as gym
 
-env = gym.make("highway-v0")
+env = gym.make('highway-v0', render_mode='human')
 
-done = False
-while not done:
+obs, info = env.reset()
+done = truncated = False
+while not (done or truncated):
     action = ... # Your agent code here
-    obs, reward, done, info = env.step(action)
-    env.render()
+    obs, reward, done, truncated, info = env.step(action)
 ```
 
 ## Documentation
 
-Read the [documentation online](https://highway-env.readthedocs.io/).
+Read the [documentation online](https://farama-foundation.github.io/HighwayEnv/).
+
+## Development Roadmap
+
+Here is the [roadmap](https://github.com/Farama-Foundation/HighwayEnv/issues/539) for future development work.
 
 ## Citing
 
@@ -212,7 +214,17 @@ List of publications & preprints using `highway-env` (please open a pull request
 *   [Deep Multi-agent Reinforcement Learning for Highway On-Ramp Merging in Mixed Traffic](https://arxiv.org/abs/2105.05701) (May 2021)
 *   [Accelerated Policy Evaluation: Learning Adversarial Environments with Adaptive Importance Sampling](https://arxiv.org/abs/2106.10566) (Jun 2021)
 *   [Learning Interaction-aware Guidance Policies for Motion Planning in Dense Traffic Scenarios](https://arxiv.org/abs/2107.04538) (Jul 2021)
+*   [Automatic Overtaking on Two-way Roads with Vehicle Interactions Based on Proximal Policy Optimization](https://ieeexplore.ieee.org/abstract/document/9575954) (Jul 2021)
 *   [Robust Predictable Control](https://arxiv.org/abs/2109.03214) (Sep 2021)
+*   [Adapting Autonomous Agents for Automotive Driving Games](https://link.springer.com/chapter/10.1007/978-3-030-92182-8_10) (Nov 2021)
+*   [Improving Robustness of Deep Reinforcement Learning Agents: Environment Attack based on the Critic Network](https://ieeexplore.ieee.org/document/9892901) (Jul 2022)
+*   [Autonomous Highway Merging in Mixed Traffic Using Reinforcement Learning and Motion Predictive Safety Controller](https://ieeexplore.ieee.org/document/9921741) (Oct 2022)
+*   [High-Level Decision-Making Non-player Vehicles](https://link.springer.com/chapter/10.1007/978-3-031-22124-8_22) (Nov 2022)
+*   [Designing an Interpretability Analysis Framework for Deep Reinforcement Learning (DRL) Agents in Highway Automated Driving Simulation](https://link.springer.com/chapter/10.1007/978-3-031-26066-7_37) (Feb 2023)
+*   [Explaining a Deep Reinforcement Learning (DRL)-Based Automated Driving Agent in Highway Simulations](https://ieeexplore.ieee.org/document/10077125) (Mar 2023)
+*   [Investigating High-Level Decision Making for Automated Driving](https://link.springer.com/chapter/10.1007/978-3-031-30333-3_41) (Apr 2023)
+*   [Implementing Deep Reinforcement Learning (DRL)-based Driving Styles for Non-Player Vehicles](https://journal.seriousgamessociety.org/index.php/IJSG/article/view/638) (Nov 2023)
+*   [Investigating Adversarial Policy Learning for Robust Agents in Automated Driving Highway Simulations](https://link.springer.com/chapter/10.1007/978-3-031-48121-5_18) (Jan 2024)
 
 PhD theses
 *   [Reinforcement learning for Dialogue Systems optimization with user adaptation](https://hal.inria.fr/tel-02422691/) (2019)
@@ -222,5 +234,6 @@ PhD theses
 Master theses
 *   [Multi-Agent Reinforcement Learning with Application on Traffic Flow Control](https://www.diva-portal.org/smash/get/diva2:1573441/FULLTEXT01.pdf) (Jun 2021)
 *   [Deep Reinforcement Learning for Automated Parking](https://repositorio-aberto.up.pt/bitstream/10216/136074/2/494682.pdf) (Aug 2021)
+*   [Deep Reinforcement Learning and Imitation Learning for Autonomous Driving in a Minimalist Environment](https://www.academia.edu/107587654/Deep_Reinforcement_Learning_and_Imitation_Learning_for_Autonomous_Driving_in_a_Minimalist_Environment) (Jun 2021)
 
 
