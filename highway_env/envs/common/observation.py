@@ -216,9 +216,12 @@ class KinematicObservation(ObservationType):
                 [v.to_dict(origin, observe_intentions=self.observe_intentions)
                  for v in close_vehicles[-self.vehicles_count + 1:]])[self.features],
                            ignore_index=True)
+        print("Before normalization : " , df)
         # Normalize and clip
         if self.normalize:
             df = self.normalize_obs(df)
+        print("After normalization : " , df)
+
         # Fill missing rows
         if df.shape[0] < self.vehicles_count:
             rows = np.zeros((self.vehicles_count - df.shape[0], len(self.features)))
