@@ -379,31 +379,32 @@ class RacetrackEnv(AbstractEnv):
             self.controlled_vehicles.append(controlled_vehicle)
             self.road.vehicles.append(controlled_vehicle)
 
-        # Front vehicle
-        vehicle = IDMVehicle.make_on_lane(
-            self.road,
-            ("b", "c", lane_index[-1]),
-            longitudinal=rng.uniform(
-                low=0, high=self.road.network.get_lane(("b", "c", 0)).length
-            ),
-            speed=6 + rng.uniform(high=3),
-        )
-        self.road.vehicles.append(vehicle)
-
-        # Other vehicles
-        for i in range(rng.integers(self.config["other_vehicles"])):
-            random_lane_index = self.road.network.random_lane_index(rng)
+        if self.config["other_vehicles"] > 0:
+            # Front vehicle
             vehicle = IDMVehicle.make_on_lane(
                 self.road,
-                random_lane_index,
+                ("b", "c", lane_index[-1]),
                 longitudinal=rng.uniform(
-                    low=0, high=self.road.network.get_lane(random_lane_index).length
+                    low=0, high=self.road.network.get_lane(("b", "c", 0)).length
                 ),
                 speed=6 + rng.uniform(high=3),
             )
-            # Prevent early collisions
-            for v in self.road.vehicles:
-                if np.linalg.norm(vehicle.position - v.position) < 20:
-                    break
-            else:
-                self.road.vehicles.append(vehicle)
+            self.road.vehicles.append(vehicle)
+
+            # Other vehicles
+            for i in range(rng.integers(self.config["other_vehicles"])):
+                random_lane_index = self.road.network.random_lane_index(rng)
+                vehicle = IDMVehicle.make_on_lane(
+                    self.road,
+                    random_lane_index,
+                    longitudinal=rng.uniform(
+                        low=0, high=self.road.network.get_lane(random_lane_index).length
+                    ),
+                    speed=6 + rng.uniform(high=3),
+                )
+                # Prevent early collisions
+                for v in self.road.vehicles:
+                    if np.linalg.norm(vehicle.position - v.position) < 20:
+                        break
+                else:
+                    self.road.vehicles.append(vehicle)
