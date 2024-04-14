@@ -256,6 +256,8 @@ class BicycleVehicle(Vehicle):
         self.theta = [self.FRICTION_FRONT, self.FRICTION_REAR]
         A = A0 + np.tensordot(self.theta, phi, axes=[0, 0])
         return A, B
+    
+    def opt_ctl(self, t, state, spat_deriv) -> Tuple:
 
 
 def simulate(dt: float = 0.1) -> None:
