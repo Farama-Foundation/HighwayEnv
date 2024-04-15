@@ -6,7 +6,7 @@
 #compute the backwards reachable tube if not computed or call the backwards reachable tube
 # color the vehicles yellow if violating worst case BRT and orange if violating predictive BRT
 # include a parameter that you can toggle on to record the time it takes to compute the BRT
-
+from abc import ABC
 import imp
 import numpy as np
 from odp.Grid import Grid
@@ -19,6 +19,13 @@ from odp.Plots import PlotOptions
 from odp.Plots import plot_isosurface, plot_valuefunction
 # Solver core
 from odp.solver import HJSolver, computeSpatDerivArray
+from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.vehicle.dynamics import BicycleVehicle
 import math
 import os
+
+class BRTCalculator(ABC):
+    def __init__(self, env: AbstractEnv) -> None:
+        config_boundaries = env.config["observation"]["features_range"]
+        g = Grid(np.array([config_boundaries["x"][0], config_boundaries["y"][0], config_boundaries[3][0], 0]), np.array([config_boundaries["x"][1], config_boundaries["y"][1], config_boundaries[3][1], 2*np.pi]), [4], [40, 40, 40, 40], [])
+    
