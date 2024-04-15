@@ -46,6 +46,9 @@ class BicycleVehicle(Vehicle):
     MAX_ANGULAR_SPEED: float = 2 * np.pi  # [rad/s]
     MAX_SPEED: float = 15  # [m/s]
 
+    MAX_ACCELERATION: float = 5 # [m/s^2]
+    MAX_STEERING_ANGLE: float = np.pi / 4 # [rad]
+
     def __init__(
         self, road: Road, position: Vector, heading: float = 0, speed: float = 0
     ) -> None:
@@ -257,8 +260,28 @@ class BicycleVehicle(Vehicle):
         A = A0 + np.tensordot(self.theta, phi, axes=[0, 0])
         return A, B
     
-    def opt_ctl(self, t, state, spat_deriv) -> Tuple:
+    def opt_ctl(self, spat_deriv) -> np.ndarray:
+        
+        opt_a = self.MAX_ACCELERATION 
+        opt_steer = self.MAX_STEERING_ANGLE
 
+        if (spat_deriv[2] < 0):
+            opt_a = -opt_a
+        if (spat_deriv[3] < 0):
+            opt_steer = -opt_steer
+        
+        return np.array([opt_a, opt_steer])
+
+    def opt_conservative_dstb(self, spat_deriv) -> np.ndarray:
+        opt_a = -self.MAX_ACCELERATION 
+        opt_steer = -self.MAX_STEERING_ANGLE
+
+        if (spat_deriv[2] > 0):
+            opt_a = -opt_a
+        if (spat_deriv[3] > 0):
+            opt_steer = -opt_steer
+        
+        return np.array([opt_a, opt_steer])
 
 def simulate(dt: float = 0.1) -> None:
     import control
