@@ -46,9 +46,6 @@ class BicycleVehicle(Vehicle):
     MAX_ANGULAR_SPEED: float = 2 * np.pi  # [rad/s]
     MAX_SPEED: float = 15  # [m/s]
 
-    MAX_ACCELERATION: float = 5 # [m/s^2]
-    MAX_STEERING_ANGLE: float = np.pi / 4 # [rad]
-
     def __init__(
         self, road: Road, position: Vector, heading: float = 0, speed: float = 0
     ) -> None:
