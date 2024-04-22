@@ -39,6 +39,9 @@ class BRTCalculator(ABC):
         g = Grid(np.array([config_boundaries["x"][0], config_boundaries["y"][0], -2*np.pi, config_boundaries["vx"][0],  config_boundaries["vx"][0]]), np.array([config_boundaries["x"][1], config_boundaries["y"][1], 2*np.pi, config_boundaries["vx"][1], config_boundaries["vx"][1]]), [5], [40, 40, 40, 40, 40], [])
         self.obs_type = env.config["observation"]["type"]
         self.absolute = env.config["observation"]["absolute"]
+        self.conservative = conservative
+        self.last_obs = {}
+        self.dt = 1/env.config["simulation_frequency"]
         #self.features = env.config["observation"]["features"]
 
         # Failure set
@@ -72,6 +75,13 @@ class BRTCalculator(ABC):
         vehicle_info = []
         ego_info = []
         other_vehicles = 0
+
+        x_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=1, accuracy="low")
+        y_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=2, accuracy="low")
+        heading_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=3, accuracy="low")
+        v_r_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=4, accuracy="low")
+        v_h_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=5, accuracy="low")
+
         for i in range(len(obs)):
             if i == 0: 
                 ego_info = [obs[i][1], obs[i][2], obs[i][3], obs[i][4]]
@@ -82,6 +92,9 @@ class BRTCalculator(ABC):
         safety_violation = 0 
         for i in range(other_vehicles):
             if self.BRT_converged[vehicle_info[i][0]][vehicle_info[i][1]][vehicle_info[i][2]][vehicle_info[i][3]][vehicle_info[i][4]] <= 0:
+               # if not self.conservative and self.last_obs != {}:
+                #    old_action = [self.last_obs[],]
+                #else:
                 safety_violation = 1
         
         return safety_violation
@@ -114,12 +127,3 @@ class BRTCalculator(ABC):
             opt_ctl.append(self.sample_relative_system.optCtrl_inPython(spat_deriv_vector))
 
         return np.mean(opt_ctl, axis=0)
-        # Compute the optimal control
-        opt_a, opt_steer = self.sample_relative_system.optCtrl_inPython(spat_deriv_vector)
-        print("Optimal accel is {}\n".format(opt_a))
-        print("Optimal steering angle is  is {}\n".format(opt_steer))
-
-
-BRTCalculator()
-        
-    
