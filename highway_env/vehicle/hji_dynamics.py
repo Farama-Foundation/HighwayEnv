@@ -19,21 +19,26 @@ class HJIVehicle:
         opt_a = hcl.scalar(self.MAX_ACCELERATION, "opt_a")
         opt_steer = hcl.scalar(self.MAX_STEERING_ANGLE, "opt_steer")
         # Just create and pass back, even though they're not used
-        in3   = hcl.scalar(0, "in3")
+        in3 = hcl.scalar(0, "in3")
         in4 = hcl.scalar(0, "in4")
         in5 = hcl.scalar(0, "in5")
 
-        with hcl.if_(spat_deriv[2] > 0):
+        au_term = hcl.scalar(0,"au_term")
+        su_term = hcl.scalar(0, "su_term")
+        au_term[0] = spat_deriv[3]
+        su_term[0] = spat_deriv[2]
+
+        with hcl.if_(au_term >= 0):
             with hcl.if_(self.uMode == "min"):
                 opt_a[0] = -opt_a
-        with hcl.elif_(spat_deriv[2] < 0):
+        with hcl.elif_(au_term < 0):
             with hcl.if_(self.uMode == "max"):
                 opt_a[0] = -opt_a
         
-        with hcl.if_(spat_deriv[3] > 0):
+        with hcl.if_(su_term >= 0):
             with hcl.if_(self.uMode == "min"):
                 opt_steer[0] = -opt_steer
-        with hcl.elif_(spat_deriv[3] < 0):
+        with hcl.elif_(su_term < 0):
             with hcl.if_(self.uMode == "max"):
                 opt_steer[0] = -opt_steer
         return (opt_a[0], opt_steer[0], in3[0], in4[0], in5[0])
@@ -46,17 +51,22 @@ class HJIVehicle:
         in4 = hcl.scalar(0, "in4")
         in5 = hcl.scalar(0, "in5")
 
-        with hcl.if_(spat_deriv[2] > 0):
+        ad_term = hcl.scalar(0,"ad_term")
+        sd_term = hcl.scalar(0, "sd_term")
+        ad_term[0] = spat_deriv[4]
+        sd_term[0] = spat_deriv[2]
+
+        with hcl.if_(ad_term >= 0):
             with hcl.if_(self.dMode == "min"):
                 opt_a[0] = -opt_a
-        with hcl.elif_(spat_deriv[2] < 0):
+        with hcl.elif_(ad_term < 0):
             with hcl.if_(self.dMode == "max"):
                 opt_a[0] = -opt_a
         
-        with hcl.if_(spat_deriv[3] > 0):
+        with hcl.if_(sd_term >= 0):
             with hcl.if_(self.dMode == "min"):
                 opt_steer[0] = -opt_steer
-        with hcl.elif_(spat_deriv[3] < 0):
+        with hcl.elif_(sd_term < 0):
             with hcl.if_(self.dMode == "max"):
                 opt_steer[0] = -opt_steer
         return (opt_a[0], opt_steer[0], in3[0], in4[0], in5[0])

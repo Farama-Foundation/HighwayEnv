@@ -11,6 +11,7 @@ import imp
 import numpy as np
 from odp.Grid import Grid
 from odp.Shapes import *
+import pickle
 
 # Specify the  file that includes dynamic systems
 from highway_env.vehicle.hji_dynamics import HJIVehicle
@@ -39,15 +40,16 @@ class BRTCalculator(ABC):
 
         # g = Grid(grid_min, grid_max, dims, N, pd)
         grid_min = np.array([config_boundaries["x"][0], config_boundaries["y"][0], 
-                           -2*np.pi, config_boundaries["vx"][0],  
+                           -np.pi/2, config_boundaries["vx"][0],  
                            config_boundaries["vx"][0]]) 
         grid_max = np.array([config_boundaries["x"][1],
                             config_boundaries["y"][1], 
-                            2*np.pi, config_boundaries["vx"][1], 
+                            np.pi/2, config_boundaries["vx"][1], 
                             config_boundaries["vx"][1]])
         dims = np.array(5)
+        print(grid_min)
         N = np.array([40, 40, 40, 40, 40])
-        pd = []
+        pd = [2]
         g = Grid(grid_min, grid_max, dims, N, pd)
         self.obs_type = env.config["observation"]["type"]
         self.absolute = env.config["observation"]["absolute"]
@@ -57,7 +59,7 @@ class BRTCalculator(ABC):
         #self.features = env.config["observation"]["features"]
 
         # Failure set
-        l_x = CylinderShape(g, [2, 3, 4], np.zeros(5), 3.5) # radius in meters 
+        l_x = CylinderShape(g, [2, 3, 4], np.zeros(5), 4.0) # radius in meters 
 
         lookback_length = 2.0
         t_step = 0.05
@@ -68,11 +70,15 @@ class BRTCalculator(ABC):
         tau = np.arange(start=0, stop=lookback_length + small_delta, step=t_step)
         #po = PlotOptions(do_plot=True, plot_type="value", plotDims=[0,1],
         #          slicesCut=[19, 30])
-        po = PlotOptions(do_plot=True, plot_type="set", plotDims=[0,1])
+        po = PlotOptions(do_plot=False, plot_type="value", plotDims=[0,1], slicesCut=[39,39,39],
+                         save_fig=True, filename="plots/2D_4_valuefunction", interactive_html=True)
 
         compMethods = { "TargetSetMode": "minVWithV0"}
-        result = HJSolver(self.sample_relative_system, g,l_x, tau, compMethods, po, saveAllTimeSteps=False)
+        #result = HJSolver(self.sample_relative_system, g,l_x, tau, compMethods, po, saveAllTimeSteps=False)
+        #np.save('converged_brt.npy', result)
 
+        result = np.load('converged_brt.npy')
+        plot_valuefunction(g, result, po)
         # The converged BRT
         last_time_step_result = result[..., 0]
 
