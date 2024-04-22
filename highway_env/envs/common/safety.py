@@ -36,13 +36,25 @@ def define_rel_coord(ego_vehicle, other_vehicle):
 class BRTCalculator(ABC):
     def __init__(self, env: AbstractEnv, conservative = True) -> None:
         config_boundaries = env.config["observation"]["features_range"]
-        g = Grid(np.array([config_boundaries["x"][0], config_boundaries["y"][0], -2*np.pi, config_boundaries["vx"][0],  config_boundaries["vx"][0]]), np.array([config_boundaries["x"][1], config_boundaries["y"][1], 2*np.pi, config_boundaries["vx"][1], config_boundaries["vx"][1]]), [5], [40, 40, 40, 40, 40], [])
+
+        # g = Grid(grid_min, grid_max, dims, N, pd)
+        grid_min = np.array([config_boundaries["x"][0], config_boundaries["y"][0], 
+                           -2*np.pi, config_boundaries["vx"][0],  
+                           config_boundaries["vx"][0]]) 
+        grid_max = np.array([config_boundaries["x"][1],
+                            config_boundaries["y"][1], 
+                            2*np.pi, config_boundaries["vx"][1], 
+                            config_boundaries["vx"][1]])
+        dims = np.array(5)
+        N = np.array([40, 40, 40, 40, 40])
+        pd = []
+        g = Grid(grid_min, grid_max, dims, N, pd)
         self.obs_type = env.config["observation"]["type"]
         self.absolute = env.config["observation"]["absolute"]
         #self.features = env.config["observation"]["features"]
 
         # Failure set
-        l_x = CylinderShape(g, [2,3,4], np.zeros(5), 3.5) # radius in meters 
+        l_x = CylinderShape(g, [2, 3, 4], np.zeros(5), 3.5) # radius in meters 
 
         lookback_length = 2.0
         t_step = 0.05
@@ -51,11 +63,12 @@ class BRTCalculator(ABC):
         self.sample_relative_system = HJIVehicle(conservative)
  
         tau = np.arange(start=0, stop=lookback_length + small_delta, step=t_step)
-        po = PlotOptions(do_plot=True, plot_type="value", plotDims=[0,1],
-                  slicesCut=[19, 30])
+        #po = PlotOptions(do_plot=True, plot_type="value", plotDims=[0,1],
+        #          slicesCut=[19, 30])
+        po = PlotOptions(do_plot=True, plot_type="set", plotDims=[0,1])
 
         compMethods = { "TargetSetMode": "minVWithV0"}
-        result = HJSolver(self.sample_relative_system, g,l_x, tau, compMethods, po, saveAllTimeSteps=True)
+        result = HJSolver(self.sample_relative_system, g,l_x, tau, compMethods, po, saveAllTimeSteps=False)
 
         # The converged BRT
         last_time_step_result = result[..., 0]
@@ -119,7 +132,5 @@ class BRTCalculator(ABC):
         print("Optimal accel is {}\n".format(opt_a))
         print("Optimal steering angle is  is {}\n".format(opt_steer))
 
-
-BRTCalculator()
         
     

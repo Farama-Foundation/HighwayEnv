@@ -21,6 +21,7 @@ class HJIVehicle:
         # Just create and pass back, even though they're not used
         in3   = hcl.scalar(0, "in3")
         in4 = hcl.scalar(0, "in4")
+        in5 = hcl.scalar(0, "in5")
 
         with hcl.if_(spat_deriv[2] > 0):
             with hcl.if_(self.uMode == "min"):
@@ -35,7 +36,7 @@ class HJIVehicle:
         with hcl.elif_(spat_deriv[3] < 0):
             with hcl.if_(self.uMode == "max"):
                 opt_steer[0] = -opt_steer
-        return (opt_a[0], opt_steer[0], in3[0], in4[0])
+        return (opt_a[0], opt_steer[0], in3[0], in4[0], in5[0])
 
     def opt_dstb(self, t, state, spat_deriv):
         opt_a = hcl.scalar(self.MAX_ACCELERATION, "opt_a")
@@ -43,6 +44,7 @@ class HJIVehicle:
         # Just create and pass back, even though they're not used
         in3   = hcl.scalar(0, "in3")
         in4 = hcl.scalar(0, "in4")
+        in5 = hcl.scalar(0, "in5")
 
         with hcl.if_(spat_deriv[2] > 0):
             with hcl.if_(self.dMode == "min"):
@@ -57,17 +59,24 @@ class HJIVehicle:
         with hcl.elif_(spat_deriv[3] < 0):
             with hcl.if_(self.dMode == "max"):
                 opt_steer[0] = -opt_steer
-        return (opt_a[0], opt_steer[0], in3[0], in4[0])
-
+        return (opt_a[0], opt_steer[0], in3[0], in4[0], in5[0])
+    
+    def tan_wrap(self, theta):
+        return hcl.sin(theta)/hcl.cos(theta)
+    
+    def arctan_approx(self, x):
+        return x - (x*x*x)/3 + (x*x*x*x*x*x)/5 + (x*x*x*x*x*x*x)/7
+         
     def dynamics(self, t, state, uOpt, dOpt):
+        print(f"start dynamics")
         x_rel_dot = hcl.scalar(0, "x_dot")
         y_rel_dot = hcl.scalar(0, "y_dot")
         heading_rel_dot = hcl.scalar(0, "heading_rel_dot")
         v_robot_dot = hcl.scalar(0, "v_robot")
         v_human_dot = hcl.scalar(0, "v_human")
 
-        b_r = hcl.atan(1/2*hcl.tan(uOpt[1]))
-        b_h = hcl.atan(1/2*hcl.tan(dOpt[1]))
+        b_r = self.arctan_approx(1/2*self.tan_wrap(uOpt[1]))
+        b_h = self.arctan_approx(1/2*self.tan_wrap(dOpt[1]))
         b_rel = b_h - b_r
 
         x_rel_dot[0] = self.v_r*hcl.cos(state[2]+b_rel) - self.v_h
@@ -75,6 +84,5 @@ class HJIVehicle:
         heading_rel_dot[0] = self.v_h/5*hcl.sin(b_h)-self.v_r/5*hcl.sin(b_r)
         v_robot_dot[0] = uOpt[0]
         v_human_dot[0] = dOpt[0]
-
 
         return (x_rel_dot[0], y_rel_dot[0], heading_rel_dot[0], v_robot_dot[0], v_human_dot[0])
