@@ -179,8 +179,9 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         # Controlled vehicles
         self.controlled_vehicles = []
         for i in range(self.config["controlled_vehicles"]):
+            x0 = (i - self.config["controlled_vehicles"] // 2) * 10
             vehicle = self.action_type.vehicle_class(
-                self.road, [i * 20, 0], 2 * np.pi * self.np_random.uniform(), 0
+                self.road, [x0, 0], 2 * np.pi * self.np_random.uniform(), 0
             )
             vehicle.color = VehicleGraphics.EGO_COLOR
             self.road.vehicles.append(vehicle)
