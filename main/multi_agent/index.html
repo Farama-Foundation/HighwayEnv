@@ -11,7 +11,7 @@
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Make your own environment" href="../make_your_own/" /><link rel="prev" title="Graphics" href="../graphics/" />
         <link rel="canonical" href="https://highway-env.farama.org/multi_agent.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.3.7 and Furo 2023.08.19.dev1 -->
         <title>The Multi-Agent setting - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
@@ -292,10 +292,10 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="the-multi-agent-setting">
-<h1>The Multi-Agent setting<a class="headerlink" href="#the-multi-agent-setting" title="Link to this heading">#</a></h1>
+<h1>The Multi-Agent setting<a class="headerlink" href="#the-multi-agent-setting" title="Link to this heading">¶</a></h1>
 <p>Most environments can be configured to a multi-agent version. Here is how:</p>
 <section id="increase-the-number-of-controlled-vehicles">
-<h2>Increase the number of controlled vehicles<a class="headerlink" href="#increase-the-number-of-controlled-vehicles" title="Link to this heading">#</a></h2>
+<h2>Increase the number of controlled vehicles<a class="headerlink" href="#increase-the-number-of-controlled-vehicles" title="Link to this heading">¶</a></h2>
 <p>To that end, update the <a class="reference internal" href="../quickstart/#configuring-an-environment"><span class="std std-ref">environment configuration</span></a> to increase <code class="docutils literal notranslate"><span class="pre">controlled_vehicles</span></code></p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -321,7 +321,7 @@
 </div>
 </section>
 <section id="change-the-action-space">
-<h2>Change the action space<a class="headerlink" href="#change-the-action-space" title="Link to this heading">#</a></h2>
+<h2>Change the action space<a class="headerlink" href="#change-the-action-space" title="Link to this heading">¶</a></h2>
 <p>Right now, since the action space has not been changed, only the first vehicle is controlled by <code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code>.
 In order for the environment to accept a tuple of actions, its action type must be set to <a class="reference internal" href="../actions/#highway_env.envs.common.action.MultiAgentAction" title="highway_env.envs.common.action.MultiAgentAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiAgentAction</span></code></a>
 The type of actions contained in the tuple must be described by a standard <a class="reference internal" href="../actions/#actions"><span class="std std-ref">action configuration</span></a> in the <code class="docutils literal notranslate"><span class="pre">action_config</span></code> field.</p>
@@ -357,7 +357,7 @@ The type of actions contained in the tuple must be described by a standard <a cl
 </div>
 </section>
 <section id="change-the-observation-space">
-<h2>Change the observation space<a class="headerlink" href="#change-the-observation-space" title="Link to this heading">#</a></h2>
+<h2>Change the observation space<a class="headerlink" href="#change-the-observation-space" title="Link to this heading">¶</a></h2>
 <p>In order to actually decide what <code class="docutils literal notranslate"><span class="pre">action_1</span></code> and <code class="docutils literal notranslate"><span class="pre">action_2</span></code> should be, both vehicles must generate their own observations.
 As before, since the observation space has not been changed no far, the observation only includes that of the first vehicle.</p>
 <p>In order for the environment to return a tuple of observations – one for each agent –, its observation type must be set to <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiAgentObservation</span></code>
@@ -397,7 +397,7 @@ The type of observations contained in the tuple must be described by a standard 
 </div>
 </section>
 <section id="wrapping-it-up">
-<h2>Wrapping it up<a class="headerlink" href="#wrapping-it-up" title="Link to this heading">#</a></h2>
+<h2>Wrapping it up<a class="headerlink" href="#wrapping-it-up" title="Link to this heading">¶</a></h2>
 <p>Here is a pseudo-code example of how a centralized multi-agent policy could be trained:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -458,7 +458,7 @@ python<span class="w"> </span>experiments.py<span class="w"> </span>evaluate<spa
 <figure class="align-default" id="id1">
 <img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection_multi_agent.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection_multi_agent.gif" />
 <figcaption>
-<p><span class="caption-text">Video of a multi-agent episode with the trained policy.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-text">Video of a multi-agent episode with the trained policy.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 </section>
@@ -618,7 +618,7 @@ python<span class="w"> </span>experiments.py<span class="w"> </span>evaluate<spa
       </script>
 
     <script src="../_static/documentation_options.js?v=a5603611"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=7660844c"></script>
     <script src="../_static/thebelab-helper.js"></script>

@@ -11,7 +11,7 @@
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Bibliography" href="../bibliography/" /><link rel="prev" title="Make your own environment" href="../make_your_own/" />
         <link rel="canonical" href="https://highway-env.farama.org/faq.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.3.7 and Furo 2023.08.19.dev1 -->
         <title>Frequently Asked Questions - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
@@ -292,11 +292,11 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="frequently-asked-questions">
-<span id="faq"></span><h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading">#</a></h1>
+<span id="faq"></span><h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading">¶</a></h1>
 <p>This is a list of Frequently Asked Questions about highway-env.  Feel free to
 suggest new entries!</p>
 <section id="when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist">
-<h2>When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code><a class="headerlink" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist" title="Link to this heading">#</a></h2>
+<h2>When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code><a class="headerlink" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist" title="Link to this heading">¶</a></h2>
 <p>This is probably because you do not have highway-env installed, but are instead working with a local copy of the
 repository. In that case, you need to run the following code first to register the environments.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">highway_env</span>
@@ -305,7 +305,7 @@ repository. In that case, you need to run the following code first to register t
 </div>
 </section>
 <section id="i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why">
-<h2>I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?<a class="headerlink" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why" title="Link to this heading">#</a></h2>
+<h2>I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?<a class="headerlink" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why" title="Link to this heading">¶</a></h2>
 <p>I also tend to get reasonable but sub-optimal policies using this observation-model pair.
 In <span id="id1">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>, we argued that a possible reason is that the MLP output depends on the order of
 vehicles in the observation. Indeed, if the agent revisits a given scene but observes vehicles described in a different
@@ -328,7 +328,7 @@ make use of its observation.</p>
 <p>This example is implemented <a class="reference external" href="https://github.com/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.py">here (SB3’s DQN)</a>.</p>
 </section>
 <section id="my-videos-are-too-fast-have-a-low-framerate">
-<h2>My videos are too fast / have a low framerate.<a class="headerlink" href="#my-videos-are-too-fast-have-a-low-framerate" title="Link to this heading">#</a></h2>
+<h2>My videos are too fast / have a low framerate.<a class="headerlink" href="#my-videos-are-too-fast-have-a-low-framerate" title="Link to this heading">¶</a></h2>
 <p>This is because in gymnasium, a single video frame is generated at each call of <code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code>. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (<em>e.g.</em> change lane) actually corresponds to several (typically, 15) simulation frames.
 In order to also render these intermediate simulation frames, the following should be done:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
@@ -508,7 +508,7 @@ In order to also render these intermediate simulation frames, the following shou
       </script>
 
     <script src="../_static/documentation_options.js?v=a5603611"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=7660844c"></script>
     <script src="../_static/thebelab-helper.js"></script>

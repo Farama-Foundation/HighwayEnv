@@ -11,7 +11,7 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="User Guide" href="../../user_guide/" /><link rel="prev" title="Intersection" href="../intersection/" />
         <link rel="canonical" href="https://highway-env.farama.org/environments/racetrack.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.3.7 and Furo 2023.08.19.dev1 -->
         <title>Racetrack - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
@@ -292,20 +292,21 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="racetrack">
-<span id="environments-racetrack"></span><h1>Racetrack<a class="headerlink" href="#racetrack" title="Link to this heading">#</a></h1>
+<span id="environments-racetrack"></span><h1>Racetrack<a class="headerlink" href="#racetrack" title="Link to this heading">¶</a></h1>
 <p>A continuous control environment, where the he agent has to follow the tracks while avoiding collisions with other vehicles.</p>
 <p>Credits and many thanks to <a class="reference external" href="https://github.com/supperted825">&#64;supperted825</a> for the <a class="reference external" href="https://github.com/eleurent/highway-env/issues/231">idea and initial implementation</a>.</p>
 <figure class="align-center" id="fig-racetrack-env">
-<a class="reference internal image-reference" href="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif"><img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif" style="width: 80%;" /></a>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif"><img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif" style="width: 80%;" />
+</a>
 </figure>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;racetrack-v0&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="default-configuration">
-<h2>Default configuration<a class="headerlink" href="#default-configuration" title="Link to this heading">#</a></h2>
+<h2>Default configuration<a class="headerlink" href="#default-configuration" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;OccupancyGrid&quot;</span><span class="p">,</span>
@@ -341,7 +342,7 @@
 <p>More specifically, it is defined in:</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.racetrack_env.RacetrackEnv.default_config">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RacetrackEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/racetrack_env/#RacetrackEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.racetrack_env.RacetrackEnv.default_config" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RacetrackEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/racetrack_env/#RacetrackEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.racetrack_env.RacetrackEnv.default_config" title="Link to this definition">¶</a></dt>
 <dd><p>Default environment configuration.</p>
 <p>Can be overloaded in environment implementations, or by calling configure().
 :return: a configuration dict</p>
@@ -349,10 +350,10 @@
 
 </section>
 <section id="api">
-<h2>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h2>
+<h2>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.racetrack_env.RacetrackEnv">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.racetrack_env.</span></span><span class="sig-name descname"><span class="pre">RacetrackEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/envs/racetrack_env/#RacetrackEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.racetrack_env.RacetrackEnv" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.racetrack_env.</span></span><span class="sig-name descname"><span class="pre">RacetrackEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/envs/racetrack_env/#RacetrackEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.racetrack_env.RacetrackEnv" title="Link to this definition">¶</a></dt>
 <dd><p>A continuous control environment.</p>
 <p>The agent needs to learn two skills:
 - follow the tracks
@@ -361,7 +362,7 @@
 See <a class="reference external" href="https://github.com/eleurent/highway-env/issues/231">https://github.com/eleurent/highway-env/issues/231</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.racetrack_env.RacetrackEnv.default_config">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/racetrack_env/#RacetrackEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.racetrack_env.RacetrackEnv.default_config" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/racetrack_env/#RacetrackEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.racetrack_env.RacetrackEnv.default_config" title="Link to this definition">¶</a></dt>
 <dd><p>Default environment configuration.</p>
 <p>Can be overloaded in environment implementations, or by calling configure().
 :return: a configuration dict</p>
@@ -534,7 +535,7 @@ See <a class="reference external" href="https://github.com/eleurent/highway-env/
       </script>
 
     <script src="../../_static/documentation_options.js?v=a5603611"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     <script src="../../_static/thebelab-helper.js"></script>
