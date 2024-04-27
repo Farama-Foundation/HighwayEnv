@@ -887,7 +887,9 @@
             <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()])[</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="n">goal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span>
-            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">goal</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()])[</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">]</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">goal</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()])[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">features</span>
+            <span class="p">]</span>
         <span class="p">)</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
             <span class="p">[</span>
