@@ -545,7 +545,9 @@ class KinematicsGoalObservation(KinematicObservation):
             pd.DataFrame.from_records([self.observer_vehicle.to_dict()])[self.features]
         )
         goal = np.ravel(
-            pd.DataFrame.from_records([self.env.goal.to_dict()])[self.features]
+            pd.DataFrame.from_records([self.observer_vehicle.goal.to_dict()])[
+                self.features
+            ]
         )
         obs = OrderedDict(
             [
