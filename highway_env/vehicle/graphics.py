@@ -21,6 +21,7 @@ class VehicleGraphics(object):
     YELLOW = (200, 200, 0)
     BLACK = (60, 60, 60)
     PURPLE = (200, 0, 150)
+    ORANGE = (255, 165, 0)
     DEFAULT_COLOR = YELLOW
     EGO_COLOR = GREEN
 
@@ -232,6 +233,8 @@ class VehicleGraphics(object):
             color = vehicle.color
         elif vehicle.crashed:
             color = cls.RED
+        elif vehicle.unsafe:
+            color = cls.ORANGE
         elif isinstance(vehicle, LinearVehicle):
             color = cls.YELLOW
         elif isinstance(vehicle, IDMVehicle):

@@ -11,6 +11,9 @@ import imp
 import numpy as np
 from odp.Grid import Grid
 from odp.Shapes import *
+from gymnasium import Wrapper
+
+from highway_env.envs.common.action import Action, ActionType, action_factory
 import pickle
 
 # Specify the  file that includes dynamic systems
@@ -35,71 +38,72 @@ def define_rel_coord(ego_vehicle, other_vehicle):
     return [x_rel, y_rel, heading_rel, ego_vehicle_speed, other_vehicle_speed]
 
 class BRTCalculator(ABC):
-    def __init__(self, env: AbstractEnv, conservative = True) -> None:
-        config_boundaries = env.config["observation"]["features_range"]
+    def __init__(self, env: AbstractEnv, conservative = True, preloaded=[]) -> None:
 
-        # g = Grid(grid_min, grid_max, dims, N, pd)
-        grid_min = np.array([config_boundaries["x"][0], config_boundaries["y"][0], 
-                           -np.pi/2, config_boundaries["vx"][0],  
-                           config_boundaries["vx"][0]]) 
-        grid_max = np.array([config_boundaries["x"][1],
-                            config_boundaries["y"][1], 
-                            np.pi/2, config_boundaries["vx"][1], 
-                            config_boundaries["vx"][1]])
-        dims = np.array(5)
-        print(grid_min)
-        N = np.array([40, 40, 40, 40, 40])
-        pd = [2]
-        g = Grid(grid_min, grid_max, dims, N, pd)
-        self.obs_type = env.config["observation"]["type"]
-        self.absolute = env.config["observation"]["absolute"]
-        self.conservative = conservative
-        self.last_obs = {}
-        self.dt = 1/env.config["simulation_frequency"]
-        #self.features = env.config["observation"]["features"]
+        if (len(preloaded)>0):
+            self.BRT_converged = preloaded
+        else:
+            config_boundaries = env.config["observation"]["features_range"]
 
-        # Failure set
-        l_x = CylinderShape(g, [2, 3, 4], np.zeros(5), 4.0) # radius in meters 
+            # g = Grid(grid_min, grid_max, dims, N, pd)
+            grid_min = np.array([config_boundaries["x"][0], config_boundaries["y"][0], 
+                            -np.pi/2, config_boundaries["vx"][0],  
+                            config_boundaries["vx"][0]]) 
+            grid_max = np.array([config_boundaries["x"][1],
+                                config_boundaries["y"][1], 
+                                np.pi/2, config_boundaries["vx"][1], 
+                                config_boundaries["vx"][1]])
+            dims = np.array(5)
+            print(grid_min)
+            N = np.array([40, 40, 40, 40, 40])
+            pd = [2]
+            g = Grid(grid_min, grid_max, dims, N, pd)
+            self.obs_type = env.config["observation"]["type"]
+            self.absolute = env.config["observation"]["absolute"]
+            self.conservative = conservative
+            self.last_obs = {}
+            self.dt = 1/env.config["simulation_frequency"]
+            #self.features = env.config["observation"]["features"]
 
-        lookback_length = 2.0
-        t_step = 0.05
+            # Failure set
+            l_x = CylinderShape(g, [2, 3, 4], np.zeros(5), 4.0) # radius in meters 
 
-        small_delta = 1e-5
-        self.sample_relative_system = HJIVehicle(conservative)
- 
-        tau = np.arange(start=0, stop=lookback_length + small_delta, step=t_step)
-        #po = PlotOptions(do_plot=True, plot_type="value", plotDims=[0,1],
-        #          slicesCut=[19, 30])
-        po = PlotOptions(do_plot=False, plot_type="value", plotDims=[0,1], slicesCut=[39,39,39],
-                         save_fig=True, filename="plots/2D_4_valuefunction", interactive_html=True)
+            lookback_length = 2.0
+            t_step = 0.05
 
-        compMethods = { "TargetSetMode": "minVWithV0"}
-        #result = HJSolver(self.sample_relative_system, g,l_x, tau, compMethods, po, saveAllTimeSteps=False)
-        #np.save('converged_brt.npy', result)
+            small_delta = 1e-5
+            self.sample_relative_system = HJIVehicle(conservative)
+    
+            tau = np.arange(start=0, stop=lookback_length + small_delta, step=t_step)
 
-        result = np.load('converged_brt.npy')
-        plot_valuefunction(g, result, po)
-        # The converged BRT
-        last_time_step_result = result[..., 0]
+            po = PlotOptions(do_plot=False, plot_type="value", plotDims=[0,1], slicesCut=[39,39,39],
+                            save_fig=True, filename="plots/2D_4_valuefunction", interactive_html=True)
 
-        self.BRT_converged = last_time_step_result
-        self.g = g
+            compMethods = { "TargetSetMode": "minVWithV0"}
+            #result = HJSolver(self.sample_relative_system, g,l_x, tau, compMethods, po, saveAllTimeSteps=False)
+            #np.save('converged_brt.npy', result)
+
+            result = np.load('converged_brt.npy')
+            plot_valuefunction(g, result, po)
+            # The converged BRT
+            last_time_step_result = result[..., 0]
+
+            self.BRT_converged = last_time_step_result
+            self.g = g  
 
     def check_safety_violation(self, obs):
-        # Return 1 for violation and 0 for no violation, -1 for invalid observation type
+        # Return an array the size of the number of vehicles where the values are either 0 or 1 
+        # 1 for safety violation and 0 for no violation,
+        # If observation type is invalid, return -1 
         #at this time, support for Kinematics observation only (order to implement: OccupancyGrid, TTC, Grayscale image )
+        # example: [1, 0, 0, 1] if the ego vehicle and the third agent vehicle are in violation 
         if self.obs_type != "Kinematics":
             return -1
         
         vehicle_info = []
         ego_info = []
         other_vehicles = 0
-
-        x_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=1, accuracy="low")
-        y_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=2, accuracy="low")
-        heading_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=3, accuracy="low")
-        v_r_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=4, accuracy="low")
-        v_h_derivative = computeSpatDerivArray(self.g, self.BRT_converged, deriv_dim=5, accuracy="low")
+        safety_violation = np.zeros(len(obs))
 
         for i in range(len(obs)):
             if i == 0: 
@@ -111,10 +115,8 @@ class BRTCalculator(ABC):
         safety_violation = 0 
         for i in range(other_vehicles):
             if self.BRT_converged[vehicle_info[i][0]][vehicle_info[i][1]][vehicle_info[i][2]][vehicle_info[i][3]][vehicle_info[i][4]] <= 0:
-               # if not self.conservative and self.last_obs != {}:
-                #    old_action = [self.last_obs[],]
-                #else:
-                safety_violation = 1
+                safety_violation[0] = 1
+                safety_violation[i] = 1
         
         return safety_violation
 
@@ -146,3 +148,43 @@ class BRTCalculator(ABC):
             opt_ctl.append(self.sample_relative_system.optCtrl_inPython(spat_deriv_vector))
 
         return np.mean(opt_ctl, axis=0)
+
+class SafetyWrapper:
+    #def __init__(self, env, conservative=True, filter_action = False, precomputed_BRT = [], ):
+    def __init__(self, env, conservative=True, filter_action = False, precomputed_BRT = [], precomputed_x_deriv = [],
+                  precomputed_y_deriv = [], precomputed_heading_deriv = [], precomputed_v_r_deriv = [], precomputed_v_h_deriv = []): #for dev purposes only
+        self.env = env
+        if (len(precomputed_BRT) == 0):
+            self.brt = BRTCalculator(env, conservative)
+        else:
+            self.brt = BRTCalculator(env, conservative, precomputed_BRT)
+            self.x_deriv = precomputed_x_deriv
+            self.y_deriv = precomputed_y_deriv
+            self.heading_deriv = precomputed_heading_deriv
+            self.v_r_deriv = precomputed_v_r_deriv
+            self.v_h_deriv = precomputed_v_h_deriv
+    
+    def step(self, action: Action):
+        obs, reward, terminated, truncated, info = self.env.step(action)
+
+        violation = self.brt.check_safety_violation(obs)
+        
+        vehicles = self.env.road.vehicles
+        vehicle_ind_map = {}
+        
+        for j in range(len(vehicles)):
+            for i in range(len(obs)):
+                if (obs[i][1] == vehicles[j].position[0] and obs[i][2] == vehicles[j].position[1]):
+                    vehicle_ind_map.j = i
+
+        for i in range(len(vehicles)):
+         if (violation[vehicle_ind_map.i]):
+            vehicles[i].unsafe = True
+
+        self.env.viewer.display()
+
+        return obs, reward, terminated, truncated, info, violation
+    
+    
+
+
