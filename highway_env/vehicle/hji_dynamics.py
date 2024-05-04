@@ -1,4 +1,4 @@
-import heterocl as hcl
+#import heterocl as hcl
 import numpy as np
 
 class HJIVehicle:

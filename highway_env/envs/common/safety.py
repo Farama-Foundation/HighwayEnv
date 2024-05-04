@@ -9,8 +9,8 @@
 from abc import ABC
 import imp
 import numpy as np
-from odp.Grid import Grid
-from odp.Shapes import *
+#from odp.Grid import Grid
+#from odp.Shapes import *
 from gymnasium import Wrapper
 
 from highway_env.envs.common.action import Action, ActionType, action_factory
@@ -19,22 +19,22 @@ import pickle
 # Specify the  file that includes dynamic systems
 from highway_env.vehicle.hji_dynamics import HJIVehicle
 # Plot options
-from odp.Plots import PlotOptions
-from odp.Plots import plot_isosurface, plot_valuefunction
+#from odp.Plots import PlotOptions
+#from odp.Plots import plot_isosurface, plot_valuefunction
 # Solver core
-from odp.solver import HJSolver, computeSpatDerivArray
+#from odp.solver import HJSolver, computeSpatDerivArray
 from highway_env.envs.common.abstract import AbstractEnv
 import math
 import os
 
 def define_rel_coord(ego_vehicle, other_vehicle):
-    ego_vehicle_heading = np.arctan2(ego_vehicle[3]/ego_vehicle[2])
-    other_vehicle_heading = np.arctan2(other_vehicle[3]/other_vehicle[2])
-    ego_vehicle_speed = np.sqrt(ego_vehicle[3]**2+ego_vehicle[2]**2)
-    other_vehicle_speed = np.sqrt(other_vehicle[3]**2+other_vehicle[2]**2)
-    x_rel = ego_vehicle[0] - other_vehicle[0]
-    y_rel = ego_vehicle[1] - other_vehicle[1]
-    heading_rel = (other_vehicle_heading - ego_vehicle_heading + 180) % 360 - 180
+    ego_vehicle_heading = int(np.arctan2(ego_vehicle[3],ego_vehicle[2]))
+    other_vehicle_heading = int(np.arctan2(other_vehicle[3],other_vehicle[2]))
+    ego_vehicle_speed =int(np.sqrt(ego_vehicle[3]**2+ego_vehicle[2]**2))
+    other_vehicle_speed = int(np.sqrt(other_vehicle[3]**2+other_vehicle[2]**2))
+    x_rel = int(ego_vehicle[0] - other_vehicle[0])
+    y_rel = int(ego_vehicle[1] - other_vehicle[1])
+    heading_rel = int((other_vehicle_heading - ego_vehicle_heading + 180) % 360 - 180)
     return [x_rel, y_rel, heading_rel, ego_vehicle_speed, other_vehicle_speed]
 
 class BRTCalculator(ABC):
@@ -42,6 +42,7 @@ class BRTCalculator(ABC):
 
         if (len(preloaded)>0):
             self.BRT_converged = preloaded
+            self.obs_type = "Kinematics"
         else:
             config_boundaries = env.config["observation"]["features_range"]
 
@@ -54,7 +55,6 @@ class BRTCalculator(ABC):
                                 np.pi/2, config_boundaries["vx"][1], 
                                 config_boundaries["vx"][1]])
             dims = np.array(5)
-            print(grid_min)
             N = np.array([40, 40, 40, 40, 40])
             pd = [2]
             g = Grid(grid_min, grid_max, dims, N, pd)
@@ -86,9 +86,8 @@ class BRTCalculator(ABC):
             result = np.load('converged_brt.npy')
             plot_valuefunction(g, result, po)
             # The converged BRT
-            last_time_step_result = result[..., 0]
 
-            self.BRT_converged = last_time_step_result
+            self.BRT_converged = result
             self.g = g  
 
     def check_safety_violation(self, obs):
@@ -103,7 +102,7 @@ class BRTCalculator(ABC):
         vehicle_info = []
         ego_info = []
         other_vehicles = 0
-        safety_violation = np.zeros(len(obs))
+        safety_violation = np.zeros(len(obs)) 
 
         for i in range(len(obs)):
             if i == 0: 
@@ -112,9 +111,14 @@ class BRTCalculator(ABC):
                 other_vehicles += 1
                 vehicle_info.append(define_rel_coord(ego_info, [obs[i][1], obs[i][2], obs[i][3], obs[i][4]]))
 
-        safety_violation = 0 
         for i in range(other_vehicles):
-            if self.BRT_converged[vehicle_info[i][0]][vehicle_info[i][1]][vehicle_info[i][2]][vehicle_info[i][3]][vehicle_info[i][4]] <= 0:
+            # Index mapping!
+            x_ind = int(vehicle_info[i][0]*40/200)
+            y_ind = int(vehicle_info[i][1]*40/200)
+            heading_ind = int(vehicle_info[i][2]*40/(4*np.pi))
+
+            print(self.BRT_converged[x_ind][y_ind][heading_ind][vehicle_info[i][3]][vehicle_info[i][4]])
+            if self.BRT_converged[x_ind][y_ind][heading_ind][vehicle_info[i][3]][vehicle_info[i][4]] <= 20000:
                 safety_violation[0] = 1
                 safety_violation[i] = 1
         
@@ -171,20 +175,26 @@ class SafetyWrapper:
         
         vehicles = self.env.road.vehicles
         vehicle_ind_map = {}
-        
+
         for j in range(len(vehicles)):
+            skip = 0
             for i in range(len(obs)):
-                if (obs[i][1] == vehicles[j].position[0] and obs[i][2] == vehicles[j].position[1]):
-                    vehicle_ind_map.j = i
+                if (vehicles[j].heading < np.arctan2(obs[i][4], obs[i][3]) + 0.1 and vehicles[j].heading > np.arctan2(obs[i][4], obs[i][3])-0.1):
+                    vehicle_ind_map[j] = i - skip
+                else:
+                    skip += 1
 
         for i in range(len(vehicles)):
-         if (violation[vehicle_ind_map.i]):
-            vehicles[i].unsafe = True
+            if (i in vehicle_ind_map):
+                if (violation[vehicle_ind_map[i]]):
+                    vehicles[i].unsafe = True
 
-        self.env.viewer.display()
+        return obs, reward, terminated, truncated, info, violation[0]
 
-        return obs, reward, terminated, truncated, info, violation
+    def render(self):
+        self.env.render()
     
-    
+    def close(self):
+        self.env.close()
 
 
