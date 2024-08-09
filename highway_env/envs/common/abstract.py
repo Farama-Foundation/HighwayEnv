@@ -428,7 +428,6 @@ class AbstractEnv(gym.Env):
 
 
 class MultiAgentWrapper(Wrapper, RecordConstructorArgs):
-
     def __init__(self, env):
         Wrapper.__init__(self, env)
         RecordConstructorArgs.__init__(self)

@@ -88,7 +88,8 @@ def _register_highway_envs():
     )
 
     gym.register(
-        id="parking-parked-v0", entry_point="highway_env.envs.parking_env:ParkingEnvParkedVehicles"
+        id="parking-parked-v0",
+        entry_point="highway_env.envs.parking_env:ParkingEnvParkedVehicles",
     )
 
     # racetrack_env.py
@@ -105,7 +106,9 @@ def _register_highway_envs():
 
     # two_way_env.py
     gym.register(
-        id="two-way-v0", entry_point="highway_env.envs.two_way_env:TwoWayEnv", max_episode_steps=15
+        id="two-way-v0",
+        entry_point="highway_env.envs.two_way_env:TwoWayEnv",
+        max_episode_steps=15,
     )
 
     # u_turn_env.py

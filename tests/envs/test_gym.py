@@ -12,7 +12,8 @@ gym.register_envs(highway_env)
 
 
 highway_env_ids = [
-    env_id for env_id, env_spec in gym.registry.items()
+    env_id
+    for env_id, env_spec in gym.registry.items()
     if isinstance(env_spec.entry_point, str) and "highway_env" in env_spec.entry_point
 ]
 
@@ -24,7 +25,7 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "A Box observation space maximum value is infinity. This is probably too high.",
         # "For Box action spaces, we recommend using a symmetric and normalized space (range=[-1, 1] or [0, 1]). See https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html for more information.",
         "The environment intersection-v0 is out of date. You should consider upgrading to version `v1`.",
-        "The environment intersection-multi-agent-v0 is out of date. You should consider upgrading to version `v1`."
+        "The environment intersection-multi-agent-v0 is out of date. You should consider upgrading to version `v1`.",
     ]
 ]
 
