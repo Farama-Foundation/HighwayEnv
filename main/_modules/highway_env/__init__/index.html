@@ -10,7 +10,7 @@
     <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/__init__.html" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" />
         <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/__init__.html" />
 
-    <link rel="shortcut icon" href="../../../_static/favicon.png"/><!-- Generated with Sphinx 7.3.7 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>highway_env.__init__ - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
@@ -309,6 +309,7 @@
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYGAME_HIDE_SUPPORT_PROMPT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
 
 <span class="kn">from</span> <span class="nn">gymnasium.envs.registration</span> <span class="kn">import</span> <span class="n">register</span>
+<span class="kn">from</span> <span class="nn">highway_env.envs.common.abstract</span> <span class="kn">import</span> <span class="n">MultiAgentWrapper</span>
 
 
 <div class="viewcode-block" id="register_highway_envs">
@@ -351,7 +352,8 @@
 
     <span class="n">register</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-multi-agent-v1&quot;</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:TupleMultiAgentIntersectionEnv&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:MultiAgentIntersectionEnv&quot;</span><span class="p">,</span>
+        <span class="n">additional_wrappers</span><span class="o">=</span><span class="p">(</span><span class="n">MultiAgentWrapper</span><span class="o">.</span><span class="n">wrapper_spec</span><span class="p">(),),</span>
     <span class="p">)</span>
 
     <span class="c1"># lane_keeping_env.py</span>
