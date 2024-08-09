@@ -1,18 +1,21 @@
+from __future__ import annotations
+
 import importlib
 from functools import partial
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from highway_env import utils
 from highway_env.vehicle.kinematics import Vehicle
 
+
 if TYPE_CHECKING:
     from highway_env.envs import AbstractEnv
 
 
 def finite_mdp(
-    env: "AbstractEnv", time_quantization: float = 1.0, horizon: float = 10.0
+    env: AbstractEnv, time_quantization: float = 1.0, horizon: float = 10.0
 ) -> object:
     """
     Time-To-Collision (TTC) representation of the state.
@@ -94,15 +97,15 @@ def finite_mdp(
         return mdp
     except ModuleNotFoundError as e:
         raise ModuleNotFoundError(
-            "The finite_mdp module is required for conversion. {}".format(e)
+            f"The finite_mdp module is required for conversion. {e}"
         )
 
 
 def compute_ttc_grid(
-    env: "AbstractEnv",
+    env: AbstractEnv,
     time_quantization: float,
     horizon: float,
-    vehicle: Optional[Vehicle] = None,
+    vehicle: Vehicle | None = None,
 ) -> np.ndarray:
     """
     Compute the grid of predicted time-to-collision to each vehicle within the lane

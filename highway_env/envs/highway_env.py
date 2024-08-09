@@ -1,4 +1,4 @@
-from typing import Dict, Text
+from __future__ import annotations
 
 import numpy as np
 
@@ -9,6 +9,7 @@ from highway_env.road.road import Road, RoadNetwork
 from highway_env.utils import near_split
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.kinematics import Vehicle
+
 
 Observation = np.ndarray
 
@@ -114,7 +115,7 @@ class HighwayEnv(AbstractEnv):
         reward *= rewards["on_road_reward"]
         return reward
 
-    def _rewards(self, action: Action) -> Dict[Text, float]:
+    def _rewards(self, action: Action) -> dict[str, float]:
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = (
             self.vehicle.target_lane_index[2]

@@ -1,7 +1,6 @@
-from __future__ import absolute_import, division, print_function
+from __future__ import annotations
 
 import copy
-from typing import Tuple
 
 import numpy as np
 
@@ -12,7 +11,6 @@ from highway_env.vehicle.dynamics import BicycleVehicle
 
 
 class LaneKeepingEnv(AbstractEnv):
-
     """A lane keeping control task."""
 
     def __init__(self, config: dict = None) -> None:
@@ -51,7 +49,7 @@ class LaneKeepingEnv(AbstractEnv):
         )
         return config
 
-    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:
+    def step(self, action: np.ndarray) -> tuple[np.ndarray, float, bool, bool, dict]:
         if self.lanes and not self.lane.on_lane(self.vehicle.position):
             self.lane = self.lanes.pop(0)
         self.store_data()

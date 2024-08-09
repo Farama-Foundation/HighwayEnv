@@ -1,4 +1,4 @@
-from typing import Dict, Text
+from __future__ import annotations
 
 import numpy as np
 
@@ -65,7 +65,7 @@ class RacetrackEnv(AbstractEnv):
         reward *= rewards["on_road_reward"]
         return reward
 
-    def _rewards(self, action: np.ndarray) -> Dict[Text, float]:
+    def _rewards(self, action: np.ndarray) -> dict[str, float]:
         _, lateral = self.vehicle.lane.local_coordinates(self.vehicle.position)
         return {
             "lane_centering_reward": 1

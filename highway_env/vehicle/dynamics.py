@@ -1,4 +1,6 @@
-from typing import Callable, Tuple
+from __future__ import annotations
+
+from typing import Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,9 +39,7 @@ class BicycleVehicle(Vehicle):
     MASS: float = 1  # [kg]
     LENGTH_A: float = Vehicle.LENGTH / 2  # [m]
     LENGTH_B: float = Vehicle.LENGTH / 2  # [m]
-    INERTIA_Z: float = (
-        1 / 12 * MASS * (Vehicle.LENGTH**2 + Vehicle.WIDTH**2)
-    )  # [kg.m2]
+    INERTIA_Z: float = 1 / 12 * MASS * (Vehicle.LENGTH**2 + Vehicle.WIDTH**2)  # [kg.m2]
     FRICTION_FRONT: float = 15.0 * MASS  # [N]
     FRICTION_REAR: float = 15.0 * MASS  # [N]
 
@@ -161,7 +161,7 @@ class BicycleVehicle(Vehicle):
             self.yaw_rate, -self.MAX_ANGULAR_SPEED, self.MAX_ANGULAR_SPEED
         )
 
-    def lateral_lpv_structure(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def lateral_lpv_structure(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         State: [lateral speed v, yaw rate r]
 
@@ -206,7 +206,7 @@ class BicycleVehicle(Vehicle):
         )
         return A0, phi, B
 
-    def lateral_lpv_dynamics(self) -> Tuple[np.ndarray, np.ndarray]:
+    def lateral_lpv_dynamics(self) -> tuple[np.ndarray, np.ndarray]:
         """
         State: [lateral speed v, yaw rate r]
 
@@ -217,7 +217,7 @@ class BicycleVehicle(Vehicle):
         A = A0 + np.tensordot(self.theta, phi, axes=[0, 0])
         return A, B
 
-    def full_lateral_lpv_structure(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def full_lateral_lpv_structure(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         State: [position y, yaw psi, lateral speed v, yaw rate r]
 
@@ -244,7 +244,7 @@ class BicycleVehicle(Vehicle):
         B = np.concatenate((np.zeros((2, 1)), B_lat))
         return A0, phi, B
 
-    def full_lateral_lpv_dynamics(self) -> Tuple[np.ndarray, np.ndarray]:
+    def full_lateral_lpv_dynamics(self) -> tuple[np.ndarray, np.ndarray]:
         """
         State: [position y, yaw psi, lateral speed v, yaw rate r]
 

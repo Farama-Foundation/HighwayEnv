@@ -245,10 +245,10 @@ For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and
 ```{eval-rst}
 .. table:: $15$ m/s
 
-==  ==  ==  ==  ==  ==  ==  ==  ==  ==  
-0   0   0   0   0   0   0   0   0   0  
-0   0   0   0   0   0   0   0   0   0  
-0   0   0   0   0   0   0   0   0   0  
+==  ==  ==  ==  ==  ==  ==  ==  ==  ==
+0   0   0   0   0   0   0   0   0   0
+0   0   0   0   0   0   0   0   0   0
+0   0   0   0   0   0   0   0   0   0
 ==  ==  ==  ==  ==  ==  ==  ==  ==  ==
 ```
 
@@ -287,18 +287,18 @@ The top row corresponds to the left-lane, the middle row corresponds to the lane
 
 The {py:class}`~highway_env.envs.common.observation.LidarObservation` divides the space around the vehicle into angular sectors, and returns an array with one row per angular sector and two columns:
   - distance to the nearest collidable object (vehicles or obstacles)
-  - component of the objects's relative velocity along that direction 
+  - component of the objects's relative velocity along that direction
 
-The angular sector of index 0 corresponds to an angle 0 (east), and then each index/sector increases the angle (south, west, north). 
+The angular sector of index 0 corresponds to an angle 0 (east), and then each index/sector increases the angle (south, west, north).
 
 For example, for a grid of 8 cells, an obstacle 10 meters away in the south and moving towards the north at 1m/s would lead to the following observation:
-    
+
 ```{eval-rst}
-.. table:: the Lidar observation 
+.. table:: the Lidar observation
 
     ===   ===
-    0     0 
-    0     0 
+    0     0
+    0     0
     10    -1
     0     0
     0     0
@@ -324,7 +324,7 @@ Here is an example of what the distance grid may look like in the parking env:
             "vehicles_count": 3,
         })
     env.reset()
-    
+
     plt.imshow(env.render())
     plt.show()
 ```

@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import functools
 import itertools
-from typing import TYPE_CHECKING, Callable, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Callable, Union
 
 import numpy as np
 from gymnasium import spaces
@@ -11,17 +13,17 @@ from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.dynamics import BicycleVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
+
 if TYPE_CHECKING:
     from highway_env.envs.common.abstract import AbstractEnv
 
 Action = Union[int, np.ndarray]
 
 
-class ActionType(object):
-
+class ActionType:
     """A type of action specifies its definition space, and how actions are executed in the environment"""
 
-    def __init__(self, env: "AbstractEnv", **kwargs) -> None:
+    def __init__(self, env: AbstractEnv, **kwargs) -> None:
         self.env = env
         self.__controlled_vehicle = None
 
@@ -69,7 +71,6 @@ class ActionType(object):
 
 
 class ContinuousAction(ActionType):
-
     """
     An continuous action space for throttle and/or steering angle.
 
@@ -86,15 +87,15 @@ class ContinuousAction(ActionType):
 
     def __init__(
         self,
-        env: "AbstractEnv",
-        acceleration_range: Optional[Tuple[float, float]] = None,
-        steering_range: Optional[Tuple[float, float]] = None,
-        speed_range: Optional[Tuple[float, float]] = None,
+        env: AbstractEnv,
+        acceleration_range: tuple[float, float] | None = None,
+        steering_range: tuple[float, float] | None = None,
+        speed_range: tuple[float, float] | None = None,
         longitudinal: bool = True,
         lateral: bool = True,
         dynamical: bool = False,
         clip: bool = True,
-        **kwargs
+        **kwargs,
     ) -> None:
         """
         Create a continuous action space.
@@ -164,15 +165,15 @@ class ContinuousAction(ActionType):
 class DiscreteAction(ContinuousAction):
     def __init__(
         self,
-        env: "AbstractEnv",
-        acceleration_range: Optional[Tuple[float, float]] = None,
-        steering_range: Optional[Tuple[float, float]] = None,
+        env: AbstractEnv,
+        acceleration_range: tuple[float, float] | None = None,
+        steering_range: tuple[float, float] | None = None,
         longitudinal: bool = True,
         lateral: bool = True,
         dynamical: bool = False,
         clip: bool = True,
         actions_per_axis: int = 3,
-        **kwargs
+        **kwargs,
     ) -> None:
         super().__init__(
             env,
@@ -196,7 +197,6 @@ class DiscreteAction(ContinuousAction):
 
 
 class DiscreteMetaAction(ActionType):
-
     """
     An discrete action space of meta-actions: lane changes, and cruise control set-point.
     """
@@ -212,11 +212,11 @@ class DiscreteMetaAction(ActionType):
 
     def __init__(
         self,
-        env: "AbstractEnv",
+        env: AbstractEnv,
         longitudinal: bool = True,
         lateral: bool = True,
-        target_speeds: Optional[Vector] = None,
-        **kwargs
+        target_speeds: Vector | None = None,
+        **kwargs,
     ) -> None:
         """
         Create a discrete action space of meta-actions.
@@ -237,11 +237,11 @@ class DiscreteMetaAction(ActionType):
         self.actions = (
             self.ACTIONS_ALL
             if longitudinal and lateral
-            else self.ACTIONS_LONGI
-            if longitudinal
-            else self.ACTIONS_LAT
-            if lateral
-            else None
+            else (
+                self.ACTIONS_LONGI
+                if longitudinal
+                else self.ACTIONS_LAT if lateral else None
+            )
         )
         if self.actions is None:
             raise ValueError(
@@ -256,10 +256,10 @@ class DiscreteMetaAction(ActionType):
     def vehicle_class(self) -> Callable:
         return functools.partial(MDPVehicle, target_speeds=self.target_speeds)
 
-    def act(self, action: Union[int, np.ndarray]) -> None:
+    def act(self, action: int | np.ndarray) -> None:
         self.controlled_vehicle.act(self.actions[int(action)])
 
-    def get_available_actions(self) -> List[int]:
+    def get_available_actions(self) -> list[int]:
         """
         Get the list of currently available actions.
 
@@ -299,7 +299,7 @@ class DiscreteMetaAction(ActionType):
 
 
 class MultiAgentAction(ActionType):
-    def __init__(self, env: "AbstractEnv", action_config: dict, **kwargs) -> None:
+    def __init__(self, env: AbstractEnv, action_config: dict, **kwargs) -> None:
         super().__init__(env)
         self.action_config = action_config
         self.agents_action_types = []
@@ -331,7 +331,7 @@ class MultiAgentAction(ActionType):
         )
 
 
-def action_factory(env: "AbstractEnv", config: dict) -> ActionType:
+def action_factory(env: AbstractEnv, config: dict) -> ActionType:
     if config["type"] == "ContinuousAction":
         return ContinuousAction(env, **config)
     if config["type"] == "DiscreteAction":

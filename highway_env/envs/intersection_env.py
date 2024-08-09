@@ -1,4 +1,4 @@
-from typing import Dict, Text, Tuple
+from __future__ import annotations
 
 import numpy as np
 
@@ -11,7 +11,7 @@ from highway_env.vehicle.kinematics import Vehicle
 
 
 class IntersectionEnv(AbstractEnv):
-    ACTIONS: Dict[int, str] = {0: "SLOWER", 1: "IDLE", 2: "FASTER"}
+    ACTIONS: dict[int, str] = {0: "SLOWER", 1: "IDLE", 2: "FASTER"}
     ACTIONS_INDEXES = {v: k for k, v in ACTIONS.items()}
 
     @classmethod
@@ -64,7 +64,7 @@ class IntersectionEnv(AbstractEnv):
             self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles
         ) / len(self.controlled_vehicles)
 
-    def _rewards(self, action: int) -> Dict[Text, float]:
+    def _rewards(self, action: int) -> dict[str, float]:
         """Multi-objective rewards, for cooperative agents."""
         agents_rewards = [
             self._agent_rewards(action, vehicle) for vehicle in self.controlled_vehicles
@@ -91,7 +91,7 @@ class IntersectionEnv(AbstractEnv):
             )
         return reward
 
-    def _agent_rewards(self, action: int, vehicle: Vehicle) -> Dict[Text, float]:
+    def _agent_rewards(self, action: int, vehicle: Vehicle) -> dict[str, float]:
         """Per-agent per-objective reward signal."""
         scaled_speed = utils.lmap(
             vehicle.speed, self.config["reward_speed_range"], [0, 1]
@@ -132,7 +132,7 @@ class IntersectionEnv(AbstractEnv):
         self._make_road()
         self._make_vehicles(self.config["initial_vehicle_count"])
 
-    def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, dict]:
+    def step(self, action: int) -> tuple[np.ndarray, float, bool, bool, dict]:
         obs, reward, terminated, truncated, info = super().step(action)
         self._clear_vehicles()
         self._spawn_vehicle(spawn_probability=self.config["spawn_probability"])
@@ -286,7 +286,7 @@ class IntersectionEnv(AbstractEnv):
         self.controlled_vehicles = []
         for ego_id in range(0, self.config["controlled_vehicles"]):
             ego_lane = self.road.network.get_lane(
-                ("o{}".format(ego_id % 4), "ir{}".format(ego_id % 4), 0)
+                (f"o{ego_id % 4}", f"ir{ego_id % 4}", 0)
             )
             destination = self.config["destination"] or "o" + str(
                 self.np_random.integers(1, 4)

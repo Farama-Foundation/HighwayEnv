@@ -4,6 +4,7 @@ from stable_baselines3 import DQN
 
 import highway_env  # noqa: F401
 
+
 TRAIN = True
 
 if __name__ == "__main__":

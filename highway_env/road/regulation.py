@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from __future__ import annotations
 
 import numpy as np
 
@@ -10,15 +10,15 @@ from highway_env.vehicle.objects import Obstacle
 
 
 class RegulatedRoad(Road):
-    YIELDING_COLOR: Tuple[float, float, float] = None
+    YIELDING_COLOR: tuple[float, float, float] = None
     REGULATION_FREQUENCY: int = 2
     YIELD_DURATION: float = 0.0
 
     def __init__(
         self,
         network: RoadNetwork = None,
-        vehicles: List[Vehicle] = None,
-        obstacles: List[Obstacle] = None,
+        vehicles: list[Vehicle] = None,
+        obstacles: list[Obstacle] = None,
         np_random: np.random.RandomState = None,
         record_history: bool = False,
     ) -> None:

@@ -1,4 +1,4 @@
-from typing import Dict, Text
+from __future__ import annotations
 
 import numpy as np
 
@@ -10,7 +10,6 @@ from highway_env.vehicle.controller import MDPVehicle
 
 
 class UTurnEnv(AbstractEnv):
-
     """
     U-Turn risk analysis task: the agent overtakes vehicles that are blocking the
     traffic. High speed overtaking must be balanced with ensuring safety.
@@ -58,7 +57,7 @@ class UTurnEnv(AbstractEnv):
         reward *= rewards["on_road_reward"]
         return reward
 
-    def _rewards(self, action: int) -> Dict[Text, float]:
+    def _rewards(self, action: int) -> dict[str, float]:
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = self.vehicle.lane_index[2]
         scaled_speed = utils.lmap(

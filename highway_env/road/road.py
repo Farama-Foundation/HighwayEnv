@@ -1,10 +1,13 @@
+from __future__ import annotations
+
 import logging
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, List, Tuple
 
 import numpy as np
 
 from highway_env.road.lane import AbstractLane, LineType, StraightLane, lane_from_config
 from highway_env.vehicle.objects import Landmark
+
 
 if TYPE_CHECKING:
     from highway_env.vehicle import kinematics, objects
@@ -15,8 +18,8 @@ LaneIndex = Tuple[str, str, int]
 Route = List[LaneIndex]
 
 
-class RoadNetwork(object):
-    graph: Dict[str, Dict[str, List[AbstractLane]]]
+class RoadNetwork:
+    graph: dict[str, dict[str, list[AbstractLane]]]
 
     def __init__(self):
         self.graph = {}
@@ -50,7 +53,7 @@ class RoadNetwork(object):
         return self.graph[_from][_to][_id]
 
     def get_closest_lane_index(
-        self, position: np.ndarray, heading: Optional[float] = None
+        self, position: np.ndarray, heading: float | None = None
     ) -> LaneIndex:
         """
         Get the index of the lane closest to a world position.
@@ -140,7 +143,7 @@ class RoadNetwork(object):
         next_to: str,
         next_id: int,
         position: np.ndarray,
-    ) -> Tuple[int, float]:
+    ) -> tuple[int, float]:
         # If next road has same number of lane, stay on the same lane
         if len(self.graph[_from][_to]) == len(self.graph[_to][next_to]):
             if next_id is None:
@@ -153,7 +156,7 @@ class RoadNetwork(object):
             )
         return next_id, self.get_lane((_to, next_to, next_id)).distance(position)
 
-    def bfs_paths(self, start: str, goal: str) -> List[List[str]]:
+    def bfs_paths(self, start: str, goal: str) -> list[list[str]]:
         """
         Breadth-first search of all routes from start to goal.
 
@@ -174,7 +177,7 @@ class RoadNetwork(object):
                 elif _next in self.graph:
                     queue.append((_next, path + [_next]))
 
-    def shortest_path(self, start: str, goal: str) -> List[str]:
+    def shortest_path(self, start: str, goal: str) -> list[str]:
         """
         Breadth-first search of shortest path from start to goal.
 
@@ -184,7 +187,7 @@ class RoadNetwork(object):
         """
         return next(self.bfs_paths(start, goal), [])
 
-    def all_side_lanes(self, lane_index: LaneIndex) -> List[LaneIndex]:
+    def all_side_lanes(self, lane_index: LaneIndex) -> list[LaneIndex]:
         """
         :param lane_index: the index of a lane.
         :return: all lanes belonging to the same road.
@@ -194,7 +197,7 @@ class RoadNetwork(object):
             for i in range(len(self.graph[lane_index[0]][lane_index[1]]))
         ]
 
-    def side_lanes(self, lane_index: LaneIndex) -> List[LaneIndex]:
+    def side_lanes(self, lane_index: LaneIndex) -> list[LaneIndex]:
         """
         :param lane_index: the index of a lane.
         :return: indexes of lanes next to a an input lane, to its right or left.
@@ -272,12 +275,12 @@ class RoadNetwork(object):
                 )
         return False
 
-    def lanes_list(self) -> List[AbstractLane]:
+    def lanes_list(self) -> list[AbstractLane]:
         return [
             lane for to in self.graph.values() for ids in to.values() for lane in ids
         ]
 
-    def lanes_dict(self) -> Dict[str, AbstractLane]:
+    def lanes_dict(self) -> dict[str, AbstractLane]:
         return {
             (from_, to_, i): lane
             for from_, tos in self.graph.items()
@@ -292,9 +295,9 @@ class RoadNetwork(object):
         length: float = 10000,
         angle: float = 0,
         speed_limit: float = 30,
-        nodes_str: Optional[Tuple[str, str]] = None,
-        net: Optional["RoadNetwork"] = None,
-    ) -> "RoadNetwork":
+        nodes_str: tuple[str, str] | None = None,
+        net: RoadNetwork | None = None,
+    ) -> RoadNetwork:
         net = net or RoadNetwork()
         nodes_str = nodes_str or ("0", "1")
         for lane in range(lanes):
@@ -313,7 +316,7 @@ class RoadNetwork(object):
                 *nodes_str,
                 StraightLane(
                     origin, end, line_types=line_types, speed_limit=speed_limit
-                )
+                ),
             )
         return net
 
@@ -323,7 +326,7 @@ class RoadNetwork(object):
         longitudinal: float,
         lateral: float,
         current_lane_index: LaneIndex,
-    ) -> Tuple[np.ndarray, float]:
+    ) -> tuple[np.ndarray, float]:
         """
         Get the absolute position and heading along a route composed of several lanes at some local coordinates.
 
@@ -386,15 +389,14 @@ class RoadNetwork(object):
         return graph_dict
 
 
-class Road(object):
-
+class Road:
     """A road is a set of lanes, and a set of vehicles driving on these lanes."""
 
     def __init__(
         self,
         network: RoadNetwork = None,
-        vehicles: List["kinematics.Vehicle"] = None,
-        road_objects: List["objects.RoadObject"] = None,
+        vehicles: list[kinematics.Vehicle] = None,
+        road_objects: list[objects.RoadObject] = None,
         np_random: np.random.RandomState = None,
         record_history: bool = False,
     ) -> None:
@@ -415,9 +417,9 @@ class Road(object):
 
     def close_objects_to(
         self,
-        vehicle: "kinematics.Vehicle",
+        vehicle: kinematics.Vehicle,
         distance: float,
-        count: Optional[int] = None,
+        count: int | None = None,
         see_behind: bool = True,
         sort: bool = True,
         vehicles_only: bool = False,
@@ -446,9 +448,9 @@ class Road(object):
 
     def close_vehicles_to(
         self,
-        vehicle: "kinematics.Vehicle",
+        vehicle: kinematics.Vehicle,
         distance: float,
-        count: Optional[int] = None,
+        count: int | None = None,
         see_behind: bool = True,
         sort: bool = True,
     ) -> object:
@@ -476,8 +478,8 @@ class Road(object):
                 vehicle.handle_collisions(other, dt)
 
     def neighbour_vehicles(
-        self, vehicle: "kinematics.Vehicle", lane_index: LaneIndex = None
-    ) -> Tuple[Optional["kinematics.Vehicle"], Optional["kinematics.Vehicle"]]:
+        self, vehicle: kinematics.Vehicle, lane_index: LaneIndex = None
+    ) -> tuple[kinematics.Vehicle | None, kinematics.Vehicle | None]:
         """
         Find the preceding and following vehicles of a given vehicle.
 

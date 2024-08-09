@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 from abc import ABC
-from typing import TYPE_CHECKING, Optional, Sequence, Tuple
+from typing import TYPE_CHECKING, Sequence, Tuple
 
 import numpy as np
 
 from highway_env import utils
+
 
 if TYPE_CHECKING:
     from highway_env.road.lane import AbstractLane
@@ -13,7 +16,6 @@ LaneIndex = Tuple[str, str, int]
 
 
 class RoadObject(ABC):
-
     """
     Common interface for objects that appear on the road.
 
@@ -25,7 +27,7 @@ class RoadObject(ABC):
 
     def __init__(
         self,
-        road: "Road",
+        road: Road,
         position: Sequence[float],
         heading: float = 0,
         speed: float = 0,
@@ -65,11 +67,11 @@ class RoadObject(ABC):
     @classmethod
     def make_on_lane(
         cls,
-        road: "Road",
+        road: Road,
         lane_index: LaneIndex,
         longitudinal: float,
-        speed: Optional[float] = None,
-    ) -> "RoadObject":
+        speed: float | None = None,
+    ) -> RoadObject:
         """
         Create a vehicle on a given lane at a longitudinal position.
 
@@ -86,7 +88,7 @@ class RoadObject(ABC):
             road, lane.position(longitudinal, 0), lane.heading_at(longitudinal), speed
         )
 
-    def handle_collisions(self, other: "RoadObject", dt: float = 0) -> None:
+    def handle_collisions(self, other: RoadObject, dt: float = 0) -> None:
         """
         Check for collision with another vehicle.
 
@@ -177,9 +179,7 @@ class RoadObject(ABC):
         points = (rotation @ points).T + np.tile(self.position, (4, 1))
         return np.vstack([points, points[0:1]])
 
-    def lane_distance_to(
-        self, other: "RoadObject", lane: "AbstractLane" = None
-    ) -> float:
+    def lane_distance_to(self, other: RoadObject, lane: AbstractLane = None) -> float:
         """
         Compute the signed distance to another object along a lane.
 
@@ -201,7 +201,7 @@ class RoadObject(ABC):
         """Is the object on its current lane, or off-road?"""
         return self.lane.on_lane(self.position)
 
-    def front_distance_to(self, other: "RoadObject") -> float:
+    def front_distance_to(self, other: RoadObject) -> float:
         return self.direction.dot(other.position - self.position)
 
     def __str__(self):
@@ -212,7 +212,6 @@ class RoadObject(ABC):
 
 
 class Obstacle(RoadObject):
-
     """Obstacles on the road."""
 
     def __init__(
@@ -223,7 +222,6 @@ class Obstacle(RoadObject):
 
 
 class Landmark(RoadObject):
-
     """Landmarks of certain areas on the road that must be reached."""
 
     def __init__(

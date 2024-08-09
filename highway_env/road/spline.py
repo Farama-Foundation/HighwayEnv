@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from __future__ import annotations
 
 import numpy as np
 from scipy import interpolate
@@ -11,7 +11,7 @@ class LinearSpline2D:
 
     PARAM_CURVE_SAMPLE_DISTANCE: int = 1  # curve samples are placed 1m apart
 
-    def __init__(self, points: List[Tuple[float, float]]):
+    def __init__(self, points: list[tuple[float, float]]):
         x_values = np.array([pt[0] for pt in points])
         y_values = np.array([pt[1] for pt in points])
         x_values_diff = np.diff(x_values)
@@ -39,15 +39,15 @@ class LinearSpline2D:
             self.x_curve, self.y_curve, self.length, self.PARAM_CURVE_SAMPLE_DISTANCE
         )
 
-    def __call__(self, lon: float) -> Tuple[float, float]:
+    def __call__(self, lon: float) -> tuple[float, float]:
         return self.x_curve(lon), self.y_curve(lon)
 
-    def get_dx_dy(self, lon: float) -> Tuple[float, float]:
+    def get_dx_dy(self, lon: float) -> tuple[float, float]:
         idx_pose = self._get_idx_segment_for_lon(lon)
         pose = self.poses[idx_pose]
         return pose.normal
 
-    def cartesian_to_frenet(self, position: Tuple[float, float]) -> Tuple[float, float]:
+    def cartesian_to_frenet(self, position: tuple[float, float]) -> tuple[float, float]:
         """
         Transform the point in Cartesian coordinates into Frenet coordinates of the curve
         """
@@ -74,7 +74,7 @@ class LinearSpline2D:
         lat = pose.project_onto_orthonormal(position)
         return lon, lat
 
-    def frenet_to_cartesian(self, lon: float, lat: float) -> Tuple[float, float]:
+    def frenet_to_cartesian(self, lon: float, lat: float) -> tuple[float, float]:
         """
         Convert the point from Frenet coordinates of the curve into Cartesian coordinates
         """
@@ -132,19 +132,19 @@ class CurvePose:
         self.normal = np.array([dx, dy]).flatten() / self.length
         self.orthonormal = np.array([-self.normal[1], self.normal[0]]).flatten()
 
-    def distance_to_origin(self, point: Tuple[float, float]) -> float:
+    def distance_to_origin(self, point: tuple[float, float]) -> float:
         """
         Compute the distance between the point [x, y] and the pose origin
         """
         return np.sqrt(np.sum((self.position - point) ** 2))
 
-    def project_onto_normal(self, point: Tuple[float, float]) -> float:
+    def project_onto_normal(self, point: tuple[float, float]) -> float:
         """
         Compute the longitudinal distance from pose origin to point by projecting the point onto the normal vector of the pose
         """
         return self.normal.dot(point - self.position)
 
-    def project_onto_orthonormal(self, point: Tuple[float, float]) -> float:
+    def project_onto_orthonormal(self, point: tuple[float, float]) -> float:
         """
         Compute the lateral distance from pose origin to point by projecting the point onto the orthonormal vector of the pose
         """

@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import itertools
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pygame
@@ -10,11 +12,12 @@ from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.dynamics import BicycleVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
+
 if TYPE_CHECKING:
     from highway_env.road.graphics import WorldSurface
 
 
-class VehicleGraphics(object):
+class VehicleGraphics:
     RED = (255, 100, 100)
     GREEN = (50, 200, 0)
     BLUE = (100, 200, 255)
@@ -28,7 +31,7 @@ class VehicleGraphics(object):
     def display(
         cls,
         vehicle: Vehicle,
-        surface: "WorldSurface",
+        surface: WorldSurface,
         transparent: bool = False,
         offscreen: bool = False,
         label: bool = False,
@@ -136,7 +139,7 @@ class VehicleGraphics(object):
         # Label
         if label:
             font = pygame.font.Font(None, 15)
-            text = "#{}".format(id(v) % 1000)
+            text = f"#{id(v) % 1000}"
             text = font.render(text, 1, (10, 10, 10), (255, 255, 255))
             surface.blit(text, position)
 
@@ -185,7 +188,7 @@ class VehicleGraphics(object):
 
     @classmethod
     def display_trajectory(
-        cls, states: List[Vehicle], surface: "WorldSurface", offscreen: bool = False
+        cls, states: list[Vehicle], surface: WorldSurface, offscreen: bool = False
     ) -> None:
         """
         Display the whole trajectory of a vehicle on a pygame surface.
@@ -201,7 +204,7 @@ class VehicleGraphics(object):
     def display_history(
         cls,
         vehicle: Vehicle,
-        surface: "WorldSurface",
+        surface: WorldSurface,
         frequency: float = 3,
         duration: float = 2,
         simulation: int = 15,
@@ -226,7 +229,7 @@ class VehicleGraphics(object):
             cls.display(v, surface, transparent=True, offscreen=offscreen)
 
     @classmethod
-    def get_color(cls, vehicle: Vehicle, transparent: bool = False) -> Tuple[int]:
+    def get_color(cls, vehicle: Vehicle, transparent: bool = False) -> tuple[int]:
         color = cls.DEFAULT_COLOR
         if getattr(vehicle, "color", None):
             color = vehicle.color

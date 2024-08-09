@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import os
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, Callable
 
 import numpy as np
 import pygame
@@ -12,19 +14,19 @@ from highway_env.envs.common.action import (
 from highway_env.road.graphics import RoadGraphics, WorldSurface
 from highway_env.vehicle.graphics import VehicleGraphics
 
+
 if TYPE_CHECKING:
     from highway_env.envs import AbstractEnv
     from highway_env.envs.common.abstract import Action
 
 
-class EnvViewer(object):
-
+class EnvViewer:
     """A viewer to render a highway driving environment."""
 
     SAVE_IMAGES = False
     agent_display = None
 
-    def __init__(self, env: "AbstractEnv", config: Optional[dict] = None) -> None:
+    def __init__(self, env: AbstractEnv, config: dict | None = None) -> None:
         self.env = env
         self.config = config or env.config
         self.offscreen = self.config["offscreen_rendering"]
@@ -86,7 +88,7 @@ class EnvViewer(object):
             (self.config["screen_width"], self.config["screen_height"])
         )
 
-    def set_agent_action_sequence(self, actions: List["Action"]) -> None:
+    def set_agent_action_sequence(self, actions: list[Action]) -> None:
         """
         Set the sequence of actions chosen by the agent, so that it can be displayed
 
@@ -160,7 +162,7 @@ class EnvViewer(object):
         if self.SAVE_IMAGES and self.directory:
             pygame.image.save(
                 self.sim_surface,
-                str(self.directory / "highway-env_{}.png".format(self.frame)),
+                str(self.directory / f"highway-env_{self.frame}.png"),
             )
             self.frame += 1
 
@@ -192,7 +194,7 @@ class EnvViewer(object):
         pygame.quit()
 
 
-class EventHandler(object):
+class EventHandler:
     @classmethod
     def handle_event(
         cls, action_type: ActionType, event: pygame.event.EventType
@@ -249,7 +251,7 @@ class EventHandler(object):
         action_type.act(action)
 
 
-class ObservationGraphics(object):
+class ObservationGraphics:
     COLOR = (0, 0, 0)
 
     @classmethod

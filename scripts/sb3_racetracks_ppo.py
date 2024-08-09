@@ -6,6 +6,7 @@ from stable_baselines3.common.vec_env import SubprocVecEnv
 
 import highway_env  # noqa: F401
 
+
 TRAIN = True
 
 if __name__ == "__main__":

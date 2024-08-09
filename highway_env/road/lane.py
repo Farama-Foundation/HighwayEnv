@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -8,15 +9,14 @@ from highway_env.road.spline import LinearSpline2D
 from highway_env.utils import Vector, class_from_path, get_class_path, wrap_to_pi
 
 
-class AbstractLane(object):
-
+class AbstractLane:
     """A lane on the road, described by its central curve."""
 
     metaclass__ = ABCMeta
     DEFAULT_WIDTH: float = 4
     VEHICLE_LENGTH: float = 5
     length: float = 0
-    line_types: List["LineType"]
+    line_types: list[LineType]
 
     @abstractmethod
     def position(self, longitudinal: float, lateral: float) -> np.ndarray:
@@ -30,7 +30,7 @@ class AbstractLane(object):
         raise NotImplementedError()
 
     @abstractmethod
-    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
+    def local_coordinates(self, position: np.ndarray) -> tuple[float, float]:
         """
         Convert a world position to local lane coordinates.
 
@@ -132,7 +132,7 @@ class AbstractLane(object):
     def distance_with_heading(
         self,
         position: np.ndarray,
-        heading: Optional[float],
+        heading: float | None,
         heading_weight: float = 1.0,
     ):
         """Compute a weighted distance in position and heading to the lane."""
@@ -148,7 +148,6 @@ class AbstractLane(object):
 
 
 class LineType:
-
     """A lane side line type."""
 
     NONE = 0
@@ -158,7 +157,6 @@ class LineType:
 
 
 class StraightLane(AbstractLane):
-
     """A lane going in straight line."""
 
     def __init__(
@@ -166,7 +164,7 @@ class StraightLane(AbstractLane):
         start: Vector,
         end: Vector,
         width: float = AbstractLane.DEFAULT_WIDTH,
-        line_types: Tuple[LineType, LineType] = None,
+        line_types: tuple[LineType, LineType] = None,
         forbidden: bool = False,
         speed_limit: float = 20,
         priority: int = 0,
@@ -208,7 +206,7 @@ class StraightLane(AbstractLane):
     def width_at(self, longitudinal: float) -> float:
         return self.width
 
-    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
+    def local_coordinates(self, position: np.ndarray) -> tuple[float, float]:
         delta = position - self.start
         longitudinal = np.dot(delta, self.direction)
         lateral = np.dot(delta, self.direction_lateral)
@@ -236,7 +234,6 @@ class StraightLane(AbstractLane):
 
 
 class SineLane(StraightLane):
-
     """A sinusoidal lane."""
 
     def __init__(
@@ -247,7 +244,7 @@ class SineLane(StraightLane):
         pulsation: float,
         phase: float,
         width: float = StraightLane.DEFAULT_WIDTH,
-        line_types: List[LineType] = None,
+        line_types: list[LineType] = None,
         forbidden: bool = False,
         speed_limit: float = 20,
         priority: int = 0,
@@ -282,7 +279,7 @@ class SineLane(StraightLane):
             * np.cos(self.pulsation * longitudinal + self.phase)
         )
 
-    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
+    def local_coordinates(self, position: np.ndarray) -> tuple[float, float]:
         longitudinal, lateral = super().local_coordinates(position)
         return longitudinal, lateral - self.amplitude * np.sin(
             self.pulsation * longitudinal + self.phase
@@ -312,7 +309,6 @@ class SineLane(StraightLane):
 
 
 class CircularLane(AbstractLane):
-
     """A lane going in circle arc."""
 
     def __init__(
@@ -323,7 +319,7 @@ class CircularLane(AbstractLane):
         end_phase: float,
         clockwise: bool = True,
         width: float = AbstractLane.DEFAULT_WIDTH,
-        line_types: List[LineType] = None,
+        line_types: list[LineType] = None,
         forbidden: bool = False,
         speed_limit: float = 20,
         priority: int = 0,
@@ -356,7 +352,7 @@ class CircularLane(AbstractLane):
     def width_at(self, longitudinal: float) -> float:
         return self.width
 
-    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
+    def local_coordinates(self, position: np.ndarray) -> tuple[float, float]:
         delta = position - self.center
         phi = np.arctan2(delta[1], delta[0])
         phi = self.start_phase + utils.wrap_to_pi(phi - self.start_phase)
@@ -395,9 +391,9 @@ class PolyLaneFixedWidth(AbstractLane):
 
     def __init__(
         self,
-        lane_points: List[Tuple[float, float]],
+        lane_points: list[tuple[float, float]],
         width: float = AbstractLane.DEFAULT_WIDTH,
-        line_types: Tuple[LineType, LineType] = None,
+        line_types: tuple[LineType, LineType] = None,
         forbidden: bool = False,
         speed_limit: float = 20,
         priority: int = 0,
@@ -415,7 +411,7 @@ class PolyLaneFixedWidth(AbstractLane):
         yaw = self.heading_at(longitudinal)
         return np.array([x - np.sin(yaw) * lateral, y + np.cos(yaw) * lateral])
 
-    def local_coordinates(self, position: np.ndarray) -> Tuple[float, float]:
+    def local_coordinates(self, position: np.ndarray) -> tuple[float, float]:
         lon, lat = self.curve.cartesian_to_frenet(position)
         return lon, lat
 
@@ -453,10 +449,10 @@ class PolyLane(PolyLaneFixedWidth):
 
     def __init__(
         self,
-        lane_points: List[Tuple[float, float]],
-        left_boundary_points: List[Tuple[float, float]],
-        right_boundary_points: List[Tuple[float, float]],
-        line_types: Tuple[LineType, LineType] = None,
+        lane_points: list[tuple[float, float]],
+        left_boundary_points: list[tuple[float, float]],
+        right_boundary_points: list[tuple[float, float]],
+        line_types: tuple[LineType, LineType] = None,
         forbidden: bool = False,
         speed_limit: float = 20,
         priority: int = 0,
@@ -533,7 +529,7 @@ class PolyLane(PolyLaneFixedWidth):
         return config
 
 
-def _to_serializable(arg: Union[np.ndarray, List]) -> List:
+def _to_serializable(arg: np.ndarray | list) -> list:
     if isinstance(arg, np.ndarray):
         return arg.tolist()
     return arg

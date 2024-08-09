@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import copy
 import importlib
 import itertools
-from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Callable, List, Sequence, Tuple, Union
 
 import numpy as np
+
 
 # Useful types
 Vector = Union[np.ndarray, Sequence[float]]
@@ -108,7 +111,7 @@ def point_in_ellipse(
 
 
 def rotated_rectangles_intersect(
-    rect1: Tuple[Vector, float, float, float], rect2: Tuple[Vector, float, float, float]
+    rect1: tuple[Vector, float, float, float], rect2: tuple[Vector, float, float, float]
 ) -> bool:
     """
     Do two rotated rectangles intersect?
@@ -127,7 +130,7 @@ def rect_corners(
     angle: float,
     include_midpoints: bool = False,
     include_center: bool = False,
-) -> List[np.ndarray]:
+) -> list[np.ndarray]:
     """
     Returns the positions of the corners of a rectangle.
     :param center: the rectangle center
@@ -153,7 +156,7 @@ def rect_corners(
 
 
 def has_corner_inside(
-    rect1: Tuple[Vector, float, float, float], rect2: Tuple[Vector, float, float, float]
+    rect1: tuple[Vector, float, float, float], rect2: tuple[Vector, float, float, float]
 ) -> bool:
     """
     Check if rect1 has a corner inside rect2
@@ -169,7 +172,7 @@ def has_corner_inside(
     )
 
 
-def project_polygon(polygon: Vector, axis: Vector) -> Tuple[float, float]:
+def project_polygon(polygon: Vector, axis: Vector) -> tuple[float, float]:
     min_p, max_p = None, None
     for p in polygon:
         projected = p.dot(axis)
@@ -190,7 +193,7 @@ def interval_distance(min_a: float, max_a: float, min_b: float, max_b: float):
 
 def are_polygons_intersecting(
     a: Vector, b: Vector, displacement_a: Vector, displacement_b: Vector
-) -> Tuple[bool, bool, Optional[np.ndarray]]:
+) -> tuple[bool, bool, np.ndarray | None]:
     """
     Checks if the two polygons are intersecting.
 
@@ -237,12 +240,12 @@ def are_polygons_intersecting(
 
 
 def confidence_ellipsoid(
-    data: Dict[str, np.ndarray],
+    data: dict[str, np.ndarray],
     lambda_: float = 1e-5,
     delta: float = 0.1,
     sigma: float = 0.1,
     param_bound: float = 1.0,
-) -> Tuple[np.ndarray, np.ndarray, float]:
+) -> tuple[np.ndarray, np.ndarray, float]:
     """
     Compute a confidence ellipsoid over the parameter theta, where y = theta^T phi
 
@@ -269,7 +272,7 @@ def confidence_ellipsoid(
 
 def confidence_polytope(
     data: dict, parameter_box: np.ndarray
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, float]:
     """
     Compute a confidence polytope over the parameter theta, where y = theta^T phi
 
@@ -380,7 +383,7 @@ def distance_to_circle(center, radius, direction):
     return distance
 
 
-def distance_to_rect(line: Tuple[np.ndarray, np.ndarray], rect: List[np.ndarray]):
+def distance_to_rect(line: tuple[np.ndarray, np.ndarray], rect: list[np.ndarray]):
     """
     Compute the intersection between a line segment and a rectangle.
 

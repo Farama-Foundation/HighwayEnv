@@ -1,4 +1,4 @@
-from typing import Dict, Text
+from __future__ import annotations
 
 import numpy as np
 
@@ -11,7 +11,6 @@ from highway_env.vehicle.objects import Obstacle
 
 
 class MergeEnv(AbstractEnv):
-
     """
     A highway merge negotiation environment.
 
@@ -57,7 +56,7 @@ class MergeEnv(AbstractEnv):
             [0, 1],
         )
 
-    def _rewards(self, action: int) -> Dict[Text, float]:
+    def _rewards(self, action: int) -> dict[str, float]:
         scaled_speed = utils.lmap(
             self.vehicle.speed, self.config["reward_speed_range"], [0, 1]
         )

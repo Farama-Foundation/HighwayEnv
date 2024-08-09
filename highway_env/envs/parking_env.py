@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from abc import abstractmethod
-from typing import Optional
 
 import numpy as np
 from gymnasium import Env
@@ -77,7 +78,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         }
     }
 
-    def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
+    def __init__(self, config: dict = None, render_mode: str | None = None) -> None:
         super().__init__(config, render_mode)
         self.observation_type_parking = None
 
@@ -121,7 +122,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         )
 
     def _info(self, obs, action) -> dict:
-        info = super(ParkingEnv, self)._info(obs, action)
+        info = super()._info(obs, action)
         if isinstance(self.observation_type, MultiAgentObservation):
             success = tuple(
                 self._is_success(agent_obs["achieved_goal"], agent_obs["desired_goal"])

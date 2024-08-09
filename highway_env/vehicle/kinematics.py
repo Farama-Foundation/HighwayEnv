@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import copy
 from collections import deque
-from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -10,7 +11,6 @@ from highway_env.vehicle.objects import RoadObject
 
 
 class Vehicle(RoadObject):
-
     """
     A moving vehicle on a road, and its kinematics.
 
@@ -52,11 +52,11 @@ class Vehicle(RoadObject):
         cls,
         road: Road,
         speed: float = None,
-        lane_from: Optional[str] = None,
-        lane_to: Optional[str] = None,
-        lane_id: Optional[int] = None,
+        lane_from: str | None = None,
+        lane_to: str | None = None,
+        lane_id: int | None = None,
         spacing: float = 1,
-    ) -> "Vehicle":
+    ) -> Vehicle:
         """
         Create a random vehicle on the road.
 
@@ -104,7 +104,7 @@ class Vehicle(RoadObject):
         return v
 
     @classmethod
-    def create_from(cls, vehicle: "Vehicle") -> "Vehicle":
+    def create_from(cls, vehicle: Vehicle) -> Vehicle:
         """
         Create a new vehicle from an existing one.
 
@@ -118,7 +118,7 @@ class Vehicle(RoadObject):
             v.color = vehicle.color
         return v
 
-    def act(self, action: Union[dict, str] = None) -> None:
+    def act(self, action: dict | str = None) -> None:
         """
         Store an action to be repeated.
 
@@ -178,7 +178,7 @@ class Vehicle(RoadObject):
 
     def predict_trajectory_constant_speed(
         self, times: np.ndarray
-    ) -> Tuple[List[np.ndarray], List[float]]:
+    ) -> tuple[list[np.ndarray], list[float]]:
         if self.prediction_type == "zero_steering":
             action = {"acceleration": 0.0, "steering": 0.0}
         elif self.prediction_type == "constant_steering":
@@ -235,7 +235,7 @@ class Vehicle(RoadObject):
             return np.zeros((3,))
 
     def to_dict(
-        self, origin_vehicle: "Vehicle" = None, observe_intentions: bool = True
+        self, origin_vehicle: Vehicle = None, observe_intentions: bool = True
     ) -> dict:
         d = {
             "presence": 1,
@@ -270,11 +270,11 @@ class Vehicle(RoadObject):
 
     def predict_trajectory(
         self,
-        actions: List,
+        actions: list,
         action_duration: float,
         trajectory_timestep: float,
         dt: float,
-    ) -> List["Vehicle"]:
+    ) -> list[Vehicle]:
         """
         Predict the future trajectory of the vehicle given a sequence of actions.
 
