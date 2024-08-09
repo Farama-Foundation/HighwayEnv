@@ -16,6 +16,7 @@ except Exception:  # nosec
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 from gymnasium.envs.registration import register
+from highway_env.envs.common.abstract import MultiAgentWrapper
 
 
 def register_highway_envs():
@@ -56,7 +57,8 @@ def register_highway_envs():
 
     register(
         id="intersection-multi-agent-v1",
-        entry_point="highway_env.envs:TupleMultiAgentIntersectionEnv",
+        entry_point="highway_env.envs:MultiAgentIntersectionEnv",
+        additional_wrappers=(MultiAgentWrapper.wrapper_spec(),),
     )
 
     # lane_keeping_env.py

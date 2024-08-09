@@ -423,6 +423,3 @@ class ContinuousIntersectionEnv(IntersectionEnv):
             }
         )
         return config
-
-
-TupleMultiAgentIntersectionEnv = MultiAgentWrapper(MultiAgentIntersectionEnv)
