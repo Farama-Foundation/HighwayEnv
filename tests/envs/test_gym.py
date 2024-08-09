@@ -45,7 +45,7 @@ def test_highway_api(env_id):
     for warning in caught_warnings:
         if "is different from the unwrapped version" in warning.message.args[0]:
             continue
-        if warning.message.args[0] not in CHECK_ENV_IGNORE_WARNINGS:
+        elif warning.message.args[0] not in CHECK_ENV_IGNORE_WARNINGS:
             raise gym.error.Error(f"Unexpected warning: {warning.message}")
 
 
