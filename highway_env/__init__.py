@@ -3,6 +3,7 @@ import sys
 
 from gymnasium.envs.registration import register
 
+
 __version__ = "2.0.0"
 
 try:
