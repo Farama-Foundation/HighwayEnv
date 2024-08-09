@@ -3,7 +3,7 @@ from typing import Dict, Text, Tuple
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv, MultiAgentWrapper
+from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import AbstractLane, CircularLane, LineType, StraightLane
 from highway_env.road.regulation import RegulatedRoad
 from highway_env.road.road import RoadNetwork
@@ -423,6 +423,3 @@ class ContinuousIntersectionEnv(IntersectionEnv):
             }
         )
         return config
-
-
-TupleMultiAgentIntersectionEnv = MultiAgentWrapper(MultiAgentIntersectionEnv)
