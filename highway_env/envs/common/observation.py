@@ -674,7 +674,7 @@ class ExitObservation(KinematicObservation):
         if self.order == "shuffled":
             self.env.np_random.shuffle(obs[1:])
         # Flatten
-        return obs
+        return obs.astype(self.space().dtype)
 
 
 class LidarObservation(ObservationType):
