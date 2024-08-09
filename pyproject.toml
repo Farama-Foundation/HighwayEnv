@@ -1,6 +1,50 @@
-[build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+[project]
+name = "highway-env"
+description = "An environment for simulated highway driving tasks."
+readme = "README.md"
+requires-python = ">= 3.8"
+authors = [{ name = "Edouard Leurent", email = "eleurent@gmail.com" }]
+license = { text = "MIT License" }
+keywords = ["Reinforcement Learning", "car simulation", "RL", "AI"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    'Intended Audience :: Science/Research',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
 ]
-build-backend = "setuptools.build_meta"
+dependencies = [
+    "gymnasium >=0.28.0",
+    "farama-notifications >=0.0.1",
+    "numpy >=1.21.0",
+    "pygame >=2.0.2",
+    "matplotlib",
+    "pandas",
+    "scipy"
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+testing = [
+    "pytest",
+    "pytest-cov"
+]
+
+[project.urls]
+Homepage = "https://farama.org"
+Repository = "https://github.com/eleurent/highway-env"
+Documentation = "https://highway-env.farama.org/"
+"Bug Report" = "https://github.com/eleurent/highway-env/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["highway_env", "highway_env.*"]
+
+[tool.setuptools.package-data]

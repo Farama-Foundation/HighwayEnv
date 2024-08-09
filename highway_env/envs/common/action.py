@@ -94,7 +94,7 @@ class ContinuousAction(ActionType):
         lateral: bool = True,
         dynamical: bool = False,
         clip: bool = True,
-        **kwargs
+        **kwargs,
     ) -> None:
         """
         Create a continuous action space.
@@ -172,7 +172,7 @@ class DiscreteAction(ContinuousAction):
         dynamical: bool = False,
         clip: bool = True,
         actions_per_axis: int = 3,
-        **kwargs
+        **kwargs,
     ) -> None:
         super().__init__(
             env,
@@ -216,7 +216,7 @@ class DiscreteMetaAction(ActionType):
         longitudinal: bool = True,
         lateral: bool = True,
         target_speeds: Optional[Vector] = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         """
         Create a discrete action space of meta-actions.

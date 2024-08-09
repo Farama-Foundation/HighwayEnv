@@ -25,11 +25,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: |
-        pip install gymnasium>=1.0.0a2
-        pip install .[deploy]
+      run: pip install .[testing]
     - name: Test with pytest
-      run: |
-        pip install pytest
-        pip install pytest-cov
-        pytest --cov=./ --cov-report=xml
+      run: pytest --cov=./ --cov-report=xml
