@@ -123,7 +123,7 @@ class IntersectionEnv(AbstractEnv):
         info["agents_rewards"] = tuple(
             self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles
         )
-        info["agents_dones"] = tuple(
+        info["agents_terminated"] = tuple(
             self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles
         )
         return info

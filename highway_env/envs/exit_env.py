@@ -46,10 +46,10 @@ class ExitEnv(HighwayEnv):
         self._create_road()
         self._create_vehicles()
 
-    def step(self, action) -> tuple[np.ndarray, float, bool, dict]:
-        obs, reward, terminal, info = super().step(action)
+    def step(self, action) -> tuple[np.ndarray, float, bool, bool, dict]:
+        obs, reward, terminated, truncated, info = super().step(action)
         info.update({"is_success": self._is_success()})
-        return obs, reward, terminal, info
+        return obs, reward, terminated, truncated, info
 
     def _create_road(
         self, road_length=1000, exit_position=400, exit_length=100
