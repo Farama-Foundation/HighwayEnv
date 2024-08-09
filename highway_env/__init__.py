@@ -1,7 +1,7 @@
 import os
 import sys
 
-__version__ = "1.8.2"
+__version__ = "1.9.0"
 
 try:
     from farama_notifications import notifications
@@ -19,7 +19,7 @@ from gymnasium.envs.registration import register
 from highway_env.envs.common.abstract import MultiAgentWrapper
 
 
-def register_highway_envs():
+def _register_highway_envs():
     """Import the envs module so that envs register themselves."""
 
     # exit_env.py
@@ -108,3 +108,6 @@ def register_highway_envs():
 
     # u_turn_env.py
     register(id="u-turn-v0", entry_point="highway_env.envs:UTurnEnv")
+
+
+_register_highway_envs()
