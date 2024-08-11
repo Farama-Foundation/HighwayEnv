@@ -1,7 +1,7 @@
 import os
 import sys
 
-__version__ = "1.8.2"
+__version__ = "1.9.1"
 
 try:
     from farama_notifications import notifications
