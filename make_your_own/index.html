@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -7,17 +7,17 @@
     <meta property="og:title" content="highway-env Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/make_your_own.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta property="og:url" content="https://highway-env.farama.org/make_your_own.html" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Frequently Asked Questions" href="../faq/" /><link rel="prev" title="The Multi-Agent setting" href="../multi_agent/" />
         <link rel="canonical" href="https://highway-env.farama.org/make_your_own.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Make your own environment - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -55,18 +55,6 @@
               <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
               <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
             </svg>
-            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
-              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
-              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
-              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
-            </svg> -->
-            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
-              <defs></defs>
-              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
-              <line x1="8" y1="1" x2="8" y2="23"></line>
-              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
-            </svg> -->
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
@@ -222,7 +210,7 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
@@ -231,10 +219,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../actions/">Actions</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
@@ -304,14 +292,14 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="make-your-own-environment">
-<span id="make-your-own"></span><h1>Make your own environment<a class="headerlink" href="#make-your-own-environment" title="Permalink to this heading">#</a></h1>
+<span id="make-your-own"></span><h1>Make your own environment<a class="headerlink" href="#make-your-own-environment" title="Link to this heading">¶</a></h1>
 <p>Here are the steps required to create a new environment.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Pull requests are welcome!</p>
 </div>
 <section id="set-up-files">
-<h2>Set up files<a class="headerlink" href="#set-up-files" title="Permalink to this heading">#</a></h2>
+<h2>Set up files<a class="headerlink" href="#set-up-files" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Create a new <code class="docutils literal notranslate"><span class="pre">your_env.py</span></code> file in <code class="docutils literal notranslate"><span class="pre">highway_env/envs/</span></code></p></li>
 <li><p>Define a class YourEnv, that must inherit from <a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractEnv</span></code></a></p></li>
@@ -325,14 +313,14 @@
 </ul>
 </section>
 <section id="create-the-scene">
-<h2>Create the scene<a class="headerlink" href="#create-the-scene" title="Permalink to this heading">#</a></h2>
+<h2>Create the scene<a class="headerlink" href="#create-the-scene" title="Link to this heading">¶</a></h2>
 <p>The first step is to create a <code class="xref py py-class docutils literal notranslate"><span class="pre">RoadNetwork</span></code> that describes the geometry and topology of
 roads and lanes in the scene.
 This should be achieved in a <code class="docutils literal notranslate"><span class="pre">YourEnv._make_road()</span></code> method, called from <code class="docutils literal notranslate"><span class="pre">YourEnv.reset()</span></code> to set the <code class="docutils literal notranslate"><span class="pre">self.road</span></code> field.</p>
 <p>See <span class="xref std std-ref">Roads</span> for reference, and existing environments as examples.</p>
 </section>
 <section id="create-the-vehicles">
-<h2>Create the vehicles<a class="headerlink" href="#create-the-vehicles" title="Permalink to this heading">#</a></h2>
+<h2>Create the vehicles<a class="headerlink" href="#create-the-vehicles" title="Link to this heading">¶</a></h2>
 <p>The second step is to populate your road network with vehicles. This should be achieved in a <code class="docutils literal notranslate"><span class="pre">YourEnv._make_road()</span></code>
 method, called from <code class="docutils literal notranslate"><span class="pre">YourEnv.reset()</span></code> to set the <code class="docutils literal notranslate"><span class="pre">self.road.vehicles</span></code> list of <a class="reference internal" href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vehicle</span></code></a>.</p>
 <p>First, define the controlled ego-vehicle by setting <code class="docutils literal notranslate"><span class="pre">self.vehicle</span></code>. The class of controlled vehicle depends on the
@@ -341,28 +329,45 @@ Other vehicles can be created more freely, and added to the <code class="docutil
 <p>See <span class="xref std std-ref">vehicle behaviors</span> for reference, and existing environments as examples.</p>
 </section>
 <section id="make-the-environment-configurable">
-<h2>Make the environment configurable<a class="headerlink" href="#make-the-environment-configurable" title="Permalink to this heading">#</a></h2>
+<h2>Make the environment configurable<a class="headerlink" href="#make-the-environment-configurable" title="Link to this heading">¶</a></h2>
 <p>To make a part of your environment configurable, overload the <a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.default_config" title="highway_env.envs.common.abstract.AbstractEnv.default_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">default_config()</span></code></a>
 method to define new <code class="docutils literal notranslate"><span class="pre">{&quot;config_key&quot;:</span> <span class="pre">value}</span></code> pairs with default values. These configurations then be accessed in your
 environment implementation with <code class="docutils literal notranslate"><span class="pre">self.config[&quot;config_key&quot;]</span></code>, and once the environment is created, it can be configured with
 <code class="docutils literal notranslate"><span class="pre">env.configure({&quot;config_key&quot;:</span> <span class="pre">other_value})</span></code> followed by <code class="docutils literal notranslate"><span class="pre">env.reset()</span></code>.</p>
 </section>
 <section id="register-the-environment">
-<h2>Register the environment<a class="headerlink" href="#register-the-environment" title="Permalink to this heading">#</a></h2>
-<p>In <code class="docutils literal notranslate"><span class="pre">highway_env/envs/__init__.py</span></code>, add the following line:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">register</span><span class="p">(</span>
+<h2>Register the environment<a class="headerlink" href="#register-the-environment" title="Link to this heading">¶</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">highway_env/envs/__init__.py</span></code>, add the following import:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">highway_env.envs.your_env</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>so you can register your env in the <code class="docutils literal notranslate"><span class="pre">register_highway_envs()</span></code> method of <code class="docutils literal notranslate"><span class="pre">highway_env/__init__.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your_env.py</span>
+<span class="n">register</span><span class="p">(</span>
     <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;your-env-v0&#39;</span><span class="p">,</span>
-    <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:YourEnv&#39;</span><span class="p">,</span>
+    <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:YourEnv&#39;</span>
 <span class="p">)</span>
+</pre></div>
+</div>
+<p>This registration will be performed automatically as a hook if you reinstall the highway_env module with</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup.py<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Alternatively, you can call it manually with</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">highway_env</span>
+<span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
 <section id="profit">
-<h2>Profit<a class="headerlink" href="#profit" title="Permalink to this heading">#</a></h2>
+<h2>Profit<a class="headerlink" href="#profit" title="Link to this heading">¶</a></h2>
 <p>That’s it!
-You should now be able to run the environment:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+You should now be able to run the environment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only required if you did not reinstall highway_env</span>
+<span class="kn">import</span> <span class="nn">highway_env</span>
+<span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 
+<span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;your-env-v0&#39;</span><span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
@@ -370,30 +375,36 @@ You should now be able to run the environment:</p>
 </pre></div>
 </div>
 </section>
-<section id="module-highway_env.envs.common.abstract">
-<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.envs.common.abstract" title="Permalink to this heading">#</a></h2>
-<dl class="py class">
+<section id="module-highway_env.__init__">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.__init__" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="highway_env.__init__.register_highway_envs">
+<span class="sig-prename descclassname"><span class="pre">highway_env.__init__.</span></span><span class="sig-name descname"><span class="pre">register_highway_envs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/__init__/#register_highway_envs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.__init__.register_highway_envs" title="Link to this definition">¶</a></dt>
+<dd><p>Import the envs module so that envs register themselves.</p>
+</dd></dl>
+
+<dl class="py class" id="module-highway_env.envs.common.abstract">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">AbstractEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">AbstractEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv" title="Link to this definition">¶</a></dt>
 <dd><p>A generic environment for various tasks involving a vehicle driving on a road.</p>
 <p>The environment contains a road populated with vehicles, and a controlled ego-vehicle that can change lane and
 speed. The action space is fixed, but the observation space and reward function must be defined in the
 environment implementations.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE">
-<span class="sig-name descname"><span class="pre">PERCEPTION_DISTANCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">200.0</span></em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">PERCEPTION_DISTANCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">200.0</span></em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE" title="Link to this definition">¶</a></dt>
 <dd><p>The maximum distance of any vehicle present in the observation [m]</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.vehicle">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><span class="pre">Vehicle</span></a></em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.vehicle" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vehicle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><span class="pre">Vehicle</span></a></em><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.vehicle" title="Link to this definition">¶</a></dt>
 <dd><p>First (default) controlled vehicle.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.default_config">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.default_config" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.default_config" title="Link to this definition">¶</a></dt>
 <dd><p>Default environment configuration.</p>
 <p>Can be overloaded in environment implementations, or by calling configure().
 :return: a configuration dict</p>
@@ -401,13 +412,13 @@ environment implementations.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.define_spaces">
-<span class="sig-name descname"><span class="pre">define_spaces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.define_spaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.define_spaces" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">define_spaces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.define_spaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.define_spaces" title="Link to this definition">¶</a></dt>
 <dd><p>Set the types and spaces of observation and action from config.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._reward">
-<span class="sig-name descname"><span class="pre">_reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._reward" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._reward" title="Link to this definition">¶</a></dt>
 <dd><p>Return the reward associated with performing a given action and ending up in the current state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -421,7 +432,7 @@ environment implementations.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._rewards">
-<span class="sig-name descname"><span class="pre">_rewards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._rewards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._rewards" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_rewards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._rewards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._rewards" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a multi-objective vector of rewards.</p>
 <p>If implemented, this reward vector should be aggregated into a scalar in _reward().
 This vector value should only be returned inside the info dict.</p>
@@ -437,14 +448,14 @@ This vector value should only be returned inside the info dict.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._is_terminated">
-<span class="sig-name descname"><span class="pre">_is_terminated</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._is_terminated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._is_terminated" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_is_terminated</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._is_terminated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._is_terminated" title="Link to this definition">¶</a></dt>
 <dd><p>Check whether the current state is a terminal state</p>
 <p>:return:is the state terminal</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._is_truncated">
-<span class="sig-name descname"><span class="pre">_is_truncated</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._is_truncated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._is_truncated" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_is_truncated</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._is_truncated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._is_truncated" title="Link to this definition">¶</a></dt>
 <dd><p>Check we truncate the episode at the current step</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -455,7 +466,7 @@ This vector value should only be returned inside the info dict.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._info">
-<span class="sig-name descname"><span class="pre">_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Observation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._info" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Observation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._info" title="Link to this definition">¶</a></dt>
 <dd><p>Return a dictionary of additional information</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -472,7 +483,7 @@ This vector value should only be returned inside the info dict.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Observation</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.reset" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Observation</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.reset" title="Link to this definition">¶</a></dt>
 <dd><p>Reset the environment to it’s initial configuration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -489,14 +500,14 @@ This vector value should only be returned inside the info dict.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._reset">
-<span class="sig-name descname"><span class="pre">_reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._reset" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._reset" title="Link to this definition">¶</a></dt>
 <dd><p>Reset the scene: roads and vehicles.</p>
 <p>This method must be overloaded by the environments.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Observation</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.step" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Observation</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.step" title="Link to this definition">¶</a></dt>
 <dd><p>Perform an action and step the environment dynamics.</p>
 <p>The action is executed by the ego-vehicle, and all other vehicles on the road performs their default behaviour
 for several simulation timesteps until the next decision making step.</p>
@@ -512,27 +523,27 @@ for several simulation timesteps until the next decision making step.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._simulate">
-<span class="sig-name descname"><span class="pre">_simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._simulate" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._simulate" title="Link to this definition">¶</a></dt>
 <dd><p>Perform several steps of simulation with constant action.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.render" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.render" title="Link to this definition">¶</a></dt>
 <dd><p>Render the environment.</p>
 <p>Create a viewer if none exists, and use it to render an image.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.close" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.close" title="Link to this definition">¶</a></dt>
 <dd><p>Close the environment.</p>
 <p>Will close the environment viewer if it exists.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._automatic_rendering">
-<span class="sig-name descname"><span class="pre">_automatic_rendering</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._automatic_rendering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._automatic_rendering" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_automatic_rendering</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._automatic_rendering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._automatic_rendering" title="Link to this definition">¶</a></dt>
 <dd><p>Automatically render the intermediate frames while an action is still ongoing.</p>
 <p>This allows to render the whole video and not only single steps corresponding to agent decision-making.
 If a RecordVideo wrapper has been set, use it to capture intermediate frames.</p>
@@ -540,7 +551,7 @@ If a RecordVideo wrapper has been set, use it to capture intermediate frames.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.simplify">
-<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.simplify" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.simplify" title="Link to this definition">¶</a></dt>
 <dd><p>Return a simplified copy of the environment where distant vehicles have been removed from the road.</p>
 <p>This is meant to lower the policy computational load while preserving the optimal actions set.</p>
 <dl class="field-list simple">
@@ -552,7 +563,7 @@ If a RecordVideo wrapper has been set, use it to capture intermediate frames.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.change_vehicles">
-<span class="sig-name descname"><span class="pre">change_vehicles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vehicle_class_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.change_vehicles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.change_vehicles" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">change_vehicles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vehicle_class_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.change_vehicles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.change_vehicles" title="Link to this definition">¶</a></dt>
 <dd><p>Change the type of all vehicles on the road</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -569,7 +580,7 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.MultiAgentWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">MultiAgentWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Env</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#MultiAgentWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.MultiAgentWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">MultiAgentWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Env</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#MultiAgentWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.MultiAgentWrapper" title="Link to this definition">¶</a></dt>
 <dd><p>Wraps an environment to allow a modular transformation of the <a class="reference internal" href="#highway_env.envs.common.abstract.MultiAgentWrapper.step" title="highway_env.envs.common.abstract.MultiAgentWrapper.step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code></a> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code> methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -578,7 +589,7 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.MultiAgentWrapper.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#MultiAgentWrapper.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.MultiAgentWrapper.step" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#MultiAgentWrapper.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.MultiAgentWrapper.step" title="Link to this definition">¶</a></dt>
 <dd><p>Uses the <a class="reference internal" href="#highway_env.envs.common.abstract.MultiAgentWrapper.step" title="highway_env.envs.common.abstract.MultiAgentWrapper.step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code></a> of the <code class="xref py py-attr docutils literal notranslate"><span class="pre">env</span></code> that can be overwritten to change the returned data.</p>
 </dd></dl>
 
@@ -656,7 +667,8 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 <li><a class="reference internal" href="#make-the-environment-configurable">Make the environment configurable</a></li>
 <li><a class="reference internal" href="#register-the-environment">Register the environment</a></li>
 <li><a class="reference internal" href="#profit">Profit</a></li>
-<li><a class="reference internal" href="#module-highway_env.envs.common.abstract">API</a><ul>
+<li><a class="reference internal" href="#module-highway_env.__init__">API</a><ul>
+<li><a class="reference internal" href="#highway_env.__init__.register_highway_envs"><code class="docutils literal notranslate"><span class="pre">register_highway_envs()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv"><code class="docutils literal notranslate"><span class="pre">AbstractEnv</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE"><code class="docutils literal notranslate"><span class="pre">AbstractEnv.PERCEPTION_DISTANCE</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.vehicle"><code class="docutils literal notranslate"><span class="pre">AbstractEnv.vehicle</span></code></a></li>
@@ -716,49 +728,100 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
     </script>
 
     
-    <script>
-          (() => {
-              if (!localStorage.getItem("shownCookieAlert")) {
-                  const boxElem = document.createElement("div");
-                  boxElem.classList.add("cookie-alert");
-                  const containerElem = document.createElement("div");
-                  containerElem.classList.add("cookie-alert__container");
-                  const textElem = document.createElement("p");
-                  textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
-                                      Google Analytics</a> to collect statistics. You can disable it by blocking
-                                      the JavaScript coming from www.google-analytics.com.`;
-                                      containerElem.appendChild(textElem);
-                  const closeBtn = document.createElement("button");
-                  closeBtn.innerHTML = `<?xml version="1.0" ?><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>`
-                  closeBtn.onclick = () => {
-                      localStorage.setItem("shownCookieAlert", "true");
-                      boxElem.style.display = "none";
-                  }
-                  containerElem.appendChild(closeBtn);
-                  boxElem.appendChild(containerElem);
-                  document.body.appendChild(boxElem);
-              }
-          })()
-      </script>
-
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H9C8TWXZ8"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6H9C8TWXZ8"></script>
       <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+        const enableGtag = () => {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-6H9C8TWXZ8');
+        }
+        (() => {
+            if (!localStorage.getItem("acceptedCookieAlert")) {
+                const boxElem = document.createElement("div");
+                boxElem.classList.add("cookie-alert");
+                const containerElem = document.createElement("div");
+                containerElem.classList.add("cookie-alert__container");
+                const textElem = document.createElement("p");
+                textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
+                                    Google Analytics</a> to collect statistics.`;
+                                    containerElem.appendChild(textElem);
 
-        gtag('config', 'G-6H9C8TWXZ8');
+                const declineBtn = Object.assign(document.createElement("button"),
+                  {
+                    innerText: "Deny",
+                    className: "farama-btn cookie-alert__button",
+                    id: "cookie-alert__decline",
+                  }
+                );
+                declineBtn.addEventListener("click", () => {
+                  localStorage.setItem("acceptedCookieAlert", false);
+                  boxElem.remove();
+                });
+
+                const acceptBtn = Object.assign(document.createElement("button"),
+                  {
+                    innerText: "Allow",
+                    className: "farama-btn cookie-alert__button",
+                    id: "cookie-alert__accept",
+                  }
+                );
+                acceptBtn.addEventListener("click", () => {
+                  localStorage.setItem("acceptedCookieAlert", true);
+                  boxElem.remove();
+                  enableGtag();
+                });
+
+                containerElem.appendChild(declineBtn);
+                containerElem.appendChild(acceptBtn);
+                boxElem.appendChild(containerElem);
+                document.body.appendChild(boxElem);
+            } else if (localStorage.getItem("acceptedCookieAlert") === "true") {
+              enableGtag();
+            }
+        })()
       </script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/documentation_options.js?v=a5603611"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=7660844c"></script>
     <script src="../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
     <script>
+
+      const createProjectsList = (projects, displayImages) => {
+        const ulElem = Object.assign(document.createElement('ul'),
+          {
+            className:'farama-header-menu-list',
+          }
+        )
+        for (let project of projects) {
+          const liElem = document.createElement("li");
+          const aElem = Object.assign(document.createElement("a"),
+            {
+              href: project.link
+            }
+          );
+          liElem.appendChild(aElem);
+          if (displayImages) {
+            const imgElem = Object.assign(document.createElement("img"),
+              {
+                src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                alt: `${project.name} logo`,
+                className: "farama-black-logo-invert"
+              }
+            );
+            aElem.appendChild(imgElem);
+          }
+          aElem.appendChild(document.createTextNode(project.name));
+          ulElem.appendChild(liElem);
+        }
+        return ulElem;
+      }
+
       // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
@@ -785,9 +848,15 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
       xhr.onload = () => {
         const jsonResponse = xhr.response;
         const sections = {
-          "Documentation": [],
-          "Mature Projects": [],
-          "Incubating Projects": [],
+          "Core Projects": [],
+          "Mature Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
           "Foundation": [
             {
               name: "About",
@@ -803,28 +872,38 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
             }
           ]
         }
+
+        // Categorize projects
         Object.keys(jsonResponse).forEach(key => {
           projectJson = jsonResponse[key];
           if (projectJson.website !== null) {
             projectJson.link = projectJson.website;
-            sections["Documentation"].push(projectJson)
-          } else if (projectJson.type == "mature") {
-            projectJson.link = projectJson.github;
-            sections["Mature Projects"].push(projectJson)
           } else {
             projectJson.link = projectJson.github;
-            sections["Incubating Projects"].push(projectJson)
+          }
+          if (projectJson.type === "core") {
+            sections["Core Projects"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            if (projectJson.website !== null) {
+              sections["Mature Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Mature Projects"]["Repositories"].push(projectJson)
+            }
+          } else {
+            if (projectJson.website !== null) {
+              sections["Incubating Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Incubating Projects"]["Repositories"].push(projectJson)
+            }
           }
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
 
         Object.keys(sections).forEach((key, i) => {
-          projects = sections[key];
           const sectionElem = Object.assign(
             document.createElement('div'), {
               className:'farama-header-menu__section',
-              style: "padding-left: 24px"
             }
           )
           sectionElem.appendChild(Object.assign(document.createElement('span'),
@@ -833,33 +912,37 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
               innerText: key
             }
           ))
-          const ulElem = Object.assign(document.createElement('ul'),
-            {
-              className:'farama-header-menu-list',
-            }
-          )
-          for (let project of projects) {
-            const liElem = document.createElement("li");
-            const aElem = Object.assign(document.createElement("a"),
-              {
-                href: project.link
-              }
-            );
-            liElem.appendChild(aElem);
-            if (key !== "Foundation") {
-              const imgElem = Object.assign(document.createElement("img"),
-                {
-                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
-                  alt: `${project.name} logo`,
-                  className: "farama-black-logo-invert"
+          // is not a list
+          if (sections[key].constructor !== Array) {
+            const subSections = sections[key];
+            const subSectionContainerElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsections-container',
+                  style: 'display: flex'
                 }
-              );
-              aElem.appendChild(imgElem);
-            }
-            aElem.appendChild(document.createTextNode(project.name));
-            ulElem.appendChild(liElem);
+            )
+            Object.keys(subSections).forEach((subKey, i) => {
+              const subSectionElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsection',
+                }
+              )
+              subSectionElem.appendChild(Object.assign(document.createElement('span'),
+                {
+                  className:'farama-header-menu__subsection-title' ,
+                  innerText: subKey
+                }
+              ))
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
+              subSectionElem.appendChild(ulElem);
+              subSectionContainerElem.appendChild(subSectionElem);
+            })
+            sectionElem.appendChild(subSectionContainerElem);
+          } else {
+            const projects = sections[key];
+            const ulElem = createProjectsList(projects, true);
+            sectionElem.appendChild(ulElem);
           }
-          sectionElem.appendChild(ulElem);
           menuContainer.appendChild(sectionElem)
         });
       }
