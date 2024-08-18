@@ -16,7 +16,7 @@ def train_env():
                 "weights": [0.2989, 0.5870, 0.1140],  # weights for RGB conversion
                 "scaling": 1.75,
             },
-        }
+        },
     )
     env.reset()
     return env
