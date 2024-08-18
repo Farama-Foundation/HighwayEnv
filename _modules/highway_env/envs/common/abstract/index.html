@@ -298,6 +298,7 @@
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">gymnasium</span> <span class="kn">import</span> <span class="n">Wrapper</span>
+<span class="kn">from</span> <span class="nn">gymnasium.utils</span> <span class="kn">import</span> <span class="n">RecordConstructorArgs</span>
 <span class="kn">from</span> <span class="nn">gymnasium.wrappers</span> <span class="kn">import</span> <span class="n">RecordVideo</span>
 
 <span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
@@ -772,14 +773,17 @@
 
 <div class="viewcode-block" id="MultiAgentWrapper">
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.MultiAgentWrapper">[docs]</a>
-<span class="k">class</span> <span class="nc">MultiAgentWrapper</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">MultiAgentWrapper</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">,</span> <span class="n">RecordConstructorArgs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="n">Wrapper</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+        <span class="n">RecordConstructorArgs</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
 <div class="viewcode-block" id="MultiAgentWrapper.step">
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.MultiAgentWrapper.step">[docs]</a>
     <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-        <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="n">obs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
         <span class="n">reward</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;agents_rewards&quot;</span><span class="p">]</span>
         <span class="n">terminated</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;agents_terminated&quot;</span><span class="p">]</span>
-        <span class="n">truncated</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;agents_truncated&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span></div>
 </div>
 
