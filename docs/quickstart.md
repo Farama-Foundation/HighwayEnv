@@ -8,14 +8,15 @@ Here is a quick example of how to create an environment:
 ```{eval-rst}
 .. jupyter-execute::
 
-  import gymnasium as gym
+  import gymnasium
+  import highway_env
   from matplotlib import pyplot as plt
   %matplotlib inline
 
-  env = gym.make('highway-v0', render_mode='rgb_array')
+  env = gymnasium.make('highway-v0', render_mode='rgb_array')
   env.reset()
   for _ in range(3):
-      action = env.action_type.actions_indexes["IDLE"]
+      action = env.unwrapped.action_type.actions_indexes["IDLE"]
       obs, reward, done, truncated, info = env.step(action)
       env.render()
 
@@ -53,8 +54,8 @@ After environment creation, the configuration can be accessed using the
 
   import pprint
 
-  env = gym.make("highway-v0", render_mode='rgb_array')
-  pprint.pprint(env.config)
+  env = gymnasium.make("highway-v0", render_mode='rgb_array')
+  pprint.pprint(env.unwrapped.config)
 ```
 
 For example, the number of lanes can be changed with:
@@ -62,10 +63,22 @@ For example, the number of lanes can be changed with:
 ```{eval-rst}
 .. jupyter-execute::
 
-  env.config["lanes_count"] = 2
+  env.unwrapped.config["lanes_count"] = 2
   env.reset()
   plt.imshow(env.render())
   plt.show()
+```
+
+or directly at creation time with:
+
+```{eval-rst}
+.. jupyter-execute::
+
+  env = gymnasium.make(
+    "highway-v0",
+    render_mode='rgb_array',
+    config={"lanes_count": 2}
+  )
 ```
 
 ```{note}
@@ -87,11 +100,11 @@ Here is an example of SB3's DQN implementation trained on `highway-fast-v0` with
 [![Colab][colab-badge]][highway_dqn]
 
 ```python
-import gymnasium as gym
+import gymnasium
 import highway_env
 from stable_baselines3 import DQN
 
-env = gym.make("highway-fast-v0")
+env = gymnasium.make("highway-fast-v0")
 model = DQN('MlpPolicy', env,
               policy_kwargs=dict(net_arch=[256, 256]),
               learning_rate=5e-4,

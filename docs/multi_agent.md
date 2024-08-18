@@ -11,12 +11,17 @@ To that end, update the {ref}`environment configuration <Configuring an environm
 ```{eval-rst}
 .. jupyter-execute::
 
-  import gymnasium as gym
+  import gymnasium
+  import highway_env
 
-  env = gym.make('highway-v0', render_mode='rgb_array')
-
-  env.configure({"controlled_vehicles": 2})  # Two controlled vehicles
-  env.configure({"vehicles_count": 1})  # A single other vehicle, for the sake of visualisation
+  env = gymnasium.make(
+    "highway-v0",
+    render_mode="rgb_array",
+    config={
+      "controlled_vehicles": 2,  # Two controlled vehicles
+      "vehicles_count": 1,       # A single other vehicle, for the sake of visualisation
+    }
+  )
   env.reset(seed=0)
 
   from matplotlib import pyplot as plt
@@ -35,7 +40,7 @@ The type of actions contained in the tuple must be described by a standard {ref}
 ```{eval-rst}
 .. jupyter-execute::
 
-  env.configure({
+  env.unwrapped.config.update({
     "action": {
       "type": "MultiAgentAction",
       "action_config": {
@@ -70,14 +75,18 @@ The type of observations contained in the tuple must be described by a standard 
 ```{eval-rst}
 .. jupyter-execute::
 
-  env.configure({
-    "observation": {
-      "type": "MultiAgentObservation",
-      "observation_config": {
-        "type": "Kinematics",
+  env = gymnasium.make(
+    "highway-v0",
+    render_mode="rgb_array",
+    config={
+      "observation": {
+        "type": "MultiAgentObservation",
+        "observation_config": {
+          "type": "Kinematics",
+        }
       }
     }
-  })
+  )
   obs, info = env.reset()
 
   import pprint
@@ -92,7 +101,7 @@ Here is a pseudo-code example of how a centralized multi-agent policy could be t
 .. jupyter-execute::
 
   # Multi-agent environment configuration
-  env.configure({
+  env.unwrapped.config.update({
     "controlled_vehicles": 2,
     "observation": {
       "type": "MultiAgentObservation",

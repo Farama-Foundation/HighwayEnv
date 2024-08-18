@@ -9,11 +9,13 @@ Environment rendering is done with [pygame](https://www.pygame.org/news), which 
 A window is created at the first call of `env.render()`. Its dimensions can be configured:
 
 ```python
-env = gym.make("roundabout-v0")
-env.configure({
-    "screen_width": 640,
-    "screen_height": 480
-})
+env = gym.make(
+    "roundabout-v0",
+    config={
+        "screen_width": 640,
+        "screen_height": 480
+    }
+)
 env.reset()
 env.render()
 ```
