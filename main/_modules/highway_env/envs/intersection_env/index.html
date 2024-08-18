@@ -421,7 +421,7 @@
         <span class="n">info</span><span class="p">[</span><span class="s2">&quot;agents_rewards&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_agent_reward</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">)</span> <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicles</span>
         <span class="p">)</span>
-        <span class="n">info</span><span class="p">[</span><span class="s2">&quot;agents_dones&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="n">info</span><span class="p">[</span><span class="s2">&quot;agents_terminated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_agent_is_terminal</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span> <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicles</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">info</span>

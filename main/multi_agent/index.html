@@ -299,12 +299,17 @@
 <p>To that end, update the <a class="reference internal" href="../quickstart/#configuring-an-environment"><span class="std std-ref">environment configuration</span></a> to increase <code class="docutils literal notranslate"><span class="pre">controlled_vehicles</span></code></p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
+<span class="kn">import</span> <span class="nn">highway_env</span>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">)</span>
-
-<span class="n">env</span><span class="o">.</span><span class="n">configure</span><span class="p">({</span><span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>  <span class="c1"># Two controlled vehicles</span>
-<span class="n">env</span><span class="o">.</span><span class="n">configure</span><span class="p">({</span><span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>  <span class="c1"># A single other vehicle, for the sake of visualisation</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+  <span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span>
+  <span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;rgb_array&quot;</span><span class="p">,</span>
+  <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>  <span class="c1"># Two controlled vehicles</span>
+    <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>       <span class="c1"># A single other vehicle, for the sake of visualisation</span>
+  <span class="p">}</span>
+<span class="p">)</span>
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -316,7 +321,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/multi_agent_0_1.png" src="../_images/multi_agent_0_1.png" />
+<img alt="../_images/multi_agent_0_0.png" src="../_images/multi_agent_0_0.png" />
 </div>
 </div>
 </section>
@@ -327,7 +332,7 @@ In order for the environment to accept a tuple of actions, its action type must 
 The type of actions contained in the tuple must be described by a standard <a class="reference internal" href="../actions/#actions"><span class="std std-ref">action configuration</span></a> in the <code class="docutils literal notranslate"><span class="pre">action_config</span></code> field.</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">configure</span><span class="p">({</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
   <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;MultiAgentAction&quot;</span><span class="p">,</span>
     <span class="s2">&quot;action_config&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -352,7 +357,7 @@ The type of actions contained in the tuple must be described by a standard <a cl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/multi_agent_1_1.png" src="../_images/multi_agent_1_1.png" />
+<img alt="../_images/multi_agent_1_0.png" src="../_images/multi_agent_1_0.png" />
 </div>
 </div>
 </section>
@@ -364,14 +369,18 @@ As before, since the observation space has not been changed no far, the observat
 The type of observations contained in the tuple must be described by a standard <a class="reference internal" href="../observations/#id1"><span class="std std-ref">observation configuration</span></a> in the <code class="docutils literal notranslate"><span class="pre">observation_config</span></code> field.</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">configure</span><span class="p">({</span>
-  <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;MultiAgentObservation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;observation_config&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+  <span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span>
+  <span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;rgb_array&quot;</span><span class="p">,</span>
+  <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;MultiAgentObservation&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;observation_config&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
+      <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
-<span class="p">})</span>
+<span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
 <span class="kn">import</span> <span class="nn">pprint</span>
@@ -380,17 +389,12 @@ The type of observations contained in the tuple must be described by a standard 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.90797305,  0.5       ,  0.3125    ,  0.        ],
-       [ 1.        ,  0.10906096, -0.5       , -0.04341291,  0.        ],
-       [ 1.        ,  0.33000726, -0.5       ,  0.        ,  0.        ],
-       [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ],
-       [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ]],
-      dtype=float32),
- array([[1.    , 1.    , 0.    , 0.3125, 0.    ],
-       [0.    , 0.    , 0.    , 0.    , 0.    ],
-       [0.    , 0.    , 0.    , 0.    , 0.    ],
-       [0.    , 0.    , 0.    , 0.    , 0.    ],
-       [0.    , 0.    , 0.    , 0.    , 0.    ]], dtype=float32))
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.9123149 ,  0.25      ,  0.3125    ,  0.        ],
+       [ 1.        ,  0.1115481 ,  0.5       , -0.02638165,  0.        ],
+       [ 1.        ,  0.21659319,  0.25      , -0.03209694,  0.        ],
+       [ 1.        ,  0.3139901 ,  0.        , -0.02034499,  0.        ],
+       [ 1.        ,  0.42402303,  0.25      , -0.04192716,  0.        ]],
+      dtype=float32),)
 </pre></div>
 </div>
 </div>
@@ -402,7 +406,7 @@ The type of observations contained in the tuple must be described by a standard 
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Multi-agent environment configuration</span>
-<span class="n">env</span><span class="o">.</span><span class="n">configure</span><span class="p">({</span>
+<span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
   <span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
   <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;MultiAgentObservation&quot;</span><span class="p">,</span>
