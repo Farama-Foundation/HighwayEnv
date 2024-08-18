@@ -2,11 +2,11 @@ import gymnasium as gym
 
 import highway_env
 
-highway_env.register_highway_envs()
+gym.register_envs(highway_env)
 
 
 def test_preprocessors():
-    env = gym.make("highway-v0")
+    env = gym.make("highway-v0").unwrapped
     env = env.simplify()
     env = env.change_vehicles("highway_env.vehicle.behavior.IDMVehicle")
     env = env.set_preferred_lane(0)

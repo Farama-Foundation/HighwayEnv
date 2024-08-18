@@ -313,7 +313,7 @@ class RoadNetwork(object):
                 *nodes_str,
                 StraightLane(
                     origin, end, line_types=line_types, speed_limit=speed_limit
-                )
+                ),
             )
         return net
 

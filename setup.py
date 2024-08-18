@@ -20,5 +20,4 @@ def get_version():
     raise RuntimeError("bad version data in __init__.py")
 
 
-if __name__ == "__main__":
-    setup(version=get_version())
+setup(version=get_version())

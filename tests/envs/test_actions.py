@@ -3,18 +3,19 @@ import pytest
 
 import highway_env
 
-highway_env.register_highway_envs()
-
-action_configs = [
-    {"type": "ContinuousAction"},
-    {"type": "DiscreteAction"},
-    {"type": "DiscreteMetaAction"},
-]
+gym.register_envs(highway_env)
 
 
-@pytest.mark.parametrize("action_config", action_configs)
+@pytest.mark.parametrize(
+    "action_config",
+    [
+        {"type": "ContinuousAction"},
+        {"type": "DiscreteAction"},
+        {"type": "DiscreteMetaAction"},
+    ],
+)
 def test_action_type(action_config):
-    env = gym.make("highway-v0")
+    env = gym.make("highway-v0").unwrapped
     env.configure({"action": action_config})
     env.reset()
     for _ in range(3):

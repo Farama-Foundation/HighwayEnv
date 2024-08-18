@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Text, Tuple, TypeVar
 import gymnasium as gym
 import numpy as np
 from gymnasium import Wrapper
+from gymnasium.utils import RecordConstructorArgs
 from gymnasium.wrappers import RecordVideo
 
 from highway_env import utils
@@ -426,10 +427,13 @@ class AbstractEnv(gym.Env):
         return result
 
 
-class MultiAgentWrapper(Wrapper):
+class MultiAgentWrapper(Wrapper, RecordConstructorArgs):
+    def __init__(self, env):
+        Wrapper.__init__(self, env)
+        RecordConstructorArgs.__init__(self)
+
     def step(self, action):
-        obs, reward, terminated, truncated, info = super().step(action)
+        obs, _, _, truncated, info = super().step(action)
         reward = info["agents_rewards"]
         terminated = info["agents_terminated"]
-        truncated = info["agents_truncated"]
         return obs, reward, terminated, truncated, info

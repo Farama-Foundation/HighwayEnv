@@ -70,7 +70,7 @@ class GrayscaleObservation(ObservationType):
         weights: List[float],
         scaling: Optional[float] = None,
         centering_position: Optional[List[float]] = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         super().__init__(env)
         self.observation_shape = observation_shape
@@ -168,7 +168,7 @@ class KinematicObservation(ObservationType):
         see_behind: bool = False,
         observe_intentions: bool = False,
         include_obstacles: bool = True,
-        **kwargs: dict
+        **kwargs: dict,
     ) -> None:
         """
         :param env: The environment to observe
@@ -293,7 +293,7 @@ class OccupancyGridObservation(ObservationType):
         align_to_vehicle_axes: bool = False,
         clip: bool = True,
         as_image: bool = False,
-        **kwargs: dict
+        **kwargs: dict,
     ) -> None:
         """
         :param env: The environment to observe
@@ -674,7 +674,7 @@ class ExitObservation(KinematicObservation):
         if self.order == "shuffled":
             self.env.np_random.shuffle(obs[1:])
         # Flatten
-        return obs
+        return obs.astype(self.space().dtype)
 
 
 class LidarObservation(ObservationType):
@@ -687,7 +687,7 @@ class LidarObservation(ObservationType):
         cells: int = 16,
         maximum_range: float = 60,
         normalize: bool = True,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(env, **kwargs)
         self.cells = cells

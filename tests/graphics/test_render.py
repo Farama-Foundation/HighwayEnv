@@ -4,13 +4,12 @@ import pytest
 
 import highway_env
 
-highway_env.register_highway_envs()
-envs = ["highway-v0", "merge-v0"]
+gym.register_envs(highway_env)
 
 
-@pytest.mark.parametrize("env_spec", envs)
+@pytest.mark.parametrize("env_spec", ["highway-v0", "merge-v0"])
 def test_render(env_spec):
-    env = gym.make(env_spec, render_mode="rgb_array")
+    env = gym.make(env_spec, render_mode="rgb_array").unwrapped
     env.configure({"offscreen_rendering": True})
     env.reset()
     img = env.render()
@@ -23,9 +22,9 @@ def test_render(env_spec):
     )  # (H,W,C)
 
 
-@pytest.mark.parametrize("env_spec", envs)
+@pytest.mark.parametrize("env_spec", ["highway-v0", "merge-v0"])
 def test_obs_grayscale(env_spec, stack_size=4):
-    env = gym.make(env_spec)
+    env = gym.make(env_spec).unwrapped
     env.configure(
         {
             "offscreen_rendering": True,

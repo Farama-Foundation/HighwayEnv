@@ -1,12 +1,14 @@
-from typing import Dict, Text, Tuple
+from __future__ import annotations
 
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs import CircularLane, HighwayEnv, Vehicle
 from highway_env.envs.common.action import Action
+from highway_env.envs.highway_env import HighwayEnv
+from highway_env.road.lane import CircularLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
+from highway_env.vehicle.kinematics import Vehicle
 
 
 class ExitEnv(HighwayEnv):
@@ -44,10 +46,10 @@ class ExitEnv(HighwayEnv):
         self._create_road()
         self._create_vehicles()
 
-    def step(self, action) -> Tuple[np.ndarray, float, bool, dict]:
-        obs, reward, terminal, info = super().step(action)
+    def step(self, action) -> tuple[np.ndarray, float, bool, bool, dict]:
+        obs, reward, terminated, truncated, info = super().step(action)
         info.update({"is_success": self._is_success()})
-        return obs, reward, terminal, info
+        return obs, reward, terminated, truncated, info
 
     def _create_road(
         self, road_length=1000, exit_position=400, exit_length=100
@@ -154,7 +156,7 @@ class ExitEnv(HighwayEnv):
             reward = np.clip(reward, 0, 1)
         return reward
 
-    def _rewards(self, action: Action) -> Dict[Text, float]:
+    def _rewards(self, action: Action) -> dict[str, float]:
         lane_index = (
             self.vehicle.target_lane_index
             if isinstance(self.vehicle, ControlledVehicle)

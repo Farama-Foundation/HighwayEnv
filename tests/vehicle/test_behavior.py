@@ -5,10 +5,9 @@ from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.objects import Obstacle
 
 FPS = 15
-vehicle_types = [IDMVehicle, LinearVehicle]
 
 
-@pytest.mark.parametrize("vehicle_type", vehicle_types)
+@pytest.mark.parametrize("vehicle_type", [IDMVehicle, LinearVehicle])
 def test_stop_before_obstacle(vehicle_type):
     road = Road(RoadNetwork.straight_road_network(lanes=1))
     vehicle = vehicle_type(road=road, position=[0, 0], speed=20, heading=0)
