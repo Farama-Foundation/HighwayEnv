@@ -291,7 +291,7 @@
           <article role="main">
             
             <h1>Source code for highway_env.vehicle.behavior</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -366,7 +366,7 @@
 <div class="viewcode-block" id="IDMVehicle.create_from">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.create_from">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;IDMVehicle&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">create_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">ControlledVehicle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IDMVehicle</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new vehicle from an existing one.</span>
 
@@ -390,7 +390,7 @@
 
 <div class="viewcode-block" id="IDMVehicle.act">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute an action.</span>
 
@@ -433,9 +433,8 @@
         <span class="n">action</span><span class="p">[</span><span class="s2">&quot;acceleration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
             <span class="n">action</span><span class="p">[</span><span class="s2">&quot;acceleration&quot;</span><span class="p">],</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ACC_MAX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ACC_MAX</span>
         <span class="p">)</span>
-        <span class="n">Vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">action</span>
-        <span class="p">)</span>  <span class="c1"># Skip ControlledVehicle.act(), or the command will be overriden.</span></div>
+        <span class="c1"># Skip ControlledVehicle.act(), or the command will be overridden.</span>
+        <span class="n">Vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="IDMVehicle.step">
@@ -671,7 +670,6 @@
 <div class="viewcode-block" id="LinearVehicle">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle">[docs]</a>
 <span class="k">class</span> <span class="nc">LinearVehicle</span><span class="p">(</span><span class="n">IDMVehicle</span><span class="p">):</span>
-
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters.&quot;&quot;&quot;</span>
 
     <span class="n">ACCELERATION_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
@@ -724,7 +722,7 @@
 
 <div class="viewcode-block" id="LinearVehicle.act">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">collecting_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">collect_data</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>

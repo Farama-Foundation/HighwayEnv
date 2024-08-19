@@ -291,8 +291,10 @@
           <article role="main">
             
             <h1>Source code for highway_env.envs.common.graphics</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pygame</span>
@@ -305,6 +307,7 @@
 <span class="kn">from</span> <span class="nn">highway_env.road.graphics</span> <span class="kn">import</span> <span class="n">RoadGraphics</span><span class="p">,</span> <span class="n">WorldSurface</span>
 <span class="kn">from</span> <span class="nn">highway_env.vehicle.graphics</span> <span class="kn">import</span> <span class="n">VehicleGraphics</span>
 
+
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">highway_env.envs</span> <span class="kn">import</span> <span class="n">AbstractEnv</span>
     <span class="kn">from</span> <span class="nn">highway_env.envs.common.abstract</span> <span class="kn">import</span> <span class="n">Action</span>
@@ -312,14 +315,13 @@
 
 <div class="viewcode-block" id="EnvViewer">
 <a class="viewcode-back" href="../../../../../graphics/#highway_env.envs.common.graphics.EnvViewer">[docs]</a>
-<span class="k">class</span> <span class="nc">EnvViewer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-
+<span class="k">class</span> <span class="nc">EnvViewer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A viewer to render a highway driving environment.&quot;&quot;&quot;</span>
 
     <span class="n">SAVE_IMAGES</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">agent_display</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="s2">&quot;AbstractEnv&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">env</span><span class="o">.</span><span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offscreen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;offscreen_rendering&quot;</span><span class="p">]</span>
@@ -386,7 +388,7 @@
 
 <div class="viewcode-block" id="EnvViewer.set_agent_action_sequence">
 <a class="viewcode-back" href="../../../../../graphics/#highway_env.envs.common.graphics.EnvViewer.set_agent_action_sequence">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_agent_action_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;Action&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_agent_action_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Action</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the sequence of actions chosen by the agent, so that it can be displayed</span>
 
@@ -466,7 +468,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SAVE_IMAGES</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
             <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">sim_surface</span><span class="p">,</span>
-                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">/</span> <span class="s2">&quot;highway-env_</span><span class="si">{}</span><span class="s2">.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)),</span>
+                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;highway-env_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
@@ -509,7 +511,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">EventHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">EventHandler</span><span class="p">:</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">action_type</span><span class="p">:</span> <span class="n">ActionType</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventType</span>
@@ -566,7 +568,7 @@
         <span class="n">action_type</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">ObservationGraphics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ObservationGraphics</span><span class="p">:</span>
     <span class="n">COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
