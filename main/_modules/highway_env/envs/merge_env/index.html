@@ -291,7 +291,7 @@
           <article role="main">
             
             <h1>Source code for highway_env.envs.merge_env</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -306,7 +306,6 @@
 <div class="viewcode-block" id="MergeEnv">
 <a class="viewcode-back" href="../../../../environments/merge/#highway_env.envs.merge_env.MergeEnv">[docs]</a>
 <span class="k">class</span> <span class="nc">MergeEnv</span><span class="p">(</span><span class="n">AbstractEnv</span><span class="p">):</span>
-
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A highway merge negotiation environment.</span>
 
@@ -355,7 +354,7 @@
             <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">scaled_speed</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reward_speed_range&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="p">)</span>
