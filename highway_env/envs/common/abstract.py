@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import copy
 import os
-from typing import Dict, List, Optional, Text, Tuple, TypeVar
+from typing import TypeVar
 
 import gymnasium as gym
 import numpy as np
@@ -16,11 +18,11 @@ from highway_env.envs.common.observation import ObservationType, observation_fac
 from highway_env.vehicle.behavior import IDMVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
+
 Observation = TypeVar("Observation")
 
 
 class AbstractEnv(gym.Env):
-
     """
     A generic environment for various tasks involving a vehicle driving on a road.
 
@@ -31,7 +33,7 @@ class AbstractEnv(gym.Env):
 
     observation_type: ObservationType
     action_type: ActionType
-    _record_video_wrapper: Optional[RecordVideo]
+    _record_video_wrapper: RecordVideo | None
     metadata = {
         "render_modes": ["human", "rgb_array"],
     }
@@ -39,7 +41,7 @@ class AbstractEnv(gym.Env):
     PERCEPTION_DISTANCE = 5.0 * Vehicle.MAX_SPEED
     """The maximum distance of any vehicle present in the observation [m]"""
 
-    def __init__(self, config: dict = None, render_mode: Optional[str] = None) -> None:
+    def __init__(self, config: dict = None, render_mode: str | None = None) -> None:
         super().__init__()
 
         # Configuration
@@ -136,7 +138,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def _rewards(self, action: Action) -> Dict[Text, float]:
+    def _rewards(self, action: Action) -> dict[str, float]:
         """
         Returns a multi-objective vector of rewards.
 
@@ -164,7 +166,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def _info(self, obs: Observation, action: Optional[Action] = None) -> dict:
+    def _info(self, obs: Observation, action: Action | None = None) -> dict:
         """
         Return a dictionary of additional information
 
@@ -186,9 +188,9 @@ class AbstractEnv(gym.Env):
     def reset(
         self,
         *,
-        seed: Optional[int] = None,
-        options: Optional[dict] = None,
-    ) -> Tuple[Observation, dict]:
+        seed: int | None = None,
+        options: dict | None = None,
+    ) -> tuple[Observation, dict]:
         """
         Reset the environment to it's initial configuration
 
@@ -219,7 +221,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError()
 
-    def step(self, action: Action) -> Tuple[Observation, float, bool, bool, dict]:
+    def step(self, action: Action) -> tuple[Observation, float, bool, bool, dict]:
         """
         Perform an action and step the environment dynamics.
 
@@ -247,7 +249,7 @@ class AbstractEnv(gym.Env):
 
         return obs, reward, terminated, truncated, info
 
-    def _simulate(self, action: Optional[Action] = None) -> None:
+    def _simulate(self, action: Action | None = None) -> None:
         """Perform several steps of simulation with constant action."""
         frames = int(
             self.config["simulation_frequency"] // self.config["policy_frequency"]
@@ -279,7 +281,7 @@ class AbstractEnv(gym.Env):
 
         self.enable_auto_render = False
 
-    def render(self) -> Optional[np.ndarray]:
+    def render(self) -> np.ndarray | None:
         """
         Render the environment.
 
@@ -317,7 +319,7 @@ class AbstractEnv(gym.Env):
             self.viewer.close()
         self.viewer = None
 
-    def get_available_actions(self) -> List[int]:
+    def get_available_actions(self) -> list[int]:
         return self.action_type.get_available_actions()
 
     def set_record_video_wrapper(self, wrapper: RecordVideo):
@@ -337,7 +339,7 @@ class AbstractEnv(gym.Env):
             else:
                 self.render()
 
-    def simplify(self) -> "AbstractEnv":
+    def simplify(self) -> AbstractEnv:
         """
         Return a simplified copy of the environment where distant vehicles have been removed from the road.
 
@@ -354,7 +356,7 @@ class AbstractEnv(gym.Env):
 
         return state_copy
 
-    def change_vehicles(self, vehicle_class_path: str) -> "AbstractEnv":
+    def change_vehicles(self, vehicle_class_path: str) -> AbstractEnv:
         """
         Change the type of all vehicles on the road
 
@@ -371,7 +373,7 @@ class AbstractEnv(gym.Env):
                 vehicles[i] = vehicle_class.create_from(v)
         return env_copy
 
-    def set_preferred_lane(self, preferred_lane: int = None) -> "AbstractEnv":
+    def set_preferred_lane(self, preferred_lane: int = None) -> AbstractEnv:
         env_copy = copy.deepcopy(self)
         if preferred_lane:
             for v in env_copy.road.vehicles:
@@ -381,14 +383,14 @@ class AbstractEnv(gym.Env):
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
 
-    def set_route_at_intersection(self, _to: str) -> "AbstractEnv":
+    def set_route_at_intersection(self, _to: str) -> AbstractEnv:
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
             if isinstance(v, IDMVehicle):
                 v.set_route_at_intersection(_to)
         return env_copy
 
-    def set_vehicle_field(self, args: Tuple[str, object]) -> "AbstractEnv":
+    def set_vehicle_field(self, args: tuple[str, object]) -> AbstractEnv:
         field, value = args
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
@@ -396,7 +398,7 @@ class AbstractEnv(gym.Env):
                 setattr(v, field, value)
         return env_copy
 
-    def call_vehicle_method(self, args: Tuple[str, Tuple[object]]) -> "AbstractEnv":
+    def call_vehicle_method(self, args: tuple[str, tuple[object]]) -> AbstractEnv:
         method, method_args = args
         env_copy = copy.deepcopy(self)
         for i, v in enumerate(env_copy.road.vehicles):
@@ -404,7 +406,7 @@ class AbstractEnv(gym.Env):
                 env_copy.road.vehicles[i] = getattr(v, method)(*method_args)
         return env_copy
 
-    def randomize_behavior(self) -> "AbstractEnv":
+    def randomize_behavior(self) -> AbstractEnv:
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
             if isinstance(v, IDMVehicle):

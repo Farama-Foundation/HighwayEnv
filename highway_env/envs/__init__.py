@@ -17,6 +17,7 @@ from highway_env.envs.roundabout_env import RoundaboutEnv
 from highway_env.envs.two_way_env import TwoWayEnv
 from highway_env.envs.u_turn_env import UTurnEnv
 
+
 __all__ = [
     "ExitEnv",
     "HighwayEnv",
@@ -28,6 +29,7 @@ __all__ = [
     "MergeEnv",
     "ParkingEnv",
     "ParkingEnvActionRepeat",
+    "ParkingEnvParkedVehicles",
     "RacetrackEnv",
     "RoundaboutEnv",
     "TwoWayEnv",

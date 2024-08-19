@@ -2,6 +2,7 @@ import gymnasium as gym
 
 import highway_env
 
+
 gym.register_envs(highway_env)
 
 

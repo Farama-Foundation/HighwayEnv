@@ -1,4 +1,6 @@
-from typing import TYPE_CHECKING, List, Tuple, Union
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Tuple, Union
 
 import numpy as np
 import pygame
@@ -9,6 +11,7 @@ from highway_env.utils import Vector
 from highway_env.vehicle.graphics import VehicleGraphics
 from highway_env.vehicle.objects import Landmark, Obstacle
 
+
 if TYPE_CHECKING:
     from highway_env.vehicle.objects import RoadObject
 
@@ -16,7 +19,6 @@ PositionType = Union[Tuple[float, float], np.ndarray]
 
 
 class WorldSurface(pygame.Surface):
-
     """A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area."""
 
     BLACK = (0, 0, 0)
@@ -30,7 +32,7 @@ class WorldSurface(pygame.Surface):
     MOVING_FACTOR = 0.1
 
     def __init__(
-        self, size: Tuple[int, int], flags: object, surf: pygame.SurfaceType
+        self, size: tuple[int, int], flags: object, surf: pygame.SurfaceType
     ) -> None:
         super().__init__(size, flags, surf)
         self.origin = np.array([0, 0])
@@ -46,7 +48,7 @@ class WorldSurface(pygame.Surface):
         """
         return int(length * self.scaling)
 
-    def pos2pix(self, x: float, y: float) -> Tuple[int, int]:
+    def pos2pix(self, x: float, y: float) -> tuple[int, int]:
         """
         Convert two world coordinates [m] into a position in the surface [px]
 
@@ -56,7 +58,7 @@ class WorldSurface(pygame.Surface):
         """
         return self.pix(x - self.origin[0]), self.pix(y - self.origin[1])
 
-    def vec2pix(self, vec: PositionType) -> Tuple[int, int]:
+    def vec2pix(self, vec: PositionType) -> tuple[int, int]:
         """
         Convert a world position [m] into a position in the surface [px].
 
@@ -108,8 +110,7 @@ class WorldSurface(pygame.Surface):
                 self.centering_position[0] += self.MOVING_FACTOR
 
 
-class LaneGraphics(object):
-
+class LaneGraphics:
     """A visualization of a lane."""
 
     # See https://www.researchgate.net/figure/French-road-traffic-lane-description-and-specification_fig4_261170641
@@ -229,9 +230,9 @@ class LaneGraphics(object):
         cls,
         lane: AbstractLane,
         surface: WorldSurface,
-        starts: List[float],
-        ends: List[float],
-        lats: List[float],
+        starts: list[float],
+        ends: list[float],
+        lats: list[float],
     ) -> None:
         """
         Draw a set of stripes along a lane.
@@ -259,7 +260,7 @@ class LaneGraphics(object):
         cls,
         lane: AbstractLane,
         surface: WorldSurface,
-        color: Tuple[float],
+        color: tuple[float],
         width: float,
         draw_surface: pygame.Surface = None,
     ) -> None:
@@ -288,8 +289,7 @@ class LaneGraphics(object):
         pygame.draw.polygon(draw_surface, color, dots, 0)
 
 
-class RoadGraphics(object):
-
+class RoadGraphics:
     """A visualization of a road lanes and vehicles."""
 
     @staticmethod
@@ -345,7 +345,6 @@ class RoadGraphics(object):
 
 
 class RoadObjectGraphics:
-
     """A visualization of objects on the road."""
 
     YELLOW = (200, 200, 0)
@@ -358,7 +357,7 @@ class RoadObjectGraphics:
     @classmethod
     def display(
         cls,
-        object_: "RoadObject",
+        object_: RoadObject,
         surface: WorldSurface,
         transparent: bool = False,
         offscreen: bool = False,
@@ -438,7 +437,7 @@ class RoadObjectGraphics:
             pygame.draw.rect(surf, (255, 0, 0), (*origin, *rotated_image.get_size()), 2)
 
     @classmethod
-    def get_color(cls, object_: "RoadObject", transparent: bool = False):
+    def get_color(cls, object_: RoadObject, transparent: bool = False):
         color = cls.DEFAULT_COLOR
 
         if isinstance(object_, Obstacle):

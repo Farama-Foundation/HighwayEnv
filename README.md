@@ -235,5 +235,3 @@ Master theses
 *   [Multi-Agent Reinforcement Learning with Application on Traffic Flow Control](https://www.diva-portal.org/smash/get/diva2:1573441/FULLTEXT01.pdf) (Jun 2021)
 *   [Deep Reinforcement Learning for Automated Parking](https://repositorio-aberto.up.pt/bitstream/10216/136074/2/494682.pdf) (Aug 2021)
 *   [Deep Reinforcement Learning and Imitation Learning for Autonomous Driving in a Minimalist Environment](https://www.academia.edu/107587654/Deep_Reinforcement_Learning_and_Imitation_Learning_for_Autonomous_Driving_in_a_Minimalist_Environment) (Jun 2021)
-
-

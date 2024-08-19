@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 from typing import TYPE_CHECKING, Callable, List, Tuple
 
@@ -21,6 +23,7 @@ from highway_env.vehicle.behavior import LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
+
 if TYPE_CHECKING:
     from highway_env.vehicle.objects import RoadObject
 
@@ -28,7 +31,6 @@ Polytope = Tuple[np.ndarray, List[np.ndarray]]
 
 
 class IntervalVehicle(LinearVehicle):
-
     """
     Estimator for the interval-membership of a LinearVehicle under parameter uncertainty.
 
@@ -48,8 +50,8 @@ class IntervalVehicle(LinearVehicle):
         route: Route = None,
         enable_lane_change: bool = True,
         timer: float = None,
-        theta_a_i: List[List[float]] = None,
-        theta_b_i: List[List[float]] = None,
+        theta_a_i: list[list[float]] = None,
+        theta_b_i: list[list[float]] = None,
         data: dict = None,
     ) -> None:
         """
@@ -81,7 +83,7 @@ class IntervalVehicle(LinearVehicle):
         self.previous_target_lane_index = self.target_lane_index
 
     @classmethod
-    def create_from(cls, vehicle: LinearVehicle) -> "IntervalVehicle":
+    def create_from(cls, vehicle: LinearVehicle) -> IntervalVehicle:
         v = cls(
             vehicle.road,
             vehicle.position,
@@ -339,7 +341,7 @@ class IntervalVehicle(LinearVehicle):
         a_theta = lambda params: a + np.tensordot(phi, params, axes=[0, 0])
         return polytope(a_theta, parameter_box)
 
-    def get_front_interval(self) -> "VehicleInterval":
+    def get_front_interval(self) -> VehicleInterval:
         # TODO: For now, we assume the front vehicle follows the models' front vehicle
         front_vehicle, _ = self.road.neighbour_vehicles(self)
         if front_vehicle:
@@ -356,7 +358,7 @@ class IntervalVehicle(LinearVehicle):
 
     def get_followed_lanes(
         self, lane_change_model: str = "model", squeeze: bool = True
-    ) -> List[LaneIndex]:
+    ) -> list[LaneIndex]:
         """
         Get the list of lanes that could be followed by this vehicle.
 
@@ -445,7 +447,7 @@ class IntervalVehicle(LinearVehicle):
         self.trajectory.append(LinearVehicle.create_from(self))
         self.interval_trajectory.append(copy.deepcopy(self.interval))
 
-    def handle_collisions(self, other: "RoadObject", dt: float) -> None:
+    def handle_collisions(self, other: RoadObject, dt: float) -> None:
         """
         Worst-case collision check.
 
@@ -485,7 +487,7 @@ class IntervalVehicle(LinearVehicle):
             self.crashed = other.crashed = True
 
 
-class VehicleInterval(object):
+class VehicleInterval:
     def __init__(self, vehicle: Vehicle) -> None:
         self.position = np.array([vehicle.position, vehicle.position], dtype=float)
         self.speed = np.array([vehicle.speed, vehicle.speed], dtype=float)

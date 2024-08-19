@@ -20,6 +20,7 @@ from typing import Any, Dict
 
 import highway_env  # noqa: F401
 
+
 project = "highway-env"
 copyright = "2023 Farama Foundation"
 author = "Farama Foundation"

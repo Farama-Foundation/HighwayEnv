@@ -1,4 +1,4 @@
-from typing import Union
+from __future__ import annotations
 
 import numpy as np
 
@@ -69,7 +69,7 @@ class IDMVehicle(ControlledVehicle):
         )
 
     @classmethod
-    def create_from(cls, vehicle: ControlledVehicle) -> "IDMVehicle":
+    def create_from(cls, vehicle: ControlledVehicle) -> IDMVehicle:
         """
         Create a new vehicle from an existing one.
 
@@ -90,7 +90,7 @@ class IDMVehicle(ControlledVehicle):
         )
         return v
 
-    def act(self, action: Union[dict, str] = None):
+    def act(self, action: dict | str = None):
         """
         Execute an action.
 
@@ -133,9 +133,8 @@ class IDMVehicle(ControlledVehicle):
         action["acceleration"] = np.clip(
             action["acceleration"], -self.ACC_MAX, self.ACC_MAX
         )
-        Vehicle.act(
-            self, action
-        )  # Skip ControlledVehicle.act(), or the command will be overriden.
+        # Skip ControlledVehicle.act(), or the command will be overridden.
+        Vehicle.act(self, action)
 
     def step(self, dt: float):
         """
@@ -349,7 +348,6 @@ class IDMVehicle(ControlledVehicle):
 
 
 class LinearVehicle(IDMVehicle):
-
     """A Vehicle whose longitudinal and lateral controllers are linear with respect to parameters."""
 
     ACCELERATION_PARAMETERS = [0.3, 0.3, 2.0]
@@ -400,7 +398,7 @@ class LinearVehicle(IDMVehicle):
         self.data = data if data is not None else {}
         self.collecting_data = True
 
-    def act(self, action: Union[dict, str] = None):
+    def act(self, action: dict | str = None):
         if self.collecting_data:
             self.collect_data()
         super().act(action)

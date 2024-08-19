@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import itertools
-from typing import Callable, List, Tuple, Union
+from typing import Callable
 
 import numpy as np
 from numpy.linalg import LinAlgError
@@ -104,7 +106,7 @@ def vector_interval_section(v_i: Interval, direction: Vector) -> np.ndarray:
 
 def interval_absolute_to_local(
     position_i: Interval, lane: AbstractLane
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Converts an interval in absolute x,y coordinates to an interval in local (longiturinal, lateral) coordinates
 
@@ -152,7 +154,7 @@ def interval_local_to_absolute(
 
 def polytope(
     parametrized_f: Callable[[np.ndarray], np.ndarray], params_intervals: np.ndarray
-) -> Tuple[np.ndarray, List[np.ndarray]]:
+) -> tuple[np.ndarray, list[np.ndarray]]:
     """
     Get a matrix polytope from a parametrized matrix function and parameter box
 
@@ -175,12 +177,12 @@ def is_metzler(matrix: np.ndarray, eps: float = 1e-9) -> bool:
     return (matrix - np.diag(np.diag(matrix)) >= -eps).all()
 
 
-class LPV(object):
+class LPV:
     def __init__(
         self,
         x0: Vector,
         a0: Matrix,
-        da: List[Vector],
+        da: list[Vector],
         b: Matrix = None,
         d: Matrix = None,
         omega_i: Matrix = None,
@@ -268,12 +270,12 @@ class LPV(object):
 
     def change_coordinates(
         self,
-        value: Union[np.ndarray, List[np.ndarray]],
+        value: np.ndarray | list[np.ndarray],
         matrix: bool = False,
         back: bool = False,
         interval: bool = False,
         offset: bool = True,
-    ) -> Union[np.ndarray, List[np.ndarray]]:
+    ) -> np.ndarray | list[np.ndarray]:
         """
         Perform a change of coordinate: rotation and centering.
 

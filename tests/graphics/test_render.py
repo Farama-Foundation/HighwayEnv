@@ -4,6 +4,7 @@ import pytest
 
 import highway_env
 
+
 gym.register_envs(highway_env)
 
 

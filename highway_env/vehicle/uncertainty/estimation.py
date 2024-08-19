@@ -1,4 +1,6 @@
-from typing import Callable, Union
+from __future__ import annotations
+
+from typing import Callable
 
 import numpy as np
 
@@ -9,7 +11,6 @@ from highway_env.vehicle.uncertainty.prediction import IntervalVehicle, Polytope
 
 
 class RegressionVehicle(IntervalVehicle):
-
     """Estimator for the parameter of a LinearVehicle."""
 
     def longitudinal_matrix_polytope(self) -> Polytope:
@@ -65,7 +66,7 @@ class MultipleModelVehicle(LinearVehicle):
         if not self.data:
             self.data = []
 
-    def act(self, action: Union[dict, str] = None) -> None:
+    def act(self, action: dict | str = None) -> None:
         if self.collecting_data:
             self.update_possible_routes()
         super().act(action)
@@ -120,7 +121,7 @@ class MultipleModelVehicle(LinearVehicle):
                 ):
                     self.data.remove((route, data))
 
-    def assume_model_is_valid(self, index: int) -> "LinearVehicle":
+    def assume_model_is_valid(self, index: int) -> LinearVehicle:
         """
         Get a copy of this vehicle behaving according to one of its possible routes.
 

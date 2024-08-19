@@ -1,4 +1,4 @@
-from typing import Dict, Text
+from __future__ import annotations
 
 import numpy as np
 
@@ -54,7 +54,7 @@ class RoundaboutEnv(AbstractEnv):
         reward *= rewards["on_road_reward"]
         return reward
 
-    def _rewards(self, action: int) -> Dict[Text, float]:
+    def _rewards(self, action: int) -> dict[str, float]:
         return {
             "collision_reward": self.vehicle.crashed,
             "high_speed_reward": MDPVehicle.get_speed_index(self.vehicle)

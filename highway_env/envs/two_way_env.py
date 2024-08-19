@@ -1,4 +1,4 @@
-from typing import Dict, Text
+from __future__ import annotations
 
 import numpy as np
 
@@ -9,7 +9,6 @@ from highway_env.road.road import Road, RoadNetwork
 
 
 class TwoWayEnv(AbstractEnv):
-
     """
     A risk management task: the agent is driving on a two-way lane with icoming traffic.
 
@@ -47,7 +46,7 @@ class TwoWayEnv(AbstractEnv):
             for name, reward in self._rewards(action).items()
         )
 
-    def _rewards(self, action: int) -> Dict[Text, float]:
+    def _rewards(self, action: int) -> dict[str, float]:
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
         return {
             "high_speed_reward": self.vehicle.speed_index

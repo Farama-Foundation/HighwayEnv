@@ -17,6 +17,7 @@ from torch.nn import functional as F
 import highway_env  # noqa: F401
 from highway_env.utils import lmap
 
+
 # ==================================
 #        Policy Architecture
 # ==================================
@@ -30,7 +31,7 @@ def activation_factory(activation_type):
     elif activation_type == "ELU":
         return nn.ELU()
     else:
-        raise ValueError("Unknown activation_type: {}".format(activation_type))
+        raise ValueError(f"Unknown activation_type: {activation_type}")
 
 
 class BaseModule(torch.nn.Module):

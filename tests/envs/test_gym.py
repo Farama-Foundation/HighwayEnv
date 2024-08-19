@@ -8,6 +8,7 @@ import highway_env
 from highway_env.envs.common.abstract import MultiAgentWrapper
 from highway_env.envs.highway_env import HighwayEnv
 
+
 gym.register_envs(highway_env)
 
 

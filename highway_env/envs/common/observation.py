@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from collections import OrderedDict
 from itertools import product
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
@@ -13,12 +15,13 @@ from highway_env.road.lane import AbstractLane
 from highway_env.utils import Vector
 from highway_env.vehicle.kinematics import Vehicle
 
+
 if TYPE_CHECKING:
     from highway_env.envs.common.abstract import AbstractEnv
 
 
-class ObservationType(object):
-    def __init__(self, env: "AbstractEnv", **kwargs) -> None:
+class ObservationType:
+    def __init__(self, env: AbstractEnv, **kwargs) -> None:
         self.env = env
         self.__observer_vehicle = None
 
@@ -45,7 +48,6 @@ class ObservationType(object):
 
 
 class GrayscaleObservation(ObservationType):
-
     """
     An observation class that collects directly what the simulator renders.
 
@@ -64,12 +66,12 @@ class GrayscaleObservation(ObservationType):
 
     def __init__(
         self,
-        env: "AbstractEnv",
-        observation_shape: Tuple[int, int],
+        env: AbstractEnv,
+        observation_shape: tuple[int, int],
         stack_size: int,
-        weights: List[float],
-        scaling: Optional[float] = None,
-        centering_position: Optional[List[float]] = None,
+        weights: list[float],
+        scaling: float | None = None,
+        centering_position: list[float] | None = None,
         **kwargs,
     ) -> None:
         super().__init__(env)
@@ -110,7 +112,7 @@ class GrayscaleObservation(ObservationType):
 
 
 class TimeToCollisionObservation(ObservationType):
-    def __init__(self, env: "AbstractEnv", horizon: int = 10, **kwargs: dict) -> None:
+    def __init__(self, env: AbstractEnv, horizon: int = 10, **kwargs: dict) -> None:
         super().__init__(env)
         self.horizon = horizon
 
@@ -150,17 +152,16 @@ class TimeToCollisionObservation(ObservationType):
 
 
 class KinematicObservation(ObservationType):
-
     """Observe the kinematics of nearby vehicles."""
 
-    FEATURES: List[str] = ["presence", "x", "y", "vx", "vy"]
+    FEATURES: list[str] = ["presence", "x", "y", "vx", "vy"]
 
     def __init__(
         self,
-        env: "AbstractEnv",
-        features: List[str] = None,
+        env: AbstractEnv,
+        features: list[str] = None,
         vehicles_count: int = 5,
-        features_range: Dict[str, List[float]] = None,
+        features_range: dict[str, list[float]] = None,
         absolute: bool = False,
         order: str = "sorted",
         normalize: bool = True,
@@ -275,20 +276,19 @@ class KinematicObservation(ObservationType):
 
 
 class OccupancyGridObservation(ObservationType):
-
     """Observe an occupancy grid of nearby vehicles."""
 
-    FEATURES: List[str] = ["presence", "vx", "vy", "on_road"]
-    GRID_SIZE: List[List[float]] = [[-5.5 * 5, 5.5 * 5], [-5.5 * 5, 5.5 * 5]]
-    GRID_STEP: List[int] = [5, 5]
+    FEATURES: list[str] = ["presence", "vx", "vy", "on_road"]
+    GRID_SIZE: list[list[float]] = [[-5.5 * 5, 5.5 * 5], [-5.5 * 5, 5.5 * 5]]
+    GRID_STEP: list[int] = [5, 5]
 
     def __init__(
         self,
-        env: "AbstractEnv",
-        features: Optional[List[str]] = None,
-        grid_size: Optional[Tuple[Tuple[float, float], Tuple[float, float]]] = None,
-        grid_step: Optional[Tuple[float, float]] = None,
-        features_range: Dict[str, List[float]] = None,
+        env: AbstractEnv,
+        features: list[str] | None = None,
+        grid_size: tuple[tuple[float, float], tuple[float, float]] | None = None,
+        grid_step: tuple[float, float] | None = None,
+        features_range: dict[str, list[float]] = None,
         absolute: bool = False,
         align_to_vehicle_axes: bool = False,
         clip: bool = True,
@@ -411,7 +411,7 @@ class OccupancyGridObservation(ObservationType):
 
             return obs
 
-    def pos_to_index(self, position: Vector, relative: bool = False) -> Tuple[int, int]:
+    def pos_to_index(self, position: Vector, relative: bool = False) -> tuple[int, int]:
         """
         Convert a world position to a grid cell index
 
@@ -433,7 +433,7 @@ class OccupancyGridObservation(ObservationType):
             int(np.floor((position[1] - self.grid_size[1, 0]) / self.grid_step[1])),
         )
 
-    def index_to_pos(self, index: Tuple[int, int]) -> np.ndarray:
+    def index_to_pos(self, index: tuple[int, int]) -> np.ndarray:
         position = np.array(
             [
                 (index[0] + 0.5) * self.grid_step[0] + self.grid_size[0, 0],
@@ -499,7 +499,7 @@ class OccupancyGridObservation(ObservationType):
 
 
 class KinematicsGoalObservation(KinematicObservation):
-    def __init__(self, env: "AbstractEnv", scales: List[float], **kwargs: dict) -> None:
+    def __init__(self, env: AbstractEnv, scales: list[float], **kwargs: dict) -> None:
         self.scales = np.array(scales)
         super().__init__(env, **kwargs)
 
@@ -531,7 +531,7 @@ class KinematicsGoalObservation(KinematicObservation):
         except AttributeError:
             return spaces.Space()
 
-    def observe(self) -> Dict[str, np.ndarray]:
+    def observe(self) -> dict[str, np.ndarray]:
         if not self.observer_vehicle:
             return OrderedDict(
                 [
@@ -560,9 +560,7 @@ class KinematicsGoalObservation(KinematicObservation):
 
 
 class AttributesObservation(ObservationType):
-    def __init__(
-        self, env: "AbstractEnv", attributes: List[str], **kwargs: dict
-    ) -> None:
+    def __init__(self, env: AbstractEnv, attributes: list[str], **kwargs: dict) -> None:
         self.env = env
         self.attributes = attributes
 
@@ -580,14 +578,14 @@ class AttributesObservation(ObservationType):
         except AttributeError:
             return spaces.Space()
 
-    def observe(self) -> Dict[str, np.ndarray]:
+    def observe(self) -> dict[str, np.ndarray]:
         return OrderedDict(
             [(attribute, getattr(self.env, attribute)) for attribute in self.attributes]
         )
 
 
 class MultiAgentObservation(ObservationType):
-    def __init__(self, env: "AbstractEnv", observation_config: dict, **kwargs) -> None:
+    def __init__(self, env: AbstractEnv, observation_config: dict, **kwargs) -> None:
         super().__init__(env)
         self.observation_config = observation_config
         self.agents_observation_types = []
@@ -607,7 +605,7 @@ class MultiAgentObservation(ObservationType):
 
 class TupleObservation(ObservationType):
     def __init__(
-        self, env: "AbstractEnv", observation_configs: List[dict], **kwargs
+        self, env: AbstractEnv, observation_configs: list[dict], **kwargs
     ) -> None:
         super().__init__(env)
         self.observation_types = [
@@ -623,7 +621,6 @@ class TupleObservation(ObservationType):
 
 
 class ExitObservation(KinematicObservation):
-
     """Specific to exit_env, observe the distance to the next exit lane as part of a KinematicObservation."""
 
     def observe(self) -> np.ndarray:
@@ -771,7 +768,7 @@ class LidarObservation(ObservationType):
         return np.array([np.cos(index * self.angle), np.sin(index * self.angle)])
 
 
-def observation_factory(env: "AbstractEnv", config: dict) -> ObservationType:
+def observation_factory(env: AbstractEnv, config: dict) -> ObservationType:
     if config["type"] == "TimeToCollision":
         return TimeToCollisionObservation(env, **config)
     elif config["type"] == "Kinematics":
