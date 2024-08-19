@@ -6,9 +6,9 @@ import highway_env  # noqa: F401
 
 
 def train_env():
-    env = gym.make("highway-fast-v0")
-    env.configure(
-        {
+    env = gym.make(
+        "highway-fast-v0",
+        config={
             "observation": {
                 "type": "GrayscaleObservation",
                 "observation_shape": (128, 64),
@@ -16,7 +16,7 @@ def train_env():
                 "weights": [0.2989, 0.5870, 0.1140],  # weights for RGB conversion
                 "scaling": 1.75,
             },
-        }
+        },
     )
     env.reset()
     return env
@@ -24,7 +24,7 @@ def train_env():
 
 def test_env():
     env = train_env()
-    env.configure({"policy_frequency": 15, "duration": 20})
+    env.unwrapped.config.update({"policy_frequency": 15, "duration": 20})
     env.reset()
     return env
 

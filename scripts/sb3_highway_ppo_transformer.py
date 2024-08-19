@@ -273,8 +273,7 @@ class CustomExtractor(BaseFeaturesExtractor):
 
 
 def make_configure_env(**kwargs):
-    env = gym.make(kwargs["id"])
-    env.configure(kwargs["config"])
+    env = gym.make(kwargs["id"], config=kwargs["config"])
     env.reset()
     return env
 

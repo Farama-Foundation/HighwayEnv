@@ -41,7 +41,7 @@ if __name__ == "__main__":
         env, video_folder="highway_dqn/videos", episode_trigger=lambda e: True
     )
     env.unwrapped.set_record_video_wrapper(env)
-    env.configure({"simulation_frequency": 15})  # Higher FPS for rendering
+    env.unwrapped.config["simulation_frequency"] = 15  # Higher FPS for rendering
 
     for videos in range(10):
         done = truncated = False

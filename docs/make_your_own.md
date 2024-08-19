@@ -43,8 +43,8 @@ See {ref}`vehicle behaviors <vehicle_behavior>` for reference, and existing envi
 
 To make a part of your environment configurable, overload the {py:meth}`~highway_env.envs.common.abstract.AbstractEnv.default_config`
 method to define new `{"config_key": value}` pairs with default values. These configurations then be accessed in your
-environment implementation with `self.config["config_key"]`, and once the environment is created, it can be configured with
-`env.configure({"config_key": other_value})` followed by `env.reset()`.
+environment implementation with `self.unwrapped.config["config_key"]`, and once the environment is created, it can be configured with
+`env.unwrapped.config["config_key"] = other_value` followed by `env.reset()`.
 
 ## Register the environment
 

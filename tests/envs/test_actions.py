@@ -16,8 +16,7 @@ gym.register_envs(highway_env)
     ],
 )
 def test_action_type(action_config):
-    env = gym.make("highway-v0").unwrapped
-    env.configure({"action": action_config})
+    env = gym.make("highway-v0", config={"action": action_config})
     env.reset()
     for _ in range(3):
         action = env.action_space.sample()
