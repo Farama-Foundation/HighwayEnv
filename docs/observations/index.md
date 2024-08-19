@@ -14,7 +14,7 @@ import gymnasium as gym
 import highway_env
 
 env = gym.make(
-    'highway-v0', 
+    'highway-v0',
     config={
         "observation": {
             "type": "OccupancyGrid",
