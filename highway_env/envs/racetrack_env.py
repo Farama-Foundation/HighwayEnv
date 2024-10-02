@@ -421,7 +421,7 @@ class RacetrackEnvLarge(RacetrackEnv):
         net = RoadNetwork()
         w = 5
         w2 = 2 * w
-        default_speedlimit = self.config['speed_limit']
+        default_speedlimit = self.config["speed_limit"]
 
         # Initialise First Lane
         lane = StraightLane(
@@ -505,7 +505,7 @@ class RacetrackEnvLarge(RacetrackEnv):
         )
 
         # 3 - Vertical Straight
-        delta_extension = -1.  # Better join
+        delta_extension = -1.0  # Better join
         net.add_lane(
             "c",
             "d",
@@ -664,7 +664,7 @@ class RacetrackEnvLarge(RacetrackEnv):
         start6_3 = np.array(
             [
                 start6[0] + 2 * (start6_2[0] - start6[0]),
-                start6[1] + 2 * (start6_2[1] - start6[1])
+                start6[1] + 2 * (start6_2[1] - start6[1]),
             ]
         )
         end6_3 = np.array(
@@ -740,42 +740,31 @@ class RacetrackEnvLarge(RacetrackEnv):
         start8 = np.array(
             [
                 center7[0] + radii7 * np.cos(np.deg2rad(theta7_end)),
-                center7[1] + radii7 * np.sin(np.deg2rad(theta7_end))
+                center7[1] + radii7 * np.sin(np.deg2rad(theta7_end)),
             ]
         )
         start8_2 = np.array(
             [
                 center7[0] + (radii7 + w) * np.cos(np.deg2rad(theta7_end)),
-                center7[1] + (radii7 + w) * np.sin(np.deg2rad(theta7_end))
+                center7[1] + (radii7 + w) * np.sin(np.deg2rad(theta7_end)),
             ]
         )
         start8_3 = np.array(
             [
                 center7[0] + (radii7 + w2) * np.cos(np.deg2rad(theta7_end)),
-                center7[1] + (radii7 + w2) * np.sin(np.deg2rad(theta7_end))
+                center7[1] + (radii7 + w2) * np.sin(np.deg2rad(theta7_end)),
             ]
         )
 
         # We preemptively take section 9's radius to make a nice join.
         radii9 = 15
         rad = np.deg2rad(30)
-        end8 = np.array(
-            [
-                42 - radii9 * np.cos(rad),
-                -radii9 - radii9 * np.sin(rad)
-            ]
-        )
+        end8 = np.array([42 - radii9 * np.cos(rad), -radii9 - radii9 * np.sin(rad)])
         end8_2 = np.array(
-            [
-                42 - (radii9 + w) * np.cos(rad),
-                -radii9 - (radii9 + w) * np.sin(rad)
-            ]
+            [42 - (radii9 + w) * np.cos(rad), -radii9 - (radii9 + w) * np.sin(rad)]
         )
         end8_3 = np.array(
-            [
-                42 - (radii9 + w2) * np.cos(rad),
-                -radii9 - (radii9 + w2) * np.sin(rad)
-            ]
+            [42 - (radii9 + w2) * np.cos(rad), -radii9 - (radii9 + w2) * np.sin(rad)]
         )
         net.add_lane(
             "h",
