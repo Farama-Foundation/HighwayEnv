@@ -52,6 +52,7 @@ class RacetrackEnv(AbstractEnv):
                 "screen_width": 600,
                 "screen_height": 600,
                 "centering_position": [0.5, 0.5],
+                "speed_limit": 10.0,
             }
         )
         return config
