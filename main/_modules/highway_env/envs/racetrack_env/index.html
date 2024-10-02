@@ -349,6 +349,7 @@
                 <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
                 <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
                 <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+                <span class="s2">&quot;speed_limit&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
@@ -720,7 +721,7 @@
         <span class="n">net</span> <span class="o">=</span> <span class="n">RoadNetwork</span><span class="p">()</span>
         <span class="n">w</span> <span class="o">=</span> <span class="mi">5</span>
         <span class="n">w2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">w</span>
-        <span class="n">default_speedlimit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;speed_limit&#39;</span><span class="p">]</span>
+        <span class="n">default_speedlimit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;speed_limit&quot;</span><span class="p">]</span>
 
         <span class="c1"># Initialise First Lane</span>
         <span class="n">lane</span> <span class="o">=</span> <span class="n">StraightLane</span><span class="p">(</span>
@@ -804,7 +805,7 @@
         <span class="p">)</span>
 
         <span class="c1"># 3 - Vertical Straight</span>
-        <span class="n">delta_extension</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>  <span class="c1"># Better join</span>
+        <span class="n">delta_extension</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>  <span class="c1"># Better join</span>
         <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
             <span class="s2">&quot;c&quot;</span><span class="p">,</span>
             <span class="s2">&quot;d&quot;</span><span class="p">,</span>
@@ -963,7 +964,7 @@
         <span class="n">start6_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">start6</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">start6_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">start6</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                <span class="n">start6</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">start6_2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start6</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">start6</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">start6_2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start6</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
             <span class="p">]</span>
         <span class="p">)</span>
         <span class="n">end6_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -1039,42 +1040,31 @@
         <span class="n">start8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">center7</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">radii7</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
-                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">radii7</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">))</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">radii7</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
             <span class="p">]</span>
         <span class="p">)</span>
         <span class="n">start8_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">center7</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
-                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">))</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
             <span class="p">]</span>
         <span class="p">)</span>
         <span class="n">start8_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">center7</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
-                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">))</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
             <span class="p">]</span>
         <span class="p">)</span>
 
         <span class="c1"># We preemptively take section 9&#39;s radius to make a nice join.</span>
         <span class="n">radii9</span> <span class="o">=</span> <span class="mi">15</span>
         <span class="n">rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-        <span class="n">end8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="mi">42</span> <span class="o">-</span> <span class="n">radii9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span>
-                <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="n">radii9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
+        <span class="n">end8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">42</span> <span class="o">-</span> <span class="n">radii9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span> <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="n">radii9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)])</span>
         <span class="n">end8_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="mi">42</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span>
-                <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">[</span><span class="mi">42</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span> <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)]</span>
         <span class="p">)</span>
         <span class="n">end8_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="mi">42</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span>
-                <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">[</span><span class="mi">42</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span> <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)]</span>
         <span class="p">)</span>
         <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
             <span class="s2">&quot;h&quot;</span><span class="p">,</span>
