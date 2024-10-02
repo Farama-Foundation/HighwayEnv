@@ -421,7 +421,7 @@ class RacetrackEnvLarge(RacetrackEnv):
         net = RoadNetwork()
         w = 5
         w2 = 2 * w
-        default_speedlimit = 10
+        default_speedlimit = self.config['speed_limit']
 
         # Initialise First Lane
         lane = StraightLane(
