@@ -707,6 +707,460 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span></div>
 
+
+
+<span class="k">class</span> <span class="nc">RacetrackEnvLarge</span><span class="p">(</span><span class="n">RacetrackEnv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A larger racetrack map, with three lanes</span>
+
+<span class="sd">    credit: @m-walters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_make_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">RoadNetwork</span><span class="p">()</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">w2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">w</span>
+        <span class="n">default_speedlimit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;speed_limit&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Initialise First Lane</span>
+        <span class="n">lane</span> <span class="o">=</span> <span class="n">StraightLane</span><span class="p">(</span>
+            <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+            <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lane</span> <span class="o">=</span> <span class="n">lane</span>
+
+        <span class="c1"># Add Lanes to Road Network - Straight Section</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">lane</span><span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="n">w</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="n">w</span><span class="p">],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="n">w2</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="n">w2</span><span class="p">],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 2 - Circular Arc #1</span>
+        <span class="n">center1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">]</span>
+        <span class="n">radii1</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center1</span><span class="p">,</span>
+                <span class="n">radii1</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center1</span><span class="p">,</span>
+                <span class="n">radii1</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center1</span><span class="p">,</span>
+                <span class="n">radii1</span> <span class="o">+</span> <span class="n">w2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 3 - Vertical Straight</span>
+        <span class="n">delta_extension</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>  <span class="c1"># Better join</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">220</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">220</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span> <span class="o">+</span> <span class="n">delta_extension</span><span class="p">],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">220</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">220</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span> <span class="o">+</span> <span class="n">delta_extension</span><span class="p">],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">220</span> <span class="o">+</span> <span class="n">w2</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">220</span> <span class="o">+</span> <span class="n">w2</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span> <span class="o">+</span> <span class="n">delta_extension</span><span class="p">],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 4 - Circular Arc #2</span>
+        <span class="n">center4</span> <span class="o">=</span> <span class="p">[</span><span class="mi">205</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="p">]</span>
+        <span class="n">radii4</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;e&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center4</span><span class="p">,</span>
+                <span class="n">radii4</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">181</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;e&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center4</span><span class="p">,</span>
+                <span class="n">radii4</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">181</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;e&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center4</span><span class="p">,</span>
+                <span class="n">radii4</span> <span class="o">+</span> <span class="n">w2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">181</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 5 - Circular Arc #3</span>
+        <span class="n">center5</span> <span class="o">=</span> <span class="p">[</span><span class="mi">170</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="p">]</span>
+        <span class="n">radii5</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;e&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center5</span><span class="p">,</span>
+                <span class="n">radii5</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">136</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;e&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center5</span><span class="p">,</span>
+                <span class="n">radii5</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">137</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;e&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center5</span><span class="p">,</span>
+                <span class="n">radii5</span> <span class="o">-</span> <span class="n">w</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">137</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 6 - Slant</span>
+        <span class="c1"># Extending [-30,-30]</span>
+        <span class="n">extend</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">])</span>
+        <span class="n">start6</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">155.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">45.7</span><span class="p">])</span>
+        <span class="n">end6</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">135.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">65.7</span><span class="p">])</span> <span class="o">+</span> <span class="n">extend</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="n">start6</span><span class="p">,</span>
+                <span class="n">end6</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">start6_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">159.3934</span><span class="p">,</span> <span class="o">-</span><span class="mf">49.2</span><span class="p">])</span>
+        <span class="n">end6_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">139.3934</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.2</span><span class="p">])</span> <span class="o">+</span> <span class="n">extend</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="n">start6_2</span><span class="p">,</span>
+                <span class="n">end6_2</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">start6_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">start6</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">start6_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">start6</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">start6</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">start6_2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start6</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">end6_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">end6</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">end6_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">end6</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">end6</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">end6_2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">end6</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="n">start6_3</span><span class="p">,</span>
+                <span class="n">end6_3</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 7 - Circular Arc #4</span>
+        <span class="c1"># Reflect it with the slant</span>
+        <span class="n">center7</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">118.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">48.1</span><span class="p">])</span> <span class="o">+</span> <span class="n">extend</span>
+        <span class="n">radii7</span> <span class="o">=</span> <span class="mi">25</span>
+        <span class="n">theta7</span> <span class="o">=</span> <span class="mi">317</span>
+        <span class="c1"># theta7_end = 270 - (theta7 - 270) - 10</span>
+        <span class="n">theta7_end</span> <span class="o">=</span> <span class="mi">205</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center7</span><span class="p">,</span>
+                <span class="n">radii7</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span> <span class="o">-</span> <span class="mi">3</span><span class="p">),</span>  <span class="c1"># nicer</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center7</span><span class="p">,</span>
+                <span class="n">radii7</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center7</span><span class="p">,</span>
+                <span class="n">radii7</span> <span class="o">+</span> <span class="n">w2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 8 - Next slant</span>
+        <span class="c1"># Reflected from the last arc&#39;s center</span>
+        <span class="n">start8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">radii7</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">radii7</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">))</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">start8_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">))</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">start8_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">)),</span>
+                <span class="n">center7</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">radii7</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta7_end</span><span class="p">))</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># We preemptively take section 9&#39;s radius to make a nice join.</span>
+        <span class="n">radii9</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="n">end8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">42</span> <span class="o">-</span> <span class="n">radii9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span>
+                <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="n">radii9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">end8_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">42</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span>
+                <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">end8_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mi">42</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span>
+                <span class="o">-</span><span class="n">radii9</span> <span class="o">-</span> <span class="p">(</span><span class="n">radii9</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="n">start8</span><span class="p">,</span>
+                <span class="n">end8</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="n">start8_2</span><span class="p">,</span>
+                <span class="n">end8_2</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="n">start8_3</span><span class="p">,</span>
+                <span class="n">end8_3</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 9 - Circular arc 7, end</span>
+        <span class="c1"># Since y2 = 0...</span>
+        <span class="n">center9</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">42</span><span class="p">,</span> <span class="o">-</span><span class="n">radii9</span><span class="p">])</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center9</span><span class="p">,</span>
+                <span class="n">radii9</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">210</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">88</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center9</span><span class="p">,</span>
+                <span class="n">radii9</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">210</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span><span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+            <span class="n">CircularLane</span><span class="p">(</span>
+                <span class="n">center9</span><span class="p">,</span>
+                <span class="n">radii9</span> <span class="o">+</span> <span class="n">w2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">212</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">88</span><span class="p">),</span>  <span class="c1"># nicer join</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+                <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+                <span class="n">speed_limit</span><span class="o">=</span><span class="n">default_speedlimit</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span>
+            <span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span>
+            <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span>
+            <span class="n">record_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_trajectories&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
 </pre></div>
           </article>
         </div>
