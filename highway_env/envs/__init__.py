@@ -1,3 +1,6 @@
+from highway_env.envs.homemade_city_env import HomemadeCity
+from highway_env.envs.homemade_racetrack_env import HomemadeRacetrack
+from highway_env.envs.homemade_highway_env import HomemadeHighway
 from highway_env.envs.exit_env import ExitEnv
 from highway_env.envs.highway_env import HighwayEnv, HighwayEnvFast
 from highway_env.envs.intersection_env import (
@@ -19,6 +22,9 @@ from highway_env.envs.u_turn_env import UTurnEnv
 
 
 __all__ = [
+    "HomemadeCity",
+    "HomemadeHighway",
+    "HomemadeRacetrack",
     "ExitEnv",
     "HighwayEnv",
     "HighwayEnvFast",
