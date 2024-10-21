@@ -832,6 +832,8 @@ class HomemadeCity(AbstractEnv):
             )
         )
         
+        
+        
         # I-1 - east to west
         net.add_lane(
             "I-1:e-out",
@@ -872,6 +874,7 @@ class HomemadeCity(AbstractEnv):
                 (n,n)
             )
         )
+        
         
         # I-1 - south to north
         net.add_lane(
@@ -926,6 +929,8 @@ class HomemadeCity(AbstractEnv):
                 priority=0
             )
         )
+        
+        
         # I-1 - north to west
         net.add_lane(
             "I-1:n-out",
@@ -1081,42 +1086,33 @@ class HomemadeCity(AbstractEnv):
             )
         )
         
+        
         # I-2 - south to north
-        # net.add_lane(
-        #     "I-2:s-out",
-        #     "I-2:n-in",
-        #     StraightLane(
-        #         [68, -80],
-        #         [68, -92],
-        #         lane_width,
-        #         (n,c),
-        #         priority=3
-        #     )
-        # )
+        net.add_lane(
+            "I-2:s-out",
+            "I-2:n-in",
+            StraightLane(
+                [68, -80],
+                [68, -92],
+                lane_width,
+                (n,c),
+                priority=3
+            )
+        )
         # I-2 - south to west
-        # net.add_lane(
-        #     "I-2:s-out",
-        #     "I-2:w-in",
-        #     CircularLane(
-        #         [60, -80],
-        #         8,
-        #         0,
-        #         90,
-        #         left_turn,
-        #         lane_width,
-        #         (c,c),
-        #         priority=2
-        #     )
-        #     # self._build_circlelane(
-        #     #     [68, -80],
-        #     #     [60, -88],
-        #     #     left_turn,
-        #     #     0,
-        #     #     -90,
-        #     #     2,
-        #     #     (c,c)
-        #     # )
-        # )
+        net.add_lane(
+            "I-2:s-out",
+            "I-2:w-in",
+            self._build_circlelane(
+                [68, -80],
+                [60, -88],
+                left_turn,
+                0,
+                -90,
+                2,
+                (n,n)
+            )
+        )
         
         
         """Exit 3"""
@@ -1176,7 +1172,7 @@ class HomemadeCity(AbstractEnv):
         # R-3 - south to north
         net.add_lane(
             "T-2:n-in",
-            "I-1:s-out",
+            "I-2:s-out",
             StraightLane(
                 [68, -45],
                 [68, -80],
@@ -2634,6 +2630,7 @@ class HomemadeCity(AbstractEnv):
         
         
         
+        
         road = RegulatedRoad(
             network=net,
             np_random=self.np_random,
@@ -2663,9 +2660,8 @@ class HomemadeCity(AbstractEnv):
         #     road.vehicles.append(other_vehicles_type(road, position, speed=speed))
 
 
-        # ego_lane = self.road.network.get_lane(("wxs", "I-12:e-out", 0))
-        # ego_lane = self.road.network.get_lane(("T-5:w-in", "I-11:e-out", 0))
-        ego_lane = self.road.network.get_lane(("I-3:w-in", "T-2:e-out", 0))
+        # ego_lane = self.road.network.get_lane(("wxs", "I-12:e-out", 0)) # This is for the northern exit of roundabout
+        ego_lane = self.road.network.get_lane(("T-5:w-in", "I-11:e-out", 0)) # This is for a tour which almost drives through the full map
         ego_vehicle = self.action_type.vehicle_class(
             self.road,
             ego_lane.position(20, 0),
@@ -2675,6 +2671,8 @@ class HomemadeCity(AbstractEnv):
         # ego_vehicle.target_speed = 5
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
+
+        
                 
     def _reward(self, action: Action) -> float:
         """
@@ -2696,6 +2694,7 @@ class HomemadeCity(AbstractEnv):
                 [0, 1],
             )
         reward *= rewards["on_road_reward"]
+        
         return reward
 
     def _rewards(self, action: Action) -> dict[str, float]:
