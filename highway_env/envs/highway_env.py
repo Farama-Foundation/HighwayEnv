@@ -112,6 +112,7 @@ class HighwayEnv(AbstractEnv):
                 ],
                 [0, 1],
             )
+
         reward *= rewards["on_road_reward"]
         return reward
 
@@ -132,6 +133,7 @@ class HighwayEnv(AbstractEnv):
             "right_lane_reward": lane / max(len(neighbours) - 1, 1),
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
             "on_road_reward": float(self.vehicle.on_road),
+            "distance_travelled": self.vehicle.travelled_distance(),
         }
 
     def _is_terminated(self) -> bool:

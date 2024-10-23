@@ -40,6 +40,7 @@ class Vehicle(RoadObject):
         predition_type: str = "constant_steering",
     ):
         super().__init__(road, position, heading, speed)
+        self.starting_position = position
         self.prediction_type = predition_type
         self.action = {"steering": 0, "acceleration": 0}
         self.crashed = False
@@ -117,6 +118,10 @@ class Vehicle(RoadObject):
         if hasattr(vehicle, "color"):
             v.color = vehicle.color
         return v
+
+    def travelled_distance(self):
+        return abs((self.position[0] ** 2 + self.starting_position[0] ** 2) / \
+            (self.position[1] ** 2 + self.starting_position[1] ** 2))
 
     def act(self, action: dict | str = None) -> None:
         """
