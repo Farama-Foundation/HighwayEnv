@@ -115,12 +115,15 @@ class EnvViewer:
             if self.env.action_type:
                 EventHandler.handle_event(self.env.action_type, event)
 
-    def display(self) -> None:
-        """Display the road and vehicles on a pygame window."""
+    def display(self, lock_window: bool=False) -> None:
+        """
+        Display the road and vehicles on a pygame window.
+        :param lock_window: whether to lock the window or not
+        """
         if not self.enabled:
             return
 
-        self.sim_surface.move_display_window_to(self.window_position())
+        self.sim_surface.move_display_window_to(self.window_position(lock_window))
         RoadGraphics.display(self.env.road, self.sim_surface)
 
         if self.vehicle_trajectory:
@@ -180,14 +183,20 @@ class EnvViewer:
         data = pygame.surfarray.array3d(surface)  # in W x H x C channel convention
         return np.moveaxis(data, 0, 1)
 
-    def window_position(self) -> np.ndarray:
-        """the world position of the center of the displayed window."""
-        if self.observer_vehicle:
-            return self.observer_vehicle.position
-        elif self.env.vehicle:
-            return self.env.vehicle.position
-        else:
+    def window_position(self, lock_window: bool) -> np.ndarray:
+        """
+        the world position of the center of the displayed window.
+        :param lock_window: whether to lock the window or not
+        """
+        if lock_window:
             return np.array([0, 0])
+        else:
+            if self.observer_vehicle:
+                return self.observer_vehicle.position
+            elif self.env.vehicle:
+                return self.env.vehicle.position
+            else:
+                return np.array([0, 0])
 
     def close(self) -> None:
         """Close the pygame window."""
