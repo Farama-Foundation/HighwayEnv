@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from random import shuffle
+
 import numpy as np
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
-from highway_env.road.lane import CircularLane, LineType, SineLane, StraightLane
+from highway_env.road.lanes.unweighted_lanes import CircularLane, SineLane, StraightLane
+from highway_env.road.lanes.lane_utils import LineType
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import MDPVehicle
 
@@ -320,6 +323,16 @@ class RoundaboutEnv(AbstractEnv):
         )
         self.road = road
 
+    def _get_random_entry(self) -> tuple[str, str, int]:
+        entries = np.array([("ner", "nes"), ("ser", "ses"), ("eer", "ees"), ("wer", "wes")])
+        entry = self.np_random.choice(entries)
+        return tuple((entry[0], entry[1], 0))
+
+    def _get_random_roundabout_lane_index(self):
+        lane_indices = np.array([("sx", "se"), ("we", "sx"), ("wx", "we"), ("ne", "wx"), ("nx", "ne"), ("ee", "nx"), ("ex", "ee"), ("se", "ex")])
+        lane_index = self.np_random.choice(lane_indices)
+        return tuple((lane_index[0], lane_index[1], self.np_random.integers(0,1)))
+
     def _make_vehicles(self) -> None:
         """
         Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
@@ -330,7 +343,8 @@ class RoundaboutEnv(AbstractEnv):
         speed_deviation = 2
 
         # Ego-vehicle
-        ego_lane = self.road.network.get_lane(("ser", "ses", 0))
+        destinations = ["wxr", "exr", "sxr", "nxr"]
+        ego_lane = self.road.network.get_lane(self._get_random_entry())
         ego_vehicle = self.action_type.vehicle_class(
             self.road,
             ego_lane.position(125, 0),
@@ -338,18 +352,17 @@ class RoundaboutEnv(AbstractEnv):
             heading=ego_lane.heading_at(140),
         )
         try:
-            ego_vehicle.plan_route_to("nxs")
+            ego_vehicle.plan_route_to(self.np_random.choice(destinations))
         except AttributeError:
             pass
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 
         # Incoming vehicle
-        destinations = ["exr", "sxr", "nxr"]
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         vehicle = other_vehicles_type.make_on_lane(
             self.road,
-            ("we", "sx", 1),
+            ("ee", "nx", 1),
             longitudinal=5 + self.np_random.normal() * position_deviation,
             speed=16 + self.np_random.normal() * speed_deviation,
         )
@@ -363,10 +376,11 @@ class RoundaboutEnv(AbstractEnv):
         self.road.vehicles.append(vehicle)
 
         # Other vehicles
-        for i in list(range(1, 2)) + list(range(-1, 0)):
+        # Spawning 2 vehicles in the roundabout
+        for i in [1, -1]:
             vehicle = other_vehicles_type.make_on_lane(
                 self.road,
-                ("we", "sx", 0),
+                self._get_random_roundabout_lane_index(),
                 longitudinal=20 * i + self.np_random.normal() * position_deviation,
                 speed=16 + self.np_random.normal() * speed_deviation,
             )
@@ -375,12 +389,13 @@ class RoundaboutEnv(AbstractEnv):
             self.road.vehicles.append(vehicle)
 
         # Entering vehicle
-        vehicle = other_vehicles_type.make_on_lane(
-            self.road,
-            ("eer", "ees", 0),
-            longitudinal=50 + self.np_random.normal() * position_deviation,
-            speed=16 + self.np_random.normal() * speed_deviation,
-        )
-        vehicle.plan_route_to(self.np_random.choice(destinations))
-        vehicle.randomize_behavior()
-        self.road.vehicles.append(vehicle)
+        for i in range(self.config["vehicles_count"]):
+            vehicle = other_vehicles_type.make_on_lane(
+                self.road,
+                self._get_random_entry(),
+                longitudinal=50 * (i % 10) + self.np_random.normal() * position_deviation,
+                speed=16 + self.np_random.normal() * speed_deviation,
+            )
+            vehicle.plan_route_to(self.np_random.choice(destinations))
+            vehicle.randomize_behavior()
+            self.road.vehicles.append(vehicle)
