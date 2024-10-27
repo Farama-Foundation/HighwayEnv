@@ -5,7 +5,8 @@ from typing import TYPE_CHECKING, Tuple, Union
 import numpy as np
 import pygame
 
-from highway_env.road.lane import AbstractLane, LineType
+from highway_env.road.lanes.abstract_lanes import AbstractLane
+from highway_env.road.lanes.lane_utils import LineType
 from highway_env.road.road import Road
 from highway_env.utils import Vector
 from highway_env.vehicle.graphics import VehicleGraphics

@@ -5,7 +5,9 @@ from typing import TYPE_CHECKING, List, Tuple
 
 import numpy as np
 
-from highway_env.road.lane import AbstractLane, LineType, StraightLane, lane_from_config
+from highway_env.road.lanes.abstract_lanes import AbstractLane
+from highway_env.road.lanes.unweighted_lanes import StraightLane, lane_from_config
+from highway_env.road.lanes.lane_utils import LineType
 from highway_env.vehicle.objects import Landmark
 
 
@@ -292,7 +294,7 @@ class RoadNetwork:
     def straight_road_network(
         lanes: int = 4,
         start: float = 0,
-        length: float = 10000,
+        length: float = 10_000, # TODO: here
         angle: float = 0,
         speed_limit: float = 30,
         nodes_str: tuple[str, str] | None = None,

@@ -1,6 +1,6 @@
 import pytest
 
-from highway_env.road.lane import StraightLane
+from highway_env.road.lanes.unweighted_lanes import StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
 

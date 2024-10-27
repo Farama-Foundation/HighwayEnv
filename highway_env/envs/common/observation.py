@@ -11,7 +11,7 @@ from gymnasium import spaces
 from highway_env import utils
 from highway_env.envs.common.finite_mdp import compute_ttc_grid
 from highway_env.envs.common.graphics import EnvViewer
-from highway_env.road.lane import AbstractLane
+from highway_env.road.lanes.abstract_lanes import AbstractLane
 from highway_env.utils import Vector
 from highway_env.vehicle.kinematics import Vehicle
 

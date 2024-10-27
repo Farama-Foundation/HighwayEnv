@@ -9,7 +9,7 @@ from highway_env import utils
 
 
 if TYPE_CHECKING:
-    from highway_env.road.lane import AbstractLane
+    from highway_env.road.lanes.abstract_lanes import AbstractLane
     from highway_env.road.road import Road
 
 LaneIndex = Tuple[str, str, int]

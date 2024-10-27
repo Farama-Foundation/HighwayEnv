@@ -4,7 +4,8 @@ import numpy as np
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
-from highway_env.road.lane import AbstractLane, CircularLane, LineType, StraightLane
+from highway_env.road.lanes.unweighted_lanes import AbstractLane, CircularLane, StraightLane
+from highway_env.road.lanes.lane_utils import LineType
 from highway_env.road.regulation import RegulatedRoad
 from highway_env.road.road import RoadNetwork
 from highway_env.vehicle.kinematics import Vehicle

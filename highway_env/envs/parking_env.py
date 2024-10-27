@@ -10,7 +10,8 @@ from highway_env.envs.common.observation import (
     MultiAgentObservation,
     observation_factory,
 )
-from highway_env.road.lane import LineType, StraightLane
+from highway_env.road.lanes.unweighted_lanes import StraightLane
+from highway_env.road.lanes.lane_utils import LineType
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.graphics import VehicleGraphics
 from highway_env.vehicle.kinematics import Vehicle

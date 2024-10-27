@@ -6,7 +6,7 @@ from typing import Callable
 import numpy as np
 from numpy.linalg import LinAlgError
 
-from highway_env.road.lane import AbstractLane
+from highway_env.road.lanes.abstract_lanes import AbstractLane
 from highway_env.utils import Interval, Matrix, Vector
 
 
