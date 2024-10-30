@@ -4,15 +4,13 @@ import logging
 from typing import TYPE_CHECKING, List, Tuple, overload
 
 import numpy as np
-from scipy.sparse.csgraph import dijkstra
+import networkx as nx
 from typing_extensions import override
 
 from highway_env.road.lanes.abstract_lanes import AbstractLane
 from highway_env.road.lanes.unweighted_lanes import StraightLane, lane_from_config
 from highway_env.road.lanes.lane_utils import LineType
 from highway_env.vehicle.objects import Landmark
-
-from highway_env.road.directed_weighted_graph import DWG, Node
 
 if TYPE_CHECKING:
     from highway_env.vehicle import kinematics, objects
@@ -29,7 +27,7 @@ class RoadNetwork:
     def __init__(self):
         self.graph = {}
 
-    def add_lane(self, _from: str, _to: str, lane: AbstractLane) -> None:
+    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None) -> None:
         """
         A lane is encoded as an edge in the road network.
 
@@ -394,28 +392,29 @@ class RoadNetwork:
         return graph_dict
 
 class WeightedRoadnetwork(RoadNetwork):
-    graph_dist: DWG
+    graph_net: nx.MultiDiGraph
 
     def __init__(self):
         super().__init__()
+        self.graph_net = nx.MultiDiGraph()
 
     def dijkstra(self, source: str, goal: str) -> list[str]:
         raise NotImplementedError
 
     def bellman_ford_cheapest_path(self, source: str, goal: str) -> list[str]:
-        source = self.graph_dist.get(source)
-        source.distance = 0
+        source = self.graph_net.nodes[source]
+        source["d"] = 0
         predecessors = dict()
 
-        for vertex in self.graph_dist.nodes:
+        for vertex in self.graph_net.nodes:
             predecessors[vertex] = []
 
         # Exploring the graph
-        for _ in self.graph_dist.nodes.len - 1:
+        for i in range(0, self.graph_net.order() - 1):
             pies = dict()
-            for (u, v) in self.graph_dist.edges:
-                if v.distance > u.distance + self.graph_dist.weight(u, v):
-                    v.distance = u.distance + self.graph_dist.weight(u, v)
+            for (u, v, _) in self.graph_net.edges:
+                if self.graph_net[v]["d"] > self.graph_net[u]["d"] + self.graph_net[u][v]["weight"]:
+                    self.graph_net[v]["d"] = self.graph_net[u]["d"] + self.graph_net[u][v]["weight"]
                     if pies.get(v) is None:
                         pies[v] = u
             for vertex in pies.keys():
@@ -426,10 +425,11 @@ class WeightedRoadnetwork(RoadNetwork):
         current = goal
         while current is not source:
             path.append(current)
-            if len(path) is 0:
+            if len(path) == 0:
                 raise Exception(f"could not find a path from '{source}' to '{goal}'")
             else:
                 current = predecessors[current].pop()
+        path.reverse()
         return path
 
     def bellman_ford(self, source: str, goal: str) -> list[str]:
@@ -442,25 +442,28 @@ class WeightedRoadnetwork(RoadNetwork):
         :param weight: weight
         :return: shortest path from start to goal
         """
-        return self.dijkstra(start, goal, weight)
+        raise NotImplementedError
 
-    @overload
-    def add_lane(self, _from: str, _to: str, weight: int, lane: AbstractLane) -> None:
+    def shortest_path(self, start: str, goal: str) -> list[str]:
+        return self.bellman_ford_cheapest_path(start, goal)
+
+    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None) -> None:
         super().add_lane(_from, _to, lane)
+        if weight == None:
+            raise Exception("Cannot create edge with weight None")
+        if not self.graph_net.has_node(_from):
+            self.graph_net.add_node(_from, d=np.inf)
+        if not self.graph_net.has_node(_to):
+            self.graph_net.add_node(_to, d=np.inf)
 
-        if self.graph_dist is None:
-            self.graph_dist = DWG(Node(_from))
-
-        u = self.graph_dist.get_or_new(_from)
-        v = self.graph_dist.get_or_new(_to)
-        self.graph_dist.add_edge(u, v, weight)
+        self.graph_net.add_edge(_from, _to, weight=weight)
 
 class Road:
     """A road is a set of lanes, and a set of vehicles driving on these lanes."""
 
     def __init__(
         self,
-        network: RoadNetwork = None,
+        network: RoadNetwork | WeightedRoadnetwork = None,
         vehicles: list[kinematics.Vehicle] = None,
         road_objects: list[objects.RoadObject] = None,
         np_random: np.random.RandomState = None,
