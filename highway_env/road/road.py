@@ -12,6 +12,7 @@ from highway_env.road.lanes.unweighted_lanes import StraightLane, lane_from_conf
 from highway_env.road.lanes.lane_utils import LineType
 from highway_env.vehicle.objects import Landmark
 
+from highway_env.road.directed_weighted_graph import DWG, Node
 
 if TYPE_CHECKING:
     from highway_env.vehicle import kinematics, objects
@@ -393,6 +394,8 @@ class RoadNetwork:
         return graph_dict
 
 class WeightedRoadnetwork(RoadNetwork):
+    graph_dist: DWG
+
     def __init__(self):
         super().__init__()
 
@@ -400,7 +403,34 @@ class WeightedRoadnetwork(RoadNetwork):
         raise NotImplementedError
 
     def bellman_ford_cheapest_path(self, source: str, goal: str) -> list[str]:
-        raise NotImplementedError
+        source = self.graph_dist.get(source)
+        source.distance = 0
+        predecessors = dict()
+
+        for vertex in self.graph_dist.nodes:
+            predecessors[vertex] = []
+
+        # Exploring the graph
+        for _ in self.graph_dist.nodes.len - 1:
+            pies = dict()
+            for (u, v) in self.graph_dist.edges:
+                if v.distance > u.distance + self.graph_dist.weight(u, v):
+                    v.distance = u.distance + self.graph_dist.weight(u, v)
+                    if pies.get(v) is None:
+                        pies[v] = u
+            for vertex in pies.keys():
+                predecessors[vertex].extend(pies.get(vertex))
+
+        # Determining the path
+        path = []
+        current = goal
+        while current is not source:
+            path.append(current)
+            if len(path) is 0:
+                raise Exception(f"could not find a path from '{source}' to '{goal}'")
+            else:
+                current = predecessors[current].pop()
+        return path
 
     def bellman_ford(self, source: str, goal: str) -> list[str]:
         raise NotImplementedError
@@ -413,6 +443,17 @@ class WeightedRoadnetwork(RoadNetwork):
         :return: shortest path from start to goal
         """
         return self.dijkstra(start, goal, weight)
+
+    @overload
+    def add_lane(self, _from: str, _to: str, weight: int, lane: AbstractLane) -> None:
+        super().add_lane(_from, _to, lane)
+
+        if self.graph_dist is None:
+            self.graph_dist = DWG(Node(_from))
+
+        u = self.graph_dist.get_or_new(_from)
+        v = self.graph_dist.get_or_new(_to)
+        self.graph_dist.add_edge(u, v, weight)
 
 class Road:
     """A road is a set of lanes, and a set of vehicles driving on these lanes."""
