@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING, List, Tuple, overload
 
 import numpy as np
+from scipy.sparse.csgraph import dijkstra
+from typing_extensions import override
 
 from highway_env.road.lanes.abstract_lanes import AbstractLane
 from highway_env.road.lanes.unweighted_lanes import StraightLane, lane_from_config
@@ -390,6 +392,27 @@ class RoadNetwork:
                     graph_dict[_from][_to].append(lane.to_config())
         return graph_dict
 
+class WeightedRoadnetwork(RoadNetwork):
+    def __init__(self):
+        super().__init__()
+
+    def dijkstra(self, source: str, goal: str) -> list[str]:
+        raise NotImplementedError
+
+    def bellman_ford_cheapest_path(self, source: str, goal: str) -> list[str]:
+        raise NotImplementedError
+
+    def bellman_ford(self, source: str, goal: str) -> list[str]:
+        raise NotImplementedError
+
+    def weighted_shortest_path(self, start: str, goal: str, weight: int) -> list[str]:
+        """
+        :param start: start node
+        :param goal: goal node
+        :param weight: weight
+        :return: shortest path from start to goal
+        """
+        return self.dijkstra(start, goal, weight)
 
 class Road:
     """A road is a set of lanes, and a set of vehicles driving on these lanes."""
