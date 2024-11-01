@@ -11,7 +11,6 @@ from highway_env.road.lanes.lane_utils import LineType
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import MDPVehicle
 
-
 class RoundaboutEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
@@ -39,6 +38,7 @@ class RoundaboutEnv(AbstractEnv):
                 "centering_position": [0.5, 0.6],
                 "duration": 11,
                 "normalize_reward": True,
+                "vehicles_count": 10,
             }
         )
         return config

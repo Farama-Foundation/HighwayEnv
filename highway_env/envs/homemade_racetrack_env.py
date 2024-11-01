@@ -10,7 +10,7 @@ from highway_env.utils import near_split
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.kinematics import Vehicle
 
-from highway_env.road.lane import CircularLane, LineType, StraightLane
+from highway_env.road.lanes.unweighted_lanes import CircularLane, LineType, StraightLane
 
 
 class HomemadeRacetrack(AbstractEnv):
