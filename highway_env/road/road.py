@@ -34,6 +34,7 @@ class RoadNetwork:
         :param _from: the node at which the lane starts.
         :param _to: the node at which the lane ends.
         :param AbstractLane lane: the lane geometry.
+        :param weight: weight of the lane
         """
         if _from not in self.graph:
             self.graph[_from] = {}
