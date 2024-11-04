@@ -15,15 +15,45 @@ class Path:
         priority: int = 0,
         speed_limit: float = 20,
         forbidden: bool = False,
-        width: float = AbstractLane.DEFAULT_WIDTH
+        width: float = AbstractLane.DEFAULT_WIDTH,
+        weight: int = None
     ):
+        """
+        Parameters
+        ----------
+        from_node_id : str
+            The id of the start point
+        to_node_id : str
+            The id of the end point
+        line_types : tuple[LineType, LineType], optional
+            The description of the line types in the road<br>
+            (Default is ``None``)
+        priority : int, optional
+            Describing the priority of the road, higher value indicates higher priority<br>
+            (Default is ``0``)
+        speed_limit : float, optional
+            Assign a speed limit in m/s<br>
+            (Default is ``20`` (m/s))
+        forbidden : bool, optional
+            Assign if it is forbidden to move into the road by lane change<br>
+            ``True`` -> it is forbidden to enter<br>
+            ``False`` -> it is not forbidden to enter<br>
+            (Default is ``False``)
+        width : float, optional
+            The width of a lane<br>
+            (Default is ``AbstractLane.DEFAULT_WIDTH`` => ``4``)
+        weight: int, optiona
+            The weight of a lane<br>
+            (Default is ``None``)
+        """
         self.from_node_id: str = from_node_id
         self.to_node_id: str = to_node_id
         self.line_types: tuple[LineType, LineType] = line_types
         self.priority: int = priority
         self.speed_limit: float = speed_limit
         self.forbidden: bool = forbidden
-        self.width: float = width
+        self.width: float = width,
+        self.weight: int = weight
 
 class StraightPath(Path):
     def __init__(
@@ -34,8 +64,37 @@ class StraightPath(Path):
         priority: int = 0,
         speed_limit: float = 20,
         forbidden: bool = False,
-        width: float = AbstractLane.DEFAULT_WIDTH
+        width: float = AbstractLane.DEFAULT_WIDTH,
+        weight: int = None
     ):
+        """
+        Parameters
+        ----------
+        from_node_id : str
+            The id of the start point
+        to_node_id : str
+            The id of the end point
+        line_types : tuple[LineType, LineType], optional
+            The description of the line types in the road<br>
+            (Default is ``None``)
+        priority : int, optional
+            Describing the priority of the road, higher value indicates higher priority<br>
+            (Default is ``0``)
+        speed_limit : float, optional
+            Assign a speed limit in m/s<br>
+            (Default is ``20`` (m/s))
+        forbidden : bool, optional
+            Assign if it is forbidden to move into the road by lane change<br>
+            ``True`` -> it is forbidden to enter<br>
+            ``False`` -> it is not forbidden to enter<br>
+            (Default is ``False``)
+        width : float, optional
+            The width of a lane<br>
+            (Default is ``AbstractLane.DEFAULT_WIDTH`` => ``4``)
+        weight: int, optiona
+            The weight of a lane<br>
+            (Default is ``None``)
+        """
         super().__init__(
             from_node_id,
             to_node_id,
@@ -43,7 +102,8 @@ class StraightPath(Path):
             priority,
             speed_limit,
             forbidden,
-            width
+            width,
+            weight
         )
         
 class CircularPath(Path):
@@ -61,7 +121,8 @@ class CircularPath(Path):
         clockwise: bool = True,
         speed_limit: float = 20,
         forbidden: bool = False,
-        width: float = AbstractLane.DEFAULT_WIDTH
+        width: float = AbstractLane.DEFAULT_WIDTH,
+        weight: int = None
     ):
         """
         Parameters
@@ -98,6 +159,9 @@ class CircularPath(Path):
         width : float, optional
             The width of a lane<br>
             (Default is ``AbstractLane.DEFAULT_WIDTH`` => ``4``)
+        weight: int, optiona
+            The weight of a lane<br>
+            (Default is ``None``)
         """
         super().__init__(
             from_node_id,
@@ -106,7 +170,8 @@ class CircularPath(Path):
             priority,
             speed_limit,
             forbidden,
-            width
+            width,
+            weight
         )
         self.clockwise: bool = self._determine_turn_direction(start_phase, end_phase) # True->right_turn, False->left_turn
         
@@ -126,14 +191,14 @@ class CircularPath(Path):
             return None  # No movement
         return diff < 180
     
-
 class SinePath(Path):
     def __init__(
         self,
         from_node_id: str,
-        to_node_id: str
+        to_node_id: str,
+        weight: int = None
     ):
-        super().__init__(from_node_id, to_node_id)
+        super().__init__(from_node_id, to_node_id, weight)
 
 class NetworkBuilder:
     class PathType(Enum):
@@ -244,6 +309,7 @@ class NetworkBuilder:
             if key in roads:
                 self._road_description[key].extend(roads[key])
         
+    # @TODO Determine the weight of roads inside the intersection
     def add_intersection(
         self,
         intersection_name: str,
