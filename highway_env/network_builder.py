@@ -3,8 +3,10 @@ from enum import Enum
 
 import numpy as np
 from highway_env.utils import Vector
-from highway_env.road.lane import AbstractLane, CircularLane, LineType, SineLane, StraightLane
-from highway_env.road.road import Road, RoadNetwork
+from highway_env.road.lanes.abstract_lanes import AbstractLane
+from highway_env.road.lanes.lane_utils import LineType
+from highway_env.road.lanes.unweighted_lanes import StraightLane, SineLane, CircularLane
+from highway_env.road.road import RoadNetwork
 
 class Path:
     def __init__(
@@ -491,7 +493,7 @@ class NetworkBuilder:
     def add_roundabout(self):
         print("Not implemented")
         
-    def _build_straight_road(self, road: StraightPath) -> tuple[str, str, AbstractLane]:
+    def _build_straight_road(self, road: StraightPath) -> tuple[str, str, AbstractLane, int]:
         return (
             road.from_node_id,
             road.to_node_id,
@@ -503,10 +505,11 @@ class NetworkBuilder:
                 road.forbidden,
                 road.speed_limit,
                 road.priority,
-            )
+            ),
+            road.weight
         )
         
-    def _build_circular_road(self, road: CircularPath) -> tuple[str, str, AbstractLane]:
+    def _build_circular_road(self, road: CircularPath) -> tuple[str, str, AbstractLane, int]:
         center = self._get_center(
             self._nodes[road.from_node_id],
             self._nodes[road.to_node_id],
@@ -527,10 +530,11 @@ class NetworkBuilder:
                 road.forbidden,
                 road.speed_limit,
                 road.priority
-            )
+            ),
+            road.weight
         )
     
-    def _build_sine_road(self, road: SinePath) -> tuple[str, str, AbstractLane]:
+    def _build_sine_road(self, road: SinePath) -> tuple[str, str, AbstractLane, int]:
         return ()
     
     def build_roads(self, road_network: RoadNetwork):
@@ -549,5 +553,5 @@ class NetworkBuilder:
                 net.append(build_method(road))
 
         # Add each lane to the road network
-        for from_id, to_id, lane in net:
-            road_network.add_lane(from_id, to_id, lane)
+        for from_id, to_id, lane, weight in net:
+            road_network.add_lane(from_id, to_id, lane, weight)

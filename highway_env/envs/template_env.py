@@ -6,7 +6,7 @@ import numpy as np
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
-from highway_env.road.road import Road, RoadNetwork
+from highway_env.road.road import Road, RoadNetwork, WeightedRoadnetwork
 from highway_env.utils import near_split
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.kinematics import Vehicle
@@ -16,6 +16,7 @@ from highway_env.road.lanes.abstract_lanes import AbstractLane
 
 from highway_env.road.regulation import RegulatedRoad
 from highway_env.network_builder import NetworkBuilder, StraightPath, CircularPath, Path
+from highway_env.road.lanes.unweighted_lanes import StraightLane, SineLane, CircularLane
 
 
 class HomemadeCity(AbstractEnv):
@@ -66,7 +67,7 @@ class HomemadeCity(AbstractEnv):
     def _make_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
 
-        net = RoadNetwork()
+        net = WeightedRoadnetwork()
         nb = NetworkBuilder()
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
         left_turn = False
@@ -74,7 +75,6 @@ class HomemadeCity(AbstractEnv):
         lane_width = AbstractLane.DEFAULT_WIDTH
         
         # Place the road here
-        
         
         nb.build_roads(net)
         
