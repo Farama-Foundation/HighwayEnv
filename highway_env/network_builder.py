@@ -118,7 +118,6 @@ class CircularPath(Path):
         end_phase: float, # degree
         line_types: tuple[LineType, LineType] = None,
         priority: int = 0,
-        clockwise: bool = True,
         speed_limit: float = 20,
         forbidden: bool = False,
         width: float = AbstractLane.DEFAULT_WIDTH,
@@ -273,7 +272,7 @@ class NetworkBuilder:
         cross = self._cross_product(vector_start_to_mid, vector_mid_to_center1)
         
         # Check direction based on the sign of the cross product
-        if clockwise:
+        if not clockwise:
             # For clockwise, cross product should be negative
             if cross < 0:
                 return center1
@@ -290,7 +289,7 @@ class NetworkBuilder:
         # clockwise :: False->left_turn ; True->right_turn
         center1, center2 = self._find_circle_center(start, end)
         
-        return self._select_center(start, end, center1, center2, not(clockwise))
+        return self._select_center(start, end, center1, center2, clockwise)
 
     def _get_radius(self, start: Vector, center: Vector) -> float:
             return math.sqrt((start[0] - center[0])**2 + (start[1] - center[1])**2)
@@ -480,7 +479,8 @@ class NetworkBuilder:
                         start_phase,
                         end_phase,
                         line_types,
-                        lane_priority
+                        lane_priority,
+                        width=lane_width
                     )
                     road_desc[self.PathType.CIRCULAR].append(path)
                     print()
