@@ -54,7 +54,7 @@ class Path:
         self.priority: int = priority
         self.speed_limit: float = speed_limit
         self.forbidden: bool = forbidden
-        self.width: float = width,
+        self.width: float = width
         self.weight: int = weight
 
 class StraightPath(Path):
@@ -67,7 +67,7 @@ class StraightPath(Path):
         priority: int = 0,
         speed_limit: float = 20,
         forbidden: bool = False,
-        width: float = AbstractLane.DEFAULT_WIDTH,
+        width: float = AbstractLane.DEFAULT_WIDTH
     ):
         """
         Parameters
@@ -78,6 +78,9 @@ class StraightPath(Path):
             The id of the end point
         line_types : tuple[LineType, LineType], optional
             The description of the line types in the road<br>
+            (Default is ``None``)
+        weight: int, optional
+            The weight of a lane<br>
             (Default is ``None``)
         priority : int, optional
             Describing the priority of the road, higher value indicates higher priority<br>
@@ -93,9 +96,6 @@ class StraightPath(Path):
         width : float, optional
             The width of a lane<br>
             (Default is ``AbstractLane.DEFAULT_WIDTH`` => ``4``)
-        weight: int, optiona
-            The weight of a lane<br>
-            (Default is ``None``)
         """
         super().__init__(
             from_node_id,
@@ -107,7 +107,7 @@ class StraightPath(Path):
             width,
             weight
         )
-        
+
 class CircularPath(Path):
     left_turn = False
     right_turn = True
@@ -123,7 +123,7 @@ class CircularPath(Path):
         priority: int = 0,
         speed_limit: float = 20,
         forbidden: bool = False,
-        width: float = AbstractLane.DEFAULT_WIDTH,
+        width: float = AbstractLane.DEFAULT_WIDTH
     ):
         """
         Parameters
@@ -140,6 +140,9 @@ class CircularPath(Path):
             Note: ``0`` degrees is always upwards, the builder will handle when this is not the case
         line_types : tuple[LineType, LineType], optional
             The description of the line types in the road<br>
+            (Default is ``None``)
+        weight: int, optional
+            The weight of a lane<br>
             (Default is ``None``)
         clockwise : bool, optional
             Describing if the cirlce moves clockwise or counterclockwise<br>
@@ -160,9 +163,7 @@ class CircularPath(Path):
         width : float, optional
             The width of a lane<br>
             (Default is ``AbstractLane.DEFAULT_WIDTH`` => ``4``)
-        weight: int, optiona
-            The weight of a lane<br>
-            (Default is ``None``)
+
         """
         super().__init__(
             from_node_id,
@@ -225,8 +226,8 @@ class NetworkBuilder:
             self.PathType.SINE     : []
         }
 
-    # Perpendicular Bisector
     def _find_circle_center(self, start: Vector, end: Vector) -> Vector:
+        # Perpendicular Bisector
         x1, y1 = start
         x2, y2 = end
         
@@ -302,15 +303,15 @@ class NetworkBuilder:
     def add_multiple_nodes(self, nodes: dict[str, Vector]):
         self._nodes.update(nodes)
         
-    def add_road(self, path_type: PathType, road: Path):
-        self._road_description[path_type].append(road)
+    def add_path(self, path_type: PathType, path: Path):
+        self._path_description[path_type].append(path)
         
-    def add_multiple_roads(self, roads: dict[PathType, list[Path]]):
+    def add_multiple_paths(self, paths: dict[PathType, list[Path]]):
         for key in NetworkBuilder.PathType:
-            if key in roads:
-                self._road_description[key].extend(roads[key])
+            if key in paths:
+                self._road_description[key].extend(paths[key])
         
-    # @TODO Determine the weight of roads inside the intersection
+    # @TODO Determine the weight of paths inside the intersection
     def add_intersection(
         self,
         intersection_name: str,
@@ -485,56 +486,56 @@ class NetworkBuilder:
                         width=lane_width
                     )
                     road_desc[self.PathType.CIRCULAR].append(path)
-                    print()
         
         # Add the constructed roads to the network
-        self.add_multiple_roads(road_desc)
+        self.add_multiple_paths(road_desc)
         
     def add_roundabout(self):
         print("Not implemented")
         
-    def _build_straight_road(self, road: StraightPath) -> tuple[str, str, AbstractLane, int]:
+    def _build_straight_path(self, path: StraightPath) -> tuple[str, str, AbstractLane, int]:
+
         return (
-            road.from_node_id,
-            road.to_node_id,
+            path.from_node_id,
+            path.to_node_id,
             StraightLane(
-                self._nodes[road.from_node_id],
-                self._nodes[road.to_node_id],
-                road.width,
-                road.line_types,
-                road.forbidden,
-                road.speed_limit,
-                road.priority,
+                self._nodes[path.from_node_id],
+                self._nodes[path.to_node_id],
+                path.width,
+                path.line_types,
+                path.forbidden,
+                path.speed_limit,
+                path.priority,
             ),
-            road.weight
+            path.weight
         )
         
-    def _build_circular_road(self, road: CircularPath) -> tuple[str, str, AbstractLane, int]:
+    def _build_circular_path(self, path: CircularPath) -> tuple[str, str, AbstractLane, int]:
         center = self._get_center(
-            self._nodes[road.from_node_id],
-            self._nodes[road.to_node_id],
-            road.clockwise
+            self._nodes[path.from_node_id],
+            self._nodes[path.to_node_id],
+            path.clockwise
         )
         
         return (
-            road.from_node_id,
-            road.to_node_id,
+            path.from_node_id,
+            path.to_node_id,
             CircularLane(
                 center,
-                self._get_radius(self._nodes[road.from_node_id], center),
-                np.deg2rad(road.start_phase),
-                np.deg2rad(road.end_phase),
-                road.clockwise,
-                road.width,
-                road.line_types,
-                road.forbidden,
-                road.speed_limit,
-                road.priority
+                self._get_radius(self._nodes[path.from_node_id], center),
+                np.deg2rad(path.start_phase),
+                np.deg2rad(path.end_phase),
+                path.clockwise,
+                path.width,
+                path.line_types,
+                path.forbidden,
+                path.speed_limit,
+                path.priority
             ),
-            road.weight
+            path.weight
         )
     
-    def _build_sine_road(self, road: SinePath) -> tuple[str, str, AbstractLane, int]:
+    def _build_sine_path(self, path: SinePath) -> tuple[str, str, AbstractLane, int]:
         return ()
     
     def build_roads(self, road_network: RoadNetwork):
@@ -542,9 +543,9 @@ class NetworkBuilder:
 
         # Mapping road types to their respective build methods
         build_methods = {
-            self.PathType.STRAIGHT: self._build_straight_road,
-            self.PathType.CIRCULAR: self._build_circular_road,
-            self.PathType.SINE: self._build_sine_road
+            self.PathType.STRAIGHT: self._build_straight_path,
+            self.PathType.CIRCULAR: self._build_circular_path,
+            self.PathType.SINE: self._build_sine_path
         }
 
         # Iterate through each road type and description
