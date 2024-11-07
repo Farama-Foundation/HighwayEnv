@@ -63,11 +63,11 @@ class StraightPath(Path):
         from_node_id: str,
         to_node_id: str,
         line_types: tuple[LineType, LineType],
+        weight: int = None,
         priority: int = 0,
         speed_limit: float = 20,
         forbidden: bool = False,
         width: float = AbstractLane.DEFAULT_WIDTH,
-        weight: int = None
     ):
         """
         Parameters
@@ -119,11 +119,11 @@ class CircularPath(Path):
         start_phase: float, # degree
         end_phase: float, # degree
         line_types: tuple[LineType, LineType] = None,
+        weight: int = None,
         priority: int = 0,
         speed_limit: float = 20,
         forbidden: bool = False,
         width: float = AbstractLane.DEFAULT_WIDTH,
-        weight: int = None
     ):
         """
         Parameters
