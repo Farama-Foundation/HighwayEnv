@@ -24,6 +24,11 @@ def _register_highway_envs():
 
     from highway_env.envs.common.abstract import MultiAgentWrapper
 
+    # stovring enviroment
+    register(
+        id="Stovring",
+        entry_point="highway_env.envs:Stovring",
+    )
     register(
         id="weighted-roundabout-v0",
         entry_point="highway_env.envs:WeightedRoundaboutEnv",
@@ -32,19 +37,19 @@ def _register_highway_envs():
     # Homemade city - by Tosuma
     register(
         id="homemade-city",
-        entry_point="highway_env.envs.homemade_city_env:HomemadeCity"
+        entry_point="highway_env.envs.homemade_city_env:HomemadeCity",
     )
 
     # Homemade highway - by Tosuma
     register(
         id="homemade-highway",
-        entry_point="highway_env.envs.homemade_highway_env:HomemadeHighway"
+        entry_point="highway_env.envs.homemade_highway_env:HomemadeHighway",
     )
 
     # Homemade racetrack - by Tosuma
     register(
         id="homemade-racetrack",
-        entry_point="highway_env.envs.homemade_racetrack_env:HomemadeRacetrack"
+        entry_point="highway_env.envs.homemade_racetrack_env:HomemadeRacetrack",
     )
 
     # exit_env.py
