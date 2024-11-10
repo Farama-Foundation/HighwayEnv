@@ -1,10 +1,12 @@
 import copy
+import itertools
+from collections import deque
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
 from highway_env import utils
-from highway_env.road.road import LaneIndex, Road, Route
+from highway_env.road.road import LaneIndex, Road, Route, PathException
 from highway_env.utils import Vector
 from highway_env.vehicle.kinematics import Vehicle
 
@@ -86,6 +88,26 @@ class ControlledVehicle(Vehicle):
             self.route = [self.lane_index]
         return self
 
+    def set_route_to(self, path: list[str]) -> "ControlledVehicle":
+        """
+        Sets the vehicle's route to the given path. Raises an error if the path is not valid.
+        """
+        queue = deque(path)
+        curr = queue.popleft()
+        while len(queue) > 0:
+            try:
+                next_node = queue.popleft()
+                lane_obj = self.road.network.graph[curr][next_node]
+            except KeyError:
+                raise PathException(f"Invalid Path: {path}\n ({curr}, {next_node}) is not an edge.")
+
+        self.route = [self.lane_index] + [
+            (path[i], path[i + 1], None) for i in range(len(path) - 1)
+        ]
+        return self
+
+
+
     def act(self, action: Union[dict, str] = None) -> None:
         """
         Perform a high-level action to change the desired lane or speed.
@@ -141,6 +163,16 @@ class ControlledVehicle(Vehicle):
                 position=self.position,
                 np_random=self.road.np_random,
             )
+
+    def get_nodes_to_target(self) -> int:
+        """
+        Returns the reaming number of nodes in the route, before the reaching the target node.
+        """
+        # TODO: rework below. Could be a lot shorter.
+        curr = self.get_lane_idx()
+        remaining = list(itertools.dropwhile(lambda x: x != curr, self.route))
+        return len(remaining)
+
 
     def steering_control(self, target_lane_index: LaneIndex) -> float:
         """
