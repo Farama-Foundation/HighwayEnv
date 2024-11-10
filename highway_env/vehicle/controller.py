@@ -76,16 +76,10 @@ class ControlledVehicle(Vehicle):
 
         :param destination: a node in the road network
         """
-        try:
-            path = self.road.network.shortest_path(self.lane_index[1], destination)
-        except KeyError:
-            path = []
-        if path:
-            self.route = [self.lane_index] + [
-                (path[i], path[i + 1], None) for i in range(len(path) - 1)
-            ]
-        else:
-            self.route = [self.lane_index]
+        path = self.road.network.shortest_path(self.lane_index[1], destination)
+        self.route = [self.lane_index] + [
+            (path[i], path[i + 1], None) for i in range(len(path) - 1)
+        ]
         return self
 
     def set_route_to(self, path: list[str]) -> "ControlledVehicle":

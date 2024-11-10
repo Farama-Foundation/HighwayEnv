@@ -492,6 +492,8 @@ class WeightedRoadnetwork(RoadNetwork):
                     predecessors[vertex].appendleft(pies.get(vertex))
 
         # Determining the path
+        # TODO: remove debug prints
+        print(f"src: {source}, goal: {goal}\n predecessors: {predecessors}")
         path = deque([goal])
         while path[0] is not source:
             try:
@@ -551,14 +553,6 @@ class WeightedRoadnetwork(RoadNetwork):
 
         return list(path)
 
-    def weighted_shortest_path(self, start: str, goal: str, weight: int) -> list[str]:
-        """
-        :param start: start node
-        :param goal: goal node
-        :param weight: weight
-        :return: shortest path from start to goal
-        """
-        raise NotImplementedError
 
     def shortest_path(self, start: str, goal: str) -> list[str]:
         return self.bellman_ford_negative_cycle(start, goal)
@@ -578,8 +572,6 @@ class WeightedRoadnetwork(RoadNetwork):
         except KeyError: # Edge does not exists
             self.graph_net.add_edge(_from, _to, weight=weight)
             return
-
-        print(f"WARNING: Tried to create already existing edge: ({_from}, {_to})")
 
 class Road:
     """A road is a set of lanes, and a set of vehicles driving on these lanes."""

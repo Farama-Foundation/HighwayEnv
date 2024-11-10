@@ -363,7 +363,7 @@ class RoundaboutEnv(AbstractEnv):
             heading=ego_lane.heading_at(140),
         )
         try:
-            ego_vehicle.plan_route_to(self._get_random_exit())
+            ego_vehicle.plan_route_to(self._get_random_exit()[1])
         except AttributeError:
             pass
         self.road.vehicles.append(ego_vehicle)
@@ -382,7 +382,7 @@ class RoundaboutEnv(AbstractEnv):
 #            destination = destinations[self.config["incoming_vehicle_destination"]]
 #        else:
 #            destination = self.np_random.choice(destinations)
-        vehicle.plan_route_to(self._get_random_exit())
+        vehicle.plan_route_to(self._get_random_exit()[1])
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
 
@@ -395,7 +395,7 @@ class RoundaboutEnv(AbstractEnv):
                 longitudinal=20 * i + self.np_random.normal() * position_deviation,
                 speed=16 + self.np_random.normal() * speed_deviation,
             )
-            vehicle.plan_route_to(self._get_random_exit())
+            vehicle.plan_route_to(self._get_random_exit()[1])
             vehicle.randomize_behavior()
             self.road.vehicles.append(vehicle)
 
@@ -407,6 +407,6 @@ class RoundaboutEnv(AbstractEnv):
                 longitudinal=50 * (i % 10) + self.np_random.normal() * position_deviation,
                 speed=16 + self.np_random.normal() * speed_deviation,
             )
-            vehicle.plan_route_to(self._get_random_exit())
+            vehicle.plan_route_to(self._get_random_exit()[1])
             vehicle.randomize_behavior()
             self.road.vehicles.append(vehicle)
