@@ -11,7 +11,7 @@ from typing_extensions import override
 
 from highway_env.road.lanes.abstract_lanes import AbstractLane
 from highway_env.road.lanes.unweighted_lanes import StraightLane, lane_from_config
-from highway_env.road.lanes.lane_utils import LineType
+from highway_env.road.lanes.lane_utils import LineType, LaneType
 from highway_env.vehicle.objects import Landmark
 
 if TYPE_CHECKING:
@@ -31,7 +31,7 @@ class RoadNetwork:
     def __init__(self):
         self.graph = {}
 
-    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None) -> None:
+    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None, lane_type: LaneType = None) -> None:
         """
         A lane is encoded as an edge in the road network.
 
@@ -408,6 +408,12 @@ class WeightedRoadnetwork(RoadNetwork):
         """
         return self.graph_net[u][v][0]["weight"]
 
+    def get_lane_type(self, u: str, v: str) -> LaneType:
+        """
+        Returns the lane type of an edge, (u, v).
+        """
+        return self.graph_net[u][v][0]["lane_type"]
+
     def topological_sort(self, source: str) -> list[tuple[str, str]]:
         """
         Sorts the graph topologically. Please note that this is not a proper topological sort, as that cannot be
@@ -557,10 +563,13 @@ class WeightedRoadnetwork(RoadNetwork):
     def shortest_path(self, start: str, goal: str) -> list[str]:
         return self.bellman_ford_negative_cycle(start, goal)
 
-    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None) -> None:
+    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None, lane_type: LaneType = None) -> None:
         super().add_lane(_from, _to, lane)
         if weight is None:
-            raise Exception("Cannot create edge with weight None")
+            raise ValueError("Cannot create edge with weight None")
+        if lane_type is None:
+            raise ValueError("Cannot create edge with lane type None")
+
         if not self.graph_net.has_node(_from):
             self.graph_net.add_node(_from)
         if not self.graph_net.has_node(_to):
@@ -570,7 +579,7 @@ class WeightedRoadnetwork(RoadNetwork):
         try:
             node = self.graph_net[_from][_to]
         except KeyError: # Edge does not exists
-            self.graph_net.add_edge(_from, _to, weight=weight)
+            self.graph_net.add_edge(_from, _to, weight=weight, lane_type=lane_type)
             return
 
 class Road:
