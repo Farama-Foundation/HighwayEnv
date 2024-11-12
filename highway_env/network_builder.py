@@ -4,7 +4,7 @@ from enum import Enum
 import numpy as np
 from highway_env.utils import Vector
 from highway_env.road.lanes.abstract_lanes import AbstractLane
-from highway_env.road.lanes.lane_utils import LineType
+from highway_env.road.lanes.lane_utils import LaneType, LineType
 from highway_env.road.lanes.unweighted_lanes import StraightLane, SineLane, CircularLane
 from highway_env.road.road import RoadNetwork
 
@@ -15,10 +15,11 @@ class Path:
         to_node_id: str,
         line_types: tuple[LineType, LineType],
         priority: int = 0,
-        speed_limit: float = 20,
+        speed_limit: float = 40,
         forbidden: bool = False,
         width: float = AbstractLane.DEFAULT_WIDTH,
-        weight: int = None
+        weight: int = None,
+        lane_type: LaneType = None,
     ):
         """
         Parameters
@@ -35,7 +36,7 @@ class Path:
             (Default is ``0``)
         speed_limit : float, optional
             Assign a speed limit in m/s<br>
-            (Default is ``20`` (m/s))
+            (Default is ``40`` (m/s))
         forbidden : bool, optional
             Assign if it is forbidden to move into the road by lane change<br>
             ``True`` -> it is forbidden to enter<br>
@@ -44,9 +45,14 @@ class Path:
         width : float, optional
             The width of a lane<br>
             (Default is ``AbstractLane.DEFAULT_WIDTH`` => ``4``)
-        weight: int, optiona
+        weight: int, optional
             The weight of a lane<br>
             (Default is ``None``)
+        lane_type: LaneType, optional
+            Describing the type of the lane, e.g. a highway, roundabout, or intersection.<br>
+            This can be used when training a model to give it the knowledge of where it is<br>
+            driving which can be used to alter its behaviour, e.g. how fast it drives.<br>
+            (Default is ``None``) 
         """
         self.from_node_id: str = from_node_id
         self.to_node_id: str = to_node_id
@@ -56,6 +62,7 @@ class Path:
         self.forbidden: bool = forbidden
         self.width: float = width
         self.weight: int = weight
+        self.lane_type: LaneType = lane_type
 
 class StraightPath(Path):
     def __init__(
@@ -64,10 +71,11 @@ class StraightPath(Path):
         to_node_id: str,
         line_types: tuple[LineType, LineType],
         weight: int = None,
+        lane_type: LaneType = None,
         priority: int = 0,
-        speed_limit: float = 20,
+        speed_limit: float = 40,
         forbidden: bool = False,
-        width: float = AbstractLane.DEFAULT_WIDTH
+        width: float = AbstractLane.DEFAULT_WIDTH,
     ):
         """
         Parameters
@@ -82,12 +90,17 @@ class StraightPath(Path):
         weight: int, optional
             The weight of a lane<br>
             (Default is ``None``)
+        lane_type: LaneType, optional
+            Describing the type of the lane, e.g. a highway, roundabout, or intersection.<br>
+            This can be used when training a model to give it the knowledge of where it is<br>
+            driving which can be used to alter its behaviour, e.g. how fast it drives.<br>
+            (Default is ``None``)            
         priority : int, optional
             Describing the priority of the road, higher value indicates higher priority<br>
             (Default is ``0``)
         speed_limit : float, optional
             Assign a speed limit in m/s<br>
-            (Default is ``20`` (m/s))
+            (Default is ``40`` (m/s))
         forbidden : bool, optional
             Assign if it is forbidden to move into the road by lane change<br>
             ``True`` -> it is forbidden to enter<br>
@@ -105,7 +118,8 @@ class StraightPath(Path):
             speed_limit,
             forbidden,
             width,
-            weight
+            weight,
+            lane_type
         )
 
 class CircularPath(Path):
@@ -120,10 +134,11 @@ class CircularPath(Path):
         end_phase: float, # degree
         line_types: tuple[LineType, LineType] = None,
         weight: int = None,
+        lane_type: LaneType = None,
         priority: int = 0,
-        speed_limit: float = 20,
+        speed_limit: float = 40,
         forbidden: bool = False,
-        width: float = AbstractLane.DEFAULT_WIDTH
+        width: float = AbstractLane.DEFAULT_WIDTH,
     ):
         """
         Parameters
@@ -144,6 +159,11 @@ class CircularPath(Path):
         weight: int, optional
             The weight of a lane<br>
             (Default is ``None``)
+        lane_type: LaneType, optional
+            Describing the type of the lane, e.g. a highway, roundabout, or intersection.<br>
+            This can be used when training a model to give it the knowledge of where it is<br>
+            driving which can be used to alter its behaviour, e.g. how fast it drives.<br>
+            (Default is ``None``) 
         clockwise : bool, optional
             Describing if the cirlce moves clockwise or counterclockwise<br>
             ``True`` -> clockwise<br>
@@ -154,7 +174,7 @@ class CircularPath(Path):
             (Default is ``0``)
         speed_limit : float, optional
             Assign a speed limit in m/s<br>
-            (Default is ``20`` (m/s))
+            (Default is ``40`` (m/s))
         forbidden : bool, optional
             Assign if it is forbidden to move into the road by lane change<br>
             ``True`` -> it is forbidden to enter<br>
@@ -173,7 +193,8 @@ class CircularPath(Path):
             speed_limit,
             forbidden,
             width,
-            weight
+            weight,
+            lane_type
         )
         self.clockwise: bool = self._determine_turn_direction(start_phase, end_phase) # True->right_turn, False->left_turn
         
@@ -198,9 +219,64 @@ class SinePath(Path):
         self,
         from_node_id: str,
         to_node_id: str,
-        weight: int = None
+        line_types: tuple[LineType, LineType],
+        priority: int = 0,
+        speed_limit: float = 40,
+        forbidden: bool = False,
+        width: float = AbstractLane.DEFAULT_WIDTH,
+        weight: int = None,
+        lane_type: LaneType = None
     ):
-        super().__init__(from_node_id, to_node_id, weight)
+        """
+        Parameters
+        ----------
+        from_node_id : str
+            The id of the start point
+        to_node_id : str
+            The id of the end point
+        start_phase : float
+            The starting phase<br>
+            Note: ``0`` degrees is always upwards, the builder will handle when this is not the case
+        end_phase : float
+            The ending phase<br>
+            Note: ``0`` degrees is always upwards, the builder will handle when this is not the case
+        line_types : tuple[LineType, LineType], optional
+            The description of the line types in the road<br>
+            (Default is ``None``)
+        weight: int, optional
+            The weight of a lane<br>
+            (Default is ``None``)
+        lane_type: LaneType, optional
+            Describing the type of the lane, e.g. a highway, roundabout, or intersection.<br>
+            This can be used when training a model to give it the knowledge of where it is<br>
+            driving which can be used to alter its behaviour, e.g. how fast it drives.<br>
+            (Default is ``None``) 
+        priority : int, optional
+            Describing the priority of the road, higher value indicates higher priority<br>
+            (Default is ``0``)
+        speed_limit : float, optional
+            Assign a speed limit in m/s<br>
+            (Default is ``40`` (m/s))
+        forbidden : bool, optional
+            Assign if it is forbidden to move into the road by lane change<br>
+            ``True`` -> it is forbidden to enter<br>
+            ``False`` -> it is not forbidden to enter<br>
+            (Default is ``False``)
+        width : float, optional
+            The width of a lane<br>
+            (Default is ``AbstractLane.DEFAULT_WIDTH`` => ``4``)
+        """
+        super().__init__(
+            from_node_id,
+            to_node_id,
+            line_types,
+            priority,
+            speed_limit,
+            forbidden,
+            width,
+            weight,
+            lane_type)
+        
 
 class NetworkBuilder:
     class PathType(Enum):
@@ -298,15 +374,136 @@ class NetworkBuilder:
             return math.sqrt((start[0] - center[0])**2 + (start[1] - center[1])**2)
     
     def add_node(self, id: str, coordinate: Vector):
+        """
+        Description
+        -----------
+            Adds a single node to the NetworkBuilder's dictionary<br>
+            which will be used when building the network using<br>
+            ``self-build_roads(...)``
+        
+        Parameters
+        ----------
+        id: str
+            The id of a node
+        coordinate: Vector
+            The location of the node
+        
+        Example
+        -------
+        ```python
+        nb = NetworkBuilder()
+        nb.add_node("road_start", [0, 0])
+        nb.add_node("road_end", [200, 0])
+        ```
+        """
         self._nodes.update({id: coordinate})
         
     def add_multiple_nodes(self, nodes: dict[str, Vector]):
+        """
+        Description
+        -----------
+            Adds multiple nodes to the NetworkBuilder's dictionary<br>
+            which will be used when building the network using<br>
+            ``self-build_roads(...)``
+            
+        Parameters
+        ----------
+        nodes: dict[str, Vector]
+            A dictionary containing the node's ``id: str`` and ``coordinate: Vector`` location
+            
+        Example
+        -------
+        ```python
+        nb = NetworkBuilder()
+        nb.add_multiple_nodes({
+            "road_start": [0, 0],
+            "road_end"  : [200, 0]
+        })
+        ```
+        """
         self._nodes.update(nodes)
         
     def add_path(self, path_type: PathType, path: Path):
+        """
+        Description
+        -----------
+            Adds a single path to the NetworkBuilder's dictionary<br>
+            which will be used when building the network using<br>
+            ``self-build_roads(...)``
+
+        Parameters
+        ----------
+        path_type: PathType
+            An enum type describing what type of path is provided<br>
+            which will be used as the key in the dictionary containing paths.<br>
+            PathType contains 3 values; ``STRAIGHT``, ``CIRCULAR``, and ``SINE``.
+        path: Path
+            The path which gives the NetworkBuilder the necessary information to<br>
+            be able to construct the network when building the network.
+
+        Example
+        -------
+        ```python
+        c = LineType.NONE, LineType.CONTINUOUS
+        nb = NetworkBuilder()
+        nb.add_path(
+            PathType.STRAIGHT,
+            StraightPath(
+                "road_start",
+                "road_end",
+                (c,c),
+                10, # weight
+                LaneType.HIGHWAY # lane_type
+        ))
+        
+        # Alternative way (one-line)
+        nb.add_path(
+            PathType.STRAIGHT,
+            StraightPath("road_start", "road_end", (c,c), 10, LaneType.HIGHWAY)
+        )
+        ```
+        """
         self._path_description[path_type].append(path)
         
     def add_multiple_paths(self, paths: dict[PathType, list[Path]]):
+        """
+        Description
+        -----------
+            Adds multiple paths to the NetworkBuilder's dictionary<br>
+            which will be used when building the network using<br>
+            ``self-build_roads(...)``
+
+        Parameters
+        ----------
+        paths: dict[PathType, list[Path]]
+            A dictionary containing the type of the path (``PathType``) and<br>
+            a list of paths describing how the nodes are connected.
+        
+        Example
+        -------
+        ```python
+        c = LineType.NONE, LineType.CONTINUOUS
+        nb = NetworkBuilder()
+        nb.add_multiple_paths({
+            PathType.STRAIGHT : [
+                StraightPath(
+                    "road_start",
+                    "road_end",
+                    (c,c),
+                    10, # weight
+                    LaneType.HIGHWAY # lane_type
+                )
+            ]
+        })
+        
+        # Alternative way (one-line)
+        nb.add_multiple_paths({
+            PathType.STRAIGHT : [
+                StraightPath("road_start", "road_end", (c,c), 10, LaneType.HIGHWAY)
+            ]
+        })
+        ```
+        """
         for key in NetworkBuilder.PathType:
             if key in paths:
                 self._road_description[key].extend(paths[key])
@@ -320,7 +517,68 @@ class NetworkBuilder:
         lane_width: float = AbstractLane.DEFAULT_WIDTH
         ):
         """
-        Assumes the I/O directions are North, South, East, and West.
+        Naming convention
+        -----------------
+            This framework, and subsequently this method, use the naming convention<br>
+            ``[type]-[id]:[direction]-[in|out]``. This method will thus generate the ``in|out`` nodes for each direction.
+            <br><br>
+            - ``type`` refers to the type of the road, e.g. "``I``" for "intersection" or "``T``" for "turn".<br>
+            - ``id`` refers to the id of the type, e.g. the first intersection is ``I-1`` and the second is ``I-2``.<br>
+            - ``direction`` refers to the cardinal traversal direction of the road which are about to be made.<br>
+            - ``in|out`` refers to the node either being an ``in`` node or ``out`` node. An ``In`` node is the<br>
+                node where you enter the road and the ``out`` node is the node where you exit the road.<br>
+                E.g. ``in`` nodes in an intersection are the ones which enters the intersection<br>
+                while the ``out`` nodes are the ones which exits the intersection.
+            
+        Description
+        -----------
+            Adds an intersection to the road network, generating and configuring<br>
+            incoming and outgoing lanes based on the specified direction,<br>
+            priority, and lane width. This method establishes both straight and<br>
+            circular paths between directions.
+
+        Parameters
+        ----------
+            intersection_name: str
+                A unique identifier for the intersection.
+                
+            ingoing_roads: dict[IntersectionDirection, Vector]
+                Maps directions (North, South, East, West) to their respective<br>
+                vectors, which define the positions of ingoing roads.
+            
+            priority: PathPriority
+                The prioritized lane direction (e.g., North-South or East-West).
+            
+            lane_width: float
+                Width of each lane, with a default value from AbstractLane.
+
+        Example
+        -------
+        ```python
+        nb = NetworkBuilder()
+        nb.add_intersection(
+            "I-2",
+            {
+                net_builder.IntersectionDirection.NORTH : [64, -92],
+                net_builder.IntersectionDirection.SOUTH : [68, -80],
+                net_builder.IntersectionDirection.WEST  : [60, -84],
+            },
+            net_builder.PathPriority.NORTH_SOUTH
+        )
+        # This will generate the following nodes:
+        # "I-2:n-in"
+        # "I-2:s-in"
+        # "I-2:w-in"
+        # "I-2:n-out"
+        # "I-2:s-out"
+        # "I-2:w-out"
+        ```
+        
+        Assumptions
+        -----------
+            The directions are expected to be North, South, East, and West.<br>
+            This method manages the road layout to handle straight and turning<br>
+            paths based on priorities and intersection geometry.
         """
 
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
@@ -494,7 +752,16 @@ class NetworkBuilder:
         print("Not implemented")
         
     def _build_straight_path(self, path: StraightPath) -> tuple[str, str, AbstractLane, int]:
-
+        """
+        Description
+        -----------
+            <b>Private method</b> which extracts the paths in the NetworkBuilder and<br>
+            converts it to the correct information needed for a lane.
+        Returns
+        -------
+            ``tuple[str, str, AbstractLane, int]`` <br>
+            Returns the needed information for the ``RoadNetwork.add_lane(...)`` method
+        """
         return (
             path.from_node_id,
             path.to_node_id,
@@ -507,10 +774,22 @@ class NetworkBuilder:
                 path.speed_limit,
                 path.priority,
             ),
-            path.weight
+            path.weight,
+            path.lane_type
         )
         
     def _build_circular_path(self, path: CircularPath) -> tuple[str, str, AbstractLane, int]:
+        """
+        Description
+        -----------
+            <b>Private method</b> which extracts the paths in the NetworkBuilder and<br>
+            converts it to the correct information needed for a lane.
+        Returns
+        -------
+            ``tuple[str, str, AbstractLane, int]`` <br>
+            Returns the needed information for the ``RoadNetwork.add_lane(...)`` method
+        """
+        
         center = self._get_center(
             self._nodes[path.from_node_id],
             self._nodes[path.to_node_id],
@@ -532,13 +811,41 @@ class NetworkBuilder:
                 path.speed_limit,
                 path.priority
             ),
-            path.weight
+            path.weight,
+            path.lane_type
         )
     
     def _build_sine_path(self, path: SinePath) -> tuple[str, str, AbstractLane, int]:
-        return ()
+        """
+        Description
+        -----------
+            <b>Private method</b> which extracts the paths in the NetworkBuilder and<br>
+            converts it to the correct information needed for a lane.
+        Returns
+        -------
+            ``tuple[str, str, AbstractLane, int]`` <br>
+            Returns the needed information for the ``RoadNetwork.add_lane(...)`` method
+        """
+        
+        return (
+            path.from_node_id,
+            path.to_node_id,
+            SineLane(),
+            path.weight,
+            path.lane_type
+        )
     
     def build_roads(self, road_network: RoadNetwork):
+        """
+        Description
+        -----------
+            Adds the content of the NetworkBuilder to the passed RoadNetwork.<br>
+            The content refers to the nodes and paths which gets translated into<br>
+            vertices and edges (nodes and lanes).
+        Parameters
+        ----------
+        road_network: RoadNetwork
+        """
         net: list[tuple[str, str, AbstractLane]] = []
 
         # Mapping road types to their respective build methods
@@ -554,5 +861,5 @@ class NetworkBuilder:
                 net.append(build_method(road))
 
         # Add each lane to the road network
-        for from_id, to_id, lane, weight in net:
-            road_network.add_lane(from_id, to_id, lane, weight)
+        for from_id, to_id, lane, weight, lane_type in net:
+            road_network.add_lane(from_id, to_id, lane, weight=weight, lane_type=lane_type)
