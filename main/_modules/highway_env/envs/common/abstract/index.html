@@ -659,6 +659,7 @@
     <span class="k">def</span> <span class="nf">set_record_video_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrapper</span><span class="p">:</span> <span class="n">RecordVideo</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span> <span class="o">=</span> <span class="n">wrapper</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_metadata</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="o">.</span><span class="n">frames_per_sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;render_fps&quot;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="AbstractEnv._automatic_rendering">
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv._automatic_rendering">[docs]</a>
@@ -670,8 +671,8 @@
 <span class="sd">        If a RecordVideo wrapper has been set, use it to capture intermediate frames.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">enable_auto_render</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="o">.</span><span class="n">video_recorder</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="o">.</span><span class="n">video_recorder</span><span class="o">.</span><span class="n">capture_frame</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_record_video_wrapper</span><span class="o">.</span><span class="n">_capture_frame</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span></div>
 
