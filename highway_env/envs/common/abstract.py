@@ -325,6 +325,7 @@ class AbstractEnv(gym.Env):
     def set_record_video_wrapper(self, wrapper: RecordVideo):
         self._record_video_wrapper = wrapper
         self.update_metadata()
+        self._record_video_wrapper.frames_per_sec = self.metadata["render_fps"]
 
     def _automatic_rendering(self) -> None:
         """
@@ -334,8 +335,8 @@ class AbstractEnv(gym.Env):
         If a RecordVideo wrapper has been set, use it to capture intermediate frames.
         """
         if self.viewer is not None and self.enable_auto_render:
-            if self._record_video_wrapper and self._record_video_wrapper.video_recorder:
-                self._record_video_wrapper.video_recorder.capture_frame()
+            if self._record_video_wrapper:
+                self._record_video_wrapper._capture_frame()
             else:
                 self.render()
 
