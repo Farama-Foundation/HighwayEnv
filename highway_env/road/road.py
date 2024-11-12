@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, List, Tuple, overload
+from collections import deque
+from queue import Queue
+from typing import TYPE_CHECKING, List, Tuple, overload, Deque
 
 import numpy as np
 import networkx as nx
@@ -9,7 +11,7 @@ from typing_extensions import override
 
 from highway_env.road.lanes.abstract_lanes import AbstractLane
 from highway_env.road.lanes.unweighted_lanes import StraightLane, lane_from_config
-from highway_env.road.lanes.lane_utils import LineType
+from highway_env.road.lanes.lane_utils import LineType, LaneType
 from highway_env.vehicle.objects import Landmark
 
 if TYPE_CHECKING:
@@ -20,6 +22,8 @@ logger = logging.getLogger(__name__)
 LaneIndex = Tuple[str, str, int]
 Route = List[LaneIndex]
 
+class PathException(Exception):
+    pass
 
 class RoadNetwork:
     graph: dict[str, dict[str, list[AbstractLane]]]
@@ -27,7 +31,7 @@ class RoadNetwork:
     def __init__(self):
         self.graph = {}
 
-    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None) -> None:
+    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None, lane_type: LaneType = None) -> None:
         """
         A lane is encoded as an edge in the road network.
 
@@ -399,65 +403,185 @@ class WeightedRoadnetwork(RoadNetwork):
         super().__init__()
         self.graph_net = nx.MultiDiGraph()
 
-    def dijkstra(self, source: str, goal: str) -> list[str]:
-        raise NotImplementedError
+    def weight(self, u: str, v: str) -> float:
+        """
+        Returns the weight of an edge. Does not check whether the edge exists.
+        """
+        return self.graph_net[u][v][0]["weight"]
 
-    def bellman_ford_cheapest_path(self, source: str, goal: str) -> list[str]:
-        source = self.graph_net.nodes[source]
-        source["d"] = 0
-        predecessors = dict()
+    def get_lane_type(self, u: str, v: str) -> LaneType:
+        """
+        Returns the lane type of an edge, (u, v).
+        """
+        return self.graph_net[u][v][0]["lane_type"]
+
+    def topological_sort(self, source: str) -> list[tuple[str, str]]:
+        """
+        Sorts the graph topologically. Please note that this is not a proper topological sort, as that cannot be
+        done on cyclic graphs. Each node is explored from the source.
+        """
+        sorted_seq: list[tuple[str, str]] = []
+        queue = deque([source])
+        while len(queue) > 0:
+            u = queue.popleft()
+            for v in self.graph_net[u]:
+                if (u, v) not in sorted_seq:
+                    sorted_seq.append((u, v))
+                    queue.append(v)
+        return sorted_seq
+
+
+    def dijkstra(self, source: str, goal: str) -> list[str]:
+        """
+        Performs the Dijkstra shortest-path algorithm. Please note that it cannot handle negative weights, and will
+        raise an error if a negative weight is detected.
+        """
+        dists: dict[str, float] = {}
+        predecessors: dict[str, str] = {}
+        queue = deque()
+        for v in self.graph_net.nodes:
+            queue.append(v)
+            dists[v] = np.inf
+
+        dists[source] = 0
+
+        while len(queue) > 0:
+            u = min(queue, key=dists.get)
+            if u == goal: break
+            queue.remove(u)
+            neighbors = self.graph_net.neighbors(u)
+            for v in neighbors:
+                if self.weight(u, v) < 0:
+                    raise ValueError(f"weight for edge ({u}, {v}) is less than zero")
+                if dists[u] + self.weight(u, v) < dists[v]:
+                    dists[v] = dists[u] + self.weight(u, v)
+                    predecessors[v] = u
+
+        path = deque([goal])
+        while path[0] is not source:
+            try:
+                node = path[0]
+                path.appendleft(predecessors[node])
+            except KeyError:
+                raise PathException(f"Could not find path {source} ~> {goal}, attempted to access non-existing predecessor for {node} in {predecessors}")
+
+        return list(path)
+
+    def bellman_ford_negative_cycle(self, source: str, goal: str, max_pi: int = 3) -> list[str]:
+        """
+        Performs the Bellman-Ford shortest path algorithm, while disregarding negative weight cycles. The number of
+        repeated visits to a single node can be set with the max_pi parameter.
+        :param source: source node.
+        :param goal: goal node.
+        :param max_pi: the maximum number of predecessors for each node. 0 is unbounded length.
+        """
+        dists: dict[str, float] = {}
+        predecessors: dict[str, deque[str]] = {}
 
         for vertex in self.graph_net.nodes:
-            predecessors[vertex] = []
+            dists[vertex] = np.inf
+            predecessors[vertex] = deque(maxlen=max_pi)
+
+        dists[source] = 0
 
         # Exploring the graph
         for i in range(0, self.graph_net.order() - 1):
             pies = dict()
-            for (u, v, _) in self.graph_net.edges:
-                if self.graph_net[v]["d"] > self.graph_net[u]["d"] + self.graph_net[u][v]["weight"]:
-                    self.graph_net[v]["d"] = self.graph_net[u]["d"] + self.graph_net[u][v]["weight"]
+            for (u, v) in self.topological_sort(source):
+                if dists[v] > dists[u] + self.weight(u, v):
+                    dists[v] = dists[u] + self.weight(u, v)
+                    # TODO: there was a reason for this, and I cannot remember it,
                     if pies.get(v) is None:
                         pies[v] = u
             for vertex in pies.keys():
-                predecessors[vertex].extend(pies.get(vertex))
+                # Only adding, if below the maximum length.
+                if len(predecessors[vertex]) < max_pi:
+                    predecessors[vertex].appendleft(pies.get(vertex))
 
         # Determining the path
-        path = []
-        current = goal
-        while current is not source:
-            path.append(current)
-            if len(path) == 0:
-                raise Exception(f"could not find a path from '{source}' to '{goal}'")
-            else:
-                current = predecessors[current].pop()
-        path.reverse()
-        return path
+        # TODO: remove debug prints
+        print(f"src: {source}, goal: {goal}\n predecessors: {predecessors}")
+        path = deque([goal])
+        while path[0] is not source:
+            try:
+                node = path[0]
+                path.appendleft(predecessors[node].pop())
+            except IndexError:
+                raise PathException(f"could not find path {source} ~> {goal}, attempted to pop from empty list. node: {node}, predecessors: {predecessors}")
+
+        return list(path)
+
 
     def bellman_ford(self, source: str, goal: str) -> list[str]:
-        raise NotImplementedError
+        """
+        Performs the Bellman-Ford shortest-path algorithm. This implementation will raise an error if a negative
+        weight cycle is detected.
+        """
+        dists: dict[str, float] = {}
+        predecessors: dict[str, str] = {}
+        for v in self.graph_net.nodes:
+            dists[v] = np.inf
 
-    def weighted_shortest_path(self, start: str, goal: str, weight: int) -> list[str]:
-        """
-        :param start: start node
-        :param goal: goal node
-        :param weight: weight
-        :return: shortest path from start to goal
-        """
-        raise NotImplementedError
+        dists[source] = 0
+
+        # Exploring the graph
+        for i in range(0, self.graph_net.order() - 1):
+            for (u, v) in self.topological_sort(source):
+                if dists[v] > dists[u] + self.weight(u, v):
+                    dists[v] = dists[u] + self.weight(u, v)
+                    predecessors[v] = u
+
+        # Detecting negative weight cycles
+        for (u, v) in self.graph_net.edges():
+            if dists[v] > dists[u] + self.weight(u, v):
+                # Finding a vertex on the negative weight cycle
+                predecessors[v] = u
+                visited = deque([v])
+                while u not in visited:
+                    visited.append(u)
+                    u = predecessors[u]
+
+                # Finding the cycle that u is a part of
+                negative_weight_cycle = deque([u])
+                v = predecessors[u]
+                while v != u:
+                    negative_weight_cycle.appendleft(v)
+                    v = predecessors[v]
+                raise Exception(f"Graph contains negative weight cycle: {list(negative_weight_cycle)}")
+
+        # Constructing the path
+        path = deque([goal])
+        while path[0] is not source:
+            try:
+                node = path[0]
+                path.appendleft(predecessors[node])
+            except KeyError:
+                raise PathException(f"Could not find path {source} ~> {goal}, attempted to access non-existing predecessor for {node} in {predecessors}")
+
+        return list(path)
+
 
     def shortest_path(self, start: str, goal: str) -> list[str]:
-        return self.bellman_ford_cheapest_path(start, goal)
+        return self.bellman_ford_negative_cycle(start, goal)
 
-    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None) -> None:
+    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None, lane_type: LaneType = None) -> None:
         super().add_lane(_from, _to, lane)
-        if weight == None:
-            raise Exception("Cannot create edge with weight None")
-        if not self.graph_net.has_node(_from):
-            self.graph_net.add_node(_from, d=np.inf)
-        if not self.graph_net.has_node(_to):
-            self.graph_net.add_node(_to, d=np.inf)
+        if weight is None:
+            raise ValueError("Cannot create edge with weight None")
+        if lane_type is None:
+            raise ValueError("Cannot create edge with lane type None")
 
-        self.graph_net.add_edge(_from, _to, weight=weight)
+        if not self.graph_net.has_node(_from):
+            self.graph_net.add_node(_from)
+        if not self.graph_net.has_node(_to):
+            self.graph_net.add_node(_to)
+
+        # Adding the weight
+        try:
+            node = self.graph_net[_from][_to]
+        except KeyError: # Edge does not exists
+            self.graph_net.add_edge(_from, _to, weight=weight, lane_type=lane_type)
+            return
 
 class Road:
     """A road is a set of lanes, and a set of vehicles driving on these lanes."""

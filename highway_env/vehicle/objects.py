@@ -165,6 +165,16 @@ class RoadObject(ABC):
     def velocity(self) -> np.ndarray:
         return self.speed * self.direction
 
+    def get_lane_idx(self) -> tuple[str, str, int] | None:
+        """
+        Gets the current edge of the vehicle.
+        :return: the current edge as a triple (u, v, lane_idx), where (u, v) is the current edge.
+        """
+        if self.road:
+            return self.road.network.get_closest_lane_index(self.position, self.heading)
+        else:
+            return None
+
     def polygon(self) -> np.ndarray:
         points = np.array(
             [
