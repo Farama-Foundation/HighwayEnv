@@ -1,4 +1,5 @@
 import math
+import re
 from enum import Enum
 
 import numpy as np
@@ -301,7 +302,7 @@ class NetworkBuilder:
             self.PathType.CIRCULAR : [],
             self.PathType.SINE     : []
         }
-
+    
     def _find_circle_center(self, start: Vector, end: Vector) -> Vector:
         # Perpendicular Bisector
         x1, y1 = start
@@ -390,9 +391,11 @@ class NetworkBuilder:
             - ``:lane_index`` refers to the lane's index such that it is possible<br>
                 to have multiple lanes from between the same nodes.<br>
                 The ``:``is a separator between the direction part and the lane indexation<br>
-                
-                
-                @TODO determine the logic for how this feature works
+                The ``:lane_index`` will be removed from the node name when building<br>
+                such that the network will know that the lanes are connected and<br>
+                it is possible to move between them. However, the NetworkBuilder will<br>
+                still store in its dictionary of nodes and paths the ``:lane_index``<br>
+                you provide - thus it is <b><i>only</i></b> when building the network it removes the lane index
         
         Description
         -----------
@@ -434,9 +437,11 @@ class NetworkBuilder:
             - ``:lane_index`` refers to the lane's index such that it is possible<br>
                 to have multiple lanes from between the same nodes.<br>
                 The ``:``is a separator between the direction part and the lane indexation<br>
-                
-                
-                @TODO determine the logic for how this feature works
+                The ``:lane_index`` will be removed from the node name when building<br>
+                such that the network will know that the lanes are connected and<br>
+                it is possible to move between them. However, the NetworkBuilder will<br>
+                still store in its dictionary of nodes and paths the ``:lane_index``<br>
+                you provide - thus it is <b><i>only</i></b> when building the network it removes the lane index
         
         Description
         -----------
@@ -478,9 +483,11 @@ class NetworkBuilder:
             - ``:lane_index`` refers to the lane's index such that it is possible<br>
                 to have multiple lanes from between the same nodes.<br>
                 The ``:``is a separator between the direction part and the lane indexation<br>
-                
-                
-                @TODO determine the logic for how this feature works
+                The ``:lane_index`` will be removed from the node name when building<br>
+                such that the network will know that the lanes are connected and<br>
+                it is possible to move between them. However, the NetworkBuilder will<br>
+                still store in its dictionary of nodes and paths the ``:lane_index``<br>
+                you provide - thus it is <b><i>only</i></b> when building the network it removes the lane index
         
         Description
         -----------
@@ -539,9 +546,11 @@ class NetworkBuilder:
             - ``:lane_index`` refers to the lane's index such that it is possible<br>
                 to have multiple lanes from between the same nodes.<br>
                 The ``:``is a separator between the direction part and the lane indexation<br>
-                
-                
-                @TODO determine the logic for how this feature works
+                The ``:lane_index`` will be removed from the node name when building<br>
+                such that the network will know that the lanes are connected and<br>
+                it is possible to move between them. However, the NetworkBuilder will<br>
+                still store in its dictionary of nodes and paths the ``:lane_index``<br>
+                you provide - thus it is <b><i>only</i></b> when building the network it removes the lane index
                 
         Description
         -----------
@@ -608,9 +617,11 @@ class NetworkBuilder:
             - ``:lane_index`` refers to the lane's index such that it is possible<br>
                 to have multiple lanes from between the same nodes.<br>
                 The ``:``is a separator between the direction part and the lane indexation<br>
-                
-                
-                @TODO determine the logic for how this feature works
+                The ``:lane_index`` will be removed from the node name when building<br>
+                such that the network will know that the lanes are connected and<br>
+                it is possible to move between them. However, the NetworkBuilder will<br>
+                still store in its dictionary of nodes and paths the ``:lane_index``<br>
+                you provide - thus it is <b><i>only</i></b> when building the network it removes the lane index
             
         Description
         -----------
@@ -633,6 +644,26 @@ class NetworkBuilder:
             
             lane_width: float
                 Width of each lane, with a default value from AbstractLane.
+
+        Mapping of an ingoing point to other ingoing points
+        ----------------------
+        This asumes that you <b>do not</b> modify the lane width.<br>
+        
+        <b>North-in</b> -> <b>south-in</b> mapping: ``[+4, +12]`` <br>
+        <b>North-in</b> -> <b>West-in</b> mapping: ``[-4, +8]`` <br>
+        <b>North-in</b> -> <b>East-in</b> mapping: ``[+8, +8]`` <br><br>
+
+        <b>South-in</b> -> <b>North-in</b> mapping: ``[-4, -12]`` <br>
+        <b>South-in</b> -> <b>West-in</b> mapping: ``[-8, -4]`` <br>
+        <b>South-in</b> -> <b>East-in</b> mapping: ``[+4, -8]`` <br><br>
+        
+        <b>West-in</b> -> <b>East-in</b> mapping: ``[+12, -4]`` <br>
+        <b>West-in</b> -> <b>North-in</b> mapping: ``[+4, -8]`` <br>
+        <b>West-in</b> -> <b>south-in</b> mapping: ``[+8, +4]`` <br><br>
+        
+        <b>East-in</b> -> <b>West-in</b> mapping: ``[-12, +4]`` <br>
+        <b>East-in</b> -> <b>North-in</b> mapping: ``[-8, -4]`` <br>
+        <b>East-in</b> -> <b>south-in</b> mapping: ``[-4 , +8]`` <br>
 
         Example
         -------
@@ -944,4 +975,10 @@ class NetworkBuilder:
 
         # Add each lane to the road network
         for from_id, to_id, lane, weight, lane_type in net:
-            road_network.add_lane(from_id, to_id, lane, weight=weight, lane_type=lane_type)
+            road_network.add_lane(
+                re.sub(r":\d+$", "", from_id),
+                re.sub(r":\d+$", "", to_id),
+                lane,
+                weight=weight,
+                lane_type=lane_type
+            )

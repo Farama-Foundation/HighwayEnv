@@ -19,7 +19,7 @@ from highway_env.network_builder import NetworkBuilder, StraightPath, CircularPa
 from highway_env.road.lanes.unweighted_lanes import StraightLane, SineLane, CircularLane
 
 
-class Template(AbstractEnv):
+class HomemadeHighwayRefactor(AbstractEnv):
     """
     A testing driving environment.
     """
@@ -67,14 +67,133 @@ class Template(AbstractEnv):
     def _make_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
 
-        net = WeightedRoadnetwork()
+        net = RoadNetwork()
         nb = NetworkBuilder()
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
-        left_turn = False
-        right_turn = True
-        lane_width = AbstractLane.DEFAULT_WIDTH
         
-        # Place the road here
+        """First highway circuit"""
+        nb.add_multiple_nodes({
+            "a:1" : [0, 0],
+            "a:2" : [0, 4],
+            
+            "b:1" : [300, 0],
+            "b:2" : [300, 4],
+
+            "c:1" : [600, 0],
+            "c:2" : [600, 4],
+            
+            "d:1" : [700, 0],
+            "d:2" : [700, 4],
+            
+            "e:1" : [720, -20],
+            "e:2" : [724, -20],
+            
+            "f:1" : [720, -120],
+            "f:2" : [724, -120],
+            
+            "g:1" : [700, -140],
+            "g:2" : [700, -144],
+            
+            "h:1" : [0, -140],
+            "h:2" : [0, -144],
+            
+            "i:1" : [-20, -120],
+            "i:2" : [-24, -120],
+            
+            "j:1" : [-20, -20],
+            "j:2" : [-24, -20],
+        })
+        
+        nb.add_multiple_paths({
+            nb.PathType.STRAIGHT : [
+                StraightPath("a:1", "b:1", (c,s)),
+                StraightPath("a:2", "b:2", (n,c)),
+                
+                StraightPath("b:1", "c:1", (c,s)),
+                StraightPath("b:2", "c:2", (n,c)),
+                
+                StraightPath("c:1", "d:1", (c,s)),
+                StraightPath("c:2", "d:2", (n,c)),
+                
+                StraightPath("e:1", "f:1", (c,s)),
+                StraightPath("e:2", "f:2", (n,c)),
+                
+                StraightPath("g:1", "h:1", (c,s)),
+                StraightPath("g:2", "h:2", (n,c)),
+                
+                StraightPath("i:1", "j:1", (c,s)),
+                StraightPath("i:2", "j:2", (n,c)),
+            ],
+            nb.PathType.CIRCULAR : [
+                CircularPath("d:1", "e:1", 90, 0, (c,s)),
+                CircularPath("d:2", "e:2", 90, 0, (n,c)),
+                
+                CircularPath("f:1", "g:1", 0, -90, (c,s)),
+                CircularPath("f:2", "g:2", 0, -90, (n,c)),
+                
+                CircularPath("h:1", "i:1", -90, -180, (c,s)),
+                CircularPath("h:2", "i:2", -90, -180, (n,c)),
+                
+                CircularPath("j:1", "a:1", 180, 90, (c,s)),
+                CircularPath("j:2", "a:2", 180, 90, (n,c)),
+            ]
+        })
+        
+        """Second highway circuit"""
+        nb.add_multiple_nodes({
+            "b:3" : [300, 8],
+            "b:4" : [300, 12],
+            
+            "c:3" : [600, 8],
+            "c:4" : [600, 12],
+            
+            "k:1" : [624, 32],
+            "k:2" : [620, 32],
+            
+            "l:1" : [624, 132],
+            "l:2" : [620, 132],
+            
+            "m:1" : [600, 156],
+            "m:2" : [600, 152],
+            
+            "n:1" : [300, 156],
+            "n:2" : [300, 152],
+            
+            "o:1" : [276, 132],
+            "o:2" : [280, 132],
+            
+            "p:1" : [276, 28],
+            "p:2" : [280, 28],
+        })
+        
+        nb.add_multiple_paths({
+            nb.PathType.STRAIGHT : [
+                StraightPath("b:3", "c:3", (c,s)),
+                StraightPath("b:4", "c:4", (n,c)),
+                
+                StraightPath("k:1", "l:1", (c,s)),
+                StraightPath("k:2", "l:2", (n,c)),
+                
+                StraightPath("m:1", "n:1", (c,s)),
+                StraightPath("m:2", "n:2", (n,c)),
+                
+                StraightPath("o:1", "p:1", (c,s)),
+                StraightPath("o:2", "p:2", (n,c)),
+            ],
+            nb.PathType.CIRCULAR : [
+                CircularPath("c:3", "k:1", 90, 180, (c,s)),
+                CircularPath("c:4", "k:2", 90, 180, (n,c)),
+                
+                CircularPath("l:1", "m:1", -180, -90, (c,s)),
+                CircularPath("l:2", "m:2", -180, -90, (n,c)),
+                
+                CircularPath("n:1", "o:1", -90, 0, (c,s)),
+                CircularPath("n:2", "o:2", -90, 0, (n,c)),
+                
+                CircularPath("p:1", "b:3", 0, 90, (c,s)),
+                CircularPath("p:2", "b:4", 0, 90, (n,c)),
+            ]
+        })
         
         nb.build_roads(net)
         
@@ -93,12 +212,12 @@ class Template(AbstractEnv):
         """
         road = self.road
 
-        ego_lane = self.road.network.get_lane(("FROM_ID", "TO_ID", 0)) # This is to place the car on a road between two points
+        ego_lane = self.road.network.get_lane(("b", "c", 0)) # This is to place the car on a road between two points
         ego_vehicle = self.action_type.vehicle_class(
             self.road,
-            ego_lane.position(0, 0),            # Use the first value to place car down the road
+            ego_lane.position(50, 0),            # Use the first value to place car down the road
             speed=0,                            # Speed of car
-            heading=ego_lane.heading_at(-90),   # Use this to change the direction of the car. "0" is north
+            heading=ego_lane.heading_at(90),   # Use this to change the direction of the car. "0" is north
         )
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
