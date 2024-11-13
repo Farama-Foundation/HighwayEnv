@@ -286,7 +286,7 @@ class NetworkBuilder:
     class PathPriority(Enum):
         NORTH_SOUTH = "ns"
         EAST_WEST   = "ew"
-    class IntersectionDirection(Enum):
+    class CardinalDirection(Enum):
         NORTH = "north"
         SOUTH = "south"
         EAST  = "east"
@@ -512,7 +512,7 @@ class NetworkBuilder:
     def add_intersection(
         self,
         intersection_name: str,
-        ingoing_roads: dict[IntersectionDirection, Vector],
+        ingoing_roads: dict[CardinalDirection, Vector],
         priority: PathPriority,
         lane_width: float = AbstractLane.DEFAULT_WIDTH
         ):
@@ -542,7 +542,7 @@ class NetworkBuilder:
             intersection_name: str
                 A unique identifier for the intersection.
                 
-            ingoing_roads: dict[IntersectionDirection, Vector]
+            ingoing_roads: dict[CardinalDirection, Vector]
                 Maps directions (North, South, East, West) to their respective<br>
                 vectors, which define the positions of ingoing roads.
             
@@ -559,9 +559,9 @@ class NetworkBuilder:
         nb.add_intersection(
             "I-2",
             {
-                net_builder.IntersectionDirection.NORTH : [64, -92],
-                net_builder.IntersectionDirection.SOUTH : [68, -80],
-                net_builder.IntersectionDirection.WEST  : [60, -84],
+                net_builder.CardinalDirection.NORTH : [64, -92],
+                net_builder.CardinalDirection.SOUTH : [68, -80],
+                net_builder.CardinalDirection.WEST  : [60, -84],
             },
             net_builder.PathPriority.NORTH_SOUTH
         )
@@ -593,13 +593,13 @@ class NetworkBuilder:
                     value = vector
                 else:  # road_type == "out"
                     x, y = vector
-                    if direction_enum   == self.IntersectionDirection.NORTH:
+                    if direction_enum   == self.CardinalDirection.NORTH:
                         x += lane_width
-                    elif direction_enum == self.IntersectionDirection.SOUTH:
+                    elif direction_enum == self.CardinalDirection.SOUTH:
                         x -= lane_width
-                    elif direction_enum == self.IntersectionDirection.EAST:
+                    elif direction_enum == self.CardinalDirection.EAST:
                         y += lane_width
-                    elif direction_enum == self.IntersectionDirection.WEST:
+                    elif direction_enum == self.CardinalDirection.WEST:
                         y -= lane_width
                     value = [x, y]
                 nodes[node_name] = value
@@ -616,47 +616,47 @@ class NetworkBuilder:
 
         # Define opposite directions
         opposite_directions = {
-            self.IntersectionDirection.NORTH: self.IntersectionDirection.SOUTH,
-            self.IntersectionDirection.SOUTH: self.IntersectionDirection.NORTH,
-            self.IntersectionDirection.EAST:  self.IntersectionDirection.WEST,
-            self.IntersectionDirection.WEST:  self.IntersectionDirection.EAST
+            self.CardinalDirection.NORTH: self.CardinalDirection.SOUTH,
+            self.CardinalDirection.SOUTH: self.CardinalDirection.NORTH,
+            self.CardinalDirection.EAST:  self.CardinalDirection.WEST,
+            self.CardinalDirection.WEST:  self.CardinalDirection.EAST
         }
 
         # Define priority pairs based on the priority parameter
         if priority == self.PathPriority.NORTH_SOUTH:
             priority_pairs = {
-                (self.IntersectionDirection.NORTH, self.IntersectionDirection.SOUTH),
-                (self.IntersectionDirection.SOUTH, self.IntersectionDirection.NORTH)
+                (self.CardinalDirection.NORTH, self.CardinalDirection.SOUTH),
+                (self.CardinalDirection.SOUTH, self.CardinalDirection.NORTH)
             }
         elif priority == self.PathPriority.EAST_WEST:
             priority_pairs = {
-                (self.IntersectionDirection.EAST, self.IntersectionDirection.WEST),
-                (self.IntersectionDirection.WEST, self.IntersectionDirection.EAST)
+                (self.CardinalDirection.EAST, self.CardinalDirection.WEST),
+                (self.CardinalDirection.WEST, self.CardinalDirection.EAST)
             }
         else:
             priority_pairs = set()
 
         # Mapping from directions to phases (degrees)
         direction_to_phase = {
-            self.IntersectionDirection.NORTH: 180,
-            self.IntersectionDirection.EAST : 270,
-            self.IntersectionDirection.SOUTH: 0,
-            self.IntersectionDirection.WEST : 90
+            self.CardinalDirection.NORTH: 180,
+            self.CardinalDirection.EAST : 270,
+            self.CardinalDirection.SOUTH: 0,
+            self.CardinalDirection.WEST : 90
         }
 
         # Define right and left turns
         left_turns = {
-            (self.IntersectionDirection.NORTH, self.IntersectionDirection.EAST),
-            (self.IntersectionDirection.EAST, self.IntersectionDirection.SOUTH),
-            (self.IntersectionDirection.SOUTH, self.IntersectionDirection.WEST),
-            (self.IntersectionDirection.WEST, self.IntersectionDirection.NORTH)
+            (self.CardinalDirection.NORTH, self.CardinalDirection.EAST),
+            (self.CardinalDirection.EAST, self.CardinalDirection.SOUTH),
+            (self.CardinalDirection.SOUTH, self.CardinalDirection.WEST),
+            (self.CardinalDirection.WEST, self.CardinalDirection.NORTH)
         }
 
         right_turns = {
-            (self.IntersectionDirection.NORTH, self.IntersectionDirection.WEST),
-            (self.IntersectionDirection.WEST, self.IntersectionDirection.SOUTH),
-            (self.IntersectionDirection.SOUTH, self.IntersectionDirection.EAST),
-            (self.IntersectionDirection.EAST, self.IntersectionDirection.NORTH)
+            (self.CardinalDirection.NORTH, self.CardinalDirection.WEST),
+            (self.CardinalDirection.WEST, self.CardinalDirection.SOUTH),
+            (self.CardinalDirection.SOUTH, self.CardinalDirection.EAST),
+            (self.CardinalDirection.EAST, self.CardinalDirection.NORTH)
         }
 
         
@@ -677,8 +677,8 @@ class NetworkBuilder:
                         lane_priority = 3
                         
                         # Determine if the inner line should be a striped or none
-                        if priority == self.PathPriority.NORTH_SOUTH and from_direction == self.IntersectionDirection.NORTH\
-                            or priority == self.PathPriority.EAST_WEST and from_direction == self.IntersectionDirection.EAST:
+                        if priority == self.PathPriority.NORTH_SOUTH and from_direction == self.CardinalDirection.NORTH\
+                            or priority == self.PathPriority.EAST_WEST and from_direction == self.CardinalDirection.EAST:
                             
                             first_value = s
                         else:
