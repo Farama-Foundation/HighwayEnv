@@ -375,6 +375,25 @@ class NetworkBuilder:
     
     def add_node(self, id: str, coordinate: Vector):
         """
+        Naming convention
+        -----------------
+            This framework, and subsequently this method, use the naming convention<br>
+            ``<type>-<id<:<direction>-<in|out>[:lane_index]``. This method will thus generate the ``in|out`` nodes for each direction.
+            <br><br>
+            - ``type`` refers to the type of the road, e.g. "``I``" for "intersection" or "``T``" for "turn".<br>
+            - ``id`` refers to the id of the type, e.g. the first intersection is ``I-1`` and the second is ``I-2``.<br>
+            - ``direction`` refers to the cardinal traversal direction of the road which are about to be made.<br>
+            - ``in|out`` refers to the node either being an ``in`` node or ``out`` node. An ``In`` node is the<br>
+                node where you enter the road and the ``out`` node is the node where you exit the road.<br>
+                E.g. ``in`` nodes in an intersection are the ones which enters the intersection<br>
+                while the ``out`` nodes are the ones which exits the intersection.<br>
+            - ``:lane_index`` refers to the lane's index such that it is possible<br>
+                to have multiple lanes from between the same nodes.<br>
+                The ``:``is a separator between the direction part and the lane indexation<br>
+                
+                
+                @TODO determine the logic for how this feature works
+        
         Description
         -----------
             Adds a single node to the NetworkBuilder's dictionary<br>
@@ -400,6 +419,25 @@ class NetworkBuilder:
         
     def add_multiple_nodes(self, nodes: dict[str, Vector]):
         """
+        Naming convention
+        -----------------
+            This framework, and subsequently this method, use the naming convention<br>
+            ``<type>-<id<:<direction>-<in|out>[:lane_index]``. This method will thus generate the ``in|out`` nodes for each direction.
+            <br><br>
+            - ``type`` refers to the type of the road, e.g. "``I``" for "intersection" or "``T``" for "turn".<br>
+            - ``id`` refers to the id of the type, e.g. the first intersection is ``I-1`` and the second is ``I-2``.<br>
+            - ``direction`` refers to the cardinal traversal direction of the road which are about to be made.<br>
+            - ``in|out`` refers to the node either being an ``in`` node or ``out`` node. An ``In`` node is the<br>
+                node where you enter the road and the ``out`` node is the node where you exit the road.<br>
+                E.g. ``in`` nodes in an intersection are the ones which enters the intersection<br>
+                while the ``out`` nodes are the ones which exits the intersection.<br>
+            - ``:lane_index`` refers to the lane's index such that it is possible<br>
+                to have multiple lanes from between the same nodes.<br>
+                The ``:``is a separator between the direction part and the lane indexation<br>
+                
+                
+                @TODO determine the logic for how this feature works
+        
         Description
         -----------
             Adds multiple nodes to the NetworkBuilder's dictionary<br>
@@ -425,6 +463,25 @@ class NetworkBuilder:
         
     def add_path(self, path_type: PathType, path: Path):
         """
+        Naming convention
+        -----------------
+            This framework, and subsequently this method, use the naming convention<br>
+            ``<type>-<id<:<direction>-<in|out>[:lane_index]``. This method will thus generate the ``in|out`` nodes for each direction.
+            <br><br>
+            - ``type`` refers to the type of the road, e.g. "``I``" for "intersection" or "``T``" for "turn".<br>
+            - ``id`` refers to the id of the type, e.g. the first intersection is ``I-1`` and the second is ``I-2``.<br>
+            - ``direction`` refers to the cardinal traversal direction of the road which are about to be made.<br>
+            - ``in|out`` refers to the node either being an ``in`` node or ``out`` node. An ``In`` node is the<br>
+                node where you enter the road and the ``out`` node is the node where you exit the road.<br>
+                E.g. ``in`` nodes in an intersection are the ones which enters the intersection<br>
+                while the ``out`` nodes are the ones which exits the intersection.<br>
+            - ``:lane_index`` refers to the lane's index such that it is possible<br>
+                to have multiple lanes from between the same nodes.<br>
+                The ``:``is a separator between the direction part and the lane indexation<br>
+                
+                
+                @TODO determine the logic for how this feature works
+        
         Description
         -----------
             Adds a single path to the NetworkBuilder's dictionary<br>
@@ -467,6 +524,25 @@ class NetworkBuilder:
         
     def add_multiple_paths(self, paths: dict[PathType, list[Path]]):
         """
+        Naming convention
+        -----------------
+            This framework, and subsequently this method, use the naming convention<br>
+            ``<type>-<id<:<direction>-<in|out>[:lane_index]``. This method will thus generate the ``in|out`` nodes for each direction.
+            <br><br>
+            - ``type`` refers to the type of the road, e.g. "``I``" for "intersection" or "``T``" for "turn".<br>
+            - ``id`` refers to the id of the type, e.g. the first intersection is ``I-1`` and the second is ``I-2``.<br>
+            - ``direction`` refers to the cardinal traversal direction of the road which are about to be made.<br>
+            - ``in|out`` refers to the node either being an ``in`` node or ``out`` node. An ``In`` node is the<br>
+                node where you enter the road and the ``out`` node is the node where you exit the road.<br>
+                E.g. ``in`` nodes in an intersection are the ones which enters the intersection<br>
+                while the ``out`` nodes are the ones which exits the intersection.<br>
+            - ``:lane_index`` refers to the lane's index such that it is possible<br>
+                to have multiple lanes from between the same nodes.<br>
+                The ``:``is a separator between the direction part and the lane indexation<br>
+                
+                
+                @TODO determine the logic for how this feature works
+                
         Description
         -----------
             Adds multiple paths to the NetworkBuilder's dictionary<br>
@@ -520,7 +596,7 @@ class NetworkBuilder:
         Naming convention
         -----------------
             This framework, and subsequently this method, use the naming convention<br>
-            ``[type]-[id]:[direction]-[in|out]``. This method will thus generate the ``in|out`` nodes for each direction.
+            ``<type>-<id<:<direction>-<in|out>[:lane_index]``. This method will thus generate the ``in|out`` nodes for each direction.
             <br><br>
             - ``type`` refers to the type of the road, e.g. "``I``" for "intersection" or "``T``" for "turn".<br>
             - ``id`` refers to the id of the type, e.g. the first intersection is ``I-1`` and the second is ``I-2``.<br>
@@ -528,7 +604,13 @@ class NetworkBuilder:
             - ``in|out`` refers to the node either being an ``in`` node or ``out`` node. An ``In`` node is the<br>
                 node where you enter the road and the ``out`` node is the node where you exit the road.<br>
                 E.g. ``in`` nodes in an intersection are the ones which enters the intersection<br>
-                while the ``out`` nodes are the ones which exits the intersection.
+                while the ``out`` nodes are the ones which exits the intersection.<br>
+            - ``:lane_index`` refers to the lane's index such that it is possible<br>
+                to have multiple lanes from between the same nodes.<br>
+                The ``:``is a separator between the direction part and the lane indexation<br>
+                
+                
+                @TODO determine the logic for how this feature works
             
         Description
         -----------
