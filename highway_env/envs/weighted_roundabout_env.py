@@ -5,7 +5,7 @@ from typing_extensions import override
 
 from highway_env import utils
 from highway_env.envs import RoundaboutEnv
-from highway_env.road.lanes.weighted_lanes import CircularLane, SineLane, StraightLane
+from highway_env.road.lanes.unweighted_lanes import CircularLane, SineLane, StraightLane
 from highway_env.road.lanes.lane_utils import LineType
 from highway_env.road.road import Road, WeightedRoadnetwork
 

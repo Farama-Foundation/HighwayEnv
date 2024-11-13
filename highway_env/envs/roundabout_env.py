@@ -324,14 +324,26 @@ class RoundaboutEnv(AbstractEnv):
         self.road = road
 
     def _get_random_entry(self) -> tuple[str, str, int]:
+        """
+        Gives a random entry as a triple (u, v, lane_idx), where (u, v) is an edge.
+        """
         entries = np.array([("ner", "nes"), ("ser", "ses"), ("eer", "ees"), ("wer", "wes")])
         entry = self.np_random.choice(entries)
         return tuple((entry[0], entry[1], 0))
 
+
+    def _get_random_exit(self) -> tuple[str, str, int]:
+        """
+        Gives a random exit as a triple (u, v, lane_idx), where (u, v) is an edge.
+        """
+        exits = np.array([("nxs`", "nxr"), ("sxs", "sxr"), ("exs", "exr"), ("wxs", "wxr")])
+        road_exit = self.np_random.choice(exits)
+        return tuple((road_exit[0], road_exit[1], 0))
+
     def _get_random_roundabout_lane_index(self):
         lane_indices = np.array([("sx", "se"), ("we", "sx"), ("wx", "we"), ("ne", "wx"), ("nx", "ne"), ("ee", "nx"), ("ex", "ee"), ("se", "ex")])
         lane_index = self.np_random.choice(lane_indices)
-        return tuple((lane_index[0], lane_index[1], self.np_random.integers(0,1)))
+        return tuple((lane_index[0], lane_index[1], self.np_random.integers(0,2)))
 
     def _make_vehicles(self) -> None:
         """
@@ -343,7 +355,6 @@ class RoundaboutEnv(AbstractEnv):
         speed_deviation = 2
 
         # Ego-vehicle
-        destinations = ["wxr", "exr", "sxr", "nxr"]
         ego_lane = self.road.network.get_lane(self._get_random_entry())
         ego_vehicle = self.action_type.vehicle_class(
             self.road,
@@ -352,7 +363,7 @@ class RoundaboutEnv(AbstractEnv):
             heading=ego_lane.heading_at(140),
         )
         try:
-            ego_vehicle.plan_route_to(self.np_random.choice(destinations))
+            ego_vehicle.plan_route_to(self._get_random_exit()[1])
         except AttributeError:
             pass
         self.road.vehicles.append(ego_vehicle)
@@ -367,11 +378,11 @@ class RoundaboutEnv(AbstractEnv):
             speed=16 + self.np_random.normal() * speed_deviation,
         )
 
-        if self.config["incoming_vehicle_destination"] is not None:
-            destination = destinations[self.config["incoming_vehicle_destination"]]
-        else:
-            destination = self.np_random.choice(destinations)
-        vehicle.plan_route_to(destination)
+#        if self.config["incoming_vehicle_destination"] is not None:
+#            destination = destinations[self.config["incoming_vehicle_destination"]]
+#        else:
+#            destination = self.np_random.choice(destinations)
+        vehicle.plan_route_to(self._get_random_exit()[1])
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
 
@@ -384,7 +395,7 @@ class RoundaboutEnv(AbstractEnv):
                 longitudinal=20 * i + self.np_random.normal() * position_deviation,
                 speed=16 + self.np_random.normal() * speed_deviation,
             )
-            vehicle.plan_route_to(self.np_random.choice(destinations))
+            vehicle.plan_route_to(self._get_random_exit()[1])
             vehicle.randomize_behavior()
             self.road.vehicles.append(vehicle)
 
@@ -396,6 +407,6 @@ class RoundaboutEnv(AbstractEnv):
                 longitudinal=50 * (i % 10) + self.np_random.normal() * position_deviation,
                 speed=16 + self.np_random.normal() * speed_deviation,
             )
-            vehicle.plan_route_to(self.np_random.choice(destinations))
+            vehicle.plan_route_to(self._get_random_exit()[1])
             vehicle.randomize_behavior()
             self.road.vehicles.append(vehicle)
