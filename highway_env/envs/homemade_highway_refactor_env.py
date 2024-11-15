@@ -70,6 +70,8 @@ class HomemadeHighwayRefactor(AbstractEnv):
         net = RoadNetwork()
         nb = NetworkBuilder()
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
+        left_turn = False
+        right_turn = True
         
         """First highway circuit"""
         nb.add_multiple_nodes({
@@ -125,17 +127,17 @@ class HomemadeHighwayRefactor(AbstractEnv):
                 StraightPath("i:2", "j:2", (n,c)),
             ],
             nb.PathType.CIRCULAR : [
-                CircularPath("d:1", "e:1", 90, 0, (c,s)),
-                CircularPath("d:2", "e:2", 90, 0, (n,c)),
+                CircularPath("d:1", "e:1", 90, 20, left_turn, (c,s)),
+                CircularPath("d:2", "e:2", 90, 24, left_turn, (n,c)),
                 
-                CircularPath("f:1", "g:1", 0, -90, (c,s)),
-                CircularPath("f:2", "g:2", 0, -90, (n,c)),
+                CircularPath("f:1", "g:1", 0, 20, left_turn, (c,s)),
+                CircularPath("f:2", "g:2", 0, 24, left_turn, (n,c)),
                 
-                CircularPath("h:1", "i:1", -90, -180, (c,s)),
-                CircularPath("h:2", "i:2", -90, -180, (n,c)),
+                CircularPath("h:1", "i:1", -90, 20, left_turn, (c,s)),
+                CircularPath("h:2", "i:2", -90, 24, left_turn, (n,c)),
                 
-                CircularPath("j:1", "a:1", 180, 90, (c,s)),
-                CircularPath("j:2", "a:2", 180, 90, (n,c)),
+                CircularPath("j:1", "a:1", 180, 20, left_turn, (c,s)),
+                CircularPath("j:2", "a:2", 180, 24, left_turn, (n,c)),
             ]
         })
         
@@ -181,21 +183,21 @@ class HomemadeHighwayRefactor(AbstractEnv):
                 StraightPath("o:2", "p:2", (n,c)),
             ],
             nb.PathType.CIRCULAR : [
-                CircularPath("c:3", "k:1", 90, 180, (c,s)),
-                CircularPath("c:4", "k:2", 90, 180, (n,c)),
+                CircularPath("c:3", "k:1", 90, 24, right_turn, (c,s)),
+                CircularPath("c:4", "k:2", 90, 20, right_turn, (n,c)),
                 
-                CircularPath("l:1", "m:1", -180, -90, (c,s)),
-                CircularPath("l:2", "m:2", -180, -90, (n,c)),
+                CircularPath("l:1", "m:1", 180, 24, right_turn, (c,s)),
+                CircularPath("l:2", "m:2", 180, 20, right_turn, (n,c)),
                 
-                CircularPath("n:1", "o:1", -90, 0, (c,s)),
-                CircularPath("n:2", "o:2", -90, 0, (n,c)),
+                CircularPath("n:1", "o:1", -90, 24, right_turn, (c,s)),
+                CircularPath("n:2", "o:2", -90, 20, right_turn, (n,c)),
                 
-                CircularPath("p:1", "b:3", 0, 90, (c,s)),
-                CircularPath("p:2", "b:4", 0, 90, (n,c)),
+                CircularPath("p:1", "b:3", 0, 24, right_turn, (c,s)),
+                CircularPath("p:2", "b:4", 0, 20, right_turn, (n,c)),
             ]
         })
         
-        nb.build_roads(net)
+        nb.build_paths(net)
         
         road = RegulatedRoad(
             network=net,
@@ -215,9 +217,9 @@ class HomemadeHighwayRefactor(AbstractEnv):
         ego_lane = self.road.network.get_lane(("b", "c", 0)) # This is to place the car on a road between two points
         ego_vehicle = self.action_type.vehicle_class(
             self.road,
-            ego_lane.position(50, 0),            # Use the first value to place car down the road
-            speed=0,                            # Speed of car
-            heading=ego_lane.heading_at(90),   # Use this to change the direction of the car. "0" is north
+            ego_lane.position(150, 0),            # Use the first value to place car down the road
+            speed=0,                              # Speed of car
+            heading=ego_lane.heading_at(90),      # Use this to change the direction of the car. "0" is north
         )
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle

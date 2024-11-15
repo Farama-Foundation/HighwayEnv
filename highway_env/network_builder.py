@@ -132,7 +132,8 @@ class CircularPath(Path):
         from_node_id: str,
         to_node_id: str,
         start_phase: float, # degree
-        end_phase: float, # degree
+        radius: float,
+        clockwise: bool, # True->right_turn, False->left_turn
         line_types: tuple[LineType, LineType] = None,
         weight: int = None,
         lane_type: LaneType = None,
@@ -151,25 +152,24 @@ class CircularPath(Path):
         start_phase : float
             The starting phase<br>
             Note: ``0`` degrees is always upwards, the builder will handle when this is not the case
-        end_phase : float
+        radius : float
             The ending phase<br>
             Note: ``0`` degrees is always upwards, the builder will handle when this is not the case
+        clockwise : bool
+            Describing if the cirlce moves clockwise or counterclockwise<br>
+            ``True`` -> clockwise<br>
+            ``False`` -> counterclockwise<br>
         line_types : tuple[LineType, LineType], optional
             The description of the line types in the road<br>
             (Default is ``None``)
-        weight: int, optional
+        weight : int, optional
             The weight of a lane<br>
             (Default is ``None``)
-        lane_type: LaneType, optional
+        lane_type : LaneType, optional
             Describing the type of the lane, e.g. a highway, roundabout, or intersection.<br>
             This can be used when training a model to give it the knowledge of where it is<br>
             driving which can be used to alter its behaviour, e.g. how fast it drives.<br>
             (Default is ``None``) 
-        clockwise : bool, optional
-            Describing if the cirlce moves clockwise or counterclockwise<br>
-            ``True`` -> clockwise<br>
-            ``False`` -> counterclockwise<br>
-            (Default is ``True``)
         priority : int, optional
             Describing the priority of the road, higher value indicates higher priority<br>
             (Default is ``0``)
@@ -197,23 +197,46 @@ class CircularPath(Path):
             weight,
             lane_type
         )
-        self.clockwise: bool = self._determine_turn_direction(start_phase, end_phase) # True->right_turn, False->left_turn
         
-        self.start_phase = start_phase if not self.clockwise else start_phase + 180
-        self.end_phase   = end_phase   if not self.clockwise else end_phase   + 180
-            
+        self.clockwise: bool    = clockwise
+        self.radius: float      = radius
+        self.start_phase: float = start_phase if not self.clockwise else start_phase + 180
         
-    def _determine_turn_direction(self, start_phase: float, end_phase: float) -> bool:
-        # Normalize the degrees to be between 0 and 360
-        start_phase = start_phase % 360
-        end_phase = end_phase % 360
         
-        # Calculate the difference
-        diff = (end_phase - start_phase) % 360
+    
+    def _get_distance(self, point_a: Vector, point_b: Vector) -> float:
+        x1, y1 = point_a
+        x2, y2 = point_b
+        return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    
+    def get_phase(self, point_a: Vector, point_b: Vector, radius: float, clockwise: bool) -> float:
+        d: float = self._get_distance(point_a, point_b)
+        theta: float = 2 * math.asin(d / (2 * radius))
+        phase: float = theta * 180 / np.pi
+
+        return phase if not clockwise else phase + 180
+    
+    def get_center(self, point_a: Vector, point_b: Vector, len_a: float, len_b: float, clockwise: bool) -> Vector:
+        x1, y1 = point_a
+        x2, y2 = point_b
         
-        if diff == 0:
-            return None  # No movement
-        return diff < 180
+        len_c: float = self._get_distance(point_a, point_b)
+        
+        unit_vector: Vector = [(x2 - x1) / len_c, (y2 - y1) / len_c]
+        perp_vector: Vector = [-((y2 - y1) / len_c), (x2 - x1) / len_c]
+        
+        
+        cos_theta: float = (len_b**2 + len_c**2 - len_a**2) / (2 * len_b * len_c)
+        cos_theta_sq = cos_theta**2
+
+        sin_theta = math.sqrt(1 - cos_theta_sq)
+        
+        x3_plus  = round(x1 + len_b * cos_theta * unit_vector[0] + len_b * sin_theta * perp_vector[0], 4) + 0.0 # to handle -0.0 cases
+        x3_minus = round(x1 + len_b * cos_theta * unit_vector[0] - len_b * sin_theta * perp_vector[0], 4) + 0.0 # to handle -0.0 cases
+        y3_plus  = round(y1 + len_b * cos_theta * unit_vector[1] + len_b * sin_theta * perp_vector[1], 4) + 0.0 # to handle -0.0 cases
+        y3_minus = round(y1 + len_b * cos_theta * unit_vector[1] - len_b * sin_theta * perp_vector[1], 4) + 0.0 # to handle -0.0 cases
+        
+        return [x3_plus, y3_plus] if clockwise else [x3_minus, y3_minus]
     
 class SinePath(Path):
     def __init__(
@@ -296,83 +319,34 @@ class NetworkBuilder:
     def __init__(
         self
     ):
+        """
+        Naming convention
+        -----------------
+            This framework, and subsequently this method, use the naming convention<br>
+            ``<type>-<id<:<direction>-<in|out>[:lane_index]``. This method will thus generate the ``in|out`` nodes for each direction.
+            <br><br>
+            - ``type`` refers to the type of the road, e.g. "``I``" for "intersection" or "``T``" for "turn".<br>
+            - ``id`` refers to the id of the type, e.g. the first intersection is ``I-1`` and the second is ``I-2``.<br>
+            - ``direction`` refers to the cardinal traversal direction of the road which are about to be made.<br>
+            - ``in|out`` refers to the node either being an ``in`` node or ``out`` node. An ``In`` node is the<br>
+                node where you enter the road and the ``out`` node is the node where you exit the road.<br>
+                E.g. ``in`` nodes in an intersection are the ones which enters the intersection<br>
+                while the ``out`` nodes are the ones which exits the intersection.<br>
+            - ``:lane_index`` refers to the lane's index such that it is possible<br>
+                to have multiple lanes from between the same nodes.<br>
+                The ``:``is a separator between the direction part and the lane indexation<br>
+                The ``:lane_index`` will be removed from the node name when building<br>
+                such that the network will know that the lanes are connected and<br>
+                it is possible to move between them. However, the NetworkBuilder will<br>
+                still store in its dictionary of nodes and paths the ``:lane_index``<br>
+                you provide - thus it is <b><i>only</i></b> when building the network it removes the lane index
+        """
         self._nodes: dict[str, Vector] = {}
-        self._road_description: dict[NetworkBuilder.PathType, list[Path]] = {
+        self._path_description: dict[NetworkBuilder.PathType, list[Path]] = {
             self.PathType.STRAIGHT : [],
             self.PathType.CIRCULAR : [],
             self.PathType.SINE     : []
         }
-    
-    def _find_circle_center(self, start: Vector, end: Vector) -> Vector:
-        # Perpendicular Bisector
-        x1, y1 = start
-        x2, y2 = end
-        
-        mid_x = (x1 + x2) / 2
-        mid_y = (y1 + y2) / 2
-
-        if x1 == x2:
-            return (mid_x, None)
-        elif y1 == y2:
-            return (None, mid_y)
-
-        slope = (y2 - y1) / (x2 - x1)
-        perp_slope = -1 / slope
-
-        radius = math.sqrt((x2 - x1)**2 + (y2 - y1)**2) / 2
-
-        dx = math.sqrt(radius**2 / (1 + perp_slope**2))
-        dy = perp_slope * dx
-
-        center1 = (mid_x + dx, mid_y + dy)
-        center2 = (mid_x - dx, mid_y - dy)
-
-        return center1, center2
-
-    def _cross_product(self, v1: Vector, v2: Vector) -> float:
-        """Compute the 2D cross product of two vectors v1 and v2."""
-        return v1[0] * v2[1] - v1[1] * v2[0]
-
-    def _select_center(
-        self,
-        start: Vector,
-        end: Vector,
-        center1: Vector,
-        center2: Vector,
-        clockwise: bool
-        ) -> Vector:
-        
-        start_x, start_y = start
-        mid_x = (start[0] + end[0]) / 2
-        mid_y = (start[1] + end[1]) / 2
-        
-        vector_start_to_mid = (mid_x - start_x, mid_y - start_y)
-        vector_mid_to_center1 = (center1[0] - mid_x, center1[1] - mid_y)
-        
-        cross = self._cross_product(vector_start_to_mid, vector_mid_to_center1)
-        
-        # Check direction based on the sign of the cross product
-        if not clockwise:
-            # For clockwise, cross product should be negative
-            if cross < 0:
-                return center1
-            else:
-                return center2
-        else:
-            # For counterclockwise, cross product should be positive
-            if cross > 0:
-                return center1
-            else:
-                return center2
-
-    def _get_center(self, start: Vector, end: Vector, clockwise: bool) -> Vector:
-        # clockwise :: False->left_turn ; True->right_turn
-        center1, center2 = self._find_circle_center(start, end)
-        
-        return self._select_center(start, end, center1, center2, clockwise)
-
-    def _get_radius(self, start: Vector, center: Vector) -> float:
-            return math.sqrt((start[0] - center[0])**2 + (start[1] - center[1])**2)
     
     def add_node(self, id: str, coordinate: Vector):
         """
@@ -401,13 +375,13 @@ class NetworkBuilder:
         -----------
             Adds a single node to the NetworkBuilder's dictionary<br>
             which will be used when building the network using<br>
-            ``self-build_roads(...)``
+            ``self-build_paths(...)``
         
         Parameters
         ----------
-        id: str
+        id : str
             The id of a node
-        coordinate: Vector
+        coordinate : Vector
             The location of the node
         
         Example
@@ -447,11 +421,11 @@ class NetworkBuilder:
         -----------
             Adds multiple nodes to the NetworkBuilder's dictionary<br>
             which will be used when building the network using<br>
-            ``self-build_roads(...)``
+            ``self-build_paths(...)``
             
         Parameters
         ----------
-        nodes: dict[str, Vector]
+        nodes : dict[str, Vector]
             A dictionary containing the node's ``id: str`` and ``coordinate: Vector`` location
             
         Example
@@ -493,15 +467,15 @@ class NetworkBuilder:
         -----------
             Adds a single path to the NetworkBuilder's dictionary<br>
             which will be used when building the network using<br>
-            ``self-build_roads(...)``
+            ``self-build_paths(...)``
 
         Parameters
         ----------
-        path_type: PathType
+        path_type : PathType
             An enum type describing what type of path is provided<br>
             which will be used as the key in the dictionary containing paths.<br>
             PathType contains 3 values; ``STRAIGHT``, ``CIRCULAR``, and ``SINE``.
-        path: Path
+        path : Path
             The path which gives the NetworkBuilder the necessary information to<br>
             be able to construct the network when building the network.
 
@@ -556,11 +530,11 @@ class NetworkBuilder:
         -----------
             Adds multiple paths to the NetworkBuilder's dictionary<br>
             which will be used when building the network using<br>
-            ``self-build_roads(...)``
+            ``self.build_paths(...)``
 
         Parameters
         ----------
-        paths: dict[PathType, list[Path]]
+        paths : dict[PathType, list[Path]]
             A dictionary containing the type of the path (``PathType``) and<br>
             a list of paths describing how the nodes are connected.
         
@@ -591,7 +565,7 @@ class NetworkBuilder:
         """
         for key in NetworkBuilder.PathType:
             if key in paths:
-                self._road_description[key].extend(paths[key])
+                self._path_description[key].extend(paths[key])
         
     # @TODO Determine the weight of paths inside the intersection
     def add_intersection(
@@ -599,6 +573,7 @@ class NetworkBuilder:
         intersection_name: str,
         ingoing_roads: dict[CardinalDirection, Vector],
         priority: PathPriority,
+        weight: int = None,
         lane_width: float = AbstractLane.DEFAULT_WIDTH
         ):
         """
@@ -632,17 +607,21 @@ class NetworkBuilder:
 
         Parameters
         ----------
-            intersection_name: str
+            intersection_name : str
                 A unique identifier for the intersection.
                 
-            ingoing_roads: dict[CardinalDirection, Vector]
+            ingoing_roads : dict[CardinalDirection, Vector]
                 Maps directions (North, South, East, West) to their respective<br>
                 vectors, which define the positions of ingoing roads.
             
-            priority: PathPriority
+            priority : PathPriority
                 The prioritized lane direction (e.g., North-South or East-West).
             
-            lane_width: float
+            weight: int, optional
+                The weight of a lane<br>
+                (Default is ``None``)
+
+            lane_width : float
                 Width of each lane, with a default value from AbstractLane.
 
         Mapping of an ingoing point to other ingoing points
@@ -651,7 +630,7 @@ class NetworkBuilder:
         
         <b>North-in</b> -> <b>south-in</b> mapping: ``[+4, +12]`` <br>
         <b>North-in</b> -> <b>West-in</b> mapping: ``[-4, +8]`` <br>
-        <b>North-in</b> -> <b>East-in</b> mapping: ``[+8, +8]`` <br><br>
+        <b>North-in</b> -> <b>East-in</b> mapping: ``[+8, +4]`` <br><br>
 
         <b>South-in</b> -> <b>North-in</b> mapping: ``[-4, -12]`` <br>
         <b>South-in</b> -> <b>West-in</b> mapping: ``[-8, -4]`` <br>
@@ -689,12 +668,14 @@ class NetworkBuilder:
         
         Assumptions
         -----------
-            The directions are expected to be North, South, East, and West.<br>
-            This method manages the road layout to handle straight and turning<br>
-            paths based on priorities and intersection geometry.
+            The directions are expected to be the cardinal directions North, South,<br>
+            East, and West. This method manages the road layout to handle<br>
+            straight and turning paths based on priorities and intersection geometry.
         """
 
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
+        left_turn = False
+        right_turn = True
         nodes: dict[str, Vector] = {}
         
         for direction_enum, vector in ingoing_roads.items():
@@ -838,41 +819,155 @@ class NetworkBuilder:
                     # Determine start_phase and end_phase
                     start_phase = direction_to_phase[from_direction]
                     if (from_direction, to_direction) in right_turns:
-                        end_phase = start_phase + 90
                         line_types = (n,c)
+                        
+                        path = CircularPath(
+                            from_node_in,
+                            to_node_out,
+                            start_phase,
+                            lane_width,
+                            right_turn,
+                            line_types,
+                            weight,
+                            LaneType.INTERSECTION,
+                            lane_priority,
+                            width=lane_width
+                        )
+                        
                     elif (from_direction, to_direction) in left_turns:
-                        end_phase = start_phase - 90
                         line_types = (n,n)
+
+                        path = CircularPath(
+                            from_node_in,
+                            to_node_out,
+                            start_phase,
+                            2* lane_width,
+                            left_turn,
+                            line_types,
+                            weight,
+                            LaneType.INTERSECTION,
+                            lane_priority,
+                            width=lane_width
+                        )
+                        
                     else:
                         continue  # Skip invalid direction combinations
-                    
+                
 
-                    path = CircularPath(
-                        from_node_in,
-                        to_node_out,
-                        start_phase,
-                        end_phase,
-                        line_types,
-                        lane_priority,
-                        width=lane_width
-                    )
                     road_desc[self.PathType.CIRCULAR].append(path)
         
         # Add the constructed roads to the network
         self.add_multiple_paths(road_desc)
         
     def add_roundabout(self):
+        """
+        Naming convention
+        -----------------
+            This framework, and subsequently this method, use the naming convention<br>
+            ``<type>-<id<:<direction>-<in|out>[:lane_index]``. This method will thus generate the ``in|out`` nodes for each direction.
+            <br><br>
+            - ``type`` refers to the type of the road, e.g. "``I``" for "intersection" or "``T``" for "turn".<br>
+            - ``id`` refers to the id of the type, e.g. the first intersection is ``I-1`` and the second is ``I-2``.<br>
+            - ``direction`` refers to the cardinal traversal direction of the road which are about to be made.<br>
+            - ``in|out`` refers to the node either being an ``in`` node or ``out`` node. An ``In`` node is the<br>
+                node where you enter the road and the ``out`` node is the node where you exit the road.<br>
+                E.g. ``in`` nodes in an intersection are the ones which enters the intersection<br>
+                while the ``out`` nodes are the ones which exits the intersection.<br>
+            - ``:lane_index`` refers to the lane's index such that it is possible<br>
+                to have multiple lanes from between the same nodes.<br>
+                The ``:``is a separator between the direction part and the lane indexation<br>
+                The ``:lane_index`` will be removed from the node name when building<br>
+                such that the network will know that the lanes are connected and<br>
+                it is possible to move between them. However, the NetworkBuilder will<br>
+                still store in its dictionary of nodes and paths the ``:lane_index``<br>
+                you provide - thus it is <b><i>only</i></b> when building the network it removes the lane index
+            
+        Description
+        -----------
+            Adds an intersection to the road network, generating and configuring<br>
+            incoming and outgoing lanes based on the specified direction,<br>
+            priority, and lane width. This method establishes both straight and<br>
+            circular paths between directions.
+
+        Parameters
+        ----------
+            intersection_name: str
+                A unique identifier for the intersection.
+                
+            ingoing_roads: dict[CardinalDirection, Vector]
+                Maps directions (North, South, East, West) to their respective<br>
+                vectors, which define the positions of ingoing roads.
+            
+            priority: PathPriority
+                The prioritized lane direction (e.g., North-South or East-West).
+            
+            lane_width: float
+                Width of each lane, with a default value from AbstractLane.
+
+        Mapping of an ingoing point to other ingoing points
+        ----------------------
+        This asumes that you <b>do not</b> modify the lane width.<br>
+        
+        <b>North-in</b> -> <b>south-in</b> mapping: ``[+4, +12]`` <br>
+        <b>North-in</b> -> <b>West-in</b> mapping: ``[-4, +8]`` <br>
+        <b>North-in</b> -> <b>East-in</b> mapping: ``[+8, +4]`` <br><br>
+
+        <b>South-in</b> -> <b>North-in</b> mapping: ``[-4, -12]`` <br>
+        <b>South-in</b> -> <b>West-in</b> mapping: ``[-8, -4]`` <br>
+        <b>South-in</b> -> <b>East-in</b> mapping: ``[+4, -8]`` <br><br>
+        
+        <b>West-in</b> -> <b>East-in</b> mapping: ``[+12, -4]`` <br>
+        <b>West-in</b> -> <b>North-in</b> mapping: ``[+4, -8]`` <br>
+        <b>West-in</b> -> <b>south-in</b> mapping: ``[+8, +4]`` <br><br>
+        
+        <b>East-in</b> -> <b>West-in</b> mapping: ``[-12, +4]`` <br>
+        <b>East-in</b> -> <b>North-in</b> mapping: ``[-8, -4]`` <br>
+        <b>East-in</b> -> <b>south-in</b> mapping: ``[-4 , +8]`` <br>
+
+        Example
+        -------
+        ```python
+        nb = NetworkBuilder()
+        nb.add_intersection(
+            "I-2",
+            {
+                net_builder.CardinalDirection.NORTH : [64, -92],
+                net_builder.CardinalDirection.SOUTH : [68, -80],
+                net_builder.CardinalDirection.WEST  : [60, -84],
+            },
+            net_builder.PathPriority.NORTH_SOUTH
+        )
+        # This will generate the following nodes:
+        # "I-2:n-in"
+        # "I-2:s-in"
+        # "I-2:w-in"
+        # "I-2:n-out"
+        # "I-2:s-out"
+        # "I-2:w-out"
+        ```
+        
+        Assumptions
+        -----------
+            The directions are expected to be the cardinal directions North, South,<br>
+            East, and West. This method manages the road layout to handle<br>
+            straight and turning paths based on priorities and intersection geometry.
+        """
         print("Not implemented")
         
-    def _build_straight_path(self, path: StraightPath) -> tuple[str, str, AbstractLane, int]:
+    def _build_straight_path(self, path: StraightPath) -> tuple[str, str, StraightLane, int, LaneType]:
         """
         Description
         -----------
             <b>Private method</b> which extracts the paths in the NetworkBuilder and<br>
             converts it to the correct information needed for a lane.
+
+        Parameters
+        ----------
+        path : StraightPath
+            A StraightPath which should connect two nodes.
         Returns
         -------
-            ``tuple[str, str, AbstractLane, int]`` <br>
+            ``tuple[str, str, StraightLane, int, LaneType]`` <br>
             Returns the needed information for the ``RoadNetwork.add_lane(...)`` method
         """
         return (
@@ -891,21 +986,40 @@ class NetworkBuilder:
             path.lane_type
         )
         
-    def _build_circular_path(self, path: CircularPath) -> tuple[str, str, AbstractLane, int]:
+    def _build_circular_path(self, path: CircularPath) -> tuple[str, str, CircularLane, int, LaneType]:
         """
         Description
         -----------
             <b>Private method</b> which extracts the paths in the NetworkBuilder and<br>
             converts it to the correct information needed for a lane.
+
+        Parameters
+        ----------
+        path : CircularPath
+            A CircluarPath which should connect two nodes.
+            
         Returns
         -------
-            ``tuple[str, str, AbstractLane, int]`` <br>
+            ``tuple[str, str, CircularLane, int, LaneType]`` <br>
             Returns the needed information for the ``RoadNetwork.add_lane(...)`` method
         """
+
         
-        center = self._get_center(
+        end_phase: float = path.start_phase - path.get_phase(
             self._nodes[path.from_node_id],
             self._nodes[path.to_node_id],
+            path.radius,
+            path.clockwise
+        )
+        
+        if path.clockwise:
+            end_phase += 360
+        
+        center: Vector = path.get_center(
+            self._nodes[path.from_node_id],
+            self._nodes[path.to_node_id],
+            path.radius,
+            path.radius,
             path.clockwise
         )
         
@@ -914,9 +1028,9 @@ class NetworkBuilder:
             path.to_node_id,
             CircularLane(
                 center,
-                self._get_radius(self._nodes[path.from_node_id], center),
+                path.radius,
                 np.deg2rad(path.start_phase),
-                np.deg2rad(path.end_phase),
+                np.deg2rad(end_phase),
                 path.clockwise,
                 path.width,
                 path.line_types,
@@ -928,15 +1042,21 @@ class NetworkBuilder:
             path.lane_type
         )
     
-    def _build_sine_path(self, path: SinePath) -> tuple[str, str, AbstractLane, int]:
+    def _build_sine_path(self, path: SinePath) -> tuple[str, str, SineLane, int, LaneType]:
         """
         Description
         -----------
             <b>Private method</b> which extracts the paths in the NetworkBuilder and<br>
             converts it to the correct information needed for a lane.
+
+        Parameters
+        ----------
+        path : SinePath
+            A SinePath which should connect two nodes.
+        
         Returns
         -------
-            ``tuple[str, str, AbstractLane, int]`` <br>
+            ``tuple[str, str, SineLane, int, LaneType]`` <br>
             Returns the needed information for the ``RoadNetwork.add_lane(...)`` method
         """
         
@@ -948,30 +1068,32 @@ class NetworkBuilder:
             path.lane_type
         )
     
-    def build_roads(self, road_network: RoadNetwork):
+    def build_paths(self, road_network: RoadNetwork):
         """
         Description
         -----------
             Adds the content of the NetworkBuilder to the passed RoadNetwork.<br>
             The content refers to the nodes and paths which gets translated into<br>
             vertices and edges (nodes and lanes).
+
         Parameters
         ----------
-        road_network: RoadNetwork
+        road_network : RoadNetwork
+            The road network to add the nodes and paths to.
         """
         net: list[tuple[str, str, AbstractLane]] = []
 
-        # Mapping road types to their respective build methods
+        # Mapping path types to their respective build methods
         build_methods = {
             self.PathType.STRAIGHT: self._build_straight_path,
             self.PathType.CIRCULAR: self._build_circular_path,
             self.PathType.SINE: self._build_sine_path
         }
 
-        # Iterate through each road type and description
-        for road_type, build_method in build_methods.items():
-            for road in self._road_description[road_type]:
-                net.append(build_method(road))
+        # Iterate through each path type and description
+        for path_type, build_method in build_methods.items():
+            for path in self._path_description[path_type]:
+                net.append(build_method(path))
 
         # Add each lane to the road network
         for from_id, to_id, lane, weight, lane_type in net:
