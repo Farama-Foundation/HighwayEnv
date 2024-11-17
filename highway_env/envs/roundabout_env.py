@@ -39,31 +39,32 @@ class RoundaboutEnv(AbstractEnv):
                 "duration": 11,
                 "normalize_reward": True,
                 "vehicles_count": 10,
+                # Reward weights
+                "collision_weight": 1,
+                "distance_from_goal_weight": 1,
+                "lane_change_weight": 1,
+                "headway_evaluation_weight": 1,
+                "on_road_weight": 1,
             }
         )
         return config
 
     def _reward(self, action: int) -> float:
         rewards = self._rewards(action)
-        reward = sum(
-            self.config.get(name, 0) * reward for name, reward in rewards.items()
-        )
-        if self.config["normalize_reward"]:
-            reward = utils.lmap(
-                reward,
-                [self.config["collision_reward"], self.config["high_speed_reward"]],
-                [0, 1],
-            )
-        reward *= rewards["on_road_reward"]
-        return reward
+        return sum(rewards.items())
 
     def _rewards(self, action: int) -> dict[str, float]:
         return {
-            "collision_reward": self.vehicle.crashed,
-            "high_speed_reward": MDPVehicle.get_speed_index(self.vehicle)
-            / (MDPVehicle.DEFAULT_TARGET_SPEEDS.size - 1),
-            "lane_change_reward": action in [0, 2],
-            "on_road_reward": self.vehicle.on_road,
+            "collision_reward":
+                self.vehicle.crashed * self.config["collision_weight"],
+            "distance_from_goal":
+                self.vehicle.remaining_route_nodes() * self.config["distance_from_goal_weight"],
+            "lane_change_reward":
+                action in [0, 2] * self.config["lane_change_weight"],
+            "headway_evaluation":
+                self.vehicle.headway_evaluation() * self.config["headway_evaluation_weight"],
+            "on_road_reward":
+                self.vehicle.on_road * self.config["on_road_weight"],
         }
 
     def _is_terminated(self) -> bool:
