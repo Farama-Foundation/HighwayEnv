@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 import itertools
 from collections import deque
@@ -53,11 +55,28 @@ class ControlledVehicle(Vehicle):
 
     @property
     def edge_speed_deviation(self) -> float:
+        """Returns the speed deviation on the current edge."""
         return self._edge_speed_max - self._edge_speed_min
 
     @property
     def remaining_route_nodes(self) -> int:
+        """Returns the number of remaining nodes in the planned route of the vehicle."""
         return len(self.route)
+
+    @property
+    def headway_evaluation(self) -> float:
+        """
+        Computed the distance, in seconds, to the front vehicle, and returns a reward, based on whether the vehicle,
+        is too close to the vehicle in front of it. The minimum distance, is hard-coded to match the legislated Danish
+        minimum distance of 2s.
+        """
+        front_vehicle, _ = self.road.neighbour_vehicles(self)
+        dist_to_front = self.front_distance_to(front_vehicle) / self.speed
+        if dist_to_front < 2.0:
+            return np.log2(dist_to_front) - 1
+        else:
+            return 0
+
 
     @classmethod
     def create_from(cls, vehicle: "ControlledVehicle") -> "ControlledVehicle":
