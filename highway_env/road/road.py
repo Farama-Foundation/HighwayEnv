@@ -31,6 +31,7 @@ class RoadNetwork:
     def __init__(self):
         self.graph = {}
 
+
     def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None, lane_type: LaneType = None) -> None:
         """
         A lane is encoded as an edge in the road network.

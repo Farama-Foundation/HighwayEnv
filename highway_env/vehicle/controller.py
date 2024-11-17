@@ -55,6 +55,10 @@ class ControlledVehicle(Vehicle):
     def edge_speed_deviation(self) -> float:
         return self._edge_speed_max - self._edge_speed_min
 
+    @property
+    def remaining_route_nodes(self) -> int:
+        return len(self.route)
+
     @classmethod
     def create_from(cls, vehicle: "ControlledVehicle") -> "ControlledVehicle":
         """
