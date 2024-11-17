@@ -51,18 +51,18 @@ class RoundaboutEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         rewards = self._rewards(action)
-        return sum(rewards.items())
+        return sum(rewards.values())
 
     def _rewards(self, action: int) -> dict[str, float]:
         return {
             "collision_reward":
                 self.vehicle.crashed * self.config["collision_weight"],
             "distance_from_goal":
-                self.vehicle.remaining_route_nodes() * self.config["distance_from_goal_weight"],
+                self.vehicle.remaining_route_nodes * self.config["distance_from_goal_weight"],
             "lane_change_reward":
                 action in [0, 2] * self.config["lane_change_weight"],
             "headway_evaluation":
-                self.vehicle.headway_evaluation() * self.config["headway_evaluation_weight"],
+                self.vehicle.headway_evaluation * self.config["headway_evaluation_weight"],
             "on_road_reward":
                 self.vehicle.on_road * self.config["on_road_weight"],
         }
