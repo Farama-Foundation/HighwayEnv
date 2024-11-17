@@ -48,6 +48,12 @@ class ControlledVehicle(Vehicle):
         self.target_lane_index = target_lane_index or self.lane_index
         self.target_speed = target_speed or self.speed
         self.route = route
+        self._edge_speed_min = 0
+        self._edge_speed_max = 0
+
+    @property
+    def edge_speed_deviation(self) -> float:
+        return self._edge_speed_max - self._edge_speed_min
 
     @classmethod
     def create_from(cls, vehicle: "ControlledVehicle") -> "ControlledVehicle":
@@ -69,6 +75,14 @@ class ControlledVehicle(Vehicle):
             route=vehicle.route,
         )
         return v
+
+    def update_edge_extremes(self, speed: float):
+        if self._edge_speed_min == 0 and self._edge_speed_max == 0:
+            self._edge_speed_min = self._edge_speed_max = speed
+        elif speed > self._edge_speed_max:
+            self._edge_speed_max = speed
+        elif speed < self._edge_speed_min:
+            self._edge_speed_min = speed
 
     def plan_route_to(self, destination: str) -> "ControlledVehicle":
         """
@@ -157,6 +171,9 @@ class ControlledVehicle(Vehicle):
                 position=self.position,
                 np_random=self.road.np_random,
             )
+            self._edge_speed_min = self._edge_speed_min = 0
+
+        self.update_edge_extremes(self.speed)
 
     def get_nodes_to_target(self) -> int:
         """

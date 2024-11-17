@@ -96,7 +96,7 @@ class RoadNetwork:
         :param route: the planned route, if any.
         :param position: the vehicle position.
         :param np_random: a source of randomness.
-        :return: the index of the next lane to be followed when current lane is finished.
+        :return: the index of the next lane to be followed when current lane is finished
         """
         _from, _to, _id = current_index
         next_to = next_id = None
