@@ -67,16 +67,43 @@ class Template(AbstractEnv):
     def _make_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
 
-        net = WeightedRoadnetwork()
+        net = RoadNetwork()
         nb = NetworkBuilder()
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
-        left_turn = False
-        right_turn = True
-        lane_width = AbstractLane.DEFAULT_WIDTH
         
-        # Place the road here
         
-        nb.build_roads(net)
+        
+        net.add_lane(
+            "ser", "R-1:s-in", StraightLane([2, 170], [2, 42.5], line_types=(s, c))
+        )
+        net.add_lane(
+            "R-1:s-out", "sxr", StraightLane([-2, 42.5], [-2, 170], line_types=(n, c))
+        )
+        
+        
+        nb.add_roundabout(
+            "R-1",
+            {
+                nb.CardinalDirection.NORTH : [-2, -42.5],
+                nb.CardinalDirection.SOUTH : [2, 42.5],
+                nb.CardinalDirection.EAST  : [42.5, -2],
+                nb.CardinalDirection.WEST  : [-42.5, 2],
+            }
+        )
+        
+        
+        net.add_lane(
+            "v",
+            "hj",
+            StraightLane([0,-24], [0,24],1, line_types=(s,c))
+        )
+        net.add_lane(
+            "alsjd",
+            "adjfa",
+            StraightLane([-24,0], [24,0], 1, line_types=(s,c))
+        )
+        
+        nb.build_paths(net)
         
         road = RegulatedRoad(
             network=net,
@@ -93,13 +120,16 @@ class Template(AbstractEnv):
         """
         road = self.road
 
-        ego_lane = self.road.network.get_lane(("FROM_ID", "TO_ID", 0)) # This is to place the car on a road between two points
+        ego_lane = self.road.network.get_lane(("ser", "R-1:s-in", 0)) # This is to place the car on a road between two points
         ego_vehicle = self.action_type.vehicle_class(
             self.road,
-            ego_lane.position(0, 0),            # Use the first value to place car down the road
+            ego_lane.position(120, 0),            # Use the first value to place car down the road
             speed=0,                            # Speed of car
-            heading=ego_lane.heading_at(-90),   # Use this to change the direction of the car. "0" is north
+            heading=ego_lane.heading_at(90),   # Use this to change the direction of the car. "0" is north
         )
+
+        ego_vehicle.plan_route_to("sxr")
+        
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 

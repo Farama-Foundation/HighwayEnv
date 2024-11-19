@@ -46,10 +46,10 @@ class Path:
         width : float, optional
             The width of a lane<br>
             (Default is ``AbstractLane.DEFAULT_WIDTH`` => ``4``)
-        weight: int, optional
+        weight : int, optional
             The weight of a lane<br>
             (Default is ``None``)
-        lane_type: LaneType, optional
+        lane_type : LaneType, optional
             Describing the type of the lane, e.g. a highway, roundabout, or intersection.<br>
             This can be used when training a model to give it the knowledge of where it is<br>
             driving which can be used to alter its behaviour, e.g. how fast it drives.<br>
@@ -88,10 +88,10 @@ class StraightPath(Path):
         line_types : tuple[LineType, LineType], optional
             The description of the line types in the road<br>
             (Default is ``None``)
-        weight: int, optional
+        weight : int, optional
             The weight of a lane<br>
             (Default is ``None``)
-        lane_type: LaneType, optional
+        lane_type : LaneType, optional
             Describing the type of the lane, e.g. a highway, roundabout, or intersection.<br>
             This can be used when training a model to give it the knowledge of where it is<br>
             driving which can be used to alter its behaviour, e.g. how fast it drives.<br>
@@ -243,13 +243,16 @@ class SinePath(Path):
         self,
         from_node_id: str,
         to_node_id: str,
+        amplitude: float,
+        pulsation: float,
+        phase: float,
         line_types: tuple[LineType, LineType],
+        weight: int = None,
+        lane_type: LaneType = None,
         priority: int = 0,
         speed_limit: float = 40,
         forbidden: bool = False,
-        width: float = AbstractLane.DEFAULT_WIDTH,
-        weight: int = None,
-        lane_type: LaneType = None
+        width: float = AbstractLane.DEFAULT_WIDTH
     ):
         """
         Parameters
@@ -258,19 +261,19 @@ class SinePath(Path):
             The id of the start point
         to_node_id : str
             The id of the end point
-        start_phase : float
-            The starting phase<br>
-            Note: ``0`` degrees is always upwards, the builder will handle when this is not the case
-        end_phase : float
-            The ending phase<br>
-            Note: ``0`` degrees is always upwards, the builder will handle when this is not the case
+        amplitude : float
+            The lane oscillation amplitude [m]
+        pulsation : float
+            The lane pulsation [rad/m]
+        phase : float
+            The lane initial phase [rad]
         line_types : tuple[LineType, LineType], optional
             The description of the line types in the road<br>
             (Default is ``None``)
-        weight: int, optional
+        weight : int, optional
             The weight of a lane<br>
             (Default is ``None``)
-        lane_type: LaneType, optional
+        lane_type : LaneType, optional
             Describing the type of the lane, e.g. a highway, roundabout, or intersection.<br>
             This can be used when training a model to give it the knowledge of where it is<br>
             driving which can be used to alter its behaviour, e.g. how fast it drives.<br>
@@ -300,6 +303,10 @@ class SinePath(Path):
             width,
             weight,
             lane_type)
+        
+        self.amplitude: float = amplitude
+        self.pulsation: float = pulsation
+        self.phase: float = phase
         
 
 class NetworkBuilder:
@@ -567,7 +574,6 @@ class NetworkBuilder:
             if key in paths:
                 self._path_description[key].extend(paths[key])
         
-    # @TODO Determine the weight of paths inside the intersection
     def add_intersection(
         self,
         intersection_name: str,
@@ -617,12 +623,13 @@ class NetworkBuilder:
             priority : PathPriority
                 The prioritized lane direction (e.g., North-South or East-West).
             
-            weight: int, optional
+            weight : int, optional
                 The weight of a lane<br>
                 (Default is ``None``)
 
-            lane_width : float
-                Width of each lane, with a default value from AbstractLane.
+            lane_width : float, optional
+                Width of each lane.<br>
+                (Default is ``AbstractLane.DEFAULT_WIDTH``)
 
         Mapping of an ingoing point to other ingoing points
         ----------------------
@@ -679,22 +686,24 @@ class NetworkBuilder:
         nodes: dict[str, Vector] = {}
         
         for direction_enum, vector in ingoing_roads.items():
-            direction = direction_enum.value[0].lower()
+            direction_char = direction_enum.value[0].lower()
             for road_type in ['in', 'out']:
-                node_name = f"{intersection_name}:{direction}-{road_type}"
+                node_name = f"{intersection_name}:{direction_char}-{road_type}"
 
                 if road_type == "in":
                     value = vector
                 else:  # road_type == "out"
                     x, y = vector
-                    if direction_enum   == self.CardinalDirection.NORTH:
-                        x += lane_width
-                    elif direction_enum == self.CardinalDirection.SOUTH:
-                        x -= lane_width
-                    elif direction_enum == self.CardinalDirection.EAST:
-                        y += lane_width
-                    elif direction_enum == self.CardinalDirection.WEST:
-                        y -= lane_width
+                    match direction_enum:
+                        case self.CardinalDirection.NORTH:
+                            x += lane_width
+                        case self.CardinalDirection.SOUTH:
+                            x -= lane_width
+                        case self.CardinalDirection.EAST:
+                            y += lane_width
+                        case self.CardinalDirection.WEST:
+                            y -= lane_width
+                    
                     value = [x, y]
                 nodes[node_name] = value
             
@@ -859,7 +868,46 @@ class NetworkBuilder:
         # Add the constructed roads to the network
         self.add_multiple_paths(road_desc)
         
-    def add_roundabout(self):
+        
+    def _get_point(self, radius: float, degree: float, center: Vector) -> Vector:
+        return [center[0] + radius * math.cos(np.deg2rad(degree)), center[1] + radius * math.sin(np.deg2rad(degree))]
+
+    def _find_roundabout_center(self, entry_lanes: dict[CardinalDirection, Vector]) -> Vector:
+        x: float = None
+        y: float = None
+    
+        if self.CardinalDirection.NORTH in entry_lanes:
+            x_north = entry_lanes[self.CardinalDirection.NORTH][0]
+            x = x_north + 2
+
+        if self.CardinalDirection.SOUTH in entry_lanes:
+            x_south = entry_lanes[self.CardinalDirection.SOUTH][0]
+            if x is None:
+                x = x_south - 2
+            else:
+                assert x_south == x + 2, "Inconsistent x-coordinate for 'south' entry."
+                
+        
+        if self.CardinalDirection.EAST in entry_lanes:
+            y_east = entry_lanes[self.CardinalDirection.EAST][1]
+            y = y_east + 2
+        
+        if self.CardinalDirection.WEST in entry_lanes:
+            y_west = entry_lanes[self.CardinalDirection.WEST][1]
+            if y is None:
+                y = y_west - 2
+            else:
+                assert y_west == y + 2, "Inconsistent y-coordinate for 'west entry."
+                
+        return [x, y]
+    
+    def add_roundabout(
+        self,
+        roundabout_name: str,
+        ingoing_roads: dict[CardinalDirection, Vector],
+        weight: float = None,
+        lane_width: float = AbstractLane.DEFAULT_WIDTH
+    ):
         """
         Naming convention
         -----------------
@@ -882,6 +930,7 @@ class NetworkBuilder:
                 still store in its dictionary of nodes and paths the ``:lane_index``<br>
                 you provide - thus it is <b><i>only</i></b> when building the network it removes the lane index
             
+            
         Description
         -----------
             Adds an intersection to the road network, generating and configuring<br>
@@ -889,61 +938,44 @@ class NetworkBuilder:
             priority, and lane width. This method establishes both straight and<br>
             circular paths between directions.
 
+
         Parameters
         ----------
-            intersection_name: str
+            roundabout_name : str
                 A unique identifier for the intersection.
                 
-            ingoing_roads: dict[CardinalDirection, Vector]
+            ingoing_roads : dict[CardinalDirection, Vector]
                 Maps directions (North, South, East, West) to their respective<br>
                 vectors, which define the positions of ingoing roads.
             
-            priority: PathPriority
-                The prioritized lane direction (e.g., North-South or East-West).
+            weight : int, optional
+                The weight of a lane<br>
+                (Default is ``None``)
             
-            lane_width: float
-                Width of each lane, with a default value from AbstractLane.
-
-        Mapping of an ingoing point to other ingoing points
-        ----------------------
-        This asumes that you <b>do not</b> modify the lane width.<br>
-        
-        <b>North-in</b> -> <b>south-in</b> mapping: ``[+4, +12]`` <br>
-        <b>North-in</b> -> <b>West-in</b> mapping: ``[-4, +8]`` <br>
-        <b>North-in</b> -> <b>East-in</b> mapping: ``[+8, +4]`` <br><br>
-
-        <b>South-in</b> -> <b>North-in</b> mapping: ``[-4, -12]`` <br>
-        <b>South-in</b> -> <b>West-in</b> mapping: ``[-8, -4]`` <br>
-        <b>South-in</b> -> <b>East-in</b> mapping: ``[+4, -8]`` <br><br>
-        
-        <b>West-in</b> -> <b>East-in</b> mapping: ``[+12, -4]`` <br>
-        <b>West-in</b> -> <b>North-in</b> mapping: ``[+4, -8]`` <br>
-        <b>West-in</b> -> <b>south-in</b> mapping: ``[+8, +4]`` <br><br>
-        
-        <b>East-in</b> -> <b>West-in</b> mapping: ``[-12, +4]`` <br>
-        <b>East-in</b> -> <b>North-in</b> mapping: ``[-8, -4]`` <br>
-        <b>East-in</b> -> <b>south-in</b> mapping: ``[-4 , +8]`` <br>
+            lane_width : float, optional
+                Width of each lane.<br>
+                (Default is ``AbstractLane.DEFAULT_WIDTH``)
+                
 
         Example
         -------
         ```python
         nb = NetworkBuilder()
-        nb.add_intersection(
-            "I-2",
+        nb.add_roundabout(
+            "R-1",
             {
                 net_builder.CardinalDirection.NORTH : [64, -92],
                 net_builder.CardinalDirection.SOUTH : [68, -80],
                 net_builder.CardinalDirection.WEST  : [60, -84],
-            },
-            net_builder.PathPriority.NORTH_SOUTH
+            }
         )
         # This will generate the following nodes:
-        # "I-2:n-in"
-        # "I-2:s-in"
-        # "I-2:w-in"
-        # "I-2:n-out"
-        # "I-2:s-out"
-        # "I-2:w-out"
+        # "R-1:n-in"
+        # "R-1:s-in"
+        # "R-1:w-in"
+        # "R-1:n-out"
+        # "R-1:s-out"
+        # "R-1:w-out"
         ```
         
         Assumptions
@@ -952,8 +984,169 @@ class NetworkBuilder:
             East, and West. This method manages the road layout to handle<br>
             straight and turning paths based on priorities and intersection geometry.
         """
-        print("Not implemented")
         
+        if len(ingoing_roads) < 3:
+            print ("Error when building the roundabout. Must have 3 or more entries!")
+            return ()
+        
+        n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
+        left_turn = False
+        nodes: dict[str, Vector] = {}
+        
+        
+        # Adding the in|out nodes
+        for direction_enum, vector in ingoing_roads.items():
+            direction_char = direction_enum.value[0].lower()
+            for road_type in ['in', 'out']:
+                node_name = f"{roundabout_name}:{direction_char}-{road_type}"
+
+                if road_type == "in":
+                    value = vector
+                else:  # road_type == "out"
+                    x, y = vector
+                    match direction_enum:
+                        case self.CardinalDirection.NORTH:
+                            x += lane_width
+                        case self.CardinalDirection.SOUTH:
+                            x -= lane_width
+                        case self.CardinalDirection.EAST:
+                            y += lane_width
+                        case self.CardinalDirection.WEST:
+                            y -= lane_width
+
+                    value = [x, y]
+                nodes[node_name] = value
+            
+        self.add_multiple_nodes(nodes)
+        
+        right_turn: bool = True
+        enter_exit_radius: float = 5
+        direction_to_phase: tuple[self.CardinalDirection, float] = {
+            self.CardinalDirection.NORTH: 180,
+            self.CardinalDirection.EAST : 270,
+            self.CardinalDirection.SOUTH: 0,
+            self.CardinalDirection.WEST : 90
+        }
+        
+        # Adding entry|exit lanes (in|out lanes)
+        for direction_enum, vector in ingoing_roads.items():
+            direction_char: str = direction_enum.value[0].lower()
+            
+            from_node_entry: str = f"{roundabout_name}:{direction_char}-in"
+            to_node_entry: str = f"{roundabout_name}:{direction_char}-entry:1"
+            from_node_exit: str = f"{roundabout_name}:{direction_char}-exit:1"
+            to_node_exit: str = f"{roundabout_name}:{direction_char}-out"
+
+            entry_node: Vector = self._nodes[from_node_entry]
+            exit_node: Vector = self._nodes[to_node_exit]
+            
+            x_entry, y_entry = entry_node
+            x_exit, y_exit = exit_node
+            
+            match direction_enum:
+                case self.CardinalDirection.NORTH:
+                    x_entry -= enter_exit_radius
+                    y_entry += enter_exit_radius
+
+                    x_exit  += enter_exit_radius
+                    y_exit  += enter_exit_radius
+
+                case self.CardinalDirection.SOUTH:
+                    x_entry += enter_exit_radius
+                    y_entry -= enter_exit_radius
+
+                    x_exit  -= enter_exit_radius
+                    y_exit  -= enter_exit_radius
+
+                case self.CardinalDirection.EAST:
+                    x_entry -= enter_exit_radius
+                    y_entry -= enter_exit_radius
+
+                    x_exit  -= enter_exit_radius
+                    y_exit  += enter_exit_radius
+
+                case self.CardinalDirection.WEST:
+                    x_entry += enter_exit_radius
+                    y_entry += enter_exit_radius
+
+                    x_exit  += enter_exit_radius
+                    y_exit  -= enter_exit_radius
+                    
+            self.add_multiple_nodes({
+                to_node_entry  : [x_entry, y_entry],
+                from_node_exit : [x_exit, y_exit],
+            })
+            
+            entry_path = CircularPath(
+                from_node_entry,
+                to_node_entry,
+                direction_to_phase[direction_enum],
+                enter_exit_radius,
+                right_turn,
+                (c,c),
+                weight,
+                LaneType.ROUNDABOUT
+            )
+            
+            exit_path = CircularPath(
+                from_node_exit,
+                to_node_exit,
+                direction_to_phase[direction_enum] + 90,
+                enter_exit_radius,
+                right_turn,
+                (c,c),
+                weight,
+                LaneType.ROUNDABOUT
+            )
+                    
+            self.add_multiple_paths({
+                self.PathType.CIRCULAR: [
+                    entry_path,
+                    exit_path
+                ]
+            })
+        
+
+        # Calculate the center of the roundabout
+        center: Vector = self._find_roundabout_center(ingoing_roads)
+        
+
+        # Calculating the radius of the circle
+        first_point: Vector = next(iter(ingoing_roads.values()))
+        radius = math.sqrt((first_point[0] - center[0])**2 + (first_point[1] - center[1])**2)
+        print(f"Radius: {radius}")
+        radius -= 4 # approximate length of the entry/exit lanes
+
+
+        # Adding the circle of the roundabout
+        self.add_multiple_nodes({
+            f"{roundabout_name}:s-exit"  : self._get_point(radius,  114, center),
+            f"{roundabout_name}:s-entry" : self._get_point(radius,   66, center),
+            f"{roundabout_name}:e-exit"  : self._get_point(radius,   24, center),
+            f"{roundabout_name}:e-entry" : self._get_point(radius,  -24, center),
+            f"{roundabout_name}:n-exit"  : self._get_point(radius,  -66, center),
+            f"{roundabout_name}:n-entry" : self._get_point(radius, -114, center),
+            f"{roundabout_name}:w-exit"  : self._get_point(radius, -156, center),
+            f"{roundabout_name}:w-entry" : self._get_point(radius, -204, center),
+        })
+        
+        
+        self.add_multiple_paths({
+            self.PathType.CIRCULAR : [
+                CircularPath(f"{roundabout_name}:s-exit",  f"{roundabout_name}:s-entry",  114, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
+                CircularPath(f"{roundabout_name}:s-entry", f"{roundabout_name}:e-exit",    66, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
+                CircularPath(f"{roundabout_name}:e-exit",  f"{roundabout_name}:e-entry",   24, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
+                CircularPath(f"{roundabout_name}:e-entry", f"{roundabout_name}:n-exit",   -24, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
+                CircularPath(f"{roundabout_name}:n-exit",  f"{roundabout_name}:n-entry",  -66, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
+                CircularPath(f"{roundabout_name}:n-entry", f"{roundabout_name}:w-exit",  -114, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
+                CircularPath(f"{roundabout_name}:w-exit",  f"{roundabout_name}:w-entry", -156, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
+                CircularPath(f"{roundabout_name}:w-entry", f"{roundabout_name}:s-exit",  -204, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
+            ]
+        })
+
+
+
+
     def _build_straight_path(self, path: StraightPath) -> tuple[str, str, StraightLane, int, LaneType]:
         """
         Description
@@ -1060,10 +1253,27 @@ class NetworkBuilder:
             Returns the needed information for the ``RoadNetwork.add_lane(...)`` method
         """
         
+        from_node = self._nodes[path.from_node_id]
+        to_node = self._nodes[path.to_node_id]
+        
+        from_node = [from_node[0], from_node[1]]
+        to_node = [to_node[0], to_node[1]]
+        
         return (
             path.from_node_id,
             path.to_node_id,
-            SineLane(),
+            SineLane(
+                from_node,
+                to_node,
+                path.amplitude,
+                path.pulsation,
+                path.phase,
+                path.width,
+                path.line_types,
+                path.forbidden,
+                path.speed_limit,
+                path.priority
+            ),
             path.weight,
             path.lane_type
         )
