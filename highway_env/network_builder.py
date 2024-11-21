@@ -635,7 +635,7 @@ class NetworkBuilder:
         ----------------------
         This asumes that you <b>do not</b> modify the lane width.<br>
         
-        <b>North-in</b> -> <b>south-in</b> mapping: ``[+4, +12]`` <br>
+        <b>North-in</b> -> <b>South-in</b> mapping: ``[+4, +12]`` <br>
         <b>North-in</b> -> <b>West-in</b> mapping: ``[-4, +8]`` <br>
         <b>North-in</b> -> <b>East-in</b> mapping: ``[+8, +4]`` <br><br>
 
@@ -645,11 +645,11 @@ class NetworkBuilder:
         
         <b>West-in</b> -> <b>East-in</b> mapping: ``[+12, -4]`` <br>
         <b>West-in</b> -> <b>North-in</b> mapping: ``[+4, -8]`` <br>
-        <b>West-in</b> -> <b>south-in</b> mapping: ``[+8, +4]`` <br><br>
+        <b>West-in</b> -> <b>South-in</b> mapping: ``[+8, +4]`` <br><br>
         
         <b>East-in</b> -> <b>West-in</b> mapping: ``[-12, +4]`` <br>
         <b>East-in</b> -> <b>North-in</b> mapping: ``[-8, -4]`` <br>
-        <b>East-in</b> -> <b>south-in</b> mapping: ``[-4 , +8]`` <br>
+        <b>East-in</b> -> <b>South-in</b> mapping: ``[-4 , +8]`` <br>
 
         Example
         -------

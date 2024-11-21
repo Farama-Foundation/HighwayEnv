@@ -1,4 +1,5 @@
 from highway_env.envs.template_env import Template
+from highway_env.envs.CarpetCity import CarpetCity
 from highway_env.envs.homemade_city_env import HomemadeCity
 from highway_env.envs.homemade_racetrack_env import HomemadeRacetrack
 from highway_env.envs.homemade_highway_env import HomemadeHighway
@@ -25,7 +26,8 @@ from highway_env.envs.u_turn_env import UTurnEnv
 
 
 __all__ = [
-    "Template"
+    "CarpetCity",
+    "Template",
     "WeightedRoundaboutEnv",
     "HomemadeCity",
     "HomemadeHighway",

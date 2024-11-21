@@ -34,6 +34,12 @@ def _register_highway_envs():
         entry_point="highway_env.envs:WeightedRoundaboutEnv",
     )
     
+    # Carpet city - by Tosuma
+    register(
+        id="carpet-city",
+        entry_point="highway_env.envs:CarpetCity"
+    )
+    
     # Homemade highway refactor - by Tosuma
     register(
         id="homemade-highway-refactor",
