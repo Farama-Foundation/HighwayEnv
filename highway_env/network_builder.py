@@ -355,6 +355,34 @@ class NetworkBuilder:
             self.PathType.SINE     : []
         }
     
+    def get_weight(self, distance: float, speed: float) -> float:
+        """
+        Description
+        -----------
+            Calculate the weight as the time (in seconds) it takes to travel a<br>
+            given distance at a given speed.
+        
+        Parameters
+        ----------
+        distance : float
+            Distance in meters.
+        speed: float
+            The speed in kilometers per hour.
+            
+        Return
+        ------
+        Time in seconds : float
+        """
+        
+        if speed <= 0:
+            raise ValueError("Speed must be greater than '0'.")
+
+        speed_m_per_s = speed * 1000 / 3600
+        
+        time_in_seconds = distance / speed_m_per_s
+        
+        return time_in_seconds
+
     def add_node(self, id: str, coordinate: Vector):
         """
         Naming convention
@@ -868,7 +896,6 @@ class NetworkBuilder:
         # Add the constructed roads to the network
         self.add_multiple_paths(road_desc)
         
-        
     def _get_point(self, radius: float, degree: float, center: Vector) -> Vector:
         return [center[0] + radius * math.cos(np.deg2rad(degree)), center[1] + radius * math.sin(np.deg2rad(degree))]
 
@@ -1143,9 +1170,6 @@ class NetworkBuilder:
                 CircularPath(f"{roundabout_name}:w-entry", f"{roundabout_name}:s-exit",  -204, radius, left_turn, (c,c), weight, LaneType.ROUNDABOUT, 1),
             ]
         })
-
-
-
 
     def _build_straight_path(self, path: StraightPath) -> tuple[str, str, StraightLane, int, LaneType]:
         """
