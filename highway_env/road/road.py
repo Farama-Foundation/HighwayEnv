@@ -500,14 +500,14 @@ class WeightedRoadnetwork(RoadNetwork):
                     predecessors[vertex].appendleft(pies.get(vertex))
 
         # Determining the path
-        # TODO: remove debug prints
-        print(f"src: {source}, goal: {goal}\n predecessors: {predecessors}")
         path = deque([goal])
         while path[0] is not source:
             try:
                 node = path[0]
                 path.appendleft(predecessors[node].pop())
             except IndexError:
+                # TODO: remove debug prints
+                print(f"src: {source}, goal: {goal}\n predecessors: {predecessors}")
                 raise PathException(f"could not find path {source} ~> {goal}, attempted to pop from empty list. node: {node}, predecessors: {predecessors}")
 
         return list(path)

@@ -54,9 +54,13 @@ class ControlledVehicle(Vehicle):
         self._edge_speed_max = 0
 
     @property
-    def edge_speed_deviation(self) -> float:
+    def speed_deviation_reward(self) -> float:
         """Returns the speed deviation on the current edge."""
-        return self._edge_speed_max - self._edge_speed_min
+        deviation = self._edge_speed_max - self._edge_speed_min
+        if deviation < 5:
+            return np.emath.logn(10, deviation)
+        else:
+            return np.emath.logn(10, deviation) * -1
 
     @property
     def remaining_route_nodes(self) -> int:
