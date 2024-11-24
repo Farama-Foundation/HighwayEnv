@@ -356,7 +356,6 @@ class RoundaboutEnv(AbstractEnv):
         #exits = np.array([("nxs", "nxr"), ("sxs", "sxr"), ("wxs", "wxr")])
         exits = np.array([("nxs", "nxr"), ("wxs", "wxr")])
         road_exit = self.np_random.choice(exits)
-        # TODO: remove debug
         print(f"road_exit {road_exit}")
         return tuple((road_exit[0], road_exit[1], 0))
 
@@ -418,9 +417,6 @@ class RoundaboutEnv(AbstractEnv):
             # Ensuring that no more than 8 vehicles are spawned pr. lane
             entry = self._get_random_edge_from(entries)
             while spawns[entry] > max_vehicles_pr_lane:
-                print(entry)
-                print(entries)
-                print(spawns)
                 entries.remove(entry)
                 entry = self._get_random_edge_from(entries)
 
