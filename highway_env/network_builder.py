@@ -1318,6 +1318,8 @@ class NetworkBuilder:
         net: list[tuple[str, str, AbstractLane]] = []
 
         # Mapping path types to their respective build methods
+        # Can/should be moved to the classes - i.e. the class should handle the building
+        
         build_methods = {
             self.PathType.STRAIGHT: self._build_straight_path,
             self.PathType.CIRCULAR: self._build_circular_path,
