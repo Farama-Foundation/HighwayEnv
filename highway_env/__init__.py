@@ -30,8 +30,25 @@ def _register_highway_envs():
         entry_point="highway_env.envs:Stovring",
     )
     register(
+        id="template",
+        entry_point="highway_env.envs:Template"
+    )
+
+    register(
         id="weighted-roundabout-v0",
         entry_point="highway_env.envs:WeightedRoundaboutEnv",
+    )
+    
+    # Carpet city - by Tosuma
+    register(
+        id="carpet-city",
+        entry_point="highway_env.envs:CarpetCity"
+    )
+    
+    # Homemade highway refactor - by Tosuma
+    register(
+        id="homemade-highway-refactor",
+        entry_point="highway_env.envs:Template"
     )
 
     # Homemade city - by Tosuma

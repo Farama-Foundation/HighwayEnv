@@ -1,3 +1,9 @@
+from highway_env.envs.template_env import Template
+from highway_env.envs.CarpetCity import CarpetCity
+from highway_env.envs.homemade_city_env import HomemadeCity
+from highway_env.envs.homemade_racetrack_env import HomemadeRacetrack
+from highway_env.envs.homemade_highway_env import HomemadeHighway
+from highway_env.envs.homemade_highway_refactor_env import HomemadeHighwayRefactor
 from highway_env.envs.exit_env import ExitEnv
 from highway_env.envs.highway_env import HighwayEnv, HighwayEnvFast
 from highway_env.envs.homemade_city_env import HomemadeCity
@@ -25,9 +31,12 @@ from highway_env.envs.weighted_roundabout_env import WeightedRoundaboutEnv
 
 __all__ = [
     "Stovring",
+    "CarpetCity",
+    "Template",
     "WeightedRoundaboutEnv",
     "HomemadeCity",
     "HomemadeHighway",
+    "HomemadeHighwayRefactor",
     "HomemadeRacetrack",
     "ExitEnv",
     "HighwayEnv",
