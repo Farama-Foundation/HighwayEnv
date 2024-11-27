@@ -734,7 +734,7 @@ class NetworkBuilder:
                     
                     value = [x, y]
                 nodes[node_name] = value
-            
+                
         self.add_multiple_nodes(nodes)
         
         
@@ -1141,7 +1141,6 @@ class NetworkBuilder:
         # Calculating the radius of the circle
         first_point: Vector = next(iter(ingoing_roads.values()))
         radius = math.sqrt((first_point[0] - center[0])**2 + (first_point[1] - center[1])**2)
-        print(f"Radius: {radius}")
         radius -= 4 # approximate length of the entry/exit lanes
 
 
@@ -1318,7 +1317,6 @@ class NetworkBuilder:
         net: list[tuple[str, str, AbstractLane]] = []
 
         # Mapping path types to their respective build methods
-        # Can/should be moved to the classes - i.e. the class should handle the building
         
         build_methods = {
             self.PathType.STRAIGHT: self._build_straight_path,

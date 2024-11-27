@@ -24,7 +24,7 @@ def _register_highway_envs():
 
     from highway_env.envs.common.abstract import MultiAgentWrapper
 
-    # stovring enviroment
+    # Stovring - by Tosuma
     register(
         id="Stovring",
         entry_point="highway_env.envs:Stovring",
