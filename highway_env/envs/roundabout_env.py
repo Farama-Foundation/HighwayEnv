@@ -352,11 +352,8 @@ class RoundaboutEnv(AbstractEnv):
         """
         Gives a random exit as a triple (u, v, lane_idx), where (u, v) is an edge.
         """
-        #exits = np.array([("nxs", "nxr"), ("sxs", "sxr"), ("exs", "exr"), ("wxs", "wxr")])
-        #exits = np.array([("nxs", "nxr"), ("sxs", "sxr"), ("wxs", "wxr")])
-        exits = np.array([("nxs", "nxr"), ("wxs", "wxr")])
+        exits = np.array([("nxs", "nxr"), ("sxs", "sxr"), ("exs", "exr"), ("wxs", "wxr")])
         road_exit = self.np_random.choice(exits)
-        print(f"road_exit {road_exit}")
         return tuple((road_exit[0], road_exit[1], 0))
 
     def _get_random_roundabout_lane_index(self):
