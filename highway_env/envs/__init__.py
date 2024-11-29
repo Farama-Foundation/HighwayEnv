@@ -1,4 +1,5 @@
 from highway_env.envs.template_env import Template
+from highway_env.envs.weighted_highway_env import WeightedHighwayEnv
 from highway_env.envs.stovring_env import Stovring
 from highway_env.envs.CarpetCity import CarpetCity
 from highway_env.envs.homemade_city_env import HomemadeCity
@@ -31,6 +32,7 @@ from highway_env.envs.weighted_roundabout_env import WeightedRoundaboutEnv
 
 __all__ = [
     "Stovring",
+    "WeightedHighwayEnv"
     "CarpetCity",
     "Template",
     "WeightedRoundaboutEnv",
