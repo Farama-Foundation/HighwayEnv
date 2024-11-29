@@ -15,7 +15,7 @@ class WeightedHighwayEnv(HighwayEnv):
         """Create a road composed of straight adjacent lanes."""
         self.road = Road(
             network=WeightedRoadnetwork.straight_road_network(
-                self.config["lanes_count"], speed_limit=30,
+                self.config["lanes_count"], speed_limit=30, weight= 1,
             ),
             
             np_random=self.np_random,

@@ -1,5 +1,4 @@
 from highway_env.envs.template_env import Template
-from highway_env.envs.weighted_highway_env import WeightedHighwayEnv
 from highway_env.envs.stovring_env import Stovring
 from highway_env.envs.CarpetCity import CarpetCity
 from highway_env.envs.homemade_city_env import HomemadeCity
@@ -8,6 +7,7 @@ from highway_env.envs.homemade_highway_env import HomemadeHighway
 from highway_env.envs.homemade_highway_refactor_env import HomemadeHighwayRefactor
 from highway_env.envs.exit_env import ExitEnv
 from highway_env.envs.highway_env import HighwayEnv, HighwayEnvFast
+from highway_env.envs.weighted_highway_env import WeightedHighwayEnv
 from highway_env.envs.homemade_city_env import HomemadeCity
 from highway_env.envs.homemade_highway_env import HomemadeHighway
 from highway_env.envs.homemade_racetrack_env import HomemadeRacetrack

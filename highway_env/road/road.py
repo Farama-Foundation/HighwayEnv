@@ -327,6 +327,8 @@ class RoadNetwork:
                     origin, end, line_types=line_types, speed_limit=speed_limit
                 ),
                 weight= weight,
+                lane_type= LaneType.HIGHWAY
+                
                 
             )
         return net
