@@ -96,6 +96,7 @@ class CarpetCity(AbstractEnv):
                     np.deg2rad(alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -110,6 +111,7 @@ class CarpetCity(AbstractEnv):
                     np.deg2rad(-alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -124,6 +126,7 @@ class CarpetCity(AbstractEnv):
                     np.deg2rad(-90 + alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -138,6 +141,7 @@ class CarpetCity(AbstractEnv):
                     np.deg2rad(-90 - alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -152,6 +156,7 @@ class CarpetCity(AbstractEnv):
                     np.deg2rad(-180 + alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -166,6 +171,7 @@ class CarpetCity(AbstractEnv):
                     np.deg2rad(-180 - alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -180,6 +186,7 @@ class CarpetCity(AbstractEnv):
                     np.deg2rad(90 + alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -194,6 +201,7 @@ class CarpetCity(AbstractEnv):
                     np.deg2rad(90 - alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -217,7 +225,8 @@ class CarpetCity(AbstractEnv):
                 [2, 150],
                 [2, dev / 2],
                 line_types=(s, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(107.5, 50),
             LaneType.CITY_ROAD
@@ -233,6 +242,7 @@ class CarpetCity(AbstractEnv):
                 w,
                 -np.pi / 2,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 50),
             LaneType.ROUNDABOUT
@@ -248,6 +258,7 @@ class CarpetCity(AbstractEnv):
                 w,
                 -np.pi / 2 + w * delta_en,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 50),
             LaneType.ROUNDABOUT
@@ -260,7 +271,8 @@ class CarpetCity(AbstractEnv):
                 [-2, dev / 2],
                 [-2, 150],
                 line_types=(n, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(107.5, 50),
             LaneType.CITY_ROAD
@@ -274,7 +286,8 @@ class CarpetCity(AbstractEnv):
                 [300, -2],
                 [dev / 2, -2],
                 line_types=(s, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(107.5, 50),
             LaneType.CITY_ROAD
@@ -290,6 +303,7 @@ class CarpetCity(AbstractEnv):
                 w,
                 -np.pi / 2,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 50),
             LaneType.ROUNDABOUT
@@ -305,6 +319,7 @@ class CarpetCity(AbstractEnv):
                 w,
                 -np.pi / 2 + w * delta_en,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 50),
             LaneType.ROUNDABOUT
@@ -317,7 +332,8 @@ class CarpetCity(AbstractEnv):
                 [dev / 2, 2],
                 [300, 2],
                 line_types=(n, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(107.5, 50),
             LaneType.CITY_ROAD
@@ -331,7 +347,8 @@ class CarpetCity(AbstractEnv):
                 [-2, -200],
                 [-2, -dev / 2],
                 line_types=(s, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(107.5, 50),
             LaneType.CITY_ROAD
@@ -347,6 +364,7 @@ class CarpetCity(AbstractEnv):
                 w,
                 -np.pi / 2,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 50),
             LaneType.ROUNDABOUT
@@ -362,6 +380,7 @@ class CarpetCity(AbstractEnv):
                 w,
                 -np.pi / 2 + w * delta_en,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 50),
             LaneType.ROUNDABOUT
@@ -374,7 +393,8 @@ class CarpetCity(AbstractEnv):
                 [2, -dev / 2],
                 [2, -200],
                 line_types=(n, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(107.5, 50),
             LaneType.CITY_ROAD
@@ -388,7 +408,8 @@ class CarpetCity(AbstractEnv):
                 [-116, 2],
                 [-dev / 2, 2],
                 line_types=(s, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(107.5, 50),
             LaneType.CITY_ROAD
@@ -404,6 +425,7 @@ class CarpetCity(AbstractEnv):
                 w,
                 -np.pi / 2,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 50),
             LaneType.ROUNDABOUT
@@ -419,6 +441,7 @@ class CarpetCity(AbstractEnv):
                 w,
                 -np.pi / 2 + w * delta_en,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 50),
             LaneType.ROUNDABOUT
@@ -431,7 +454,8 @@ class CarpetCity(AbstractEnv):
                 [-dev / 2, -2],
                 [-116, -2],
                 line_types=(n, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(107.5, 50),
             LaneType.CITY_ROAD

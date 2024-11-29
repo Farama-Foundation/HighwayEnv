@@ -96,6 +96,7 @@ class Stovring(AbstractEnv):
                     np.deg2rad(alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -110,6 +111,7 @@ class Stovring(AbstractEnv):
                     np.deg2rad(-alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -124,6 +126,7 @@ class Stovring(AbstractEnv):
                     np.deg2rad(-90 + alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -138,6 +141,7 @@ class Stovring(AbstractEnv):
                     np.deg2rad(-90 - alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -152,6 +156,7 @@ class Stovring(AbstractEnv):
                     np.deg2rad(-180 + alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -166,6 +171,7 @@ class Stovring(AbstractEnv):
                     np.deg2rad(-180 - alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -180,6 +186,7 @@ class Stovring(AbstractEnv):
                     np.deg2rad(90 + alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -194,6 +201,7 @@ class Stovring(AbstractEnv):
                     np.deg2rad(90 - alpha),
                     clockwise=False,
                     line_types=line[lane],
+                    speed_limit=40,
                 ),
                 nb.get_weight(15.7, 50),
                 LaneType.ROUNDABOUT
@@ -217,7 +225,8 @@ class Stovring(AbstractEnv):
                 [0, 3406],
                 [dev / 2 + center[0], -2 + center[1]],
                 line_types=(s, c),
-                priority=3
+                priority=3,
+                    speed_limit=40,
             ),
             nb.get_weight(164, 80),
             LaneType.ROAD
@@ -232,6 +241,7 @@ class Stovring(AbstractEnv):
                 w,
                 -np.pi / 2,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 80),
             LaneType.ROUNDABOUT
@@ -247,6 +257,7 @@ class Stovring(AbstractEnv):
                 w,
                 -np.pi / 2 + w * delta_en,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 80),
             LaneType.ROUNDABOUT
@@ -258,7 +269,8 @@ class Stovring(AbstractEnv):
                 [dev / 2 + center[0], 2 + center[1]],
                 [0, 3410],
                 line_types=(n, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(164, 80),
             LaneType.ROAD
@@ -274,7 +286,8 @@ class Stovring(AbstractEnv):
                 [-208, 2217],
                 [-2 + center[0], -dev / 2 + center[1]],
                 line_types=(s, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(1149, 80),
             LaneType.ROAD
@@ -290,6 +303,7 @@ class Stovring(AbstractEnv):
                 w,
                 -np.pi / 2,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 80),
             LaneType.ROUNDABOUT
@@ -305,6 +319,7 @@ class Stovring(AbstractEnv):
                 w,
                 -np.pi / 2 + w * delta_en,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 80),
             LaneType.ROUNDABOUT
@@ -316,7 +331,8 @@ class Stovring(AbstractEnv):
                 [2 + center[0], -dev / 2 + center[1]],
                 [-204, 2217],
                 line_types=(n, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(1149, 80),
             LaneType.ROAD
@@ -331,7 +347,8 @@ class Stovring(AbstractEnv):
                 [-300, 3410],
                 [-dev / 2 + center[0], 2 + center[1]],
                 line_types=(s, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(88, 80),
             LaneType.ROAD
@@ -347,6 +364,7 @@ class Stovring(AbstractEnv):
                 w,
                 -np.pi / 2,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 80),
             LaneType.ROUNDABOUT
@@ -362,6 +380,7 @@ class Stovring(AbstractEnv):
                 w,
                 -np.pi / 2 + w * delta_en,
                 line_types=(c, c),
+                speed_limit=40,
             ),
             nb.get_weight(18, 80),
             LaneType.ROUNDABOUT
@@ -373,7 +392,8 @@ class Stovring(AbstractEnv):
                 [-dev / 2 + center[0], -2 + center[1]],
                 [-300, 3406],
                 line_types=(n, c),
-                priority=3
+                priority=3,
+                speed_limit=40,
             ),
             nb.get_weight(88, 80),
             LaneType.ROAD
