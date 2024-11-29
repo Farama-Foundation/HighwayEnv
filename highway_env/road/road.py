@@ -323,11 +323,11 @@ class RoadNetwork:
             ]
             net.add_lane(
                 *nodes_str,
-                LaneType.HIGHWAY,
                 StraightLane(
                     origin, end, line_types=line_types, speed_limit=speed_limit
                 ),
                 weight= weight,
+                lane_type= 'highway',
                 
                 
                 
