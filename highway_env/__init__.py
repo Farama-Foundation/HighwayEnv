@@ -25,6 +25,11 @@ def _register_highway_envs():
     from highway_env.envs.common.abstract import MultiAgentWrapper
 
     register(
+        id="weighted-intersection-v0",
+        entry_point="highway_env.envs:WeightedIntersectionEnv",
+    )
+
+    register(
         id="weighted-roundabout-v0",
         entry_point="highway_env.envs:WeightedRoundaboutEnv",
     )
