@@ -2013,15 +2013,15 @@ class Stovring(AbstractEnv):
         
         nb.add_multiple_paths({
             nb.PathType.STRAIGHT : [
-                StraightPath("T-30:n-out", "H-1:s-in:1", (n,c), nb.get_weight(10, 130), LaneType.HIGHWAY_ENTRY),
-                StraightPath("T-30:n-out", "H-1:s-in:2", (c,s), nb.get_weight(10, 130), LaneType.HIGHWAY_ENTRY),
-                StraightPath("H-1:s-out:1", "T-30:n-in", (n,c), nb.get_weight(10, 130), LaneType.HIGHWAY_EXIT),
-                StraightPath("H-1:s-out:2", "T-30:n-in", (c,s), nb.get_weight(10, 130), LaneType.HIGHWAY_EXIT),
+                StraightPath("T-30:n-out", "H-1:s-in:1", (n,c), nb.get_weight(10, 130), LaneType.HIGHWAY),
+                StraightPath("T-30:n-out", "H-1:s-in:2", (c,s), nb.get_weight(10, 130), LaneType.HIGHWAY),
+                StraightPath("H-1:s-out:1", "T-30:n-in", (n,c), nb.get_weight(10, 130), LaneType.HIGHWAY),
+                StraightPath("H-1:s-out:2", "T-30:n-in", (c,s), nb.get_weight(10, 130), LaneType.HIGHWAY),
                 
-                StraightPath("T-29:s-out", "H-1:n-in:1", (n,c), nb.get_weight(10, 130), LaneType.HIGHWAY_ENTRY),
-                StraightPath("T-29:s-out", "H-1:n-in:2", (c,s), nb.get_weight(10, 130), LaneType.HIGHWAY_ENTRY),
-                StraightPath("H-1:n-out:1", "T-29:s-in", (n,c), nb.get_weight(10, 130), LaneType.HIGHWAY_EXIT),
-                StraightPath("H-1:n-out:2", "T-29:s-in", (c,s), nb.get_weight(10, 130), LaneType.HIGHWAY_EXIT),
+                StraightPath("T-29:s-out", "H-1:n-in:1", (n,c), nb.get_weight(10, 130), LaneType.HIGHWAY),
+                StraightPath("T-29:s-out", "H-1:n-in:2", (c,s), nb.get_weight(10, 130), LaneType.HIGHWAY),
+                StraightPath("H-1:n-out:1", "T-29:s-in", (n,c), nb.get_weight(10, 130), LaneType.HIGHWAY),
+                StraightPath("H-1:n-out:2", "T-29:s-in", (c,s), nb.get_weight(10, 130), LaneType.HIGHWAY),
 
                 StraightPath("H-1:s-in:1", "H-1:n-out:1", (n,c), nb.get_weight(14, 130), LaneType.HIGHWAY),
                 StraightPath("H-1:s-in:2", "H-1:n-out:2", (c,s), nb.get_weight(14, 130), LaneType.HIGHWAY),
