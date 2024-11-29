@@ -326,8 +326,7 @@ class RoadNetwork:
                 StraightLane(
                     origin, end, line_types=line_types, speed_limit=speed_limit
                 ),
-                weight= weight,
-                lane_type= 'highway',
+                lane_type = LaneType.HIGHWAY
                 
                 
                 
