@@ -722,15 +722,14 @@ class NetworkBuilder:
                     value = vector
                 else:  # road_type == "out"
                     x, y = vector
-                    match direction_enum:
-                        case self.CardinalDirection.NORTH:
-                            x += lane_width
-                        case self.CardinalDirection.SOUTH:
-                            x -= lane_width
-                        case self.CardinalDirection.EAST:
-                            y += lane_width
-                        case self.CardinalDirection.WEST:
-                            y -= lane_width
+                    if direction_enum == self.CardinalDirection.NORTH:
+                        x += lane_width
+                    elif direction_enum == self.CardinalDirection.SOUTH:
+                        x -= lane_width
+                    elif direction_enum == self.CardinalDirection.EAST:
+                        y += lane_width
+                    elif direction_enum == self.CardinalDirection.WEST:
+                        y -= lane_width
                     
                     value = [x, y]
                 nodes[node_name] = value
@@ -1031,15 +1030,14 @@ class NetworkBuilder:
                     value = vector
                 else:  # road_type == "out"
                     x, y = vector
-                    match direction_enum:
-                        case self.CardinalDirection.NORTH:
-                            x += lane_width
-                        case self.CardinalDirection.SOUTH:
-                            x -= lane_width
-                        case self.CardinalDirection.EAST:
-                            y += lane_width
-                        case self.CardinalDirection.WEST:
-                            y -= lane_width
+                    if direction_enum == self.CardinalDirection.NORTH:
+                        x += lane_width
+                    elif direction_enum == self.CardinalDirection.SOUTH:
+                        x -= lane_width
+                    elif direction_enum == self.CardinalDirection.EAST:
+                        y += lane_width
+                    elif direction_enum == self.CardinalDirection.WEST:
+                        y -= lane_width
 
                     value = [x, y]
                 nodes[node_name] = value
@@ -1070,29 +1068,28 @@ class NetworkBuilder:
             x_entry, y_entry = entry_node
             x_exit, y_exit = exit_node
             
-            match direction_enum:
-                case self.CardinalDirection.NORTH:
+            if direction_enum == self.CardinalDirection.NORTH:
                     x_entry -= enter_exit_radius
                     y_entry += enter_exit_radius
 
                     x_exit  += enter_exit_radius
                     y_exit  += enter_exit_radius
 
-                case self.CardinalDirection.SOUTH:
+            elif direction_enum == self.CardinalDirection.SOUTH:
                     x_entry += enter_exit_radius
                     y_entry -= enter_exit_radius
 
                     x_exit  -= enter_exit_radius
                     y_exit  -= enter_exit_radius
 
-                case self.CardinalDirection.EAST:
+            elif direction_enum == self.CardinalDirection.EAST:
                     x_entry -= enter_exit_radius
                     y_entry -= enter_exit_radius
 
                     x_exit  -= enter_exit_radius
                     y_exit  += enter_exit_radius
 
-                case self.CardinalDirection.WEST:
+            elif direction_enum == self.CardinalDirection.WEST:
                     x_entry += enter_exit_radius
                     y_entry += enter_exit_radius
 

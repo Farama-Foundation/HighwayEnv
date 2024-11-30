@@ -33,6 +33,11 @@ def _register_highway_envs():
         id="template",
         entry_point="highway_env.envs:Template"
     )
+    
+    register(
+        id="weighted-highway-v0",
+        entry_point="highway_env.envs:WeightedHighwayEnv"
+    )
 
     register(
         id="weighted-roundabout-v0",

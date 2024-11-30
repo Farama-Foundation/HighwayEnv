@@ -304,9 +304,10 @@ class RoadNetwork:
         angle: float = 0,
         speed_limit: float = 30,
         nodes_str: tuple[str, str] | None = None,
-        net: RoadNetwork | None = None,
-    ) -> RoadNetwork:
-        net = net or RoadNetwork()
+        net: WeightedRoadnetwork | None = None,
+        weight: int = 1,
+    ) -> WeightedRoadnetwork:
+        net = net or WeightedRoadnetwork()
         nodes_str = nodes_str or ("0", "1")
         for lane in range(lanes):
             origin = np.array([start, lane * StraightLane.DEFAULT_WIDTH])
@@ -322,9 +323,11 @@ class RoadNetwork:
             ]
             net.add_lane(
                 *nodes_str,
-                StraightLane(
+                lane = StraightLane(
                     origin, end, line_types=line_types, speed_limit=speed_limit
                 ),
+                weight = weight,
+                lane_type= LaneType.HIGHWAY
             )
         return net
 
