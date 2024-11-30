@@ -838,8 +838,10 @@ class NetworkBuilder:
                         from_node_in,
                         to_node_out,
                         line_types,
+                        weight,
+                        LaneType.INTERSECTION,
                         lane_priority,
-                        lane_width
+                        lane_width,
                     )
                     road_desc[self.PathType.STRAIGHT].append(path)
                 else:
