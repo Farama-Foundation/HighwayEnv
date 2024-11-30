@@ -138,8 +138,6 @@ class WeightedIntersectionEnv(IntersectionEnv, WeightedUtils):
     def _get_entries(self) -> list[tuple[str, str, int]]:
         edges = self.road.network.graph_net.edges
         entries = [(u, v, l) for (u, v, l) in edges if re.match(r'o.*', u) and re.match(r'ir.*', v)]
-        # TODO: remove debug
-        print(entries)
         return entries
 
     def _get_exits(self) -> list[tuple[str, str, int]]:
@@ -167,36 +165,7 @@ class WeightedIntersectionEnv(IntersectionEnv, WeightedUtils):
         vehicle_type.COMFORT_ACC_MAX = 6
         vehicle_type.COMFORT_ACC_MIN = -3
 
-        # Spawning vehicles on random routes with random plans
-        max_vehicles_pr_lane = 8
-        if n_vehicles > max_vehicles_pr_lane * 4:
-            n_vehicles = max_vehicles_pr_lane * 4
-        spawns: dict[tuple[str, str, int], int] = {}
-        entries = self._get_entries()
-        for entry in entries:
-            spawns[entry] = 0
-        for i in range(n_vehicles):
-            entry = self.get_random_edge_from(entries)
-            while spawns[entry] > max_vehicles_pr_lane:
-                entries.remove(entry)
-                entry = self.get_random_edge_from(entries)
-
-            spawns[entry] += 1
-            longitudinal_deviation = spawns[entry] % max_vehicles_pr_lane
-            exit_edge = self._get_random_exit()
-            vehicle = vehicle_type.make_on_lane(
-                self.road,
-                entry,
-                longitudinal=5 * longitudinal_deviation + self.np_random.normal(),
-                speed=8 * self.np_random.normal(),
-            )
-            vehicle.plan_route_to(exit_edge)
-            vehicle.randomize_behavior()
-            self.road.vehicles.append(vehicle)
-
-
         # Random vehicles
-        """
         simulation_steps = 0 # How far the vehicles should drive before the ego vehicle is spawned.
         for t in range(n_vehicles - 1):
             self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
@@ -216,17 +185,14 @@ class WeightedIntersectionEnv(IntersectionEnv, WeightedUtils):
             position_deviation=0.1,
             speed_deviation=0,
         )
-        """
 
         # Controlled vehicles
         self.controlled_vehicles = []
         for ego_id in range(0, self.config["controlled_vehicles"]):
             ego_lane = self.road.network.get_lane(
-                (f"o{ego_id % 4}", f"ir{ego_id % 4}", 0)
+                self._get_random_entry()
             )
-            destination = self.config["destination"] or "o" + str(
-                self.np_random.integers(1, 4)
-            )
+            destination = self._get_random_exit()
             ego_vehicle = self.action_type.vehicle_class(
                 self.road,
                 ego_lane.position(60 + 5 * self.np_random.normal(1), 0),
@@ -234,7 +200,7 @@ class WeightedIntersectionEnv(IntersectionEnv, WeightedUtils):
                 heading=ego_lane.heading_at(60),
             )
             try:
-                ego_vehicle.plan_route_to(destination)
+                ego_vehicle.plan_route_to(destination[1])
                 ego_vehicle.speed_index = ego_vehicle.speed_to_index(
                     ego_lane.speed_limit
                 )

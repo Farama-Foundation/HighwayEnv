@@ -326,6 +326,7 @@ class IntersectionEnv(AbstractEnv):
         spawn_probability: float = 0.6,
         go_straight: bool = False,
     ) -> None:
+        """Default spawn probability set to `0.6`"""
         if self.np_random.uniform() > spawn_probability:
             return
 
