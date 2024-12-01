@@ -10,7 +10,8 @@ class LineType:
 class LaneType(Enum):
     INTERSECTION = 'intersection'
     ROUNDABOUT = 'roundabout'
-    ROAD_ENTRY = 'road-entry'
-    ROAD_EXIT = 'road-exit'
+    HIGHWAY_ENTRY = 'highway-entry'
+    HIGHWAY_EXIT = 'highway-exit'
     HIGHWAY = 'highway'
     ROAD = 'road'
+    CITY_ROAD = 'city-road'

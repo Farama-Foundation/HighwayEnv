@@ -24,6 +24,21 @@ def _register_highway_envs():
 
     from highway_env.envs.common.abstract import MultiAgentWrapper
 
+    # Stovring - by Tosuma
+    register(
+        id="Stovring",
+        entry_point="highway_env.envs:Stovring",
+    )
+    register(
+        id="template",
+        entry_point="highway_env.envs:Template"
+    )
+    
+    register(
+        id="weighted-highway-v0",
+        entry_point="highway_env.envs:WeightedHighwayEnv"
+    )
+
     register(
         id="weighted-intersection-v0",
         entry_point="highway_env.envs:WeightedIntersectionEnv",
@@ -33,23 +48,35 @@ def _register_highway_envs():
         id="weighted-roundabout-v0",
         entry_point="highway_env.envs:WeightedRoundaboutEnv",
     )
+    
+    # Carpet city - by Tosuma
+    register(
+        id="carpet-city",
+        entry_point="highway_env.envs:CarpetCity"
+    )
+    
+    # Homemade highway refactor - by Tosuma
+    register(
+        id="homemade-highway-refactor",
+        entry_point="highway_env.envs:Template"
+    )
 
     # Homemade city - by Tosuma
     register(
         id="homemade-city",
-        entry_point="highway_env.envs.homemade_city_env:HomemadeCity"
+        entry_point="highway_env.envs.homemade_city_env:HomemadeCity",
     )
 
     # Homemade highway - by Tosuma
     register(
         id="homemade-highway",
-        entry_point="highway_env.envs.homemade_highway_env:HomemadeHighway"
+        entry_point="highway_env.envs.homemade_highway_env:HomemadeHighway",
     )
 
     # Homemade racetrack - by Tosuma
     register(
         id="homemade-racetrack",
-        entry_point="highway_env.envs.homemade_racetrack_env:HomemadeRacetrack"
+        entry_point="highway_env.envs.homemade_racetrack_env:HomemadeRacetrack",
     )
 
     # exit_env.py
