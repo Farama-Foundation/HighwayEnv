@@ -39,31 +39,32 @@ class RoundaboutEnv(AbstractEnv):
                 "duration": 11,
                 "normalize_reward": True,
                 "vehicles_count": 10,
+                # Reward weights
+                "collision_weight": 1,
+                "distance_from_goal_weight": 1,
+                "lane_change_weight": 1,
+                "headway_evaluation_weight": 1,
+                "on_road_weight": 1,
             }
         )
         return config
 
     def _reward(self, action: int) -> float:
         rewards = self._rewards(action)
-        reward = sum(
-            self.config.get(name, 0) * reward for name, reward in rewards.items()
-        )
-        if self.config["normalize_reward"]:
-            reward = utils.lmap(
-                reward,
-                [self.config["collision_reward"], self.config["high_speed_reward"]],
-                [0, 1],
-            )
-        reward *= rewards["on_road_reward"]
-        return reward
+        return sum(rewards.values())
 
     def _rewards(self, action: int) -> dict[str, float]:
         return {
-            "collision_reward": self.vehicle.crashed,
-            "high_speed_reward": MDPVehicle.get_speed_index(self.vehicle)
-            / (MDPVehicle.DEFAULT_TARGET_SPEEDS.size - 1),
-            "lane_change_reward": action in [0, 2],
-            "on_road_reward": self.vehicle.on_road,
+            "collision_reward":
+                self.vehicle.crashed * self.config["collision_weight"],
+            "distance_from_goal":
+                self.vehicle.remaining_route_nodes * self.config["distance_from_goal_weight"],
+            "lane_change_reward":
+                action in [0, 2] * self.config["lane_change_weight"],
+            "headway_evaluation":
+                self.vehicle.headway_evaluation * self.config["headway_evaluation_weight"],
+            "on_road_reward":
+                self.vehicle.on_road * self.config["on_road_weight"],
         }
 
     def _is_terminated(self) -> bool:
@@ -327,16 +328,31 @@ class RoundaboutEnv(AbstractEnv):
         """
         Gives a random entry as a triple (u, v, lane_idx), where (u, v) is an edge.
         """
-        entries = np.array([("ner", "nes"), ("ser", "ses"), ("eer", "ees"), ("wer", "wes")])
+        entries = self._get_entry_edges()
         entry = self.np_random.choice(entries)
         return tuple((entry[0], entry[1], 0))
+
+    def _get_random_edge_from(self, edge_list: list[tuple[str, str, int]]) -> tuple[str, str, int]:
+        edge = self.np_random.choice(edge_list)
+        return tuple((edge[0], edge[1], 0))
+
+    def _get_entry_edges(self) -> list[tuple[str, str, int]]:
+        """
+        Returns the entry edges of the roundabout.
+        """
+        return [
+            ("ner", "nes", 0),
+            ("ser", "ses", 0),
+            ("eer", "ees", 0),
+            ("wer", "wes", 0),
+        ]
 
 
     def _get_random_exit(self) -> tuple[str, str, int]:
         """
         Gives a random exit as a triple (u, v, lane_idx), where (u, v) is an edge.
         """
-        exits = np.array([("nxs`", "nxr"), ("sxs", "sxr"), ("exs", "exr"), ("wxs", "wxr")])
+        exits = np.array([("nxs", "nxr"), ("sxs", "sxr"), ("exs", "exr"), ("wxs", "wxr")])
         road_exit = self.np_random.choice(exits)
         return tuple((road_exit[0], road_exit[1], 0))
 
@@ -369,24 +385,8 @@ class RoundaboutEnv(AbstractEnv):
         self.road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 
-        # Incoming vehicle
-        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        vehicle = other_vehicles_type.make_on_lane(
-            self.road,
-            ("ee", "nx", 1),
-            longitudinal=5 + self.np_random.normal() * position_deviation,
-            speed=16 + self.np_random.normal() * speed_deviation,
-        )
-
-#        if self.config["incoming_vehicle_destination"] is not None:
-#            destination = destinations[self.config["incoming_vehicle_destination"]]
-#        else:
-#            destination = self.np_random.choice(destinations)
-        vehicle.plan_route_to(self._get_random_exit()[1])
-        vehicle.randomize_behavior()
-        self.road.vehicles.append(vehicle)
-
         # Other vehicles
+        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         # Spawning 2 vehicles in the roundabout
         for i in [1, -1]:
             vehicle = other_vehicles_type.make_on_lane(
@@ -399,14 +399,33 @@ class RoundaboutEnv(AbstractEnv):
             vehicle.randomize_behavior()
             self.road.vehicles.append(vehicle)
 
-        # Entering vehicle
+        # Entering vehicles
+        spawns: dict[tuple[str, str, int], int] = {
+            ('ner', 'nes', 0): 0,
+            ('ser', 'ses', 0): 0,
+            ('eer', 'ees', 0): 0,
+            ('wer', 'wes', 0): 0,
+        }
+        entries = self._get_entry_edges()
+        max_vehicles_pr_lane = 8
+        if self.config['vehicles_count'] > max_vehicles_pr_lane * 4:
+            self.config['vehicles_count'] = max_vehicles_pr_lane * 4
         for i in range(self.config["vehicles_count"]):
+            # Ensuring that no more than 8 vehicles are spawned pr. lane
+            entry = self._get_random_edge_from(entries)
+            while spawns[entry] > max_vehicles_pr_lane:
+                entries.remove(entry)
+                entry = self._get_random_edge_from(entries)
+
+            spawns[entry] += 1
+            longitudinal_deviation = spawns[entry] % max_vehicles_pr_lane
+            exit_edge = self._get_random_exit()
             vehicle = other_vehicles_type.make_on_lane(
                 self.road,
-                self._get_random_entry(),
-                longitudinal=50 * (i % 10) + self.np_random.normal() * position_deviation,
+                entry,
+                longitudinal=15 * longitudinal_deviation + self.np_random.normal() * position_deviation,
                 speed=16 + self.np_random.normal() * speed_deviation,
             )
-            vehicle.plan_route_to(self._get_random_exit()[1])
+            vehicle.plan_route_to(exit_edge[1])
             vehicle.randomize_behavior()
             self.road.vehicles.append(vehicle)

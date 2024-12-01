@@ -43,7 +43,7 @@ class IntersectionEnv(AbstractEnv):
                 "duration": 13,  # [s]
                 "destination": "o1",
                 "controlled_vehicles": 1,
-                "initial_vehicle_count": 10,
+                "vehicles_count": 10,
                 "spawn_probability": 0.6,
                 "screen_width": 600,
                 "screen_height": 600,
@@ -131,7 +131,7 @@ class IntersectionEnv(AbstractEnv):
 
     def _reset(self) -> None:
         self._make_road()
-        self._make_vehicles(self.config["initial_vehicle_count"])
+        self._make_vehicles(self.config["vehicles_count"])
 
     def step(self, action: int) -> tuple[np.ndarray, float, bool, bool, dict]:
         obs, reward, terminated, truncated, info = super().step(action)
@@ -326,6 +326,7 @@ class IntersectionEnv(AbstractEnv):
         spawn_probability: float = 0.6,
         go_straight: bool = False,
     ) -> None:
+        """Default spawn probability set to `0.6`"""
         if self.np_random.uniform() > spawn_probability:
             return
 

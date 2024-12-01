@@ -20,7 +20,7 @@ class StraightLane(AbstractLane):
         width: float = AbstractLane.DEFAULT_WIDTH,
         line_types: tuple[LineType, LineType] = None,
         forbidden: bool = False,
-        speed_limit: float = 20,
+        speed_limit: float = 40,
         priority: int = 0,
     ) -> None:
         """
@@ -100,7 +100,7 @@ class SineLane(StraightLane):
         width: float = StraightLane.DEFAULT_WIDTH,
         line_types: list[LineType] = None,
         forbidden: bool = False,
-        speed_limit: float = 20,
+        speed_limit: float = 40,
         priority: int = 0,
     ) -> None:
         """
@@ -175,7 +175,7 @@ class CircularLane(AbstractLane):
         width: float = AbstractLane.DEFAULT_WIDTH,
         line_types: list[LineType] = None,
         forbidden: bool = False,
-        speed_limit: float = 20,
+        speed_limit: float = 40,
         priority: int = 0,
     ) -> None:
         super().__init__()
@@ -249,7 +249,7 @@ class PolyLaneFixedWidth(AbstractLane):
         width: float = AbstractLane.DEFAULT_WIDTH,
         line_types: tuple[LineType, LineType] = None,
         forbidden: bool = False,
-        speed_limit: float = 20,
+        speed_limit: float = 40,
         priority: int = 0,
     ) -> None:
         self.curve = LinearSpline2D(lane_points)
@@ -308,7 +308,7 @@ class PolyLane(PolyLaneFixedWidth):
         right_boundary_points: list[tuple[float, float]],
         line_types: tuple[LineType, LineType] = None,
         forbidden: bool = False,
-        speed_limit: float = 20,
+        speed_limit: float = 40,
         priority: int = 0,
     ):
         super().__init__(

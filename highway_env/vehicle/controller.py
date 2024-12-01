@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 import itertools
 from collections import deque
@@ -48,6 +50,38 @@ class ControlledVehicle(Vehicle):
         self.target_lane_index = target_lane_index or self.lane_index
         self.target_speed = target_speed or self.speed
         self.route = route
+        self._edge_speed_min = 0
+        self._edge_speed_max = 0
+
+    @property
+    def speed_deviation_reward(self) -> float:
+        """Returns the speed deviation on the current edge."""
+        deviation = self._edge_speed_max - self._edge_speed_min
+        if deviation < 5:
+            return np.emath.logn(10, deviation)
+        else:
+            return np.emath.logn(10, deviation) * -1
+
+    @property
+    def remaining_route_nodes(self) -> int:
+        """Returns the number of remaining nodes in the planned route of the vehicle."""
+        return len(self.route)
+
+    @property
+    def headway_evaluation(self) -> float:
+        """
+        Computed the distance, in seconds, to the front vehicle, and returns a reward, based on whether the vehicle,
+        is too close to the vehicle in front of it. The minimum distance, is hard-coded to match the legislated Danish
+        minimum distance of 2s.
+        """
+        front_vehicle, _ = self.road.neighbour_vehicles(self)
+        if front_vehicle is not None:
+            dist_to_front = self.front_distance_to(front_vehicle) / self.speed
+            if dist_to_front < 2.0:
+                return np.log2(dist_to_front) - 1
+
+        return 0
+
 
     @classmethod
     def create_from(cls, vehicle: "ControlledVehicle") -> "ControlledVehicle":
@@ -69,6 +103,14 @@ class ControlledVehicle(Vehicle):
             route=vehicle.route,
         )
         return v
+
+    def update_edge_extremes(self, speed: float):
+        if self._edge_speed_min == 0 and self._edge_speed_max == 0:
+            self._edge_speed_min = self._edge_speed_max = speed
+        elif speed > self._edge_speed_max:
+            self._edge_speed_max = speed
+        elif speed < self._edge_speed_min:
+            self._edge_speed_min = speed
 
     def plan_route_to(self, destination: str) -> "ControlledVehicle":
         """
@@ -157,6 +199,9 @@ class ControlledVehicle(Vehicle):
                 position=self.position,
                 np_random=self.road.np_random,
             )
+            self._edge_speed_min = self._edge_speed_min = 0
+
+        self.update_edge_extremes(self.speed)
 
     def get_nodes_to_target(self) -> int:
         """

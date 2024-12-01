@@ -6,7 +6,7 @@ from typing_extensions import override
 from highway_env import utils
 from highway_env.envs import RoundaboutEnv
 from highway_env.road.lanes.unweighted_lanes import CircularLane, SineLane, StraightLane
-from highway_env.road.lanes.lane_utils import LineType
+from highway_env.road.lanes.lane_utils import LineType, LaneType
 from highway_env.road.road import Road, WeightedRoadnetwork
 
 class WeightedRoundaboutEnv(RoundaboutEnv):
@@ -35,6 +35,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                     line_types=line[lane],
                 ),
                 -1,
+                LaneType.ROUNDABOUT,
             )
             net.add_lane(
                 "ex",
@@ -48,6 +49,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                     line_types=line[lane],
                 ),
                 -1,
+                LaneType.ROUNDABOUT,
             )
             net.add_lane(
                 "ee",
@@ -61,6 +63,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                     line_types=line[lane],
                 ),
                 -1,
+                LaneType.ROUNDABOUT,
             )
             net.add_lane(
                 "nx",
@@ -74,6 +77,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                     line_types=line[lane],
                 ),
                 -1,
+                LaneType.ROUNDABOUT,
             )
             net.add_lane(
                 "ne",
@@ -87,6 +91,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                     line_types=line[lane],
                 ),
                 -1,
+                LaneType.ROUNDABOUT,
             )
             net.add_lane(
                 "wx",
@@ -100,6 +105,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                     line_types=line[lane],
                 ),
                 1,
+                LaneType.ROUNDABOUT,
             )
             net.add_lane(
                 "we",
@@ -113,6 +119,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                     line_types=line[lane],
                 ),
                 -1,
+                LaneType.ROUNDABOUT,
             )
             net.add_lane(
                 "sx",
@@ -126,6 +133,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                     line_types=line[lane],
                 ),
                 -1,
+                LaneType.ROUNDABOUT,
             )
 
         # Access lanes: (r)oad/(s)ine
@@ -144,6 +152,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 [2, dev / 2],
                 line_types=(s, c)),
             1,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
             "ses",
@@ -157,6 +166,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 line_types=(c, c),
             ),
             1,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
             "sx",
@@ -170,13 +180,21 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 line_types=(c, c),
             ),
             10,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
-            "sxs", "sxr", weight=1, lane=StraightLane([-2, dev / 2], [-2, access], line_types=(n, c))
+            "sxs", "sxr",
+            weight=1,
+            lane=StraightLane([-2, dev / 2], [-2, access], line_types=(n, c)),
+            lane_type=LaneType.ROUNDABOUT
         )
 
         net.add_lane(
-            "eer", "ees", weight=1, lane=StraightLane([access, -2], [dev / 2, -2], line_types=(s, c))
+            "eer",
+            "ees",
+            weight=1,
+            lane=StraightLane([access, -2], [dev / 2, -2], line_types=(s, c)),
+            lane_type=LaneType.ROUNDABOUT,
         )
         net.add_lane(
             "ees",
@@ -190,6 +208,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 line_types=(c, c),
             ),
             1,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
             "ex",
@@ -203,13 +222,22 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 line_types=(c, c),
             ),
             -10,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
-            "exs", "exr", weight=1, lane=StraightLane([dev / 2, 2], [access, 2], line_types=(n, c))
+            "exs",
+            "exr",
+            weight=1,
+            lane=StraightLane([dev / 2, 2], [access, 2], line_types=(n, c)),
+            lane_type=LaneType.ROUNDABOUT,
         )
 
         net.add_lane(
-            "ner", "nes", weight=1, lane=StraightLane([-2, -access], [-2, -dev / 2], line_types=(s, c))
+            "ner",
+            "nes",
+            weight=1,
+            lane=StraightLane([-2, -access], [-2, -dev / 2], line_types=(s, c)),
+            lane_type=LaneType.ROUNDABOUT,
         )
         net.add_lane(
             "nes",
@@ -223,6 +251,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 line_types=(c, c),
             ),
             1,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
             "nx",
@@ -236,13 +265,22 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 line_types=(c, c),
             ),
             -10,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
-            "nxs", "nxr", weight=1, lane=StraightLane([2, -dev / 2], [2, -access], line_types=(n, c))
+            "nxs",
+            "nxr",
+            weight=1,
+            lane=StraightLane([2, -dev / 2], [2, -access], line_types=(n, c)),
+            lane_type=LaneType.ROUNDABOUT,
         )
 
         net.add_lane(
-            "wer", "wes", weight=1, lane=StraightLane([-access, 2], [-dev / 2, 2], line_types=(s, c))
+            "wer",
+            "wes",
+            weight=1,
+            lane=StraightLane([-access, 2], [-dev / 2, 2], line_types=(s, c)),
+            lane_type=LaneType.ROUNDABOUT,
         )
         net.add_lane(
             "wes",
@@ -256,6 +294,7 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 line_types=(c, c),
             ),
             1,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
             "wx",
@@ -269,9 +308,14 @@ class WeightedRoundaboutEnv(RoundaboutEnv):
                 line_types=(c, c),
             ),
             -10,
+            LaneType.ROUNDABOUT,
         )
         net.add_lane(
-            "wxs", "wxr", weight=1, lane=StraightLane([-dev / 2, -2], [-access, -2], line_types=(n, c))
+            "wxs",
+                "wxr",
+            weight=1,
+            lane=StraightLane([-dev / 2, -2], [-access, -2], line_types=(n, c)),
+            lane_type=LaneType.ROUNDABOUT,
         )
 
         road = Road(

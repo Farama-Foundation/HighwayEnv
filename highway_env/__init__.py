@@ -40,6 +40,11 @@ def _register_highway_envs():
     )
 
     register(
+        id="weighted-intersection-v0",
+        entry_point="highway_env.envs:WeightedIntersectionEnv",
+    )
+
+    register(
         id="weighted-roundabout-v0",
         entry_point="highway_env.envs:WeightedRoundaboutEnv",
     )

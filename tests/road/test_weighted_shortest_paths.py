@@ -4,7 +4,7 @@ import numpy as np
 import highway_env.envs.weighted_roundabout_env
 from highway_env.envs import WeightedRoundaboutEnv, RoundaboutEnv
 from highway_env.road.road import WeightedRoadnetwork, PathException
-from highway_env.road.lanes.weighted_lanes import CircularLane, SineLane, StraightLane
+from highway_env.road.lanes.unweighted_lanes import CircularLane, SineLane, StraightLane
 from highway_env.road.lanes.lane_utils import LineType
 
 
