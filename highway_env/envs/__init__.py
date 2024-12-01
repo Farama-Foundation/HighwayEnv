@@ -34,11 +34,11 @@ from highway_env.envs.weighted_roundabout_env import WeightedRoundaboutEnv
 
 __all__ = [
     "WeightedIntersectionEnv",
+    "WeightedRoundaboutEnv",
+    "WeightedHighwayEnv",
     "Stovring",
-    "WeightedHighwayEnv"
     "CarpetCity",
     "Template",
-    "WeightedRoundaboutEnv",
     "HomemadeCity",
     "HomemadeHighway",
     "HomemadeHighwayRefactor",
