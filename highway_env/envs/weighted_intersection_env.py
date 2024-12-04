@@ -10,7 +10,7 @@ from highway_env.road.lanes.unweighted_lanes import StraightLane, CircularLane
 from highway_env.road.regulation import RegulatedRoad
 from highway_env.road.road import WeightedRoadnetwork
 from highway_env.envs.weighted_utils import WeightedUtils
-from tests.envs.test_time import wrapper
+# from tests.envs.test_time import wrapper
 
 
 class WeightedIntersectionEnv(IntersectionEnv, WeightedUtils):
