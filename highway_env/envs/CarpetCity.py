@@ -1,9 +1,11 @@
 from __future__ import annotations
 import math
+import re
 
 import numpy as np
 
 from highway_env import utils
+from highway_env.envs.weighted_utils import WeightedUtils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork, WeightedRoadnetwork
@@ -19,7 +21,7 @@ from highway_env.network_builder import NetworkBuilder, StraightPath, CircularPa
 from highway_env.road.lanes.unweighted_lanes import StraightLane, SineLane, CircularLane
 
 
-class CarpetCity(AbstractEnv):
+class CarpetCity(AbstractEnv, WeightedUtils):
     """
     A testing driving environment.
     """
@@ -39,10 +41,10 @@ class CarpetCity(AbstractEnv):
                 },
                 "simulation_frequency": 15,
                 "lanes_count": 2,
-                "vehicles_count": 0,
+                "vehicles_count": 30,
                 "controlled_vehicles": 1,
                 "initial_lane_id": None,
-                "duration": 60,  # [s]
+                "duration": 120,  # [s]
                 "ego_spacing": 2,
                 "vehicles_density": 1,
                 "collision_reward": -1,  # The reward received when colliding with a vehicle.
@@ -62,7 +64,7 @@ class CarpetCity(AbstractEnv):
 
     def _reset(self) -> None:
             self._make_road()
-            self._make_vehicles()
+            self._make_vehicles(self.config["vehicles_count"])
     
     def _make_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
@@ -1481,25 +1483,102 @@ class CarpetCity(AbstractEnv):
         self.road = road
         return
 
-    def _make_vehicles(self) -> None:
-        """
-        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
-        """
-        road = self.road
+    def _spawn_vehicle(
+            self,
+            longitudinal: float = 0,
+            position_deviation: float = 1.0,
+            speed_deviation: float = 1.0,
+            spawn_probability: float = 0.6,
+    ) -> None:
+        if self.np_random.uniform() > spawn_probability:
+            return
 
-        ego_lane = self.road.network.get_lane(("T-6:e-out", "H-3:e-out", 0))
-        
-        ego_vehicle = self.action_type.vehicle_class(
+        entry_edge = self.get_random_edge_from(self._get_entry_edges())
+        exit_edge  = self.get_random_edge_from(self._get_exit_edges())
+        vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
+        speed = self.road.network.get_lane(entry_edge).speed_limit if not None else 25
+        # TODO: Handle speed in a better way
+        vehicle = vehicle_type.make_on_lane(
             self.road,
-            ego_lane.position(0, 0),            # Use the first value to place car down the road
-            speed=0,                            # Speed of car
-            heading=ego_lane.heading_at(90),   # Use this to change the direction of the car. "0" is north
+            entry_edge,
+            longitudinal=(
+                    longitudinal + 5 + self.np_random.normal() * position_deviation
+            ),
+            speed=speed + self.np_random.normal() * speed_deviation,
         )
+        # Not adding the vehicle, if it is too close to another vehicle
+        for v in self.road.vehicles:
+            if np.linalg.norm(v.position - vehicle.position) < 15:
+                return
 
-        # ego_vehicle.plan_route_to("sxr")
-        
-        road.vehicles.append(ego_vehicle)
-        self.vehicle = ego_vehicle
+        vehicle.plan_route_to(exit_edge[1])
+        vehicle.randomize_behavior()
+        self.road.vehicles.append(vehicle)
+        return vehicle
+
+    def _make_vehicles(self, n_vehicles: int = 10) -> None:
+        """
+        Populate a road with several vehicles on the highway and on the merging lane
+
+        :return: the ego-vehicle
+        """
+        # FIXME: remove duct-tape
+        # Configure vehicles
+        vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
+        vehicle_type.DISTANCE_WANTED = 7  # Low jam distance
+        vehicle_type.COMFORT_ACC_MAX = 6
+        vehicle_type.COMFORT_ACC_MIN = -3
+
+        # Random vehicles
+        simulation_steps = 0 # How far the vehicles should drive before the ego vehicle is spawned.
+        for t in range(n_vehicles - 1):
+            self._spawn_vehicle()
+            #self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
+        for _ in range(simulation_steps):
+            [
+                (
+                    self.road.act(),
+                    self.road.step(1 / self.config["simulation_frequency"]),
+                )
+                for _ in range(self.config["simulation_frequency"])
+            ]
+
+        self._spawn_vehicle()
+
+        # Controlled vehicles
+        self.controlled_vehicles = []
+        for ego_id in range(0, self.config["controlled_vehicles"]):
+            startpoint = self.get_random_edge_from(self._get_entry_edges())
+            ego_lane = self.road.network.get_lane(
+                startpoint
+            )
+            destination = self.get_random_edge_from(self._get_exit_edges())
+            ego_vehicle = self.action_type.vehicle_class(
+                self.road,
+                ego_lane.position(60 + 5 * self.np_random.normal(1), 0),
+                speed=ego_lane.speed_limit,
+                heading=ego_lane.heading_at(60),
+            )
+            try:
+                ego_vehicle.plan_route_to(destination[1])
+                ego_vehicle.speed_index = ego_vehicle.speed_to_index(
+                    ego_lane.speed_limit
+                )
+                ego_vehicle.target_speed = ego_vehicle.index_to_speed(
+                    ego_vehicle.speed_index
+                )
+            except AttributeError:
+                print("Got an attribute error")
+                pass
+
+            self.road.vehicles.append(ego_vehicle)
+            self.controlled_vehicles.append(ego_vehicle)
+            for v in self.road.vehicles:  # Prevent early collisions
+                if (
+                    v is not ego_vehicle
+                    and np.linalg.norm(v.position - ego_vehicle.position) < 20
+                ):
+                    self.road.vehicles.remove(v)
 
         
     # Note this reward function is just generic from another template
@@ -1525,6 +1604,42 @@ class CarpetCity(AbstractEnv):
         reward *= rewards["on_road_reward"]
         
         return reward
+
+    def _get_roundabout_entry_edges(self) -> list[tuple[str, str, int]]:
+        edges = self.road.network.graph_net.edges
+        entries = [(u, v, l) for (u, v, l) in edges if re.match(r"^[n|s|e|w]es$", v)]
+        return entries
+
+    def _get_roundabout_exit_edges(self) -> list[tuple[str, str, int]]:
+        """
+        PLEASE NOTE:
+        The exit edges of the roundabout is also in the edges given by the function `self._get_exit_edges()`.
+        """
+        edges = self.road.network.graph_net.edges
+        exits = [(u, v, l) for (u, v, l) in edges if re.match(r"^[n|s|e|w]xs$", u)]
+        return exits
+
+    def _get_entry_edges(self) -> list[tuple[str, str, int]]:
+        edges = self.road.network.graph_net.edges
+        entries = [(u, v, l) for (u, v, l) in edges if re.match(r"^[H|I|R|T]-[0-9]{1,2}:[n|s|e|w]-in$", v)]
+        return entries
+
+    def _get_exit_edges(self) -> list[tuple[str, str, int]]:
+        edges = self.road.network.graph_net.edges
+        exits = [(u, v, l) for (u, v, l) in edges if re.match(r"^[H|I|R|T]-[0-9]{1,2}:[n|s|e|w]-out$", v)]
+        return exits
+
+
+    def _get_random_start(self) -> tuple[str, str, int]:
+        entry = self.np_random.choice(self.road.network.graph_net.edges)
+        return tuple((entry[0], entry[1], 0))
+
+    def _get_random_end(self, startpoint: tuple[str, str, int]) -> tuple[str, str, int]:
+        edges = self.road.network.graph_net.edges
+        #edges.remove(startpoint)
+        entry = self.np_random.choice(edges)
+
+        return tuple((entry[0], entry[1], 0))
 
     # Note this reward function is just generic from another template
     def _rewards(self, action: Action) -> dict[str, float]:

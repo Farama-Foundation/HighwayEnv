@@ -29,6 +29,7 @@ def _register_highway_envs():
         id="Stovring",
         entry_point="highway_env.envs:Stovring",
     )
+
     register(
         id="template",
         entry_point="highway_env.envs:Template"
