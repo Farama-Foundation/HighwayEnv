@@ -59,7 +59,23 @@ class RoadNetwork:
             pass
         if _id is None and len(self.graph[_from][_to]) == 1:
             _id = 0
-        return self.graph[_from][_to][_id]
+
+        try:
+            return self.graph[_from][_to][_id]
+        except IndexError:
+            """
+            print("-------------------------------")
+            print(f"IndexError: _from={_from}, _to={_to}, _id={_id}")
+            print("from:")
+            print(self.graph[_from])
+            print("to:")
+            print(self.graph[_from][_to])
+            print("expected: ")
+            print(self.graph[_from][_to][0])
+            print("-------------------------------")
+            """
+            return self.graph[_from][_to][0]
+
 
     def get_closest_lane_index(
         self, position: np.ndarray, heading: float | None = None

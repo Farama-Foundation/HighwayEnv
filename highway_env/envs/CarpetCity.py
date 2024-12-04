@@ -5,6 +5,7 @@ import re
 import numpy as np
 
 from highway_env import utils
+from highway_env.envs.weighted_utils import WeightedUtils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
 from highway_env.road.road import Road, RoadNetwork, WeightedRoadnetwork
@@ -20,7 +21,7 @@ from highway_env.network_builder import NetworkBuilder, StraightPath, CircularPa
 from highway_env.road.lanes.unweighted_lanes import StraightLane, SineLane, CircularLane
 
 
-class CarpetCity(AbstractEnv):
+class CarpetCity(AbstractEnv, WeightedUtils):
     """
     A testing driving environment.
     """
@@ -1482,12 +1483,46 @@ class CarpetCity(AbstractEnv):
         self.road = road
         return
 
+    def _spawn_vehicle(
+            self,
+            longitudinal: float = 0,
+            position_deviation: float = 1.0,
+            speed_deviation: float = 1.0,
+            spawn_probability: float = 0.6,
+    ) -> None:
+        if self.np_random.uniform() > spawn_probability:
+            return
+
+        entry_edge = self.get_random_edge_from(self._get_entry_edges())
+        exit_edge  = self.get_random_edge_from(self._get_exit_edges())
+        vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
+        speed = self.road.network.get_lane(entry_edge).speed_limit if not None else 25
+        # TODO: Handle speed in a better way
+        vehicle = vehicle_type.make_on_lane(
+            self.road,
+            entry_edge,
+            longitudinal=(
+                    longitudinal + 5 + self.np_random.normal() * position_deviation
+            ),
+            speed=speed + self.np_random.normal() * speed_deviation,
+        )
+        # Not adding the vehicle, if it is too close to another vehicle
+        for v in self.road.vehicles:
+            if np.linalg.norm(v.position - vehicle.position) < 15:
+                return
+
+        vehicle.plan_route_to(exit_edge[1])
+        vehicle.randomize_behavior()
+        self.road.vehicles.append(vehicle)
+        return vehicle
+
     def _make_vehicles(self, n_vehicles: int = 10) -> None:
         """
         Populate a road with several vehicles on the highway and on the merging lane
 
         :return: the ego-vehicle
         """
+        # FIXME: remove duct-tape
         # Configure vehicles
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
         vehicle_type.DISTANCE_WANTED = 7  # Low jam distance
@@ -1497,7 +1532,8 @@ class CarpetCity(AbstractEnv):
         # Random vehicles
         simulation_steps = 0 # How far the vehicles should drive before the ego vehicle is spawned.
         for t in range(n_vehicles - 1):
-            self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
+            self._spawn_vehicle()
+            #self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
         for _ in range(simulation_steps):
             [
                 (
@@ -1507,22 +1543,16 @@ class CarpetCity(AbstractEnv):
                 for _ in range(self.config["simulation_frequency"])
             ]
 
-        self._spawn_vehicle(
-            60,
-            spawn_probability=1,
-            go_straight=True,
-            position_deviation=0.1,
-            speed_deviation=0,
-        )
+        self._spawn_vehicle()
 
         # Controlled vehicles
         self.controlled_vehicles = []
         for ego_id in range(0, self.config["controlled_vehicles"]):
-            startpoint = self._get_random_start()
+            startpoint = self.get_random_edge_from(self._get_entry_edges())
             ego_lane = self.road.network.get_lane(
                 startpoint
             )
-            destination = self._get_random_end(startpoint)
+            destination = self.get_random_edge_from(self._get_exit_edges())
             ego_vehicle = self.action_type.vehicle_class(
                 self.road,
                 ego_lane.position(60 + 5 * self.np_random.normal(1), 0),
@@ -1538,6 +1568,7 @@ class CarpetCity(AbstractEnv):
                     ego_vehicle.speed_index
                 )
             except AttributeError:
+                print("Got an attribute error")
                 pass
 
             self.road.vehicles.append(ego_vehicle)
@@ -1574,13 +1605,38 @@ class CarpetCity(AbstractEnv):
         
         return reward
 
+    def _get_roundabout_entry_edges(self) -> list[tuple[str, str, int]]:
+        edges = self.road.network.graph_net.edges
+        entries = [(u, v, l) for (u, v, l) in edges if re.match(r"^[n|s|e|w]es$", v)]
+        return entries
+
+    def _get_roundabout_exit_edges(self) -> list[tuple[str, str, int]]:
+        """
+        PLEASE NOTE:
+        The exit edges of the roundabout is also in the edges given by the function `self._get_exit_edges()`.
+        """
+        edges = self.road.network.graph_net.edges
+        exits = [(u, v, l) for (u, v, l) in edges if re.match(r"^[n|s|e|w]xs$", u)]
+        return exits
+
+    def _get_entry_edges(self) -> list[tuple[str, str, int]]:
+        edges = self.road.network.graph_net.edges
+        entries = [(u, v, l) for (u, v, l) in edges if re.match(r"^[H|I|R|T]-[0-9]{1,2}:[n|s|e|w]-in$", v)]
+        return entries
+
+    def _get_exit_edges(self) -> list[tuple[str, str, int]]:
+        edges = self.road.network.graph_net.edges
+        exits = [(u, v, l) for (u, v, l) in edges if re.match(r"^[H|I|R|T]-[0-9]{1,2}:[n|s|e|w]-out$", v)]
+        return exits
+
+
     def _get_random_start(self) -> tuple[str, str, int]:
         entry = self.np_random.choice(self.road.network.graph_net.edges)
         return tuple((entry[0], entry[1], 0))
 
     def _get_random_end(self, startpoint: tuple[str, str, int]) -> tuple[str, str, int]:
         edges = self.road.network.graph_net.edges
-        edges.remove(startpoint)
+        #edges.remove(startpoint)
         entry = self.np_random.choice(edges)
 
         return tuple((entry[0], entry[1], 0))
