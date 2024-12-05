@@ -1493,8 +1493,11 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         if self.np_random.uniform() > spawn_probability:
             return
 
-        entry_edge = self.get_random_edge_from(self._get_entry_edges())
-        exit_edge  = self.get_random_edge_from(self._get_exit_edges())
+        entry_edge = self._get_random_edge()
+        exit_edge  = self._get_random_edge() 
+        while entry_edge == exit_edge:
+            exit_edge = self._get_random_edge()
+
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
         speed = self.road.network.get_lane(entry_edge).speed_limit if not None else 25
         # TODO: Handle speed in a better way
@@ -1552,7 +1555,11 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             ego_lane = self.road.network.get_lane(
                 startpoint
             )
-            destination = self.get_random_edge_from(self._get_exit_edges())
+            while True:
+                destination = self.get_random_edge_from(self._get_exit_edges())
+                if destination != startpoint:
+                    break
+
             ego_vehicle = self.action_type.vehicle_class(
                 self.road,
                 ego_lane.position(60 + 5 * self.np_random.normal(1), 0),
@@ -1605,41 +1612,9 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         
         return reward
 
-    def _get_roundabout_entry_edges(self) -> list[tuple[str, str, int]]:
+    def _get_random_edge(self) -> tuple[str, str, int]:
         edges = self.road.network.graph_net.edges
-        entries = [(u, v, l) for (u, v, l) in edges if re.match(r"^[n|s|e|w]es$", v)]
-        return entries
-
-    def _get_roundabout_exit_edges(self) -> list[tuple[str, str, int]]:
-        """
-        PLEASE NOTE:
-        The exit edges of the roundabout is also in the edges given by the function `self._get_exit_edges()`.
-        """
-        edges = self.road.network.graph_net.edges
-        exits = [(u, v, l) for (u, v, l) in edges if re.match(r"^[n|s|e|w]xs$", u)]
-        return exits
-
-    def _get_entry_edges(self) -> list[tuple[str, str, int]]:
-        edges = self.road.network.graph_net.edges
-        entries = [(u, v, l) for (u, v, l) in edges if re.match(r"^[H|I|R|T]-[0-9]{1,2}:[n|s|e|w]-in$", v)]
-        return entries
-
-    def _get_exit_edges(self) -> list[tuple[str, str, int]]:
-        edges = self.road.network.graph_net.edges
-        exits = [(u, v, l) for (u, v, l) in edges if re.match(r"^[H|I|R|T]-[0-9]{1,2}:[n|s|e|w]-out$", v)]
-        return exits
-
-
-    def _get_random_start(self) -> tuple[str, str, int]:
-        entry = self.np_random.choice(self.road.network.graph_net.edges)
-        return tuple((entry[0], entry[1], 0))
-
-    def _get_random_end(self, startpoint: tuple[str, str, int]) -> tuple[str, str, int]:
-        edges = self.road.network.graph_net.edges
-        #edges.remove(startpoint)
-        entry = self.np_random.choice(edges)
-
-        return tuple((entry[0], entry[1], 0))
+        return self.get_random_edge_from(edges)
 
     # Note this reward function is just generic from another template
     def _rewards(self, action: Action) -> dict[str, float]:
