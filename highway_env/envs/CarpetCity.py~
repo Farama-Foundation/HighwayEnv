@@ -1514,7 +1514,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             if np.linalg.norm(v.position - vehicle.position) < 15:
                 return
 
-        print(f"planning route {entry_edge} ~> {exit_edge}")
+        #print(f"planning route {entry_edge} ~> {exit_edge}")
         vehicle.plan_route_to(exit_edge[1])
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
