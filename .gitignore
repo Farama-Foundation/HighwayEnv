@@ -145,3 +145,6 @@ jupyter_execute
 
 # IDE
 .idea
+
+# vim
+*~
