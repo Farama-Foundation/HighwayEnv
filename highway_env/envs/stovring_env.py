@@ -2064,25 +2064,131 @@ class Stovring(AbstractEnv):
         self.road = road
         return
 
-    def _make_vehicles(self) -> None:
-        """
-        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
-        """
-        road = self.road
+    def _spawn_vehicle(
+            self,
+            longitudinal: float = 0,
+            position_deviation: float = 1.0,
+            speed_deviation: float = 1.0,
+            spawn_probability: float = 0.6,
+    ) -> None:
+        if self.np_random.uniform() > spawn_probability:
+            return
 
-        ego_lane = self.road.network.get_lane(("I-1:w-out", "T-29:e-in", 0))
-        
-        ego_vehicle = self.action_type.vehicle_class(
+        entry_edge = self._get_random_edge()
+        exit_edge  = self._get_random_edge() 
+        while entry_edge[1] == exit_edge[1]:
+            exit_edge = self._get_random_edge()
+
+        vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
+        speed = self.road.network.get_lane(entry_edge).speed_limit if not None else 25
+        # TODO: Handle speed in a better way
+        vehicle = vehicle_type.make_on_lane(
             self.road,
-            ego_lane.position(0, 0),
-            speed=0,
-            heading=ego_lane.heading_at(90),
+            entry_edge,
+            longitudinal=(
+                    longitudinal + 5 + self.np_random.normal() * position_deviation
+            ),
+            speed=speed + self.np_random.normal() * speed_deviation,
         )
+        # Not adding the vehicle, if it is too close to another vehicle
+        for v in self.road.vehicles:
+            if np.linalg.norm(v.position - vehicle.position) < 15:
+                return
 
-        # ego_vehicle.plan_route_to("sxr")
+        print(f"planning route {entry_edge} ~> {exit_edge}")
+        vehicle.plan_route_to(exit_edge[1])
+        vehicle.randomize_behavior()
+        self.road.vehicles.append(vehicle)
+        return vehicle
+
+    def _make_vehicles(self, n_vehicles: int = 10) -> None:
+        """
+        Populate a road with several vehicles on the highway and on the merging lane
+
+        :return: the ego-vehicle
+        """
+        # FIXME: remove duct-tape
+        # Configure vehicles
+        vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
+        vehicle_type.DISTANCE_WANTED = 7  # Low jam distance
+        vehicle_type.COMFORT_ACC_MAX = 6
+        vehicle_type.COMFORT_ACC_MIN = -3
+
+        # Random vehicles
+        simulation_steps = 0 # How far the vehicles should drive before the ego vehicle is spawned.
+        for t in range(n_vehicles - 1):
+            self._spawn_vehicle()
+            #self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
+        for _ in range(simulation_steps):
+            [
+                (
+                    self.road.act(),
+                    self.road.step(1 / self.config["simulation_frequency"]),
+                )
+                for _ in range(self.config["simulation_frequency"])
+            ]
+
+        self._spawn_vehicle()
+
+        # Controlled vehicles
+        print("\n---::: Beginning controlled vehicle :::---\n")
+        self.controlled_vehicles = []
+        for ego_id in range(0, self.config["controlled_vehicles"]):
+            startpoint = self._get_random_edge()
+            destination = self._get_random_edge()
+
+            
+            while startpoint[1] == destination[1]:
+                destination = self._get_random_edge()
+
+            ego_lane = self.road.network.get_lane(
+                startpoint
+            )
+            
+            
+            ego_vehicle = self.action_type.vehicle_class(
+                self.road,
+                ego_lane.position(0, 0),
+                speed=ego_lane.speed_limit,
+                heading=ego_lane.heading_at(60),
+            )
+            
+            try:
+                print(f"ego vehicle planning route {startpoint} ~> {destination}")
+                print(f"destination[1]: {destination[1]} :: plan_route_to({destination[1]})")
+                ego_vehicle.plan_route_to(destination[1])
+                ego_vehicle.speed_index = ego_vehicle.speed_to_index(
+                    ego_lane.speed_limit
+                )
+                ego_vehicle.target_speed = ego_vehicle.index_to_speed(
+                    ego_vehicle.speed_index
+                )
+            except AttributeError:
+                print("Got an attribute error")
+                pass
+
+            self.road.vehicles.append(ego_vehicle)
+            self.controlled_vehicles.append(ego_vehicle)
+            for v in self.road.vehicles:  # Prevent early collisions
+                if (
+                    v is not ego_vehicle
+                    and np.linalg.norm(v.position - ego_vehicle.position) < 20
+                ):
+                    self.road.vehicles.remove(v)
+                    
+    def _get_random_edge(self) -> tuple[str, str, int]:
+        edges = self.road.network.graph_net.edges
+        edge = self.get_random_edge_from(edges)
         
-        road.vehicles.append(ego_vehicle)
-        self.vehicle = ego_vehicle
+        edge_lane = self.road.network.get_lane(edge)
+        close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+
+        while edge != close_edge:
+            edge = self.get_random_edge_from(edges)
+            edge_lane = self.road.network.get_lane(edge)
+            close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+        
+        return edge    
 
     # Note this reward function is just generic from another template
     def _reward(self, action: Action) -> float:
