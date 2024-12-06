@@ -1550,25 +1550,31 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         self._spawn_vehicle()
 
         # Controlled vehicles
+        print("\n---::: Beginning controlled vehicle :::---\n")
         self.controlled_vehicles = []
         for ego_id in range(0, self.config["controlled_vehicles"]):
             startpoint = self._get_random_edge()
             destination = self._get_random_edge()
+
+            
             while startpoint[1] == destination[1]:
                 destination = self._get_random_edge()
 
             ego_lane = self.road.network.get_lane(
                 startpoint
             )
-
+            
+            
             ego_vehicle = self.action_type.vehicle_class(
                 self.road,
                 ego_lane.position(0, 0),
                 speed=ego_lane.speed_limit,
                 heading=ego_lane.heading_at(60),
             )
+            
             try:
                 print(f"ego vehicle planning route {startpoint} ~> {destination}")
+                print(f"destination[1]: {destination[1]} :: plan_route_to({destination[1]})")
                 ego_vehicle.plan_route_to(destination[1])
                 ego_vehicle.speed_index = ego_vehicle.speed_to_index(
                     ego_lane.speed_limit
@@ -1616,7 +1622,18 @@ class CarpetCity(AbstractEnv, WeightedUtils):
 
     def _get_random_edge(self) -> tuple[str, str, int]:
         edges = self.road.network.graph_net.edges
-        return self.get_random_edge_from(edges)
+        edge = self.get_random_edge_from(edges)
+        
+        edge_lane = self.road.network.get_lane(edge)
+        close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+
+        while edge != close_edge:
+            edge = self.get_random_edge_from(edges)
+            edge_lane = self.road.network.get_lane(edge)
+            close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+        
+        return edge        
+        
 
     # Note this reward function is just generic from another template
     def _rewards(self, action: Action) -> dict[str, float]:
