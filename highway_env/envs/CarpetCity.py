@@ -1,6 +1,5 @@
 from __future__ import annotations
-import math
-import re
+import logging
 
 import numpy as np
 
@@ -20,6 +19,22 @@ from highway_env.road.regulation import RegulatedRoad
 from highway_env.network_builder import NetworkBuilder, StraightPath, CircularPath, Path
 from highway_env.road.lanes.unweighted_lanes import StraightLane, SineLane, CircularLane
 
+# Debug logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler("carpet_city.log")
+formatter = logging.Formatter('%(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+# Episode and route logger
+routes_logger = logging.getLogger(__name__ + ".routes")
+routes_logger.setLevel(logging.INFO)
+file_handler_routes = logging.FileHandler("carpet_city_routes.log")
+routes_formatter = logging.Formatter('%(message)s')
+file_handler_routes.setFormatter(routes_formatter)
+routes_logger.addHandler(file_handler_routes)
+routes_logger.propagate = False
 
 class CarpetCity(AbstractEnv, WeightedUtils):
     """
@@ -64,7 +79,16 @@ class CarpetCity(AbstractEnv, WeightedUtils):
 
     def _reset(self) -> None:
             self._make_road()
+            
+            if not hasattr(self, "episode_count"):
+                self.episode_count = 0
+            
+            logger.info(f"Episode: {self.episode_count}")
+            routes_logger.info(f"Episode: {self.episode_count}")
+            
+            self._categorize_edges_by_type()
             self._make_vehicles(self.config["vehicles_count"])
+            self.episode_count += 1
     
     def _make_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
@@ -1495,7 +1519,9 @@ class CarpetCity(AbstractEnv, WeightedUtils):
 
         entry_edge = self._get_random_edge()
         exit_edge  = self._get_random_edge() 
-        while entry_edge[1] == exit_edge[1]:
+
+        while (entry_edge[0] in exit_edge or entry_edge[1] in exit_edge):
+            logger.info(f"\t_spawn_vehicle            :: Element in 'entry_edge' was in 'exit_edge' -- {entry_edge} ~> {exit_edge}")
             exit_edge = self._get_random_edge()
 
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
@@ -1514,18 +1540,80 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             if np.linalg.norm(v.position - vehicle.position) < 15:
                 return
 
-        print(f"planning route {entry_edge} ~> {exit_edge}")
+        routes_logger.info(f"\t_spawn_vehicele :: planning route {entry_edge} ~> {exit_edge}")
         vehicle.plan_route_to(exit_edge[1])
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
         return vehicle
+    
+    def _categorize_edges_by_type(self):
+        """
+        Categorize edges based on the end vertex type.
+         - Intersection edges: edges whose end vertex name starts with 'I'
+         - Roundabout edges: edges whose end vertex name starts with 'R'
+         - Highway edges: edges whose end vertex name starts with 'H'
+         - Turn edges: edges whose end vertex name starts with 'T'
+        """
+        self.I_edges = []
+        self.R_edges = []
+        self.H_edges = []
+        self.T_edges = []
 
+        edges = self.road.network.graph_net.edges
+        for edge in edges:
+            end_node = edge[1]
+            if end_node.startswith("I-"):
+                self.I_edges.append(edge)
+            elif end_node.startswith("R-"):
+                self.R_edges.append(edge)
+            elif end_node.startswith("H-"):
+                self.H_edges.append(edge)
+            elif end_node.startswith("T-"):
+                self.T_edges.append(edge)
+        
+    def _get_balanced_random_edge(self) -> tuple[str, str, int]:
+        categories: list[list[tuple[str, str, int]]] = [self.I_edges, self.R_edges, self.H_edges, self.T_edges]
+        category_index: int                          = self.episode_count % len(categories)
+        chosen_category: list[tuple[str, str, int]]  = categories[category_index]
+
+        edge = self.get_random_edge_from(chosen_category)
+        
+        # Validate the edge can be found again
+        edge_lane = self.road.network.get_lane(edge)
+        close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+
+        while edge != close_edge:
+            logger.info(f"\t_get_balanced_random_edge :: close_edge != edge -- {edge} : {close_edge}")
+            edge = self.get_random_edge_from(chosen_category)
+            edge_lane = self.road.network.get_lane(edge)
+            close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+
+        return edge
+        
+    def _get_random_edge(self   ) -> tuple[str, str, int]:
+        edges = self.road.network.graph_net.edges
+        edge = self.get_random_edge_from(edges)
+        
+        # Validate the edge can be found again
+        edge_lane = self.road.network.get_lane(edge)
+        close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+
+        while edge != close_edge:
+            logger.info(f"\t_get_random_edge          :: close_edge != edge -- {edge} : {close_edge}")
+            edge = self.get_random_edge_from(edges)
+            edge_lane = self.road.network.get_lane(edge)
+            close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+        
+        return edge
+    
+    
     def _make_vehicles(self, n_vehicles: int = 10) -> None:
         """
         Populate a road with several vehicles on the highway and on the merging lane
 
         :return: the ego-vehicle
         """
+        # print("\n---::: New make vechicle :::---")
         # FIXME: remove duct-tape
         # Configure vehicles
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
@@ -1550,21 +1638,18 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         self._spawn_vehicle()
 
         # Controlled vehicles
-        print("\n---::: Beginning controlled vehicle :::---\n")
         self.controlled_vehicles = []
         for ego_id in range(0, self.config["controlled_vehicles"]):
-            startpoint = self._get_random_edge()
+            startpoint = self._get_balanced_random_edge()
             destination = self._get_random_edge()
-
             
-            while startpoint[1] == destination[1]:
+            # Validate that no vertex from 'startpoint' is in 'destination'
+            while (startpoint[0] in destination or startpoint[1] in destination):
+                logger.info(f"\t_make_vehicles :: Element in 'startpoint' was in 'destination' -- {startpoint} ~> {destination}")
                 destination = self._get_random_edge()
 
-            ego_lane = self.road.network.get_lane(
-                startpoint
-            )
             
-            
+            ego_lane = self.road.network.get_lane(startpoint)
             ego_vehicle = self.action_type.vehicle_class(
                 self.road,
                 ego_lane.position(0, 0),
@@ -1573,8 +1658,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             )
             
             try:
-                print(f"ego vehicle planning route {startpoint} ~> {destination}")
-                print(f"destination[1]: {destination[1]} :: plan_route_to({destination[1]})")
+                routes_logger.info(f"\t_make_vehicele  :: ego vehicle planning route {startpoint} ~> {destination}")
+                # print(f"destination[1]: {destination[1]} :: plan_route_to({destination[1]})")
                 ego_vehicle.plan_route_to(destination[1])
                 ego_vehicle.speed_index = ego_vehicle.speed_to_index(
                     ego_lane.speed_limit
@@ -1584,6 +1669,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 )
             except AttributeError:
                 print("Got an attribute error")
+                logger.warning(f"In episode '{self.episode_count}': AttributeError while planning ego route")
                 pass
 
             self.road.vehicles.append(ego_vehicle)
@@ -1619,21 +1705,6 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         reward *= rewards["on_road_reward"]
         
         return reward
-
-    def _get_random_edge(self) -> tuple[str, str, int]:
-        edges = self.road.network.graph_net.edges
-        edge = self.get_random_edge_from(edges)
-        
-        edge_lane = self.road.network.get_lane(edge)
-        close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
-
-        while edge != close_edge:
-            edge = self.get_random_edge_from(edges)
-            edge_lane = self.road.network.get_lane(edge)
-            close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
-        
-        return edge        
-        
 
     # Note this reward function is just generic from another template
     def _rewards(self, action: Action) -> dict[str, float]:
