@@ -34,7 +34,7 @@ file_handler_routes = logging.FileHandler("carpet_city_routes.log")
 routes_formatter = logging.Formatter('%(message)s')
 file_handler_routes.setFormatter(routes_formatter)
 routes_logger.addHandler(file_handler_routes)
-
+routes_logger.propagate = False
 
 class CarpetCity(AbstractEnv, WeightedUtils):
     """
