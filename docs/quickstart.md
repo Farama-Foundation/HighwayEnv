@@ -55,8 +55,12 @@ For example, the number of lanes can be changed with:
 
   env = gymnasium.make(
     "highway-v0",
-    config={"lanes_count": 2}
+    config={"lanes_count": 2},
+    render_mode='rgb_array',
   )
+  env.reset()
+  plt.imshow(env.render())
+  plt.show()
 ```
 
 After environment creation, the configuration can be accessed using the
@@ -68,24 +72,6 @@ After environment creation, the configuration can be accessed using the
   import pprint
 
   pprint.pprint(env.unwrapped.config)
-```
-
-The config can also be changed after creation
-
-
-```{eval-rst}
-.. jupyter-execute::
-  env = gymnasium.make("highway-v0", render_mode='rgb_array')
-  env.unwrapped.config["lanes_count"] = 2
-  env.reset()
-  plt.imshow(env.render())
-  plt.show()
-```
-
-
-```{note}
-The environment must be {py:meth}`~highway_env.envs.common.abstract.AbstractEnv.reset` for the change of configuration
-to be effective.
 ```
 
 ## Training an agent
