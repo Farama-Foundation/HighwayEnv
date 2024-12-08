@@ -338,14 +338,31 @@
 <span id="configuration"></span><h2>Configuring an environment<a class="headerlink" href="#configuring-an-environment" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../observations/#id1"><span class="std std-ref">observations</span></a>, <a class="reference internal" href="../actions/#actions"><span class="std std-ref">actions</span></a>, <a class="reference internal" href="../dynamics/#dynamics"><span class="std std-ref">dynamics</span></a> and <a class="reference internal" href="../rewards/#rewards"><span class="std std-ref">rewards</span></a>
 of an environment are parametrized by a configuration, defined as a
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.
-After environment creation, the configuration can be accessed using the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.</p>
+<p>For example, the number of lanes can be changed with:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+  <span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span>
+  <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+  <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_1_0.png" src="../_images/quickstart_1_0.png" />
+</div>
+</div>
+<p>After environment creation, the configuration can be accessed using the
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> attribute.</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pprint</span>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">)</span>
 <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -360,7 +377,7 @@ After environment creation, the configuration can be accessed using the
  &#39;high_speed_reward&#39;: 0.4,
  &#39;initial_lane_id&#39;: None,
  &#39;lane_change_reward&#39;: 0,
- &#39;lanes_count&#39;: 4,
+ &#39;lanes_count&#39;: 2,
  &#39;manual_control&#39;: False,
  &#39;normalize_reward&#39;: True,
  &#39;observation&#39;: {&#39;type&#39;: &#39;Kinematics&#39;},
@@ -382,39 +399,6 @@ After environment creation, the configuration can be accessed using the
 </pre></div>
 </div>
 </div>
-</div>
-<p>For example, the number of lanes can be changed with:</p>
-<div class="jupyter_cell jupyter_container docutils container">
-<div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/quickstart_2_0.png" src="../_images/quickstart_2_0.png" />
-</div>
-</div>
-<p>or directly at creation time with:</p>
-<div class="jupyter_cell jupyter_container docutils container">
-<div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-  <span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span>
-  <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">,</span>
-  <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-</div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The environment must be <a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.reset" title="highway_env.envs.common.abstract.AbstractEnv.reset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code></a> for the change of configuration
-to be effective.</p>
 </div>
 </section>
 <section id="training-an-agent">
