@@ -8,7 +8,12 @@ import numpy as np
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
+<<<<<<< Updated upstream
 from highway_env.network_builder import CircularPath, NetworkBuilder, StraightPath
+=======
+from highway_env.envs.weighted_utils import WeightedUtils
+from highway_env.network_builder import CircularPath, NetworkBuilder, Path, StraightPath
+>>>>>>> Stashed changes
 from highway_env.road.lanes.abstract_lanes import AbstractLane
 from highway_env.road.lanes.lane_utils import LaneType, LineType
 from highway_env.road.lanes.unweighted_lanes import CircularLane, SineLane, StraightLane
@@ -92,7 +97,7 @@ class Stovring(AbstractEnv, WeightedUtils):
     def _make_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
 
-        net = RoadNetwork()
+        net = WeightedRoadnetwork()
         nb = NetworkBuilder()
         n, c, s = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
         left_turn = False
@@ -2118,6 +2123,7 @@ class Stovring(AbstractEnv, WeightedUtils):
             ),
             speed=speed + self.np_random.normal() * speed_deviation,
         )
+        vehicle.check_collision = False
         # Not adding the vehicle, if it is too close to another vehicle
         for v in self.road.vehicles:
             if np.linalg.norm(v.position - vehicle.position) < 15:
