@@ -1,6 +1,7 @@
 from __future__ import annotations
 import copy
 import logging
+import os
 import pickle
 
 import numpy as np
@@ -80,23 +81,35 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         return config
     
     def calculate_shortest_paths(self):
-        routes = {}
+        file_name = "carpet-city-paths.pkl"
+        
+        if os.path.exists(file_name):
+            with open(file_name, "rb") as f:
+                routes = pickle.load(f)
+        else:
+            routes = {}
+
         edges = self.road.network.graph_net.edges
         
         # Iterate over each location as the source
         i = 0
-        j = 0
         for _, startpoint, _ in edges:
             print(f"---::: {i}/{len(edges)} @ Beginning on {startpoint}:::---")
 
             # Create a nested dictionary for this source
-            routes[startpoint] = {}
+            if startpoint not in routes:
+                routes[startpoint] = {}
 
                 
             # Iterate over each location as the destination
             j = 0
             for _, destination, _ in edges:
                 if startpoint == destination:
+                    continue
+                
+                if destination in routes[startpoint]:
+                    print(f"\t$$$ Skipping already calculated route from {startpoint} to {destination}")
+                    j += 1
                     continue
                 
                 print(f"\t$$$ start: {i}/{len(edges)} @ dest.: {j}/{len(edges)-1} @ {destination}")
@@ -107,15 +120,15 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 # Store the result in the nested dict structure
                 routes[startpoint][destination] = result
                 
+                # Once the dictionary is complete, write it to a JSON file
+                with open("carpet-city-paths.pkl", "wb") as f:
+                    pickle.dump(routes, f, protocol=pickle.HIGHEST_PROTOCOL)
+
                 j += 1
-                    
-            # Once the dictionary is complete, write it to a JSON file
-            with open("carpet-city-paths.pkl", "wb") as f:
-                pickle.dump(routes, f, protocol=pickle.HIGHEST_PROTOCOL)
             
             i +=1
             
-        print("Routes have been calculated and saved to carpet-city-paths.pkl")
+        print(f"Routes have been calculated and saved to {file_name}")
 
     def _reset(self) -> None:
         if not hasattr(self, "episode_count"):
