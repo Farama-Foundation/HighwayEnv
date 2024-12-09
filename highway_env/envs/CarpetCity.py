@@ -1,5 +1,7 @@
 from __future__ import annotations
 import logging
+import pickle
+import time
 
 import numpy as np
 
@@ -75,22 +77,69 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 "screen_width": 1200,
             }
         )
-        return config    
+        return config
+    
+    def calculate_shortest_paths(self):
+        routes = {}
+        edges = self.road.network.graph_net.edges
+        
+        # Iterate over each location as the source
+        i = 0
+        j = 0
+        for _, startpoint, _ in edges:
+            print(f"---::: {i}/{len(edges)} @ Beginning on {startpoint}:::---")
+
+            # Create a nested dictionary for this source
+            routes[startpoint] = {}
+
+                
+            # Iterate over each location as the destination
+            j = 0
+            for _, destination, _ in edges:
+                if startpoint == destination:
+                    continue
+                
+                print(f"\t$$$ start: {i}/{len(edges)} @ dest.: {j}/{len(edges)-1} @ {destination}")
+                
+                # Compute the route from src to dst
+                result = self.road.network.shortest_path(startpoint, destination)
+
+                # Store the result in the nested dict structure
+                routes[startpoint][destination] = result
+                
+                j += 1
+                    
+            # Once the dictionary is complete, write it to a JSON file
+            with open("carpet-city-paths.pkl", "wb") as f:
+                pickle.dump(routes, f, protocol=pickle.HIGHEST_PROTOCOL)
+            
+            i +=1
+            
+        print("Routes have been calculated and saved to carpet-city-paths.pkl")
 
     def _reset(self) -> None:
-            self._make_road()
-            
-            if not hasattr(self, "episode_count"):
-                self.episode_count = 0
-            
-            logger.info(f"Episode: {self.episode_count}")
-            routes_logger.info(f"Episode: {self.episode_count}")
-            
-            self._categorize_edges_by_type()
-            self._make_vehicles(self.config["vehicles_count"])
-            self.episode_count += 1
+        logger.info(f"Episode: {self.episode_count}")
+        routes_logger.info(f"Episode: {self.episode_count}")
+        
+        self._make_road()
+        
+        # self.calculate_shortest_paths()
+        # return
     
-    def _make_road(self) -> None:
+        if not hasattr(self, "shortest_paths"):
+            with open("carpet-city-paths.pkl", "rb") as f:
+                self.shortest_paths = pickle.load(f)
+        
+        if not hasattr(self, "episode_count"):
+            self.episode_count = 0
+        
+        if not hasattr(self, "has_been_categorized"):
+            self._categorize_edges_by_type()
+        
+        self._make_vehicles(self.config["vehicles_count"])
+        self.episode_count += 1
+    
+    def _make_road(self):
         """Create a road composed of straight adjacent lanes."""
 
         nb = NetworkBuilder()
@@ -1505,8 +1554,12 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         )
 
         self.road = road
-        return
+        return net
 
+    def _get_shortest_path(self, startpoint: tuple[str, str, int], destination: tuple[str, str, int]) -> list[tuple[str, str, int]]:
+        shortest_path = [startpoint[0]] + self.shortest_paths[startpoint[1]][destination[1]]
+        return [(shortest_path[i], shortest_path[i+1], None) for i in range(len(shortest_path)-1)]
+        
     def _spawn_vehicle(
             self,
             longitudinal: float = 0,
@@ -1541,7 +1594,9 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 return
 
         routes_logger.info(f"\t_spawn_vehicele :: planning route {entry_edge} ~> {exit_edge}")
-        vehicle.plan_route_to(exit_edge[1])
+        vehicle.route = self._get_shortest_path(entry_edge, exit_edge)
+        
+        vehicle.check_collisions = False
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
         return vehicle
@@ -1554,6 +1609,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
          - Highway edges: edges whose end vertex name starts with 'H'
          - Turn edges: edges whose end vertex name starts with 'T'
         """
+        self.has_been_categorized = True
         self.I_edges = []
         self.R_edges = []
         self.H_edges = []
@@ -1606,7 +1662,6 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         
         return edge
     
-    
     def _make_vehicles(self, n_vehicles: int = 10) -> None:
         """
         Populate a road with several vehicles on the highway and on the merging lane
@@ -1634,7 +1689,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 )
                 for _ in range(self.config["simulation_frequency"])
             ]
-
+        
         self._spawn_vehicle()
 
         # Controlled vehicles
@@ -1660,7 +1715,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             try:
                 routes_logger.info(f"\t_make_vehicele  :: ego vehicle planning route {startpoint} ~> {destination}")
                 # print(f"destination[1]: {destination[1]} :: plan_route_to({destination[1]})")
-                ego_vehicle.plan_route_to(destination[1])
+                ego_vehicle.route = self._get_shortest_path(startpoint, destination)
                 ego_vehicle.speed_index = ego_vehicle.speed_to_index(
                     ego_lane.speed_limit
                 )
@@ -1681,7 +1736,6 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 ):
                     self.road.vehicles.remove(v)
 
-        
     # Note this reward function is just generic from another template
     def _reward(self, action: Action) -> float:
         """

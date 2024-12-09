@@ -2,18 +2,15 @@ from __future__ import annotations
 
 import logging
 import math
+import pickle
 
 import numpy as np
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
-<<<<<<< Updated upstream
-from highway_env.network_builder import CircularPath, NetworkBuilder, StraightPath
-=======
 from highway_env.envs.weighted_utils import WeightedUtils
 from highway_env.network_builder import CircularPath, NetworkBuilder, Path, StraightPath
->>>>>>> Stashed changes
 from highway_env.road.lanes.abstract_lanes import AbstractLane
 from highway_env.road.lanes.lane_utils import LaneType, LineType
 from highway_env.road.lanes.unweighted_lanes import CircularLane, SineLane, StraightLane
@@ -80,17 +77,63 @@ class Stovring(AbstractEnv, WeightedUtils):
         )
         return config
 
-    def _reset(self) -> None:
-        self._make_road()
+    def calculate_shortest_paths(self):
+        routes = {}
+        edges = self.road.network.graph_net.edges
         
-        if not hasattr(self, "episode_count"):
-                self.episode_count = 0
+        # Iterate over each location as the source
+        i = 0
+        j = 0
+        for _, startpoint, _ in edges:
+            print(f"---::: {i}/{len(edges)} @ Beginning on {startpoint}:::---")
+
+            # Create a nested dictionary for this source
+            routes[startpoint] = {}
+
                 
+            # Iterate over each location as the destination
+            j = 0
+            for _, destination, _ in edges:
+                if startpoint == destination:
+                    continue
+                
+                print(f"\t$$$ start: {i}/{len(edges)} @ dest.: {j}/{len(edges)-1} @ {destination}")
+                
+                # Compute the route from src to dst
+                result = self.road.network.shortest_path(startpoint, destination)
+
+                # Store the result in the nested dict structure
+                routes[startpoint][destination] = result
+                
+                j += 1
+                    
+            # Once the dictionary is complete, write it to a JSON file
+            with open("stovring-paths.pkl", "wb") as f:
+                pickle.dump(routes, f, protocol=pickle.HIGHEST_PROTOCOL)
+            
+            i +=1
+            
+        print("Routes have been calculated and saved to stovring-paths.pkl")
+
+    def _reset(self) -> None:
         logger.info(f"Episode: {self.episode_count}")
         routes_logger.info(f"Episode: {self.episode_count}")
-            
-        self._categorize_edges_by_type()
-            
+        
+        self._make_road()
+        
+        # self.calculate_shortest_paths()
+        # return
+    
+        if not hasattr(self, "shortest_paths"):
+            with open("carpet-city-paths.pkl", "rb") as f:
+                self.shortest_paths = pickle.load(f)
+        
+        if not hasattr(self, "episode_count"):
+            self.episode_count = 0
+        
+        if not hasattr(self, "has_been_categorized"):
+            self._categorize_edges_by_type()
+        
         self._make_vehicles(self.config["vehicles_count"])
         self.episode_count += 1
 
@@ -2095,6 +2138,10 @@ class Stovring(AbstractEnv, WeightedUtils):
         self.road = road
         return
 
+    def _get_shortest_path(self, startpoint: tuple[str, str, int], destination: tuple[str, str, int]) -> list[tuple[str, str, int]]:
+        shortest_path = [startpoint[0]] + self.shortest_paths[startpoint[1]][destination[1]]
+        return [(shortest_path[i], shortest_path[i+1], None) for i in range(len(shortest_path)-1)]
+
     def _spawn_vehicle(
             self,
             longitudinal: float = 0,
@@ -2123,14 +2170,16 @@ class Stovring(AbstractEnv, WeightedUtils):
             ),
             speed=speed + self.np_random.normal() * speed_deviation,
         )
-        vehicle.check_collision = False
+        
         # Not adding the vehicle, if it is too close to another vehicle
         for v in self.road.vehicles:
             if np.linalg.norm(v.position - vehicle.position) < 15:
                 return
 
         routes_logger.info(f"\t_spawn_vehicele :: planning route {entry_edge} ~> {exit_edge}")
-        vehicle.plan_route_to(exit_edge[1])
+        vehicle.route = self._get_shortest_path(entry_edge, exit_edge)
+
+        vehicle.check_collision = False
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
         return vehicle
@@ -2143,6 +2192,7 @@ class Stovring(AbstractEnv, WeightedUtils):
          - Highway edges: edges whose end vertex name starts with 'H'
          - Turn edges: edges whose end vertex name starts with 'T'
         """
+        self.has_been_categorized = True
         self.I_edges = []
         self.R_edges = []
         self.H_edges = []
@@ -2194,7 +2244,6 @@ class Stovring(AbstractEnv, WeightedUtils):
             close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
         
         return edge
-    
     
     def _make_vehicles(self, n_vehicles: int = 10) -> None:
         """
@@ -2249,7 +2298,7 @@ class Stovring(AbstractEnv, WeightedUtils):
             try:
                 routes_logger.info(f"\t_make_vehicele  :: ego vehicle planning route {startpoint} ~> {destination}")
                 # print(f"destination[1]: {destination[1]} :: plan_route_to({destination[1]})")
-                ego_vehicle.plan_route_to(destination[1])
+                ego_vehicle.route = self._get_shortest_path(startpoint, destination)
                 ego_vehicle.speed_index = ego_vehicle.speed_to_index(
                     ego_lane.speed_limit
                 )
