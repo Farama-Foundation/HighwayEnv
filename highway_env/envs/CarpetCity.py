@@ -1653,6 +1653,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             "right_lane_reward": lane / max(len(neighbours) - 1, 1),
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
             "on_road_reward": float(self.vehicle.on_road),
+            "distance_from_goal": self.vehicle.remaining_route_nodes,
+            "headway_evaluation": np.power(self.vehicle.headway_evaluation, 2),
         }
     
     def _is_terminated(self) -> bool:
