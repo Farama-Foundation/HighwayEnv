@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import logging
 import math
 import pickle
@@ -116,6 +117,9 @@ class Stovring(AbstractEnv, WeightedUtils):
         print("Routes have been calculated and saved to stovring-paths.pkl")
 
     def _reset(self) -> None:
+        if not hasattr(self, "episode_count"):
+            self.episode_count = 0
+            
         logger.info(f"Episode: {self.episode_count}")
         routes_logger.info(f"Episode: {self.episode_count}")
         
@@ -128,8 +132,12 @@ class Stovring(AbstractEnv, WeightedUtils):
             with open("carpet-city-paths.pkl", "rb") as f:
                 self.shortest_paths = pickle.load(f)
         
-        if not hasattr(self, "episode_count"):
-            self.episode_count = 0
+        if not hasattr(self, "local_graph_net"):
+            self.local_graph_net = copy.deepcopy(self.road.network.graph_net)
+        
+        if not hasattr(self, "shortest_paths"):
+            with open("stovring-paths.pkl", "rb") as f:
+                self.shortest_paths = pickle.load(f)
         
         if not hasattr(self, "has_been_categorized"):
             self._categorize_edges_by_type()
@@ -2198,8 +2206,17 @@ class Stovring(AbstractEnv, WeightedUtils):
         self.H_edges = []
         self.T_edges = []
 
-        edges = self.road.network.graph_net.edges
+        edges = list(self.local_graph_net.edges)
         for edge in edges:
+            
+            # Skip the edges we cannot get back
+            edge_lane = self.road.network.get_lane(edge)
+            close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
+            if edge != close_edge:
+                logger.info(f"\t_categorize_edges_by_type :: close_edge != edge -- {close_edge} : {edge}")
+                self.local_graph_net.remove_edge(*edge)
+                continue
+            
             end_node = edge[1]
             if end_node.startswith("I-"):
                 self.I_edges.append(edge)
@@ -2230,7 +2247,7 @@ class Stovring(AbstractEnv, WeightedUtils):
         return edge
         
     def _get_random_edge(self   ) -> tuple[str, str, int]:
-        edges = self.road.network.graph_net.edges
+        edges = list(self.local_graph_net.edges)
         edge = self.get_random_edge_from(edges)
         
         # Validate the edge can be found again
@@ -2239,6 +2256,8 @@ class Stovring(AbstractEnv, WeightedUtils):
 
         while edge != close_edge:
             logger.info(f"\t_get_random_edge          :: close_edge != edge -- {edge} : {close_edge}")
+            self.local_graph_net.remove_edge(*edge)
+            
             edge = self.get_random_edge_from(edges)
             edge_lane = self.road.network.get_lane(edge)
             close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
