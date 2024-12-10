@@ -55,7 +55,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 },
                 "action": {
                     "type": "DiscreteMetaAction",
-                    "target_speeds": [-10, 0, 5, 10, 20] #np.linspace(0, 30, 10)
+                    "target_speeds": np.linspace(0, 40, 10),
                 },
                 "simulation_frequency": 15,
                 "lanes_count": 2,
@@ -1816,4 +1816,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
 
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
-        return self.time >= self.config["duration"]
+        # Add logic for checking if we have reached our destination
+        return (
+            self.time >= self.config["duration"]
+            or self.vehicle.remaining_route_nodes == 0
+        )
