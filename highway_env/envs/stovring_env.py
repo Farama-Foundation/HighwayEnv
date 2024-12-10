@@ -2232,10 +2232,10 @@ class Stovring(AbstractEnv, WeightedUtils):
             return
 
         entry_edge = self._get_random_edge()
-        exit_edge  = self._get_random_edge() 
+        exit_edge  = self._get_random_destination_different_from(entry_edge) 
 
         while (entry_edge[0] in exit_edge or entry_edge[1] in exit_edge):
-            logger.info(f"\t_spawn_vehicle            :: Element in 'entry_edge' was in 'exit_edge' -- {entry_edge} ~> {exit_edge}")
+            logger.info(f"\t_spawn_vehicle                         :: Element in 'entry_edge' was in 'exit_edge' -- {entry_edge} ~> {exit_edge}")
             exit_edge = self._get_random_edge()
 
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
@@ -2249,7 +2249,6 @@ class Stovring(AbstractEnv, WeightedUtils):
             ),
             speed=speed + self.np_random.normal() * speed_deviation,
         )
-        
         # Not adding the vehicle, if it is too close to another vehicle
         for v in self.road.vehicles:
             if np.linalg.norm(v.position - vehicle.position) < 15:
@@ -2257,8 +2256,8 @@ class Stovring(AbstractEnv, WeightedUtils):
 
         routes_logger.info(f"\t_spawn_vehicele :: planning route {entry_edge} ~> {exit_edge}")
         vehicle.route = self._get_shortest_path(entry_edge, exit_edge)
-
-        vehicle.check_collision = False
+        
+        vehicle.check_collisions = False
         vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
         return vehicle
@@ -2277,14 +2276,13 @@ class Stovring(AbstractEnv, WeightedUtils):
         self.H_edges = []
         self.T_edges = []
 
-        edges = list(self.local_graph_net.edges)
-        for edge in edges:
+        for edge in list(self.local_graph_net.edges):
             
             # Skip the edges we cannot get back
             edge_lane = self.road.network.get_lane(edge)
             close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
             if edge != close_edge:
-                logger.info(f"\t_categorize_edges_by_type :: close_edge != edge -- {close_edge} : {edge}")
+                logger.info(f"\t_categorize_edges_by_type          :: close_edge != edge -- {close_edge} : {edge}")
                 self.local_graph_net.remove_edge(*edge)
                 continue
             
@@ -2297,7 +2295,7 @@ class Stovring(AbstractEnv, WeightedUtils):
                 self.H_edges.append(edge)
             elif end_node.startswith("T-"):
                 self.T_edges.append(edge)
-        
+
     def _get_balanced_random_edge(self) -> tuple[str, str, int]:
         categories: list[list[tuple[str, str, int]]] = [self.I_edges, self.R_edges, self.H_edges, self.T_edges]
         category_index: int                          = self.episode_count % len(categories)
@@ -2310,14 +2308,14 @@ class Stovring(AbstractEnv, WeightedUtils):
         close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
 
         while edge != close_edge:
-            logger.info(f"\t_get_balanced_random_edge :: close_edge != edge -- {edge} : {close_edge}")
+            logger.info(f"\t_get_balanced_random_edge              :: close_edge != edge -- {close_edge} : {edge}")
             edge = self.get_random_edge_from(chosen_category)
             edge_lane = self.road.network.get_lane(edge)
             close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
 
         return edge
         
-    def _get_random_edge(self   ) -> tuple[str, str, int]:
+    def _get_random_edge(self) -> tuple[str, str, int]:
         edges = list(self.local_graph_net.edges)
         edge = self.get_random_edge_from(edges)
         
@@ -2326,9 +2324,9 @@ class Stovring(AbstractEnv, WeightedUtils):
         close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
 
         while edge != close_edge:
-            logger.info(f"\t_get_random_edge          :: close_edge != edge -- {edge} : {close_edge}")
+            logger.info(f"\t_get_random_edge                       :: close_edge != edge -- {close_edge} : {edge}")
             self.local_graph_net.remove_edge(*edge)
-            
+
             edge = self.get_random_edge_from(edges)
             edge_lane = self.road.network.get_lane(edge)
             close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
@@ -2340,7 +2338,7 @@ class Stovring(AbstractEnv, WeightedUtils):
         
         # Validate that no vertex from 'start_edge' is in 'destination'
         while (start_edge[0] in destination or start_edge[1] in destination):
-            logger.info(f"\t_make_vehicles :: Element in 'startpoint' was in 'destination' -- {start_edge} ~> {destination}")
+            logger.info(f"\t_get_random_destination_different_from :: Element in 'startpoint' was in 'destination' -- {start_edge} ~> {destination}")
             destination = self._get_random_edge()
             
         return destination
@@ -2352,6 +2350,7 @@ class Stovring(AbstractEnv, WeightedUtils):
                 return candidate
             
         return None
+    
     
     def _make_vehicles(self, n_vehicles: int = 10) -> None:
         """

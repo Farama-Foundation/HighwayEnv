@@ -1630,10 +1630,10 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             return
 
         entry_edge = self._get_random_edge()
-        exit_edge  = self._get_random_edge() 
+        exit_edge  = self._get_random_destination_different_from(entry_edge) 
 
         while (entry_edge[0] in exit_edge or entry_edge[1] in exit_edge):
-            logger.info(f"\t_spawn_vehicle            :: Element in 'entry_edge' was in 'exit_edge' -- {entry_edge} ~> {exit_edge}")
+            logger.info(f"\t_spawn_vehicle                         :: Element in 'entry_edge' was in 'exit_edge' -- {entry_edge} ~> {exit_edge}")
             exit_edge = self._get_random_edge()
 
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
@@ -1680,7 +1680,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             edge_lane = self.road.network.get_lane(edge)
             close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
             if edge != close_edge:
-                logger.info(f"\t_categorize_edges_by_type :: close_edge != edge -- {close_edge} : {edge}")
+                logger.info(f"\t_categorize_edges_by_type          :: close_edge != edge -- {close_edge} : {edge}")
                 self.local_graph_net.remove_edge(*edge)
                 continue
             
@@ -1706,14 +1706,14 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
 
         while edge != close_edge:
-            logger.info(f"\t_get_balanced_random_edge :: close_edge != edge -- {close_edge} : {edge}")
+            logger.info(f"\t_get_balanced_random_edge              :: close_edge != edge -- {close_edge} : {edge}")
             edge = self.get_random_edge_from(chosen_category)
             edge_lane = self.road.network.get_lane(edge)
             close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
 
         return edge
         
-    def _get_random_edge(self   ) -> tuple[str, str, int]:
+    def _get_random_edge(self) -> tuple[str, str, int]:
         edges = list(self.local_graph_net.edges)
         edge = self.get_random_edge_from(edges)
         
@@ -1722,7 +1722,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         close_edge = self.road.network.get_closest_lane_index(edge_lane.position(0,0), edge_lane.heading_at(60))
 
         while edge != close_edge:
-            logger.info(f"\t_get_random_edge          :: close_edge != edge -- {close_edge} : {edge}")
+            logger.info(f"\t_get_random_edge                       :: close_edge != edge -- {close_edge} : {edge}")
             self.local_graph_net.remove_edge(*edge)
 
             edge = self.get_random_edge_from(edges)
@@ -1736,7 +1736,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         
         # Validate that no vertex from 'start_edge' is in 'destination'
         while (start_edge[0] in destination or start_edge[1] in destination):
-            logger.info(f"\t_make_vehicles :: Element in 'startpoint' was in 'destination' -- {start_edge} ~> {destination}")
+            logger.info(f"\t_get_random_destination_different_from :: Element in 'startpoint' was in 'destination' -- {start_edge} ~> {destination}")
             destination = self._get_random_edge()
             
         return destination
@@ -1909,9 +1909,10 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                         vehicle_destination = self._get_random_destination_different_from(start_edge)
                     
                     try:
+                        routes_logger.info(f"\t_make_vehicele  :: ego vehicle planning route {startpoint} ~> {destination}")
                         other_vehicle.route = self._get_shortest_path(start_edge, vehicle_destination)
                     except Exception as e:
-                        logger.warning(f"Could not get shortest path for other vehicle: {e}")
+                        logger.warning(f"In episode '{self.episode_count}': AttributeError while planning ego route")
                         other_vehicle.route = []
 
                     other_vehicle.randomize_behavior()
