@@ -2468,9 +2468,10 @@ class Stovring(AbstractEnv, WeightedUtils):
 
 
         # Spawn the other vehicles
+        _attempts = 10
         for _ in range(num_other_vehicles):
             placed = False
-            for _attempt in range(10):  # up to 10 attempts to place a vehicle
+            for _attempt in range(_attempts):  # up to 10 attempts to place a vehicle
                 if not candidate_edges:
                     # If no candidate lanes are available, break early.
                     break
@@ -2512,6 +2513,7 @@ class Stovring(AbstractEnv, WeightedUtils):
                         vehicle_destination = self._get_random_destination_different_from(start_edge)
                     
                     try:
+                        routes_logger.info(f"\t_make_vehicele  :: planning route {start_edge} ~> {vehicle_destination}")
                         other_vehicle.route = self._get_shortest_path(start_edge, vehicle_destination)
                     except Exception as e:
                         logger.warning(f"Could not get shortest path for other vehicle: {e}")
@@ -2523,7 +2525,7 @@ class Stovring(AbstractEnv, WeightedUtils):
                     break
 
             if not placed:
-                logger.info("Could not place a new vehicle without collision after 10 attempts.")
+                logger.info(f"Could not place a new vehicle without collision after {_attempts} attempts.")
 
         # ---::: End of code for spawning other vehicles :::---
         
