@@ -79,6 +79,8 @@ class ControlledVehicle(Vehicle):
             dist_to_front = self.front_distance_to(front_vehicle) / self.speed
             if dist_to_front < 2.0:
                 return np.log2(dist_to_front) - 1
+            elif 2.0 < dist_to_front < 3.0:
+                return np.log2(dist_to_front)
 
         return 0
 
