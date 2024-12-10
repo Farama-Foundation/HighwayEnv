@@ -3,6 +3,8 @@ import copy
 import logging
 import os
 import pickle
+import time
+import random
 
 import numpy as np
 
@@ -74,8 +76,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 "reward_speed_range": [20, 30],
                 "normalize_reward": True,
                 "offroad_terminal": False,
-                "screen_height": 600,
-                "screen_width": 1200,
+                "screen_height": 900,
+                "screen_width": 2000,
             }
         )
         return config
@@ -88,45 +90,86 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 routes = pickle.load(f)
         else:
             routes = {}
-
-        edges = self.road.network.graph_net.edges
         
-        # Iterate over each location as the source
+        edges = self.road.network.graph_net.edges
+
+        total_edges = (len(edges) * (len(edges) - 1)) 
+        edges_left = total_edges
+        
+        for _, s, _ in edges:
+            if s in routes:
+                edges_left -= len(routes[s])
+                
+            edges_left -= 1
+            
+        if edges_left < 0:
+            edges_left = 0
+            
+        avg_time = None
+        count = 0
+        
+        
         i = 0
         for _, startpoint, _ in edges:
-            print(f"---::: {i}/{len(edges)} @ Beginning on {startpoint}:::---")
+            # shortest_path_logger.info(f"---::: {i}/{len(edges)-1} @ Beginning on '{startpoint}' :::---")
+            print(f"---::: {i}/{len(edges)} @ Beginning on '{startpoint}' :::---")
 
-            # Create a nested dictionary for this source
             if startpoint not in routes:
                 routes[startpoint] = {}
 
                 
-            # Iterate over each location as the destination
             j = 0
             for _, destination, _ in edges:
                 if startpoint == destination:
-                    continue
-                
-                if destination in routes[startpoint]:
-                    print(f"\t$$$ Skipping already calculated route from {startpoint} to {destination}")
                     j += 1
                     continue
+
+                start_t = time.time()
+                if destination in routes[startpoint]:
+                    # shortest_path_logger.info(f"\t$$$ Skipping already calculated route from '{startpoint}' ~> '{destination}'\t @ path is: {routes[startpoint][destination]}")
+                    print(f"\t$$$ Skipping already calculated route from '{startpoint}' ~> '{destination}'\t")
+                        
+                    j += 1
+                    edges_left -= 1
+                    continue
                 
-                print(f"\t$$$ start: {i}/{len(edges)} @ dest.: {j}/{len(edges)-1} @ {destination}")
                 
-                # Compute the route from src to dst
                 result = self.road.network.shortest_path(startpoint, destination)
 
-                # Store the result in the nested dict structure
                 routes[startpoint][destination] = result
-                
-                # Once the dictionary is complete, write it to a JSON file
-                with open("carpet-city-paths.pkl", "wb") as f:
+                    
+                with open(file_name, "wb") as f:
                     pickle.dump(routes, f, protocol=pickle.HIGHEST_PROTOCOL)
 
+                end_t = time.time()
+                duration = end_t - start_t
+                
+                
+                if avg_time is None:
+                    avg_time = duration
+                else:
+                    avg_time = (avg_time * count + duration) / (count + 1)
+                
+                count += 1
+                edges_left -= 1
+                
+                if avg_time is not None and edges_left > 0:
+                    time_left = avg_time * edges_left
+                    hrs = int(time_left // 3600)
+                    mins = int((time_left % 3600) // 60)
+                    secs = int(time_left % 60)
+                    time_left_str = f"{hrs}h {mins}m {secs}s"
+                else:
+                    time_left_str = "N/A"
+                
+                
+                # shortest_path_logger.info(f"\t$$$ start: {i}/{len(edges)-1} @ dest.: {j}/{len(edges)-2} @ '{startpoint}' ~> '{destination}'")
+                print(f"\t$$$ estimate time left: {time_left_str}\t $$$ start: {i}/{len(edges)-1} @ dest.: {j}/{len(edges)-2} @ '{startpoint}' ~> '{destination}'")
+                
                 j += 1
             
             i +=1
+            edges_left -= 1
             
         print(f"Routes have been calculated and saved to {file_name}")
 
@@ -1688,6 +1731,24 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         
         return edge
     
+    def _get_random_destination_different_from(self, start_edge) -> tuple[str, str, int]:
+        destination = self._get_random_edge()
+        
+        # Validate that no vertex from 'start_edge' is in 'destination'
+        while (start_edge[0] in destination or start_edge[1] in destination):
+            logger.info(f"\t_make_vehicles :: Element in 'startpoint' was in 'destination' -- {start_edge} ~> {destination}")
+            destination = self._get_random_edge()
+            
+        return destination
+    
+    def get_destination_close_to(self, start_edge, ego_destination) -> tuple[str, str, int]:
+        for _ in range(10):
+            candidate = self._get_random_destination_different_from(start_edge)
+            if ego_destination in candidate:
+                return candidate
+            
+        return None
+    
     def _make_vehicles(self, n_vehicles: int = 10) -> None:
         """
         Populate a road with several vehicles on the highway and on the merging lane
@@ -1702,52 +1763,31 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         vehicle_type.COMFORT_ACC_MAX = 6
         vehicle_type.COMFORT_ACC_MIN = -3
 
-        # Random vehicles
-        simulation_steps = 0 # How far the vehicles should drive before the ego vehicle is spawned.
-        for t in range(n_vehicles - 1):
-            self._spawn_vehicle()
-            #self._spawn_vehicle(np.linspace(0, 80, n_vehicles)[t])
-        for _ in range(simulation_steps):
-            [
-                (
-                    self.road.act(),
-                    self.road.step(1 / self.config["simulation_frequency"]),
-                )
-                for _ in range(self.config["simulation_frequency"])
-            ]
-        
-        self._spawn_vehicle()
-
         # Controlled vehicles
         self.controlled_vehicles = []
         for ego_id in range(0, self.config["controlled_vehicles"]):
             startpoint = self._get_balanced_random_edge()
-            destination = self._get_random_edge()
-            
-            # Validate that no vertex from 'startpoint' is in 'destination'
-            while (startpoint[0] in destination or startpoint[1] in destination):
-                logger.info(f"\t_make_vehicles :: Element in 'startpoint' was in 'destination' -- {startpoint} ~> {destination}")
-                destination = self._get_random_edge()
-
+            destination = self._get_random_destination_different_from(startpoint)
             
             ego_lane = self.road.network.get_lane(startpoint)
+            ego_longtitudinal = min(50, ego_lane.length - 10)
+            ego_pos = ego_lane.position(ego_longtitudinal, 0)
+            ego_heading = ego_lane.heading_at(ego_longtitudinal)
+            
             ego_vehicle = self.action_type.vehicle_class(
                 self.road,
-                ego_lane.position(0, 0),
-                speed=ego_lane.speed_limit,
-                heading=ego_lane.heading_at(60),
+                ego_pos,
+                speed=10,
+                heading=ego_heading,
             )
             
             try:
                 routes_logger.info(f"\t_make_vehicele  :: ego vehicle planning route {startpoint} ~> {destination}")
                 # print(f"destination[1]: {destination[1]} :: plan_route_to({destination[1]})")
+
                 ego_vehicle.route = self._get_shortest_path(startpoint, destination)
-                ego_vehicle.speed_index = ego_vehicle.speed_to_index(
-                    ego_lane.speed_limit
-                )
-                ego_vehicle.target_speed = ego_vehicle.index_to_speed(
-                    ego_vehicle.speed_index
-                )
+                # ego_vehicle.speed_index = ego_vehicle.speed_to_index(ego_lane.speed_limit)
+                # ego_vehicle.target_speed = ego_vehicle.index_to_speed(ego_vehicle.speed_index)
             except AttributeError:
                 print("Got an attribute error")
                 logger.warning(f"In episode '{self.episode_count}': AttributeError while planning ego route")
@@ -1755,12 +1795,141 @@ class CarpetCity(AbstractEnv, WeightedUtils):
 
             self.road.vehicles.append(ego_vehicle)
             self.controlled_vehicles.append(ego_vehicle)
-            for v in self.road.vehicles:  # Prevent early collisions
-                if (
-                    v is not ego_vehicle
-                    and np.linalg.norm(v.position - ego_vehicle.position) < 20
-                ):
-                    self.road.vehicles.remove(v)
+        
+        # ---::: Code to spawn other vehicles goes here :::---
+
+        # Use the ego vehicle's route. This should be a list of edges like [(start_node, end_node, lane_index), ...]
+        candidate_edges = list(ego_vehicle.route)  # Already a list of edges along the route
+
+        # For each edge in the route, add all side lanes
+        for edge in ego_vehicle.route:
+            side_lane_indexes = self.road.network.all_side_lanes(edge)
+            for sl_idx in side_lane_indexes:
+                candidate_edges.append(sl_idx)
+
+        # Remove duplicates if any
+        candidate_edges = list(dict.fromkeys(candidate_edges))
+        ego_final_node = destination
+        close_to_ego_dest_probability = 0.7
+
+        vehicle_behind = 5
+        vehicles_behind_placed = 0
+        behind_spacing = 10.0
+        num_other_vehicles = n_vehicles
+        
+        while vehicles_behind_placed < vehicle_behind and num_other_vehicles > 0:
+            behind_longitudinal = ego_longtitudinal - (behind_spacing * (vehicles_behind_placed + 1))
+            if behind_longitudinal < 0:
+                break
+            
+            pos_behind = ego_lane.position(behind_longitudinal, 0)
+            heading_behind = ego_lane.heading_at(behind_longitudinal)
+            
+            if self.road.network.get_lane_type(startpoint[0], startpoint[1]) == LaneType.HIGHWAY:
+                speed_behind = np.random.uniform(20, 30)
+            else:
+                speed_behind = np.random.uniform(5, 20)
+                
+            other_vehicle = vehicle_type(self.road, pos_behind, heading=heading_behind, speed=speed_behind)
+
+            no_collision = True
+            for v in self.road.vehicles:
+                if np.linalg.norm(v.position - other_vehicle.position) < 10:
+                    no_collision = False
+                    break
+                
+            
+            if no_collision:
+                # Route for behind vehicle: also try close to ego's final node
+                start_edge = startpoint
+                if random.random() < close_to_ego_dest_probability:
+                    vehicle_destination = self.get_destination_close_to(start_edge, ego_final_node)
+                    if vehicle_destination is None:
+                        vehicle_destination = self._get_random_destination_different_from(start_edge)
+                else:
+                    vehicle_destination = self._get_random_destination_different_from(start_edge)
+
+                try:
+                    other_vehicle.route = self._get_shortest_path(start_edge, vehicle_destination)
+                except Exception as e:
+                    logger.warning(f"Could not get shortest path for behind vehicle: {e}")
+                    other_vehicle.route = []
+
+                other_vehicle.randomize_behavior()
+                self.road.vehicles.append(other_vehicle)
+                vehicles_behind_placed += 1
+                num_other_vehicles -= 1
+
+            else:
+                break
+
+
+        # Spawn the other vehicles
+        for _ in range(num_other_vehicles):
+            placed = False
+            for _attempt in range(10):  # up to 10 attempts to place a vehicle
+                if not candidate_edges:
+                    # If no candidate lanes are available, break early.
+                    break
+                
+                # Pick a random edge and get its corresponding lane
+                edge = random.choice(candidate_edges)
+                lane = self.road.network.get_lane(edge)
+                
+                # Choose a random longitudinal position along this lane
+                longitudinal = np.random.uniform(0, lane.length)
+                pos = lane.position(longitudinal, 0)
+                heading = lane.heading_at(longitudinal)
+                
+                if self.road.network.get_lane_type(edge[0], edge[1]) == LaneType.HIGHWAY:
+                    speed = np.random.uniform(20, 30)
+                else:
+                    speed = np.random.uniform(5, 20)
+                
+                other_vehicle = vehicle_type(self.road, pos, heading=heading, speed=speed)
+                other_vehicle.check_collisions = False
+                
+                # Check collision with existing vehicles
+                no_collision = True
+                for v in self.road.vehicles:
+                    if np.linalg.norm(v.position - other_vehicle.position) < 10:  # 10 meters safe distance
+                        no_collision = False
+                        break
+
+                if no_collision:
+                    start_edge = edge
+
+                    if random.random() < close_to_ego_dest_probability:
+                        # Get destination close to ego_destination
+                        vehicle_destination = self.get_destination_close_to(start_edge, ego_final_node)
+                        if vehicle_destination is None:
+                            vehicle_destination = self._get_random_destination_different_from(start_edge)
+                    else:
+                        # Get random destination
+                        vehicle_destination = self._get_random_destination_different_from(start_edge)
+                    
+                    try:
+                        other_vehicle.route = self._get_shortest_path(start_edge, vehicle_destination)
+                    except Exception as e:
+                        logger.warning(f"Could not get shortest path for other vehicle: {e}")
+                        other_vehicle.route = []
+
+                    other_vehicle.randomize_behavior()
+                    self.road.vehicles.append(other_vehicle)
+                    placed = True
+                    break
+
+            if not placed:
+                logger.info("Could not place a new vehicle without collision after 10 attempts.")
+
+        # ---::: End of code for spawning other vehicles :::---
+        
+        for v in self.road.vehicles:  # Prevent early collisions
+            if (
+                v is not ego_vehicle
+                and np.linalg.norm(v.position - ego_vehicle.position) < 20
+            ):
+                self.road.vehicles.remove(v)
 
     # Note this reward function is just generic from another template
     def _reward(self, action: Action) -> float:
@@ -1819,5 +1988,5 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         # Add logic for checking if we have reached our destination
         return (
             self.time >= self.config["duration"]
-            or self.vehicle.remaining_route_nodes == 0
+            # or self.vehicle.remaining_route_nodes == 0
         )
