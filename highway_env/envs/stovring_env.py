@@ -5,6 +5,7 @@ import logging
 import math
 import os
 import pickle
+import time
 
 import numpy as np
 
@@ -37,6 +38,15 @@ routes_formatter = logging.Formatter('%(message)s')
 file_handler_routes.setFormatter(routes_formatter)
 routes_logger.addHandler(file_handler_routes)
 routes_logger.propagate = False
+
+# Shortest path logger
+shortest_path_logger = logging.getLogger(__name__ + ".routes")
+shortest_path_logger.setLevel(logging.INFO)
+file_handler_routes = logging.FileHandler("stovring_shortest_paths.log")
+shortest_path_formatter = logging.Formatter('%(message)s')
+file_handler_routes.setFormatter(shortest_path_formatter)
+shortest_path_logger.addHandler(file_handler_routes)
+shortest_path_logger.propagate = False
 
 class Stovring(AbstractEnv, WeightedUtils):
     """
@@ -90,10 +100,28 @@ class Stovring(AbstractEnv, WeightedUtils):
         
         edges = self.road.network.graph_net.edges
 
+        total_edges = (len(edges) * (len(edges) - 1)) 
+        edges_left = total_edges
+        
+        for _, s, _ in edges:
+            if s in routes:
+                edges_left -= len(routes[s])
+                
+            edges_left -= 1
+            
+        if edges_left < 0:
+            edges_left = 0
+            
+        avg_time = None
+        count = 0
+        
+        
+        
         # Iterate over each location as the source
         i = 0
         for _, startpoint, _ in edges:
-            print(f"---::: {i}/{len(edges)} @ Beginning on {startpoint}:::---")
+            # shortest_path_logger.info(f"---::: {i}/{len(edges)-1} @ Beginning on '{startpoint}' :::---")
+            print(f"---::: {i}/{len(edges)} @ Beginning on '{startpoint}' :::---")
 
             # Create a nested dictionary for this source
             if startpoint not in routes:
@@ -104,14 +132,18 @@ class Stovring(AbstractEnv, WeightedUtils):
             j = 0
             for _, destination, _ in edges:
                 if startpoint == destination:
-                    continue
-                
-                if destination in routes[startpoint]:
-                    print(f"\t$$$ Skipping already calculated route from {startpoint} to {destination}")
                     j += 1
                     continue
+
+                start_t = time.time()
+                if destination in routes[startpoint]:
+                    # shortest_path_logger.info(f"\t$$$ Skipping already calculated route from '{startpoint}' ~> '{destination}'\t @ path is: {routes[startpoint][destination]}")
+                    print(f"\t$$$ Skipping already calculated route from '{startpoint}' ~> '{destination}'\t")
+                        
+                    j += 1
+                    edges_left -= 1
+                    continue
                 
-                print(f"\t$$$ start: {i}/{len(edges)} @ dest.: {j}/{len(edges)-1} @ {destination}")
                 
                 # Compute the route from src to dst
                 result = self.road.network.shortest_path(startpoint, destination)
@@ -123,9 +155,35 @@ class Stovring(AbstractEnv, WeightedUtils):
                 with open(file_name, "wb") as f:
                     pickle.dump(routes, f, protocol=pickle.HIGHEST_PROTOCOL)
 
+                end_t = time.time()
+                duration = end_t - start_t
+                
+                
+                if avg_time is None:
+                    avg_time = duration
+                else:
+                    avg_time = (avg_time * count + duration) / (count + 1)
+                
+                count += 1
+                edges_left -= 1
+                
+                if avg_time is not None and edges_left > 0:
+                    time_left = avg_time * edges_left
+                    hrs = int(time_left // 3600)
+                    mins = int((time_left % 3600) // 60)
+                    secs = int(time_left % 60)
+                    time_left_str = f"{hrs}h {mins}m {secs}s"
+                else:
+                    time_left_str = "N/A"
+                
+                
+                # shortest_path_logger.info(f"\t$$$ start: {i}/{len(edges)-1} @ dest.: {j}/{len(edges)-2} @ '{startpoint}' ~> '{destination}'")
+                print(f"\t$$$ estimate time left: {time_left_str}\t $$$ start: {i}/{len(edges)-1} @ dest.: {j}/{len(edges)-2} @ '{startpoint}' ~> '{destination}'")
+                
                 j += 1
             
             i +=1
+            edges_left -= 1
             
         print(f"Routes have been calculated and saved to {file_name}")
 
