@@ -74,11 +74,12 @@ class ControlledVehicle(Vehicle):
         is too close to the vehicle in front of it. The minimum distance, is hard-coded to match the legislated Danish
         minimum distance of 2s.
         """
+        min_value = -5
         front_vehicle, _ = self.road.neighbour_vehicles(self)
         if front_vehicle is not None:
             dist_to_front = self.front_distance_to(front_vehicle) / self.speed
             if dist_to_front < 2.0:
-                return np.log2(dist_to_front) - 1
+                return max(min_value, np.log2(dist_to_front) - 1)
             elif 2.0 < dist_to_front < 3.0:
                 return np.log2(dist_to_front)
 
