@@ -1990,8 +1990,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
 
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
-        # Add logic for checking if we have reached our destination
         return (
             self.time >= self.config["duration"]
-            # or self.vehicle.remaining_route_nodes == 0
+            or self.vehicle.remaining_route_nodes == 0
         )
