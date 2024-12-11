@@ -26,7 +26,7 @@ def _register_highway_envs():
 
     # Stovring - by Tosuma
     register(
-        id="Stovring",
+        id="stovring",
         entry_point="highway_env.envs:Stovring",
     )
 
