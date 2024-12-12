@@ -76,8 +76,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 "reward_speed_range": [20, 30],
                 "normalize_reward": True,
                 "offroad_terminal": False,
-                "screen_height": 900,
-                "screen_width": 2000,
+                "screen_height": 600,
+                "screen_width": 1200,
             }
         )
         return config
@@ -1987,8 +1987,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
 
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
-        # Add logic for checking if we have reached our destination
         return (
             self.time >= self.config["duration"]
-            # or self.vehicle.remaining_route_nodes == 0
+            or self.vehicle.remaining_route_nodes == 0
         )
