@@ -2543,6 +2543,8 @@ class Stovring(AbstractEnv, WeightedUtils):
         :param action: the last action performed
         :return: the corresponding reward
         """
+        MIN_REWARD = -10
+        MAX_REWARD = 10
         rewards = self._rewards(action)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
@@ -2551,33 +2553,18 @@ class Stovring(AbstractEnv, WeightedUtils):
             reward = utils.lmap(
                 reward,
                 [
-                    self.config["collision_reward"],
-                    self.config["high_speed_reward"] + self.config["right_lane_reward"],
+                    MIN_REWARD,
+                    MAX_REWARD,
                 ],
                 [0, 1],
             )
-        reward *= rewards["on_road_reward"]
-
         return reward
 
     # Note this reward function is just generic from another template
     def _rewards(self, action: Action) -> dict[str, float]:
-        neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
-        lane = (
-            self.vehicle.target_lane_index[2]
-            if isinstance(self.vehicle, ControlledVehicle)
-            else self.vehicle.lane_index[2]
-        )
-        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
-        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
-        scaled_speed = utils.lmap(
-            forward_speed, self.config["reward_speed_range"], [0, 1]
-        )
         return {
             "collision_reward": float(self.vehicle.crashed),
-            "right_lane_reward": lane / max(len(neighbours) - 1, 1),
-            "high_speed_reward": np.clip(scaled_speed, 0, 1),
-            "on_road_reward": float(self.vehicle.on_road),
+            "distance_from_goal": np.log2(self.vehicle.remaining_route_nodes),
         }
 
     def _is_terminated(self) -> bool:
