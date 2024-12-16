@@ -51,20 +51,33 @@ class RoundaboutEnv(AbstractEnv):
 
     def _reward(self, action: int) -> float:
         rewards = self._rewards(action)
-        return sum(rewards.values())
+        reward = sum(
+            self.config.get(name, 0) * reward for name, reward in rewards.items()
+        )
+        if self.config["normalize_reward"]:
+            reward = utils.lmap(
+                reward,
+                [0, 1],
+                [0, 1],
+            )
+
+        reward *= rewards["collision_reward"]
+        return reward
 
     def _rewards(self, action: int) -> dict[str, float]:
+        min_value = 0
+        max_value = 1
         return {
             "collision_reward":
                 self.vehicle.crashed * self.config["collision_weight"],
             "distance_from_goal":
-                self.vehicle.remaining_route_nodes * self.config["distance_from_goal_weight"],
+                np.clip(self.vehicle.remaining_route_nodes * self.config["distance_from_goal_weight"], min_value, max_value),
             "lane_change_reward":
-                action in [0, 2] * self.config["lane_change_weight"],
+                np.clip(action in [0, 2] * self.config["lane_change_weight"], min_value, max_value),
             "headway_evaluation":
-                self.vehicle.headway_evaluation * self.config["headway_evaluation_weight"],
+                np.clip(self.vehicle.headway_evaluation * self.config["headway_evaluation_weight"], min_value, max_value) ,
             "on_road_reward":
-                self.vehicle.on_road * self.config["on_road_weight"],
+                np.clip(self.vehicle.on_road * self.config["on_road_weight"], min_value, max_value),
         }
 
     def _is_terminated(self) -> bool:

@@ -1959,6 +1959,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
 
     # Note this reward function is just generic from another template
     def _rewards(self, action: Action) -> dict[str, float]:
+        MIN_REWARD = -10
+        MAX_REWARD = 2
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = (
             self.vehicle.target_lane_index[2]
@@ -1974,7 +1976,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             "collision_reward": float(self.vehicle.crashed),
             "right_lane_reward": lane / max(len(neighbours) - 1, 1),
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
-            "on_road_reward": float(self.vehicle.on_road),
+            "distance_from_goal": self.vehicle.remaining_route_nodes,
+            "headway_evaluation": np.power(self.vehicle.headway_evaluation, 2),
         }
     
     def _is_terminated(self) -> bool:
