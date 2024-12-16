@@ -199,10 +199,6 @@ class Stovring(AbstractEnv, WeightedUtils):
         # self.calculate_shortest_paths()
         # return
     
-        if not hasattr(self, "shortest_paths"):
-            with open("carpet-city-paths.pkl", "rb") as f:
-                self.shortest_paths = pickle.load(f)
-        
         if not hasattr(self, "local_graph_net"):
             self.local_graph_net = copy.deepcopy(self.road.network.graph_net)
         
