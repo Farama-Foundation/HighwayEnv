@@ -75,7 +75,7 @@ class Stovring(AbstractEnv, WeightedUtils):
                 "duration": 60,  # [s]
                 "ego_spacing": 2,
                 "vehicles_density": 1,
-                "collision_reward": -1,  # The reward received when colliding with a vehicle.
+                "collision_reward": -10,  # The reward received when colliding with a vehicle.
                 "right_lane_reward": 0.1,  # The reward received when driving on the right-most lanes, linearly mapped to
                 # zero for other lanes.
                 "high_speed_reward": 0.4,  # The reward received when driving at full speed, linearly mapped to zero for

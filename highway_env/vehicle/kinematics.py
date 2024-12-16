@@ -120,7 +120,6 @@ class Vehicle(RoadObject):
         return v
 
     def travelled_distance(self):
-        # TODO: remove
         return self.position[0] - self.starting_position[0]
 
     def act(self, action: dict | str = None) -> None:

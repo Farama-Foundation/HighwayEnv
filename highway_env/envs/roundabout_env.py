@@ -28,15 +28,16 @@ class RoundaboutEnv(AbstractEnv):
                     },
                 },
                 "action": {"type": "DiscreteMetaAction", "target_speeds": [0, 8, 16]},
+                "reward_speed_range": [8, 16],
                 "incoming_vehicle_destination": None,
-                "collision_reward": -1,
-                "high_speed_reward": 0.2,
+                "collision_reward": -10,
+                "high_speed_reward": 0.4,
                 "right_lane_reward": 0,
                 "lane_change_reward": -0.05,
                 "screen_width": 600,
                 "screen_height": 600,
                 "centering_position": [0.5, 0.6],
-                "duration": 11,
+                "duration": 30,
                 "normalize_reward": True,
                 "vehicles_count": 10,
                 # Reward weights
@@ -50,6 +51,8 @@ class RoundaboutEnv(AbstractEnv):
         return config
 
     def _reward(self, action: int) -> float:
+        MIN_REWARD = -10
+        MAX_REWARD = 5
         rewards = self._rewards(action)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
@@ -57,34 +60,31 @@ class RoundaboutEnv(AbstractEnv):
         if self.config["normalize_reward"]:
             reward = utils.lmap(
                 reward,
-                [0, 1],
+                [MIN_REWARD, MAX_REWARD],
                 [0, 1],
             )
 
-        reward *= rewards["collision_reward"]
         return reward
 
     def _rewards(self, action: int) -> dict[str, float]:
-        min_value = 0
-        max_value = 1
+        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
+        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
+        scaled_speed = utils.lmap(
+            forward_speed, self.config["reward_speed_range"], [0, 1]
+        )
         return {
-            "collision_reward":
-                self.vehicle.crashed * self.config["collision_weight"],
-            "distance_from_goal":
-                np.clip(self.vehicle.remaining_route_nodes * self.config["distance_from_goal_weight"], min_value, max_value),
-            "lane_change_reward":
-                np.clip(action in [0, 2] * self.config["lane_change_weight"], min_value, max_value),
-            "headway_evaluation":
-                np.clip(self.vehicle.headway_evaluation * self.config["headway_evaluation_weight"], min_value, max_value) ,
-            "on_road_reward":
-                np.clip(self.vehicle.on_road * self.config["on_road_weight"], min_value, max_value),
+            "collision_reward": self.vehicle.crashed * self.config["collision_reward"],
+            "distance_from_goal": self.vehicle.remaining_route_nodes,
+            "lane_change_reward": float(action in [0, 2]),
+            "headway_evaluation": self.vehicle.headway_evaluation,
+            "high_speed_reward": np.clip(scaled_speed, 0, 1),
         }
 
     def _is_terminated(self) -> bool:
         return self.vehicle.crashed
 
     def _is_truncated(self) -> bool:
-        return self.time >= self.config["duration"]
+        return self.time >= self.config["duration"] or self.vehicle.remaining_route_nodes == 1
 
     def _reset(self) -> None:
         self._make_road()
@@ -238,6 +238,10 @@ class RoundaboutEnv(AbstractEnv):
         )
 
         net.add_lane(
+            "sxr", "sxre", StraightLane([-2, dev / 2], [-2, access], line_types=(n, c))
+        )
+
+        net.add_lane(
             "eer", "ees", StraightLane([access, -2], [dev / 2, -2], line_types=(s, c))
         )
         net.add_lane(
@@ -266,6 +270,10 @@ class RoundaboutEnv(AbstractEnv):
         )
         net.add_lane(
             "exs", "exr", StraightLane([dev / 2, 2], [access, 2], line_types=(n, c))
+        )
+
+        net.add_lane(
+            "exr", "exre", StraightLane([dev / 2, 2], [access, 2], line_types=(n, c))
         )
 
         net.add_lane(
@@ -300,6 +308,10 @@ class RoundaboutEnv(AbstractEnv):
         )
 
         net.add_lane(
+            "nxr", "nxre", StraightLane([2, -dev / 2], [2, -access], line_types=(n, c))
+        )
+
+        net.add_lane(
             "wer", "wes", StraightLane([-access, 2], [-dev / 2, 2], line_types=(s, c))
         )
         net.add_lane(
@@ -328,6 +340,10 @@ class RoundaboutEnv(AbstractEnv):
         )
         net.add_lane(
             "wxs", "wxr", StraightLane([-dev / 2, -2], [-access, -2], line_types=(n, c))
+        )
+
+        net.add_lane(
+            "wxr", "wxre", StraightLane([-dev / 2, -2], [-access, -2], line_types=(n, c))
         )
 
         road = Road(

@@ -38,7 +38,7 @@ class HighwayEnv(AbstractEnv):
                 "duration": 40,  # [s]
                 "ego_spacing": 2,
                 "vehicles_density": 1,
-                "collision_reward": -1,  # The reward received when colliding with a vehicle.
+                "collision_reward": -10,  # The reward received when colliding with a vehicle.
                 "right_lane_reward": 0.1,  # The reward received when driving on the right-most lanes, linearly mapped to
                 # zero for other lanes.
                 "high_speed_reward": 0.4,  # The reward received when driving at full speed, linearly mapped to zero for
@@ -99,6 +99,8 @@ class HighwayEnv(AbstractEnv):
         :param action: the last action performed
         :return: the corresponding reward
         """
+        MIN_REWARD = -10
+        MAX_REWARD = 5
         rewards = self._rewards(action)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
@@ -107,13 +109,11 @@ class HighwayEnv(AbstractEnv):
             reward = utils.lmap(
                 reward,
                 [
-                    self.config["collision_reward"],
-                    self.config["high_speed_reward"] + self.config["right_lane_reward"],
+                    MIN_REWARD,
+                    MAX_REWARD
                 ],
                 [0, 1],
             )
-
-        reward *= rewards["on_road_reward"]
         return reward
 
     def _rewards(self, action: Action) -> dict[str, float]:
@@ -132,8 +132,7 @@ class HighwayEnv(AbstractEnv):
             "collision_reward": float(self.vehicle.crashed),
             "right_lane_reward": lane / max(len(neighbours) - 1, 1),
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
-            "on_road_reward": float(self.vehicle.on_road),
-            "distance_travelled": self.vehicle.travelled_distance(),
+            "distance_travelled": np.log10(self.vehicle.travelled_distance()),
         }
 
     def _is_terminated(self) -> bool:

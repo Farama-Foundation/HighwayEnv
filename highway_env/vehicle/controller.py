@@ -65,7 +65,11 @@ class ControlledVehicle(Vehicle):
     @property
     def remaining_route_nodes(self) -> int:
         """Returns the number of remaining nodes in the planned route of the vehicle."""
-        return len(self.route)
+        remaining = len(self.route)
+        if remaining > 0:
+            return remaining * (-1)
+        else:
+            return 1
 
     @property
     def headway_evaluation(self) -> float:
