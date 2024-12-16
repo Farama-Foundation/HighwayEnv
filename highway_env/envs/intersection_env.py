@@ -49,8 +49,8 @@ class IntersectionEnv(AbstractEnv):
                 "screen_height": 600,
                 "centering_position": [0.5, 0.6],
                 "scaling": 5.5 * 1.3,
-                "collision_reward": -5,
-                "high_speed_reward": 1,
+                "collision_reward": -10,
+                "high_speed_reward": 0.4,
                 "arrived_reward": 1,
                 "reward_speed_range": [7.0, 9.0],
                 "normalize_reward": False,
@@ -78,16 +78,16 @@ class IntersectionEnv(AbstractEnv):
 
     def _agent_reward(self, action: int, vehicle: Vehicle) -> float:
         """Per-agent reward signal."""
+        MIN_REWARD = -10
+        MAX_REWARD = 3
         rewards = self._agent_rewards(action, vehicle)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
         )
-        reward = self.config["arrived_reward"] if rewards["arrived_reward"] else reward
-        reward *= rewards["on_road_reward"]
         if self.config["normalize_reward"]:
             reward = utils.lmap(
                 reward,
-                [self.config["collision_reward"], self.config["arrived_reward"]],
+                [MIN_REWARD, MAX_REWARD],
                 [0, 1],
             )
         return reward
@@ -100,8 +100,7 @@ class IntersectionEnv(AbstractEnv):
         return {
             "collision_reward": vehicle.crashed,
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
-            "arrived_reward": self.has_arrived(vehicle),
-            "on_road_reward": vehicle.on_road,
+            "distance_from_goal": self.vehicle.remaining_route_nodes,
         }
 
     def _is_terminated(self) -> bool:

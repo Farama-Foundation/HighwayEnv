@@ -67,7 +67,7 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 "duration": 120,  # [s]
                 "ego_spacing": 2,
                 "vehicles_density": 1,
-                "collision_reward": -1,  # The reward received when colliding with a vehicle.
+                "collision_reward": -10,  # The reward received when colliding with a vehicle.
                 "right_lane_reward": 0.1,  # The reward received when driving on the right-most lanes, linearly mapped to
                 # zero for other lanes.
                 "high_speed_reward": 0.4,  # The reward received when driving at full speed, linearly mapped to zero for
@@ -1940,6 +1940,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         :param action: the last action performed
         :return: the corresponding reward
         """
+        MIN_REWARD = -10
+        MAX_REWARD = 5
         rewards = self._rewards(action)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
@@ -1948,19 +1950,16 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             reward = utils.lmap(
                 reward,
                 [
-                    self.config["collision_reward"],
-                    self.config["high_speed_reward"] + self.config["right_lane_reward"],
+                    MIN_REWARD,
+                    MAX_REWARD,
                 ],
                 [0, 1],
             )
-        reward *= rewards["on_road_reward"]
-        
+
         return reward
 
     # Note this reward function is just generic from another template
     def _rewards(self, action: Action) -> dict[str, float]:
-        MIN_REWARD = -10
-        MAX_REWARD = 2
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
         lane = (
             self.vehicle.target_lane_index[2]
@@ -1973,11 +1972,11 @@ class CarpetCity(AbstractEnv, WeightedUtils):
             forward_speed, self.config["reward_speed_range"], [0, 1]
         )
         return {
-            "collision_reward": float(self.vehicle.crashed),
+            "collision_reward": float(self.vehicle.crashed) * self.config["collision_reward"],
             "right_lane_reward": lane / max(len(neighbours) - 1, 1),
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
             "distance_from_goal": self.vehicle.remaining_route_nodes,
-            "headway_evaluation": np.power(self.vehicle.headway_evaluation, 2),
+            "headway_evaluation": self.vehicle.headway_evaluation,
         }
     
     def _is_terminated(self) -> bool:
@@ -1992,5 +1991,5 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         """The episode is truncated if the time limit is reached."""
         return (
             self.time >= self.config["duration"]
-            or self.vehicle.remaining_route_nodes == 0
+            or self.vehicle.remaining_route_nodes == 1
         )
