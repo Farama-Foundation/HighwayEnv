@@ -69,7 +69,7 @@ class Stovring(AbstractEnv, WeightedUtils):
                 },
                 "simulation_frequency": 15,
                 "lanes_count": 2,
-                "vehicles_count": 0,
+                "vehicles_count": 200,
                 "controlled_vehicles": 1,
                 "initial_lane_id": None,
                 "duration": 60,  # [s]
