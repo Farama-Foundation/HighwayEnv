@@ -2560,7 +2560,7 @@ class Stovring(AbstractEnv, WeightedUtils):
     def _rewards(self, action: Action) -> dict[str, float]:
         return {
             "collision_reward": float(self.vehicle.crashed),
-            "distance_from_goal": np.log2(self.vehicle.remaining_route_nodes),
+            "distance_from_goal": self.vehicle.remaining_route_nodes,
         }
 
     def _is_terminated(self) -> bool:
