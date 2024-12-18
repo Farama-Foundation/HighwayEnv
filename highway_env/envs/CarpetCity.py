@@ -68,10 +68,11 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 "ego_spacing": 2,
                 "vehicles_density": 1,
                 "collision_reward": -10,  # The reward received when colliding with a vehicle.
-                "right_lane_reward": 0.1,  # The reward received when driving on the right-most lanes, linearly mapped to
                 # zero for other lanes.
-                "high_speed_reward": 0.4,  # The reward received when driving at full speed, linearly mapped to zero for
+                "high_speed_reward": 1,
+                "distance_from_goal": 2,  # The reward received when driving at full speed, linearly mapped to zero for
                 # lower speeds according to config["reward_speed_range"].
+                "headway_evaluation": 0.5,
                 "lane_change_reward": 0,  # The reward received at each lane change action.
                 "reward_speed_range": [20, 30],
                 "normalize_reward": True,
@@ -1940,8 +1941,8 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         :param action: the last action performed
         :return: the corresponding reward
         """
-        MIN_REWARD = -10
-        MAX_REWARD = 5
+        MIN_REWARD = -1
+        MAX_REWARD = 3.1
         rewards = self._rewards(action)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
@@ -1955,27 +1956,24 @@ class CarpetCity(AbstractEnv, WeightedUtils):
                 ],
                 [0, 1],
             )
+        if self.config["normalize_reward"]:
+            reward = np.clip(reward, 0, 1)
 
         return reward
 
     # Note this reward function is just generic from another template
     def _rewards(self, action: Action) -> dict[str, float]:
-        neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
-        lane = (
-            self.vehicle.target_lane_index[2]
-            if isinstance(self.vehicle, ControlledVehicle)
-            else self.vehicle.lane_index[2]
-        )
         # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
         forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
         scaled_speed = utils.lmap(
             forward_speed, self.config["reward_speed_range"], [0, 1]
         )
+        distance = np.absolute(self.vehicle.remaining_route_nodes)
+        distance_reward = 1/(np.power(2, (distance/2))-1)
         return {
-            "collision_reward": float(self.vehicle.crashed) * self.config["collision_reward"],
-            "right_lane_reward": lane / max(len(neighbours) - 1, 1),
-            "high_speed_reward": np.clip(scaled_speed, 0, 1),
-            "distance_from_goal": self.vehicle.remaining_route_nodes,
+            "collision_reward": float(self.vehicle.crashed),
+            "high_speed_reward": np.clip(scaled_speed,-1, 1), ## now gives negative rewards for driving too slow, but no more than 1 reward for driving fast
+            "distance_from_goal": distance_reward,
             "headway_evaluation": self.vehicle.headway_evaluation,
         }
     

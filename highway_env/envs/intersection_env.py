@@ -50,8 +50,8 @@ class IntersectionEnv(AbstractEnv):
                 "centering_position": [0.5, 0.6],
                 "scaling": 5.5 * 1.3,
                 "collision_reward": -10,
-                "high_speed_reward": 0.4,
-                "arrived_reward": 1,
+                "high_speed_reward": 1,
+                "distance_from_goal": 1,
                 "reward_speed_range": [7.0, 9.0],
                 "normalize_reward": False,
                 "offroad_terminal": False,
@@ -60,27 +60,9 @@ class IntersectionEnv(AbstractEnv):
         return config
 
     def _reward(self, action: int) -> float:
-        """Aggregated reward, for cooperative agents."""
-        return sum(
-            self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles
-        ) / len(self.controlled_vehicles)
-
-    def _rewards(self, action: int) -> dict[str, float]:
-        """Multi-objective rewards, for cooperative agents."""
-        agents_rewards = [
-            self._agent_rewards(action, vehicle) for vehicle in self.controlled_vehicles
-        ]
-        return {
-            name: sum(agent_rewards[name] for agent_rewards in agents_rewards)
-            / len(agents_rewards)
-            for name in agents_rewards[0].keys()
-        }
-
-    def _agent_reward(self, action: int, vehicle: Vehicle) -> float:
-        """Per-agent reward signal."""
-        MIN_REWARD = -10
-        MAX_REWARD = 3
-        rewards = self._agent_rewards(action, vehicle)
+        MIN_REWARD = 0
+        MAX_REWARD = 2
+        rewards = self._rewards(action)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
         )
@@ -90,18 +72,52 @@ class IntersectionEnv(AbstractEnv):
                 [MIN_REWARD, MAX_REWARD],
                 [0, 1],
             )
+
+        if self.config["normalize_reward"]:
+            reward = np.clip(reward, 0, 1)
+
         return reward
 
-    def _agent_rewards(self, action: int, vehicle: Vehicle) -> dict[str, float]:
-        """Per-agent per-objective reward signal."""
+    def _rewards(self, action: int) -> dict[str, float]:
+        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
+        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
         scaled_speed = utils.lmap(
-            vehicle.speed, self.config["reward_speed_range"], [0, 1]
+            forward_speed, self.config["reward_speed_range"], [0, 1]
         )
+        distance = np.absolute(self.vehicle.remaining_route_nodes)
+        distance_reward = 1/(np.power(2, distance*2)-1)
         return {
-            "collision_reward": vehicle.crashed,
+            "collision_reward": self.vehicle.crashed,
+            "distance_from_goal": distance_reward,
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
-            "distance_from_goal": self.vehicle.remaining_route_nodes,
         }
+
+    # def _agent_reward(self, action: int, vehicle: Vehicle) -> float:
+    #     """Per-agent reward signal."""
+    #     MIN_REWARD = -10
+    #     MAX_REWARD = 3
+    #     rewards = self._agent_rewards(action, vehicle)
+    #     reward = sum(
+    #         self.config.get(name, 0) * reward for name, reward in rewards.items()
+    #     )
+    #     if self.config["normalize_reward"]:
+    #         reward = utils.lmap(
+    #             reward,
+    #             [MIN_REWARD, MAX_REWARD],
+    #             [0, 1],
+    #         )
+    #     return reward
+
+    # def _agent_rewards(self, action: int, vehicle: Vehicle) -> dict[str, float]:
+    #     """Per-agent per-objective reward signal."""
+    #     scaled_speed = utils.lmap(
+    #         vehicle.speed, self.config["reward_speed_range"], [0, 1]
+    #     )
+    #     return {
+    #         "collision_reward": vehicle.crashed,
+    #         "high_speed_reward": np.clip(scaled_speed, 0, 1),
+    #         "distance_from_goal": self.vehicle.remaining_route_nodes,
+    #     }
 
     def _is_terminated(self) -> bool:
         return (
@@ -118,15 +134,15 @@ class IntersectionEnv(AbstractEnv):
         """The episode is truncated if the time limit is reached."""
         return self.time >= self.config["duration"]
 
-    def _info(self, obs: np.ndarray, action: int) -> dict:
-        info = super()._info(obs, action)
-        info["agents_rewards"] = tuple(
-            self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles
-        )
-        info["agents_terminated"] = tuple(
-            self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles
-        )
-        return info
+    # def _info(self, obs: np.ndarray, action: int) -> dict:
+    #     info = super()._info(obs, action)
+    #     info["agents_rewards"] = tuple(
+    #         self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles
+    #     )
+    #     info["agents_terminated"] = tuple(
+    #         self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles
+    #     )
+    #     return info
 
     def _reset(self) -> None:
         self._make_road()

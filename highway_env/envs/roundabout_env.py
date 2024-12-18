@@ -31,9 +31,8 @@ class RoundaboutEnv(AbstractEnv):
                 "reward_speed_range": [8, 16],
                 "incoming_vehicle_destination": None,
                 "collision_reward": -10,
-                "high_speed_reward": 0.4,
-                "right_lane_reward": 0,
-                "lane_change_reward": -0.05,
+                "high_speed_reward": 0.5,
+                "distance_from_goal": 2,
                 "screen_width": 600,
                 "screen_height": 600,
                 "centering_position": [0.5, 0.6],
@@ -41,18 +40,13 @@ class RoundaboutEnv(AbstractEnv):
                 "normalize_reward": True,
                 "vehicles_count": 10,
                 # Reward weights
-                "collision_weight": 1,
-                "distance_from_goal_weight": 1,
-                "lane_change_weight": 1,
-                "headway_evaluation_weight": 1,
-                "on_road_weight": 1,
             }
         )
         return config
 
     def _reward(self, action: int) -> float:
-        MIN_REWARD = -10
-        MAX_REWARD = 5
+        MIN_REWARD = -1
+        MAX_REWARD = 2.5
         rewards = self._rewards(action)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
@@ -64,6 +58,9 @@ class RoundaboutEnv(AbstractEnv):
                 [0, 1],
             )
 
+        if self.config["normalize_reward"]:
+            reward = np.clip(reward, 0, 1)
+
         return reward
 
     def _rewards(self, action: int) -> dict[str, float]:
@@ -72,11 +69,11 @@ class RoundaboutEnv(AbstractEnv):
         scaled_speed = utils.lmap(
             forward_speed, self.config["reward_speed_range"], [0, 1]
         )
+        distance = np.absolute(self.vehicle.remaining_route_nodes)
+        distance_reward = 1/(np.power(2, distance)-1)
         return {
-            "collision_reward": self.vehicle.crashed * self.config["collision_reward"],
-            "distance_from_goal": self.vehicle.remaining_route_nodes,
-            "lane_change_reward": float(action in [0, 2]),
-            "headway_evaluation": self.vehicle.headway_evaluation,
+            "collision_reward": self.vehicle.crashed,
+            "distance_from_goal": distance_reward,
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
         }
 
