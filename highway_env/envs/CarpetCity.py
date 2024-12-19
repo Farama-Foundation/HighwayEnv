@@ -3072,7 +3072,6 @@ class CarpetCity(AbstractEnv, WeightedUtils):
         :return: the ego-vehicle
         """
         # print("\n---::: New make vechicle :::---")
-        # FIXME: remove duct-tape
         # Configure vehicles
         vehicle_type = utils.class_from_path(self.config["other_vehicles_type"])
         vehicle_type.DISTANCE_WANTED = 7  # Low jam distance
