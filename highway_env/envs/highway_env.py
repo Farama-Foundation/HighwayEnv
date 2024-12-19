@@ -126,7 +126,6 @@ class HighwayEnv(AbstractEnv):
             if isinstance(self.vehicle, ControlledVehicle)
             else self.vehicle.lane_index[2]
         )
-        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
         forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
         scaled_speed = utils.lmap(
             forward_speed, self.config["reward_speed_range"], [0, 1]

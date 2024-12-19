@@ -192,10 +192,3 @@ class ExitEnv(HighwayEnv):
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
         return self.time >= self.config["duration"]
-
-
-# class DenseLidarExitEnv(DenseExitEnv):
-#     @classmethod
-#     def default_config(cls) -> dict:
-#         return dict(super().default_config(),
-#                     observation=dict(type="LidarObservation"))

@@ -5,12 +5,11 @@ import numpy as np
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.action import Action
+from highway_env.road.lanes.unweighted_lanes import CircularLane, LineType, StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.utils import near_split
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.kinematics import Vehicle
-
-from highway_env.road.lanes.unweighted_lanes import CircularLane, LineType, StraightLane
 
 
 class HomemadeRacetrack(AbstractEnv):
@@ -29,7 +28,16 @@ class HomemadeRacetrack(AbstractEnv):
                 },
                 "action": {
                     "type": "DiscreteMetaAction",
-                    "target_speeds": [-10, 0, 10, 20, 30, 40, 50, 60] #np.linspace(0, 30, 10)
+                    "target_speeds": [
+                        -10,
+                        0,
+                        10,
+                        20,
+                        30,
+                        40,
+                        50,
+                        60,
+                    ],  # np.linspace(0, 30, 10)
                 },
                 "simulation_frequency": 15,
                 "lanes_count": 2,
@@ -52,24 +60,26 @@ class HomemadeRacetrack(AbstractEnv):
                 "screen_width": 1200,
             }
         )
-        return config    
+        return config
 
     def _reset(self) -> None:
-            self._make_road()
-            self._make_vehicles()
-            
+        self._make_road()
+        self._make_vehicles()
+
     def _make_road(self) -> None:
         """Create a road composed of straight adjacent lanes."""
 
-        line_none, line_continuous, line_striped = LineType.NONE, LineType.CONTINUOUS, LineType.STRIPED
-        
+        line_none, line_continuous, line_striped = (
+            LineType.NONE,
+            LineType.CONTINUOUS,
+            LineType.STRIPED,
+        )
+
         lane1 = (line_continuous, line_none)
         lane2 = (line_striped, line_continuous)
-        
-        
+
         net = RoadNetwork()
 
-        # Set Speed Limits for Road Sections - Straight, Turn20, Straight, Turn 15, Turn15, Straight, Turn25x2, Turn18
         speedlimits = [None, 10, 10, 10, 10, 10, 10, 10, 10]
 
         # Initialise First Lane
@@ -95,7 +105,7 @@ class HomemadeRacetrack(AbstractEnv):
                 speed_limit=speedlimits[1],
             ),
         )
-        
+
         # 2 - Circular Arc #1
         center1 = [100, -20]
         radii1 = 20
@@ -127,7 +137,7 @@ class HomemadeRacetrack(AbstractEnv):
                 speed_limit=speedlimits[2],
             ),
         )
-        
+
         net.add_lane(
             "c",
             "d",
@@ -150,8 +160,8 @@ class HomemadeRacetrack(AbstractEnv):
                 speed_limit=speedlimits[3],
             ),
         )
-        
-        center2 = [100,-120]
+
+        center2 = [100, -120]
         net.add_lane(
             "d",
             "e",
@@ -163,8 +173,8 @@ class HomemadeRacetrack(AbstractEnv):
                 width=5,
                 clockwise=False,
                 line_types=lane1,
-                speed_limit=speedlimits[2]
-            )
+                speed_limit=speedlimits[2],
+            ),
         )
         net.add_lane(
             "d",
@@ -177,10 +187,10 @@ class HomemadeRacetrack(AbstractEnv):
                 width=5,
                 clockwise=False,
                 line_types=lane2,
-                speed_limit=speedlimits[2]
-            )
+                speed_limit=speedlimits[2],
+            ),
         )
-        
+
         net.add_lane(
             "e",
             "f",
@@ -189,8 +199,8 @@ class HomemadeRacetrack(AbstractEnv):
                 [0, -140],
                 line_types=lane1,
                 width=5,
-                speed_limit=speedlimits[2]
-            )
+                speed_limit=speedlimits[2],
+            ),
         )
         net.add_lane(
             "e",
@@ -200,10 +210,10 @@ class HomemadeRacetrack(AbstractEnv):
                 [0, -145],
                 line_types=lane2,
                 width=5,
-                speed_limit=speedlimits[2]
-            )
+                speed_limit=speedlimits[2],
+            ),
         )
-        
+
         center3 = [0, -120]
         net.add_lane(
             "f",
@@ -215,8 +225,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-180),
                 width=5,
                 clockwise=False,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "f",
@@ -228,32 +238,17 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-180),
                 width=5,
                 clockwise=False,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
-        
+
         net.add_lane(
-            "g",
-            "h",
-            StraightLane(
-                [-20, -120],
-                [-20, -70],
-                width=5,
-                line_types=lane1
-            )
+            "g", "h", StraightLane([-20, -120], [-20, -70], width=5, line_types=lane1)
         )
         net.add_lane(
-            "g",
-            "h",
-            StraightLane(
-                [-25, -120],
-                [-25, -70],
-                width=5,
-                line_types=lane2
-            )
+            "g", "h", StraightLane([-25, -120], [-25, -70], width=5, line_types=lane2)
         )
-        
+
         center4 = [0, -70]
         net.add_lane(
             "h",
@@ -265,8 +260,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(0),
                 width=5,
                 clockwise=False,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "h",
@@ -278,10 +273,10 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(0),
                 width=5,
                 clockwise=False,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
+
         center5 = [35, -70]
         radii2 = 10
         net.add_lane(
@@ -294,8 +289,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(0),
                 width=5,
                 clockwise=True,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "i",
@@ -307,10 +302,10 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(0),
                 width=5,
                 clockwise=True,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
+
         center6 = [60, -70]
         net.add_lane(
             "j",
@@ -322,8 +317,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(0),
                 clockwise=False,
                 width=5,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "j",
@@ -335,31 +330,17 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(0),
                 clockwise=False,
                 width=5,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
+
         net.add_lane(
-            "k",
-            "l",
-            StraightLane(
-                [70, -70],
-                [70, -90],
-                width=5,
-                line_types=lane1
-            )
+            "k", "l", StraightLane([70, -70], [70, -90], width=5, line_types=lane1)
         )
         net.add_lane(
-            "k",
-            "l",
-            StraightLane(
-                [75, -70],
-                [75, -90],
-                width=5,
-                line_types=lane2
-            )
+            "k", "l", StraightLane([75, -70], [75, -90], width=5, line_types=lane2)
         )
-        
+
         center7 = [60, -90]
         net.add_lane(
             "l",
@@ -371,8 +352,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-90),
                 clockwise=False,
                 width=5,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "l",
@@ -384,31 +365,17 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-90),
                 clockwise=False,
                 width=5,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
+
         net.add_lane(
-            "m",
-            "n",
-            StraightLane(
-                [60, -100],
-                [20, -100],
-                width=5,
-                line_types=lane1
-            )
+            "m", "n", StraightLane([60, -100], [20, -100], width=5, line_types=lane1)
         )
         net.add_lane(
-            "m",
-            "n",
-            StraightLane(
-                [60, -105],
-                [20, -105],
-                width=5,
-                line_types=lane2
-            )
+            "m", "n", StraightLane([60, -105], [20, -105], width=5, line_types=lane2)
         )
-        
+
         center8 = [20, -90]
         net.add_lane(
             "n",
@@ -420,8 +387,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-180),
                 clockwise=False,
                 width=5,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "n",
@@ -433,31 +400,17 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-180),
                 clockwise=False,
                 width=5,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
+
         net.add_lane(
-            "o",
-            "p",
-            StraightLane(
-                [10, -90],
-                [10, -70],
-                width=5,
-                line_types=lane1
-            )
+            "o", "p", StraightLane([10, -90], [10, -70], width=5, line_types=lane1)
         )
         net.add_lane(
-            "o",
-            "p",
-            StraightLane(
-                [5, -90],
-                [5, -70],
-                width=5,
-                line_types=lane2
-            )
+            "o", "p", StraightLane([5, -90], [5, -70], width=5, line_types=lane2)
         )
-        
+
         center9 = [0, -70]
         radii3 = 5
         net.add_lane(
@@ -470,8 +423,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(180),
                 clockwise=True,
                 width=5,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "p",
@@ -483,31 +436,17 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(180),
                 clockwise=True,
                 width=5,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
+
         net.add_lane(
-            "q",
-            "r",
-            StraightLane(
-                [-10, -70],
-                [-10, -90],
-                width=5,
-                line_types=lane1
-            )
+            "q", "r", StraightLane([-10, -70], [-10, -90], width=5, line_types=lane1)
         )
         net.add_lane(
-            "q",
-            "r",
-            StraightLane(
-                [-5, -70],
-                [-5, -90],
-                width=5,
-                line_types=lane2
-            )
+            "q", "r", StraightLane([-5, -70], [-5, -90], width=5, line_types=lane2)
         )
-        
+
         center10 = [25, -90]
         radii4 = 30
         net.add_lane(
@@ -520,8 +459,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-90),
                 clockwise=True,
                 width=5,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "r",
@@ -533,31 +472,17 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-90),
                 clockwise=True,
                 width=5,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
+
         net.add_lane(
-            "s",
-            "t",
-            StraightLane(
-                [25, -125],
-                [70, -125],
-                width=5,
-                line_types=lane1
-            )
+            "s", "t", StraightLane([25, -125], [70, -125], width=5, line_types=lane1)
         )
         net.add_lane(
-            "s",
-            "t",
-            StraightLane(
-                [25, -120],
-                [70, -120],
-                width=5,
-                line_types=lane2
-            )
+            "s", "t", StraightLane([25, -120], [70, -120], width=5, line_types=lane2)
         )
-        
+
         center11 = [70, -90]
         net.add_lane(
             "t",
@@ -569,8 +494,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(0),
                 clockwise=True,
                 width=5,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "t",
@@ -582,11 +507,10 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(0),
                 clockwise=True,
                 width=5,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
-        
+
         center12 = [45, -90]
         radii5 = 55
         net.add_lane(
@@ -599,8 +523,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(90),
                 clockwise=True,
                 width=5,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "u",
@@ -612,34 +536,20 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(90),
                 clockwise=True,
                 width=5,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
+
         net.add_lane(
-            "v",
-            "w",
-            StraightLane(
-                [45, -30],
-                [0, -30],
-                width=5,
-                line_types=lane1
-            )
+            "v", "w", StraightLane([45, -30], [0, -30], width=5, line_types=lane1)
         )
         net.add_lane(
-            "v",
-            "w",
-            StraightLane(
-                [45, -35],
-                [0, -35],
-                width=5,
-                line_types=lane2
-            )
+            "v", "w", StraightLane([45, -35], [0, -35], width=5, line_types=lane2)
         )
-        
+
         center13 = [0, -15]
         radii6 = 15
-        
+
         net.add_lane(
             "w",
             "a",
@@ -650,8 +560,8 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-270),
                 clockwise=False,
                 width=5,
-                line_types=lane1
-            )
+                line_types=lane1,
+            ),
         )
         net.add_lane(
             "w",
@@ -663,22 +573,21 @@ class HomemadeRacetrack(AbstractEnv):
                 np.deg2rad(-270),
                 clockwise=False,
                 width=5,
-                line_types=lane2
-            )
+                line_types=lane2,
+            ),
         )
-        
-        
+
         road = Road(
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
         )
         self.road = road
-        
+
     def _make_vehicles(self) -> None:
         """Create some new random vehicles of a given type, and add them on the road."""
         other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
-        
+
         # Since only 1 controlle vehicle this will have the size of '1'
         other_per_controlled = near_split(
             self.config["vehicles_count"], num_bins=self.config["controlled_vehicles"]
@@ -693,16 +602,14 @@ class HomemadeRacetrack(AbstractEnv):
                 lane_id=self.config["initial_lane_id"],
                 spacing=self.config["ego_spacing"],
             )
-            
-            # This creates an MDP vehicle whic
+
+            # This creates an MDP vehicle
             vehicle = self.action_type.vehicle_class(
                 self.road, vehicle.position, vehicle.heading, vehicle.speed
             )
-            
-            
+
             self.controlled_vehicles.append(vehicle)
             self.road.vehicles.append(vehicle)
-
 
             # This creates the uncontrolled vehicles
             for _ in range(others):
@@ -712,9 +619,7 @@ class HomemadeRacetrack(AbstractEnv):
                 )
                 vehicle.randomize_behavior()
                 self.road.vehicles.append(vehicle)
-                
-                
-                
+
     def _reward(self, action: Action) -> float:
         """
         The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
@@ -744,7 +649,6 @@ class HomemadeRacetrack(AbstractEnv):
             if isinstance(self.vehicle, ControlledVehicle)
             else self.vehicle.lane_index[2]
         )
-        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
         forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
         scaled_speed = utils.lmap(
             forward_speed, self.config["reward_speed_range"], [0, 1]
@@ -755,7 +659,7 @@ class HomemadeRacetrack(AbstractEnv):
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
             "on_road_reward": float(self.vehicle.on_road),
         }
-    
+
     def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed."""
         return (
@@ -767,3 +671,4 @@ class HomemadeRacetrack(AbstractEnv):
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
         return self.time >= self.config["duration"]
+
