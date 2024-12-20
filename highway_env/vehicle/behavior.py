@@ -250,15 +250,12 @@ class IDMVehicle(ControlledVehicle):
 
         # decide to make a lane change
         for lane_index in self.road.network.side_lanes(self.lane_index):
-            # Is the candidate lane close enough?
             if not self.road.network.get_lane(lane_index).is_reachable_from(
                 self.position
             ):
                 continue
-            # Only change lane when the vehicle is moving
             if np.abs(self.speed) < 1:
                 continue
-            # Does the MOBIL model recommend a lane change?
             if self.mobil(lane_index):
                 self.target_lane_index = lane_index
 
@@ -273,7 +270,6 @@ class IDMVehicle(ControlledVehicle):
         :param lane_index: the candidate lane for the change
         :return: whether the lane change should be performed
         """
-        # Is the maneuver unsafe for the new following vehicle?
         new_preceding, new_following = self.road.neighbour_vehicles(self, lane_index)
         new_following_a = self.acceleration(
             ego_vehicle=new_following, front_vehicle=new_preceding
@@ -284,7 +280,6 @@ class IDMVehicle(ControlledVehicle):
         if new_following_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
             return False
 
-        # Do I have a planned route for a specific lane which is safe for me to access?
         old_preceding, old_following = self.road.neighbour_vehicles(self)
         self_pred_a = self.acceleration(ego_vehicle=self, front_vehicle=new_preceding)
         if self.route and self.route[0][2] is not None:
@@ -297,7 +292,6 @@ class IDMVehicle(ControlledVehicle):
             elif self_pred_a < -self.LANE_CHANGE_MAX_BRAKING_IMPOSED:
                 return False
 
-        # Is there an acceleration advantage for me and/or my followers to change lane?
         else:
             self_a = self.acceleration(ego_vehicle=self, front_vehicle=old_preceding)
             old_following_a = self.acceleration(
@@ -320,7 +314,6 @@ class IDMVehicle(ControlledVehicle):
             if jerk < self.LANE_CHANGE_MIN_ACC_GAIN:
                 return False
 
-        # All clear, let's go!
         return True
 
     def recover_from_stop(self, acceleration: float) -> float:
@@ -332,7 +325,6 @@ class IDMVehicle(ControlledVehicle):
         """
         stopped_speed = 5
         safe_distance = 200
-        # Is the vehicle stopped on the wrong lane?
         if self.target_lane_index != self.lane_index and self.speed < stopped_speed:
             _, rear = self.road.neighbour_vehicles(self)
             _, new_rear = self.road.neighbour_vehicles(

@@ -93,7 +93,6 @@ class MultipleModelVehicle(LinearVehicle):
                     if lane_index[2] is not None
                     else (lane_index[0], lane_index[1], 0)
                 )
-            # Is this route already considered, or a suffix of a route already considered ?
             for known_route, _ in self.data:
                 if known_route == route:
                     break

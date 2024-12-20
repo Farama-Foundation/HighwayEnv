@@ -349,8 +349,6 @@ class IntervalVehicle(LinearVehicle):
                 # Use interval from the observer estimate of the front vehicle
                 front_interval = front_vehicle.interval
             else:
-                # The front vehicle trajectory interval is not being estimated, so it should be considered as certain.
-                # We use a new observer created from that current vehicle state, which will have full certainty.
                 front_interval = IntervalVehicle.create_from(front_vehicle).interval
         else:
             front_interval = None
@@ -472,8 +470,6 @@ class IntervalVehicle(LinearVehicle):
         ):
             return
 
-        # Projection of other vehicle to uncertainty rectangle. This is the possible position of this vehicle which is
-        # the most likely to collide with other vehicle
         projection = np.minimum(
             np.maximum(other.position, self.interval.position[0]),
             self.interval.position[1],

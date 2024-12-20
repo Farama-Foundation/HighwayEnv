@@ -114,7 +114,6 @@ class WorldSurface(pygame.Surface):
 class LaneGraphics:
     """A visualization of a lane."""
 
-    # See https://www.researchgate.net/figure/French-road-traffic-lane-description-and-specification_fig4_261170641
     STRIPE_SPACING: float = 4.33
     """ Offset between stripes [m]"""
 
@@ -385,9 +384,7 @@ class RoadObjectGraphics:
         )
         pygame.draw.rect(s, cls.get_color(o, transparent), rect, 0)
         pygame.draw.rect(s, cls.BLACK, rect, 1)
-        if (
-            not offscreen
-        ):  # convert_alpha throws errors in offscreen mode TODO() Explain why
+        if not offscreen:
             s = pygame.Surface.convert_alpha(s)
         h = o.heading if abs(o.heading) > 2 * np.pi / 180 else 0
         # Centered rotation

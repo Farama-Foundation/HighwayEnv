@@ -3,16 +3,17 @@ from __future__ import annotations
 import logging
 from collections import deque
 from queue import Queue
-from typing import TYPE_CHECKING, List, Tuple, overload, Deque
-
-import numpy as np
-import networkx as nx
+from typing import TYPE_CHECKING, Deque, List, Tuple, overload
 from typing_extensions import override
 
+import networkx as nx
+import numpy as np
+
 from highway_env.road.lanes.abstract_lanes import AbstractLane
+from highway_env.road.lanes.lane_utils import LaneType, LineType
 from highway_env.road.lanes.unweighted_lanes import StraightLane, lane_from_config
-from highway_env.road.lanes.lane_utils import LineType, LaneType
 from highway_env.vehicle.objects import Landmark
+
 
 if TYPE_CHECKING:
     from highway_env.vehicle import kinematics, objects
@@ -22,8 +23,10 @@ logger = logging.getLogger(__name__)
 LaneIndex = Tuple[str, str, int]
 Route = List[LaneIndex]
 
+
 class PathException(Exception):
     pass
+
 
 class RoadNetwork:
     graph: dict[str, dict[str, list[AbstractLane]]]
@@ -31,8 +34,14 @@ class RoadNetwork:
     def __init__(self):
         self.graph = {}
 
-
-    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None, lane_type: LaneType = None) -> None:
+    def add_lane(
+        self,
+        _from: str,
+        _to: str,
+        lane: AbstractLane,
+        weight: int = None,
+        lane_type: LaneType = None,
+    ) -> None:
         """
         A lane is encoded as an edge in the road network.
 
@@ -104,13 +113,9 @@ class RoadNetwork:
         next_to = next_id = None
         # Pick next road according to planned route
         if route:
-            if (
-                route[0][:2] == current_index[:2]
-            ):  # We just finished the first step of the route, drop it.
+            if route[0][:2] == current_index[:2]:
                 route.pop(0)
-            if (
-                route and route[0][0] == _to
-            ):  # Next road in route is starting at the end of current road.
+            if route and route[0][0] == _to:
                 _, next_to, next_id = route[0]
             elif route:
                 logger.warning(
@@ -134,7 +139,7 @@ class RoadNetwork:
                         ),
                     )
                     for next_to in self.graph[_to].keys()
-                ]  # (next_to, next_id, distance)
+                ]
                 next_to, next_id, _ = min(lanes_dists, key=lambda x: x[-1])
             except KeyError:
                 return current_index
@@ -263,12 +268,10 @@ class RoadNetwork:
             return True
         if depth > 0:
             if route and route[0][:2] == lane_index_1[:2]:
-                # Route is starting at current road, skip it
                 return self.is_connected_road(
                     lane_index_1, lane_index_2, route[1:], same_lane, depth
                 )
             elif route and route[0][0] == lane_index_1[1]:
-                # Route is continuing from current road, follow it
                 return self.is_connected_road(
                     route[0], lane_index_2, route[1:], same_lane, depth - 1
                 )
@@ -302,7 +305,7 @@ class RoadNetwork:
     def straight_road_network(
         lanes: int = 4,
         start: float = 0,
-        length: float = 10_000, # TODO: here
+        length: float = 10_000,
         angle: float = 0,
         speed_limit: float = 30,
         nodes_str: tuple[str, str] | None = None,
@@ -325,11 +328,11 @@ class RoadNetwork:
             ]
             net.add_lane(
                 *nodes_str,
-                lane = StraightLane(
+                lane=StraightLane(
                     origin, end, line_types=line_types, speed_limit=speed_limit
                 ),
-                weight = weight,
-                lane_type= LaneType.HIGHWAY
+                weight=weight,
+                lane_type=LaneType.HIGHWAY,
             )
         return net
 
@@ -401,6 +404,7 @@ class RoadNetwork:
                     graph_dict[_from][_to].append(lane.to_config())
         return graph_dict
 
+
 class WeightedRoadnetwork(RoadNetwork):
     graph_net: nx.MultiDiGraph
 
@@ -435,7 +439,6 @@ class WeightedRoadnetwork(RoadNetwork):
                     queue.append(v)
         return sorted_seq
 
-
     def dijkstra(self, source: str, goal: str) -> list[str]:
         """
         Performs the Dijkstra shortest-path algorithm. Please note that it cannot handle negative weights, and will
@@ -452,7 +455,8 @@ class WeightedRoadnetwork(RoadNetwork):
 
         while len(queue) > 0:
             u = min(queue, key=dists.get)
-            if u == goal: break
+            if u == goal:
+                break
             queue.remove(u)
             neighbors = self.graph_net.neighbors(u)
             for v in neighbors:
@@ -468,11 +472,15 @@ class WeightedRoadnetwork(RoadNetwork):
                 node = path[0]
                 path.appendleft(predecessors[node])
             except KeyError:
-                raise PathException(f"Could not find path {source} ~> {goal}, attempted to access non-existing predecessor for {node} in {predecessors}")
+                raise PathException(
+                    f"Could not find path {source} ~> {goal}, attempted to access non-existing predecessor for {node} in {predecessors}"
+                )
 
         return list(path)
 
-    def bellman_ford_negative_cycle(self, source: str, goal: str, max_pi: int = 3) -> list[str]:
+    def bellman_ford_negative_cycle(
+        self, source: str, goal: str, max_pi: int = 3
+    ) -> list[str]:
         """
         Performs the Bellman-Ford shortest path algorithm, while disregarding negative weight cycles. The number of
         repeated visits to a single node can be set with the max_pi parameter.
@@ -492,10 +500,9 @@ class WeightedRoadnetwork(RoadNetwork):
         # Exploring the graph
         for i in range(0, self.graph_net.order() - 1):
             pies = dict()
-            for (u, v) in self.topological_sort(source):
+            for u, v in self.topological_sort(source):
                 if dists[v] > dists[u] + self.weight(u, v):
                     dists[v] = dists[u] + self.weight(u, v)
-                    # TODO: there was a reason for this, and I cannot remember it,
                     if pies.get(v) is None:
                         pies[v] = u
             for vertex in pies.keys():
@@ -510,12 +517,12 @@ class WeightedRoadnetwork(RoadNetwork):
                 node = path[0]
                 path.appendleft(predecessors[node].pop())
             except IndexError:
-                # TODO: remove debug prints
                 print(f"src: {source}, goal: {goal}\n predecessors: {predecessors}")
-                raise PathException(f"could not find path {source} ~> {goal}, attempted to pop from empty list. node: {node}, predecessors: {predecessors}")
+                raise PathException(
+                    f"could not find path {source} ~> {goal}, attempted to pop from empty list. node: {node}, predecessors: {predecessors}"
+                )
 
         return list(path)
-
 
     def bellman_ford(self, source: str, goal: str) -> list[str]:
         """
@@ -531,13 +538,13 @@ class WeightedRoadnetwork(RoadNetwork):
 
         # Exploring the graph
         for i in range(0, self.graph_net.order() - 1):
-            for (u, v) in self.topological_sort(source):
+            for u, v in self.topological_sort(source):
                 if dists[v] > dists[u] + self.weight(u, v):
                     dists[v] = dists[u] + self.weight(u, v)
                     predecessors[v] = u
 
         # Detecting negative weight cycles
-        for (u, v) in self.graph_net.edges():
+        for u, v in self.graph_net.edges():
             if dists[v] > dists[u] + self.weight(u, v):
                 # Finding a vertex on the negative weight cycle
                 predecessors[v] = u
@@ -552,7 +559,9 @@ class WeightedRoadnetwork(RoadNetwork):
                 while v != u:
                     negative_weight_cycle.appendleft(v)
                     v = predecessors[v]
-                raise Exception(f"Graph contains negative weight cycle: {list(negative_weight_cycle)}")
+                raise Exception(
+                    f"Graph contains negative weight cycle: {list(negative_weight_cycle)}"
+                )
 
         # Constructing the path
         path = deque([goal])
@@ -561,15 +570,23 @@ class WeightedRoadnetwork(RoadNetwork):
                 node = path[0]
                 path.appendleft(predecessors[node])
             except KeyError:
-                raise PathException(f"Could not find path {source} ~> {goal}, attempted to access non-existing predecessor for {node} in {predecessors}")
+                raise PathException(
+                    f"Could not find path {source} ~> {goal}, attempted to access non-existing predecessor for {node} in {predecessors}"
+                )
 
         return list(path)
-
 
     def shortest_path(self, start: str, goal: str) -> list[str]:
         return self.bellman_ford_negative_cycle(start, goal)
 
-    def add_lane(self, _from: str, _to: str, lane: AbstractLane, weight: int = None, lane_type: LaneType = None) -> None:
+    def add_lane(
+        self,
+        _from: str,
+        _to: str,
+        lane: AbstractLane,
+        weight: int = None,
+        lane_type: LaneType = None,
+    ) -> None:
         super().add_lane(_from, _to, lane)
         if weight is None:
             raise ValueError("Cannot create edge with weight None")
@@ -584,9 +601,10 @@ class WeightedRoadnetwork(RoadNetwork):
         # Adding the weight
         try:
             node = self.graph_net[_from][_to]
-        except KeyError: # Edge does not exists
+        except KeyError:  # Edge does not exists
             self.graph_net.add_edge(_from, _to, weight=weight, lane_type=lane_type)
             return
+
 
 class Road:
     """A road is a set of lanes, and a set of vehicles driving on these lanes."""
@@ -696,10 +714,7 @@ class Road:
         s_front = s_rear = None
         v_front = v_rear = None
         for v in self.vehicles + self.objects:
-            if v is not vehicle and not isinstance(
-                v, Landmark
-            ):  # self.network.is_connected_road(v.lane_index,
-                # lane_index, same_lane=True):
+            if v is not vehicle and not isinstance(v, Landmark):
                 s_v, lat_v = lane.local_coordinates(v.position)
                 if not lane.on_lane(v.position, s_v, lat_v, margin=1):
                     continue
