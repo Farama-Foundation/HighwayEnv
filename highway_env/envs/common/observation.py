@@ -708,7 +708,7 @@ class LidarObservation(ObservationType):
 
     def trace(self, origin: np.ndarray, origin_velocity: np.ndarray) -> np.ndarray:
         self.origin = origin.copy()
-        self.grid = np.ones((self.cells, 2)) * self.maximum_range
+        self.grid = np.ones((self.cells, 2), dtype=np.float32) * self.maximum_range
 
         for obstacle in self.env.road.vehicles + self.env.road.objects:
             if obstacle is self.observer_vehicle or not obstacle.solid:
