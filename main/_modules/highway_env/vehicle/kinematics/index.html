@@ -12,11 +12,11 @@
 
     <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>highway_env.vehicle.kinematics - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -291,21 +291,21 @@
           <article role="main">
             
             <h1>Source code for highway_env.vehicle.kinematics</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">Road</span>
-<span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">RoadObject</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">Road</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">RoadObject</span>
 
 
 <div class="viewcode-block" id="Vehicle">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle">[docs]</a>
-<span class="k">class</span> <span class="nc">Vehicle</span><span class="p">(</span><span class="n">RoadObject</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Vehicle</span><span class="p">(</span><span class="n">RoadObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A moving vehicle on a road, and its kinematics.</span>
 
@@ -326,7 +326,7 @@
     <span class="n">HISTORY_SIZE</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Length of the vehicle state history, for trajectory display&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
         <span class="n">position</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
@@ -345,7 +345,7 @@
 <div class="viewcode-block" id="Vehicle.create_random">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.create_random">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create_random</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_random</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
         <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -404,7 +404,7 @@
 <div class="viewcode-block" id="Vehicle.create_from">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.create_from">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">Vehicle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vehicle</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_from</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">Vehicle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Vehicle</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new vehicle from an existing one.</span>
 
@@ -421,7 +421,7 @@
 
 <div class="viewcode-block" id="Vehicle.act">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Store an action to be repeated.</span>
 
@@ -433,7 +433,7 @@
 
 <div class="viewcode-block" id="Vehicle.step">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.step">[docs]</a>
-    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Propagate the vehicle state given its actions.</span>
 
@@ -459,7 +459,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">on_state_update</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="nf">clip_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clip_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">crashed</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;steering&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;acceleration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span>
@@ -474,7 +474,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;acceleration&quot;</span><span class="p">],</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MIN_SPEED</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">on_state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_closest_lane_index</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span>
@@ -483,7 +483,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">record_history</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_from</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">predict_trajectory_constant_speed</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_trajectory_constant_speed</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">times</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">&quot;zero_steering&quot;</span><span class="p">:</span>
@@ -506,11 +506,11 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">headings</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>  <span class="c1"># TODO: slip angle beta should be used here</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">destination</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">destination</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;route&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="n">last_lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">last_lane_index</span> <span class="o">=</span> <span class="p">(</span>
@@ -524,7 +524,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">destination_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">destination_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span>
@@ -533,7 +533,7 @@
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">lane_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lane_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">long</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
             <span class="n">ang</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lane</span><span class="o">.</span><span class="n">local_angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heading</span><span class="p">,</span> <span class="n">long</span><span class="p">)</span>
@@ -541,7 +541,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,))</span>
 
-    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">origin_vehicle</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">observe_intentions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
@@ -567,17 +567,17 @@
                 <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-=</span> <span class="n">origin_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">d</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> #</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1000</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Vehicle.predict_trajectory">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.predict_trajectory">[docs]</a>
-    <span class="k">def</span> <span class="nf">predict_trajectory</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_trajectory</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">action_duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>

@@ -12,11 +12,11 @@
 
     <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>highway_env.road.graphics - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -291,29 +291,29 @@
           <article role="main">
             
             <h1>Source code for highway_env.road.graphics</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pygame</span>
 
-<span class="kn">from</span> <span class="nn">highway_env.road.lane</span> <span class="kn">import</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">LineType</span>
-<span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">Road</span>
-<span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.graphics</span> <span class="kn">import</span> <span class="n">VehicleGraphics</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">Landmark</span><span class="p">,</span> <span class="n">Obstacle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">LineType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">Road</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.graphics</span><span class="w"> </span><span class="kn">import</span> <span class="n">VehicleGraphics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">Landmark</span><span class="p">,</span> <span class="n">Obstacle</span>
 
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">RoadObject</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">RoadObject</span>
 
 <span class="n">PositionType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="WorldSurface">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface">[docs]</a>
-<span class="k">class</span> <span class="nc">WorldSurface</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WorldSurface</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A pygame Surface implementing a local coordinate system so that we can move and zoom in the displayed area.&quot;&quot;&quot;</span>
 
     <span class="n">BLACK</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -326,7 +326,7 @@
     <span class="n">SCALING_FACTOR</span> <span class="o">=</span> <span class="mf">1.3</span>
     <span class="n">MOVING_FACTOR</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">surf</span><span class="p">)</span>
@@ -336,7 +336,7 @@
 
 <div class="viewcode-block" id="WorldSurface.pix">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.pix">[docs]</a>
-    <span class="k">def</span> <span class="nf">pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a distance [m] to pixels [px].</span>
 
@@ -348,7 +348,7 @@
 
 <div class="viewcode-block" id="WorldSurface.pos2pix">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.pos2pix">[docs]</a>
-    <span class="k">def</span> <span class="nf">pos2pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pos2pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert two world coordinates [m] into a position in the surface [px]</span>
 
@@ -361,7 +361,7 @@
 
 <div class="viewcode-block" id="WorldSurface.vec2pix">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.vec2pix">[docs]</a>
-    <span class="k">def</span> <span class="nf">vec2pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vec2pix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a world position [m] into a position in the surface [px].</span>
 
@@ -373,7 +373,7 @@
 
 <div class="viewcode-block" id="WorldSurface.is_visible">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.is_visible">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Is a position visible in the surface?</span>
 <span class="sd">        :param vec: a position</span>
@@ -389,7 +389,7 @@
 
 <div class="viewcode-block" id="WorldSurface.move_display_window_to">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.move_display_window_to">[docs]</a>
-    <span class="k">def</span> <span class="nf">move_display_window_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">move_display_window_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">PositionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the origin of the displayed area to center on a given world position.</span>
 
@@ -405,7 +405,7 @@
 
 <div class="viewcode-block" id="WorldSurface.handle_event">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.handle_event">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle pygame events for moving and zooming in the displayed area.</span>
 
@@ -426,7 +426,7 @@
 
 <div class="viewcode-block" id="LaneGraphics">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics">[docs]</a>
-<span class="k">class</span> <span class="nc">LaneGraphics</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LaneGraphics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A visualization of a lane.&quot;&quot;&quot;</span>
 
     <span class="c1"># See https://www.researchgate.net/figure/French-road-traffic-lane-description-and-specification_fig4_261170641</span>
@@ -442,7 +442,7 @@
 <div class="viewcode-block" id="LaneGraphics.display">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.display">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a lane on a surface.</span>
 
@@ -470,7 +470,7 @@
 <div class="viewcode-block" id="LaneGraphics.striped_line">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.striped_line">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">striped_line</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">striped_line</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
         <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
@@ -500,7 +500,7 @@
 <div class="viewcode-block" id="LaneGraphics.continuous_curve">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.continuous_curve">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">continuous_curve</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">continuous_curve</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
         <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
@@ -530,7 +530,7 @@
 <div class="viewcode-block" id="LaneGraphics.continuous_line">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.continuous_line">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">continuous_line</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">continuous_line</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
         <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
@@ -556,7 +556,7 @@
 <div class="viewcode-block" id="LaneGraphics.draw_stripes">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.LaneGraphics.draw_stripes">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">draw_stripes</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_stripes</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
         <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
@@ -587,7 +587,7 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">draw_ground</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_ground</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">,</span>
         <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
@@ -623,13 +623,13 @@
 
 <div class="viewcode-block" id="RoadGraphics">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics">[docs]</a>
-<span class="k">class</span> <span class="nc">RoadGraphics</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RoadGraphics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A visualization of a road lanes and vehicles.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RoadGraphics.display">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics.display">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the road lanes on a surface.</span>
 
@@ -646,7 +646,7 @@
 <div class="viewcode-block" id="RoadGraphics.display_traffic">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics.display_traffic">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">display_traffic</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_traffic</span><span class="p">(</span>
         <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span>
         <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
         <span class="n">simulation_frequency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
@@ -672,7 +672,7 @@
 <div class="viewcode-block" id="RoadGraphics.display_road_objects">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadGraphics.display_road_objects">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">display_road_objects</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_road_objects</span><span class="p">(</span>
         <span class="n">road</span><span class="p">:</span> <span class="n">Road</span><span class="p">,</span> <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span> <span class="n">offscreen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -690,7 +690,7 @@
 
 <div class="viewcode-block" id="RoadObjectGraphics">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics">[docs]</a>
-<span class="k">class</span> <span class="nc">RoadObjectGraphics</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RoadObjectGraphics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A visualization of objects on the road.&quot;&quot;&quot;</span>
 
     <span class="n">YELLOW</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -703,7 +703,7 @@
 <div class="viewcode-block" id="RoadObjectGraphics.display">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics.display">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">object_</span><span class="p">:</span> <span class="n">RoadObject</span><span class="p">,</span>
         <span class="n">surface</span><span class="p">:</span> <span class="n">WorldSurface</span><span class="p">,</span>
@@ -745,7 +745,7 @@
 <div class="viewcode-block" id="RoadObjectGraphics.blit_rotate">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics.blit_rotate">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">blit_rotate</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">blit_rotate</span><span class="p">(</span>
         <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span>
         <span class="n">image</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span>
         <span class="n">pos</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
@@ -789,7 +789,7 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_color</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_</span><span class="p">:</span> <span class="n">RoadObject</span><span class="p">,</span> <span class="n">transparent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_color</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_</span><span class="p">:</span> <span class="n">RoadObject</span><span class="p">,</span> <span class="n">transparent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="n">color</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULT_COLOR</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_</span><span class="p">,</span> <span class="n">Obstacle</span><span class="p">):</span>

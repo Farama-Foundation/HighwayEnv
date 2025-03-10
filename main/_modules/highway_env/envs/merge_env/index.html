@@ -12,11 +12,11 @@
 
     <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>highway_env.envs.merge_env - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -291,21 +291,21 @@
           <article role="main">
             
             <h1>Source code for highway_env.envs.merge_env</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">highway_env.envs.common.abstract</span> <span class="kn">import</span> <span class="n">AbstractEnv</span>
-<span class="kn">from</span> <span class="nn">highway_env.road.lane</span> <span class="kn">import</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">SineLane</span><span class="p">,</span> <span class="n">StraightLane</span>
-<span class="kn">from</span> <span class="nn">highway_env.road.road</span> <span class="kn">import</span> <span class="n">Road</span><span class="p">,</span> <span class="n">RoadNetwork</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.controller</span> <span class="kn">import</span> <span class="n">ControlledVehicle</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.objects</span> <span class="kn">import</span> <span class="n">Obstacle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">SineLane</span><span class="p">,</span> <span class="n">StraightLane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">Road</span><span class="p">,</span> <span class="n">RoadNetwork</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlledVehicle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">Obstacle</span>
 
 
 <div class="viewcode-block" id="MergeEnv">
 <a class="viewcode-back" href="../../../../environments/merge/#highway_env.envs.merge_env.MergeEnv">[docs]</a>
-<span class="k">class</span> <span class="nc">MergeEnv</span><span class="p">(</span><span class="n">AbstractEnv</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MergeEnv</span><span class="p">(</span><span class="n">AbstractEnv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A highway merge negotiation environment.</span>
 
@@ -317,7 +317,7 @@
 <div class="viewcode-block" id="MergeEnv.default_config">
 <a class="viewcode-back" href="../../../../environments/merge/#highway_env.envs.merge_env.MergeEnv.default_config">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
         <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span>
@@ -332,7 +332,7 @@
         <span class="k">return</span> <span class="n">cfg</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The vehicle is rewarded for driving with high speed on lanes to the right and avoiding collisions</span>
 
@@ -354,7 +354,7 @@
             <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">scaled_speed</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reward_speed_range&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="p">)</span>
@@ -371,18 +371,18 @@
             <span class="p">),</span>
         <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">_is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The episode is over when a collision occurs or when the access ramp has been passed.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">370</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_is_truncated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_truncated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_make_road</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_make_vehicles</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_make_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make a road composed of a straight highway and a merging lane.</span>
 
@@ -450,7 +450,7 @@
         <span class="n">road</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Obstacle</span><span class="p">(</span><span class="n">road</span><span class="p">,</span> <span class="n">lbc</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">road</span>
 
-    <span class="k">def</span> <span class="nf">_make_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.</span>
 

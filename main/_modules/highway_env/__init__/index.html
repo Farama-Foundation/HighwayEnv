@@ -12,11 +12,11 @@
 
     <link rel="shortcut icon" href="../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>highway_env.__init__ - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -291,16 +291,16 @@
           <article role="main">
             
             <h1>Source code for highway_env.__init__</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">gymnasium.envs.registration</span> <span class="kn">import</span> <span class="n">register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.envs.registration</span><span class="w"> </span><span class="kn">import</span> <span class="n">register</span>
 
 
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.10.1&quot;</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">farama_notifications</span> <span class="kn">import</span> <span class="n">notifications</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">farama_notifications</span><span class="w"> </span><span class="kn">import</span> <span class="n">notifications</span>
 
     <span class="k">if</span> <span class="s2">&quot;highway_env&quot;</span> <span class="ow">in</span> <span class="n">notifications</span> <span class="ow">and</span> <span class="n">__version__</span> <span class="ow">in</span> <span class="n">notifications</span><span class="p">[</span><span class="s2">&quot;gymnasium&quot;</span><span class="p">]:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">notifications</span><span class="p">[</span><span class="s2">&quot;highway_env&quot;</span><span class="p">][</span><span class="n">__version__</span><span class="p">],</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
@@ -314,10 +314,10 @@
 
 <div class="viewcode-block" id="_register_highway_envs">
 <a class="viewcode-back" href="../../../make_your_own/#highway_env.__init__._register_highway_envs">[docs]</a>
-<span class="k">def</span> <span class="nf">_register_highway_envs</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_register_highway_envs</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Import the envs module so that envs register themselves.&quot;&quot;&quot;</span>
 
-    <span class="kn">from</span> <span class="nn">highway_env.envs.common.abstract</span> <span class="kn">import</span> <span class="n">MultiAgentWrapper</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiAgentWrapper</span>
 
     <span class="c1"># exit_env.py</span>
     <span class="n">register</span><span class="p">(</span>

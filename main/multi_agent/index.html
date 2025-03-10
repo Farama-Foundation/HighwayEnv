@@ -13,11 +13,11 @@
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>The Multi-Agent setting - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -299,8 +299,8 @@
 <p>To that end, update the <a class="reference internal" href="../quickstart/#configuring-an-environment"><span class="std std-ref">environment configuration</span></a> to increase <code class="docutils literal notranslate"><span class="pre">controlled_vehicles</span></code></p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
-<span class="kn">import</span> <span class="nn">highway_env</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
   <span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span>
@@ -312,7 +312,7 @@
 <span class="p">)</span>
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Controlled vehicles are in green&quot;</span><span class="p">)</span>
@@ -383,17 +383,17 @@ The type of observations contained in the tuple must be described by a standard 
 <span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
-<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>
 <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.8996421 ,  0.5       ,  0.3125    ,  0.        ],
-       [ 1.        ,  0.10610674, -0.25      , -0.02496706,  0.        ],
-       [ 1.        ,  0.21663845, -0.5       , -0.01358112,  0.        ],
-       [ 1.        ,  0.33168566,  0.25      , -0.02108839,  0.        ],
-       [ 1.        ,  0.42837486,  0.        , -0.0485089 ,  0.        ]],
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.88674194,  0.        ,  0.3125    ,  0.        ],
+       [ 1.        ,  0.10273281,  0.25      , -0.03843109,  0.        ],
+       [ 1.        ,  0.21265705,  0.75      , -0.04634853,  0.        ],
+       [ 1.        ,  0.30795565,  0.5       , -0.03274173,  0.        ],
+       [ 1.        ,  0.40366378,  0.25      , -0.02930958,  0.        ]],
       dtype=float32),)
 </pre></div>
 </div>
@@ -423,14 +423,14 @@ The type of observations contained in the tuple must be described by a standard 
 <span class="p">})</span>
 
 <span class="c1"># Dummy RL algorithm</span>
-<span class="k">class</span> <span class="nc">Model</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Dummy code for an RL algorithm, which predicts an action from an observation,</span>
 <span class="sd">  and update its model from observed transitions.&quot;&quot;&quot;</span>
 
-  <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
     <span class="k">return</span> <span class="mi">0</span>
 
-  <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">next_obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">next_obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">):</span>
     <span class="k">pass</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
 
