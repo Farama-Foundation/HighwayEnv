@@ -7,7 +7,8 @@ from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import CircularLane, LineType, StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.behavior import IDMVehicle
-
+from highway_env.vehicle.controller import ControlledVehicle
+from highway_env.vehicle.objects import Obstacle
 
 class RacetrackEnv(AbstractEnv):
     """
@@ -53,6 +54,8 @@ class RacetrackEnv(AbstractEnv):
                 "screen_height": 600,
                 "centering_position": [0.5, 0.5],
                 "speed_limit": 10.0,
+                "terminate_off_road": True,  # CL: terminate if car goes off-road
+
             }
         )
         return config
@@ -77,7 +80,12 @@ class RacetrackEnv(AbstractEnv):
         }
 
     def _is_terminated(self) -> bool:
-        return self.vehicle.crashed
+        if self.config["terminate_off_road"]:
+            while self.vehicle.on_road:
+                return self.vehicle.crashed
+            return True # CL: return True if vehicle is not on road
+        else:
+            return self.vehicle.crashed
 
     def _is_truncated(self) -> bool:
         return self.time >= self.config["duration"]
@@ -852,3 +860,522 @@ class RacetrackEnvLarge(RacetrackEnv):
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
         )
+
+
+class RacetrackEnvLoop(RacetrackEnv):
+    """
+    A simple racetrack with the form of a loop that allows for custom number of lanes, custom length of horizontal
+    straight and a scenario of roadblocks (block second lane counting from innermost lane) to enforce a clear
+    decision-making scenario (which side to use to avoid blocks)
+
+    The agent needs to learn three skills:
+    - follow the tracks
+    - avoid collisions with other vehicles
+    - avoid collisions with fixed objects
+
+    credit: @christophluther
+    """
+
+    def default_config(cls) -> dict:
+        config = super().default_config()
+        config.update(
+            {
+                "observation": {
+                    "type": "OccupancyGrid",
+                    "features": ["presence", "on_road"],
+                    "grid_size": [[-18, 18], [-18, 18]],
+                    "grid_step": [3, 3],
+                    "as_image": False,
+                    "align_to_vehicle_axes": True,
+                },
+                "action": {
+                    "type": "ContinuousAction",
+                    "longitudinal": False,
+                    "lateral": True,
+                    "target_speeds": [0, 5, 10],
+                },
+                "simulation_frequency": 15,
+                "policy_frequency": 5,
+                "duration": 300,
+                "collision_reward": -1,
+                "lane_centering_cost": 4,
+                "lane_centering_reward": 1,
+                "action_reward": -0.3,
+                "controlled_vehicles": 1,
+                "other_vehicles": 1,
+                "screen_width": 600,
+                "screen_height": 600,
+                "centering_position": [0.5, 0.5],
+                "speed_limit": 10.0,
+                "terminate_off_road": True,  # CL: terminate if car goes off-road
+                "length": 100,  # CL: length of straight; 0: random number form [100,200]
+                "no_lanes": 3,  # CL: no. of lanes; 0: random number form [2,7]
+                "block_lane": False, # CL: road block on second lane (bottom straight, counting from innermost lane)
+                "force_decision": False, # road block on first and third lane (before blocking lane 2)
+
+            }
+        )
+        return config
+
+    def _make_road(self) -> None:
+        net = RoadNetwork()
+
+        # define rng
+        rng = np.random.default_rng()
+
+        # Set Speed Limits for Road Sections - default [None, 20, 18, 20, 18, 20, 18, 20, 18]
+        speedlimits = [None, 10, 10, 10, 10, 10, 10, 10, 10]
+
+        # define length,
+        if self.config["length"] == 0:
+            length = rng.integers(100, high=200)
+        else:
+            length = self.config["length"]
+
+        if self.config["no_lanes"] == 0:
+            no_lanes = rng.integers(2, high=7)
+        else:
+            no_lanes = self.config["no_lanes"]
+
+        # Lane 1: Initialise First Inner Lane
+        lane = StraightLane(
+            [0, 0],
+            [length + 1, 0],
+            line_types=(LineType.CONTINUOUS, LineType.STRIPED),
+            width=5,
+            speed_limit=speedlimits[1],
+        )
+        self.lane = lane
+
+        # successively add lanes
+        net.add_lane("a", "b", lane)
+
+        # CL: This for loop must be separate for every segment bcs segment names have to be introduced
+        for i in range(1, no_lanes-1):
+            # add additional lanes between inner and outer lane
+            net.add_lane(
+                "a",
+                "b",
+                StraightLane(
+                    [0, i * 5],
+                    [length + 1, i * 5],
+                    line_types=(LineType.STRIPED, LineType.NONE),
+                    width=5,
+                    speed_limit=speedlimits[1],
+                ),
+            )
+
+        # Lane 1: Outer Lane
+        net.add_lane(
+            "a",
+            "b",
+            StraightLane(
+                [0, (no_lanes-1) * 5],
+                [length + 1, (no_lanes-1) * 5],
+                line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                width=5,
+                speed_limit=speedlimits[1],
+            ),
+        )
+
+        # Turn 1: Inner Lane
+        center1 = [length, -20]
+        radii1 = 20
+        net.add_lane(
+            "b",
+            "c",
+            CircularLane(
+                center1,
+                radii1,
+                np.deg2rad(90),
+                np.deg2rad(0),
+                width=5,
+                clockwise=False,
+                line_types=(LineType.CONTINUOUS, LineType.NONE),
+                speed_limit=speedlimits[2],
+            ),
+        )
+
+        for i in range(1, no_lanes-1):
+            # add additional lanes between inner and outer lane
+            net.add_lane(
+                "b",
+                "c",
+                CircularLane(
+                    center1,
+                    radii1 + i * 5,
+                    np.deg2rad(90),
+                    np.deg2rad(0),
+                    width=5,
+                    clockwise=False,
+                    line_types=(LineType.STRIPED, LineType.NONE),
+                    speed_limit=speedlimits[2],
+                ),
+            )
+
+        # Turn 1: Outer Lane
+        net.add_lane(
+            "b",
+            "c",
+            CircularLane(
+                center1,
+                radii1 + (no_lanes-1) * 5,
+                np.deg2rad(90),
+                np.deg2rad(0),
+                width=5,
+                clockwise=False,
+                line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                speed_limit=speedlimits[2],
+            ),
+        )
+
+        # Vertical Straight 1: Inner Lane
+        net.add_lane(
+            "c",
+            "d",
+            StraightLane(
+                [length + 20, -20],
+                [length + 20, -50],
+                line_types=(LineType.CONTINUOUS, LineType.NONE),
+                width=5,
+                speed_limit=speedlimits[3],
+            ),
+        )
+
+        for i in range(1, no_lanes-1):
+            # add additional lanes between inner and outer lane
+            net.add_lane(
+                "c",
+                "d",
+                StraightLane(
+                    [length + 20 + i * 5, -20],
+                    [length + 20 + i * 5, -50],
+                    line_types=(LineType.STRIPED, LineType.NONE),
+                    width=5,
+                    speed_limit=speedlimits[3],
+                ),
+            )
+
+        # Vertical Straight 1: Outer Lane
+        net.add_lane(
+            "c",
+            "d",
+            StraightLane(
+                [length + 20 + (no_lanes-1) * 5, -20],
+                [length + 20 + (no_lanes-1) * 5, -50],
+                line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                width=5,
+                speed_limit=speedlimits[3],
+            ),
+        )
+
+        # Turn 2: Inner Lane
+        center2 = [length + 5, -50]
+        radii2 = 15
+        net.add_lane(
+            "d",
+            "e",
+            CircularLane(
+                center2,
+                radii2,
+                np.deg2rad(0),
+                np.deg2rad(-90),
+                width=5,
+                clockwise=False,
+                line_types=(LineType.CONTINUOUS, LineType.NONE),
+                speed_limit=speedlimits[4],
+            ),
+        )
+
+        for i in range(1, no_lanes-1):
+            # add additional lanes between inner and outer lane
+            net.add_lane(
+                "d",
+                "e",
+                CircularLane(
+                    center2,
+                    radii2 + i * 5,
+                    np.deg2rad(0),
+                    np.deg2rad(-90),
+                    width=5,
+                    clockwise=False,
+                    line_types=(LineType.STRIPED, LineType.NONE),
+                    speed_limit=speedlimits[4],
+                ),
+            )
+
+        # Turn 2: Outer Lane
+        net.add_lane(
+            "d",
+            "e",
+            CircularLane(
+                center2,
+                radii2 + (no_lanes-1) * 5,
+                np.deg2rad(0),
+                np.deg2rad(-90),
+                width=5,
+                clockwise=False,
+                line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                speed_limit=speedlimits[4],
+            ),
+        )
+
+        # Horizontal Straight 2: Inner Lane
+        net.add_lane(
+            "e",
+            "f",
+            StraightLane(
+                [length  + 5, -65],
+                [-5, -65],
+                line_types=(LineType.CONTINUOUS, LineType.NONE),
+                width=5,
+                speed_limit=speedlimits[5],
+            ),
+        )
+
+        for i in range(1, no_lanes-1):
+            # add additional lanes between inner and outer lane
+            net.add_lane(
+                "e",
+                "f",
+                StraightLane(
+                    [length + 5, -(65 + i * 5)],
+                    [-5, -(65 + i * 5)],
+                    line_types=(LineType.STRIPED, LineType.NONE),
+                    width=5,
+                    speed_limit=speedlimits[5],
+                ),
+            )
+
+        # Horizontal Straight 2: Outer Lane
+        net.add_lane(
+            "e",
+            "f",
+            StraightLane(
+                [length + 5, -(65 + (no_lanes-1) * 5)],
+                [-5, -(65+ (no_lanes-1) * 5)],
+                line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                width=5,
+                speed_limit=speedlimits[5],
+            ),
+        )
+
+        # Turn 3: Inner Lane
+        center4 = [-5, -50]
+        radii4 = 15
+        net.add_lane(
+            "f",
+            "g",
+            CircularLane(
+                center4,
+                radii4,
+                np.deg2rad(-90),
+                np.deg2rad(-180),
+                width=5,
+                clockwise=False,
+                line_types=(LineType.CONTINUOUS, LineType.NONE),
+                speed_limit=speedlimits[6],
+            ),
+        )
+
+        for i in range(1,no_lanes-1):
+            net.add_lane(
+                "f",
+                "g",
+                CircularLane(
+                    center4,
+                    radii4 + i * 5,
+                    np.deg2rad(-90),
+                    np.deg2rad(-180),
+                    width=5,
+                    clockwise=False,
+                    line_types=(LineType.STRIPED, LineType.NONE),
+                    speed_limit=speedlimits[6],
+                ),
+            )
+
+        # Turn 3: Outer Lane
+        net.add_lane(
+            "f",
+            "g",
+            CircularLane(
+                center4,
+                radii4 + (no_lanes-1) * 5,
+                np.deg2rad(-90),
+                np.deg2rad(-180),
+                width=5,
+                clockwise=False,
+                line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                speed_limit=speedlimits[6],
+            ),
+        )
+
+        # Vertical Straight 2: Inner Lane
+        net.add_lane(
+            "g",
+            "h",
+            StraightLane(
+                [-20, -50],
+                [-20, -20],
+                line_types=(LineType.CONTINUOUS, LineType.NONE),
+                width=5,
+                speed_limit=speedlimits[7],
+            ),
+        )
+
+        for i in range(1, no_lanes-1):
+            net.add_lane(
+                "g",
+                "h",
+                StraightLane(
+                    [-20 - i * 5, -50],
+                    [-20 - i * 5, -20],
+                    line_types=(LineType.STRIPED, LineType.NONE),
+                    width=5,
+                    speed_limit=speedlimits[7],
+                ),
+            )
+
+        # Vertical Straight 2: Outer Lane
+        net.add_lane(
+            "g",
+            "h",
+            StraightLane(
+                [-20 - (no_lanes-1) * 5, -50],
+                [-20 - (no_lanes-1) * 5, -20],
+                line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                width=5,
+                speed_limit=speedlimits[7],
+            ),
+        )
+
+        # Turn 4: Inner Lane
+        center6 = [0, -20]
+        radii6 = 20
+        net.add_lane(
+            "h",
+            "a",
+            CircularLane(
+                center6,
+                radii6,
+                np.deg2rad(180),
+                np.deg2rad(90),
+                width=5,
+                clockwise=False,
+                line_types=(LineType.CONTINUOUS, LineType.NONE),
+                speed_limit=speedlimits[8],
+            ),
+        )
+
+        for i in range(1, no_lanes-1):
+            net.add_lane(
+                "h",
+                "a",
+                CircularLane(
+                    center6,
+                    radii6 + i * 5,
+                    np.deg2rad(180),
+                    np.deg2rad(90),
+                    width=5,
+                    clockwise=False,
+                    line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                    speed_limit=speedlimits[8],
+                ),
+            )
+
+        # Turn 4: Outer Lane
+        net.add_lane(
+            "h",
+            "a",
+            CircularLane(
+                center6,
+                radii6 + (no_lanes - 1) * 5,
+                np.deg2rad(180),
+                np.deg2rad(90),
+                width=5,
+                clockwise=False,
+                line_types=(LineType.STRIPED, LineType.CONTINUOUS),
+                speed_limit=speedlimits[8],
+            ),
+        )
+
+        road = Road(
+            network=net,
+            np_random=self.np_random,
+            record_history=self.config["show_trajectories"],
+        )
+
+        # CL: scenario to force a "binary" decision (which lane to change to, in order to avoid road block)
+        if self.config["block_lane"]:
+            road.objects.append(Obstacle(road, [length - 40, 3.75]))
+            road.objects.append(Obstacle(road, [length - 40, 6.25]))
+            road.objects.append(Obstacle(road, [length - 43, 3.75]))
+            road.objects.append(Obstacle(road, [length - 43, 6.25]))
+            road.objects.append(Obstacle(road, [length - 46, 3.75]))
+            road.objects.append(Obstacle(road, [length - 46, 6.25]))
+            road.objects.append(Obstacle(road, [length - 49, 3.75]))
+            road.objects.append(Obstacle(road, [length - 49, 6.25]))
+
+        if self.config["force_decision"]:
+            road.objects.append(Obstacle(road, [length - 90, -1.25]))
+            road.objects.append(Obstacle(road, [length - 90, 1.25]))
+            road.objects.append(Obstacle(road, [length - 90, 8.75]))
+            road.objects.append(Obstacle(road, [length - 90, 11.25]))
+
+
+        self.road = road
+
+    # CL adjusted to number of lanes
+    def _make_vehicles(self) -> None:
+        """
+        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+        """
+        rng = self.np_random
+
+        # Controlled vehicles
+        self.controlled_vehicles = []
+        # Number of lanes
+        no_lanes = self.config["no_lanes"]
+
+        for i in range(self.config["controlled_vehicles"]):
+            lane_index = (
+                ("a", "b", rng.integers(no_lanes))
+                if i == 0
+                else self.road.network.random_lane_index(rng)
+            )
+            controlled_vehicle = self.action_type.vehicle_class.make_on_lane(
+                self.road, lane_index, speed=None, longitudinal=rng.uniform(20, 50)
+            )
+
+            self.controlled_vehicles.append(controlled_vehicle)
+            self.road.vehicles.append(controlled_vehicle)
+
+        if self.config["other_vehicles"] > 0:
+            # Front vehicle
+            vehicle = IDMVehicle.make_on_lane(
+                self.road,
+                ("b", "c", lane_index[-1]),
+                longitudinal=rng.uniform(
+                    low=0, high=self.road.network.get_lane(("b", "c", 0)).length
+                ),
+                speed=6 + rng.uniform(high=3),
+            )
+            self.road.vehicles.append(vehicle)
+
+            # Other vehicles
+            for i in range(rng.integers(self.config["other_vehicles"])):
+                random_lane_index = self.road.network.random_lane_index(rng)
+                vehicle = IDMVehicle.make_on_lane(
+                    self.road,
+                    random_lane_index,
+                    longitudinal=rng.uniform(
+                        low=0, high=self.road.network.get_lane(random_lane_index).length
+                    ),
+                    speed=6 + rng.uniform(high=3),
+                )
+                # Prevent early collisions
+                for v in self.road.vehicles:
+                    if np.linalg.norm(vehicle.position - v.position) < 20:
+                        break
+                else:
+                    self.road.vehicles.append(vehicle)
