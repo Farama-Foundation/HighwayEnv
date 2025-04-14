@@ -1,4 +1,4 @@
-# train and test PPO agent on racetrack-loop-v0 with config (for good results, hyperparameter tuning and more train
+# train and test PPO agent on racetrack-oval-v0 with config (for good results, hyperparameter tuning and more train
 # steps required)
 
 import gymnasium as gym
@@ -45,13 +45,13 @@ config = {
             "length": 100,  # CL: length of straight; 0: random number form [100,200]
             "no_lanes": 3,  # CL: no. of lanes; 0: random number form [2,7]
 
-        }
+}
 
 
 if __name__ == "__main__":
     n_cpu = 8
     batch_size = 32
-    make_env = lambda: gym.make('racetrack-loop-v0', config=config)
+    make_env = lambda: gym.make('racetrack-oval-v0', config=config)
     env = make_vec_env(make_env, n_envs=n_cpu, vec_env_cls=SubprocVecEnv)
     model = PPO(
         "MlpPolicy",
@@ -60,25 +60,24 @@ if __name__ == "__main__":
         n_steps=batch_size * 12 // n_cpu,
         batch_size=batch_size,
         verbose=2,
-        tensorboard_log="racetrack_loop_ppo/",
+        tensorboard_log="racetrack_oval_ppo/",
     )
     # Train the model
     if TRAIN:
-        model = PPO.load("racetrack_loop_ppo/model", env=env)
-        model.learn(total_timesteps=int(1e5))
-        model.save("racetrack_loop_ppo/model")
+        model.learn(total_timesteps=int(1e3))
+        model.save("racetrack_oval_ppo/model")
         del model
 
     # Run the algorithm
-    model = PPO.load("racetrack_loop_ppo/model", env=env)
+    model = PPO.load("racetrack_oval_ppo/model", env=env)
 
-    env = gym.make("racetrack-loop-v0", render_mode="rgb_array", config=config)
+    env = gym.make("racetrack-oval-v0", render_mode="rgb_array", config=config)
     env = RecordVideo(
-        env, video_folder="racetrack_loop_ppo/videos", episode_trigger=lambda e: True
+        env, video_folder="racetrack_oval_ppo/videos", episode_trigger=lambda e: True
     )
     env.unwrapped.set_record_video_wrapper(env)
 
-    for video in range(10):
+    for video in range(5):
         done = truncated = False
         obs, info = env.reset()
         while not (done or truncated):
