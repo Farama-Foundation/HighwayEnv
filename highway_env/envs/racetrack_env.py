@@ -862,9 +862,9 @@ class RacetrackEnvLarge(RacetrackEnv):
         )
 
 
-class RacetrackEnvLoop(RacetrackEnv):
+class RacetrackEnvOval(RacetrackEnv):
     """
-    A simple racetrack with the form of a loop that allows for custom number of lanes, custom length of horizontal
+    A simple racetrack with the form of an oval that allows for custom number of lanes, custom length of horizontal
     straight and a scenario of roadblocks (block second lane counting from innermost lane) to enforce a clear
     decision-making scenario (which side to use to avoid blocks)
 
