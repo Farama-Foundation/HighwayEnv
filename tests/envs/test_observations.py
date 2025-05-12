@@ -23,5 +23,6 @@ def test_observation_type(observation_config):
         assert env.observation_space.contains(obs)
     env.close()
 
+
 if __name__ == '__main__':
     pytest.main([__file__])
