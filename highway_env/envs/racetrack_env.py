@@ -81,11 +81,8 @@ class RacetrackEnv(AbstractEnv):
 
     def _is_terminated(self) -> bool:
         if self.config["terminate_off_road"]:
-            while self.vehicle.on_road:
-                return self.vehicle.crashed
-            return True # CL: return True if vehicle is not on road
-        else:
-            return self.vehicle.crashed
+            return self.vehicle.crashed or not self.vehicle.on_road
+        return self.vehicle.crashed
 
     def _is_truncated(self) -> bool:
         return self.time >= self.config["duration"]
