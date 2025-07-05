@@ -145,3 +145,5 @@ jupyter_execute
 
 # IDE
 .idea
+
+racetrack_oval_ppo/
