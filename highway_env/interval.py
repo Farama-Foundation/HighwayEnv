@@ -169,7 +169,7 @@ def polytope(
     for vertex_id in vertices_id:
         params_vertex = params_intervals[vertex_id, np.arange(len(vertex_id))]
         d_a.append(parametrized_f(params_vertex) - parametrized_f(params_means))
-    d_a = list({d_a_i.tostring(): d_a_i for d_a_i in d_a}.values())
+    d_a = list({str(d_a_i): d_a_i for d_a_i in d_a}.values())
     return a0, d_a
 
 
