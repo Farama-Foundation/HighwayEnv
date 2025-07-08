@@ -7,8 +7,8 @@ from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import CircularLane, LineType, StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.behavior import IDMVehicle
-from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.objects import Obstacle
+
 
 class RacetrackEnv(AbstractEnv):
     """
@@ -18,7 +18,8 @@ class RacetrackEnv(AbstractEnv):
     - follow the tracks
     - avoid collisions with other vehicles
 
-    Credits and many thanks to @supperted825 for the idea and initial implementation.
+    Credits and many thanks to @supperted825 for the idea and
+    initial implementation.
     See https://github.com/eleurent/highway-env/issues/231
     """
 
@@ -54,8 +55,7 @@ class RacetrackEnv(AbstractEnv):
                 "screen_height": 600,
                 "centering_position": [0.5, 0.5],
                 "speed_limit": 10.0,
-                "terminate_off_road": True,  # CL: terminate if car goes off-road
-
+                "terminate_off_road": True,
             }
         )
         return config
@@ -63,9 +63,12 @@ class RacetrackEnv(AbstractEnv):
     def _reward(self, action: np.ndarray) -> float:
         rewards = self._rewards(action)
         reward = sum(
-            self.config.get(name, 0) * reward for name, reward in rewards.items()
+            self.config.get(name, 0) * reward
+            for name, reward in rewards.items()
         )
-        reward = utils.lmap(reward, [self.config["collision_reward"], 1], [0, 1])
+        reward = utils.lmap(reward,
+                            [self.config["collision_reward"], 1],
+                            [0, 1])
         reward *= rewards["on_road_reward"]
         return reward
 
@@ -94,7 +97,8 @@ class RacetrackEnv(AbstractEnv):
     def _make_road(self) -> None:
         net = RoadNetwork()
 
-        # Set Speed Limits for Road Sections - Straight, Turn20, Straight, Turn 15, Turn15, Straight, Turn25x2, Turn18
+        # Set Speed Limits for Road Sections - Straight, Turn20, Straight,
+        # Turn 15, Turn15, Straight, Turn25x2, Turn18
         speedlimits = [None, 10, 10, 10, 10, 10, 10, 10, 10]
 
         # Initialise First Lane
@@ -265,7 +269,7 @@ class RacetrackEnv(AbstractEnv):
             ),
         )
 
-        # 7 - Circular Arc #4 - Bugs out when arc is too large, hence written in 2 sections
+        # 7 - Circular Arc #4 - Bugs out when arc is too large, thus 2 sections
         center4 = [18.1, -18.1]
         radii4 = 25
         net.add_lane(
@@ -366,7 +370,8 @@ class RacetrackEnv(AbstractEnv):
 
     def _make_vehicles(self) -> None:
         """
-        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+        Populate a road with several vehicles on the highway and
+        on the merging lane, as well as an ego-vehicle.
         """
         rng = self.np_random
 
@@ -379,7 +384,10 @@ class RacetrackEnv(AbstractEnv):
                 else self.road.network.random_lane_index(rng)
             )
             controlled_vehicle = self.action_type.vehicle_class.make_on_lane(
-                self.road, lane_index, speed=None, longitudinal=rng.uniform(20, 50)
+                self.road,
+                lane_index,
+                speed=None,
+                longitudinal=rng.uniform(20, 50)
             )
 
             self.controlled_vehicles.append(controlled_vehicle)
@@ -391,7 +399,8 @@ class RacetrackEnv(AbstractEnv):
                 self.road,
                 ("b", "c", lane_index[-1]),
                 longitudinal=rng.uniform(
-                    low=0, high=self.road.network.get_lane(("b", "c", 0)).length
+                    low=0,
+                    high=self.road.network.get_lane(("b", "c", 0)).length
                 ),
                 speed=6 + rng.uniform(high=3),
             )
@@ -399,12 +408,14 @@ class RacetrackEnv(AbstractEnv):
 
             # Other vehicles
             for i in range(rng.integers(self.config["other_vehicles"])):
-                random_lane_index = self.road.network.random_lane_index(rng)
+                rand_lane_index = self.road.network.random_lane_index(rng)
+
                 vehicle = IDMVehicle.make_on_lane(
                     self.road,
-                    random_lane_index,
+                    rand_lane_index,
                     longitudinal=rng.uniform(
-                        low=0, high=self.road.network.get_lane(random_lane_index).length
+                        low=0,
+                        high=self.road.network.get_lane(rand_lane_index).length
                     ),
                     speed=6 + rng.uniform(high=3),
                 )
@@ -765,12 +776,15 @@ class RacetrackEnvLarge(RacetrackEnv):
         # We preemptively take section 9's radius to make a nice join.
         radii9 = 15
         rad = np.deg2rad(30)
-        end8 = np.array([42 - radii9 * np.cos(rad), -radii9 - radii9 * np.sin(rad)])
+        end8 = np.array([42 - radii9 * np.cos(rad),
+                         -radii9 - radii9 * np.sin(rad)])
         end8_2 = np.array(
-            [42 - (radii9 + w) * np.cos(rad), -radii9 - (radii9 + w) * np.sin(rad)]
+            [42 - (radii9 + w) * np.cos(rad),
+             -radii9 - (radii9 + w) * np.sin(rad)]
         )
         end8_3 = np.array(
-            [42 - (radii9 + w2) * np.cos(rad), -radii9 - (radii9 + w2) * np.sin(rad)]
+            [42 - (radii9 + w2) * np.cos(rad),
+             -radii9 - (radii9 + w2) * np.sin(rad)]
         )
         net.add_lane(
             "h",
@@ -861,14 +875,12 @@ class RacetrackEnvLarge(RacetrackEnv):
 
 class RacetrackEnvOval(RacetrackEnv):
     """
-    A simple racetrack with the form of an oval that allows for custom number of lanes, custom length of horizontal
-    straight and a scenario of roadblocks (block second lane counting from innermost lane) to enforce a clear
-    decision-making scenario (which side to use to avoid blocks)
+    Oval-shaped racetrack with customizable parameters:
 
-    The agent needs to learn three skills:
-    - follow the tracks
-    - avoid collisions with other vehicles
-    - avoid collisions with fixed objects
+    Key additional features:
+    - Customizable number of lanes.
+    - Adjustable length of horizontal straight segments.
+    - Optional roadblocks to enforce strategic lane changes.
 
     credit: @christophluther
     """
@@ -904,12 +916,11 @@ class RacetrackEnvOval(RacetrackEnv):
                 "screen_height": 600,
                 "centering_position": [0.5, 0.5],
                 "speed_limit": 10.0,
-                "terminate_off_road": True,  # CL: terminate if car goes off-road
-                "length": 100,  # CL: length of straight; 0: random number form [100,200]
-                "no_lanes": 3,  # CL: no. of lanes; 0: random number form [2,7]
-                "block_lane": False, # CL: road block on second lane (bottom straight, counting from innermost lane)
-                "force_decision": False, # road block on first and third lane (before blocking lane 2)
-
+                "terminate_off_road": True,
+                "length": 100,  # 0: random number from [100,200]
+                "no_lanes": 3,  # 0: random number from [2,7]
+                "block_lane": False,  # block middle lane
+                "force_decision": False,  # block 1st and 3rd lane
             }
         )
         return config
@@ -920,7 +931,7 @@ class RacetrackEnvOval(RacetrackEnv):
         # define rng
         rng = np.random.default_rng()
 
-        # Set Speed Limits for Road Sections - default [None, 20, 18, 20, 18, 20, 18, 20, 18]
+        # Set Speed Limits for Road Sections
         speedlimits = [None, 10, 10, 10, 10, 10, 10, 10, 10]
 
         # define length,
@@ -947,8 +958,8 @@ class RacetrackEnvOval(RacetrackEnv):
         # successively add lanes
         net.add_lane("a", "b", lane)
 
-        # CL: This for loop must be separate for every segment bcs segment names have to be introduced
-        for i in range(1, no_lanes-1):
+        # Loop must be separate for every segment to introduce segment names
+        for i in range(1, no_lanes - 1):
             # add additional lanes between inner and outer lane
             net.add_lane(
                 "a",
@@ -967,8 +978,8 @@ class RacetrackEnvOval(RacetrackEnv):
             "a",
             "b",
             StraightLane(
-                [0, (no_lanes-1) * 5],
-                [length + 1, (no_lanes-1) * 5],
+                [0, (no_lanes - 1) * 5],
+                [length + 1, (no_lanes - 1) * 5],
                 line_types=(LineType.STRIPED, LineType.CONTINUOUS),
                 width=5,
                 speed_limit=speedlimits[1],
@@ -993,7 +1004,7 @@ class RacetrackEnvOval(RacetrackEnv):
             ),
         )
 
-        for i in range(1, no_lanes-1):
+        for i in range(1, no_lanes - 1):
             # add additional lanes between inner and outer lane
             net.add_lane(
                 "b",
@@ -1016,7 +1027,7 @@ class RacetrackEnvOval(RacetrackEnv):
             "c",
             CircularLane(
                 center1,
-                radii1 + (no_lanes-1) * 5,
+                radii1 + (no_lanes - 1) * 5,
                 np.deg2rad(90),
                 np.deg2rad(0),
                 width=5,
@@ -1039,7 +1050,7 @@ class RacetrackEnvOval(RacetrackEnv):
             ),
         )
 
-        for i in range(1, no_lanes-1):
+        for i in range(1, no_lanes - 1):
             # add additional lanes between inner and outer lane
             net.add_lane(
                 "c",
@@ -1058,8 +1069,8 @@ class RacetrackEnvOval(RacetrackEnv):
             "c",
             "d",
             StraightLane(
-                [length + 20 + (no_lanes-1) * 5, -20],
-                [length + 20 + (no_lanes-1) * 5, -50],
+                [length + 20 + (no_lanes - 1) * 5, -20],
+                [length + 20 + (no_lanes - 1) * 5, -50],
                 line_types=(LineType.STRIPED, LineType.CONTINUOUS),
                 width=5,
                 speed_limit=speedlimits[3],
@@ -1084,7 +1095,7 @@ class RacetrackEnvOval(RacetrackEnv):
             ),
         )
 
-        for i in range(1, no_lanes-1):
+        for i in range(1, no_lanes - 1):
             # add additional lanes between inner and outer lane
             net.add_lane(
                 "d",
@@ -1107,7 +1118,7 @@ class RacetrackEnvOval(RacetrackEnv):
             "e",
             CircularLane(
                 center2,
-                radii2 + (no_lanes-1) * 5,
+                radii2 + (no_lanes - 1) * 5,
                 np.deg2rad(0),
                 np.deg2rad(-90),
                 width=5,
@@ -1122,7 +1133,7 @@ class RacetrackEnvOval(RacetrackEnv):
             "e",
             "f",
             StraightLane(
-                [length  + 5, -65],
+                [length + 5, -65],
                 [-5, -65],
                 line_types=(LineType.CONTINUOUS, LineType.NONE),
                 width=5,
@@ -1130,7 +1141,7 @@ class RacetrackEnvOval(RacetrackEnv):
             ),
         )
 
-        for i in range(1, no_lanes-1):
+        for i in range(1, no_lanes - 1):
             # add additional lanes between inner and outer lane
             net.add_lane(
                 "e",
@@ -1149,8 +1160,8 @@ class RacetrackEnvOval(RacetrackEnv):
             "e",
             "f",
             StraightLane(
-                [length + 5, -(65 + (no_lanes-1) * 5)],
-                [-5, -(65+ (no_lanes-1) * 5)],
+                [length + 5, -(65 + (no_lanes - 1) * 5)],
+                [-5, -(65 + (no_lanes - 1) * 5)],
                 line_types=(LineType.STRIPED, LineType.CONTINUOUS),
                 width=5,
                 speed_limit=speedlimits[5],
@@ -1175,7 +1186,7 @@ class RacetrackEnvOval(RacetrackEnv):
             ),
         )
 
-        for i in range(1,no_lanes-1):
+        for i in range(1, no_lanes - 1):
             net.add_lane(
                 "f",
                 "g",
@@ -1197,7 +1208,7 @@ class RacetrackEnvOval(RacetrackEnv):
             "g",
             CircularLane(
                 center4,
-                radii4 + (no_lanes-1) * 5,
+                radii4 + (no_lanes - 1) * 5,
                 np.deg2rad(-90),
                 np.deg2rad(-180),
                 width=5,
@@ -1220,7 +1231,7 @@ class RacetrackEnvOval(RacetrackEnv):
             ),
         )
 
-        for i in range(1, no_lanes-1):
+        for i in range(1, no_lanes - 1):
             net.add_lane(
                 "g",
                 "h",
@@ -1238,8 +1249,8 @@ class RacetrackEnvOval(RacetrackEnv):
             "g",
             "h",
             StraightLane(
-                [-20 - (no_lanes-1) * 5, -50],
-                [-20 - (no_lanes-1) * 5, -20],
+                [-20 - (no_lanes - 1) * 5, -50],
+                [-20 - (no_lanes - 1) * 5, -20],
                 line_types=(LineType.STRIPED, LineType.CONTINUOUS),
                 width=5,
                 speed_limit=speedlimits[7],
@@ -1264,7 +1275,7 @@ class RacetrackEnvOval(RacetrackEnv):
             ),
         )
 
-        for i in range(1, no_lanes-1):
+        for i in range(1, no_lanes - 1):
             net.add_lane(
                 "h",
                 "a",
@@ -1302,30 +1313,22 @@ class RacetrackEnvOval(RacetrackEnv):
             record_history=self.config["show_trajectories"],
         )
 
-        # CL: scenario to force a "binary" decision (which lane to change to, in order to avoid road block)
+        # Scenario to force a "binary" decision
         if self.config["block_lane"]:
-            road.objects.append(Obstacle(road, [length - 40, 3.75]))
-            road.objects.append(Obstacle(road, [length - 40, 6.25]))
-            road.objects.append(Obstacle(road, [length - 43, 3.75]))
-            road.objects.append(Obstacle(road, [length - 43, 6.25]))
-            road.objects.append(Obstacle(road, [length - 46, 3.75]))
-            road.objects.append(Obstacle(road, [length - 46, 6.25]))
-            road.objects.append(Obstacle(road, [length - 49, 3.75]))
-            road.objects.append(Obstacle(road, [length - 49, 6.25]))
+            for i in [40, 43, 46, 49]:
+                road.objects.append(Obstacle(road, [length - i, 3.75]))
+                road.objects.append(Obstacle(road, [length - i, 6.25]))
 
         if self.config["force_decision"]:
-            road.objects.append(Obstacle(road, [length - 90, -1.25]))
-            road.objects.append(Obstacle(road, [length - 90, 1.25]))
-            road.objects.append(Obstacle(road, [length - 90, 8.75]))
-            road.objects.append(Obstacle(road, [length - 90, 11.25]))
-
+            for i in [-1.25, 1.25, 8.85, 11.25]:
+                road.objects.append(Obstacle(road, [length - 90, i]))
 
         self.road = road
 
     # CL adjusted to number of lanes
     def _make_vehicles(self) -> None:
         """
-        Populate a road with several vehicles on the highway and on the merging lane, as well as an ego-vehicle.
+        Populate a road with several vehicles.
         """
         rng = self.np_random
 
@@ -1341,7 +1344,10 @@ class RacetrackEnvOval(RacetrackEnv):
                 else self.road.network.random_lane_index(rng)
             )
             controlled_vehicle = self.action_type.vehicle_class.make_on_lane(
-                self.road, lane_index, speed=None, longitudinal=rng.uniform(20, 50)
+                self.road,
+                lane_index,
+                speed=None,
+                longitudinal=rng.uniform(20, 50)
             )
 
             self.controlled_vehicles.append(controlled_vehicle)
@@ -1353,7 +1359,8 @@ class RacetrackEnvOval(RacetrackEnv):
                 self.road,
                 ("b", "c", lane_index[-1]),
                 longitudinal=rng.uniform(
-                    low=0, high=self.road.network.get_lane(("b", "c", 0)).length
+                    low=0,
+                    high=self.road.network.get_lane(("b", "c", 0)).length
                 ),
                 speed=6 + rng.uniform(high=3),
             )
@@ -1361,12 +1368,13 @@ class RacetrackEnvOval(RacetrackEnv):
 
             # Other vehicles
             for i in range(rng.integers(self.config["other_vehicles"])):
-                random_lane_index = self.road.network.random_lane_index(rng)
+                rand_lane_index = self.road.network.random_lane_index(rng)
                 vehicle = IDMVehicle.make_on_lane(
                     self.road,
-                    random_lane_index,
+                    rand_lane_index,
                     longitudinal=rng.uniform(
-                        low=0, high=self.road.network.get_lane(random_lane_index).length
+                        low=0,
+                        high=self.road.network.get_lane(rand_lane_index).length
                     ),
                     speed=6 + rng.uniform(high=3),
                 )
