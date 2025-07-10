@@ -86,8 +86,7 @@ if __name__ == "__main__":
 
     env = gym.make("racetrack-oval-v0", render_mode="rgb_array", config=config)
     env = RecordVideo(
-        env, video_folder="racetrack_oval_ppo/videos",
-        episode_trigger=lambda e: True
+        env, video_folder="racetrack_oval_ppo/videos", episode_trigger=lambda e: True
     )
     env.unwrapped.set_record_video_wrapper(env)
 

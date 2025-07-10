@@ -63,12 +63,9 @@ class RacetrackEnv(AbstractEnv):
     def _reward(self, action: np.ndarray) -> float:
         rewards = self._rewards(action)
         reward = sum(
-            self.config.get(name, 0) * reward
-            for name, reward in rewards.items()
+            self.config.get(name, 0) * reward for name, reward in rewards.items()
         )
-        reward = utils.lmap(reward,
-                            [self.config["collision_reward"], 1],
-                            [0, 1])
+        reward = utils.lmap(reward, [self.config["collision_reward"], 1], [0, 1])
         reward *= rewards["on_road_reward"]
         return reward
 
@@ -384,10 +381,7 @@ class RacetrackEnv(AbstractEnv):
                 else self.road.network.random_lane_index(rng)
             )
             controlled_vehicle = self.action_type.vehicle_class.make_on_lane(
-                self.road,
-                lane_index,
-                speed=None,
-                longitudinal=rng.uniform(20, 50)
+                self.road, lane_index, speed=None, longitudinal=rng.uniform(20, 50)
             )
 
             self.controlled_vehicles.append(controlled_vehicle)
@@ -399,8 +393,7 @@ class RacetrackEnv(AbstractEnv):
                 self.road,
                 ("b", "c", lane_index[-1]),
                 longitudinal=rng.uniform(
-                    low=0,
-                    high=self.road.network.get_lane(("b", "c", 0)).length
+                    low=0, high=self.road.network.get_lane(("b", "c", 0)).length
                 ),
                 speed=6 + rng.uniform(high=3),
             )
@@ -414,8 +407,7 @@ class RacetrackEnv(AbstractEnv):
                     self.road,
                     rand_lane_index,
                     longitudinal=rng.uniform(
-                        low=0,
-                        high=self.road.network.get_lane(rand_lane_index).length
+                        low=0, high=self.road.network.get_lane(rand_lane_index).length
                     ),
                     speed=6 + rng.uniform(high=3),
                 )
@@ -776,15 +768,12 @@ class RacetrackEnvLarge(RacetrackEnv):
         # We preemptively take section 9's radius to make a nice join.
         radii9 = 15
         rad = np.deg2rad(30)
-        end8 = np.array([42 - radii9 * np.cos(rad),
-                         -radii9 - radii9 * np.sin(rad)])
+        end8 = np.array([42 - radii9 * np.cos(rad), -radii9 - radii9 * np.sin(rad)])
         end8_2 = np.array(
-            [42 - (radii9 + w) * np.cos(rad),
-             -radii9 - (radii9 + w) * np.sin(rad)]
+            [42 - (radii9 + w) * np.cos(rad), -radii9 - (radii9 + w) * np.sin(rad)]
         )
         end8_3 = np.array(
-            [42 - (radii9 + w2) * np.cos(rad),
-             -radii9 - (radii9 + w2) * np.sin(rad)]
+            [42 - (radii9 + w2) * np.cos(rad), -radii9 - (radii9 + w2) * np.sin(rad)]
         )
         net.add_lane(
             "h",
@@ -1344,10 +1333,7 @@ class RacetrackEnvOval(RacetrackEnv):
                 else self.road.network.random_lane_index(rng)
             )
             controlled_vehicle = self.action_type.vehicle_class.make_on_lane(
-                self.road,
-                lane_index,
-                speed=None,
-                longitudinal=rng.uniform(20, 50)
+                self.road, lane_index, speed=None, longitudinal=rng.uniform(20, 50)
             )
 
             self.controlled_vehicles.append(controlled_vehicle)
@@ -1359,8 +1345,7 @@ class RacetrackEnvOval(RacetrackEnv):
                 self.road,
                 ("b", "c", lane_index[-1]),
                 longitudinal=rng.uniform(
-                    low=0,
-                    high=self.road.network.get_lane(("b", "c", 0)).length
+                    low=0, high=self.road.network.get_lane(("b", "c", 0)).length
                 ),
                 speed=6 + rng.uniform(high=3),
             )
@@ -1373,8 +1358,7 @@ class RacetrackEnvOval(RacetrackEnv):
                     self.road,
                     rand_lane_index,
                     longitudinal=rng.uniform(
-                        low=0,
-                        high=self.road.network.get_lane(rand_lane_index).length
+                        low=0, high=self.road.network.get_lane(rand_lane_index).length
                     ),
                     speed=6 + rng.uniform(high=3),
                 )
