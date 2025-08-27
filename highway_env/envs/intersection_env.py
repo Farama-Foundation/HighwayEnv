@@ -177,7 +177,7 @@ class IntersectionEnv(AbstractEnv):
                 "o" + str(corner),
                 "ir" + str(corner),
                 StraightLane(
-                    start, end, line_types=[s, c], priority=priority, speed_limit=10
+                    start, end, line_types=[s, c], priority=priority, speed_limit=10.0
                 ),
             )
             # Right turn
@@ -192,7 +192,7 @@ class IntersectionEnv(AbstractEnv):
                     angle + np.radians(270),
                     line_types=[n, c],
                     priority=priority,
-                    speed_limit=10,
+                    speed_limit=10.0,
                 ),
             )
             # Left turn
@@ -215,7 +215,7 @@ class IntersectionEnv(AbstractEnv):
                     clockwise=False,
                     line_types=[n, n],
                     priority=priority - 1,
-                    speed_limit=10,
+                    speed_limit=10.0,
                 ),
             )
             # Straight
@@ -225,7 +225,7 @@ class IntersectionEnv(AbstractEnv):
                 "ir" + str(corner),
                 "il" + str((corner + 2) % 4),
                 StraightLane(
-                    start, end, line_types=[s, n], priority=priority, speed_limit=10
+                    start, end, line_types=[s, n], priority=priority, speed_limit=10.0
                 ),
             )
             # Exit
@@ -237,7 +237,7 @@ class IntersectionEnv(AbstractEnv):
                 "il" + str((corner - 1) % 4),
                 "o" + str((corner - 1) % 4),
                 StraightLane(
-                    end, start, line_types=[n, c], priority=priority, speed_limit=10
+                    end, start, line_types=[n, c], priority=priority, speed_limit=10.0
                 ),
             )
 
@@ -276,10 +276,10 @@ class IntersectionEnv(AbstractEnv):
         # Challenger vehicle
         self._spawn_vehicle(
             60,
-            spawn_probability=1,
+            spawn_probability=1.0,
             go_straight=True,
             position_deviation=0.1,
-            speed_deviation=0,
+            speed_deviation=0.0,
         )
 
         # Controlled vehicles
@@ -293,9 +293,9 @@ class IntersectionEnv(AbstractEnv):
             )
             ego_vehicle = self.action_type.vehicle_class(
                 self.road,
-                ego_lane.position(60 + 5 * self.np_random.normal(1), 0),
+                ego_lane.position(60.0 + 5.0 * self.np_random.normal(1.0), 0.0),
                 speed=ego_lane.speed_limit,
-                heading=ego_lane.heading_at(60),
+                heading=ego_lane.heading_at(60.0),
             )
             try:
                 ego_vehicle.plan_route_to(destination)
@@ -335,9 +335,9 @@ class IntersectionEnv(AbstractEnv):
             self.road,
             ("o" + str(route[0]), "ir" + str(route[0]), 0),
             longitudinal=(
-                longitudinal + 5 + self.np_random.normal() * position_deviation
+                longitudinal + 5.0 + self.np_random.normal() * position_deviation
             ),
-            speed=8 + self.np_random.normal() * speed_deviation,
+            speed=8.0 + self.np_random.normal() * speed_deviation,
         )
         for v in self.road.vehicles:
             if np.linalg.norm(v.position - vehicle.position) < 15:

@@ -181,12 +181,12 @@ class UTurnEnv(AbstractEnv):
         """
 
         # These variables add small variations to the driving behavior.
-        position_deviation = 2
-        speed_deviation = 2
+        position_deviation = 2.0
+        speed_deviation = 2.0
 
         ego_lane = self.road.network.get_lane(("a", "b", 0))
         ego_vehicle = self.action_type.vehicle_class(
-            self.road, ego_lane.position(0, 0), speed=16
+            self.road, ego_lane.position(0, 0), speed=16.0
         )
         # Stronger anticipation for the turn
         ego_vehicle.PURSUIT_TAU = MDPVehicle.TAU_HEADING
@@ -207,7 +207,7 @@ class UTurnEnv(AbstractEnv):
         vehicle = vehicles_type.make_on_lane(
             self.road,
             ("a", "b", 0),
-            longitudinal=25 + self.np_random.normal() * position_deviation,
+            longitudinal=25.0 + self.np_random.normal() * position_deviation,
             speed=13.5 + self.np_random.normal() * speed_deviation,
         )
         vehicle.plan_route_to("d")
@@ -218,7 +218,7 @@ class UTurnEnv(AbstractEnv):
         vehicle = vehicles_type.make_on_lane(
             self.road,
             ("a", "b", 1),
-            longitudinal=56 + self.np_random.normal() * position_deviation,
+            longitudinal=56.0 + self.np_random.normal() * position_deviation,
             speed=14.5 + self.np_random.normal() * speed_deviation,
         )
         vehicle.plan_route_to("d")
@@ -251,7 +251,7 @@ class UTurnEnv(AbstractEnv):
         vehicle = vehicles_type.make_on_lane(
             self.road,
             ("c", "d", 0),
-            longitudinal=1 + self.np_random.normal() * position_deviation,
+            longitudinal=1.0 + self.np_random.normal() * position_deviation,
             speed=3.5 + self.np_random.normal() * speed_deviation,
         )
         vehicle.plan_route_to("d")
@@ -262,7 +262,7 @@ class UTurnEnv(AbstractEnv):
         vehicle = vehicles_type.make_on_lane(
             self.road,
             ("c", "d", 1),
-            longitudinal=30 + self.np_random.normal() * position_deviation,
+            longitudinal=30.0 + self.np_random.normal() * position_deviation,
             speed=5.5 + self.np_random.normal() * speed_deviation,
         )
         vehicle.plan_route_to("d")

@@ -44,7 +44,6 @@ class BicycleVehicle(Vehicle):
     FRICTION_REAR: float = 15.0 * MASS  # [N]
 
     MAX_ANGULAR_SPEED: float = 2 * np.pi  # [rad/s]
-    MAX_SPEED: float = 15  # [m/s]
 
     def __init__(
         self, road: Road, position: Vector, heading: float = 0, speed: float = 0

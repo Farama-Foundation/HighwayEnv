@@ -96,7 +96,7 @@ class RacetrackEnv(AbstractEnv):
 
         # Set Speed Limits for Road Sections - Straight, Turn20, Straight,
         # Turn 15, Turn15, Straight, Turn25x2, Turn18
-        speedlimits = [None, 10, 10, 10, 10, 10, 10, 10, 10]
+        speedlimits = [None, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
 
         # Initialise First Lane
         lane = StraightLane(
@@ -393,9 +393,9 @@ class RacetrackEnv(AbstractEnv):
                 self.road,
                 ("b", "c", lane_index[-1]),
                 longitudinal=rng.uniform(
-                    low=0, high=self.road.network.get_lane(("b", "c", 0)).length
+                    low=0.0, high=self.road.network.get_lane(("b", "c", 0)).length
                 ),
-                speed=6 + rng.uniform(high=3),
+                speed=6.0 + rng.uniform(high=3.0),
             )
             self.road.vehicles.append(vehicle)
 
@@ -407,9 +407,9 @@ class RacetrackEnv(AbstractEnv):
                     self.road,
                     rand_lane_index,
                     longitudinal=rng.uniform(
-                        low=0, high=self.road.network.get_lane(rand_lane_index).length
+                        low=0.0, high=self.road.network.get_lane(rand_lane_index).length
                     ),
-                    speed=6 + rng.uniform(high=3),
+                    speed=6.0 + rng.uniform(high=3.0),
                 )
                 # Prevent early collisions
                 for v in self.road.vehicles:
@@ -1304,13 +1304,13 @@ class RacetrackEnvOval(RacetrackEnv):
 
         # Scenario to force a "binary" decision
         if self.config["block_lane"]:
-            for i in [40, 43, 46, 49]:
+            for i in [40.0, 43.0, 46.0, 49.0]:
                 road.objects.append(Obstacle(road, [length - i, 3.75]))
                 road.objects.append(Obstacle(road, [length - i, 6.25]))
 
         if self.config["force_decision"]:
             for i in [-1.25, 1.25, 8.85, 11.25]:
-                road.objects.append(Obstacle(road, [length - 90, i]))
+                road.objects.append(Obstacle(road, [length - 90.0, i]))
 
         self.road = road
 
@@ -1333,7 +1333,7 @@ class RacetrackEnvOval(RacetrackEnv):
                 else self.road.network.random_lane_index(rng)
             )
             controlled_vehicle = self.action_type.vehicle_class.make_on_lane(
-                self.road, lane_index, speed=None, longitudinal=rng.uniform(20, 50)
+                self.road, lane_index, speed=None, longitudinal=rng.uniform(20.0, 50.0)
             )
 
             self.controlled_vehicles.append(controlled_vehicle)
@@ -1345,9 +1345,9 @@ class RacetrackEnvOval(RacetrackEnv):
                 self.road,
                 ("b", "c", lane_index[-1]),
                 longitudinal=rng.uniform(
-                    low=0, high=self.road.network.get_lane(("b", "c", 0)).length
+                    low=0.0, high=self.road.network.get_lane(("b", "c", 0)).length
                 ),
-                speed=6 + rng.uniform(high=3),
+                speed=6.0 + rng.uniform(high=3.0),
             )
             self.road.vehicles.append(vehicle)
 
@@ -1358,13 +1358,13 @@ class RacetrackEnvOval(RacetrackEnv):
                     self.road,
                     rand_lane_index,
                     longitudinal=rng.uniform(
-                        low=0, high=self.road.network.get_lane(rand_lane_index).length
+                        low=0.0, high=self.road.network.get_lane(rand_lane_index).length
                     ),
-                    speed=6 + rng.uniform(high=3),
+                    speed=6.0 + rng.uniform(high=3.0),
                 )
                 # Prevent early collisions
                 for v in self.road.vehicles:
-                    if np.linalg.norm(vehicle.position - v.position) < 20:
+                    if np.linalg.norm(vehicle.position - v.position) < 20.0:
                         break
                 else:
                     self.road.vehicles.append(vehicle)
