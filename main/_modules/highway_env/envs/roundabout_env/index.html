@@ -624,16 +624,16 @@
 
 <span class="sd">        :return: the ego-vehicle</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">position_deviation</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">speed_deviation</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">position_deviation</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="n">speed_deviation</span> <span class="o">=</span> <span class="mf">2.0</span>
 
         <span class="c1"># Ego-vehicle</span>
         <span class="n">ego_lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">((</span><span class="s2">&quot;ser&quot;</span><span class="p">,</span> <span class="s2">&quot;ses&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="n">ego_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">vehicle_class</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
-            <span class="n">ego_lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mi">125</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="n">speed</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
-            <span class="n">heading</span><span class="o">=</span><span class="n">ego_lane</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="mi">140</span><span class="p">),</span>
+            <span class="n">ego_lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mf">125.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span>
+            <span class="n">heading</span><span class="o">=</span><span class="n">ego_lane</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="mf">140.0</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;nxs&quot;</span><span class="p">)</span>
@@ -648,7 +648,7 @@
         <span class="n">vehicle</span> <span class="o">=</span> <span class="n">other_vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
             <span class="p">(</span><span class="s2">&quot;we&quot;</span><span class="p">,</span> <span class="s2">&quot;sx&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="n">longitudinal</span><span class="o">=</span><span class="mi">5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="mf">5.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
             <span class="n">speed</span><span class="o">=</span><span class="mi">16</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -665,8 +665,9 @@
             <span class="n">vehicle</span> <span class="o">=</span> <span class="n">other_vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
                 <span class="p">(</span><span class="s2">&quot;we&quot;</span><span class="p">,</span> <span class="s2">&quot;sx&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="n">longitudinal</span><span class="o">=</span><span class="mi">20</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
-                <span class="n">speed</span><span class="o">=</span><span class="mi">16</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+                <span class="n">longitudinal</span><span class="o">=</span><span class="mf">20.0</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+                <span class="n">speed</span><span class="o">=</span><span class="mf">16.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">destinations</span><span class="p">))</span>
             <span class="n">vehicle</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
@@ -676,8 +677,8 @@
         <span class="n">vehicle</span> <span class="o">=</span> <span class="n">other_vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
             <span class="p">(</span><span class="s2">&quot;eer&quot;</span><span class="p">,</span> <span class="s2">&quot;ees&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="n">longitudinal</span><span class="o">=</span><span class="mi">50</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
-            <span class="n">speed</span><span class="o">=</span><span class="mi">16</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="mf">50.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">16.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">destinations</span><span class="p">))</span>
         <span class="n">vehicle</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
