@@ -1,6 +1,7 @@
 import warnings
 
 import gymnasium as gym
+import numpy as np
 import pytest
 from gymnasium.utils.env_checker import check_env
 
@@ -87,3 +88,45 @@ def test_env_reset_options(env_spec: str = "highway-v0"):
     update_duration = default_duration * 2
     env.reset(options={"config": {"duration": update_duration}})
     assert env.config["duration"] == update_duration
+
+
+@pytest.mark.parametrize(
+    "env_spec",
+    [
+        "highway-v0",
+        "merge-v0",
+        "roundabout-v0",
+        "intersection-v0",
+        "intersection-v1",
+        "parking-v0",
+        "two-way-v0",
+        "racetrack-v0",
+    ],
+)
+def test_env_vectorization__info_dtype_is_float(env_spec):
+    def thunk(**config_kwargs):
+        def make():
+            return gym.make(env_spec, config=config_kwargs)
+
+        return make
+
+    envs = gym.vector.SyncVectorEnv(
+        [
+            thunk(duration=2, simulation_frequency=2),
+            thunk(duration=1, simulation_frequency=2),
+        ],
+        autoreset_mode="SameStep",
+    )
+
+    _obs, info = envs.reset()
+    assert np.issubdtype(info["speed"].dtype, np.floating)
+
+    zero_action = np.zeros(envs.action_space.shape, envs.action_space.dtype)
+    # run until first environment with longer duration terminates
+    for _step in range(2):
+        _obs, _reward, _terminated, truncated, info = envs.step(zero_action)
+        assert np.issubdtype(info["speed"].dtype, np.floating)
+        if truncated[0]:
+            break
+
+    envs.close()

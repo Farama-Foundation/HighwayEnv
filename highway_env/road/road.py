@@ -291,10 +291,10 @@ class RoadNetwork:
     @staticmethod
     def straight_road_network(
         lanes: int = 4,
-        start: float = 0,
-        length: float = 10000,
-        angle: float = 0,
-        speed_limit: float = 30,
+        start: float = 0.0,
+        length: float = 10000.0,
+        angle: float = 0.0,
+        speed_limit: float = 30.0,
         nodes_str: tuple[str, str] | None = None,
         net: RoadNetwork | None = None,
     ) -> RoadNetwork:
