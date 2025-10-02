@@ -46,6 +46,23 @@ environments/racetrack
 The {ref}`observations <observations>`, {ref}`actions <actions>`, {ref}`dynamics <dynamics>` and {ref}`rewards <rewards>`
 of an environment are parametrized by a configuration, defined as a
 {py:attr}`~highway_env.envs.common.abstract.AbstractEnv.config` dictionary.
+
+For example, the number of lanes can be changed with:
+
+
+```{eval-rst}
+.. jupyter-execute::
+
+  env = gymnasium.make(
+    "highway-v0",
+    config={"lanes_count": 2},
+    render_mode='rgb_array',
+  )
+  env.reset()
+  plt.imshow(env.render())
+  plt.show()
+```
+
 After environment creation, the configuration can be accessed using the
 {py:attr}`~highway_env.envs.common.abstract.AbstractEnv.config` attribute.
 
@@ -54,36 +71,7 @@ After environment creation, the configuration can be accessed using the
 
   import pprint
 
-  env = gymnasium.make("highway-v0", render_mode='rgb_array')
   pprint.pprint(env.unwrapped.config)
-```
-
-For example, the number of lanes can be changed with:
-
-```{eval-rst}
-.. jupyter-execute::
-
-  env.unwrapped.config["lanes_count"] = 2
-  env.reset()
-  plt.imshow(env.render())
-  plt.show()
-```
-
-or directly at creation time with:
-
-```{eval-rst}
-.. jupyter-execute::
-
-  env = gymnasium.make(
-    "highway-v0",
-    render_mode='rgb_array',
-    config={"lanes_count": 2}
-  )
-```
-
-```{note}
-The environment must be {py:meth}`~highway_env.envs.common.abstract.AbstractEnv.reset` for the change of configuration
-to be effective.
 ```
 
 ## Training an agent

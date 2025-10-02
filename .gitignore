@@ -136,3 +136,14 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Sphinx
+docs/_build
+docs/jupyter_execute
+_build
+jupyter_execute
+
+# IDE
+.idea
+
+racetrack_oval_ppo/

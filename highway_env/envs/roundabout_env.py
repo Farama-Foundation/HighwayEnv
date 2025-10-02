@@ -326,16 +326,16 @@ class RoundaboutEnv(AbstractEnv):
 
         :return: the ego-vehicle
         """
-        position_deviation = 2
-        speed_deviation = 2
+        position_deviation = 2.0
+        speed_deviation = 2.0
 
         # Ego-vehicle
         ego_lane = self.road.network.get_lane(("ser", "ses", 0))
         ego_vehicle = self.action_type.vehicle_class(
             self.road,
-            ego_lane.position(125, 0),
-            speed=8,
-            heading=ego_lane.heading_at(140),
+            ego_lane.position(125.0, 0.0),
+            speed=8.0,
+            heading=ego_lane.heading_at(140.0),
         )
         try:
             ego_vehicle.plan_route_to("nxs")
@@ -350,7 +350,7 @@ class RoundaboutEnv(AbstractEnv):
         vehicle = other_vehicles_type.make_on_lane(
             self.road,
             ("we", "sx", 1),
-            longitudinal=5 + self.np_random.normal() * position_deviation,
+            longitudinal=5.0 + self.np_random.normal() * position_deviation,
             speed=16 + self.np_random.normal() * speed_deviation,
         )
 
@@ -367,8 +367,9 @@ class RoundaboutEnv(AbstractEnv):
             vehicle = other_vehicles_type.make_on_lane(
                 self.road,
                 ("we", "sx", 0),
-                longitudinal=20 * i + self.np_random.normal() * position_deviation,
-                speed=16 + self.np_random.normal() * speed_deviation,
+                longitudinal=20.0 * float(i)
+                + self.np_random.normal() * position_deviation,
+                speed=16.0 + self.np_random.normal() * speed_deviation,
             )
             vehicle.plan_route_to(self.np_random.choice(destinations))
             vehicle.randomize_behavior()
@@ -378,8 +379,8 @@ class RoundaboutEnv(AbstractEnv):
         vehicle = other_vehicles_type.make_on_lane(
             self.road,
             ("eer", "ees", 0),
-            longitudinal=50 + self.np_random.normal() * position_deviation,
-            speed=16 + self.np_random.normal() * speed_deviation,
+            longitudinal=50.0 + self.np_random.normal() * position_deviation,
+            speed=16.0 + self.np_random.normal() * speed_deviation,
         )
         vehicle.plan_route_to(self.np_random.choice(destinations))
         vehicle.randomize_behavior()

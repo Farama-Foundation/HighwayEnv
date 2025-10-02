@@ -94,7 +94,7 @@ class LinearSpline2D:
             return len(self.s_samples) - 1
         if idx_smaller[0] == 0:
             return 0
-        return int(idx_smaller[0]) - 1
+        return int(idx_smaller[0].item()) - 1
 
     @staticmethod
     def sample_curve(x_curve, y_curve, length: float, CURVE_SAMPLE_DISTANCE=1):

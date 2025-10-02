@@ -107,7 +107,7 @@ class ExitEnv(HighwayEnv):
         for _ in range(self.config["controlled_vehicles"]):
             vehicle = Vehicle.create_random(
                 self.road,
-                speed=25,
+                speed=25.0,
                 lane_from="0",
                 lane_to="1",
                 lane_id=0,

@@ -225,7 +225,8 @@ List of publications & preprints using `highway-env` (please open a pull request
 *   [Investigating High-Level Decision Making for Automated Driving](https://link.springer.com/chapter/10.1007/978-3-031-30333-3_41) (Apr 2023)
 *   [Implementing Deep Reinforcement Learning (DRL)-based Driving Styles for Non-Player Vehicles](https://journal.seriousgamessociety.org/index.php/IJSG/article/view/638) (Nov 2023)
 *   [Investigating Adversarial Policy Learning for Robust Agents in Automated Driving Highway Simulations](https://link.springer.com/chapter/10.1007/978-3-031-48121-5_18) (Jan 2024)
-*   [Validation of Reinforcement Learning Agents and Safety Shields with ProB](https://link.springer.com/chapter/10.1007/978-3-031-60698-4_16) (May 2024)
+*   [Enhancing Autonomous Vehicle Training with Language Model Integration and Critical Scenario Generation](https://arxiv.org/abs/2404.08570) (Apr 2024)
+*   *   [Validation of Reinforcement Learning Agents and Safety Shields with ProB](https://link.springer.com/chapter/10.1007/978-3-031-60698-4_16) (May 2024)
 
 PhD theses
 *   [Reinforcement learning for Dialogue Systems optimization with user adaptation](https://hal.inria.fr/tel-02422691/) (2019)

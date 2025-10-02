@@ -180,9 +180,9 @@ class ParkingEnv(AbstractEnv, GoalEnv):
         # Controlled vehicles
         self.controlled_vehicles = []
         for i in range(self.config["controlled_vehicles"]):
-            x0 = (i - self.config["controlled_vehicles"] // 2) * 10
+            x0 = float(i - self.config["controlled_vehicles"] // 2) * 10.0
             vehicle = self.action_type.vehicle_class(
-                self.road, [x0, 0], 2 * np.pi * self.np_random.uniform(), 0
+                self.road, [x0, 0.0], 2.0 * np.pi * self.np_random.uniform(), 0.0
             )
             vehicle.color = VehicleGraphics.EGO_COLOR
             self.road.vehicles.append(vehicle)
@@ -204,7 +204,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             if not empty_spots:
                 continue
             lane_index = empty_spots[self.np_random.choice(np.arange(len(empty_spots)))]
-            v = Vehicle.make_on_lane(self.road, lane_index, 4, speed=0)
+            v = Vehicle.make_on_lane(self.road, lane_index, longitudinal=4.0, speed=0.0)
             self.road.vehicles.append(v)
             empty_spots.remove(lane_index)
 
