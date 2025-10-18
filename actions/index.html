@@ -13,11 +13,11 @@
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Actions - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -243,7 +243,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -297,7 +297,7 @@
 <a class="reference internal" href="#module-highway_env.envs.common.action" title="highway_env.envs.common.action"><code class="xref py py-mod docutils literal notranslate"><span class="pre">action</span></code></a> module.
 Each environment comes with a <em>default</em> action type, which can be changed or customised using
 <a class="reference internal" href="../quickstart/#configuration"><span class="std std-ref">environment configurations</span></a>. For instance,</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span>
     <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -310,7 +310,7 @@ Each environment comes with a <em>default</em> action type, which can be changed
 <h2>Continuous Actions<a class="headerlink" href="#continuous-actions" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.action.ContinuousAction" title="highway_env.envs.common.action.ContinuousAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousAction</span></code></a> type allows the agent to directly set the low-level
 controls of the <a class="reference internal" href="../dynamics/vehicle/kinematics/#vehicle-kinematics"><span class="std std-ref">vehicle kinematics</span></a>, namely the throttle <span class="math notranslate nohighlight">\(a\)</span> and steering angle <span class="math notranslate nohighlight">\(\delta\)</span>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span>
     <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -329,7 +329,7 @@ configurations, respectively. Thus, the action space can be either 1D or 2D.</p>
 <section id="discrete-actions">
 <h2>Discrete Actions<a class="headerlink" href="#discrete-actions" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.action.DiscreteAction" title="highway_env.envs.common.action.DiscreteAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteAction</span></code></a> is a uniform quantization of the <a class="reference internal" href="#highway_env.envs.common.action.ContinuousAction" title="highway_env.envs.common.action.ContinuousAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousAction</span></code></a> above.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span>
     <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -345,7 +345,7 @@ configurations, respectively. Thus, the action space can be either 1D or 2D.</p>
 <p>The <a class="reference internal" href="#highway_env.envs.common.action.DiscreteMetaAction" title="highway_env.envs.common.action.DiscreteMetaAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteMetaAction</span></code></a> type adds a layer of <span class="xref std std-ref">speed and steering controllers</span>
 on top of the continuous low-level control, so that the ego-vehicle can automatically follow the road at a desired velocity.
 Then, the available <strong>meta-actions</strong> consist in <em>changing the target lane and speed</em> that are used as setpoints for the low-level controllers.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span>
     <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>

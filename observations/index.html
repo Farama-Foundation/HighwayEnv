@@ -13,11 +13,11 @@
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Observations - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -243,7 +243,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -297,8 +297,8 @@
 <a class="reference internal" href="#module-highway_env.envs.common.observation" title="highway_env.envs.common.observation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">observation</span></code></a> module.
 Each environment comes with a <em>default</em> observation, which can be changed or customised using
 <a class="reference internal" href="../quickstart/#configuration"><span class="std std-ref">environment configurations</span></a>. For instance,</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
-<span class="kn">import</span> <span class="nn">highway_env</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
     <span class="s1">&#39;highway-v0&#39;</span><span class="p">,</span>
@@ -533,8 +533,8 @@ vehicle and 0 for placeholders.</p>
 <h3>Example configuration<a class="headerlink" href="#example-configuration" title="Link to this heading">¶</a></h3>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
-<span class="kn">import</span> <span class="nn">highway_env</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -560,23 +560,23 @@ vehicle and 0 for placeholders.</p>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.12        1.          0.          1.
    0.        ]
- [ 1.          0.20796539  0.         -0.07930574  0.          1.
+ [ 1.          0.20721146 -0.04       -0.16531742  0.          1.
    0.        ]
- [ 1.          0.43728748  0.         -0.10441518  0.          1.
+ [ 1.          0.4250598   0.         -0.19713265  0.          1.
    0.        ]
- [ 1.          0.63276297  0.         -0.16635698  0.          1.
+ [ 1.          0.6423146  -0.08       -0.19115959  0.          1.
    0.        ]
- [ 1.          0.8445503  -0.12       -0.10898441  0.          1.
+ [ 1.          0.85355127 -0.08       -0.07153895  0.          1.
    0.        ]
- [ 1.          1.         -0.12       -0.12598878  0.          1.
+ [ 1.          1.         -0.08       -0.11902624  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.07915984  0.          1.
+ [ 1.          1.          0.         -0.08813012  0.          1.
    0.        ]
- [ 1.          1.         -0.12       -0.1142595   0.          1.
+ [ 1.          1.         -0.12       -0.1718052   0.          1.
    0.        ]
- [ 1.          1.         -0.08       -0.11307526  0.          1.
+ [ 1.          1.         -0.08       -0.18233377  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.16392277  0.          1.
+ [ 1.          1.          0.         -0.10497054  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -602,7 +602,7 @@ The RGB to grayscale conversion is a weighted sum, configured by the <code class
 <span id="id3"></span><h3>Example configuration<a class="headerlink" href="#grayscale-example-configuration" title="Link to this heading">¶</a></h3>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -948,7 +948,7 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/index_3_1.png" src="../_images/index_3_1.png" />
+<img alt="../_images/index_3_0.png" src="../_images/index_3_0.png" />
 </div>
 </div>
 <p>You can configure the number of cells in the angular grid with the <code class="docutils literal notranslate"><span class="pre">cells</span></code> parameter, the maximum range with <code class="docutils literal notranslate"><span class="pre">maximum_range</span></code>, and if you enable <code class="docutils literal notranslate"><span class="pre">normalize</span></code>, then distances and relative speeds are both divided by the maximum range.</p>

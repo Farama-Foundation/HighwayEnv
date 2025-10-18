@@ -122,15 +122,30 @@
         });
 
         const sortVersions = (a, b) => {
-            // Alpha versions
-            if (a.includes("a")) return 1;
-            if (b.includes("a")) return -1;
-            if (a.replace("v", "") > b.replace("v", ""))
-                return -1
-            else if (a.replace("v", "") < b.replace("v", ""))
-                return 1
-            else
-                return 0
+            // Remove 'v' prefix if present
+            const innerA = a.replace(/^v/i, "");
+            const innerB = b.replace(/^v/i, "");
+
+            // Handle alphabetic versions (like 'alpha', 'beta', etc.)
+            if (innerA.match(/[a-z]/) && !innerB.match(/[a-z]/)) return 1;
+            if (!innerA.match(/[a-z]/) && innerB.match(/[a-z]/)) return -1;
+
+            // Split versions into components (e.g., "2.1.0" -> ["2", "1", "0"])
+            const partsA = innerA.split(".");
+            const partsB = innerB.split(".");
+
+            // Compare each version component numerically
+            for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
+                // Missing parts are treated as 0
+                const numA = parseInt(partsA[i] || "0", 10);
+                const numB = parseInt(partsB[i] || "0", 10);
+
+                if (numA > numB) return -1; // Higher version comes first
+                if (numA < numB) return 1;  // Lower version comes later
+            }
+
+            // Versions are identical
+            return 0;
         }
 
         if ((githubUser !== null && githubUser !== "") || (repo !== null && repo !== "")) {

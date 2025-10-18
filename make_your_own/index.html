@@ -13,11 +13,11 @@
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Make your own environment - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -243,7 +243,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -338,7 +338,7 @@ environment implementation with <code class="docutils literal notranslate"><span
 <section id="register-the-environment">
 <h2>Register the environment<a class="headerlink" href="#register-the-environment" title="Link to this heading">¶</a></h2>
 <p>In <code class="docutils literal notranslate"><span class="pre">highway_env/envs/__init__.py</span></code>, add the following import:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">highway_env.envs.your_env</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.your_env</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <p>so you can register your env in the <code class="docutils literal notranslate"><span class="pre">register_highway_envs()</span></code> method of <code class="docutils literal notranslate"><span class="pre">highway_env/__init__.py</span></code></p>
@@ -354,7 +354,7 @@ environment implementation with <code class="docutils literal notranslate"><span
 </pre></div>
 </div>
 <p>Alternatively, you can call it manually with</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">highway_env</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
 <span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -364,10 +364,10 @@ environment implementation with <code class="docutils literal notranslate"><span
 <p>That’s it!
 You should now be able to run the environment.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only required if you did not reinstall highway_env</span>
-<span class="kn">import</span> <span class="nn">highway_env</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
 <span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 
-<span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;your-env-v0&#39;</span><span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>

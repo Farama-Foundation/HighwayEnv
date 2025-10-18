@@ -12,11 +12,11 @@
 
     <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>highway_env.road.lane - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -242,7 +242,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -291,20 +291,20 @@
           <article role="main">
             
             <h1>Source code for highway_env.road.lane</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">highway_env.road.spline</span> <span class="kn">import</span> <span class="n">LinearSpline2D</span>
-<span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">class_from_path</span><span class="p">,</span> <span class="n">get_class_path</span><span class="p">,</span> <span class="n">wrap_to_pi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.spline</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSpline2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">class_from_path</span><span class="p">,</span> <span class="n">get_class_path</span><span class="p">,</span> <span class="n">wrap_to_pi</span>
 
 
 <div class="viewcode-block" id="AbstractLane">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane">[docs]</a>
-<span class="k">class</span> <span class="nc">AbstractLane</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AbstractLane</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A lane on the road, described by its central curve.&quot;&quot;&quot;</span>
 
     <span class="n">metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
@@ -316,7 +316,7 @@
 <div class="viewcode-block" id="AbstractLane.position">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.position">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert local lane coordinates to a world position.</span>
 
@@ -330,7 +330,7 @@
 <div class="viewcode-block" id="AbstractLane.local_coordinates">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.local_coordinates">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a world position to local lane coordinates.</span>
 
@@ -343,7 +343,7 @@
 <div class="viewcode-block" id="AbstractLane.heading_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.heading_at">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the lane heading at a given longitudinal lane coordinate.</span>
 
@@ -356,7 +356,7 @@
 <div class="viewcode-block" id="AbstractLane.width_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.width_at">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the lane width at a given longitudinal lane coordinate.</span>
 
@@ -369,7 +369,7 @@
 <div class="viewcode-block" id="AbstractLane.from_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.from_config">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create lane instance from config</span>
 
@@ -381,7 +381,7 @@
 <div class="viewcode-block" id="AbstractLane.to_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.to_config">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write lane parameters to dict which can be serialized to json</span>
 
@@ -392,7 +392,7 @@
 
 <div class="viewcode-block" id="AbstractLane.on_lane">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.on_lane">[docs]</a>
-    <span class="k">def</span> <span class="nf">on_lane</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_lane</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -419,7 +419,7 @@
 
 <div class="viewcode-block" id="AbstractLane.is_reachable_from">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.is_reachable_from">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_reachable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_reachable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Whether the lane is reachable from a given world position</span>
 
@@ -436,7 +436,7 @@
         <span class="k">return</span> <span class="n">is_close</span></div>
 
 
-    <span class="k">def</span> <span class="nf">after_end</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">after_end</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">longitudinal</span><span class="p">:</span>
@@ -445,7 +445,7 @@
 
 <div class="viewcode-block" id="AbstractLane.distance">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.distance">[docs]</a>
-    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the L1 distance [m] from a position to the lane.&quot;&quot;&quot;</span>
         <span class="n">s</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
@@ -453,7 +453,7 @@
 
 <div class="viewcode-block" id="AbstractLane.distance_with_heading">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.distance_with_heading">[docs]</a>
-    <span class="k">def</span> <span class="nf">distance_with_heading</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">distance_with_heading</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -469,7 +469,7 @@
 
 <div class="viewcode-block" id="AbstractLane.local_angle">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.local_angle">[docs]</a>
-    <span class="k">def</span> <span class="nf">local_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">long_offset</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">local_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">long_offset</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute non-normalised angle of heading to the lane.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">wrap_to_pi</span><span class="p">(</span><span class="n">heading</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">long_offset</span><span class="p">))</span></div>
 </div>
@@ -478,7 +478,7 @@
 
 <div class="viewcode-block" id="LineType">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.LineType">[docs]</a>
-<span class="k">class</span> <span class="nc">LineType</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LineType</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A lane side line type.&quot;&quot;&quot;</span>
 
     <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
@@ -490,10 +490,10 @@
 
 <div class="viewcode-block" id="StraightLane">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.StraightLane">[docs]</a>
-<span class="k">class</span> <span class="nc">StraightLane</span><span class="p">(</span><span class="n">AbstractLane</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StraightLane</span><span class="p">(</span><span class="n">AbstractLane</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A lane going in straight line.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">start</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
         <span class="n">end</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
@@ -529,7 +529,7 @@
 
 <div class="viewcode-block" id="StraightLane.position">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.StraightLane.position">[docs]</a>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
             <span class="o">+</span> <span class="n">longitudinal</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
@@ -539,19 +539,19 @@
 
 <div class="viewcode-block" id="StraightLane.heading_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.StraightLane.heading_at">[docs]</a>
-    <span class="k">def</span> <span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span></div>
 
 
 <div class="viewcode-block" id="StraightLane.width_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.StraightLane.width_at">[docs]</a>
-    <span class="k">def</span> <span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span></div>
 
 
 <div class="viewcode-block" id="StraightLane.local_coordinates">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.StraightLane.local_coordinates">[docs]</a>
-    <span class="k">def</span> <span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">delta</span> <span class="o">=</span> <span class="n">position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
         <span class="n">longitudinal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
         <span class="n">lateral</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction_lateral</span><span class="p">)</span>
@@ -561,7 +561,7 @@
 <div class="viewcode-block" id="StraightLane.from_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.StraightLane.from_config">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">])</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
@@ -569,7 +569,7 @@
 
 <div class="viewcode-block" id="StraightLane.to_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.StraightLane.to_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;class_path&quot;</span><span class="p">:</span> <span class="n">get_class_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">),</span>
             <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -588,10 +588,10 @@
 
 <div class="viewcode-block" id="SineLane">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane">[docs]</a>
-<span class="k">class</span> <span class="nc">SineLane</span><span class="p">(</span><span class="n">StraightLane</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SineLane</span><span class="p">(</span><span class="n">StraightLane</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A sinusoidal lane.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">start</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
         <span class="n">end</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
@@ -622,7 +622,7 @@
 
 <div class="viewcode-block" id="SineLane.position">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.position">[docs]</a>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">position</span><span class="p">(</span>
             <span class="n">longitudinal</span><span class="p">,</span>
             <span class="n">lateral</span>
@@ -632,7 +632,7 @@
 
 <div class="viewcode-block" id="SineLane.heading_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.heading_at">[docs]</a>
-    <span class="k">def</span> <span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span>
             <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span>
@@ -642,7 +642,7 @@
 
 <div class="viewcode-block" id="SineLane.local_coordinates">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.local_coordinates">[docs]</a>
-    <span class="k">def</span> <span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">longitudinal</span><span class="p">,</span> <span class="n">lateral</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pulsation</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span>
@@ -652,7 +652,7 @@
 <div class="viewcode-block" id="SineLane.from_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.from_config">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">])</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
@@ -660,7 +660,7 @@
 
 <div class="viewcode-block" id="SineLane.to_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.SineLane.to_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to_config</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span>
@@ -681,10 +681,10 @@
 
 <div class="viewcode-block" id="CircularLane">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane">[docs]</a>
-<span class="k">class</span> <span class="nc">CircularLane</span><span class="p">(</span><span class="n">AbstractLane</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CircularLane</span><span class="p">(</span><span class="n">AbstractLane</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A lane going in circle arc.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">center</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
         <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -713,7 +713,7 @@
 
 <div class="viewcode-block" id="CircularLane.position">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane.position">[docs]</a>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">-</span> <span class="n">lateral</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)]</span>
@@ -722,7 +722,7 @@
 
 <div class="viewcode-block" id="CircularLane.heading_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane.heading_at">[docs]</a>
-    <span class="k">def</span> <span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">*</span> <span class="n">longitudinal</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span>
         <span class="n">psi</span> <span class="o">=</span> <span class="n">phi</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
         <span class="k">return</span> <span class="n">psi</span></div>
@@ -730,13 +730,13 @@
 
 <div class="viewcode-block" id="CircularLane.width_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane.width_at">[docs]</a>
-    <span class="k">def</span> <span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span></div>
 
 
 <div class="viewcode-block" id="CircularLane.local_coordinates">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane.local_coordinates">[docs]</a>
-    <span class="k">def</span> <span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">delta</span> <span class="o">=</span> <span class="n">position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span>
         <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">delta</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">delta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span> <span class="o">+</span> <span class="n">utils</span><span class="o">.</span><span class="n">wrap_to_pi</span><span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_phase</span><span class="p">)</span>
@@ -749,14 +749,14 @@
 <div class="viewcode-block" id="CircularLane.from_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane.from_config">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;center&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;center&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CircularLane.to_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.CircularLane.to_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;class_path&quot;</span><span class="p">:</span> <span class="n">get_class_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">),</span>
             <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -778,12 +778,12 @@
 
 <div class="viewcode-block" id="PolyLaneFixedWidth">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLaneFixedWidth">[docs]</a>
-<span class="k">class</span> <span class="nc">PolyLaneFixedWidth</span><span class="p">(</span><span class="n">AbstractLane</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PolyLaneFixedWidth</span><span class="p">(</span><span class="n">AbstractLane</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A fixed-width lane defined by a set of points and approximated with a 2D Hermite polynomial.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">lane_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">AbstractLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">,</span>
@@ -802,7 +802,7 @@
 
 <div class="viewcode-block" id="PolyLaneFixedWidth.position">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLaneFixedWidth.position">[docs]</a>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lateral</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span>
         <span class="n">yaw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span><span class="p">)</span> <span class="o">*</span> <span class="n">lateral</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span><span class="p">)</span> <span class="o">*</span> <span class="n">lateral</span><span class="p">])</span></div>
@@ -810,34 +810,34 @@
 
 <div class="viewcode-block" id="PolyLaneFixedWidth.local_coordinates">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLaneFixedWidth.local_coordinates">[docs]</a>
-    <span class="k">def</span> <span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">cartesian_to_frenet</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span></div>
 
 
 <div class="viewcode-block" id="PolyLaneFixedWidth.heading_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLaneFixedWidth.heading_at">[docs]</a>
-    <span class="k">def</span> <span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">heading_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">get_dx_dy</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">dy</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PolyLaneFixedWidth.width_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLaneFixedWidth.width_at">[docs]</a>
-    <span class="k">def</span> <span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span></div>
 
 
 <div class="viewcode-block" id="PolyLaneFixedWidth.from_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLaneFixedWidth.from_config">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PolyLaneFixedWidth.to_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLaneFixedWidth.to_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -857,12 +857,12 @@
 
 <div class="viewcode-block" id="PolyLane">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLane">[docs]</a>
-<span class="k">class</span> <span class="nc">PolyLane</span><span class="p">(</span><span class="n">PolyLaneFixedWidth</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PolyLane</span><span class="p">(</span><span class="n">PolyLaneFixedWidth</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A lane defined by a set of points and approximated with a 2D Hermite polynomial.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">lane_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
         <span class="n">left_boundary_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
@@ -885,7 +885,7 @@
 
 <div class="viewcode-block" id="PolyLane.width_at">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLane.width_at">[docs]</a>
-    <span class="k">def</span> <span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">width_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">longitudinal</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">longitudinal</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width_samples</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
@@ -894,7 +894,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_samples</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">)]</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_width_at_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_width_at_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate width by taking the minimum distance between centerline and each boundary at a given s-value. This compensates indentations in boundary lines.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -918,7 +918,7 @@
             <span class="n">AbstractLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_init_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Pre-calculate sampled width values in about 1m distance to reduce computation during runtime. It is assumed that the width does not change significantly within 1-2m.</span>
 <span class="sd">        Using numpys linspace ensures that min and max s-values are contained in the samples.</span>
@@ -932,7 +932,7 @@
 
 <div class="viewcode-block" id="PolyLane.to_config">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.PolyLane.to_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to_config</span><span class="p">()</span>
 
         <span class="n">ordered_boundary_points</span> <span class="o">=</span> <span class="n">_to_serializable</span><span class="p">(</span>
@@ -951,13 +951,13 @@
 
 
 
-<span class="k">def</span> <span class="nf">_to_serializable</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_serializable</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">arg</span>
 
 
-<span class="k">def</span> <span class="nf">lane_from_config</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractLane</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lane_from_config</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractLane</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">class_from_path</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;class_path&quot;</span><span class="p">])(</span><span class="o">**</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">])</span>
 </pre></div>
           </article>

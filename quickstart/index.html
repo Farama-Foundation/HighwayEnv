@@ -13,11 +13,11 @@
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Getting Started - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -243,7 +243,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -298,9 +298,9 @@
 <p>Here is a quick example of how to create an environment:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
-<span class="kn">import</span> <span class="nn">highway_env</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;highway-v0&#39;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">)</span>
@@ -338,14 +338,31 @@
 <span id="configuration"></span><h2>Configuring an environment<a class="headerlink" href="#configuring-an-environment" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../observations/#id1"><span class="std std-ref">observations</span></a>, <a class="reference internal" href="../actions/#actions"><span class="std std-ref">actions</span></a>, <a class="reference internal" href="../dynamics/#dynamics"><span class="std std-ref">dynamics</span></a> and <a class="reference internal" href="../rewards/#rewards"><span class="std std-ref">rewards</span></a>
 of an environment are parametrized by a configuration, defined as a
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.
-After environment creation, the configuration can be accessed using the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.</p>
+<p>For example, the number of lanes can be changed with:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+  <span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span>
+  <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+  <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_1_0.png" src="../_images/quickstart_1_0.png" />
+</div>
+</div>
+<p>After environment creation, the configuration can be accessed using the
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> attribute.</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pprint</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">)</span>
 <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -360,7 +377,7 @@ After environment creation, the configuration can be accessed using the
  &#39;high_speed_reward&#39;: 0.4,
  &#39;initial_lane_id&#39;: None,
  &#39;lane_change_reward&#39;: 0,
- &#39;lanes_count&#39;: 4,
+ &#39;lanes_count&#39;: 2,
  &#39;manual_control&#39;: False,
  &#39;normalize_reward&#39;: True,
  &#39;observation&#39;: {&#39;type&#39;: &#39;Kinematics&#39;},
@@ -383,39 +400,6 @@ After environment creation, the configuration can be accessed using the
 </div>
 </div>
 </div>
-<p>For example, the number of lanes can be changed with:</p>
-<div class="jupyter_cell jupyter_container docutils container">
-<div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/quickstart_2_0.png" src="../_images/quickstart_2_0.png" />
-</div>
-</div>
-<p>or directly at creation time with:</p>
-<div class="jupyter_cell jupyter_container docutils container">
-<div class="cell_input code_cell docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-  <span class="s2">&quot;highway-v0&quot;</span><span class="p">,</span>
-  <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">,</span>
-  <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-</div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The environment must be <a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.reset" title="highway_env.envs.common.abstract.AbstractEnv.reset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code></a> for the change of configuration
-to be effective.</p>
-</div>
 </section>
 <section id="training-an-agent">
 <h2>Training an agent<a class="headerlink" href="#training-an-agent" title="Link to this heading">¶</a></h2>
@@ -423,9 +407,9 @@ to be effective.</p>
 <a class="reference external" href="https://github.com/openai/baselines">openai/baselines</a> or <a class="reference external" href="https://github.com/DLR-RM/stable-baselines3">Stable Baselines3</a>.</p>
 <p>Here is an example of SB3’s DQN implementation trained on <code class="docutils literal notranslate"><span class="pre">highway-fast-v0</span></code> with its default kinematics observation and an MLP model.</p>
 <p><a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
-<span class="kn">import</span> <span class="nn">highway_env</span>
-<span class="kn">from</span> <span class="nn">stable_baselines3</span> <span class="kn">import</span> <span class="n">DQN</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stable_baselines3</span><span class="w"> </span><span class="kn">import</span> <span class="n">DQN</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;highway-fast-v0&quot;</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">DQN</span><span class="p">(</span><span class="s1">&#39;MlpPolicy&#39;</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span>

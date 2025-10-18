@@ -12,11 +12,11 @@
 
     <link rel="shortcut icon" href="../../../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>highway_env.envs.common.action - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -242,7 +242,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -291,46 +291,46 @@
           <article role="main">
             
             <h1>Source code for highway_env.envs.common.action</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">gymnasium</span> <span class="kn">import</span> <span class="n">spaces</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="kn">import</span> <span class="n">spaces</span>
 
-<span class="kn">from</span> <span class="nn">highway_env</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">highway_env.utils</span> <span class="kn">import</span> <span class="n">Vector</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.controller</span> <span class="kn">import</span> <span class="n">MDPVehicle</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.dynamics</span> <span class="kn">import</span> <span class="n">BicycleVehicle</span>
-<span class="kn">from</span> <span class="nn">highway_env.vehicle.kinematics</span> <span class="kn">import</span> <span class="n">Vehicle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">MDPVehicle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.dynamics</span><span class="w"> </span><span class="kn">import</span> <span class="n">BicycleVehicle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.kinematics</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vehicle</span>
 
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">highway_env.envs.common.abstract</span> <span class="kn">import</span> <span class="n">AbstractEnv</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span>
 
 <span class="n">Action</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="ActionType">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ActionType">[docs]</a>
-<span class="k">class</span> <span class="nc">ActionType</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ActionType</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A type of action specifies its definition space, and how actions are executed in the environment&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__controlled_vehicle</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="ActionType.space">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ActionType.space">[docs]</a>
-    <span class="k">def</span> <span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The action space.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The class of a vehicle able to execute the action.</span>
 
@@ -340,7 +340,7 @@
 
 <div class="viewcode-block" id="ActionType.act">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ActionType.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the action on the ego-vehicle.</span>
 
@@ -355,7 +355,7 @@
 
 <div class="viewcode-block" id="ActionType.get_available_actions">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ActionType.get_available_actions">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        For discrete action space, return the list of available actions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -363,21 +363,21 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">controlled_vehicle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">controlled_vehicle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The vehicle acted upon.</span>
 
 <span class="sd">        If not set, the first controlled vehicle is used by default.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__controlled_vehicle</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">vehicle</span>
 
     <span class="nd">@controlled_vehicle</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">controlled_vehicle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">controlled_vehicle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__controlled_vehicle</span> <span class="o">=</span> <span class="n">vehicle</span></div>
 
 
 
 <div class="viewcode-block" id="ContinuousAction">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ContinuousAction">[docs]</a>
-<span class="k">class</span> <span class="nc">ContinuousAction</span><span class="p">(</span><span class="n">ActionType</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContinuousAction</span><span class="p">(</span><span class="n">ActionType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An continuous action space for throttle and/or steering angle.</span>
 
@@ -392,7 +392,7 @@
     <span class="n">STEERING_RANGE</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Steering angle range: [-x, x], in rad.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span>
         <span class="n">acceleration_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -435,15 +435,15 @@
 
 <div class="viewcode-block" id="ContinuousAction.space">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ContinuousAction.space">[docs]</a>
-    <span class="k">def</span> <span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Vehicle</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamical</span> <span class="k">else</span> <span class="n">BicycleVehicle</span>
 
-    <span class="k">def</span> <span class="nf">get_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip</span><span class="p">:</span>
             <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">:</span>
@@ -469,7 +469,7 @@
 
 <div class="viewcode-block" id="ContinuousAction.act">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.ContinuousAction.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_action</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_action</span> <span class="o">=</span> <span class="n">action</span></div>
 </div>
@@ -478,8 +478,8 @@
 
 <div class="viewcode-block" id="DiscreteAction">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.DiscreteAction">[docs]</a>
-<span class="k">class</span> <span class="nc">DiscreteAction</span><span class="p">(</span><span class="n">ContinuousAction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiscreteAction</span><span class="p">(</span><span class="n">ContinuousAction</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span>
         <span class="n">acceleration_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -504,13 +504,13 @@
 
 <div class="viewcode-block" id="DiscreteAction.space">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.DiscreteAction.space">[docs]</a>
-    <span class="k">def</span> <span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_per_axis</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DiscreteAction.act">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.DiscreteAction.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cont_space</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">space</span><span class="p">()</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">cont_space</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">cont_space</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_per_axis</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
         <span class="n">all_actions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">axes</span><span class="p">))</span>
@@ -521,7 +521,7 @@
 
 <div class="viewcode-block" id="DiscreteMetaAction">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.DiscreteMetaAction">[docs]</a>
-<span class="k">class</span> <span class="nc">DiscreteMetaAction</span><span class="p">(</span><span class="n">ActionType</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiscreteMetaAction</span><span class="p">(</span><span class="n">ActionType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An discrete action space of meta-actions: lane changes, and cruise control set-point.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -535,7 +535,7 @@
     <span class="n">ACTIONS_LAT</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;LANE_LEFT&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;IDLE&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;LANE_RIGHT&quot;</span><span class="p">}</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A mapping of lateral action indexes to labels.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span>
         <span class="n">longitudinal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -576,23 +576,23 @@
 
 <div class="viewcode-block" id="DiscreteMetaAction.space">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.DiscreteMetaAction.space">[docs]</a>
-    <span class="k">def</span> <span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">))</span></div>
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">MDPVehicle</span><span class="p">,</span> <span class="n">target_speeds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speeds</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DiscreteMetaAction.act">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.DiscreteMetaAction.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicle</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">action</span><span class="p">)])</span></div>
 
 
 <div class="viewcode-block" id="DiscreteMetaAction.get_available_actions">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.DiscreteMetaAction.get_available_actions">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the list of currently available actions.</span>
 
@@ -635,8 +635,8 @@
 
 <div class="viewcode-block" id="MultiAgentAction">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.MultiAgentAction">[docs]</a>
-<span class="k">class</span> <span class="nc">MultiAgentAction</span><span class="p">(</span><span class="n">ActionType</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">action_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiAgentAction</span><span class="p">(</span><span class="n">ActionType</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">action_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_config</span> <span class="o">=</span> <span class="n">action_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents_action_types</span> <span class="o">=</span> <span class="p">[]</span>
@@ -647,19 +647,19 @@
 
 <div class="viewcode-block" id="MultiAgentAction.space">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.MultiAgentAction.space">[docs]</a>
-    <span class="k">def</span> <span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">(</span>
             <span class="p">[</span><span class="n">action_type</span><span class="o">.</span><span class="n">space</span><span class="p">()</span> <span class="k">for</span> <span class="n">action_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_action_types</span><span class="p">]</span>
         <span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vehicle_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">action_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_config</span><span class="p">)</span><span class="o">.</span><span class="n">vehicle_class</span>
 
 <div class="viewcode-block" id="MultiAgentAction.act">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.MultiAgentAction.act">[docs]</a>
-    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">agent_action</span><span class="p">,</span> <span class="n">action_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_action_types</span><span class="p">):</span>
             <span class="n">action_type</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">agent_action</span><span class="p">)</span></div>
@@ -667,7 +667,7 @@
 
 <div class="viewcode-block" id="MultiAgentAction.get_available_actions">
 <a class="viewcode-back" href="../../../../../actions/#highway_env.envs.common.action.MultiAgentAction.get_available_actions">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
             <span class="o">*</span><span class="p">[</span>
                 <span class="n">action_type</span><span class="o">.</span><span class="n">get_available_actions</span><span class="p">()</span>
@@ -678,7 +678,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">action_factory</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ActionType</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">action_factory</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ActionType</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ContinuousAction&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ContinuousAction</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DiscreteAction&quot;</span><span class="p">:</span>

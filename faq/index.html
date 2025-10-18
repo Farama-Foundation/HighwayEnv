@@ -13,11 +13,11 @@
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Frequently Asked Questions - highway-env Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -243,7 +243,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -299,7 +299,7 @@ suggest new entries!</p>
 <h2>When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code><a class="headerlink" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist" title="Link to this heading">¶</a></h2>
 <p>This is probably because you do not have highway-env installed, but are instead working with a local copy of the
 repository. In that case, you need to run the following code first to register the environments.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">highway_env</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
 <span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -331,7 +331,7 @@ make use of its observation.</p>
 <h2>My videos are too fast / have a low framerate.<a class="headerlink" href="#my-videos-are-too-fast-have-a-low-framerate" title="Link to this heading">¶</a></h2>
 <p>This is because in gymnasium, a single video frame is generated at each call of <code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code>. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (<em>e.g.</em> change lane) actually corresponds to several (typically, 15) simulation frames.
 In order to also render these intermediate simulation frames, the following should be done:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 
 <span class="c1"># Wrap the env by a RecordVideo wrapper</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;highway-v0&quot;</span><span class="p">)</span>
