@@ -142,6 +142,37 @@ class ControlledVehicle(Vehicle):
                 np_random=self.road.np_random,
             )
 
+    def acceleration_ego(self,
+                     ego_vehicle: Vehicle,
+                     front_vehicle: Vehicle = None,
+                     rear_vehicle: Vehicle = None) -> float:
+        """Implementation of a longitudinal controller used the IDM behavior"""
+        if not ego_vehicle or isinstance(ego_vehicle, RoadObject):
+            return 0
+
+        target_lane = self.road.network.get_lane(self.target_lane_index)
+        lane_coords = target_lane.local_coordinates(self.position)
+        """deactivate controller during langechange"""        
+        if ego_vehicle.lane_index != target_lane:
+            index_changed = True
+        else:
+            index_changed = False
+        """ comparsion of heading for reactivate the controller""" 
+        while index_changed == True and abs(ego_vehicle.heading) > abs(target_lane.heading_at(lane_coords[0])) + 0.05:
+                acceleration = 0
+                break
+          
+        else:
+            ego_target_speed = utils.not_zero(getattr(ego_vehicle, "target_speed", 0))
+            acceleration = self.COMFORT_ACC_MAX * (
+                    1 - np.power(max(ego_vehicle.speed, 0) / ego_target_speed, self.DELTA))
+
+            if front_vehicle:
+                d = ego_vehicle.lane_distance_to(front_vehicle, self.lane)
+                acceleration -= self.COMFORT_ACC_MAX * \
+                    np.power(self.desired_gap(ego_vehicle, front_vehicle) / utils.not_zero(d), 2)
+        return acceleration
+            
     def steering_control(self, target_lane_index: LaneIndex) -> float:
         """
         Steer the vehicle to follow the center of an given lane.
