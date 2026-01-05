@@ -20,8 +20,8 @@ class KinematicAttentionExtractor(BaseFeaturesExtractor):
         if len(observation_space.shape) == 2:
             self.vehicles_count, self.feat_dim = observation_space.shape
         else:
-            # flattened case: vehicles_count * feat_dim
-            # You must set these manually if you ever use a flat obs space.
+            # Flattened case: vehicles_count * feat_dim
+            # If use a flat obs space -> set manually
             raise ValueError("Flattened observation_space not supported in this extractor.")
 
         self.n_nei = self.vehicles_count - 1
@@ -47,9 +47,9 @@ class KinematicAttentionExtractor(BaseFeaturesExtractor):
         self.last_attention = None  # (batch, n_nei)
 
     def forward(self, observations: torch.Tensor) -> torch.Tensor:
-        # observations: (B, V, F)
+        # Observations: (B, V, F)
         if observations.dim() == 2:
-            # If you ever feed flattened obs by mistake, this will fail loudly.
+            # If feed flattened obs by mistake, this will fail loudly
             raise ValueError(f"Expected 3D obs (B,V,F), got {observations.shape}")
 
         x = observations
@@ -59,14 +59,14 @@ class KinematicAttentionExtractor(BaseFeaturesExtractor):
         ego_e = self.embed(ego)    # (B, D)
         nei_e = self.embed(nei)    # (B, N, D)
 
-        q = self.to_q(ego_e)       # (B, D)
-        k = self.to_k(nei_e)       # (B, N, D)
+        q = self.to_q(ego_e)       # (B, D)        # what the ego car is looking for
+        k = self.to_k(nei_e)       # (B, N, D)     # what the neighbours offer
         v = self.to_v(nei_e)       # (B, N, D)
 
-        # scores: (B, N)
-        scores = torch.einsum("bd,bnd->bn", q, k) / math.sqrt(k.shape[-1])
+        # Scores: (B, N)
+        scores = torch.einsum("bd,bnd->bn", q, k) / math.sqrt(k.shape[-1])   # how relevant each neighbour is to the ego right now
 
-        # Mask using presence flag if your features include it at index 0:
+        # Mask using presence flag if features include it at index 0:
         # presence == 1 means slot is occupied, 0 means empty
         presence = nei[:, :, 0]  # (B, N)
         mask = presence > 0.5
@@ -82,7 +82,7 @@ class KinematicAttentionExtractor(BaseFeaturesExtractor):
                 attn,
             )
 
-        # context: (B, D)
+        # Context: (B, D)
         context = torch.einsum("bn,bnd->bd", attn, v)
 
         self.last_attention = attn.detach()  # store for evaluation/visualisation

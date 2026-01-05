@@ -23,7 +23,7 @@ RUN_NAME = "ppo_attn_cf_v1"
 SEED = 0
 
 if __name__ == "__main__":
-    # sanity check
+    # Sanity check
     test_env = gym.make(ENV_ID, config=ENV_CONFIG)
     obs, _ = test_env.reset()
     print("obs shape:", obs.shape)
