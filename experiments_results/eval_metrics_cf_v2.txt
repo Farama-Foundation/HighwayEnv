@@ -1,0 +1,9 @@
+BASELINE 
+ return: 30.968 ± 0.588 
+ crash_rate: 0.000 ± 0.000 
+ ep_len: 40.000 ± 0.000 
+
+ATTENTION 
+ return: 32.006 ± 0.083 
+ crash_rate: 0.013 ± 0.019 
+ ep_len: 39.713 ± 0.405
