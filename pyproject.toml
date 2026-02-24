@@ -1,19 +1,23 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "highway-env"
 description = "An environment for simulated highway driving tasks."
 readme = "README.md"
-requires-python = ">= 3.8"
+requires-python = ">= 3.9"
 authors = [{ name = "Edouard Leurent", email = "eleurent@gmail.com" }]
 license = { text = "MIT License" }
 keywords = ["Reinforcement Learning", "car simulation", "RL", "AI"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     'Intended Audience :: Science/Research',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
@@ -21,7 +25,7 @@ classifiers = [
 dependencies = [
     "gymnasium >=1.0.0a2",
     "farama-notifications >=0.0.1",
-    "numpy >=1.21.0",
+    "numpy >=1.23.0",
     "pygame >=2.0.2",
     "matplotlib",
     "pandas",
