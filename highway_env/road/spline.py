@@ -103,9 +103,7 @@ class LinearSpline2D:
         conversion and vice versa
         """
         num_samples = np.floor(length / CURVE_SAMPLE_DISTANCE)
-        s_values = np.hstack(
-            (CURVE_SAMPLE_DISTANCE * np.arange(0, int(num_samples) + 1), length)
-        )
+        s_values = CURVE_SAMPLE_DISTANCE * np.arange(0, int(num_samples) + 1)
         x_values = x_curve(s_values)
         y_values = y_curve(s_values)
         dx_values = np.diff(x_values)
