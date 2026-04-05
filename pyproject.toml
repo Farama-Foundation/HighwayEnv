@@ -44,6 +44,9 @@ Repository = "https://github.com/eleurent/highway-env"
 Documentation = "https://highway-env.farama.org/"
 "Bug Report" = "https://github.com/eleurent/highway-env/issues"
 
+[project.entry-points."gymnasium.envs.__root__"]
+highway-env = "highway_env:_register_highway_envs"
+
 [tool.setuptools]
 include-package-data = true
 

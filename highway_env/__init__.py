@@ -1,7 +1,7 @@
 import os
 import sys
 
-from gymnasium.envs.registration import register
+from gymnasium.envs.registration import register, registry
 
 
 __version__ = "1.10.2"
@@ -20,7 +20,15 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
 def _register_highway_envs():
-    """Import the envs module so that envs register themselves."""
+    """Import the envs module so that envs register themselves.
+
+    This function is idempotent: calling it multiple times (e.g. when
+    gymnasium resolves a ``"highway_env:env-id"`` spec in a subprocess)
+    will not raise duplicate-registration errors.
+    """
+    # Skip if environments are already registered (idempotent)
+    if "highway-v0" in registry:
+        return
 
     from highway_env.envs.common.abstract import MultiAgentWrapper
 
