@@ -111,6 +111,10 @@ def _register_highway_envs():
         id="roundabout-v0",
         entry_point="highway_env.envs.roundabout_env:RoundaboutEnv",
     )
+    register(
+        id="roundabout-generic-v0",
+        entry_point="highway_env.envs.roundabout_env:RoundaboutGenericEnv",
+    )
 
     # two_way_env.py
     register(
