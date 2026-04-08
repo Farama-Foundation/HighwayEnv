@@ -483,6 +483,10 @@ class Road:
         """
         Find the preceding and following vehicles of a given vehicle.
 
+        Searches the current lane as well as connected next/previous lane
+        segments so that vehicles near segment boundaries are correctly
+        detected (fixes issue #626).
+
         :param vehicle: the vehicle whose neighbours must be found
         :param lane_index: the lane on which to look for preceding and following vehicles.
                      It doesn't have to be the current vehicle lane but can also be another lane, in which case the
@@ -493,23 +497,54 @@ class Road:
         if not lane_index:
             return None, None
         lane = self.network.get_lane(lane_index)
-        s = self.network.get_lane(lane_index).local_coordinates(vehicle.position)[0]
+        s = lane.local_coordinates(vehicle.position)[0]
         s_front = s_rear = None
         v_front = v_rear = None
-        for v in self.vehicles + self.objects:
-            if v is not vehicle and not isinstance(
-                v, Landmark
-            ):  # self.network.is_connected_road(v.lane_index,
-                # lane_index, same_lane=True):
-                s_v, lat_v = lane.local_coordinates(v.position)
-                if not lane.on_lane(v.position, s_v, lat_v, margin=1):
+
+        # Build list of (lane_object, longitudinal_offset) pairs.
+        # offset is added to a vehicle's longitudinal coordinate on that lane
+        # to convert it into the ego lane's coordinate frame.
+        lanes_offsets: list[tuple[AbstractLane, float]] = [(lane, 0)]
+
+        _from, _to, _id = lane_index
+
+        # Next (downstream) lanes: vehicles there are ahead of the current
+        # lane's end, so offset = current lane length.
+        for next_to, next_lanes in self.network.graph.get(_to, {}).items():
+            if _id < len(next_lanes):
+                lanes_offsets.append((next_lanes[_id], lane.length))
+            elif next_lanes:
+                lanes_offsets.append((next_lanes[0], lane.length))
+
+        # Previous (upstream) lanes: vehicles there are behind the current
+        # lane's start, so offset = -prev_lane.length.
+        for prev_from, to_dict in self.network.graph.items():
+            if _from in to_dict:
+                prev_lanes = to_dict[_from]
+                if _id < len(prev_lanes):
+                    prev_lane = prev_lanes[_id]
+                elif prev_lanes:
+                    prev_lane = prev_lanes[0]
+                else:
                     continue
+                lanes_offsets.append((prev_lane, -prev_lane.length))
+
+        for v in self.vehicles + self.objects:
+            if v is vehicle or isinstance(v, Landmark):
+                continue
+            for search_lane, offset in lanes_offsets:
+                s_v, lat_v = search_lane.local_coordinates(v.position)
+                if not search_lane.on_lane(v.position, s_v, lat_v, margin=1):
+                    continue
+                s_v += offset
                 if s <= s_v and (s_front is None or s_v <= s_front):
                     s_front = s_v
                     v_front = v
                 if s_v < s and (s_rear is None or s_v > s_rear):
                     s_rear = s_v
                     v_rear = v
+                break  # matched on this lane, no need to check others
+
         return v_front, v_rear
 
     def __repr__(self):
