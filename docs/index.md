@@ -1,4 +1,4 @@
-# Welcome to [highway-env](https://github.com/Farama-Foundation/HighwayEnv)'s documentation!
+# Welcome to [HighwayEnv](https://github.com/Farama-Foundation/HighwayEnv)'s documentation!
 
 This project gathers a collection of environment for *decision-making* in Autonomous Driving.
 

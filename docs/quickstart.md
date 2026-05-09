@@ -136,7 +136,7 @@ However, [eleurent/rl-agents](https://github.com/eleurent/rl-agents)'s implement
 
 ## Examples on Google Colab
 
-Several scripts and notebooks to train driving policies on `highway-env` are available [on this page](https://github.com/eleurent/highway-env/tree/master/scripts).
+Several scripts and notebooks to train driving policies on `HighwayEnv` are available [on this page](https://github.com/eleurent/highway-env/tree/master/scripts).
 Here are a few of them:
 
 [highway_dqn_cnn]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.ipynb
