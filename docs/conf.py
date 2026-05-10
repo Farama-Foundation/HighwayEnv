@@ -21,7 +21,7 @@ from typing import Any, Dict
 import highway_env  # noqa: F401
 
 
-project = "highway-env"
+project = "HighwayEnv"
 copyright = "2023 Farama Foundation"
 author = "Farama Foundation"
 
@@ -84,22 +84,28 @@ myst_enable_extensions = [
 # a list of builtin themes.
 #
 html_theme = "furo"
-html_title = "highway-env Documentation"
+html_title = "HighwayEnv Documentation"
 html_baseurl = "https://highway-env.farama.org"
 html_copy_source = False
-html_favicon = "_static/img/favicon.png"
+html_favicon = "_static/img/highway-favicon.png"
 html_theme_options = {
+    "light_logo": "img/highway.svg",
+    "dark_logo": "img/highway-white.svg",
+    "image": "img/highway-github.png",
     "gtag": "G-6H9C8TWXZ8",
     "description": "A collection of environments for autonomous driving and tactical decision-making tasks",
     "versioning": True,
+    "source_repository": "https://github.com/Farama-Foundation/HighwayEnv/",
+    "source_branch": "master",
+    "source_directory": "docs/",
 }
 html_context: Dict[str, Any] = {}
 html_context["conf_py_path"] = "/docs/"
 html_context["display_github"] = False
 html_context["github_user"] = "Farama-Foundation"
-html_context["github_repo"] = "highway-env"
+html_context["github_repo"] = "HighwayEnv"
 html_context["github_version"] = "main"
-html_context["slug"] = "highway-env"
+html_context["slug"] = "HighwayEnv"
 
 html_static_path = ["_static"]
 html_css_files = []

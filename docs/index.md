@@ -1,4 +1,16 @@
-# Welcome to [highway-env](https://github.com/Farama-Foundation/HighwayEnv)'s documentation!
+---
+hide-toc: true
+firstpage:
+lastpage:
+---
+
+```{project-logo} _static/img/highway-text.png
+:alt: HighwayEnv Logo
+```
+
+```{project-heading}
+A collection of environments for autonomous driving and tactical decision-making tasks.
+```
 
 This project gathers a collection of environment for *decision-making* in Autonomous Driving.
 

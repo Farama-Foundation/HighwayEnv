@@ -143,6 +143,9 @@ docs/jupyter_execute
 _build
 jupyter_execute
 
+# mise / docs venv
+.venv-docs/
+
 # IDE
 .idea
 
