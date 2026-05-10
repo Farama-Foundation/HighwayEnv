@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Observations - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -558,25 +558,25 @@ vehicle and 0 for placeholders.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.08        1.          0.          1.
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.12        1.          0.          1.
    0.        ]
- [ 1.          0.20685998 -0.08       -0.06960234  0.          1.
+ [ 1.          0.21287225  0.         -0.09522083  0.          1.
    0.        ]
- [ 1.          0.4344867   0.04       -0.08004017  0.          1.
+ [ 1.          0.41150066 -0.12       -0.17091854  0.          1.
    0.        ]
- [ 1.          0.63980365 -0.04       -0.16986209  0.          1.
+ [ 1.          0.61585075 -0.08       -0.10929299  0.          1.
    0.        ]
- [ 1.          0.8716576   0.         -0.07105012  0.          1.
+ [ 1.          0.8391455  -0.04       -0.1624499   0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.07798105  0.          1.
+ [ 1.          1.         -0.04       -0.09893508  0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.11225008  0.          1.
+ [ 1.          1.         -0.04       -0.18608542  0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.10393017  0.          1.
+ [ 1.          1.         -0.12       -0.14978419  0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.0913104   0.          1.
+ [ 1.          1.         -0.12       -0.06493162  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.14816499  0.          1.
+ [ 1.          1.         -0.04       -0.12453027  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -625,7 +625,7 @@ The RGB to grayscale conversion is a weighted sum, configured by the <code class
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/index_1_0.png" src="../_images/index_1_0.png" />
+<img alt="../_images/index_1_2.png" src="../_images/index_1_2.png" />
 </div>
 </div>
 </section>
@@ -948,7 +948,7 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/index_3_0.png" src="../_images/index_3_0.png" />
+<img alt="../_images/index_3_1.png" src="../_images/index_3_1.png" />
 </div>
 </div>
 <p>You can configure the number of cells in the angular grid with the <code class="docutils literal notranslate"><span class="pre">cells</span></code> parameter, the maximum range with <code class="docutils literal notranslate"><span class="pre">maximum_range</span></code>, and if you enable <code class="docutils literal notranslate"><span class="pre">normalize</span></code>, then distances and relative speeds are both divided by the maximum range.</p>
@@ -1458,14 +1458,6 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -1479,7 +1471,14 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -1495,8 +1494,6 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -1508,6 +1505,13 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -1552,7 +1556,14 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

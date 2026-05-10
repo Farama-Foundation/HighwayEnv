@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Rewards - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -319,7 +319,7 @@ R(s,a) = a\frac{v - v_\min}{v_\max - v_\min} - b\,\text{collision}
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Since the rewards must be bounded, and the optimal policy is invariant by scaling and shifting rewards, we choose to normalize them in the <span class="math notranslate nohighlight">\([0, 1]\)</span> range, by convention.
-Normalizing rewards has also been observed to be practically beneficial in deep reinforcement learning <span id="id2">[<a class="reference internal" href="../bibliography/#id7" title="Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei A. Rusu, Joel Veness, Marc G. Bellemare, Alex Graves, Martin Riedmiller, Andreas K. Fidjeland, Georg Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis Antonoglou, Helen King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and Demis Hassabis. Human-level control through deep reinforcement learning. Nature, 518(7540):529–533, 2015.">MKS+15</a>]</span>.
+Normalizing rewards has also been observed to be practically beneficial in deep reinforcement learning <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../bibliography/#id7" title="Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei A. Rusu, Joel Veness, Marc G. Bellemare, Alex Graves, Martin Riedmiller, Andreas K. Fidjeland, Georg Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis Antonoglou, Helen King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and Demis Hassabis. Human-level control through deep reinforcement learning. Nature, 518(7540):529–533, 2015.">MKS+15</a>]</span>.
 Note that we forbid negative rewards, since they may encourage the agent to prefer terminating an episode early (by causing a collision) rather than risking suffering a negative return if no satisfying trajectory can be found.</p>
 </div>
 <p>In some environments, the weight of the collision penalty can be configured through the <code class="docutils literal notranslate"><span class="pre">collision_penalty</span></code> parameter.</p>
@@ -559,14 +559,6 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -580,7 +572,14 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -596,8 +595,6 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -609,6 +606,13 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -653,7 +657,14 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

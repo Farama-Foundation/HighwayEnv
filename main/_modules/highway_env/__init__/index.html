@@ -13,7 +13,7 @@
     <link rel="shortcut icon" href="../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>highway_env.__init__ - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -294,7 +294,7 @@
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.envs.registration</span><span class="w"> </span><span class="kn">import</span> <span class="n">register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.envs.registration</span><span class="w"> </span><span class="kn">import</span> <span class="n">register</span><span class="p">,</span> <span class="n">registry</span>
 
 
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.10.2&quot;</span>
@@ -315,7 +315,15 @@
 <div class="viewcode-block" id="_register_highway_envs">
 <a class="viewcode-back" href="../../../make_your_own/#highway_env.__init__._register_highway_envs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_register_highway_envs</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import the envs module so that envs register themselves.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import the envs module so that envs register themselves.</span>
+
+<span class="sd">    This function is idempotent: calling it multiple times (e.g. when</span>
+<span class="sd">    gymnasium resolves a ``&quot;highway_env:env-id&quot;`` spec in a subprocess)</span>
+<span class="sd">    will not raise duplicate-registration errors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Skip if environments are already registered (idempotent)</span>
+    <span class="k">if</span> <span class="s2">&quot;highway-v0&quot;</span> <span class="ow">in</span> <span class="n">registry</span><span class="p">:</span>
+        <span class="k">return</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiAgentWrapper</span>
 
@@ -597,14 +605,6 @@
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -618,7 +618,14 @@
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -634,8 +641,6 @@
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -647,6 +652,13 @@
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -691,7 +703,14 @@
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

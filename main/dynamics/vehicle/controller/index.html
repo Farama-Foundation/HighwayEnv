@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Control - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -351,7 +351,7 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
 <span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.vehicle.controller" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.vehicle.controller.ControlledVehicle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.vehicle.controller.</span></span><span class="sig-name descname"><span class="pre">ControlledVehicle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">road</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../road/road/#highway_env.road.road.Road" title="highway_env.road.road.Road"><span class="pre">Road</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_lane_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/highway_env/vehicle/controller/#ControlledVehicle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.vehicle.controller.</span></span><span class="sig-name descname"><span class="pre">ControlledVehicle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">road</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../road/road/#highway_env.road.road.Road" title="highway_env.road.road.Road"><span class="pre">Road</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_lane_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/highway_env/vehicle/controller/#ControlledVehicle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle" title="Link to this definition">¶</a></dt>
 <dd><p>A vehicle piloted by two low-level controller, allowing high-level actions such as cruise control and lane changes.</p>
 <ul class="simple">
 <li><p>The longitudinal controller is a speed controller;</p></li>
@@ -401,7 +401,7 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.vehicle.controller.ControlledVehicle.act">
-<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/highway_env/vehicle/controller/#ControlledVehicle.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.act" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/highway_env/vehicle/controller/#ControlledVehicle.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.vehicle.controller.ControlledVehicle.act" title="Link to this definition">¶</a></dt>
 <dd><p>Perform a high-level action to change the desired lane or speed.</p>
 <ul class="simple">
 <li><p>If a high-level action is provided, update the target speed and lane;</p></li>
@@ -508,9 +508,14 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="highway_env.vehicle.controller.MDPVehicle.DEFAULT_TARGET_SPEEDS">
+<span class="sig-name descname"><span class="pre">DEFAULT_TARGET_SPEEDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">array([20.,</span> <span class="pre">25.,</span> <span class="pre">30.])</span></em><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.DEFAULT_TARGET_SPEEDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.vehicle.controller.MDPVehicle.act">
-<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/highway_env/vehicle/controller/#MDPVehicle.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.act" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/highway_env/vehicle/controller/#MDPVehicle.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.vehicle.controller.MDPVehicle.act" title="Link to this definition">¶</a></dt>
 <dd><p>Perform a high-level action.</p>
 <ul class="simple">
 <li><p>If the action is a speed change, choose speed from the allowed discrete range.</p></li>
@@ -675,6 +680,7 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
 </ul>
 </li>
 <li><a class="reference internal" href="#highway_env.vehicle.controller.MDPVehicle"><code class="docutils literal notranslate"><span class="pre">MDPVehicle</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.vehicle.controller.MDPVehicle.DEFAULT_TARGET_SPEEDS"><code class="docutils literal notranslate"><span class="pre">MDPVehicle.DEFAULT_TARGET_SPEEDS</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.vehicle.controller.MDPVehicle.act"><code class="docutils literal notranslate"><span class="pre">MDPVehicle.act()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.vehicle.controller.MDPVehicle.index_to_speed"><code class="docutils literal notranslate"><span class="pre">MDPVehicle.index_to_speed()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.vehicle.controller.MDPVehicle.speed_to_index"><code class="docutils literal notranslate"><span class="pre">MDPVehicle.speed_to_index()</span></code></a></li>
@@ -839,14 +845,6 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -860,7 +858,14 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -876,8 +881,6 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -889,6 +892,13 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -933,7 +943,14 @@ v_{\text{lat},r} &amp;= -K_{p,\text{lat}} \Delta_{\text{lat}}, \\ \Delta \psi_{r
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

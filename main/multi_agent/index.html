@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>The Multi-Agent setting - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -321,7 +321,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/multi_agent_0_0.png" src="../_images/multi_agent_0_0.png" />
+<img alt="../_images/multi_agent_0_1.png" src="../_images/multi_agent_0_1.png" />
 </div>
 </div>
 </section>
@@ -389,11 +389,11 @@ The type of observations contained in the tuple must be described by a standard 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.892043  ,  0.5       ,  0.3125    ,  0.        ],
-       [ 1.        ,  0.09516737,  0.        , -0.0459762 ,  0.        ],
-       [ 1.        ,  0.19470389,  0.25      , -0.0221087 ,  0.        ],
-       [ 1.        ,  0.2995946 ,  0.25      , -0.04365226,  0.        ],
-       [ 1.        ,  0.39835238,  0.25      , -0.02876395,  0.        ]],
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.9084151 ,  0.75      ,  0.3125    ,  0.        ],
+       [ 1.        ,  0.09765626, -0.25      , -0.04589   ,  0.        ],
+       [ 1.        ,  0.20874144, -0.5       , -0.0423912 ,  0.        ],
+       [ 1.        ,  0.31697658, -0.5       , -0.01746728,  0.        ],
+       [ 1.        ,  0.42619374, -0.25      , -0.02947062,  0.        ]],
       dtype=float32),)
 </pre></div>
 </div>
@@ -688,14 +688,6 @@ python<span class="w"> </span>experiments.py<span class="w"> </span>evaluate<spa
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -709,7 +701,14 @@ python<span class="w"> </span>experiments.py<span class="w"> </span>evaluate<spa
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -725,8 +724,6 @@ python<span class="w"> </span>experiments.py<span class="w"> </span>evaluate<spa
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -738,6 +735,13 @@ python<span class="w"> </span>experiments.py<span class="w"> </span>evaluate<spa
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -782,7 +786,14 @@ python<span class="w"> </span>experiments.py<span class="w"> </span>evaluate<spa
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

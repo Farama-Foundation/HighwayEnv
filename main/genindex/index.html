@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 --><title>Index - highway-env Documentation</title>
 <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -339,7 +339,11 @@
 </li>
         </ul></li>
         <li><a href="../actions/#highway_env.envs.common.action.ContinuousAction.ACCELERATION_RANGE">ACCELERATION_RANGE (highway_env.envs.common.action.ContinuousAction attribute)</a>
+
+        <ul>
+          <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.ACCELERATION_RANGE">(highway_env.vehicle.behavior.LinearVehicle attribute)</a>
 </li>
+        </ul></li>
         <li><a href="../actions/#highway_env.envs.common.action.ActionType.act">act() (highway_env.envs.common.action.ActionType method)</a>
 
         <ul>
@@ -462,6 +466,8 @@
         </ul></li>
         <li><a href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.DEFAULT_INITIAL_SPEEDS">DEFAULT_INITIAL_SPEEDS (highway_env.vehicle.kinematics.Vehicle attribute)</a>
 </li>
+        <li><a href="../dynamics/vehicle/controller/#highway_env.vehicle.controller.MDPVehicle.DEFAULT_TARGET_SPEEDS">DEFAULT_TARGET_SPEEDS (highway_env.vehicle.controller.MDPVehicle attribute)</a>
+</li>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.DefensiveVehicle">DefensiveVehicle (class in highway_env.vehicle.behavior)</a>
 </li>
         <li><a href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.define_spaces">define_spaces() (highway_env.envs.common.abstract.AbstractEnv method)</a>
@@ -472,10 +478,10 @@
         </ul></li>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.DELTA">DELTA (highway_env.vehicle.behavior.IDMVehicle attribute)</a>
 </li>
-        <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.DELTA_RANGE">DELTA_RANGE (highway_env.vehicle.behavior.IDMVehicle attribute)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.DELTA_RANGE">DELTA_RANGE (highway_env.vehicle.behavior.IDMVehicle attribute)</a>
+</li>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.desired_gap">desired_gap() (highway_env.vehicle.behavior.IDMVehicle method)</a>
 </li>
         <li><a href="../actions/#highway_env.envs.common.action.DiscreteAction">DiscreteAction (class in highway_env.envs.common.action)</a>
@@ -976,10 +982,10 @@
 </li>
         <li><a href="../dynamics/vehicle/controller/#highway_env.vehicle.controller.MDPVehicle.speed_to_index">speed_to_index() (highway_env.vehicle.controller.MDPVehicle method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="../dynamics/vehicle/controller/#highway_env.vehicle.controller.MDPVehicle.speed_to_index_default">speed_to_index_default() (highway_env.vehicle.controller.MDPVehicle class method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.steering_control">steering_control() (highway_env.vehicle.behavior.LinearVehicle method)</a>
 
         <ul>
@@ -989,7 +995,11 @@
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.steering_features">steering_features() (highway_env.vehicle.behavior.LinearVehicle method)</a>
 </li>
         <li><a href="../actions/#highway_env.envs.common.action.ContinuousAction.STEERING_RANGE">STEERING_RANGE (highway_env.envs.common.action.ContinuousAction attribute)</a>
+
+        <ul>
+          <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.STEERING_RANGE">(highway_env.vehicle.behavior.LinearVehicle attribute)</a>
 </li>
+        </ul></li>
         <li><a href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.step">step() (highway_env.envs.common.abstract.AbstractEnv method)</a>
 
         <ul>
@@ -1281,14 +1291,6 @@
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -1302,7 +1304,14 @@
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -1318,8 +1327,6 @@
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -1331,6 +1338,13 @@
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -1375,7 +1389,14 @@
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

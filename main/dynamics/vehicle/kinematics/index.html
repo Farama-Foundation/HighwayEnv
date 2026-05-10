@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Kinematics - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -293,7 +293,7 @@
             
             <span class="target" id="vehicle-kinematics"></span><section class="tex2jax_ignore mathjax_ignore" id="kinematics">
 <h1>Kinematics<a class="headerlink" href="#kinematics" title="Link to this heading">¶</a></h1>
-<p>The vehicles kinematics are represented in the <a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vehicle</span></code></a> class by the <em>Kinematic Bicycle Model</em> <span id="id1">[<a class="reference internal" href="../../../bibliography/#id4" title="Philip Polack, Florent Altché, and Brigitte D'Andréa-Novel. The Kinematic Bicycle Model : a Consistent Model for Planning Feasible Trajectories for Autonomous Vehicles ? IEEE Intelligent Vehicles Symposium, pages 6–8, 2017.">PAltcheDAndreaN17</a>]</span>.</p>
+<p>The vehicles kinematics are represented in the <a class="reference internal" href="#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vehicle</span></code></a> class by the <em>Kinematic Bicycle Model</em> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../bibliography/#id4" title="Philip Polack, Florent Altché, and Brigitte D'Andréa-Novel. The Kinematic Bicycle Model : a Consistent Model for Planning Feasible Trajectories for Autonomous Vehicles ? IEEE Intelligent Vehicles Symposium, pages 6–8, 2017.">PAltcheDAndreaN17</a>]</span>.</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -686,14 +686,6 @@ The vehicle’s current lane is updated.</p>
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -707,7 +699,14 @@ The vehicle’s current lane is updated.</p>
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -723,8 +722,6 @@ The vehicle’s current lane is updated.</p>
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -736,6 +733,13 @@ The vehicle’s current lane is updated.</p>
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -780,7 +784,14 @@ The vehicle’s current lane is updated.</p>
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

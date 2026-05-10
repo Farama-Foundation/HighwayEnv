@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Actions - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -595,7 +595,7 @@ Must some pre-processing can be applied to the action based on the ActionType co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.action.DiscreteMetaAction.act">
-<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">np.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.act" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/action/#DiscreteMetaAction.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.action.DiscreteMetaAction.act" title="Link to this definition">¶</a></dt>
 <dd><p>Execute the action on the ego-vehicle.</p>
 <p>Most of the action mechanics are actually implemented in vehicle.act(action), where
 vehicle is an instance of the specified <a class="reference internal" href="#highway_env.envs.common.action.ActionType.vehicle_class" title="highway_env.envs.common.action.ActionType.vehicle_class"><code class="xref py py-class docutils literal notranslate"><span class="pre">highway_env.envs.common.action.ActionType.vehicle_class</span></code></a>.
@@ -926,14 +926,6 @@ Must some pre-processing can be applied to the action based on the ActionType co
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -947,7 +939,14 @@ Must some pre-processing can be applied to the action based on the ActionType co
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -963,8 +962,6 @@ Must some pre-processing can be applied to the action based on the ActionType co
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -976,6 +973,13 @@ Must some pre-processing can be applied to the action based on the ActionType co
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -1020,7 +1024,14 @@ Must some pre-processing can be applied to the action based on the ActionType co
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Getting Started - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -316,7 +316,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/quickstart_0_0.png" src="../_images/quickstart_0_0.png" />
+<img alt="../_images/quickstart_0_1.png" src="../_images/quickstart_0_1.png" />
 </div>
 </div>
 <section id="all-the-environments">
@@ -354,7 +354,7 @@ of an environment are parametrized by a configuration, defined as a
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/quickstart_1_0.png" src="../_images/quickstart_1_0.png" />
+<img alt="../_images/quickstart_1_1.png" src="../_images/quickstart_1_1.png" />
 </div>
 </div>
 <p>After environment creation, the configuration can be accessed using the
@@ -464,13 +464,13 @@ Here are a few of them:</p>
 <p>Highway with image observations and a CNN model <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
 Train SB3’s DQN on <code class="docutils literal notranslate"><span class="pre">highway-fast-v0</span></code> , but using <a class="reference internal" href="../observations/#grayscale-image"><span class="std std-ref">image observations</span></a> and a CNN model for the value function.</p>
 <p>Trajectory Planning on Highway <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
-Plan a trajectory on <code class="docutils literal notranslate"><span class="pre">highway-v0</span></code> using the <code class="docutils literal notranslate"><span class="pre">OPD</span></code> <span id="id1">[<a class="reference internal" href="../bibliography/#id5" title="Jean François Hren and Rémi Munos. Optimistic planning of deterministic systems. Lecture Notes in Computer Science, 2008.">HM08</a>]</span> implementation from <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>.</p>
+Plan a trajectory on <code class="docutils literal notranslate"><span class="pre">highway-v0</span></code> using the <code class="docutils literal notranslate"><span class="pre">OPD</span></code> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../bibliography/#id5" title="Jean François Hren and Rémi Munos. Optimistic planning of deterministic systems. Lecture Notes in Computer Science, 2008.">HM08</a>]</span> implementation from <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>.</p>
 <p>A Model-based Reinforcement Learning tutorial on Parking <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
 A tutorial written for <a class="reference external" href="https://rlss.inria.fr/">RLSS 2019</a> and demonstrating the principle of model-based reinforcement learning on the <code class="docutils literal notranslate"><span class="pre">parking-v0</span></code> task.</p>
 <p>Parking with Hindsight Experience Replay <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
-Train a goal-conditioned <code class="docutils literal notranslate"><span class="pre">parking-v0</span></code> policy using the <code class="docutils literal notranslate"><span class="pre">HER</span></code> <span id="id2">[<a class="reference internal" href="../bibliography/#id6" title="Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, and Wojciech Zaremba. Hindsight experience replay. In Advances in Neural Information Processing Systems. 2017. arXiv:1707.01495.">AWR+17</a>]</span> implementation from <a class="reference external" href="https://github.com/hill-a/stable-baselines">stable-baselines</a>.</p>
+Train a goal-conditioned <code class="docutils literal notranslate"><span class="pre">parking-v0</span></code> policy using the <code class="docutils literal notranslate"><span class="pre">HER</span></code> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../bibliography/#id6" title="Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, and Wojciech Zaremba. Hindsight experience replay. In Advances in Neural Information Processing Systems. 2017. arXiv:1707.01495.">AWR+17</a>]</span> implementation from <a class="reference external" href="https://github.com/hill-a/stable-baselines">stable-baselines</a>.</p>
 <p>Intersection with DQN and social attention <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
-Train an <code class="docutils literal notranslate"><span class="pre">intersection-v0</span></code> crossing policy using the social attention architecture <span id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span> and the DQN implementation from <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>.</p>
+Train an <code class="docutils literal notranslate"><span class="pre">intersection-v0</span></code> crossing policy using the social attention architecture <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span> and the DQN implementation from <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>.</p>
 </section>
 </section>
 
@@ -697,14 +697,6 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -718,7 +710,14 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -734,8 +733,6 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -747,6 +744,13 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -791,7 +795,14 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

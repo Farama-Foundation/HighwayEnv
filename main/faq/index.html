@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Frequently Asked Questions - highway-env Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -307,14 +307,14 @@ repository. In that case, you need to run the following code first to register t
 <section id="i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why">
 <h2>I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?<a class="headerlink" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why" title="Link to this heading">¶</a></h2>
 <p>I also tend to get reasonable but sub-optimal policies using this observation-model pair.
-In <span id="id1">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>, we argued that a possible reason is that the MLP output depends on the order of
+In <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>, we argued that a possible reason is that the MLP output depends on the order of
 vehicles in the observation. Indeed, if the agent revisits a given scene but observes vehicles described in a different
 order, it will see it as a novel state and will not be able to reuse past information. Thus, the agent struggles to
 make use of its observation.</p>
 <p>This can be addressed in two ways:</p>
 <ul class="simple">
 <li><ul>
-<li><p>Change the <em>model</em>, to use a permutation-invariant architecture which will not be sensitive to the vehicles order, such as <em>e.g.</em> <span id="id2">[<a class="reference internal" href="../bibliography/#id9" title="Charles R. Qi, Hao Su, Kaichun Mo, and Leonidas J. Guibas. Pointnet: deep learning on point sets for 3d classification and segmentation. 2017. arXiv:1612.00593.">QSMG17</a>]</span> or <span id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>.</p></li>
+<li><p>Change the <em>model</em>, to use a permutation-invariant architecture which will not be sensitive to the vehicles order, such as <em>e.g.</em> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../bibliography/#id9" title="Charles R. Qi, Hao Su, Kaichun Mo, and Leonidas J. Guibas. Pointnet: deep learning on point sets for 3d classification and segmentation. 2017. arXiv:1612.00593.">QSMG17</a>]</span> or <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>.</p></li>
 </ul>
 </li>
 </ul>
@@ -574,14 +574,6 @@ In order to also render these intermediate simulation frames, the following shou
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -595,7 +587,14 @@ In order to also render these intermediate simulation frames, the following shou
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -611,8 +610,6 @@ In order to also render these intermediate simulation frames, the following shou
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -624,6 +621,13 @@ In order to also render these intermediate simulation frames, the following shou
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -668,7 +672,14 @@ In order to also render these intermediate simulation frames, the following shou
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 
