@@ -4,17 +4,17 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="A collection of environments for autonomous driving and tactical decision-making tasks">
-    <meta property="og:title" content="highway-env Documentation" />
+    <meta property="og:title" content="HighwayEnv Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/faq.html" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:url" content="https://highway-env.farama.org/faq.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Bibliography" href="../bibliography/" /><link rel="prev" title="Make your own environment" href="../make_your_own/" />
         <link rel="canonical" href="https://highway-env.farama.org/faq.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>Frequently Asked Questions - highway-env Documentation</title>
+    <link rel="shortcut icon" href="../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
+        <title>Frequently Asked Questions - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -59,7 +59,9 @@
         </div>
         <div class="farama-header__left farama-header__center--mobile">
           <a href="../">
-            <span class="farama-header__title">highway-env Documentation</span>
+              <img class="farama-header__logo only-light" src="../_static/img/highway.svg" alt="Light Logo"/>
+              <img class="farama-header__logo only-dark" src="../_static/img/highway-white.svg" alt="Dark Logo"/>
+            <span class="farama-header__title">HighwayEnv Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
@@ -180,7 +182,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../"><div class="brand">highway-env Documentation</div></a>
+      <a href="../"><div class="brand">HighwayEnv Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -201,7 +203,9 @@
     <div class="sidebar-container">
       
       <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../">
-    <span class="farama-header__title">highway-env Documentation</span>
+      <img class="farama-header__logo only-light" src="../_static/img/highway.svg" alt="Light Logo"/>
+      <img class="farama-header__logo only-dark" src="../_static/img/highway-white.svg" alt="Dark Logo"/>
+    <span class="farama-header__title">HighwayEnv Documentation</span>
   </a><form class="sidebar-search-container" method="get" action="../search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
@@ -268,7 +272,16 @@
             </svg>
             <span>Back to top</span>
           </a>
-          <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+          <div class="content-icon-container"><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/master/docs/faq.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
               <button class="theme-toggle" title="Toggle color theme">
                 <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
                 <svg class="theme-icon-when-auto">
@@ -293,11 +306,11 @@
             
             <section class="tex2jax_ignore mathjax_ignore" id="frequently-asked-questions">
 <span id="faq"></span><h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading">¶</a></h1>
-<p>This is a list of Frequently Asked Questions about highway-env.  Feel free to
+<p>This is a list of Frequently Asked Questions about HighwayEnv.  Feel free to
 suggest new entries!</p>
 <section id="when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist">
 <h2>When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code><a class="headerlink" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist" title="Link to this heading">¶</a></h2>
-<p>This is probably because you do not have highway-env installed, but are instead working with a local copy of the
+<p>This is probably because you do not have HighwayEnv installed, but are instead working with a local copy of the
 repository. In that case, you need to run the following code first to register the environments.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
 <span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
@@ -307,14 +320,14 @@ repository. In that case, you need to run the following code first to register t
 <section id="i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why">
 <h2>I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?<a class="headerlink" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why" title="Link to this heading">¶</a></h2>
 <p>I also tend to get reasonable but sub-optimal policies using this observation-model pair.
-In <span id="id1">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>, we argued that a possible reason is that the MLP output depends on the order of
+In <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>, we argued that a possible reason is that the MLP output depends on the order of
 vehicles in the observation. Indeed, if the agent revisits a given scene but observes vehicles described in a different
 order, it will see it as a novel state and will not be able to reuse past information. Thus, the agent struggles to
 make use of its observation.</p>
 <p>This can be addressed in two ways:</p>
 <ul class="simple">
 <li><ul>
-<li><p>Change the <em>model</em>, to use a permutation-invariant architecture which will not be sensitive to the vehicles order, such as <em>e.g.</em> <span id="id2">[<a class="reference internal" href="../bibliography/#id9" title="Charles R. Qi, Hao Su, Kaichun Mo, and Leonidas J. Guibas. Pointnet: deep learning on point sets for 3d classification and segmentation. 2017. arXiv:1612.00593.">QSMG17</a>]</span> or <span id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>.</p></li>
+<li><p>Change the <em>model</em>, to use a permutation-invariant architecture which will not be sensitive to the vehicles order, such as <em>e.g.</em> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../bibliography/#id9" title="Charles R. Qi, Hao Su, Kaichun Mo, and Leonidas J. Guibas. Pointnet: deep learning on point sets for 3d classification and segmentation. 2017. arXiv:1612.00593.">QSMG17</a>]</span> or <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>.</p></li>
 </ul>
 </li>
 </ul>
@@ -329,7 +342,7 @@ make use of its observation.</p>
 </section>
 <section id="my-videos-are-too-fast-have-a-low-framerate">
 <h2>My videos are too fast / have a low framerate.<a class="headerlink" href="#my-videos-are-too-fast-have-a-low-framerate" title="Link to this heading">¶</a></h2>
-<p>This is because in gymnasium, a single video frame is generated at each call of <code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code>. However, in highway-env, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (<em>e.g.</em> change lane) actually corresponds to several (typically, 15) simulation frames.
+<p>This is because in gymnasium, a single video frame is generated at each call of <code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code>. However, in HighwayEnv, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (<em>e.g.</em> change lane) actually corresponds to several (typically, 15) simulation frames.
 In order to also render these intermediate simulation frames, the following should be done:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 
@@ -398,7 +411,14 @@ In order to also render these intermediate simulation frames, the following shou
             </div>
             <div class="right-details">
               <div class="icons">
-                
+                <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/"
+                  aria-label="On GitHub">
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z">
+                    </path>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
@@ -574,14 +594,6 @@ In order to also render these intermediate simulation frames, the following shou
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -595,7 +607,14 @@ In order to also render these intermediate simulation frames, the following shou
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -611,8 +630,6 @@ In order to also render these intermediate simulation frames, the following shou
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -624,6 +641,13 @@ In order to also render these intermediate simulation frames, the following shou
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -668,7 +692,14 @@ In order to also render these intermediate simulation frames, the following shou
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 
@@ -680,7 +711,30 @@ In order to also render these intermediate simulation frames, the following shou
     </script>
 
     
-    
+    <script>
+      const versioningConfig = {
+        githubUser: 'Farama-Foundation',
+        githubRepo: 'HighwayEnv',
+      };
+      fetch('/main/_static/versioning/versioning_menu.html').then(response => {
+        if (response.status === 200) {
+            response.text().then(text => {
+                const container = document.createElement("div");
+                container.innerHTML = text;
+                document.querySelector("body").appendChild(container);
+                // innerHtml doenst evaluate scripts, we need to add them dynamically
+                Array.from(container.querySelectorAll("script")).forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+            });
+        } else {
+            console.warn("Unable to load versioning menu", response);
+        }
+      });
+    </script>
 
     </body>
 </html>

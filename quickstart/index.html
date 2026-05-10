@@ -4,17 +4,17 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="A collection of environments for autonomous driving and tactical decision-making tasks">
-    <meta property="og:title" content="highway-env Documentation" />
+    <meta property="og:title" content="HighwayEnv Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/quickstart.html" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:url" content="https://highway-env.farama.org/quickstart.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Highway" href="../environments/highway/" /><link rel="prev" title="Installation" href="../installation/" />
         <link rel="canonical" href="https://highway-env.farama.org/quickstart.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>Getting Started - highway-env Documentation</title>
+    <link rel="shortcut icon" href="../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
+        <title>Getting Started - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -59,7 +59,9 @@
         </div>
         <div class="farama-header__left farama-header__center--mobile">
           <a href="../">
-            <span class="farama-header__title">highway-env Documentation</span>
+              <img class="farama-header__logo only-light" src="../_static/img/highway.svg" alt="Light Logo"/>
+              <img class="farama-header__logo only-dark" src="../_static/img/highway-white.svg" alt="Dark Logo"/>
+            <span class="farama-header__title">HighwayEnv Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
@@ -180,7 +182,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../"><div class="brand">highway-env Documentation</div></a>
+      <a href="../"><div class="brand">HighwayEnv Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -201,7 +203,9 @@
     <div class="sidebar-container">
       
       <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../">
-    <span class="farama-header__title">highway-env Documentation</span>
+      <img class="farama-header__logo only-light" src="../_static/img/highway.svg" alt="Light Logo"/>
+      <img class="farama-header__logo only-dark" src="../_static/img/highway-white.svg" alt="Dark Logo"/>
+    <span class="farama-header__title">HighwayEnv Documentation</span>
   </a><form class="sidebar-search-container" method="get" action="../search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
@@ -268,7 +272,16 @@
             </svg>
             <span>Back to top</span>
           </a>
-          <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+          <div class="content-icon-container"><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/master/docs/quickstart.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
               <button class="theme-toggle" title="Toggle color theme">
                 <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
                 <svg class="theme-icon-when-auto">
@@ -316,7 +329,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/quickstart_0_0.png" src="../_images/quickstart_0_0.png" />
+<img alt="../_images/quickstart_0_2.png" src="../_images/quickstart_0_2.png" />
 </div>
 </div>
 <section id="all-the-environments">
@@ -354,7 +367,7 @@ of an environment are parametrized by a configuration, defined as a
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/quickstart_1_0.png" src="../_images/quickstart_1_0.png" />
+<img alt="../_images/quickstart_1_1.png" src="../_images/quickstart_1_1.png" />
 </div>
 </div>
 <p>After environment creation, the configuration can be accessed using the
@@ -459,18 +472,18 @@ However, <a class="reference external" href="https://github.com/eleurent/rl-agen
 </section>
 <section id="examples-on-google-colab">
 <h2>Examples on Google Colab<a class="headerlink" href="#examples-on-google-colab" title="Link to this heading">¶</a></h2>
-<p>Several scripts and notebooks to train driving policies on <code class="docutils literal notranslate"><span class="pre">highway-env</span></code> are available <a class="reference external" href="https://github.com/eleurent/highway-env/tree/master/scripts">on this page</a>.
+<p>Several scripts and notebooks to train driving policies on <code class="docutils literal notranslate"><span class="pre">HighwayEnv</span></code> are available <a class="reference external" href="https://github.com/eleurent/highway-env/tree/master/scripts">on this page</a>.
 Here are a few of them:</p>
 <p>Highway with image observations and a CNN model <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
 Train SB3’s DQN on <code class="docutils literal notranslate"><span class="pre">highway-fast-v0</span></code> , but using <a class="reference internal" href="../observations/#grayscale-image"><span class="std std-ref">image observations</span></a> and a CNN model for the value function.</p>
 <p>Trajectory Planning on Highway <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
-Plan a trajectory on <code class="docutils literal notranslate"><span class="pre">highway-v0</span></code> using the <code class="docutils literal notranslate"><span class="pre">OPD</span></code> <span id="id1">[<a class="reference internal" href="../bibliography/#id5" title="Jean François Hren and Rémi Munos. Optimistic planning of deterministic systems. Lecture Notes in Computer Science, 2008.">HM08</a>]</span> implementation from <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>.</p>
+Plan a trajectory on <code class="docutils literal notranslate"><span class="pre">highway-v0</span></code> using the <code class="docutils literal notranslate"><span class="pre">OPD</span></code> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../bibliography/#id5" title="Jean François Hren and Rémi Munos. Optimistic planning of deterministic systems. Lecture Notes in Computer Science, 2008.">HM08</a>]</span> implementation from <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>.</p>
 <p>A Model-based Reinforcement Learning tutorial on Parking <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
 A tutorial written for <a class="reference external" href="https://rlss.inria.fr/">RLSS 2019</a> and demonstrating the principle of model-based reinforcement learning on the <code class="docutils literal notranslate"><span class="pre">parking-v0</span></code> task.</p>
 <p>Parking with Hindsight Experience Replay <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
-Train a goal-conditioned <code class="docutils literal notranslate"><span class="pre">parking-v0</span></code> policy using the <code class="docutils literal notranslate"><span class="pre">HER</span></code> <span id="id2">[<a class="reference internal" href="../bibliography/#id6" title="Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, and Wojciech Zaremba. Hindsight experience replay. In Advances in Neural Information Processing Systems. 2017. arXiv:1707.01495.">AWR+17</a>]</span> implementation from <a class="reference external" href="https://github.com/hill-a/stable-baselines">stable-baselines</a>.</p>
+Train a goal-conditioned <code class="docutils literal notranslate"><span class="pre">parking-v0</span></code> policy using the <code class="docutils literal notranslate"><span class="pre">HER</span></code> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../bibliography/#id6" title="Marcin Andrychowicz, Filip Wolski, Alex Ray, Jonas Schneider, Rachel Fong, Peter Welinder, Bob McGrew, Josh Tobin, Pieter Abbeel, and Wojciech Zaremba. Hindsight experience replay. In Advances in Neural Information Processing Systems. 2017. arXiv:1707.01495.">AWR+17</a>]</span> implementation from <a class="reference external" href="https://github.com/hill-a/stable-baselines">stable-baselines</a>.</p>
 <p>Intersection with DQN and social attention <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb"><img alt="Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
-Train an <code class="docutils literal notranslate"><span class="pre">intersection-v0</span></code> crossing policy using the social attention architecture <span id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span> and the DQN implementation from <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>.</p>
+Train an <code class="docutils literal notranslate"><span class="pre">intersection-v0</span></code> crossing policy using the social attention architecture <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span> and the DQN implementation from <a class="reference external" href="https://github.com/eleurent/rl-agents">eleurent/rl-agents</a>.</p>
 </section>
 </section>
 
@@ -517,7 +530,14 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
             </div>
             <div class="right-details">
               <div class="icons">
-                
+                <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/"
+                  aria-label="On GitHub">
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z">
+                    </path>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
@@ -697,14 +717,6 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -718,7 +730,14 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -734,8 +753,6 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -747,6 +764,13 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -791,7 +815,14 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 
@@ -803,7 +834,30 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
     </script>
 
     
-    
+    <script>
+      const versioningConfig = {
+        githubUser: 'Farama-Foundation',
+        githubRepo: 'HighwayEnv',
+      };
+      fetch('/main/_static/versioning/versioning_menu.html').then(response => {
+        if (response.status === 200) {
+            response.text().then(text => {
+                const container = document.createElement("div");
+                container.innerHTML = text;
+                document.querySelector("body").appendChild(container);
+                // innerHtml doenst evaluate scripts, we need to add them dynamically
+                Array.from(container.querySelectorAll("script")).forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+            });
+        } else {
+            console.warn("Unable to load versioning menu", response);
+        }
+      });
+    </script>
 
     </body>
 </html>

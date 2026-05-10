@@ -4,17 +4,17 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="A collection of environments for autonomous driving and tactical decision-making tasks">
-    <meta property="og:title" content="highway-env Documentation" />
+    <meta property="og:title" content="HighwayEnv Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/make_your_own.html" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:url" content="https://highway-env.farama.org/make_your_own.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Frequently Asked Questions" href="../faq/" /><link rel="prev" title="The Multi-Agent setting" href="../multi_agent/" />
         <link rel="canonical" href="https://highway-env.farama.org/make_your_own.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>Make your own environment - highway-env Documentation</title>
+    <link rel="shortcut icon" href="../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
+        <title>Make your own environment - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -59,7 +59,9 @@
         </div>
         <div class="farama-header__left farama-header__center--mobile">
           <a href="../">
-            <span class="farama-header__title">highway-env Documentation</span>
+              <img class="farama-header__logo only-light" src="../_static/img/highway.svg" alt="Light Logo"/>
+              <img class="farama-header__logo only-dark" src="../_static/img/highway-white.svg" alt="Dark Logo"/>
+            <span class="farama-header__title">HighwayEnv Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
@@ -180,7 +182,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../"><div class="brand">highway-env Documentation</div></a>
+      <a href="../"><div class="brand">HighwayEnv Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -201,7 +203,9 @@
     <div class="sidebar-container">
       
       <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../">
-    <span class="farama-header__title">highway-env Documentation</span>
+      <img class="farama-header__logo only-light" src="../_static/img/highway.svg" alt="Light Logo"/>
+      <img class="farama-header__logo only-dark" src="../_static/img/highway-white.svg" alt="Dark Logo"/>
+    <span class="farama-header__title">HighwayEnv Documentation</span>
   </a><form class="sidebar-search-container" method="get" action="../search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
@@ -268,7 +272,16 @@
             </svg>
             <span>Back to top</span>
           </a>
-          <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+          <div class="content-icon-container"><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/master/docs/make_your_own.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
               <button class="theme-toggle" title="Toggle color theme">
                 <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
                 <svg class="theme-icon-when-auto">
@@ -381,6 +394,9 @@ You should now be able to run the environment.</p>
 <dt class="sig sig-object py" id="highway_env.__init__._register_highway_envs">
 <span class="sig-prename descclassname"><span class="pre">highway_env.__init__.</span></span><span class="sig-name descname"><span class="pre">_register_highway_envs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/__init__/#_register_highway_envs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.__init__._register_highway_envs" title="Link to this definition">¶</a></dt>
 <dd><p>Import the envs module so that envs register themselves.</p>
+<p>This function is idempotent: calling it multiple times (e.g. when
+gymnasium resolves a <code class="docutils literal notranslate"><span class="pre">&quot;highway_env:env-id&quot;</span></code> spec in a subprocess)
+will not raise duplicate-registration errors.</p>
 </dd></dl>
 
 <dl class="py class" id="module-highway_env.envs.common.abstract">
@@ -466,7 +482,7 @@ This vector value should only be returned inside the info dict.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._info">
-<span class="sig-name descname"><span class="pre">_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Observation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Action</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._info" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Observation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._info" title="Link to this definition">¶</a></dt>
 <dd><p>Return a dictionary of additional information</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -523,13 +539,13 @@ for several simulation timesteps until the next decision making step.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv._simulate">
-<span class="sig-name descname"><span class="pre">_simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Action</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._simulate" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv._simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv._simulate" title="Link to this definition">¶</a></dt>
 <dd><p>Perform several steps of simulation with constant action.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">np.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.render" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv.render" title="Link to this definition">¶</a></dt>
 <dd><p>Render the environment.</p>
 <p>Create a viewer if none exists, and use it to render an image.</p>
 </dd></dl>
@@ -641,7 +657,14 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
             </div>
             <div class="right-details">
               <div class="icons">
-                
+                <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/"
+                  aria-label="On GitHub">
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z">
+                    </path>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
@@ -849,14 +872,6 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -870,7 +885,14 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -886,8 +908,6 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -899,6 +919,13 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -943,7 +970,14 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 
@@ -955,7 +989,30 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
     </script>
 
     
-    
+    <script>
+      const versioningConfig = {
+        githubUser: 'Farama-Foundation',
+        githubRepo: 'HighwayEnv',
+      };
+      fetch('/main/_static/versioning/versioning_menu.html').then(response => {
+        if (response.status === 200) {
+            response.text().then(text => {
+                const container = document.createElement("div");
+                container.innerHTML = text;
+                document.querySelector("body").appendChild(container);
+                // innerHtml doenst evaluate scripts, we need to add them dynamically
+                Array.from(container.querySelectorAll("script")).forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+            });
+        } else {
+            console.warn("Unable to load versioning menu", response);
+        }
+      });
+    </script>
 
     </body>
 </html>

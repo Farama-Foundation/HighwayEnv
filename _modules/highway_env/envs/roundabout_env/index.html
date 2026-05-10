@@ -4,16 +4,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="A collection of environments for autonomous driving and tactical decision-making tasks">
-    <meta property="og:title" content="highway-env Documentation" />
+    <meta property="og:title" content="HighwayEnv Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/envs/roundabout_env.html" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
+    <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/envs/roundabout_env.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
         <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/envs/roundabout_env.html" />
 
-    <link rel="shortcut icon" href="../../../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>highway_env.envs.roundabout_env - highway-env Documentation</title>
+    <link rel="shortcut icon" href="../../../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
+        <title>highway_env.envs.roundabout_env - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -58,7 +58,9 @@
         </div>
         <div class="farama-header__left farama-header__center--mobile">
           <a href="../../../../">
-            <span class="farama-header__title">highway-env Documentation</span>
+              <img class="farama-header__logo only-light" src="../../../../_static/img/highway.svg" alt="Light Logo"/>
+              <img class="farama-header__logo only-dark" src="../../../../_static/img/highway-white.svg" alt="Dark Logo"/>
+            <span class="farama-header__title">HighwayEnv Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
@@ -179,7 +181,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../../"><div class="brand">highway-env Documentation</div></a>
+      <a href="../../../../"><div class="brand">HighwayEnv Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -200,7 +202,9 @@
     <div class="sidebar-container">
       
       <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../../../">
-    <span class="farama-header__title">highway-env Documentation</span>
+      <img class="farama-header__logo only-light" src="../../../../_static/img/highway.svg" alt="Light Logo"/>
+      <img class="farama-header__logo only-dark" src="../../../../_static/img/highway-white.svg" alt="Dark Logo"/>
+    <span class="farama-header__title">HighwayEnv Documentation</span>
   </a><form class="sidebar-search-container" method="get" action="../../../../search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
@@ -684,6 +688,358 @@
         <span class="n">vehicle</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span></div>
 
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RoundaboutGenericEnv</span><span class="p">(</span><span class="n">RoundaboutEnv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A generic version of the roundabout environment.</span>
+<span class="sd">    Additionally supports changing:</span>
+<span class="sd">    - the number of lanes in the roundabout</span>
+<span class="sd">    - the roundabout radius</span>
+<span class="sd">    - the number of spawned other vehicles</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;roundabout_radius&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                <span class="s2">&quot;roundabout_lanes&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># [m]</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;roundabout_radius&quot;</span><span class="p">]</span>
+        <span class="n">num_lanes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;roundabout_lanes&quot;</span><span class="p">]</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="mi">24</span>  <span class="c1"># [deg]</span>
+
+        <span class="n">net</span> <span class="o">=</span> <span class="n">RoadNetwork</span><span class="p">()</span>
+        <span class="n">radii</span> <span class="o">=</span> <span class="p">[</span><span class="n">radius</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_lanes</span><span class="p">)]</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span>
+
+        <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">,</span> <span class="s2">&quot;ex&quot;</span><span class="p">,</span> <span class="s2">&quot;ee&quot;</span><span class="p">,</span> <span class="s2">&quot;nx&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">,</span> <span class="s2">&quot;wx&quot;</span><span class="p">,</span> <span class="s2">&quot;we&quot;</span><span class="p">,</span> <span class="s2">&quot;sx&quot;</span><span class="p">,</span> <span class="s2">&quot;se&quot;</span><span class="p">]</span>
+
+        <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mi">90</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="o">-</span><span class="n">alpha</span><span class="p">),</span>
+            <span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">),</span>
+            <span class="p">(</span><span class="o">-</span><span class="mi">90</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">),</span>
+            <span class="p">(</span><span class="o">-</span><span class="mi">90</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">),</span>
+            <span class="p">(</span><span class="o">-</span><span class="mi">180</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">180</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">,</span> <span class="mi">90</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">90</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">,</span> <span class="mi">90</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_lanes</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">num_lanes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">line_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">lane</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">line_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">lane</span> <span class="o">==</span> <span class="n">num_lanes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">line_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">line_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">s</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+                    <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                    <span class="n">nodes</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                    <span class="n">CircularLane</span><span class="p">(</span>
+                        <span class="n">center</span><span class="p">,</span>
+                        <span class="n">radii</span><span class="p">[</span><span class="n">lane</span><span class="p">],</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                        <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">line_types</span><span class="o">=</span><span class="n">line_types</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Dynamically calculate exact coordinates on the outermost circle</span>
+        <span class="n">outer_radius</span> <span class="o">=</span> <span class="n">radii</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">pt</span><span class="p">(</span><span class="n">angle_deg</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+            <span class="n">rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">angle_deg</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">outer_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span><span class="p">),</span> <span class="n">outer_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span><span class="p">)]</span>
+
+        <span class="n">p_se</span> <span class="o">=</span> <span class="n">pt</span><span class="p">(</span><span class="mi">90</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">p_ex</span> <span class="o">=</span> <span class="n">pt</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">p_ee</span> <span class="o">=</span> <span class="n">pt</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">p_nx</span> <span class="o">=</span> <span class="n">pt</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">p_ne</span> <span class="o">=</span> <span class="n">pt</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">p_wx</span> <span class="o">=</span> <span class="n">pt</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">p_we</span> <span class="o">=</span> <span class="n">pt</span><span class="p">(</span><span class="mi">180</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">p_sx</span> <span class="o">=</span> <span class="n">pt</span><span class="p">(</span><span class="mi">90</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">)</span>
+
+        <span class="c1"># In case radius is very large</span>
+        <span class="n">dev</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">outer_radius</span> <span class="o">+</span> <span class="mf">40.0</span><span class="p">)</span>
+        <span class="n">access</span> <span class="o">=</span> <span class="n">dev</span> <span class="o">+</span> <span class="mf">40.0</span>
+
+        <span class="c1"># South Entry (ses -&gt; se)</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">p_se</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_se</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dy</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;ser&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ses&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="n">access</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;ses&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;se&quot;</span><span class="p">,</span>
+            <span class="n">SineLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="p">,</span> <span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="p">,</span> <span class="n">p_se</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">a</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># South Exit (sx -&gt; sxs)</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">p_sx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_sx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dy</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;sx&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sxs&quot;</span><span class="p">,</span>
+            <span class="n">SineLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">p_sx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">,</span> <span class="n">p_sx</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="p">[</span><span class="n">p_sx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">,</span> <span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="n">a</span><span class="p">,</span>
+                <span class="n">w</span><span class="p">,</span>
+                <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;sxs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sxr&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">access</span><span class="p">],</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># East Entry (ees -&gt; ee)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">p_ee</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">-</span> <span class="n">p_ee</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dx</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;eer&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ees&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">([</span><span class="n">access</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;ees&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ee&quot;</span><span class="p">,</span>
+            <span class="n">SineLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span> <span class="o">-</span> <span class="n">a</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">p_ee</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">2</span> <span class="o">-</span> <span class="n">a</span><span class="p">],</span>
+                <span class="n">a</span><span class="p">,</span>
+                <span class="n">w</span><span class="p">,</span>
+                <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># East Exit (ex -&gt; exs)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">p_ex</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">-</span> <span class="n">p_ex</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dx</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;ex&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;exs&quot;</span><span class="p">,</span>
+            <span class="n">SineLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">p_ex</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p_ex</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">p_ex</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">],</span>
+                <span class="n">a</span><span class="p">,</span>
+                <span class="n">w</span><span class="p">,</span>
+                <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;exs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;exr&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">([</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">access</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># North Entry (nes -&gt; ne)</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">p_ne</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">-</span> <span class="n">p_ne</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dy</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;ner&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nes&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">access</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;nes&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ne&quot;</span><span class="p">,</span>
+            <span class="n">SineLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="o">-</span><span class="mi">2</span> <span class="o">-</span> <span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="p">[</span><span class="o">-</span><span class="mi">2</span> <span class="o">-</span> <span class="n">a</span><span class="p">,</span> <span class="n">p_ne</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="n">a</span><span class="p">,</span>
+                <span class="n">w</span><span class="p">,</span>
+                <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># North Exit (nx -&gt; nxs)</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">p_nx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">-</span> <span class="n">p_nx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dy</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;nx&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nxs&quot;</span><span class="p">,</span>
+            <span class="n">SineLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">p_nx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">,</span> <span class="n">p_nx</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="p">[</span><span class="n">p_nx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+                <span class="n">a</span><span class="p">,</span>
+                <span class="n">w</span><span class="p">,</span>
+                <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;nxs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nxr&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">access</span><span class="p">],</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># West Entry (wes -&gt; we)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">p_we</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_we</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dx</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;wer&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wes&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">([</span><span class="o">-</span><span class="n">access</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;wes&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;we&quot;</span><span class="p">,</span>
+            <span class="n">SineLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="n">p_we</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="p">],</span> <span class="n">a</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># West Exit (wx -&gt; wxs)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">p_wx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_wx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dx</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;wx&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wxs&quot;</span><span class="p">,</span>
+            <span class="n">SineLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">p_wx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p_wx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">],</span>
+                <span class="p">[</span><span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">p_wx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">],</span>
+                <span class="n">a</span><span class="p">,</span>
+                <span class="n">w</span><span class="p">,</span>
+                <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;wxs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wxr&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">([</span><span class="o">-</span><span class="n">dev</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">access</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+        <span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span>
+            <span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span>
+            <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span>
+            <span class="n">record_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_trajectories&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">road</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">speed_deviation</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="n">vehicle_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicles_count&quot;</span><span class="p">]</span>
+        <span class="n">other_vehicles_type</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">])</span>
+        <span class="n">destinations</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;exr&quot;</span><span class="p">,</span> <span class="s2">&quot;sxr&quot;</span><span class="p">,</span> <span class="s2">&quot;nxr&quot;</span><span class="p">,</span> <span class="s2">&quot;wxr&quot;</span><span class="p">]</span>
+
+        <span class="n">ego_lane_id</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ser&quot;</span><span class="p">,</span> <span class="s2">&quot;ses&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">ego_lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">ego_lane_id</span><span class="p">)</span>
+        <span class="n">ego_longitudinal</span> <span class="o">=</span> <span class="n">ego_lane</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="mf">2.5</span>  <span class="c1"># Placed at end of straight lane</span>
+
+        <span class="n">ego_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">vehicle_class</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+            <span class="n">ego_lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">ego_longitudinal</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span>
+            <span class="n">heading</span><span class="o">=</span><span class="n">ego_lane</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span><span class="n">ego_longitudinal</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;nxs&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span> <span class="o">=</span> <span class="n">ego_vehicle</span>
+
+        <span class="n">spawned_positions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">spawned_positions</span><span class="p">[</span><span class="n">ego_lane_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">ego_longitudinal</span><span class="p">]</span>
+
+        <span class="n">spawn_lanes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;we&quot;</span><span class="p">,</span> <span class="s2">&quot;sx&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;sx&quot;</span><span class="p">,</span> <span class="s2">&quot;se&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;ee&quot;</span><span class="p">,</span> <span class="s2">&quot;nx&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;nx&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;eer&quot;</span><span class="p">,</span> <span class="s2">&quot;ees&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;ner&quot;</span><span class="p">,</span> <span class="s2">&quot;nes&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;wer&quot;</span><span class="p">,</span> <span class="s2">&quot;wes&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="n">spawned_points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">spawned_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ego_lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">ego_longitudinal</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">safe_distance</span> <span class="o">=</span> <span class="mf">7.0</span>  <span class="c1"># safe distance to spawn vehicles from each other</span>
+        <span class="n">tries</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># number of times it tries to spawn a vehicle</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vehicle_count</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tries</span><span class="p">):</span>
+                <span class="n">lane_tuple</span> <span class="o">=</span> <span class="n">spawn_lanes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">spawn_lanes</span><span class="p">))]</span>
+                <span class="n">available_lanes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">lane_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">lane_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+                <span class="p">)</span>
+                <span class="n">lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">available_lanes</span><span class="p">)</span>
+                <span class="n">lane_id</span> <span class="o">=</span> <span class="p">(</span><span class="n">lane_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lane_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lane_index</span><span class="p">)</span>
+
+                <span class="n">lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">lane_id</span><span class="p">)</span>
+                <span class="n">longitudinal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+                    <span class="mf">5.0</span><span class="p">,</span>
+                    <span class="nb">max</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="mf">5.0</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="n">candidate_position</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">longitudinal</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+                <span class="n">is_safe</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">spawned_points</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">candidate_position</span> <span class="o">-</span> <span class="n">point</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">safe_distance</span><span class="p">:</span>
+                        <span class="n">is_safe</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">is_safe</span><span class="p">:</span>
+                    <span class="n">vehicle</span> <span class="o">=</span> <span class="n">other_vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+                        <span class="n">lane_id</span><span class="p">,</span>
+                        <span class="n">longitudinal</span><span class="o">=</span><span class="n">longitudinal</span><span class="p">,</span>
+                        <span class="n">speed</span><span class="o">=</span><span class="mf">14.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;incoming_vehicle_destination&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">dest_idx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;incoming_vehicle_destination&quot;</span><span class="p">],</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="n">destinations</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">destination</span> <span class="o">=</span> <span class="n">destinations</span><span class="p">[</span><span class="n">dest_idx</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">destination</span> <span class="o">=</span> <span class="n">destinations</span><span class="p">[</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">destinations</span><span class="p">))</span>
+                        <span class="p">]</span>
+
+                    <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+                    <span class="n">vehicle</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+
+                    <span class="n">spawned_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">candidate_position</span><span class="p">)</span>
+                    <span class="k">break</span>
 </pre></div>
           </article>
         </div>
@@ -706,7 +1062,14 @@
             </div>
             <div class="right-details">
               <div class="icons">
-                
+                <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/"
+                  aria-label="On GitHub">
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z">
+                    </path>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
@@ -861,14 +1224,6 @@
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -882,7 +1237,14 @@
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -898,8 +1260,6 @@
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -911,6 +1271,13 @@
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -955,7 +1322,14 @@
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 
@@ -967,7 +1341,30 @@
     </script>
 
     
-    
+    <script>
+      const versioningConfig = {
+        githubUser: 'Farama-Foundation',
+        githubRepo: 'HighwayEnv',
+      };
+      fetch('/main/_static/versioning/versioning_menu.html').then(response => {
+        if (response.status === 200) {
+            response.text().then(text => {
+                const container = document.createElement("div");
+                container.innerHTML = text;
+                document.querySelector("body").appendChild(container);
+                // innerHtml doenst evaluate scripts, we need to add them dynamically
+                Array.from(container.querySelectorAll("script")).forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+            });
+        } else {
+            console.warn("Unable to load versioning menu", response);
+        }
+      });
+    </script>
 
     </body>
 </html>
