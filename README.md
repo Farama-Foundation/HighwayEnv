@@ -13,7 +13,7 @@ A collection of environments for *autonomous driving* and tactical decision-maki
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/highway-env.gif?raw=true"><br/>
-    <em>An episode of one of the environments available in highway-env.</em>
+    <em>An episode of one of the environments available in HighwayEnv.</em>
 </p>
 
 ## [Try it on Google Colab! ![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](scripts)
@@ -104,7 +104,7 @@ A continuous control task involving lane-keeping and obstacle avoidance.
 
 ## Examples of agents
 
-Agents solving the `highway-env` environments are available in the [eleurent/rl-agents](https://github.com/eleurent/rl-agents) and [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) repositories.
+Agents solving the HighwayEnv environments are available in the [eleurent/rl-agents](https://github.com/eleurent/rl-agents) and [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) repositories.
 
 See the [documentation](https://farama-foundation.github.io/HighwayEnv/quickstart/#training-an-agent) for some examples and notebooks.
 
@@ -186,7 +186,7 @@ If you use the project in your work, please consider citing it with:
 }
 ```
 
-List of publications & preprints using `highway-env` (please open a pull request to add missing entries):
+List of publications & preprints using HighwayEnv (please open a pull request to add missing entries):
 *   [Approximate Robust Control of Uncertain Dynamical Systems](https://arxiv.org/abs/1903.00220) (Dec 2018)
 *   [Interval Prediction for Continuous-Time Systems with Parametric Uncertainties](https://arxiv.org/abs/1904.04727) (Apr 2019)
 *   [Practical Open-Loop Optimistic Planning](https://arxiv.org/abs/1904.04700) (Apr 2019)
