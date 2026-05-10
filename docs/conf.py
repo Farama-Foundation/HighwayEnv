@@ -89,9 +89,15 @@ html_baseurl = "https://highway-env.farama.org"
 html_copy_source = False
 html_favicon = "_static/img/highway-favicon.png"
 html_theme_options = {
+    "light_logo": "img/highway.svg",
+    "dark_logo": "img/highway-white.svg",
+    "image": "img/highway-github.png",
     "gtag": "G-6H9C8TWXZ8",
     "description": "A collection of environments for autonomous driving and tactical decision-making tasks",
     "versioning": True,
+    "source_repository": "https://github.com/Farama-Foundation/HighwayEnv/",
+    "source_branch": "master",
+    "source_directory": "docs/",
 }
 html_context: Dict[str, Any] = {}
 html_context["conf_py_path"] = "/docs/"
