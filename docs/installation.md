@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-This project requires python3 (>=3.5)
+This project requires python3 (>=3.10)
 
 The graphics require the installation of [pygame](https://www.pygame.org/news), which itself has dependencies that must be installed manually.
 
