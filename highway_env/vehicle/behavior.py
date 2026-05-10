@@ -414,6 +414,7 @@ class LinearVehicle(IDMVehicle):
         self.STEERING_PARAMETERS = self.STEERING_RANGE[0] + ub * (
             self.STEERING_RANGE[1] - self.STEERING_RANGE[0]
         )
+        super().randomize_behavior()
 
     def acceleration(
         self,
