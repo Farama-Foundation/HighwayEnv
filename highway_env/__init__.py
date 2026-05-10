@@ -4,7 +4,7 @@ import sys
 from gymnasium.envs.registration import register, registry
 
 
-__version__ = "1.10.2"
+__version__ = "1.11"
 
 try:
     from farama_notifications import notifications
