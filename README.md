@@ -6,7 +6,7 @@
 
 <p align="center">
     <a href="https://highway-env.farama.org/" target = "_blank">
-    <img src="https://github.com/Farama-Foundation/HighwayEnv/blob/master/docs/_static/img/highway-text.png" width="500px" />
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/refs/heads/main/docs/_static/img/highway-text.png" width="500px" />
 </a>
 
 A collection of environments for *autonomous driving* and tactical decision-making tasks, developed and maintained by [Edouard Leurent](https://github.com/eleurent).
