@@ -11,7 +11,7 @@ CWD = pathlib.Path(__file__).absolute().parent
 
 
 def get_version():
-    """Gets the gymnasium version."""
+    """Gets the highway-env version."""
     path = CWD / "highway_env" / "__init__.py"
     content = path.read_text()
 
