@@ -9,7 +9,7 @@ __version__ = "1.11"
 try:
     from farama_notifications import notifications
 
-    if "highway_env" in notifications and __version__ in notifications["gymnasium"]:
+    if "highway_env" in notifications and __version__ in notifications["highway_env"]:
         print(notifications["highway_env"][__version__], file=sys.stderr)
 
 except Exception:  # nosec
