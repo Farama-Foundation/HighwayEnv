@@ -6,17 +6,19 @@ Fixes # (issue)
 
 ## Type of change
 
-Please delete options that are not relevant.
+<!-- Please delete options that are not relevant. -->
 
 - [ ] Documentation only change (no code changed)
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
+- [ ] New environment or environment variant
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Compatibility fix or other chore tasks
 - [ ] This change requires a documentation update
 
 ### Screenshots
 
-Please attach before and after screenshots of the change if applicable.
+Please attach before and after screenshots, videos or GIFs of the change if applicable (especially for rendering or environment changes).
 
 <!--
 Example:
@@ -31,7 +33,7 @@ To upload images to a PR -- simply drag and drop an image while in edit mode and
 
 # Checklist:
 
-- [ ] I have run the [`pre-commit` checks](https://pre-commit.com/) with `pre-commit run --all-files` (see `CONTRIBUTING.md` instructions to set it up)
+- [ ] I have run the [`pre-commit` checks](https://pre-commit.com/) with `pre-commit run --all-files`
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
 - [ ] My changes generate no new warnings

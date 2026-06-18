@@ -44,6 +44,6 @@ body:
       label: Checklist
       options:
         - label: >
-            I have checked that there is no similar [issue](https://github.com/Farama-Foundation/Gymnasium/issues) in
+            I have checked that there is no similar [issue](https://github.com/Farama-Foundation/HighwayEnv/issues) in
             the repo
           required: true
