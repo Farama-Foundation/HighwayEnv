@@ -28,6 +28,7 @@ class ConnectedLaneNeighboursMixin:
 
     See https://github.com/Farama-Foundation/HighwayEnv/pull/667
     """
+
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
