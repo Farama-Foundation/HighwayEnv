@@ -4,26 +4,23 @@
 
 The {py:meth}`~highway_env.road.road.Road.neighbour_vehicles` method finds the preceding and following
 vehicles of a given vehicle on a lane. It is used throughout the library — notably by
-{py:class}`~highway_env.vehicle.behavior.IDMVehicle` for longitudinal control and MOBIL lane-change
-decisions — so its accuracy directly affects simulation behaviour in multi-segment environments.
+{py:class}`~highway_env.vehicle.behavior.IDMVehicle` for MOBIL lane-change decisions.
+Its accuracy directly affects simulation behaviour in multi-segment environments.
 
 ## Problem
 
 Before version 1.12, `neighbour_vehicles()` only searched the **current lane segment**. Vehicles that
-had already crossed into a connected next or previous segment were treated as invisible, even when they
-were directly ahead of or behind the ego vehicle in the driving direction.
+are not in the current segment were treated as invisible, even when they were directly ahead of or
+behind the ego vehicle in the driving direction.
 
 This caused incorrect behaviour near segment boundaries in environments built from several connected
-lanes, such as merge, exit, roundabout, racetrack, intersection, and u-turn maps. See
+lanes, such as `merge`, `exit`, `roundabout`, `racetrack`, `intersection`, and `u-turn` maps. See
 [issue #626](https://github.com/Farama-Foundation/HighwayEnv/issues/626).
 
 ## The fix
 
 When {py:attr}`~highway_env.road.road.Road.neighbour_vehicles_connected_lanes` is enabled, the search
-extends to **downstream and upstream connected lane segments** via the road-network graph. Longitudinal
-coordinates on each connected lane are mapped into the ego lane's coordinate frame using appropriate
-offsets (the length of the current lane for next segments, and the negative length of the previous lane
-for upstream segments).
+extends to **downstream and upstream connected lane segments** via the road-network graph.
 
 The behaviour is controlled by:
 
@@ -33,16 +30,15 @@ The behaviour is controlled by:
 
 ## Reproducibility and environment versions
 
-To preserve reproducibility for coursework and published experiments, existing `*-v0` environment IDs
-keep the original same-segment neighbour search by default
-(`neighbour_vehicles_connected_lanes=False`).
+To preserve reproducibility, existing `*-v0` environment IDs keep the original same-segment neighbour
+search by default (`neighbour_vehicles_connected_lanes=False`).
 
 New registered versions enable connected-lane search by default through
 {py:class}`~highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin`. For any environment, the
 new behaviour can also be enabled explicitly (albeit not recommended):
 
 ```python
-env = gym.make("merge-v0", config={"neighbour_vehicles_connected_lanes": True})
+env = gym.make("merge-v0", config={..., "neighbour_vehicles_connected_lanes": True})
 ```
 
 ### Version mapping
@@ -64,9 +60,9 @@ continuous-action variant and a multi-agent wrapper respectively, not connected-
 ## Demonstration
 
 The animation below compares `merge-v0` (left, original same-segment search) with `merge-v1` (right,
-connected-lane search) running the same seed and actions side by side. When the ego vehicle approaches
-a segment boundary, `merge-v1` can detect a lead vehicle that has already entered the next segment,
-while `merge-v0` cannot. Also notice that vehicle behaviour is different even with the same seed.
+connected-lane search) running the same seed and actions side by side. When the ego vehicle passes
+a segment boundary, `merge-v1` can detect a rear vehicle that is in previous segment,
+while `merge-v0` cannot. Also notice that vehicle behaviour is **different** even with the same seed.
 
 ```{figure} ../../../../_static/img/compare_merge_v0_v1.gif
 :align: center
@@ -79,14 +75,14 @@ Side-by-side comparison of merge-v0 (left) and merge-v1 (right).
 
 | Overlay | Meaning |
 |---|---|
-| Green solid line | Front neighbour returned by `neighbour_vehicles()` |
-| Red dashed line | Vehicle on the next connected segment that was **not** detected |
-| Blue solid line | Rear neighbour returned by `neighbour_vehicles()` |
-| Yellow dashed line | Lane segment boundary (road-network node) |
+| Green line | Front neighbour returned by `neighbour_vehicles()` |
+| Red line | Vehicle that was **not** detected pre-1.12 |
+| Blue line | Rear neighbour returned by `neighbour_vehicles()` |
+| Yellow line | Lane segment boundary (road-network node) |
 
 ## Interactive comparison
 
-A pygame script is provided to explore the difference interactively:
+A pygame program has been created to demonstrate the difference:
 
 [scripts/compare_merge_v0_v1.py](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/compare_merge_v0_v1.py)
 
@@ -101,9 +97,7 @@ python scripts/compare_merge_v0_v1.py --fixed-seed --steps 80
 |---|---|
 | `--no-patch` | Do not patch the left panel with the pre-1.12 implementation |
 | `--validate` | Compare current `merge-v0` against patched `merge-v0` with pre-1.12 code |
-| `--fixed-seed` | Keep the same seed across loops instead of incrementing it |
+| `--fixed-seed` | Keep the same seed across loops |
 | `--steps` | Number of simulation steps per loop before resetting (default: 80) |
 
-Keyboard controls: **←** rewind, **→** unwind / step forward, **Space** pause/play, **Q** quit.
-
-Pygame is required to run the viewer.
+Keyboard controls: **←** rewind, **→** unwind / step forward, **Space** pause / play, **Q** quit.
