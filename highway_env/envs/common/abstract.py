@@ -23,6 +23,11 @@ Observation = TypeVar("Observation")
 
 
 class ConnectedLaneNeighboursMixin:
+    """
+    A mixin class introduced in v1.12 to enable new behaviour for neighbour vehicles detection.
+
+    See https://github.com/Farama-Foundation/HighwayEnv/pull/667
+    """
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
