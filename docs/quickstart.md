@@ -82,7 +82,7 @@ Reinforcement Learning agents can be trained using libraries such as [eleurent/r
 Here is an example of SB3's DQN implementation trained on `highway-fast-v0` with its default kinematics observation and an MLP model.
 
 [colab-badge]: https://colab.research.google.com/assets/colab-badge.svg
-[highway_dqn]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn.ipynb
+[highway_dqn]: https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_dqn.ipynb
 
 
 [![Colab][colab-badge]][highway_dqn]
@@ -139,11 +139,11 @@ However, [eleurent/rl-agents](https://github.com/eleurent/rl-agents)'s implement
 Several scripts and notebooks to train driving policies on `HighwayEnv` are available [on this page](https://github.com/eleurent/highway-env/tree/master/scripts).
 Here are a few of them:
 
-[highway_dqn_cnn]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.ipynb
-[planning_hw]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/highway_planning.ipynb
-[parking_mb]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_model_based.ipynb
-[parking_her]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/parking_her.ipynb
-[dqn_social]: https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb
+[highway_dqn_cnn]: https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_dqn_cnn.ipynb
+[planning_hw]: https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/highway_planning.ipynb
+[parking_mb]: https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/parking_model_based.ipynb
+[parking_her]: https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/parking_her.ipynb
+[dqn_social]: https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/intersection_social_dqn.ipynb
 
 
 Highway with image observations and a CNN model [![Colab][colab-badge]][highway_dqn_cnn]
