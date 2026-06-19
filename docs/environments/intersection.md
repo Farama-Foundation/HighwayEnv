@@ -31,6 +31,19 @@ and I welcome any contribution on that matter.
 env = gym.make("intersection-v0")
 ```
 
+## Versions
+
+| ID | Description |
+|---|---|
+| `intersection-v0` | Initial version. Same-segment neighbour search only. Preserved for reproducibility. |
+| `intersection-v1` | Continuous-action variant. Same neighbour search as `intersection-v0`. |
+| `intersection-v2` | Connected-lane neighbour search enabled by default. Recommended for new experiments. |
+| `intersection-multi-agent-v0` | Multi-agent initial version. Same-segment neighbour search only. |
+| `intersection-multi-agent-v1` | Multi-agent variant with `MultiAgentWrapper`. Same neighbour search as v0. |
+| `intersection-multi-agent-v2` | Multi-agent variant with connected-lane neighbour search enabled. |
+
+See {ref}`road-neighbour-vehicles` for details.
+
 ## Default configuration
 
 ```python

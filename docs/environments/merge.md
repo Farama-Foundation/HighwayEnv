@@ -20,6 +20,15 @@ In this task, the ego-vehicle starts on a main highway but soon approaches a roa
 env = gym.make("merge-v0")
 ```
 
+## Versions
+
+| ID | Description |
+|---|---|
+| `merge-v0` | Initial version. Same-segment neighbour search only (`neighbour_vehicles_connected_lanes=False`). Preserved for reproducibility. |
+| `merge-v1` | Connected-lane neighbour search enabled by default. Recommended for new experiments. |
+
+See {ref}`road-neighbour-vehicles` for details.
+
 ## Default configuration
 
 ```python

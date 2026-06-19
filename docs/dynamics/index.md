@@ -15,6 +15,7 @@ of {py:class}`~highway_env.vehicle.kinematics.Vehicle`.
 
 road/lane
 road/road
+road/neighbour_vehicles
 road/regulation
 ```
 

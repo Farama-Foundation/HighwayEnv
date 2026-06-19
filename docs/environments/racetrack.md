@@ -22,6 +22,19 @@ Credits and many thanks to [@supperted825](https://github.com/supperted825) for 
 env = gym.make("racetrack-v0")
 ```
 
+## Versions
+
+| ID | Description |
+|---|---|
+| `racetrack-v0` | Initial version. Same-segment neighbour search only. Preserved for reproducibility. |
+| `racetrack-v1` | Connected-lane neighbour search enabled by default. Recommended for new experiments. |
+| `racetrack-large-v0` | Large three-lane map. Same-segment neighbour search only. |
+| `racetrack-large-v1` | Large map with connected-lane neighbour search enabled. |
+| `racetrack-oval-v0` | Oval map. Same-segment neighbour search only. |
+| `racetrack-oval-v1` | Oval map with connected-lane neighbour search enabled. |
+
+See {ref}`road-neighbour-vehicles` for details.
+
 ## Default configuration
 
 ```python
