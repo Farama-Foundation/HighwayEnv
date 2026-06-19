@@ -147,7 +147,7 @@ Here are a few of them:
 
 
 Highway with image observations and a CNN model [![Colab][colab-badge]][highway_dqn_cnn]
-Train SB3's DQN on `highway-fast-v0` , but using [image observations](#grayscale-image) and a CNN model for the value function.
+Train SB3's DQN on `highway-fast-v0` , but using image observations and a CNN model for the value function.
 
 
 Trajectory Planning on Highway [![Colab][colab-badge]][planning_hw]
