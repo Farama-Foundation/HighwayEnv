@@ -11,13 +11,13 @@
 </p>
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway-env.gif" width="600px" /><br/>
-    <em>An episode of the highway-v0 environment.</em>
+    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/highway-env.gif?raw=true"><br/>
+    <em>An episode of one of the environments available in HighwayEnv.</em>
 </p>
 
-HighwayEnv is an open source Python library of environments for autonomous driving and tactical decision-making tasks. The environments include highway, merge, roundabout, parking, intersection, and racetrack scenarios, all following the [Gymnasium](https://gymnasium.farama.org/) API.
+A collection of environments for autonomous driving and tactical decision-making tasks. Originally developed by [Edouard Leurent](https://github.com/eleurent) and currently maintained by [Jin Huang](https://github.com/Trenza1ore).
 
-The documentation website is at [highway-env.farama.org](https://highway-env.farama.org/), and we have a public discord server (which we also use to coordinate development work) that you can join here: https://discord.gg/bnJ6kubTg6
+The documentation website is at [highway-env.farama.org](https://highway-env.farama.org), and we have a public discord server (which we also use to coordinate development work) that you can join here: https://discord.gg/bnJ6kubTg6
 
 ## Installation
 
@@ -32,6 +32,15 @@ We support Python 3.10+ on Linux and macOS.
 ## Environments
 
 HighwayEnv includes 6 driving scenario environments: `highway`, `merge`, `roundabout`, `parking`, `intersection`, and `racetrack`. The full list with descriptions and configuration options is available in the [documentation](https://highway-env.farama.org/environments/highway/).
+
+<details>
+<summary>Previews</summary>
+
+| `highway` | `merge` | `roundabout` | `parking` | `intersection` | `racetrack` |
+|:---------:|:-------:|:------------:|:---------:|:--------------:|:-----------:|
+| <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/highway.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/merge-env.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/roundabout-env.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/parking-env.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/intersection-env.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/racetrack-env.gif?raw=true"/> |
+
+</details>
 
 ## Usage
 
@@ -50,17 +59,15 @@ env.close()
 
 See the [documentation](https://highway-env.farama.org/quickstart/) for more examples including how to train agents with Stable Baselines3 and Google Colab notebooks. For examples of trained agents (DQN, DDPG, Value Iteration, MCTS), see the [Agent Examples](https://highway-env.farama.org/content/algorithms/) page.
 
+## Documentation
+
+Read the [documentation online](https://farama-foundation.github.io/HighwayEnv/).
+
 ## Development Roadmap
 
-Development on HighwayEnv is ongoing to bring it up to [Farama Standards](https://farama.org/project_standards) for mature projects. See the [GitHub Issues](https://github.com/Farama-Foundation/HighwayEnv/issues) for current open tasks and planned improvements. If you'd like to help out, you can join our Discord server here: https://discord.gg/bnJ6kubTg6
+Here is the [roadmap](https://github.com/Farama-Foundation/HighwayEnv/issues/539) for future development work.
 
-## Project Maintainers
-
-Project Manager: [Edouard Leurent](https://github.com/eleurent)
-
-Maintenance for this project is also contributed by the broader Farama team: [farama.org/team](https://farama.org/team).
-
-## Citation
+## Citating
 
 If you use HighwayEnv in your work, please consider citing it with:
 
@@ -74,5 +81,7 @@ If you use HighwayEnv in your work, please consider citing it with:
   howpublished = {\url{https://github.com/Farama-Foundation/HighwayEnv}},
 }
 ```
+
+## Publications
 
 A list of publications using HighwayEnv can be found in the [documentation](https://highway-env.farama.org/content/publications/).
