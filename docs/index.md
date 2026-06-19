@@ -33,7 +33,7 @@ BibTeX:
   year = {2018},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {\url{https://github.com/eleurent/highway-env}},
+  howpublished = {\url{https://github.com/Farama-Foundation/HighwayEnv}},
 }
 ```
 
@@ -43,8 +43,10 @@ BibTeX:
 
 installation
 quickstart
+content/algorithms
 user_guide
 faq
+List of Publications <content/publications>
 bibliography/index
 ```
 
@@ -53,5 +55,5 @@ bibliography/index
 :caption: Development
 
 Github <https://github.com/Farama-Foundation/HighwayEnv>
-Contribute to the Docs <https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md>
+Contribute to the Docs <https://github.com/Farama-Foundation/HighwayEnv/blob/master/CONTRIBUTING.md>
 ```
