@@ -14,6 +14,7 @@ import argparse
 import math
 import types
 from contextvars import ContextVar
+from functools import partial
 
 import gymnasium as gym
 import numpy as np
