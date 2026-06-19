@@ -17,6 +17,13 @@ This caused incorrect behaviour near segment boundaries in environments built fr
 lanes, such as `merge`, `exit`, `roundabout`, `racetrack`, `intersection`, and `u-turn` maps. See
 [issue #626](https://github.com/Farama-Foundation/HighwayEnv/issues/626).
 
+```{figure} ../../../../_static/img/compare_intersection_v0_v2.gif
+:align: center
+:width: 100%
+
+Side-by-side comparison of intersection-v0 (left) and intersection-v2 (right).
+```
+
 ## The fix
 
 When {py:attr}`~highway_env.road.road.Road.neighbour_vehicles_connected_lanes` is enabled, the search
@@ -80,23 +87,26 @@ Side-by-side comparison of merge-v0 (left) and merge-v1 (right).
 | Blue line | Rear neighbour returned by `neighbour_vehicles()` |
 | Yellow line | Lane segment boundary (road-network node) |
 
-## Interactive comparison
+## Visual comparison
 
 A pygame program has been created to demonstrate the difference:
 
-[scripts/compare_merge_v0_v1.py](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/compare_merge_v0_v1.py)
+[scripts/compare_neighbour_detection.py](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/compare_neighbour_detection.py)
 
 ```bash
-python scripts/compare_merge_v0_v1.py
-python scripts/compare_merge_v0_v1.py --no-patch
-python scripts/compare_merge_v0_v1.py --validate
-python scripts/compare_merge_v0_v1.py --fixed-seed --steps 80
+python scripts/compare_neighbour_detection.py
+python scripts/compare_neighbour_detection.py --env merge
+python scripts/compare_neighbour_detection.py --env intersection
+python scripts/compare_neighbour_detection.py --env racetrack-large --no-patch
+python scripts/compare_neighbour_detection.py --validate
+python scripts/compare_neighbour_detection.py --fixed-seed --steps 80
 ```
 
 | Flag | Description |
 |---|---|
+| `--env` | Environment to compare (default: `merge`) |
 | `--no-patch` | Do not patch the left panel with the pre-1.12 implementation |
-| `--validate` | Compare current `merge-v0` against patched `merge-v0` with pre-1.12 code |
+| `--validate` | Compare current legacy env against patched legacy env with pre-1.12 code |
 | `--fixed-seed` | Keep the same seed across loops |
 | `--steps` | Number of simulation steps per loop before resetting (default: 80) |
 

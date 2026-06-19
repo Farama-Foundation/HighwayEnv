@@ -1,13 +1,14 @@
 """
-Side-by-side pygame visualization of merge-v0 vs merge-v1.
+Side-by-side pygame visualization of legacy vs connected-lane neighbour search.
 
 Shows how connected-lane neighbour detection differs when the ego vehicle
-is on one lane segment and the lead vehicle is on the next connected segment.
+is on one lane segment and a neighbour is on an adjacent connected segment.
 
 Run:
-    python scripts/compare_merge_v0_v1.py
-    python scripts/compare_merge_v0_v1.py --no-patch
-    python scripts/compare_merge_v0_v1.py --validate
+    python scripts/compare_neighbour_detection.py
+    python scripts/compare_neighbour_detection.py --env racetrack
+    python scripts/compare_neighbour_detection.py --env intersection --no-patch
+    python scripts/compare_neighbour_detection.py --validate
 """
 
 import argparse
@@ -24,6 +25,25 @@ from highway_env.road.graphics import WorldSurface
 from highway_env.road.road import Road
 from highway_env.vehicle import kinematics
 from highway_env.vehicle.objects import Landmark, LaneIndex
+
+
+# Legacy (v0) and connected-lane env IDs; intersection uses v2 (v1 is continuous-action).
+ENV_VERSIONS = {
+    "exit": ("exit-v0", "exit-v1"),
+    "merge": ("merge-v0", "merge-v1"),
+    "roundabout": ("roundabout-v0", "roundabout-v1"),
+    "roundabout-generic": ("roundabout-generic-v0", "roundabout-generic-v1"),
+    "racetrack": ("racetrack-v0", "racetrack-v1"),
+    "racetrack-large": ("racetrack-large-v0", "racetrack-large-v1"),
+    "racetrack-oval": ("racetrack-oval-v0", "racetrack-oval-v1"),
+    "u-turn": ("u-turn-v0", "u-turn-v1"),
+    "intersection": ("intersection-v0", "intersection-v2"),
+    "intersection-multi-agent": (
+        "intersection-multi-agent-v0",
+        "intersection-multi-agent-v2",
+    ),
+}
+ENV_CHOICES = sorted(ENV_VERSIONS)
 
 
 STARTING_SEED = 42
@@ -51,7 +71,7 @@ _should_update_seed: ContextVar[bool] = ContextVar("update_seed")
 
 
 class DualEnvReplay:
-    """Keep both merge envs in sync and support stepping, rewinding, and looping."""
+    """Keep both env panels in sync and support stepping, rewinding, and looping."""
 
     def __init__(
         self,
@@ -129,7 +149,19 @@ class DualEnvReplay:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Compare merge-v0 and merge-v1 neighbour detection."
+        description="Compare legacy and connected-lane neighbour_vehicles behaviour."
+    )
+    parser.add_argument(
+        "-e",
+        "--env",
+        choices=ENV_CHOICES,
+        default="merge",
+        metavar="ENV",
+        help=(
+            "Environment to compare (default: merge). "
+            "Intersection uses v2 for connected-lane search (v1 is continuous-action). "
+            f"Choices: {', '.join(ENV_CHOICES)}."
+        ),
     )
     parser.add_argument(
         "-f",
@@ -150,7 +182,7 @@ def main() -> None:
         action=argparse.BooleanOptionalAction,
         default=True,
         help=(
-            "Patch left merge-v0 with the pre-PR-667 neighbour_vehicles implementation "
+            "Patch left legacy env with the pre-PR-667 neighbour_vehicles implementation "
             "(default: enabled). Ignored when --validate is set."
         ),
     )
@@ -158,7 +190,7 @@ def main() -> None:
         "-v",
         "--validate",
         action="store_true",
-        help="Compare registered merge-v0 (left) against patched merge-v0 (right).",
+        help="Compare registered legacy env (left) against patched legacy env (right).",
     )
     parser.add_argument(
         "--fps",
@@ -168,24 +200,12 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    if args.validate:
-        right_env_id = "merge-v0"
-        patch_left = False
-        patch_right = True
-        window_caption = "Merge v0 vs patched v0 — validation"
-        left_title = "merge-v0 (registered)"
-        right_title = "merge-v0 (patched original neighbour_vehicles)"
-        mode_label = "validate"
-    else:
-        right_env_id = "merge-v1"
-        patch_left = args.patch
-        patch_right = False
-        window_caption = "Merge v0 vs v1 — neighbour_vehicles comparison"
-        left_title = (
-            "merge-v0 (original neighbour_vehicles)" if args.patch else "merge-v0"
-        )
-        right_title = "merge-v1 (connected-lane search)"
-        mode_label = f"v0 patch {'on' if args.patch else 'off'}"
+    legacy_id, connected_id = _resolve_env_ids(args.env, args.validate)
+    left_title, right_title, window_caption, mode_label = _panel_titles(
+        args.env, legacy_id, connected_id, args.validate, args.patch
+    )
+    patch_left = False if args.validate else args.patch
+    patch_right = args.validate
 
     pygame.init()
     frame_rate = args.fps
@@ -199,8 +219,8 @@ def main() -> None:
     boundary_font = pygame.font.SysFont("menlo,consolas,dejavusansmono,monospace", 11)
 
     _make_env = partial(gym.make, render_mode="rgb_array", config=ENV_CONFIG)
-    env_v0 = _make_env("merge-v0")
-    env_v1 = _make_env(right_env_id)
+    env_v0 = _make_env(legacy_id)
+    env_v1 = _make_env(connected_id if not args.validate else legacy_id)
     neutral_action = np.zeros(env_v0.action_space.shape, dtype=np.float32)
     _should_update_seed.set(not args.fixed_seed)
     replay = DualEnvReplay(
@@ -274,6 +294,7 @@ def main() -> None:
             small_font,
             footer_y,
             loop_text=(
+                f"env {args.env} ({legacy_id} vs {connected_id}) | "
                 f"step {replay.cursor}/{args.steps} | "
                 f"loop {replay.loops_completed + 1} | "
                 f"{mode_label} | "
@@ -333,6 +354,30 @@ def patch_original_neighbour_vehicles(road: Road) -> None:
     """Replace Road.neighbour_vehicles with the pre-PR-667 implementation."""
     road.neighbour_vehicles = types.MethodType(original_neighbour_vehicles, road)
     setattr(road, "_uses_original_neighbour_vehicles", True)
+
+
+def _resolve_env_ids(env_key: str, validate: bool) -> tuple[str, str]:
+    legacy_id, connected_id = ENV_VERSIONS[env_key]
+    if validate:
+        return legacy_id, legacy_id
+    return legacy_id, connected_id
+
+
+def _panel_titles(
+    env_key: str, legacy_id: str, connected_id: str, validate: bool, patch: bool
+) -> tuple[str, str, str, str]:
+    if validate:
+        return (
+            f"{legacy_id} (registered)",
+            f"{legacy_id} (patched original neighbour_vehicles)",
+            f"{env_key} v0 vs patched v0 — validation",
+            "validate",
+        )
+    left = f"{legacy_id} (original neighbour_vehicles)" if patch else legacy_id
+    right = f"{connected_id} (connected-lane search)"
+    caption = f"{legacy_id} vs {connected_id} — neighbour_vehicles comparison"
+    mode = f"v0 patch {'on' if patch else 'off'}"
+    return left, right, caption, mode
 
 
 def _draw_dashed_line(
