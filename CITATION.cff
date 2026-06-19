@@ -6,4 +6,4 @@ authors:
 title: "An Environment for Autonomous Driving Decision-Making"
 version: 1.4
 date-released: 2018-05-01
-url: "https://github.com/eleurent/highway-env"
+url: "https://github.com/Farama-Foundation/HighwayEnv"

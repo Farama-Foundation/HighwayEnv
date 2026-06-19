@@ -41,9 +41,9 @@ testing = [
 
 [project.urls]
 Homepage = "https://farama.org"
-Repository = "https://github.com/eleurent/highway-env"
+Repository = "https://github.com/Farama-Foundation/HighwayEnv"
 Documentation = "https://highway-env.farama.org/"
-"Bug Report" = "https://github.com/eleurent/highway-env/issues"
+"Bug Report" = "https://github.com/Farama-Foundation/HighwayEnv/issues"
 
 [project.entry-points."gymnasium.envs.__root__"]
 highway-env = "highway_env:_register_highway_envs"

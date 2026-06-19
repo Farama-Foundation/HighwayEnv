@@ -8,7 +8,7 @@
 
 In this task, the ego-vehicle if approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.
 
-```{figure} https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/roundabout-env.gif
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/roundabout-env.gif
 :align: center
 :name: fig:roundabout_env
 :width: 80%
