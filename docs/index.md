@@ -55,5 +55,5 @@ bibliography/index
 :caption: Development
 
 Github <https://github.com/Farama-Foundation/HighwayEnv>
-Contribute to the Docs <https://github.com/Farama-Foundation/HighwayEnv/blob/master/CONTRIBUTING.md>
+Contribute to the Docs <https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md>
 ```
