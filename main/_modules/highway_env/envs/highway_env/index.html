@@ -222,6 +222,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/racetrack/">Racetrack</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../actions/">Actions</a></li>
@@ -241,12 +242,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../faq/">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -424,7 +426,7 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="p">)</span>
             <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="p">)</span>
-        <span class="c1"># Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268</span>
+        <span class="c1"># Use forward speed rather than speed, see https://github.com/Farama-Foundation/HighwayEnv/issues/268</span>
         <span class="n">forward_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span>
         <span class="n">scaled_speed</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span>
             <span class="n">forward_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reward_speed_range&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>

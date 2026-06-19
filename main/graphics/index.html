@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../actions/">Actions</a></li>
@@ -242,12 +243,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -306,7 +308,7 @@
             
             <span class="target" id="graphics"></span><section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>Graphics<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
-<p>Environment rendering is done with <a class="reference external" href="https://www.pygame.org/news">pygame</a>, which must be <a class="reference internal" href="../installation/#installation"><span class="std std-ref">installed separately</span></a>.</p>
+<p>Environment rendering is done with <a class="reference external" href="https://pyga.me">pygame community edition</a>, a maintained fork of the original <a class="reference external" href="https://www.pygame.org/news">pygame</a> library.</p>
 <p>A window is created at the first call of <code class="docutils literal notranslate"><span class="pre">env.render()</span></code>. Its dimensions can be configured:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
     <span class="s2">&quot;roundabout-v0&quot;</span><span class="p">,</span>

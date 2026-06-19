@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
     <meta property="og:url" content="https://highway-env.farama.org/environments/racetrack.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="User Guide" href="../../user_guide/" /><link rel="prev" title="Intersection" href="../intersection/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Agent Examples" href="../../content/algorithms/" /><link rel="prev" title="Intersection" href="../intersection/" />
         <link rel="canonical" href="https://highway-env.farama.org/environments/racetrack.html" />
 
     <link rel="shortcut icon" href="../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -223,6 +223,7 @@
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Racetrack</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../actions/">Actions</a></li>
@@ -242,12 +243,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../faq/">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -307,9 +309,9 @@
             <section class="tex2jax_ignore mathjax_ignore" id="racetrack">
 <span id="environments-racetrack"></span><h1>Racetrack<a class="headerlink" href="#racetrack" title="Link to this heading">¶</a></h1>
 <p>A continuous control environment, where the he agent has to follow the tracks while avoiding collisions with other vehicles.</p>
-<p>Credits and many thanks to <a class="reference external" href="https://github.com/supperted825">&#64;supperted825</a> for the <a class="reference external" href="https://github.com/eleurent/highway-env/issues/231">idea and initial implementation</a>.</p>
+<p>Credits and many thanks to <a class="reference external" href="https://github.com/supperted825">&#64;supperted825</a> for the <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/issues/231">idea and initial implementation</a>.</p>
 <figure class="align-center" id="fig-racetrack-env">
-<a class="reference internal image-reference" href="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif"><img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif" style="width: 80%;" />
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/racetrack-env.gif"><img alt="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/racetrack-env.gif" src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/racetrack-env.gif" style="width: 80%;" />
 </a>
 </figure>
 <section id="usage">
@@ -373,7 +375,7 @@
 - avoid collisions with other vehicles</p>
 <p>Credits and many thanks to &#64;supperted825 for the idea and
 initial implementation.
-See <a class="reference external" href="https://github.com/eleurent/highway-env/issues/231">https://github.com/eleurent/highway-env/issues/231</a></p>
+See <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/issues/231">https://github.com/Farama-Foundation/HighwayEnv/issues/231</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.racetrack_env.RacetrackEnv.default_config">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/racetrack_env/#RacetrackEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.racetrack_env.RacetrackEnv.default_config" title="Link to this definition">¶</a></dt>
@@ -392,12 +394,12 @@ See <a class="reference external" href="https://github.com/eleurent/highway-env/
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../../user_guide/">
+            <a class="next-page" href="../../content/algorithms/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">User Guide</div>
+                <div class="title">Agent Examples</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
