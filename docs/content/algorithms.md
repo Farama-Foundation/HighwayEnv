@@ -4,7 +4,7 @@
 
 Agents solving the HighwayEnv environments are available in the [eleurent/rl-agents](https://github.com/eleurent/rl-agents) and [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) repositories.
 
-See the [quickstart guide](quickstart.md) for training examples and notebooks.
+See the [quickstart guide](../quickstart.md) for training examples and notebooks.
 
 ## Deep Q-Network
 
