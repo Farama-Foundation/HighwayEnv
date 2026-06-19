@@ -20,7 +20,7 @@ class RacetrackEnv(AbstractEnv):
 
     Credits and many thanks to @supperted825 for the idea and
     initial implementation.
-    See https://github.com/eleurent/highway-env/issues/231
+    See https://github.com/Farama-Foundation/HighwayEnv/issues/231
     """
 
     @classmethod

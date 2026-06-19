@@ -121,11 +121,11 @@ while True:
 
 A full run takes about 25mn on my laptop (fps=14). The following results are obtained:
 
-```{figure} https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.png
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway_fast_dqn.png
 Training curves, for 5 random seeds.
 ```
 
-```{figure} https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway_fast_dqn.gif
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway_fast_dqn.gif
 Video of an episode run with the trained policy.
 ```
 
@@ -136,7 +136,7 @@ However, [eleurent/rl-agents](https://github.com/eleurent/rl-agents)'s implement
 
 ## Examples on Google Colab
 
-Several scripts and notebooks to train driving policies on `HighwayEnv` are available [on this page](https://github.com/eleurent/highway-env/tree/master/scripts).
+Several scripts and notebooks to train driving policies on `HighwayEnv` are available [on this page](https://github.com/Farama-Foundation/HighwayEnv/tree/master/scripts).
 Here are a few of them:
 
 [highway_dqn_cnn]: https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_dqn_cnn.ipynb

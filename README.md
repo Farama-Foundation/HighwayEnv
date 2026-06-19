@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway-env.gif" width="600px" /><br/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway-env.gif" width="600px" /><br/>
     <em>An episode of the highway-v0 environment.</em>
 </p>
 

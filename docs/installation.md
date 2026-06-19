@@ -34,5 +34,5 @@ pip install highway-env
 To install the current development version:
 
 ```bash
-pip install --user git+https://github.com/eleurent/highway-env
+pip install --user git+https://github.com/Farama-Foundation/HighwayEnv
 ```

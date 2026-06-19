@@ -8,7 +8,7 @@
 
 In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles. The agent's objective is to reach a high speed while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.
 
-```{figure} https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/highway.gif
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway.gif
 :align: center
 :name: fig:highway_env
 :width: 80%
@@ -63,7 +63,7 @@ A faster (x15 speedup) variant is also available with:
 env = gym.make("highway-fast-v0")
 ```
 
-The details of this variant are described [here](https://github.com/eleurent/highway-env/issues/223).
+The details of this variant are described [here](https://github.com/Farama-Foundation/HighwayEnv/issues/223).
 
 ## API
 
