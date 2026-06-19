@@ -54,6 +54,6 @@ bibliography/index
 :hidden:
 :caption: Development
 
-Github <https://github.com/Farama-Foundation/HighwayEnv>
+GitHub <https://github.com/Farama-Foundation/HighwayEnv>
 Contribute to the Docs <https://github.com/Farama-Foundation/HighwayEnv/blob/main/README.md>
 ```
