@@ -166,7 +166,7 @@ class RoadNetwork:
         """
         queue = [(start, [start])]
         while queue:
-            (node, path) = queue.pop(0)
+            node, path = queue.pop(0)
             if node not in self.graph:
                 yield []
             for _next in sorted(
@@ -399,6 +399,7 @@ class Road:
         road_objects: list[objects.RoadObject] = None,
         np_random: np.random.RandomState = None,
         record_history: bool = False,
+        neighbour_vehicles_connected_lanes: bool = False,
     ) -> None:
         """
         New road.
@@ -408,12 +409,14 @@ class Road:
         :param road_objects: the objects on the road including obstacles and landmarks
         :param np.random.RandomState np_random: a random number generator for vehicle behaviour
         :param record_history: whether the recent trajectories of vehicles should be recorded for display
+        :param neighbour_vehicles_connected_lanes: whether to search connected lane segments for neighbours
         """
         self.network = network
         self.vehicles = vehicles or []
         self.objects = road_objects or []
         self.np_random = np_random if np_random else np.random.RandomState()
         self.record_history = record_history
+        self.neighbour_vehicles_connected_lanes = neighbour_vehicles_connected_lanes
 
     def close_objects_to(
         self,
@@ -483,9 +486,9 @@ class Road:
         """
         Find the preceding and following vehicles of a given vehicle.
 
-        Searches the current lane as well as connected next/previous lane
-        segments so that vehicles near segment boundaries are correctly
-        detected (fixes issue #626).
+        When ``neighbour_vehicles_connected_lanes`` is enabled, connected
+        next/previous lane segments are also searched so vehicles near
+        segment boundaries are detected.
 
         :param vehicle: the vehicle whose neighbours must be found
         :param lane_index: the lane on which to look for preceding and following vehicles.
@@ -501,33 +504,29 @@ class Road:
         s_front = s_rear = None
         v_front = v_rear = None
 
-        # Build list of (lane_object, longitudinal_offset) pairs.
-        # offset is added to a vehicle's longitudinal coordinate on that lane
-        # to convert it into the ego lane's coordinate frame.
         lanes_offsets: list[tuple[AbstractLane, float]] = [(lane, 0)]
 
-        _from, _to, _id = lane_index
+        if self.neighbour_vehicles_connected_lanes:
+            # Offsets convert each connected lane's longitudinal coordinate
+            # into the ego lane coordinate frame.
+            _from, _to, _id = lane_index
 
-        # Next (downstream) lanes: vehicles there are ahead of the current
-        # lane's end, so offset = current lane length.
-        for next_to, next_lanes in self.network.graph.get(_to, {}).items():
-            if _id < len(next_lanes):
-                lanes_offsets.append((next_lanes[_id], lane.length))
-            elif next_lanes:
-                lanes_offsets.append((next_lanes[0], lane.length))
+            for next_lanes in self.network.graph.get(_to, {}).values():
+                if _id < len(next_lanes):
+                    lanes_offsets.append((next_lanes[_id], lane.length))
+                elif next_lanes:
+                    lanes_offsets.append((next_lanes[0], lane.length))
 
-        # Previous (upstream) lanes: vehicles there are behind the current
-        # lane's start, so offset = -prev_lane.length.
-        for prev_from, to_dict in self.network.graph.items():
-            if _from in to_dict:
-                prev_lanes = to_dict[_from]
-                if _id < len(prev_lanes):
-                    prev_lane = prev_lanes[_id]
-                elif prev_lanes:
-                    prev_lane = prev_lanes[0]
-                else:
-                    continue
-                lanes_offsets.append((prev_lane, -prev_lane.length))
+            for to_dict in self.network.graph.values():
+                if _from in to_dict:
+                    prev_lanes = to_dict[_from]
+                    if _id < len(prev_lanes):
+                        prev_lane = prev_lanes[_id]
+                    elif prev_lanes:
+                        prev_lane = prev_lanes[0]
+                    else:
+                        continue
+                    lanes_offsets.append((prev_lane, -prev_lane.length))
 
         for v in self.vehicles + self.objects:
             if v is vehicle or isinstance(v, Landmark):

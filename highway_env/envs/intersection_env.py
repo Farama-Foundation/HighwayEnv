@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs.common.abstract import AbstractEnv, ConnectedLaneNeighboursMixin
 from highway_env.road.lane import AbstractLane, CircularLane, LineType, StraightLane
 from highway_env.road.regulation import RegulatedRoad
 from highway_env.road.road import RoadNetwork
@@ -245,6 +245,9 @@ class IntersectionEnv(AbstractEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
         self.road = road
 
@@ -391,6 +394,16 @@ class MultiAgentIntersectionEnv(IntersectionEnv):
             }
         )
         return config
+
+
+class ConnectedLaneIntersectionEnv(ConnectedLaneNeighboursMixin, IntersectionEnv):
+    pass
+
+
+class ConnectedLaneMultiAgentIntersectionEnv(
+    ConnectedLaneNeighboursMixin, MultiAgentIntersectionEnv
+):
+    pass
 
 
 class ContinuousIntersectionEnv(IntersectionEnv):

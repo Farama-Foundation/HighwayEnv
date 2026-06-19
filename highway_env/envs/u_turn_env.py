@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs.common.abstract import AbstractEnv, ConnectedLaneNeighboursMixin
 from highway_env.road.lane import CircularLane, LineType, StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import MDPVehicle
@@ -169,6 +169,9 @@ class UTurnEnv(AbstractEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
         self.road = road
 
@@ -268,3 +271,7 @@ class UTurnEnv(AbstractEnv):
         vehicle.plan_route_to("d")
         # vehicle.randomize_behavior()
         self.road.vehicles.append(vehicle)
+
+
+class ConnectedLaneUTurnEnv(ConnectedLaneNeighboursMixin, UTurnEnv):
+    pass

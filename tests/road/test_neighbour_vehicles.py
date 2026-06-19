@@ -1,4 +1,4 @@
-"""Tests for Road.neighbour_vehicles with connected lane segments.
+"""Tests for Road.neighbour_vehicles with optional connected lane segments.
 
 Covers issue #626: neighbour_vehicles doesn't consider connected lanes.
 """
@@ -26,6 +26,10 @@ def _make_vehicle(
     v.lane = lane
     road.vehicles.append(v)
     return v
+
+
+def _enable_connected_lane_search(road: Road) -> None:
+    road.neighbour_vehicles_connected_lanes = True
 
 
 # ---------------------------------------------------------------------------
@@ -191,6 +195,15 @@ class TestSameSegmentNeighbours:
         assert v_front is None
         assert v_rear is rear
 
+    def test_connected_segments_ignored_by_default(self, straight_connected_road):
+        road, net = straight_connected_road
+        ego = _make_vehicle(road, net, ("a", "b", 0), longitudinal=48)
+        _make_vehicle(road, net, ("b", "c", 0), longitudinal=5)
+
+        v_front, v_rear = road.neighbour_vehicles(ego, ("a", "b", 0))
+        assert v_front is None
+        assert v_rear is None
+
 
 # ---------------------------------------------------------------------------
 # Tests: connected lane neighbours (the fix for issue #626)
@@ -203,6 +216,7 @@ class TestConnectedLaneNeighbours:
     def test_front_on_next_segment(self, straight_connected_road):
         """Vehicle on next segment b->c should be detected as front neighbour."""
         road, net = straight_connected_road
+        _enable_connected_lane_search(road)
         ego = _make_vehicle(road, net, ("a", "b", 0), longitudinal=48)
         front = _make_vehicle(road, net, ("b", "c", 0), longitudinal=5)
 
@@ -214,6 +228,7 @@ class TestConnectedLaneNeighbours:
     def test_rear_on_previous_segment(self, straight_connected_road):
         """Vehicle on previous segment a->b should be detected as rear neighbour."""
         road, net = straight_connected_road
+        _enable_connected_lane_search(road)
         ego = _make_vehicle(road, net, ("b", "c", 0), longitudinal=5)
         rear = _make_vehicle(road, net, ("a", "b", 0), longitudinal=45)
 
@@ -225,6 +240,7 @@ class TestConnectedLaneNeighbours:
     def test_front_on_curve_segment(self, straight_curve_road):
         """Vehicle on a connected curve should be detected as front neighbour."""
         road, net = straight_curve_road
+        _enable_connected_lane_search(road)
         ego = _make_vehicle(road, net, ("a", "b", 0), longitudinal=48)
         front = _make_vehicle(road, net, ("b", "c", 0), longitudinal=5)
 
@@ -239,6 +255,7 @@ class TestConnectedLaneNeighbours:
         """When both a same-segment and a next-segment vehicle are ahead,
         the closer one should be returned."""
         road, net = straight_connected_road
+        _enable_connected_lane_search(road)
         ego = _make_vehicle(road, net, ("a", "b", 0), longitudinal=30)
         close_front = _make_vehicle(road, net, ("a", "b", 0), longitudinal=45)
         _make_vehicle(
@@ -253,6 +270,7 @@ class TestConnectedLaneNeighbours:
     def test_both_connected_front_and_rear(self, three_segment_road):
         """Ego on middle segment, front on next, rear on previous."""
         road, net = three_segment_road
+        _enable_connected_lane_search(road)
         rear = _make_vehicle(road, net, ("a", "b", 0), longitudinal=45)
         ego = _make_vehicle(road, net, ("b", "c", 0), longitudinal=5)
         front = _make_vehicle(road, net, ("c", "d", 0), longitudinal=5)
@@ -265,6 +283,7 @@ class TestConnectedLaneNeighbours:
         """On a multi-lane road, only vehicles on the matching lane id
         of the next segment should be considered."""
         road, net = multi_lane_road
+        _enable_connected_lane_search(road)
         ego = _make_vehicle(road, net, ("a", "b", 0), longitudinal=48)
         front_lane0 = _make_vehicle(road, net, ("b", "c", 0), longitudinal=5)
         # Vehicle on lane 1 of the next segment (different lane)
@@ -294,7 +313,11 @@ class TestEdgeCases:
                 [0, 0], [50, 0], line_types=(LineType.CONTINUOUS, LineType.CONTINUOUS)
             ),
         )
-        road = Road(network=net, np_random=np.random.RandomState(42))
+        road = Road(
+            network=net,
+            np_random=np.random.RandomState(42),
+            neighbour_vehicles_connected_lanes=True,
+        )
         ego = _make_vehicle(road, net, ("a", "b", 0), longitudinal=48)
 
         v_front, v_rear = road.neighbour_vehicles(ego, ("a", "b", 0))
@@ -311,27 +334,25 @@ class TestEdgeCases:
                 [50, 0], [100, 0], line_types=(LineType.CONTINUOUS, LineType.CONTINUOUS)
             ),
         )
-        road = Road(network=net, np_random=np.random.RandomState(42))
+        road = Road(
+            network=net,
+            np_random=np.random.RandomState(42),
+            neighbour_vehicles_connected_lanes=True,
+        )
         ego = _make_vehicle(road, net, ("b", "c", 0), longitudinal=5)
 
         v_front, v_rear = road.neighbour_vehicles(ego, ("b", "c", 0))
         assert v_front is None
         assert v_rear is None
 
-    def test_vehicle_far_on_next_segment_not_detected(self, straight_connected_road):
-        """A vehicle very far into the next segment (beyond on_lane margin)
-        should not be detected — on_lane check must still filter correctly."""
+    def test_vehicle_far_on_next_segment_detected(self, straight_connected_road):
+        """A vehicle far into a connected next segment is a valid front neighbour."""
         road, net = straight_connected_road
+        _enable_connected_lane_search(road)
         ego = _make_vehicle(road, net, ("a", "b", 0), longitudinal=25)
-        # Place a vehicle 40m into the next segment — it is on b->c but not
-        # geometrically close to a->b at all.
         _make_vehicle(road, net, ("b", "c", 0), longitudinal=40)
 
         v_front, _ = road.neighbour_vehicles(ego, ("a", "b", 0))
-        # The vehicle is on next segment; its adjusted s would be 50+40=90,
-        # which is well ahead. It should be found by the search on the next
-        # lane, and on_lane check on segment b->c should pass.
-        # So it IS a valid front neighbour.
         assert v_front is not None
 
     def test_lane_index_none_returns_none(self, straight_connected_road):
