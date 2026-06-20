@@ -25,7 +25,7 @@ the ego-vehicle to simply wait the end of episode in these situations. But I agr
 and I welcome any contribution on that matter.
 
 Update (v1.12): this is due to an oversight in neighbour vehicle detection, check
-{ref}`road-neighbour-vehicles` for explaination. Many thanks to [@m-walters](https://github.com/m-walters) for reporting this bug and [@Lidang-Jiang](https://github.com/Lidang-Jiang) for proposing a fix.
+{ref}`road-neighbour-vehicles` for explanation. Many thanks to [@m-walters](https://github.com/m-walters) for reporting this bug and [@Lidang-Jiang](https://github.com/Lidang-Jiang) for proposing a fix.
 ```
 
 ## Usage
