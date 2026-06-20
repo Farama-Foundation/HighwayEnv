@@ -8,7 +8,7 @@
 
 In this task, the ego-vehicle if approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.
 
-```{figure} https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/roundabout-env.gif
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/roundabout-env.gif
 :align: center
 :name: fig:roundabout_env
 :width: 80%
@@ -19,6 +19,17 @@ In this task, the ego-vehicle if approaching a roundabout with flowing traffic. 
 ```python
 env = gym.make("roundabout-v0")
 ```
+
+## Versions
+
+| ID | Description |
+|---|---|
+| `roundabout-v0` | Initial version. Same-segment neighbour search only. Preserved for reproducibility. |
+| `roundabout-v1` | Connected-lane neighbour search enabled by default. Recommended for new experiments. |
+| `roundabout-generic-v0` | Initial generic roundabout map. Same-segment neighbour search only. |
+| `roundabout-generic-v1` | Generic roundabout map with connected-lane neighbour search enabled. |
+
+See {ref}`road-neighbour-vehicles` for details.
 
 ## Default configuration
 

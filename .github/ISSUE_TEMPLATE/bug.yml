@@ -1,0 +1,59 @@
+name: Bug Report
+description: Submit a bug report
+title: "[Bug Report] Bug title"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: input
+    id: environment-id
+    attributes:
+      label: Environment ID
+      description: The Gymnasium environment ID (e.g. `highway-v0`, `racetrack-v0`).
+      placeholder: highway-v0
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: Code example
+      description: |
+        Please try to provide a minimal example to reproduce the bug. Error messages and stack traces are also helpful.
+        This will be automatically formatted into code, so no need for backticks.
+      render: python
+
+  - type: textarea
+    id: system-info
+    attributes:
+      label: System info
+      description: |
+        Describe the characteristic of your environment:
+        * Describe how `highway-env` was installed (pip, source, ...)
+        * Version of `highway-env` (e.g. `import highway_env; highway_env.__version__`)
+        * Version of `gymnasium` (e.g. `import gymnasium; gymnasium.__version__`)
+        * Version of `pygame` or `pygame-ce` (e.g. `import pygame; pygame.__version__`)
+        * What OS/version you're using.
+        * Which Python version are you using, is there anything special about it? (e.g. free-thread build, MSYS2/Mingw fork, ...)
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here (rendering issues, screenshots, etc.).
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: >
+            I have checked that there is no similar [issue](https://github.com/Farama-Foundation/HighwayEnv/issues) in
+            the repo
+          required: true

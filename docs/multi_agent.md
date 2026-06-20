@@ -153,6 +153,6 @@ python experiments.py evaluate configs/IntersectionEnv/env_multi_agent.json \
                                --train --episodes=3000
 ```
 
-```{figure} https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection_multi_agent.gif
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/intersection_multi_agent.gif
 Video of a multi-agent episode with the trained policy.
 ```

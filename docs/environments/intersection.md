@@ -8,7 +8,7 @@
 
 An intersection negotiation task with dense traffic.
 
-```{figure} https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection-env.gif
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/intersection-env.gif
 :align: center
 :name: fig:intersection_env
 :width: 80%
@@ -23,6 +23,9 @@ This simple system sometime fails which results in collisions, blocking the way 
 I figured it was fine for my own purpose, since it did not happen too often and it's reasonable to expect
 the ego-vehicle to simply wait the end of episode in these situations. But I agree that it is not ideal,
 and I welcome any contribution on that matter.
+
+Update (v1.12): this is due to an oversight in neighbour vehicle detection, check
+{ref}`road-neighbour-vehicles` for explanation. Many thanks to [@m-walters](https://github.com/m-walters) for reporting this bug and [@Lidang-Jiang](https://github.com/Lidang-Jiang) for proposing a fix.
 ```
 
 ## Usage
@@ -30,6 +33,19 @@ and I welcome any contribution on that matter.
 ```python
 env = gym.make("intersection-v0")
 ```
+
+## Versions
+
+| ID | Description |
+|---|---|
+| `intersection-v0` | Initial version. Same-segment neighbour search only. Preserved for reproducibility. |
+| `intersection-v1` | Continuous-action variant. Same neighbour search as `intersection-v0`. |
+| `intersection-v2` | Connected-lane neighbour search enabled by default. Recommended for new experiments. |
+| `intersection-multi-agent-v0` | Multi-agent initial version. Same-segment neighbour search only. |
+| `intersection-multi-agent-v1` | Multi-agent variant with `MultiAgentWrapper`. Same neighbour search as v0. |
+| `intersection-multi-agent-v2` | Multi-agent variant with connected-lane neighbour search enabled. |
+
+See {ref}`road-neighbour-vehicles` for details.
 
 ## Default configuration
 

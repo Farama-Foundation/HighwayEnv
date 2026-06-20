@@ -21,6 +21,15 @@ lane = road.road_network.graph["lab"]["pub"][1]
 
 The actual positions of the lab and the pub are defined in the lane\`\`\`geometry object.
 
+## Neighbour vehicles
+
+Each {py:class}`~highway_env.road.road.Road` exposes
+{py:meth}`~highway_env.road.road.Road.neighbour_vehicles` to find the preceding and following vehicles
+on a lane. By default, the search is limited to the current lane segment; when
+{py:attr}`~highway_env.road.road.Road.neighbour_vehicles_connected_lanes` is enabled, connected next
+and previous segments are included. See {ref}`road-neighbour-vehicles` for the full description,
+environment version mapping, and a visual comparison.
+
 ## API
 
 ```{eval-rst}

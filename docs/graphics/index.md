@@ -4,7 +4,7 @@
 
 # Graphics
 
-Environment rendering is done with [pygame](https://www.pygame.org/news), which must be {ref}`installed separately <installation>`.
+Environment rendering is done with [pygame community edition](https://pyga.me), a maintained fork of the original [pygame](https://www.pygame.org/news) library.
 
 A window is created at the first call of `env.render()`. Its dimensions can be configured:
 

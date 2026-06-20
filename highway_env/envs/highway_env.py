@@ -63,6 +63,9 @@ class HighwayEnv(AbstractEnv):
             ),
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
 
     def _create_vehicles(self) -> None:
@@ -122,7 +125,7 @@ class HighwayEnv(AbstractEnv):
             if isinstance(self.vehicle, ControlledVehicle)
             else self.vehicle.lane_index[2]
         )
-        # Use forward speed rather than speed, see https://github.com/eleurent/highway-env/issues/268
+        # Use forward speed rather than speed, see https://github.com/Farama-Foundation/HighwayEnv/issues/268
         forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
         scaled_speed = utils.lmap(
             forward_speed, self.config["reward_speed_range"], [0, 1]

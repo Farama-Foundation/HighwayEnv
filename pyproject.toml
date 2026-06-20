@@ -26,7 +26,7 @@ dependencies = [
     "gymnasium >=1.0.0a2",
     "farama-notifications >=0.0.1",
     "numpy >=1.23.0",
-    "pygame >=2.0.2",
+    "pygame-ce >=2.1.3",
     "matplotlib",
     "pandas",
     "scipy"
@@ -41,9 +41,9 @@ testing = [
 
 [project.urls]
 Homepage = "https://farama.org"
-Repository = "https://github.com/eleurent/highway-env"
+Repository = "https://github.com/Farama-Foundation/HighwayEnv"
 Documentation = "https://highway-env.farama.org/"
-"Bug Report" = "https://github.com/eleurent/highway-env/issues"
+"Bug Report" = "https://github.com/Farama-Foundation/HighwayEnv/issues"
 
 [project.entry-points."gymnasium.envs.__root__"]
 highway-env = "highway_env:_register_highway_envs"

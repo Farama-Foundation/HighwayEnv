@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from highway_env import utils
+from highway_env.envs.common.abstract import ConnectedLaneNeighboursMixin
 from highway_env.envs.common.action import Action
 from highway_env.envs.highway_env import HighwayEnv
 from highway_env.road.lane import CircularLane
@@ -99,6 +100,9 @@ class ExitEnv(HighwayEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
 
     def _create_vehicles(self) -> None:
@@ -192,6 +196,10 @@ class ExitEnv(HighwayEnv):
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
         return self.time >= self.config["duration"]
+
+
+class ConnectedLaneExitEnv(ConnectedLaneNeighboursMixin, ExitEnv):
+    pass
 
 
 # class DenseLidarExitEnv(DenseExitEnv):

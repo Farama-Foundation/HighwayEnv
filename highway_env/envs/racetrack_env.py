@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs.common.abstract import AbstractEnv, ConnectedLaneNeighboursMixin
 from highway_env.road.lane import CircularLane, LineType, StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.behavior import IDMVehicle
@@ -20,7 +20,7 @@ class RacetrackEnv(AbstractEnv):
 
     Credits and many thanks to @supperted825 for the idea and
     initial implementation.
-    See https://github.com/eleurent/highway-env/issues/231
+    See https://github.com/Farama-Foundation/HighwayEnv/issues/231
     """
 
     @classmethod
@@ -362,6 +362,9 @@ class RacetrackEnv(AbstractEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
         self.road = road
 
@@ -417,6 +420,10 @@ class RacetrackEnv(AbstractEnv):
                         break
                 else:
                     self.road.vehicles.append(vehicle)
+
+
+class ConnectedLaneRacetrackEnv(ConnectedLaneNeighboursMixin, RacetrackEnv):
+    pass
 
 
 class RacetrackEnvLarge(RacetrackEnv):
@@ -859,7 +866,14 @@ class RacetrackEnvLarge(RacetrackEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
+
+
+class ConnectedLaneRacetrackEnvLarge(ConnectedLaneNeighboursMixin, RacetrackEnvLarge):
+    pass
 
 
 class RacetrackEnvOval(RacetrackEnv):
@@ -874,6 +888,7 @@ class RacetrackEnvOval(RacetrackEnv):
     credit: @christophluther
     """
 
+    @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
         config.update(
@@ -1300,6 +1315,9 @@ class RacetrackEnvOval(RacetrackEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
 
         # Scenario to force a "binary" decision
@@ -1368,3 +1386,7 @@ class RacetrackEnvOval(RacetrackEnv):
                         break
                 else:
                     self.road.vehicles.append(vehicle)
+
+
+class ConnectedLaneRacetrackEnvOval(ConnectedLaneNeighboursMixin, RacetrackEnvOval):
+    pass

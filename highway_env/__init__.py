@@ -4,12 +4,12 @@ import sys
 from gymnasium.envs.registration import register, registry
 
 
-__version__ = "1.11"
+__version__ = "1.12.0.dev1"
 
 try:
     from farama_notifications import notifications
 
-    if "highway_env" in notifications and __version__ in notifications["gymnasium"]:
+    if "highway_env" in notifications and __version__ in notifications["highway_env"]:
         print(notifications["highway_env"][__version__], file=sys.stderr)
 
 except Exception:  # nosec
@@ -37,6 +37,10 @@ def _register_highway_envs():
         id="exit-v0",
         entry_point="highway_env.envs.exit_env:ExitEnv",
     )
+    register(
+        id="exit-v1",
+        entry_point="highway_env.envs.exit_env:ConnectedLaneExitEnv",
+    )
 
     # highway_env.py
     register(
@@ -59,6 +63,10 @@ def _register_highway_envs():
         id="intersection-v1",
         entry_point="highway_env.envs.intersection_env:ContinuousIntersectionEnv",
     )
+    register(
+        id="intersection-v2",
+        entry_point="highway_env.envs.intersection_env:ConnectedLaneIntersectionEnv",
+    )
 
     register(
         id="intersection-multi-agent-v0",
@@ -68,6 +76,11 @@ def _register_highway_envs():
     register(
         id="intersection-multi-agent-v1",
         entry_point="highway_env.envs.intersection_env:MultiAgentIntersectionEnv",
+        additional_wrappers=(MultiAgentWrapper.wrapper_spec(),),
+    )
+    register(
+        id="intersection-multi-agent-v2",
+        entry_point="highway_env.envs.intersection_env:ConnectedLaneMultiAgentIntersectionEnv",
         additional_wrappers=(MultiAgentWrapper.wrapper_spec(),),
     )
 
@@ -82,6 +95,10 @@ def _register_highway_envs():
     register(
         id="merge-v0",
         entry_point="highway_env.envs.merge_env:MergeEnv",
+    )
+    register(
+        id="merge-v1",
+        entry_point="highway_env.envs.merge_env:ConnectedLaneMergeEnv",
     )
 
     # parking_env.py
@@ -106,12 +123,24 @@ def _register_highway_envs():
         entry_point="highway_env.envs.racetrack_env:RacetrackEnv",
     )
     register(
+        id="racetrack-v1",
+        entry_point="highway_env.envs.racetrack_env:ConnectedLaneRacetrackEnv",
+    )
+    register(
         id="racetrack-large-v0",
         entry_point="highway_env.envs.racetrack_env:RacetrackEnvLarge",
     )
     register(
+        id="racetrack-large-v1",
+        entry_point="highway_env.envs.racetrack_env:ConnectedLaneRacetrackEnvLarge",
+    )
+    register(
         id="racetrack-oval-v0",
         entry_point="highway_env.envs.racetrack_env:RacetrackEnvOval",
+    )
+    register(
+        id="racetrack-oval-v1",
+        entry_point="highway_env.envs.racetrack_env:ConnectedLaneRacetrackEnvOval",
     )
 
     # roundabout_env.py
@@ -120,8 +149,16 @@ def _register_highway_envs():
         entry_point="highway_env.envs.roundabout_env:RoundaboutEnv",
     )
     register(
+        id="roundabout-v1",
+        entry_point="highway_env.envs.roundabout_env:ConnectedLaneRoundaboutEnv",
+    )
+    register(
         id="roundabout-generic-v0",
         entry_point="highway_env.envs.roundabout_env:RoundaboutGenericEnv",
+    )
+    register(
+        id="roundabout-generic-v1",
+        entry_point="highway_env.envs.roundabout_env:ConnectedLaneRoundaboutGenericEnv",
     )
 
     # two_way_env.py
@@ -133,6 +170,10 @@ def _register_highway_envs():
 
     # u_turn_env.py
     register(id="u-turn-v0", entry_point="highway_env.envs.u_turn_env:UTurnEnv")
+    register(
+        id="u-turn-v1",
+        entry_point="highway_env.envs.u_turn_env:ConnectedLaneUTurnEnv",
+    )
 
 
 _register_highway_envs()

@@ -8,9 +8,9 @@
 
 A continuous control environment, where the he agent has to follow the tracks while avoiding collisions with other vehicles.
 
-Credits and many thanks to [@supperted825](https://github.com/supperted825) for the [idea and initial implementation](https://github.com/eleurent/highway-env/issues/231).
+Credits and many thanks to [@supperted825](https://github.com/supperted825) for the [idea and initial implementation](https://github.com/Farama-Foundation/HighwayEnv/issues/231).
 
-```{figure} https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/racetrack-env.gif
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/racetrack-env.gif
 :align: center
 :name: fig:racetrack_env
 :width: 80%
@@ -21,6 +21,19 @@ Credits and many thanks to [@supperted825](https://github.com/supperted825) for 
 ```python
 env = gym.make("racetrack-v0")
 ```
+
+## Versions
+
+| ID | Description |
+|---|---|
+| `racetrack-v0` | Initial version. Same-segment neighbour search only. Preserved for reproducibility. |
+| `racetrack-v1` | Connected-lane neighbour search enabled by default. Recommended for new experiments. |
+| `racetrack-large-v0` | Large three-lane map. Same-segment neighbour search only. |
+| `racetrack-large-v1` | Large map with connected-lane neighbour search enabled. |
+| `racetrack-oval-v0` | Oval map. Same-segment neighbour search only. |
+| `racetrack-oval-v1` | Oval map with connected-lane neighbour search enabled. |
+
+See {ref}`road-neighbour-vehicles` for details.
 
 ## Default configuration
 

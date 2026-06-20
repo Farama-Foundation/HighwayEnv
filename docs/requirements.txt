@@ -1,7 +1,7 @@
 sphinx
 sphinx-autobuild
 myst-parser
-git+https://github.com/Farama-Foundation/Celshast#egg=furo
+furo @ git+https://github.com/Farama-Foundation/Celshast.git
 sphinx_github_changelog
 sphinxcontrib-bibtex
 ipykernel
