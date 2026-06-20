@@ -36,7 +36,8 @@ class EnvViewer:
         self.frame = 0
         self.directory = None
 
-        pygame.init()
+        pygame.display.init()
+        pygame.font.init()
         pygame.display.set_caption("Highway-env")
         panel_size = (self.config["screen_width"], self.config["screen_height"])
 
