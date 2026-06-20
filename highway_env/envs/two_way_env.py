@@ -107,6 +107,9 @@ class TwoWayEnv(AbstractEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
         self.road = road
 

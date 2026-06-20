@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.abstract import AbstractEnv
+from highway_env.envs.common.abstract import AbstractEnv, ConnectedLaneNeighboursMixin
 from highway_env.road.lane import LineType, SineLane, StraightLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
@@ -148,6 +148,9 @@ class MergeEnv(AbstractEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
         road.objects.append(Obstacle(road, lbc.position(ends[2], 0)))
         self.road = road
@@ -178,3 +181,7 @@ class MergeEnv(AbstractEnv):
         merging_v.target_speed = 30.0
         road.vehicles.append(merging_v)
         self.vehicle = ego_vehicle
+
+
+class ConnectedLaneMergeEnv(ConnectedLaneNeighboursMixin, MergeEnv):
+    pass

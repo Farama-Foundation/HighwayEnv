@@ -26,8 +26,18 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "A Box observation space minimum value is -infinity. This is probably too low.",
         "A Box observation space maximum value is infinity. This is probably too high.",
         # "For Box action spaces, we recommend using a symmetric and normalized space (range=[-1, 1] or [0, 1]). See https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html for more information.",
-        "The environment intersection-v0 is out of date. You should consider upgrading to version `v1`.",
-        "The environment intersection-multi-agent-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment exit-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment merge-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment racetrack-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment racetrack-large-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment racetrack-oval-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment roundabout-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment roundabout-generic-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment u-turn-v0 is out of date. You should consider upgrading to version `v1`.",
+        "The environment intersection-v0 is out of date. You should consider upgrading to version `v2`.",
+        "The environment intersection-v1 is out of date. You should consider upgrading to version `v2`.",
+        "The environment intersection-multi-agent-v0 is out of date. You should consider upgrading to version `v2`.",
+        "The environment intersection-multi-agent-v1 is out of date. You should consider upgrading to version `v2`.",
     ]
 ]
 
@@ -88,6 +98,39 @@ def test_env_reset_options(env_spec: str = "highway-v0"):
     update_duration = default_duration * 2
     env.reset(options={"config": {"duration": update_duration}})
     assert env.config["duration"] == update_duration
+
+
+@pytest.mark.parametrize(
+    ("old_env_spec", "new_env_spec"),
+    [
+        ("exit-v0", "exit-v1"),
+        ("merge-v0", "merge-v1"),
+        ("roundabout-v0", "roundabout-v1"),
+        ("roundabout-generic-v0", "roundabout-generic-v1"),
+        ("racetrack-v0", "racetrack-v1"),
+        ("racetrack-large-v0", "racetrack-large-v1"),
+        ("racetrack-oval-v0", "racetrack-oval-v1"),
+        ("u-turn-v0", "u-turn-v1"),
+        ("intersection-v0", "intersection-v2"),
+        ("intersection-multi-agent-v0", "intersection-multi-agent-v2"),
+    ],
+)
+def test_connected_lane_neighbour_versions(old_env_spec, new_env_spec):
+    old_env = gym.make(old_env_spec)
+    new_env = gym.make(new_env_spec, config={"duration": 1})
+
+    try:
+        old_unwrapped = old_env.unwrapped
+        new_unwrapped = new_env.unwrapped
+
+        assert old_unwrapped.config["neighbour_vehicles_connected_lanes"] is False
+        assert old_unwrapped.road.neighbour_vehicles_connected_lanes is False
+        assert new_unwrapped.config["neighbour_vehicles_connected_lanes"] is True
+        assert new_unwrapped.road.neighbour_vehicles_connected_lanes is True
+        assert new_unwrapped.config["duration"] == 1
+    finally:
+        old_env.close()
+        new_env.close()
 
 
 @pytest.mark.parametrize(

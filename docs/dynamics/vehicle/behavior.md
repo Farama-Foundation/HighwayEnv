@@ -6,6 +6,9 @@
 
 Other simulated vehicles follow simple and realistic behaviors that dictate how they accelerate and
 steer on the road. They are implemented in the {py:class}`~highway_env.vehicle.behavior.IDMVehicle` class.
+Both longitudinal (IDM) and lateral (MOBIL) decisions rely on
+{py:meth}`~highway_env.road.road.Road.neighbour_vehicles`; see {ref}`road-neighbour-vehicles` for how
+neighbour detection works across connected lane segments.
 
 ## Longitudinal Behavior
 

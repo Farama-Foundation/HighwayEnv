@@ -21,8 +21,16 @@ class RegulatedRoad(Road):
         obstacles: list[Obstacle] = None,
         np_random: np.random.RandomState = None,
         record_history: bool = False,
+        neighbour_vehicles_connected_lanes: bool = False,
     ) -> None:
-        super().__init__(network, vehicles, obstacles, np_random, record_history)
+        super().__init__(
+            network,
+            vehicles,
+            obstacles,
+            np_random,
+            record_history,
+            neighbour_vehicles_connected_lanes,
+        )
         self.steps = 0
 
     def step(self, dt: float) -> None:

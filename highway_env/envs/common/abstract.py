@@ -22,6 +22,20 @@ from highway_env.vehicle.kinematics import Vehicle
 Observation = TypeVar("Observation")
 
 
+class ConnectedLaneNeighboursMixin:
+    """
+    A mixin class introduced in v1.12 to enable new behaviour for neighbour vehicles detection.
+
+    See https://github.com/Farama-Foundation/HighwayEnv/pull/667
+    """
+
+    @classmethod
+    def default_config(cls) -> dict:
+        config = super().default_config()
+        config.update({"neighbour_vehicles_connected_lanes": True})
+        return config
+
+
 class AbstractEnv(gym.Env):
     """
     A generic environment for various tasks involving a vehicle driving on a road.
@@ -106,6 +120,7 @@ class AbstractEnv(gym.Env):
             "offscreen_rendering": os.environ.get("OFFSCREEN_RENDERING", "0") == "1",
             "manual_control": False,
             "real_time_rendering": False,
+            "neighbour_vehicles_connected_lanes": False,
         }
 
     def configure(self, config: dict) -> None:
@@ -206,6 +221,10 @@ class AbstractEnv(gym.Env):
         self.time = self.steps = 0
         self.done = False
         self._reset()
+        if self.road is not None:
+            self.road.neighbour_vehicles_connected_lanes = self.config[
+                "neighbour_vehicles_connected_lanes"
+            ]
         self.define_spaces()  # Second, to link the obs and actions to the vehicles once the scene is created
         obs = self.observation_type.observe()
         info = self._info(obs, action=self.action_space.sample())

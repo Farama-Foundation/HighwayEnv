@@ -166,7 +166,7 @@ class RoadNetwork:
         """
         queue = [(start, [start])]
         while queue:
-            (node, path) = queue.pop(0)
+            node, path = queue.pop(0)
             if node not in self.graph:
                 yield []
             for _next in sorted(
@@ -399,6 +399,7 @@ class Road:
         road_objects: list[objects.RoadObject] = None,
         np_random: np.random.RandomState = None,
         record_history: bool = False,
+        neighbour_vehicles_connected_lanes: bool = False,
     ) -> None:
         """
         New road.
@@ -408,12 +409,14 @@ class Road:
         :param road_objects: the objects on the road including obstacles and landmarks
         :param np.random.RandomState np_random: a random number generator for vehicle behaviour
         :param record_history: whether the recent trajectories of vehicles should be recorded for display
+        :param neighbour_vehicles_connected_lanes: whether to search connected lane segments for neighbours
         """
         self.network = network
         self.vehicles = vehicles or []
         self.objects = road_objects or []
         self.np_random = np_random if np_random else np.random.RandomState()
         self.record_history = record_history
+        self.neighbour_vehicles_connected_lanes = neighbour_vehicles_connected_lanes
 
     def close_objects_to(
         self,
@@ -483,6 +486,10 @@ class Road:
         """
         Find the preceding and following vehicles of a given vehicle.
 
+        When ``neighbour_vehicles_connected_lanes`` is enabled, connected
+        next/previous lane segments are also searched so vehicles near
+        segment boundaries are detected.
+
         :param vehicle: the vehicle whose neighbours must be found
         :param lane_index: the lane on which to look for preceding and following vehicles.
                      It doesn't have to be the current vehicle lane but can also be another lane, in which case the
@@ -493,23 +500,50 @@ class Road:
         if not lane_index:
             return None, None
         lane = self.network.get_lane(lane_index)
-        s = self.network.get_lane(lane_index).local_coordinates(vehicle.position)[0]
+        s = lane.local_coordinates(vehicle.position)[0]
         s_front = s_rear = None
         v_front = v_rear = None
+
+        lanes_offsets: list[tuple[AbstractLane, float]] = [(lane, 0)]
+
+        if self.neighbour_vehicles_connected_lanes:
+            # Offsets convert each connected lane's longitudinal coordinate
+            # into the ego lane coordinate frame.
+            _from, _to, _id = lane_index
+
+            for next_lanes in self.network.graph.get(_to, {}).values():
+                if _id < len(next_lanes):
+                    lanes_offsets.append((next_lanes[_id], lane.length))
+                elif next_lanes:
+                    lanes_offsets.append((next_lanes[0], lane.length))
+
+            for to_dict in self.network.graph.values():
+                if _from in to_dict:
+                    prev_lanes = to_dict[_from]
+                    if _id < len(prev_lanes):
+                        prev_lane = prev_lanes[_id]
+                    elif prev_lanes:
+                        prev_lane = prev_lanes[0]
+                    else:
+                        continue
+                    lanes_offsets.append((prev_lane, -prev_lane.length))
+
         for v in self.vehicles + self.objects:
-            if v is not vehicle and not isinstance(
-                v, Landmark
-            ):  # self.network.is_connected_road(v.lane_index,
-                # lane_index, same_lane=True):
-                s_v, lat_v = lane.local_coordinates(v.position)
-                if not lane.on_lane(v.position, s_v, lat_v, margin=1):
+            if v is vehicle or isinstance(v, Landmark):
+                continue
+            for search_lane, offset in lanes_offsets:
+                s_v, lat_v = search_lane.local_coordinates(v.position)
+                if not search_lane.on_lane(v.position, s_v, lat_v, margin=1):
                     continue
+                s_v += offset
                 if s <= s_v and (s_front is None or s_v <= s_front):
                     s_front = s_v
                     v_front = v
                 if s_v < s and (s_rear is None or s_v > s_rear):
                     s_rear = s_v
                     v_rear = v
+                break  # matched on this lane, no need to check others
+
         return v_front, v_rear
 
     def __repr__(self):

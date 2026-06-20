@@ -84,4 +84,4 @@ If you use HighwayEnv in your work, please consider citing it with:
 
 ## Publications
 
-A list of publications using HighwayEnv can be found in the [documentation](https://highway-env.farama.org/content/publications/).
+A list of publications using HighwayEnv can be found in the [documentation](https://highway-env.farama.org/main/content/publications/).
