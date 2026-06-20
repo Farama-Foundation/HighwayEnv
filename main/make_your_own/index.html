@@ -230,6 +230,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
@@ -402,6 +403,13 @@ will not raise duplicate-registration errors.</p>
 </dd></dl>
 
 <dl class="py class" id="module-highway_env.envs.common.abstract">
+<dt class="sig sig-object py" id="highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">ConnectedLaneNeighboursMixin</span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#ConnectedLaneNeighboursMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin" title="Link to this definition">¶</a></dt>
+<dd><p>A mixin class introduced in v1.12 to enable new behaviour for neighbour vehicles detection.</p>
+<p>See <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/pull/667">https://github.com/Farama-Foundation/HighwayEnv/pull/667</a></p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">AbstractEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv" title="Link to this definition">¶</a></dt>
 <dd><p>A generic environment for various tasks involving a vehicle driving on a road.</p>
@@ -694,6 +702,7 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 <li><a class="reference internal" href="#profit">Profit</a></li>
 <li><a class="reference internal" href="#module-highway_env.__init__">API</a><ul>
 <li><a class="reference internal" href="#highway_env.__init__._register_highway_envs"><code class="docutils literal notranslate"><span class="pre">_register_highway_envs()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin"><code class="docutils literal notranslate"><span class="pre">ConnectedLaneNeighboursMixin</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv"><code class="docutils literal notranslate"><span class="pre">AbstractEnv</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE"><code class="docutils literal notranslate"><span class="pre">AbstractEnv.PERCEPTION_DISTANCE</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.vehicle"><code class="docutils literal notranslate"><span class="pre">AbstractEnv.vehicle</span></code></a></li>

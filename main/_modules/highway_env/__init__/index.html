@@ -229,6 +229,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/vehicle/controller/">Control</a></li>
@@ -303,7 +304,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.envs.registration</span><span class="w"> </span><span class="kn">import</span> <span class="n">register</span><span class="p">,</span> <span class="n">registry</span>
 
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.11&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.12.0.dev1&quot;</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">farama_notifications</span><span class="w"> </span><span class="kn">import</span> <span class="n">notifications</span>
@@ -338,6 +339,10 @@
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;exit-v0&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.exit_env:ExitEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;exit-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.exit_env:ConnectedLaneExitEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="c1"># highway_env.py</span>
     <span class="n">register</span><span class="p">(</span>
@@ -360,6 +365,10 @@
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-v1&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.intersection_env:ContinuousIntersectionEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-v2&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.intersection_env:ConnectedLaneIntersectionEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">register</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-multi-agent-v0&quot;</span><span class="p">,</span>
@@ -369,6 +378,11 @@
     <span class="n">register</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-multi-agent-v1&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.intersection_env:MultiAgentIntersectionEnv&quot;</span><span class="p">,</span>
+        <span class="n">additional_wrappers</span><span class="o">=</span><span class="p">(</span><span class="n">MultiAgentWrapper</span><span class="o">.</span><span class="n">wrapper_spec</span><span class="p">(),),</span>
+    <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;intersection-multi-agent-v2&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.intersection_env:ConnectedLaneMultiAgentIntersectionEnv&quot;</span><span class="p">,</span>
         <span class="n">additional_wrappers</span><span class="o">=</span><span class="p">(</span><span class="n">MultiAgentWrapper</span><span class="o">.</span><span class="n">wrapper_spec</span><span class="p">(),),</span>
     <span class="p">)</span>
 
@@ -383,6 +397,10 @@
     <span class="n">register</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;merge-v0&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.merge_env:MergeEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;merge-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.merge_env:ConnectedLaneMergeEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># parking_env.py</span>
@@ -407,12 +425,24 @@
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.racetrack_env:RacetrackEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;racetrack-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.racetrack_env:ConnectedLaneRacetrackEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;racetrack-large-v0&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.racetrack_env:RacetrackEnvLarge&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;racetrack-large-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.racetrack_env:ConnectedLaneRacetrackEnvLarge&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;racetrack-oval-v0&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.racetrack_env:RacetrackEnvOval&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;racetrack-oval-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.racetrack_env:ConnectedLaneRacetrackEnvOval&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># roundabout_env.py</span>
@@ -421,8 +451,16 @@
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.roundabout_env:RoundaboutEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;roundabout-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.roundabout_env:ConnectedLaneRoundaboutEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;roundabout-generic-v0&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.roundabout_env:RoundaboutGenericEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;roundabout-generic-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.roundabout_env:ConnectedLaneRoundaboutGenericEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># two_way_env.py</span>
@@ -433,7 +471,11 @@
     <span class="p">)</span>
 
     <span class="c1"># u_turn_env.py</span>
-    <span class="n">register</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;u-turn-v0&quot;</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.u_turn_env:UTurnEnv&quot;</span><span class="p">)</span></div>
+    <span class="n">register</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;u-turn-v0&quot;</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.u_turn_env:UTurnEnv&quot;</span><span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;u-turn-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.u_turn_env:ConnectedLaneUTurnEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 

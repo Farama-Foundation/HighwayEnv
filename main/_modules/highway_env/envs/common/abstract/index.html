@@ -229,6 +229,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/controller/">Control</a></li>
@@ -321,6 +322,23 @@
 <span class="n">Observation</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;Observation&quot;</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="ConnectedLaneNeighboursMixin">
+<a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConnectedLaneNeighboursMixin</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mixin class introduced in v1.12 to enable new behaviour for neighbour vehicles detection.</span>
+
+<span class="sd">    See https://github.com/Farama-Foundation/HighwayEnv/pull/667</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;neighbour_vehicles_connected_lanes&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">config</span></div>
+
+
+
 <div class="viewcode-block" id="AbstractEnv">
 <a class="viewcode-back" href="../../../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AbstractEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
@@ -409,6 +427,7 @@
             <span class="s2">&quot;offscreen_rendering&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;OFFSCREEN_RENDERING&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
             <span class="s2">&quot;manual_control&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;real_time_rendering&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;neighbour_vehicles_connected_lanes&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
@@ -530,6 +549,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">neighbour_vehicles_connected_lanes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span>
+                <span class="s2">&quot;neighbour_vehicles_connected_lanes&quot;</span>
+            <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">define_spaces</span><span class="p">()</span>  <span class="c1"># Second, to link the obs and actions to the vehicles once the scene is created</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_type</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span>
         <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>

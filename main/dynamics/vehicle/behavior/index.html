@@ -230,6 +230,7 @@
 <li class="toctree-l2 current has-children"><a class="reference internal" href="../../">Dynamics</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../../road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../controller/">Control</a></li>
@@ -309,7 +310,10 @@
             <section class="tex2jax_ignore mathjax_ignore" id="behavior">
 <span id="vehicle-behavior"></span><h1>Behavior<a class="headerlink" href="#behavior" title="Link to this heading">¶</a></h1>
 <p>Other simulated vehicles follow simple and realistic behaviors that dictate how they accelerate and
-steer on the road. They are implemented in the <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle" title="highway_env.vehicle.behavior.IDMVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDMVehicle</span></code></a> class.</p>
+steer on the road. They are implemented in the <a class="reference internal" href="#highway_env.vehicle.behavior.IDMVehicle" title="highway_env.vehicle.behavior.IDMVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDMVehicle</span></code></a> class.
+Both longitudinal (IDM) and lateral (MOBIL) decisions rely on
+<a class="reference internal" href="../../road/road/#highway_env.road.road.Road.neighbour_vehicles" title="highway_env.road.road.Road.neighbour_vehicles"><code class="xref py py-meth docutils literal notranslate"><span class="pre">neighbour_vehicles()</span></code></a>; see <a class="reference internal" href="../../road/neighbour_vehicles/#road-neighbour-vehicles"><span class="std std-ref">Neighbour vehicles</span></a> for how
+neighbour detection works across connected lane segments.</p>
 <section id="longitudinal-behavior">
 <h2>Longitudinal Behavior<a class="headerlink" href="#longitudinal-behavior" title="Link to this heading">¶</a></h2>
 <p>The acceleration of the vehicle is given by the <em>Intelligent Driver Model</em> (IDM) from <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../bibliography/#id2" title="Martin Treiber, Ansgar Hennecke, and Dirk Helbing. Congested traffic states in empirical observations and microscopic simulations. Physical Review E - Statistical Physics, Plasmas, Fluids, and Related Interdisciplinary Topics, 62(2):1805–1824, 2000.">THH00</a>]</span>.</p>

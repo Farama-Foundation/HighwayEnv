@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="../">
+<html class="no-js" lang="en" data-content_root="../../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -7,17 +7,17 @@
     <meta property="og:title" content="HighwayEnv Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/rewards/index.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Graphics" href="../graphics/" /><link rel="prev" title="Behavior" href="../dynamics/vehicle/behavior/" />
-        <link rel="canonical" href="https://highway-env.farama.org/rewards/index.html" />
+    <meta property="og:url" content="https://highway-env.farama.org/dynamics/road/neighbour_vehicles.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Road regulation" href="../regulation/" /><link rel="prev" title="Road" href="../road/" />
+        <link rel="canonical" href="https://highway-env.farama.org/dynamics/road/neighbour_vehicles.html" />
 
-    <link rel="shortcut icon" href="../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>Rewards - HighwayEnv Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
-    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
+    <link rel="shortcut icon" href="../../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
+        <title>Neighbour vehicles - HighwayEnv Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=5b1a364e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -58,16 +58,16 @@
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
-          <a href="../">
-              <img class="farama-header__logo only-light" src="../_static/img/highway.svg" alt="Light Logo"/>
-              <img class="farama-header__logo only-dark" src="../_static/img/highway-white.svg" alt="Dark Logo"/>
+          <a href="../../../">
+              <img class="farama-header__logo only-light" src="../../../_static/img/highway.svg" alt="Light Logo"/>
+              <img class="farama-header__logo only-dark" src="../../../_static/img/highway-white.svg" alt="Dark Logo"/>
             <span class="farama-header__title">HighwayEnv Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
           <div class="farama-header-menu">
             <button class="farama-header-menu__btn" aria-label="Open Farama Menu" aria-expanded="false" aria-haspopup="true" aria-controls="farama-menu">
-              <img class="farama-black-logo-invert" src="../_static/img/farama-logo-header.svg">
+              <img class="farama-black-logo-invert" src="../../../_static/img/farama-logo-header.svg">
               <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <polyline style="stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-width: 2px;" points="1 7 12 18 23 7"></polyline>
               </svg>
@@ -75,7 +75,7 @@
             <div class="farama-header-menu-container farama-hidden" aria-hidden="true" id="farama-menu">
               <div class="farama-header-menu__header">
                 <a href="https://farama.org">
-                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
+                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../../../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
                   <span>Farama Foundation</span>
                 </a>
                 <div class="farama-header-menu-header__right">
@@ -182,7 +182,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../"><div class="brand">HighwayEnv Documentation</div></a>
+      <a href="../../../"><div class="brand">HighwayEnv Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -202,50 +202,50 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../">
-      <img class="farama-header__logo only-light" src="../_static/img/highway.svg" alt="Light Logo"/>
-      <img class="farama-header__logo only-dark" src="../_static/img/highway-white.svg" alt="Dark Logo"/>
+      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../../">
+      <img class="farama-header__logo only-light" src="../../../_static/img/highway.svg" alt="Light Logo"/>
+      <img class="farama-header__logo only-dark" src="../../../_static/img/highway-white.svg" alt="Dark Logo"/>
     <span class="farama-header__title">HighwayEnv Documentation</span>
-  </a><form class="sidebar-search-container" method="get" action="../search/" role="search">
+  </a><form class="sidebar-search-container" method="get" action="../../../search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../environments/parking/">Parking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../environments/intersection/">Intersection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/highway/">Highway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/merge/">Merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/roundabout/">Roundabout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/parking/">Parking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/intersection/">Intersection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/racetrack/">Racetrack</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../actions/">Actions</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/lane/">Lane</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/behavior/">Behavior</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../content/algorithms/">Agent Examples</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../observations/">Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../actions/">Actions</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="../../">Dynamics</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../lane/">Lane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../road/">Road</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Neighbour vehicles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../vehicle/kinematics/">Kinematics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../vehicle/controller/">Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../vehicle/behavior/">Behavior</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Rewards</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../graphics/">Graphics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../multi_agent/">The Multi-Agent setting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../make_your_own/">Make your own environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../rewards/">Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../graphics/">Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../multi_agent/">The Multi-Agent setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../make_your_own/">Make your own environment</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../content/publications/">List of Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -276,7 +276,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/master/docs/rewards/index.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/master/docs/dynamics/road/neighbour_vehicles.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -307,51 +307,173 @@
           </div>
           <article role="main">
             
-            <section class="tex2jax_ignore mathjax_ignore" id="rewards">
-<span id="id1"></span><h1>Rewards<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h1>
-<p>The reward function is defined in the <a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv._reward" title="highway_env.envs.common.abstract.AbstractEnv._reward"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_reward()</span></code></a> method, overloaded in every environment.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The choice of an appropriate reward function that yields realistic optimal driving behaviour is a challenging problem, that we do not address in this project.
-In particular, we do not wish to specify every single aspect of the expected driving behaviour inside the reward function, such as keeping a safe distance to the front vehicle.
-Instead, we would rather only specify a reward function as simple and straightforward as possible in order to see adequate behaviour emerge from learning.
-In this perspective, keeping a safe distance is optimal not for being directly rewarded but for robustness against the uncertain behaviour of the leading vehicle, which could brake at any time.</p>
-</div>
-<section id="most-environments">
-<h2>Most environments<a class="headerlink" href="#most-environments" title="Link to this heading">¶</a></h2>
-<p>We generally focus on two features: a vehicle should</p>
-<ul class="simple">
-<li><p>progress quickly on the road;</p></li>
-<li><p>avoid collisions.</p></li>
-</ul>
-<p>Thus, the reward function is often composed of a velocity term and a collision term:</p>
-<div class="math-wrapper docutils container">
-<div class="math notranslate nohighlight">
-\[
-R(s,a) = a\frac{v - v_\min}{v_\max - v_\min} - b\,\text{collision}
-\]</div>
-</div>
-<p>where <span class="math notranslate nohighlight">\(v,\,v_\min,\,v_\max\)</span> are the current, minimum and maximum speed of the ego-vehicle respectively, and <span class="math notranslate nohighlight">\(a,\,b\)</span> are two coefficients.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Since the rewards must be bounded, and the optimal policy is invariant by scaling and shifting rewards, we choose to normalize them in the <span class="math notranslate nohighlight">\([0, 1]\)</span> range, by convention.
-Normalizing rewards has also been observed to be practically beneficial in deep reinforcement learning <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../bibliography/#id7" title="Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei A. Rusu, Joel Veness, Marc G. Bellemare, Alex Graves, Martin Riedmiller, Andreas K. Fidjeland, Georg Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis Antonoglou, Helen King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and Demis Hassabis. Human-level control through deep reinforcement learning. Nature, 518(7540):529–533, 2015.">MKS+15</a>]</span>.
-Note that we forbid negative rewards, since they may encourage the agent to prefer terminating an episode early (by causing a collision) rather than risking suffering a negative return if no satisfying trajectory can be found.</p>
-</div>
-<p>In some environments, the weight of the collision penalty can be configured through the <code class="docutils literal notranslate"><span class="pre">collision_penalty</span></code> parameter.</p>
+            <section class="tex2jax_ignore mathjax_ignore" id="neighbour-vehicles">
+<span id="road-neighbour-vehicles"></span><h1>Neighbour vehicles<a class="headerlink" href="#neighbour-vehicles" title="Link to this heading">¶</a></h1>
+<p>The <a class="reference internal" href="../road/#highway_env.road.road.Road.neighbour_vehicles" title="highway_env.road.road.Road.neighbour_vehicles"><code class="xref py py-meth docutils literal notranslate"><span class="pre">neighbour_vehicles()</span></code></a> method finds the preceding and following
+vehicles of a given vehicle on a lane. It is used throughout the library — notably by
+<a class="reference internal" href="../../vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle" title="highway_env.vehicle.behavior.IDMVehicle"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDMVehicle</span></code></a> for MOBIL lane-change decisions.
+Its accuracy directly affects simulation behaviour in multi-segment environments.</p>
+<section id="problem">
+<h2>Problem<a class="headerlink" href="#problem" title="Link to this heading">¶</a></h2>
+<p>Before version 1.12, <code class="docutils literal notranslate"><span class="pre">neighbour_vehicles()</span></code> only searched the <strong>current lane segment</strong>. Vehicles that
+are not in the current segment were treated as invisible, even when they were directly ahead of or
+behind the ego vehicle in the driving direction.</p>
+<p>This caused incorrect behaviour near segment boundaries in environments built from several connected
+lanes, such as <code class="docutils literal notranslate"><span class="pre">merge</span></code>, <code class="docutils literal notranslate"><span class="pre">exit</span></code>, <code class="docutils literal notranslate"><span class="pre">roundabout</span></code>, <code class="docutils literal notranslate"><span class="pre">racetrack</span></code>, <code class="docutils literal notranslate"><span class="pre">intersection</span></code>, and <code class="docutils literal notranslate"><span class="pre">u-turn</span></code> maps. See
+<a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/issues/626">issue #626</a>.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../../_images/compare_intersection_v0_v2.gif"><img alt="../../../_images/compare_intersection_v0_v2.gif" src="../../../_images/compare_intersection_v0_v2.gif" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Side-by-side comparison of intersection-v0 (left) and intersection-v2 (right).</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 </section>
-<section id="goal-environments">
-<h2>Goal environments<a class="headerlink" href="#goal-environments" title="Link to this heading">¶</a></h2>
-<p>In the <span class="xref std std-ref">Parking</span> environment, however, the reward function must also specify the desired goal destination.
-Thus, the velocity term is replaced by a weighted p-norm between the agent state and the goal state.</p>
-<div class="math-wrapper docutils container">
-<div class="math notranslate nohighlight">
-\[
-R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
-\]</div>
+<section id="the-fix">
+<h2>The fix<a class="headerlink" href="#the-fix" title="Link to this heading">¶</a></h2>
+<p>When <code class="xref py py-attr docutils literal notranslate"><span class="pre">neighbour_vehicles_connected_lanes</span></code> is enabled, the search
+extends to <strong>downstream and upstream connected lane segments</strong> via the road-network graph.</p>
+<p>The behaviour is controlled by:</p>
+<ul class="simple">
+<li><p>the <code class="docutils literal notranslate"><span class="pre">neighbour_vehicles_connected_lanes</span></code> flag on <a class="reference internal" href="../road/#highway_env.road.road.Road" title="highway_env.road.road.Road"><code class="xref py py-class docutils literal notranslate"><span class="pre">Road</span></code></a>, and</p></li>
+<li><p>the matching <code class="docutils literal notranslate"><span class="pre">neighbour_vehicles_connected_lanes</span></code> entry in the environment config (see
+<a class="reference internal" href="../../../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.default_config" title="highway_env.envs.common.abstract.AbstractEnv.default_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">default_config()</span></code></a>).</p></li>
+</ul>
+</section>
+<section id="reproducibility-and-environment-versions">
+<h2>Reproducibility and environment versions<a class="headerlink" href="#reproducibility-and-environment-versions" title="Link to this heading">¶</a></h2>
+<p>To preserve reproducibility, existing <code class="docutils literal notranslate"><span class="pre">*-v0</span></code> environment IDs keep the original same-segment neighbour
+search by default (<code class="docutils literal notranslate"><span class="pre">neighbour_vehicles_connected_lanes=False</span></code>).</p>
+<p>New registered versions enable connected-lane search by default through
+<a class="reference internal" href="../../../make_your_own/#highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin" title="highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectedLaneNeighboursMixin</span></code></a>. For any environment, the
+new behaviour can also be enabled explicitly (albeit not recommended):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;merge-v0&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="o">...</span><span class="p">,</span> <span class="s2">&quot;neighbour_vehicles_connected_lanes&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+</pre></div>
 </div>
-<p>where <span class="math notranslate nohighlight">\(s = [x, y, v_x, v_y, \cos\psi, \sin\psi]\)</span>, <span class="math notranslate nohighlight">\(s_g = [x_g, y_g, 0, 0, \cos\psi_g, \sin\psi_g]\)</span>, and
-<span class="math notranslate nohighlight">\(\|x\|_{W,p} = (\sum_i |W_i x_i|^p)^{1/p}\)</span>. We use a p-norm rather than an Euclidean norm in order to have a narrower spike of rewards at the goal.</p>
+<section id="version-mapping">
+<h3>Version mapping<a class="headerlink" href="#version-mapping" title="Link to this heading">¶</a></h3>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Environment</p></th>
+<th class="head"><p>Initial (legacy search)</p></th>
+<th class="head"><p>Connected-lane search</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>exit</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exit-v0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exit-v1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>merge</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">merge-v0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">merge-v1</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>roundabout</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">roundabout-v0</span></code>, <code class="docutils literal notranslate"><span class="pre">roundabout-generic-v0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">roundabout-v1</span></code>, <code class="docutils literal notranslate"><span class="pre">roundabout-generic-v1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>racetrack</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">racetrack-v0</span></code>, <code class="docutils literal notranslate"><span class="pre">racetrack-large-v0</span></code>, <code class="docutils literal notranslate"><span class="pre">racetrack-oval-v0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">racetrack-v1</span></code>, <code class="docutils literal notranslate"><span class="pre">racetrack-large-v1</span></code>, <code class="docutils literal notranslate"><span class="pre">racetrack-oval-v1</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>u-turn</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u-turn-v0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u-turn-v1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>intersection</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">intersection-v0</span></code>, <code class="docutils literal notranslate"><span class="pre">intersection-multi-agent-v0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">intersection-v2</span></code>, <code class="docutils literal notranslate"><span class="pre">intersection-multi-agent-v2</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">intersection-v1</span></code> and <code class="docutils literal notranslate"><span class="pre">intersection-multi-agent-v1</span></code> are unrelated to this change: they provide a
+continuous-action variant and a multi-agent wrapper respectively, not connected-lane neighbour search.</p>
+</div>
+</section>
+</section>
+<section id="demonstration">
+<h2>Demonstration<a class="headerlink" href="#demonstration" title="Link to this heading">¶</a></h2>
+<p>The animation below compares <code class="docutils literal notranslate"><span class="pre">merge-v0</span></code> (left, original same-segment search) with <code class="docutils literal notranslate"><span class="pre">merge-v1</span></code> (right,
+connected-lane search) running the same seed and actions side by side. When the ego vehicle passes
+a segment boundary, <code class="docutils literal notranslate"><span class="pre">merge-v1</span></code> can detect a rear vehicle that is in the previous segment,
+while <code class="docutils literal notranslate"><span class="pre">merge-v0</span></code> cannot. Also notice that vehicle behaviour is <strong>different</strong> even with the same seed.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../../_images/compare_merge_v0_v1.gif"><img alt="../../../_images/compare_merge_v0_v1.gif" src="../../../_images/compare_merge_v0_v1.gif" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Side-by-side comparison of merge-v0 (left) and merge-v1 (right).</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="overlay-legend">
+<h3>Overlay legend<a class="headerlink" href="#overlay-legend" title="Link to this heading">¶</a></h3>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Overlay</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Green line</p></td>
+<td><p>Front neighbour returned by <code class="docutils literal notranslate"><span class="pre">neighbour_vehicles()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Red line</p></td>
+<td><p>Vehicle that was <strong>not</strong> detected pre-1.12</p></td>
+</tr>
+<tr class="row-even"><td><p>Blue line</p></td>
+<td><p>Rear neighbour returned by <code class="docutils literal notranslate"><span class="pre">neighbour_vehicles()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Yellow line</p></td>
+<td><p>Lane segment boundary (road-network node)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="visual-comparison">
+<h2>Visual comparison<a class="headerlink" href="#visual-comparison" title="Link to this heading">¶</a></h2>
+<p>A pygame program has been created to demonstrate the difference:</p>
+<p><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/compare_neighbour_detection.py">scripts/compare_neighbour_detection.py</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/compare_neighbour_detection.py
+python<span class="w"> </span>scripts/compare_neighbour_detection.py<span class="w"> </span>--env<span class="w"> </span>merge
+python<span class="w"> </span>scripts/compare_neighbour_detection.py<span class="w"> </span>--env<span class="w"> </span>intersection
+python<span class="w"> </span>scripts/compare_neighbour_detection.py<span class="w"> </span>--env<span class="w"> </span>racetrack-large<span class="w"> </span>--no-patch
+python<span class="w"> </span>scripts/compare_neighbour_detection.py<span class="w"> </span>--validate
+python<span class="w"> </span>scripts/compare_neighbour_detection.py<span class="w"> </span>--fixed-seed<span class="w"> </span>--steps<span class="w"> </span><span class="m">80</span>
+</pre></div>
+</div>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Flag</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--env</span></code></p></td>
+<td><p>Environment to compare (default: <code class="docutils literal notranslate"><span class="pre">merge</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--no-patch</span></code></p></td>
+<td><p>Do not patch the left panel with the pre-1.12 implementation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--validate</span></code></p></td>
+<td><p>Compare current legacy env against patched legacy env with pre-1.12 code</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--fixed-seed</span></code></p></td>
+<td><p>Keep the same seed across loops</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--steps</span></code></p></td>
+<td><p>Number of simulation steps per loop before resetting (default: 80)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Keyboard controls: <strong>←</strong> rewind, <strong>→</strong> unwind / step forward, <strong>Space</strong> pause / play, <strong>Q</strong> quit.</p>
 </section>
 </section>
 
@@ -360,18 +482,18 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../graphics/">
+            <a class="next-page" href="../regulation/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Graphics</div>
+                <div class="title">Road regulation</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
             </a>
-            <a class="prev-page" href="../dynamics/vehicle/behavior/">
+            <a class="prev-page" href="../road/">
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
@@ -380,7 +502,7 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Behavior</div>
+                <div class="title">Road</div>
                 
               </div>
             </a>
@@ -424,9 +546,18 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
           <div class="toc-tree-container">
             <div class="toc-tree">
               <ul>
-<li><a class="reference internal" href="#">Rewards</a><ul>
-<li><a class="reference internal" href="#most-environments">Most environments</a></li>
-<li><a class="reference internal" href="#goal-environments">Goal environments</a></li>
+<li><a class="reference internal" href="#">Neighbour vehicles</a><ul>
+<li><a class="reference internal" href="#problem">Problem</a></li>
+<li><a class="reference internal" href="#the-fix">The fix</a></li>
+<li><a class="reference internal" href="#reproducibility-and-environment-versions">Reproducibility and environment versions</a><ul>
+<li><a class="reference internal" href="#version-mapping">Version mapping</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demonstration">Demonstration</a><ul>
+<li><a class="reference internal" href="#overlay-legend">Overlay legend</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#visual-comparison">Visual comparison</a></li>
 </ul>
 </li>
 </ul>
@@ -513,15 +644,13 @@ R(s,a) = -\| s - s_g \|_{W,p}^p - b\,\text{collision}
         })()
       </script>
 
-    <script src="../_static/documentation_options.js?v=a5603611"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=7660844c"></script>
-    <script src="../_static/thebelab-helper.js"></script>
+    <script src="../../../_static/documentation_options.js?v=a5603611"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=7660844c"></script>
+    <script src="../../../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script>
 

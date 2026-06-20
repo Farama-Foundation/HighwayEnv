@@ -229,6 +229,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/controller/">Control</a></li>
@@ -302,7 +303,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">ConnectedLaneNeighboursMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">SineLane</span><span class="p">,</span> <span class="n">StraightLane</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">Road</span><span class="p">,</span> <span class="n">RoadNetwork</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlledVehicle</span>
@@ -452,6 +453,9 @@
             <span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span>
             <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span>
             <span class="n">record_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_trajectories&quot;</span><span class="p">],</span>
+            <span class="n">neighbour_vehicles_connected_lanes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span>
+                <span class="s2">&quot;neighbour_vehicles_connected_lanes&quot;</span>
+            <span class="p">],</span>
         <span class="p">)</span>
         <span class="n">road</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Obstacle</span><span class="p">(</span><span class="n">road</span><span class="p">,</span> <span class="n">lbc</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">road</span>
@@ -483,6 +487,10 @@
         <span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merging_v</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span> <span class="o">=</span> <span class="n">ego_vehicle</span></div>
 
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConnectedLaneMergeEnv</span><span class="p">(</span><span class="n">ConnectedLaneNeighboursMixin</span><span class="p">,</span> <span class="n">MergeEnv</span><span class="p">):</span>
+    <span class="k">pass</span>
 </pre></div>
           </article>
         </div>
