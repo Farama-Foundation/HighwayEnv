@@ -17,7 +17,7 @@ This caused incorrect behaviour near segment boundaries in environments built fr
 lanes, such as `merge`, `exit`, `roundabout`, `racetrack`, `intersection`, and `u-turn` maps. See
 [issue #626](https://github.com/Farama-Foundation/HighwayEnv/issues/626).
 
-```{figure} ../../../../_static/img/compare_intersection_v0_v2.gif
+```{figure} ../../_static/img/compare_intersection_v0_v2.gif
 :align: center
 :width: 100%
 
@@ -68,10 +68,10 @@ continuous-action variant and a multi-agent wrapper respectively, not connected-
 
 The animation below compares `merge-v0` (left, original same-segment search) with `merge-v1` (right,
 connected-lane search) running the same seed and actions side by side. When the ego vehicle passes
-a segment boundary, `merge-v1` can detect a rear vehicle that is in previous segment,
+a segment boundary, `merge-v1` can detect a rear vehicle that is in the previous segment,
 while `merge-v0` cannot. Also notice that vehicle behaviour is **different** even with the same seed.
 
-```{figure} ../../../../_static/img/compare_merge_v0_v1.gif
+```{figure} ../../_static/img/compare_merge_v0_v1.gif
 :align: center
 :width: 100%
 
