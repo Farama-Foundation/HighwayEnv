@@ -744,6 +744,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">STEERING_PARAMETERS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">STEERING_RANGE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">ub</span> <span class="o">*</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">STEERING_RANGE</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">STEERING_RANGE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
 
 <div class="viewcode-block" id="LinearVehicle.acceleration">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.acceleration">[docs]</a>
