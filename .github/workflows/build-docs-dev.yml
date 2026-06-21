@@ -1,7 +1,12 @@
-name: Build main branch documentation website
+name: Docs Build (main)
 on:
   push:
     branches: [main]
+  pull_request:
+      branches: [ main ]
+      paths:
+        - 'docs/**'
+        - '.github/workflows/build-docs*.yml'
 permissions:
   contents: write
 env:
@@ -30,6 +35,7 @@ jobs:
       - name: Register Envs
         run: pip install -e .
 
+      # TODO: eliminate all warnings and add -W flag to fail at warnings
       - name: Build
         run: sphinx-build -b dirhtml -v docs _build
 
@@ -43,6 +49,7 @@ jobs:
         run: rm -r _build/.doctrees
 
       - name: Upload to GitHub Pages
+        if: github.event_name == 'push'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: _build
