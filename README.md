@@ -31,7 +31,7 @@ We support Python 3.10+ on Linux and macOS.
 
 ## Environments
 
-HighwayEnv includes 6 driving scenario environments: `highway`, `merge`, `roundabout`, `parking`, `intersection`, and `racetrack`. The full list with descriptions and configuration options is available in the [documentation](https://highway-env.farama.org/environments/highway/).
+HighwayEnv includes 10 driving scenario families: `highway`, `intersection`, `exit`, `lane-keeping`, `merge`, `parking`, `racetrack`, `roundabout`, `two-way`, and `u-turn`, with several environments also offering fast, continuous-control, connected-lane, multi-agent, generic, large, or oval variants. The full list with descriptions and configuration options is available in the [documentation](https://highway-env.farama.org/main/environments/).
 
 <details>
 <summary>Previews</summary>
