@@ -12,6 +12,7 @@ Fixes # (issue)
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] New environment or environment variant
+- [ ] Performance improvement (non-breaking change that improves speed, memory, or resource usage)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] Compatibility fix or other chore tasks
 - [ ] This change requires a documentation update
@@ -39,6 +40,7 @@ To upload images to a PR -- simply drag and drop an image while in edit mode and
 - [ ] My changes generate no new warnings
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
+- [ ] If my code may add latency, I've tested locally and provided details in description above
 
 <!--
 As you go through the checklist above, you can mark something as done by putting an x character in it

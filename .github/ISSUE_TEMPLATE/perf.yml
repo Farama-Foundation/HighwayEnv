@@ -1,0 +1,77 @@
+name: Performance
+description: Report a performance issue or propose a performance improvement
+title: "[Performance] Performance title"
+labels: ["performance"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the performance issue
+      description: A clear and concise description of the slowdown, bottleneck, or resource usage problem.
+    validations:
+      required: true
+
+  - type: input
+    id: environment-id
+    attributes:
+      label: Environment ID
+      description: The Gymnasium environment ID (e.g. `highway-v0`, `racetrack-v0`), `*` if not environment-specific, or `N/A` if you are not sure.
+      placeholder: highway-v0
+    validations:
+      required: true
+
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Current vs expected performance
+      description: |
+        Share measurable results where possible (e.g. steps/sec, reset time, render FPS, memory usage, training throughput).
+        Include what you expected and what you observed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: profiling
+    attributes:
+      label: Profiling output, or flame graph that demonstrates the hotspot (if applicable)
+      description: |
+        Share the profiling output, we recommend using `line-profiler` as it's more intuitive to read.
+        For flame graph you can try `pyinstrument -r html -o <output_file> benchmark_script.py`.
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps or benchmark
+      description: |
+        Provide a minimal script, benchmark, or step-by-step instructions to reproduce the performance issue.
+        This will be automatically formatted into code, so no need for backticks.
+      render: python
+
+  - type: textarea
+    id: system-info
+    attributes:
+      label: System info
+      description: |
+        Describe the characteristic of your environment:
+        * Describe how `highway-env` was installed (pip, source, ...)
+        * Version of `highway-env` (e.g. `import highway_env; highway_env.__version__`)
+        * Version of `gymnasium` (e.g. `import gymnasium; gymnasium.__version__`)
+        * Version of `pygame` or `pygame-ce` (e.g. `import pygame; pygame.__version__`)
+        * What OS/version you're using.
+        * Which Python version are you using, is there anything special about it? (e.g. free-thread build, MSYS2/Mingw fork, ...)
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here (profiling output, related issues, screenshots, etc.).
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: >
+            I have checked that there is no similar [issue](https://github.com/Farama-Foundation/HighwayEnv/issues) in
+            the repo
+          required: true
