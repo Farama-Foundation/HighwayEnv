@@ -329,17 +329,11 @@ order, it will see it as a novel state and will not be able to reuse past inform
 make use of its observation.</p>
 <p>This can be addressed in two ways:</p>
 <ul class="simple">
-<li><ul>
 <li><p>Change the <em>model</em>, to use a permutation-invariant architecture which will not be sensitive to the vehicles order, such as <em>e.g.</em> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../bibliography/#id9" title="Charles R. Qi, Hao Su, Kaichun Mo, and Leonidas J. Guibas. Pointnet: deep learning on point sets for 3d classification and segmentation. 2017. arXiv:1612.00593.">QSMG17</a>]</span> or <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>.</p></li>
-</ul>
-</li>
 </ul>
 <p>This example is implemented <a class="reference external" href="https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/intersection_social_dqn.ipynb">here (DQN)</a> or <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_ppo_transformer.py">here (SB3’s PPO)</a>.</p>
 <ul class="simple">
-<li><ul>
 <li><p>Change the <em>observation</em>. For example, the <a class="reference internal" href="../observations/#grayscale-image"><span class="std std-ref">Grayscale Image</span></a> does not depend on an ordering. In this case, a CNN model is more suitable than an MLP model.</p></li>
-</ul>
-</li>
 </ul>
 <p>This example is implemented <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_dqn_cnn.py">here (SB3’s DQN)</a>.</p>
 </section>

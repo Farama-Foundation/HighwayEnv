@@ -576,23 +576,23 @@ vehicle and 0 for placeholders.</p>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.12        1.          0.          1.
    0.        ]
- [ 1.          0.18558058 -0.04       -0.19826165  0.          1.
+ [ 1.          0.2082548  -0.04       -0.10288074  0.          1.
    0.        ]
- [ 1.          0.38665316 -0.04       -0.14803557  0.          1.
+ [ 1.          0.4056267  -0.04       -0.12037509  0.          1.
    0.        ]
- [ 1.          0.59039795 -0.08       -0.07981386  0.          1.
+ [ 1.          0.60642415  0.         -0.11289795  0.          1.
    0.        ]
- [ 1.          0.78576154 -0.04       -0.11772126  0.          1.
+ [ 1.          0.8095602  -0.12       -0.12156907  0.          1.
    0.        ]
- [ 1.          0.9970916   0.         -0.15997693  0.          1.
+ [ 1.          1.         -0.08       -0.08480794  0.          1.
    0.        ]
- [ 1.          1.         -0.08       -0.12337852  0.          1.
+ [ 1.          1.         -0.12       -0.06660027  0.          1.
    0.        ]
- [ 1.          1.         -0.08       -0.06025069  0.          1.
+ [ 1.          1.         -0.12       -0.07401603  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.09188157  0.          1.
+ [ 1.          1.          0.         -0.07961195  0.          1.
    0.        ]
- [ 1.          1.         -0.12       -0.11335826  0.          1.
+ [ 1.          1.         -0.08       -0.16031253  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -775,8 +775,9 @@ The grid size and resolution is defined by the <code class="docutils literal not
 <p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeToCollisionObservation</span></code> is a <span class="math notranslate nohighlight">\(V\times L\times H\)</span> array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
 These predictions are performed for <span class="math notranslate nohighlight">\(V\)</span> different values of the ego-vehicle speed, <span class="math notranslate nohighlight">\(L\)</span> lanes on the road around the current lane, and represented as one-hot encodings over <span class="math notranslate nohighlight">\(H\)</span> discretised time values (bins), with 1s steps.</p>
 <p>For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using <span class="math notranslate nohighlight">\(V=3,\, L = 3\,H = 10\)</span>, with ego-speed of {<span class="math notranslate nohighlight">\(15\)</span> m/s, <span class="math notranslate nohighlight">\(20\)</span> m/s and <span class="math notranslate nohighlight">\(25\)</span> m/s}, the predicted time-to-collisions are <span class="math notranslate nohighlight">\(\infty,\,5s,\,2.5s\)</span> and the corresponding observation is</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
+<div class="table-wrapper docutils container" id="id9">
+<table class="docutils align-default" id="id9">
+<caption><span class="caption-text">$15$ m/s</span><a class="headerlink" href="#id9" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -814,8 +815,9 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </tbody>
 </table>
 </div>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
+<div class="table-wrapper docutils container" id="id10">
+<table class="docutils align-default" id="id10">
+<caption><span class="caption-text">$20$ m/s</span><a class="headerlink" href="#id10" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -853,8 +855,9 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </tbody>
 </table>
 </div>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
+<div class="table-wrapper docutils container" id="id11">
+<table class="docutils align-default" id="id11">
+<caption><span class="caption-text">$25$ m/s</span><a class="headerlink" href="#id11" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -912,9 +915,9 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </ul>
 <p>The angular sector of index 0 corresponds to an angle 0 (east), and then each index/sector increases the angle (south, west, north).</p>
 <p>For example, for a grid of 8 cells, an obstacle 10 meters away in the south and moving towards the north at 1m/s would lead to the following observation:</p>
-<div class="table-wrapper docutils container" id="id9">
-<table class="docutils align-default" id="id9">
-<caption><span class="caption-text">the Lidar observation</span><a class="headerlink" href="#id9" title="Link to this table">¶</a></caption>
+<div class="table-wrapper docutils container" id="id12">
+<table class="docutils align-default" id="id12">
+<caption><span class="caption-text">the Lidar observation</span><a class="headerlink" href="#id12" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
