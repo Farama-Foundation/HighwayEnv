@@ -29,14 +29,14 @@ dependencies = [
     "pygame-ce >=2.1.3",
     "matplotlib",
     "pandas",
-    "scipy"
 ]
 dynamic = ["version"]
 
 [project.optional-dependencies]
 testing = [
     "pytest",
-    "pytest-cov"
+    "pytest-cov",
+    "scipy",
 ]
 
 [project.urls]

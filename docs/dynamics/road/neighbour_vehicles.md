@@ -91,15 +91,15 @@ Side-by-side comparison of merge-v0 (left) and merge-v1 (right).
 
 A pygame program has been created to demonstrate the difference:
 
-[scripts/compare_neighbour_detection.py](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/compare_neighbour_detection.py)
+[scripts/validate/compare_neighbour_detection.py](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/validate/compare_neighbour_detection.py)
 
 ```bash
-python scripts/compare_neighbour_detection.py
-python scripts/compare_neighbour_detection.py --env merge
-python scripts/compare_neighbour_detection.py --env intersection
-python scripts/compare_neighbour_detection.py --env racetrack-large --no-patch
-python scripts/compare_neighbour_detection.py --validate
-python scripts/compare_neighbour_detection.py --fixed-seed --steps 80
+python scripts/validate/compare_neighbour_detection.py
+python scripts/validate/compare_neighbour_detection.py --env merge
+python scripts/validate/compare_neighbour_detection.py --env intersection
+python scripts/validate/compare_neighbour_detection.py --env racetrack-large --no-patch
+python scripts/validate/compare_neighbour_detection.py --validate
+python scripts/validate/compare_neighbour_detection.py --fixed-seed --steps 80
 ```
 
 | Flag | Description |
