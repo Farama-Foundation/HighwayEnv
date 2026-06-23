@@ -35,7 +35,8 @@ dynamic = ["version"]
 [project.optional-dependencies]
 testing = [
     "pytest",
-    "pytest-cov"
+    "pytest-cov",
+    "scipy",
 ]
 
 [project.urls]
