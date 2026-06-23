@@ -1,7 +1,36 @@
 from __future__ import annotations
 
 import numpy as np
-from scipy import interpolate
+
+
+def numpy_interp1d(x: np.ndarray, y: np.ndarray):
+    """
+    Drop-in replacement for ``scipy.interpolate.interp1d(x, y, fill_value="extrapolate")``.
+
+    Introduced by https://github.com/Farama-Foundation/HighwayEnv/pull/691 to remove the ``scipy`` dependency.
+    A validation benchmark script can be found at ``scripts/validate/bench_interp1d.py``.
+    """
+
+    def interpolator(x_new):
+        x_new = np.asarray(x_new, dtype=float)
+        scalar = x_new.ndim == 0
+        x_new = np.atleast_1d(x_new)
+
+        result = np.interp(x_new, x, y)
+
+        left = x_new < x[0]
+        if np.any(left):
+            slope = (y[1] - y[0]) / (x[1] - x[0])
+            result[left] = y[0] + slope * (x_new[left] - x[0])
+
+        right = x_new > x[-1]
+        if np.any(right):
+            slope = (y[-1] - y[-2]) / (x[-1] - x[-2])
+            result[right] = y[-1] + slope * (x_new[right] - x[-1])
+
+        return float(result[0]) if scalar else result
+
+    return interpolator
 
 
 class LinearSpline2D:
@@ -22,18 +51,10 @@ class LinearSpline2D:
             (0, np.cumsum(np.sqrt(x_values_diff[:-1] ** 2 + y_values_diff[:-1] ** 2)))
         )
         self.length = arc_length_cumulated[-1]
-        self.x_curve = interpolate.interp1d(
-            arc_length_cumulated, x_values, fill_value="extrapolate"
-        )
-        self.y_curve = interpolate.interp1d(
-            arc_length_cumulated, y_values, fill_value="extrapolate"
-        )
-        self.dx_curve = interpolate.interp1d(
-            arc_length_cumulated, x_values_diff, fill_value="extrapolate"
-        )
-        self.dy_curve = interpolate.interp1d(
-            arc_length_cumulated, y_values_diff, fill_value="extrapolate"
-        )
+        self.x_curve = numpy_interp1d(arc_length_cumulated, x_values)
+        self.y_curve = numpy_interp1d(arc_length_cumulated, y_values)
+        self.dx_curve = numpy_interp1d(arc_length_cumulated, x_values_diff)
+        self.dy_curve = numpy_interp1d(arc_length_cumulated, y_values_diff)
 
         (self.s_samples, self.poses) = self.sample_curve(
             self.x_curve, self.y_curve, self.length, self.PARAM_CURVE_SAMPLE_DISTANCE

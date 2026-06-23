@@ -29,7 +29,6 @@ dependencies = [
     "pygame-ce >=2.1.3",
     "matplotlib",
     "pandas",
-    "scipy"
 ]
 dynamic = ["version"]
 

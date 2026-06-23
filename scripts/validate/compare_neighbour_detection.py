@@ -5,10 +5,10 @@ Shows how connected-lane neighbour detection differs when the ego vehicle
 is on one lane segment and a neighbour is on an adjacent connected segment.
 
 Run:
-    python scripts/compare_neighbour_detection.py
-    python scripts/compare_neighbour_detection.py --env racetrack
-    python scripts/compare_neighbour_detection.py --env intersection --no-patch
-    python scripts/compare_neighbour_detection.py --validate
+    python scripts/validate/compare_neighbour_detection.py
+    python scripts/validate/compare_neighbour_detection.py --env racetrack
+    python scripts/validate/compare_neighbour_detection.py --env intersection --no-patch
+    python scripts/validate/compare_neighbour_detection.py --validate
 """
 
 import argparse
