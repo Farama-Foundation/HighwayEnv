@@ -12,12 +12,44 @@ lastpage:
 A collection of environments for autonomous driving and tactical decision-making tasks.
 ```
 
-This project gathers a collection of environment for *decision-making* in Autonomous Driving.
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway.gif
+:alt: Highway
+:width: 500
+```
 
-The purpose of this documentation is to provide:
+**HighwayEnv** is a collection of [Gymnasium](https://gymnasium.farama.org/) environments for decision-making in autonomous driving. It features various driving scenarios such as highway cruising, merging, intersection crossing, parking, car racing, and more — all with configurable observations, actions, dynamics, and rewards:
 
-1. a {ref}`quick start guide <quickstart>` describing the environments and their customization options;
-2. a {ref}`detailed description <user_guide>` of the nuts and bolts of the project, and how *you* can contribute.
+```python
+import gymnasium as gym
+import highway_env
+
+gym.register_envs(highway_env)
+
+# Initialise the environment
+env = gym.make("highway-v1", config={"lanes_count": 3}, render_mode="human")
+
+# Reset the environment to generate the first observation
+obs, info = env.reset()
+for _ in range(1000):
+    # this is where you would insert your policy
+    action = env.action_space.sample()
+
+    # step (transition) through the environment with the action
+    # receiving the next observation, reward and if the episode has terminated or truncated
+    obs, reward, terminated, truncated, info = env.step(action)
+
+    # If the episode has ended then we can reset to start a new episode
+    if terminated or truncated:
+        obs, info = env.reset()
+
+env.close()
+```
+
+This documentation provides:
+
+1. a {ref}`quick start guide <quickstart>` describing the environments and how to get started;
+2. a description of the available {ref}`environments <environments>` and their configuration options;
+3. a {ref}`detailed guide <user_guide>` covering the nuts and bolts of the project, and how *you* can contribute.
 
 (index-how-to-cite-this-work)=
 
@@ -39,14 +71,32 @@ BibTeX:
 
 ```{toctree}
 :hidden:
-:maxdepth: 2
+:caption: Getting Started
 
 installation
 quickstart
+```
+
+```{toctree}
+:hidden:
+:caption: Environments
+
+environments/index
+```
+
+```{toctree}
+:hidden:
+:caption: User Guide
+
 content/algorithms
 user_guide
-Environments <environments/index>
 faq
+```
+
+```{toctree}
+:hidden:
+:caption: Reference
+
 List of Publications <content/publications>
 bibliography/index
 ```
