@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import itertools
-from typing import Callable
+from typing import Callable, Sequence
 
 import numpy as np
 from numpy.linalg import LinAlgError
@@ -182,7 +182,7 @@ class LPV:
         self,
         x0: Vector,
         a0: Matrix,
-        da: list[Vector],
+        da: Sequence[Vector],
         b: Matrix = None,
         d: ColumnVector = None,
         omega_i: Matrix = None,

@@ -224,6 +224,8 @@ class IntervalVehicle(LinearVehicle):
         """
         # Create longitudinal and lateral LPVs
         self.predictor_init()
+        self.lateral_lpv: LPV
+        self.longitudinal_lpv: LPV
 
         # Detect lane change and update intervals of local coordinates with the new frame
         if self.target_lane_index != self.previous_target_lane_index:
