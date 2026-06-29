@@ -61,6 +61,7 @@ More specifically, it is defined in:
 
 ```{eval-rst}
 .. automethod:: HighwayEnv.default_config
+    :no-index:
 ```
 
 ## Faster variant

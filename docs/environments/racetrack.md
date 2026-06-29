@@ -77,6 +77,7 @@ More specifically, it is defined in:
 
 ```{eval-rst}
 .. automethod:: RacetrackEnv.default_config
+    :no-index:
 ```
 
 ## API

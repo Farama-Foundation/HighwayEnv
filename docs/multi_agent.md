@@ -6,10 +6,11 @@ Most environments can be configured to a multi-agent version. Here is how:
 
 ## Increase the number of controlled vehicles
 
-To that end, update the {ref}`environment configuration <Configuring an environment>` to increase `controlled_vehicles`
+To that end, update the {ref}`environment configuration <configuration>` to increase `controlled_vehicles`
 
 ```{eval-rst}
 .. jupyter-execute::
+  :stderr:
 
   import gymnasium
   import highway_env
@@ -39,6 +40,7 @@ The type of actions contained in the tuple must be described by a standard {ref}
 
 ```{eval-rst}
 .. jupyter-execute::
+  :stderr:
 
   env.unwrapped.config.update({
     "action": {
@@ -74,6 +76,7 @@ The type of observations contained in the tuple must be described by a standard 
 
 ```{eval-rst}
 .. jupyter-execute::
+  :stderr:
 
   env = gymnasium.make(
     "highway-v0",
@@ -99,6 +102,7 @@ Here is a pseudo-code example of how a centralized multi-agent policy could be t
 
 ```{eval-rst}
 .. jupyter-execute::
+  :stderr:
 
   # Multi-agent environment configuration
   env.unwrapped.config.update({

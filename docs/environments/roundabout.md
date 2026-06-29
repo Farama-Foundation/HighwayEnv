@@ -73,6 +73,7 @@ More specifically, it is defined in:
 
 ```{eval-rst}
 .. automethod:: RoundaboutEnv.default_config
+    :no-index:
 ```
 
 ## API

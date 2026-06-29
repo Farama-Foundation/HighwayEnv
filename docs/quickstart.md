@@ -7,6 +7,7 @@ Here is a quick example of how to create an environment:
 
 ```{eval-rst}
 .. jupyter-execute::
+  :stderr:
 
   import gymnasium
   import highway_env
@@ -48,6 +49,7 @@ For example, the number of lanes can be changed with:
 
 ```{eval-rst}
 .. jupyter-execute::
+  :stderr:
 
   env = gymnasium.make(
     "highway-v0",
@@ -64,6 +66,7 @@ After environment creation, the configuration can be accessed using the
 
 ```{eval-rst}
 .. jupyter-execute::
+  :stderr:
 
   import pprint
 

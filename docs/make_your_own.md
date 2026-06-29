@@ -26,7 +26,7 @@ The first step is to create a {py:class}`~highway_env.road.road.RoadNetwork` tha
 roads and lanes in the scene.
 This should be achieved in a `YourEnv._make_road()` method, called from `YourEnv.reset()` to set the `self.road` field.
 
-See {ref}`Roads <road_road>` for reference, and existing environments as examples.
+See {ref}`Roads <road-road>` for reference, and existing environments as examples.
 
 ## Create the vehicles
 
@@ -37,7 +37,7 @@ First, define the controlled ego-vehicle by setting `self.vehicle`. The class of
 choice of action type, and can be accessed as `self.action_type.vehicle_class`.
 Other vehicles can be created more freely, and added to the `self.road.vehicles` list.
 
-See {ref}`vehicle behaviors <vehicle_behavior>` for reference, and existing environments as examples.
+See {ref}`vehicle behaviors <vehicle-behavior>` for reference, and existing environments as examples.
 
 ## Make the environment configurable
 

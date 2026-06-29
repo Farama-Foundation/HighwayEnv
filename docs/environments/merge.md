@@ -64,6 +64,7 @@ More specifically, it is defined in:
 
 ```{eval-rst}
 .. automethod:: MergeEnv.default_config
+    :no-index:
 ```
 
 ## API

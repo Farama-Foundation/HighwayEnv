@@ -65,6 +65,7 @@ More specifically, it is defined in:
 
 ```{eval-rst}
 .. automethod:: ParkingEnv.default_config
+    :no-index:
 ```
 
 ## API

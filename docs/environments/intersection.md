@@ -17,7 +17,7 @@ An intersection negotiation task with dense traffic.
 ```{warning}
 It's quite hard to come up with good decentralized behaviors for other agents to avoid each other. Of course, this
 could be achieved by sophisticated centralized schedulers, or traffic lights, but to keep things simple a
-{ref}`rudimentary collision prediction <road_regulation>` was added in the behaviour of other vehicles.
+{ref}`rudimentary collision prediction <road-regulation>` was added in the behaviour of other vehicles.
 
 This simple system sometime fails which results in collisions, blocking the way for the ego-vehicle.
 I figured it was fine for my own purpose, since it did not happen too often and it's reasonable to expect
@@ -93,6 +93,7 @@ More specifically, it is defined in:
 
 ```{eval-rst}
 .. automethod:: IntersectionEnv.default_config
+    :no-index:
 ```
 
 ## API

@@ -36,7 +36,7 @@ In some environments, the weight of the collision penalty can be configured thro
 
 ## Goal environments
 
-In the {ref}`Parking <environments_parking>` environment, however, the reward function must also specify the desired goal destination.
+In the {ref}`Parking <environments-parking>` environment, however, the reward function must also specify the desired goal destination.
 Thus, the velocity term is replaced by a weighted p-norm between the agent state and the goal state.
 
 $$
