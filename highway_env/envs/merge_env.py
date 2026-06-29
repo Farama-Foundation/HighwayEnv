@@ -219,16 +219,16 @@ class MergeGenericEnv(MergeEnv):
         cfg.update(
             {
                 "lanes_count": 2,
-                "vehicles_count": 10,
+                "vehicles_count": 3,
                 # Parameters that define the size of each component of the merging road:
-                # Section before the merge segment (must be >= 60)
+                # Section before the merge segment (recommended to be >= 60)
                 "before_merge_length": 150,
                 # Section converging closer to the highway
                 "converge_merge_length": 80,
                 # Section where the vehicle can merge into the highway
                 "parallel_merge_length": 80,
-                # Section after the merge segment (must be >= 100)
-                "after_merge_length": 300,
+                # Section after the merge segment (must be >= 90)
+                "after_merge_length": 150,
             }
         )
         return cfg
@@ -240,7 +240,7 @@ class MergeGenericEnv(MergeEnv):
         converge = self.config["converge_merge_length"]
         parallel = self.config["parallel_merge_length"]
         after = self.config["after_merge_length"]
-        self.end_position = pre_merge + converge + parallel + after - 100
+        self.end_position = pre_merge + converge + parallel + after - 90
 
         net = RoadNetwork.straight_road_network(
             lanes,
@@ -304,6 +304,9 @@ class MergeGenericEnv(MergeEnv):
             network=net,
             np_random=self.np_random,
             record_history=self.config.get("show_trajectories", False),
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
         )
         road.objects.append(Obstacle(road, lbc.position(parallel, 0)))
         self.road = road
