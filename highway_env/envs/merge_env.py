@@ -240,6 +240,10 @@ class MergeGenericEnv(MergeEnv):
         converge = self.config["converge_merge_length"]
         parallel = self.config["parallel_merge_length"]
         after = self.config["after_merge_length"]
+        assert all(
+            road_segment > 0 for road_segment in [pre_merge, converge, parallel]
+        ), "All road segments must have positive length"
+        assert after >= 90, "The after merge road segment must have length >= 90"
         self.end_position = pre_merge + converge + parallel + after - 90
 
         net = RoadNetwork.straight_road_network(
