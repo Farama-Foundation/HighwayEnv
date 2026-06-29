@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
     <meta property="og:url" content="https://highway-env.farama.org/quickstart.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Highway" href="../environments/highway/" /><link rel="prev" title="Installation" href="../installation/" />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Environments" href="../environments/" /><link rel="prev" title="Installation" href="../installation/" />
         <link rel="canonical" href="https://highway-env.farama.org/quickstart.html" />
 
     <link rel="shortcut icon" href="../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -212,9 +212,14 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Getting Started</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
@@ -223,6 +228,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
@@ -244,6 +252,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
 </ul>
@@ -338,21 +349,19 @@
 <section id="all-the-environments">
 <h3>All the environments<a class="headerlink" href="#all-the-environments" title="Link to this heading">¶</a></h3>
 <p>Here is the list of all the environments available and their descriptions:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../environments/highway/">Highway</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/merge/">Merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/parking/">Parking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/intersection/">Intersection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
+<ul class="simple">
+<li><p><a class="reference internal" href="../environments/highway/#environments-highway"><span class="std std-ref">Highway</span></a></p></li>
+<li><p><a class="reference internal" href="../environments/merge/#environments-merge"><span class="std std-ref">Merge</span></a></p></li>
+<li><p><a class="reference internal" href="../environments/roundabout/#environments-roundabout"><span class="std std-ref">Roundabout</span></a></p></li>
+<li><p><a class="reference internal" href="../environments/parking/#environments-parking"><span class="std std-ref">Parking</span></a></p></li>
+<li><p><a class="reference internal" href="../environments/intersection/#environments-intersection"><span class="std std-ref">Intersection</span></a></p></li>
+<li><p><a class="reference internal" href="../environments/racetrack/#environments-racetrack"><span class="std std-ref">Racetrack</span></a></p></li>
 </ul>
-</div>
 </section>
 </section>
 <section id="configuring-an-environment">
 <span id="configuration"></span><h2>Configuring an environment<a class="headerlink" href="#configuring-an-environment" title="Link to this heading">¶</a></h2>
-<p>The <a class="reference internal" href="../observations/#id1"><span class="std std-ref">observations</span></a>, <a class="reference internal" href="../actions/#actions"><span class="std std-ref">actions</span></a>, <a class="reference internal" href="../dynamics/#dynamics"><span class="std std-ref">dynamics</span></a> and <a class="reference internal" href="../rewards/#rewards"><span class="std std-ref">rewards</span></a>
+<p>The <a class="reference internal" href="../observations/#observations"><span class="std std-ref">observations</span></a>, <a class="reference internal" href="../actions/#actions"><span class="std std-ref">actions</span></a>, <a class="reference internal" href="../dynamics/#dynamics"><span class="std std-ref">dynamics</span></a> and <a class="reference internal" href="../rewards/#rewards"><span class="std std-ref">rewards</span></a>
 of an environment are parametrized by a configuration, defined as a
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">config</span></code> dictionary.</p>
 <p>For example, the number of lanes can be changed with:</p>
@@ -496,12 +505,12 @@ Train an <code class="docutils literal notranslate"><span class="pre">intersecti
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../environments/highway/">
+            <a class="next-page" href="../environments/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Highway</div>
+                <div class="title">Environments</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>

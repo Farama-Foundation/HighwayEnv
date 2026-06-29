@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
     <meta property="og:url" content="https://highway-env.farama.org/environments/highway.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Merge" href="../merge/" /><link rel="prev" title="Getting Started" href="../../quickstart/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Merge" href="../merge/" /><link rel="prev" title="Environments" href="../" />
         <link rel="canonical" href="https://highway-env.farama.org/environments/highway.html" />
 
     <link rel="shortcut icon" href="../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -212,9 +212,14 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../../quickstart/">Getting Started</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../">Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../roundabout/">Roundabout</a></li>
@@ -223,6 +228,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../racetrack/">Racetrack</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../observations/">Observations</a></li>
@@ -244,6 +252,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../bibliography/">Bibliography</a></li>
 </ul>
@@ -331,10 +342,18 @@
     <span class="p">},</span>
     <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;initial_lane_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>  <span class="c1"># [s]</span>
-    <span class="s2">&quot;initial_spacing&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;ego_spacing&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;vehicles_density&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># The reward received when colliding with a vehicle.</span>
-    <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>  <span class="c1"># [m/s] The reward for high speed is mapped linearly from this range to [0, HighwayEnv.HIGH_SPEED_REWARD].</span>
+    <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes.</span>
+    <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>  <span class="c1"># The reward received when driving at full speed, linearly mapped to zero for lower speeds according to config[&quot;reward_speed_range&quot;].</span>
+    <span class="s2">&quot;lane_change_reward&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># The reward received at each lane change action.</span>
+    <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>  <span class="c1"># [m/s] The reward for high speed is mapped linearly from this range to [0, 1].</span>
+    <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;offroad_terminal&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
     <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
     <span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">:</span> <span class="s2">&quot;highway_env.vehicle.behavior.IDMVehicle&quot;</span><span class="p">,</span>
@@ -350,8 +369,8 @@
 </div>
 <p>More specifically, it is defined in:</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="highway_env.envs.highway_env.HighwayEnv.default_config">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">HighwayEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/highway_env/#HighwayEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.highway_env.HighwayEnv.default_config" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">HighwayEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/highway_env/#HighwayEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Default environment configuration.</p>
 <p>Can be overloaded in environment implementations, or by calling configure().
 :return: a configuration dict</p>
@@ -403,7 +422,7 @@ staying on the rightmost lanes and avoiding collisions.</p>
                 <use href="#svg-arrow-right"></use>
               </svg>
             </a>
-            <a class="prev-page" href="../../quickstart/">
+            <a class="prev-page" href="../">
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
@@ -412,7 +431,7 @@ staying on the rightmost lanes and avoiding collisions.</p>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Getting Started</div>
+                <div class="title">Environments</div>
                 
               </div>
             </a>
@@ -458,10 +477,7 @@ staying on the rightmost lanes and avoiding collisions.</p>
               <ul>
 <li><a class="reference internal" href="#">Highway</a><ul>
 <li><a class="reference internal" href="#usage">Usage</a></li>
-<li><a class="reference internal" href="#default-configuration">Default configuration</a><ul>
-<li><a class="reference internal" href="#highway_env.envs.highway_env.HighwayEnv.default_config"><code class="docutils literal notranslate"><span class="pre">HighwayEnv.default_config()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#default-configuration">Default configuration</a></li>
 <li><a class="reference internal" href="#faster-variant">Faster variant</a></li>
 <li><a class="reference internal" href="#api">API</a><ul>
 <li><a class="reference internal" href="#highway_env.envs.highway_env.HighwayEnv"><code class="docutils literal notranslate"><span class="pre">HighwayEnv</span></code></a><ul>

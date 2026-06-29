@@ -212,9 +212,14 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
@@ -223,6 +228,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Observations</a></li>
@@ -244,6 +252,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
 </ul>
@@ -545,8 +556,8 @@ vehicle and 0 for placeholders.</p>
 </tbody>
 </table>
 </div>
-<section id="example-configuration">
-<h3>Example configuration<a class="headerlink" href="#example-configuration" title="Link to this heading">¶</a></h3>
+<section id="example-configuration-kinematics">
+<h3>Example configuration (kinematics)<a class="headerlink" href="#example-configuration-kinematics" title="Link to this heading">¶</a></h3>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
@@ -574,25 +585,25 @@ vehicle and 0 for placeholders.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.12        1.          0.          1.
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.          1.          0.          1.
    0.        ]
- [ 1.          0.20157683 -0.08       -0.13034807  0.          1.
+ [ 1.          0.21834278  0.08       -0.10522188  0.          1.
    0.        ]
- [ 1.          0.4182411  -0.08       -0.16529676  0.          1.
+ [ 1.          0.4200749   0.04       -0.11080014  0.          1.
    0.        ]
- [ 1.          0.6242538  -0.08       -0.0782686   0.          1.
+ [ 1.          0.6386639   0.04       -0.11732775  0.          1.
    0.        ]
- [ 1.          0.8573825  -0.12       -0.05711982  0.          1.
+ [ 1.          0.83509743  0.04       -0.17502107  0.          1.
    0.        ]
- [ 1.          1.         -0.08       -0.17755607  0.          1.
+ [ 1.          1.          0.12       -0.18842904  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.15950528  0.          1.
+ [ 1.          1.          0.08       -0.18428664  0.          1.
    0.        ]
- [ 1.          1.         -0.08       -0.11781902  0.          1.
+ [ 1.          1.          0.12       -0.09064016  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.17744851  0.          1.
+ [ 1.          1.          0.04       -0.08148635  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.09954539  0.          1.
+ [ 1.          1.          0.         -0.08322383  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -611,11 +622,11 @@ vehicle and 0 for placeholders.</p>
 </section>
 </section>
 <section id="grayscale-image">
-<span id="id2"></span><h2>Grayscale Image<a class="headerlink" href="#grayscale-image" title="Link to this heading">¶</a></h2>
+<span id="id2"></span><h2>Grayscale image<a class="headerlink" href="#grayscale-image" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="#highway_env.envs.common.observation.GrayscaleObservation" title="highway_env.envs.common.observation.GrayscaleObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">GrayscaleObservation</span></code></a> is a <span class="math notranslate nohighlight">\(W\times H\)</span> grayscale image of the scene, where <span class="math notranslate nohighlight">\(W,H\)</span> are set with the <code class="docutils literal notranslate"><span class="pre">observation_shape</span></code> parameter.
 The RGB to grayscale conversion is a weighted sum, configured by the <code class="docutils literal notranslate"><span class="pre">weights</span></code> parameter. Several images can be stacked with the <code class="docutils literal notranslate"><span class="pre">stack_size</span></code> parameter, as is customary with image observations.</p>
-<section id="grayscale-example-configuration">
-<span id="id3"></span><h3>Example configuration<a class="headerlink" href="#grayscale-example-configuration" title="Link to this heading">¶</a></h3>
+<section id="example-configuration-grayscale-image">
+<span id="grayscale-example-configuration"></span><h3>Example configuration (grayscale image)<a class="headerlink" href="#example-configuration-grayscale-image" title="Link to this heading">¶</a></h3>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -675,9 +686,9 @@ that represents a grid of shape <span class="math notranslate nohighlight">\(W\t
 uniform rectangle cells. Each cell is described by <span class="math notranslate nohighlight">\(F\)</span> features, listed in the <code class="docutils literal notranslate"><span class="pre">&quot;features&quot;</span></code> configuration field.
 The grid size and resolution is defined by the <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> and <code class="docutils literal notranslate"><span class="pre">grid_steps</span></code> configuration fields.</p>
 <p>For instance, the channel corresponding to the <code class="docutils literal notranslate"><span class="pre">presence</span></code> feature may look like this:</p>
-<div class="table-wrapper docutils container" id="id7">
-<table class="docutils align-default" id="id7">
-<caption><span class="caption-text">presence feature: one vehicle is close to the north, and one is farther to the east.</span><a class="headerlink" href="#id7" title="Link to this table">¶</a></caption>
+<div class="table-wrapper docutils container" id="id3">
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">presence feature: one vehicle is close to the north, and one is farther to the east.</span><a class="headerlink" href="#id3" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -713,9 +724,9 @@ The grid size and resolution is defined by the <code class="docutils literal not
 </table>
 </div>
 <p>The corresponding <span class="math notranslate nohighlight">\(v_x\)</span> feature may look like this:</p>
-<div class="table-wrapper docutils container" id="id8">
-<table class="docutils align-default" id="id8">
-<caption><span class="caption-text"><span class="math notranslate nohighlight">\(v_x\)</span> feature: the north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower</span><a class="headerlink" href="#id8" title="Link to this table">¶</a></caption>
+<div class="table-wrapper docutils container" id="id4">
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text"><span class="math notranslate nohighlight">\(v_x\)</span> feature: the north vehicle drives at the same speed as the ego-vehicle, and the east vehicle a bit slower</span><a class="headerlink" href="#id4" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -750,8 +761,8 @@ The grid size and resolution is defined by the <code class="docutils literal not
 </tbody>
 </table>
 </div>
-<section id="id4">
-<h3>Example configuration<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<section id="example-configuration-occupancy-grid">
+<h3>Example configuration (occupancy grid)<a class="headerlink" href="#example-configuration-occupancy-grid" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;OccupancyGrid&quot;</span><span class="p">,</span>
     <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
@@ -775,9 +786,9 @@ The grid size and resolution is defined by the <code class="docutils literal not
 <p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeToCollisionObservation</span></code> is a <span class="math notranslate nohighlight">\(V\times L\times H\)</span> array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
 These predictions are performed for <span class="math notranslate nohighlight">\(V\)</span> different values of the ego-vehicle speed, <span class="math notranslate nohighlight">\(L\)</span> lanes on the road around the current lane, and represented as one-hot encodings over <span class="math notranslate nohighlight">\(H\)</span> discretised time values (bins), with 1s steps.</p>
 <p>For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using <span class="math notranslate nohighlight">\(V=3,\, L = 3\,H = 10\)</span>, with ego-speed of {<span class="math notranslate nohighlight">\(15\)</span> m/s, <span class="math notranslate nohighlight">\(20\)</span> m/s and <span class="math notranslate nohighlight">\(25\)</span> m/s}, the predicted time-to-collisions are <span class="math notranslate nohighlight">\(\infty,\,5s,\,2.5s\)</span> and the corresponding observation is</p>
-<div class="table-wrapper docutils container" id="id9">
-<table class="docutils align-default" id="id9">
-<caption><span class="caption-text">$15$ m/s</span><a class="headerlink" href="#id9" title="Link to this table">¶</a></caption>
+<div class="table-wrapper docutils container" id="id5">
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">$15$ m/s</span><a class="headerlink" href="#id5" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -815,9 +826,9 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </tbody>
 </table>
 </div>
-<div class="table-wrapper docutils container" id="id10">
-<table class="docutils align-default" id="id10">
-<caption><span class="caption-text">$20$ m/s</span><a class="headerlink" href="#id10" title="Link to this table">¶</a></caption>
+<div class="table-wrapper docutils container" id="id6">
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text">$20$ m/s</span><a class="headerlink" href="#id6" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -855,9 +866,9 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </tbody>
 </table>
 </div>
-<div class="table-wrapper docutils container" id="id11">
-<table class="docutils align-default" id="id11">
-<caption><span class="caption-text">$25$ m/s</span><a class="headerlink" href="#id11" title="Link to this table">¶</a></caption>
+<div class="table-wrapper docutils container" id="id7">
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-text">$25$ m/s</span><a class="headerlink" href="#id7" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -896,8 +907,8 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </table>
 </div>
 <p>The top row corresponds to the left-lane, the middle row corresponds to the lane where ego-vehicle is located, and the bottom row to the right-lane.</p>
-<section id="id5">
-<h3>Example configuration<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<section id="example-configuration-time-to-collision">
+<h3>Example configuration (time to collision)<a class="headerlink" href="#example-configuration-time-to-collision" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;TimeToCollision&quot;</span>
     <span class="s2">&quot;horizon&quot;</span><span class="p">:</span> <span class="mi">10</span>
@@ -915,9 +926,9 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </ul>
 <p>The angular sector of index 0 corresponds to an angle 0 (east), and then each index/sector increases the angle (south, west, north).</p>
 <p>For example, for a grid of 8 cells, an obstacle 10 meters away in the south and moving towards the north at 1m/s would lead to the following observation:</p>
-<div class="table-wrapper docutils container" id="id12">
-<table class="docutils align-default" id="id12">
-<caption><span class="caption-text">the Lidar observation</span><a class="headerlink" href="#id12" title="Link to this table">¶</a></caption>
+<div class="table-wrapper docutils container" id="id8">
+<table class="docutils align-default" id="id8">
+<caption><span class="caption-text">the Lidar observation</span><a class="headerlink" href="#id8" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>0</p></td>
 <td><p>0</p></td>
@@ -971,8 +982,8 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </div>
 </div>
 <p>You can configure the number of cells in the angular grid with the <code class="docutils literal notranslate"><span class="pre">cells</span></code> parameter, the maximum range with <code class="docutils literal notranslate"><span class="pre">maximum_range</span></code>, and if you enable <code class="docutils literal notranslate"><span class="pre">normalize</span></code>, then distances and relative speeds are both divided by the maximum range.</p>
-<section id="id6">
-<h3>Example configuration<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<section id="example-configuration-lidar">
+<h3>Example configuration (lidar)<a class="headerlink" href="#example-configuration-lidar" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LidarObservation&quot;</span><span class="p">,</span>
     <span class="s2">&quot;cells&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
@@ -993,16 +1004,14 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 The observation shape is C x W x H.</p>
 <p>Specific keys are expected in the configuration dictionary passed.
 Example of observation dictionary in the environment config:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>observation”: {</dt><dd><p>“type”: “GrayscaleObservation”,
-“observation_shape”: (84, 84)
-“stack_size”: 4,
-“weights”: [0.2989, 0.5870, 0.1140],  # weights for RGB conversion,</p>
-</dd>
-</dl>
-<p>}</p>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;GrayscaleObservation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;observation_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">84</span><span class="p">,</span> <span class="mi">84</span><span class="p">)</span>
+    <span class="s2">&quot;stack_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2989</span><span class="p">,</span> <span class="mf">0.5870</span><span class="p">,</span> <span class="mf">0.1140</span><span class="p">],</span>  <span class="c1"># weights for RGB conversion,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.GrayscaleObservation.space">
 <span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#GrayscaleObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.space" title="Link to this definition">¶</a></dt>
@@ -1277,24 +1286,24 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
               <ul>
 <li><a class="reference internal" href="#">Observations</a><ul>
 <li><a class="reference internal" href="#kinematics">Kinematics</a><ul>
-<li><a class="reference internal" href="#example-configuration">Example configuration</a></li>
+<li><a class="reference internal" href="#example-configuration-kinematics">Example configuration (kinematics)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#grayscale-image">Grayscale Image</a><ul>
-<li><a class="reference internal" href="#grayscale-example-configuration">Example configuration</a></li>
+<li><a class="reference internal" href="#grayscale-image">Grayscale image</a><ul>
+<li><a class="reference internal" href="#example-configuration-grayscale-image">Example configuration (grayscale image)</a></li>
 <li><a class="reference internal" href="#illustration-of-the-stack-mechanism">Illustration of the stack mechanism</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#occupancy-grid">Occupancy grid</a><ul>
-<li><a class="reference internal" href="#id4">Example configuration</a></li>
+<li><a class="reference internal" href="#example-configuration-occupancy-grid">Example configuration (occupancy grid)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#time-to-collision">Time to collision</a><ul>
-<li><a class="reference internal" href="#id5">Example configuration</a></li>
+<li><a class="reference internal" href="#example-configuration-time-to-collision">Example configuration (time to collision)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#lidar">Lidar</a><ul>
-<li><a class="reference internal" href="#id6">Example configuration</a></li>
+<li><a class="reference internal" href="#example-configuration-lidar">Example configuration (lidar)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-highway_env.envs.common.observation">API</a><ul>

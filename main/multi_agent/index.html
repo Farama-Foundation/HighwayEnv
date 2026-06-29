@@ -212,9 +212,14 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
@@ -223,6 +228,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
@@ -244,6 +252,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
 </ul>
@@ -312,7 +323,7 @@
 <p>Most environments can be configured to a multi-agent version. Here is how:</p>
 <section id="increase-the-number-of-controlled-vehicles">
 <h2>Increase the number of controlled vehicles<a class="headerlink" href="#increase-the-number-of-controlled-vehicles" title="Link to this heading">¶</a></h2>
-<p>To that end, update the <a class="reference internal" href="../quickstart/#configuring-an-environment"><span class="std std-ref">environment configuration</span></a> to increase <code class="docutils literal notranslate"><span class="pre">controlled_vehicles</span></code></p>
+<p>To that end, update the <a class="reference internal" href="../quickstart/#configuration"><span class="std std-ref">environment configuration</span></a> to increase <code class="docutils literal notranslate"><span class="pre">controlled_vehicles</span></code></p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
@@ -382,7 +393,7 @@ The type of actions contained in the tuple must be described by a standard <a cl
 <p>In order to actually decide what <code class="docutils literal notranslate"><span class="pre">action_1</span></code> and <code class="docutils literal notranslate"><span class="pre">action_2</span></code> should be, both vehicles must generate their own observations.
 As before, since the observation space has not been changed no far, the observation only includes that of the first vehicle.</p>
 <p>In order for the environment to return a tuple of observations – one for each agent –, its observation type must be set to <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiAgentObservation</span></code>
-The type of observations contained in the tuple must be described by a standard <a class="reference internal" href="../observations/#id1"><span class="std std-ref">observation configuration</span></a> in the <code class="docutils literal notranslate"><span class="pre">observation_config</span></code> field.</p>
+The type of observations contained in the tuple must be described by a standard <a class="reference internal" href="../observations/#observations"><span class="std std-ref">observation configuration</span></a> in the <code class="docutils literal notranslate"><span class="pre">observation_config</span></code> field.</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
@@ -405,11 +416,11 @@ The type of observations contained in the tuple must be described by a standard 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.9114311 ,  0.5       ,  0.3125    ,  0.        ],
-       [ 1.        ,  0.09817561, -0.5       , -0.02793472,  0.        ],
-       [ 1.        ,  0.2054047 , -0.5       , -0.02207313,  0.        ],
-       [ 1.        ,  0.3053054 , -0.25      , -0.04856182,  0.        ],
-       [ 1.        ,  0.40579185,  0.        , -0.04275757,  0.        ]],
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.8820182 ,  0.25      ,  0.3125    ,  0.        ],
+       [ 1.        ,  0.10546785,  0.25      , -0.03390121,  0.        ],
+       [ 1.        ,  0.2014477 ,  0.25      , -0.03641459,  0.        ],
+       [ 1.        ,  0.30513433,  0.        , -0.03341604,  0.        ],
+       [ 1.        ,  0.41515118,  0.5       , -0.02408185,  0.        ]],
       dtype=float32),)
 </pre></div>
 </div>

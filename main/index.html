@@ -212,9 +212,14 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/roundabout/">Roundabout</a></li>
@@ -223,6 +228,9 @@
 <li class="toctree-l2"><a class="reference internal" href="environments/racetrack/">Racetrack</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="observations/">Observations</a></li>
@@ -244,6 +252,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography/">Bibliography</a></li>
 </ul>
@@ -315,11 +326,41 @@
 A collection of environments for autonomous driving and tactical decision-making tasks.
 </h2>
 </div>
-<p>This project gathers a collection of environment for <em>decision-making</em> in Autonomous Driving.</p>
-<p>The purpose of this documentation is to provide:</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway.gif"><img alt="Highway" src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway.gif" style="width: 500px;" />
+</a>
+</figure>
+<p><strong>HighwayEnv</strong> is a collection of <a class="reference external" href="https://gymnasium.farama.org/">Gymnasium</a> environments for decision-making in autonomous driving. It features various driving scenarios such as highway cruising, merging, intersection crossing, parking, car racing, and more — all with configurable observations, actions, dynamics, and rewards:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
+
+<span class="n">gym</span><span class="o">.</span><span class="n">register_envs</span><span class="p">(</span><span class="n">highway_env</span><span class="p">)</span>
+
+<span class="c1"># Initialise the environment</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;highway-v1&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">)</span>
+
+<span class="c1"># Reset the environment to generate the first observation</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="c1"># this is where you would insert your policy</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+
+    <span class="c1"># step (transition) through the environment with the action</span>
+    <span class="c1"># receiving the next observation, reward and if the episode has terminated or truncated</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="c1"># If the episode has ended then we can reset to start a new episode</span>
+    <span class="k">if</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span><span class="p">:</span>
+        <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This documentation provides:</p>
 <ol class="arabic simple">
-<li><p>a <a class="reference internal" href="quickstart/#quickstart"><span class="std std-ref">quick start guide</span></a> describing the environments and their customization options;</p></li>
-<li><p>a <a class="reference internal" href="user_guide/#user-guide"><span class="std std-ref">detailed description</span></a> of the nuts and bolts of the project, and how <em>you</em> can contribute.</p></li>
+<li><p>a <a class="reference internal" href="quickstart/#quickstart"><span class="std std-ref">quick start guide</span></a> describing the environments and how to get started;</p></li>
+<li><p>a description of the available <a class="reference internal" href="environments/#environments"><span class="std std-ref">environments</span></a> and their configuration options;</p></li>
+<li><p>a <a class="reference internal" href="user_guide/#user-guide"><span class="std std-ref">detailed guide</span></a> covering the nuts and bolts of the project, and how <em>you</em> can contribute.</p></li>
 </ol>
 <section class="tex2jax_ignore mathjax_ignore" id="how-to-cite-this-work">
 <span id="index-how-to-cite-this-work"></span><h1>How to cite this work?<a class="headerlink" href="#how-to-cite-this-work" title="Link to this heading">¶</a></h1>
@@ -334,6 +375,12 @@ BibTeX:</p>
 <span class="w">  </span><span class="na">howpublished</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{\url{https://github.com/Farama-Foundation/HighwayEnv}}</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>

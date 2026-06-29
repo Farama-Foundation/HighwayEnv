@@ -212,9 +212,14 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../../quickstart/">Getting Started</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../">Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../roundabout/">Roundabout</a></li>
@@ -223,6 +228,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../racetrack/">Racetrack</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../observations/">Observations</a></li>
@@ -244,6 +252,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../bibliography/">Bibliography</a></li>
 </ul>
@@ -318,7 +329,7 @@
 <p class="admonition-title">Warning</p>
 <p>It’s quite hard to come up with good decentralized behaviors for other agents to avoid each other. Of course, this
 could be achieved by sophisticated centralized schedulers, or traffic lights, but to keep things simple a
-<span class="xref std std-ref">rudimentary collision prediction</span> was added in the behaviour of other vehicles.</p>
+<a class="reference internal" href="../../dynamics/road/regulation/#road-regulation"><span class="std std-ref">rudimentary collision prediction</span></a> was added in the behaviour of other vehicles.</p>
 <p>This simple system sometime fails which results in collisions, blocking the way for the ego-vehicle.
 I figured it was fine for my own purpose, since it did not happen too often and it’s reasonable to expect
 the ego-vehicle to simply wait the end of episode in these situations. But I agree that it is not ideal,
@@ -384,26 +395,32 @@ and I welcome any contribution on that matter.</p>
     <span class="p">},</span>
     <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;longitudinal&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;lateral&quot;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="s2">&quot;longitudinal&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;lateral&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;target_speeds&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>  <span class="c1"># [s]</span>
     <span class="s2">&quot;destination&quot;</span><span class="p">:</span> <span class="s2">&quot;o1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;initial_vehicle_count&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
     <span class="s2">&quot;spawn_probability&quot;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span>
     <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
     <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
     <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
     <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mf">5.5</span> <span class="o">*</span> <span class="mf">1.3</span><span class="p">,</span>
-    <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="n">IntersectionEnv</span><span class="o">.</span><span class="n">COLLISION_REWARD</span><span class="p">,</span>
-    <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;arrived_reward&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">],</span>
+    <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;offroad_terminal&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>More specifically, it is defined in:</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="highway_env.envs.intersection_env.IntersectionEnv.default_config">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">IntersectionEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/intersection_env/#IntersectionEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.intersection_env.IntersectionEnv.default_config" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">IntersectionEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/intersection_env/#IntersectionEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Default environment configuration.</p>
 <p>Can be overloaded in environment implementations, or by calling configure().
 :return: a configuration dict</p>
@@ -516,10 +533,7 @@ for several simulation timesteps until the next decision making step.</p>
 <li><a class="reference internal" href="#">Intersection</a><ul>
 <li><a class="reference internal" href="#usage">Usage</a></li>
 <li><a class="reference internal" href="#versions">Versions</a></li>
-<li><a class="reference internal" href="#default-configuration">Default configuration</a><ul>
-<li><a class="reference internal" href="#highway_env.envs.intersection_env.IntersectionEnv.default_config"><code class="docutils literal notranslate"><span class="pre">IntersectionEnv.default_config()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#default-configuration">Default configuration</a></li>
 <li><a class="reference internal" href="#api">API</a><ul>
 <li><a class="reference internal" href="#highway_env.envs.intersection_env.IntersectionEnv"><code class="docutils literal notranslate"><span class="pre">IntersectionEnv</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.intersection_env.IntersectionEnv.default_config"><code class="docutils literal notranslate"><span class="pre">IntersectionEnv.default_config()</span></code></a></li>
