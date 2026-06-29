@@ -29,7 +29,7 @@ This can be addressed in two ways:
 
 This example is implemented [here (DQN)](https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/intersection_social_dqn.ipynb) or [here (SB3's PPO)](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_ppo_transformer.py).
 
-- Change the *observation*. For example, the {ref}`Grayscale Image` does not depend on an ordering. In this case, a CNN model is more suitable than an MLP model.
+- Change the *observation*. For example, the {ref}`Grayscale Image <grayscale-image>` does not depend on an ordering. In this case, a CNN model is more suitable than an MLP model.
 
 This example is implemented [here (SB3's DQN)](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_dqn_cnn.py).
 

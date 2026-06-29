@@ -55,8 +55,9 @@ class GrayscaleObservation(ObservationType):
     The observation shape is C x W x H.
 
     Specific keys are expected in the configuration dictionary passed.
-    Example of observation dictionary in the environment config:
-        observation": {
+    Example of observation dictionary in the environment config::
+
+        "observation": {
             "type": "GrayscaleObservation",
             "observation_shape": (84, 84)
             "stack_size": 4,

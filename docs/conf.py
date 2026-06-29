@@ -73,6 +73,9 @@ napoleon_custom_sections = [("Returns", "params_style")]
 autoclass_content = "both"
 autodoc_preserve_defaults = True
 
+# -- Auto Section Label configuration ----------------------------------------
+autosectionlabel_prefix_document = True
+
 # -- MyST configuration -----------------------------------------------------
 myst_enable_extensions = [
     "dollarmath",

@@ -103,10 +103,11 @@ vehicle and 0 for placeholders.
 | $lat_{off}$  | Lateral offset to closest lane.                                     |
 | $ang_{off}$  | Angular offset to closest lane.                                     |
 
-### Example configuration
+### Example configuration (kinematics)
 
 ```{eval-rst}
 .. jupyter-execute::
+    :stderr:
 
     import gymnasium as gym
     import highway_env
@@ -133,17 +134,18 @@ vehicle and 0 for placeholders.
 ```
 
 (grayscale-image)=
-## Grayscale Image
+## Grayscale image
 
 The {py:class}`~highway_env.envs.common.observation.GrayscaleObservation` is a $W\times H$ grayscale image of the scene, where $W,H$ are set with the `observation_shape` parameter.
 The RGB to grayscale conversion is a weighted sum, configured by the `weights` parameter. Several images can be stacked with the `stack_size` parameter, as is customary with image observations.
 
 (grayscale-example-configuration)=
 
-### Example configuration
+### Example configuration (grayscale image)
 
 ```{eval-rst}
 .. jupyter-execute::
+    :stderr:
 
     from matplotlib import pyplot as plt
     %matplotlib inline
@@ -172,6 +174,7 @@ We illustrate the stack update by performing three steps in the environment.
 
 ```{eval-rst}
 .. jupyter-execute::
+    :stderr:
 
     for _ in range(3):
         obs, reward, done, truncated, info = env.step(env.unwrapped.action_type.actions_indexes["IDLE"])
@@ -217,7 +220,7 @@ The corresponding $v_x$ feature may look like this:
     ==  ==  ==  ==  ==
 ```
 
-### Example configuration
+### Example configuration (occupancy grid)
 
 ```python
 "observation": {
@@ -275,7 +278,7 @@ For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and
 
 The top row corresponds to the left-lane, the middle row corresponds to the lane where ego-vehicle is located, and the bottom row to the right-lane.
 
-### Example configuration
+### Example configuration (time to collision)
 
 ```python
 "observation": {
@@ -313,6 +316,7 @@ Here is an example of what the distance grid may look like in the parking env:
 
 ```{eval-rst}
 .. jupyter-execute::
+    :stderr:
 
     env = gym.make(
         'parking-v0',
@@ -333,7 +337,7 @@ Here is an example of what the distance grid may look like in the parking env:
 You can configure the number of cells in the angular grid with the `cells` parameter, the maximum range with `maximum_range`, and if you enable `normalize`, then distances and relative speeds are both divided by the maximum range.
 
 
-### Example configuration
+### Example configuration (lidar)
 
 ```python
 "observation": {

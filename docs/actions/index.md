@@ -1,9 +1,8 @@
----
-_actions:
----
+(actions)=
 
 ```{eval-rst}
 .. py:module:: highway_env.envs.common.action
+    :no-index:
 ```
 
 # Actions
@@ -63,7 +62,7 @@ The {py:attr}`~highway_env.envs.common.action.DiscreteAction.actions_per_axis` p
 
 ## Discrete Meta-Actions
 
-The {py:class}`~highway_env.envs.common.action.DiscreteMetaAction` type adds a layer of {ref}`speed and steering controllers <vehicle_controller>`
+The {py:class}`~highway_env.envs.common.action.DiscreteMetaAction` type adds a layer of {ref}`speed and steering controllers <vehicle-controller>`
 on top of the continuous low-level control, so that the ego-vehicle can automatically follow the road at a desired velocity.
 Then, the available **meta-actions** consist in *changing the target lane and speed* that are used as setpoints for the low-level controllers.
 
@@ -95,8 +94,8 @@ Taking an unavailable action is equivalent to taking the `IDLE` action.
 
 Similarly to continuous actions, the longitudinal (speed changes) and lateral (lane changes) actions can be disabled separately
 through the {py:attr}`~highway_env.envs.common.action.DiscreteMetaAction.longitudinal` and {py:attr}`~highway_env.envs.common.action.DiscreteMetaAction.lateral` parameters.
-For instance, in the default configuration of the {ref}`intersection <environments_intersection>` environment, only the speed is controlled by the agent,
-while the lateral control of the vehicle is automatically performed by a {ref}`steering controller <vehicle_controller>` to track a desired lane.
+For instance, in the default configuration of the {ref}`intersection <environments-intersection>` environment, only the speed is controlled by the agent,
+while the lateral control of the vehicle is automatically performed by a {ref}`steering controller <vehicle-controller>` to track a desired lane.
 
 ## Manual control
 
