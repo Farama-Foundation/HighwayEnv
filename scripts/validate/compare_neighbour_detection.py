@@ -16,11 +16,13 @@ import math
 import types
 from contextvars import ContextVar
 from functools import partial
+from typing import Callable
 
 import gymnasium as gym
 import numpy as np
 import pygame
 
+from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.graphics import WorldSurface
 from highway_env.road.road import Road
 from highway_env.vehicle import kinematics
@@ -31,6 +33,7 @@ from highway_env.vehicle.objects import Landmark, LaneIndex
 ENV_VERSIONS = {
     "exit": ("exit-v0", "exit-v1"),
     "merge": ("merge-v0", "merge-v1"),
+    "merge-generic": ("merge-generic-v0", "merge-generic-v1"),
     "roundabout": ("roundabout-v0", "roundabout-v1"),
     "roundabout-generic": ("roundabout-generic-v0", "roundabout-generic-v1"),
     "racetrack": ("racetrack-v0", "racetrack-v1"),
@@ -75,8 +78,8 @@ class DualEnvReplay:
 
     def __init__(
         self,
-        env_v0,
-        env_v1,
+        env_v0: AbstractEnv,
+        env_v1: AbstractEnv,
         seed: int,
         neutral_action: np.ndarray,
         patch_left: bool = False,
@@ -84,6 +87,12 @@ class DualEnvReplay:
     ) -> None:
         self.env_v0 = env_v0
         self.env_v1 = env_v1
+        self.env_v0_terminated: Callable[[], bool] = getattr(
+            self.env_v0.unwrapped, "_is_terminated"
+        )
+        self.env_v1_terminated: Callable[[], bool] = getattr(
+            self.env_v1.unwrapped, "_is_terminated"
+        )
         self.seed = seed
         self.neutral_action = neutral_action
         self.patch_left = patch_left
@@ -122,8 +131,10 @@ class DualEnvReplay:
 
     def step_forward(self) -> None:
         action = self.neutral_action.copy()
-        self.env_v0.step(action)
-        self.env_v1.step(action)
+        if not self.env_v0_terminated():
+            self.env_v0.step(action)
+        if not self.env_v1_terminated():
+            self.env_v1.step(action)
         if self.cursor == len(self.actions):
             self.actions.append(action)
         else:
