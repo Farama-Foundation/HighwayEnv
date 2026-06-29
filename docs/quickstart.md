@@ -28,16 +28,12 @@ Here is a quick example of how to create an environment:
 
 Here is the list of all the environments available and their descriptions:
 
-```{toctree}
-:maxdepth: 1
-
-environments/highway
-environments/merge
-environments/roundabout
-environments/parking
-environments/intersection
-environments/racetrack
-```
+- {ref}`Highway <environments-highway>`
+- {ref}`Merge <environments-merge>`
+- {ref}`Roundabout <environments-roundabout>`
+- {ref}`Parking <environments-parking>`
+- {ref}`Intersection <environments-intersection>`
+- {ref}`Racetrack <environments-racetrack>`
 
 (configuration)=
 

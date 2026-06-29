@@ -45,6 +45,7 @@ installation
 quickstart
 content/algorithms
 user_guide
+Environments <environments/index>
 faq
 List of Publications <content/publications>
 bibliography/index

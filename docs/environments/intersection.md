@@ -67,19 +67,25 @@ See {ref}`road-neighbour-vehicles` for details.
     },
     "action": {
         "type": "DiscreteMetaAction",
-        "longitudinal": False,
-        "lateral": True
+        "longitudinal": True,
+        "lateral": False,
+        "target_speeds": [0, 4.5, 9],
     },
     "duration": 13,  # [s]
     "destination": "o1",
+    "controlled_vehicles": 1,
     "initial_vehicle_count": 10,
     "spawn_probability": 0.6,
     "screen_width": 600,
     "screen_height": 600,
     "centering_position": [0.5, 0.6],
     "scaling": 5.5 * 1.3,
-    "collision_reward": IntersectionEnv.COLLISION_REWARD,
-    "normalize_reward": False
+    "collision_reward": -5,
+    "high_speed_reward": 1,
+    "arrived_reward": 1,
+    "reward_speed_range": [7.0, 9.0],
+    "normalize_reward": False,
+    "offroad_terminal": False,
 }
 ```
 
