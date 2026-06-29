@@ -45,7 +45,7 @@ class RoadObject(ABC):
         self.lane_index = (
             self.road.network.get_closest_lane_index(self.position, self.heading)
             if self.road
-            else np.nan
+            else None
         )
         self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
 

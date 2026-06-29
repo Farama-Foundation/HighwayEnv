@@ -70,10 +70,14 @@ class IntervalVehicle(LinearVehicle):
             timer,
         )
         self.theta_a_i = (
-            theta_a_i if theta_a_i is not None else LinearVehicle.ACCELERATION_RANGE
+            np.asarray(theta_a_i)
+            if theta_a_i is not None
+            else LinearVehicle.ACCELERATION_RANGE
         )
         self.theta_b_i = (
-            theta_b_i if theta_b_i is not None else LinearVehicle.STEERING_RANGE
+            np.asarray(theta_b_i)
+            if theta_b_i is not None
+            else LinearVehicle.STEERING_RANGE
         )
         self.data = data
         self.interval = VehicleInterval(self)
@@ -83,8 +87,8 @@ class IntervalVehicle(LinearVehicle):
         self.previous_target_lane_index = self.target_lane_index
 
     @classmethod
-    def create_from(cls, vehicle: LinearVehicle) -> IntervalVehicle:
-        v = cls(
+    def create_from(cls, vehicle: Vehicle) -> IntervalVehicle:
+        return cls(
             vehicle.road,
             vehicle.position,
             heading=vehicle.heading,
@@ -97,7 +101,6 @@ class IntervalVehicle(LinearVehicle):
             theta_b_i=getattr(vehicle, "theta_b_i", None),
             data=getattr(vehicle, "data", None),
         )
-        return v
 
     def step(self, dt: float, mode: str = "partial") -> None:
         self.store_trajectories()
@@ -341,7 +344,7 @@ class IntervalVehicle(LinearVehicle):
         a_theta = lambda params: a + np.tensordot(phi, params, axes=[0, 0])
         return polytope(a_theta, parameter_box)
 
-    def get_front_interval(self) -> VehicleInterval:
+    def get_front_interval(self) -> VehicleInterval | None:
         # TODO: For now, we assume the front vehicle follows the models' front vehicle
         front_vehicle, _ = self.road.neighbour_vehicles(self)
         if front_vehicle:
@@ -368,6 +371,7 @@ class IntervalVehicle(LinearVehicle):
         :param squeeze: if True, remove duplicate lanes (at boundaries of the road)
         :return: the list of followed lane indexes
         """
+        self.target_lane_index: LaneIndex
         lanes = []
         if lane_change_model == "model":
             lanes = [self.target_lane_index]
@@ -385,9 +389,9 @@ class IntervalVehicle(LinearVehicle):
             ).is_reachable_from(
                 self.position
             ):
-                lanes += [(_from, _to, _id + 1)]
+                lanes.append((_from, _to, _id + 1))
             elif not squeeze:
-                lanes += [self.target_lane_index]  # Right lane is also current lane
+                lanes.append(self.target_lane_index)  # Right lane is also current lane
         return lanes
 
     def partial_observer_step(self, dt: float, alpha: float = 0) -> None:
@@ -447,7 +451,7 @@ class IntervalVehicle(LinearVehicle):
         self.trajectory.append(LinearVehicle.create_from(self))
         self.interval_trajectory.append(copy.deepcopy(self.interval))
 
-    def handle_collisions(self, other: RoadObject, dt: float) -> None:
+    def handle_collisions(self, other: RoadObject, dt: float = 0) -> None:
         """
         Worst-case collision check.
 
