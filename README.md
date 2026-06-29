@@ -46,14 +46,27 @@ HighwayEnv includes 10 driving scenario families: `highway`, `intersection`, `ex
 
 ```python
 import gymnasium as gym
+import highway_env
 
-env = gym.make('highway-v0', render_mode='human')
+gym.register_envs(highway_env)
 
+# Initialise the environment
+env = gym.make("highway-v1", config={"lanes_count": 3}, render_mode="human")
+
+# Reset the environment to generate the first observation
 obs, info = env.reset()
-done = truncated = False
-while not (done or truncated):
-    action = ...  # Your agent code here
-    obs, reward, done, truncated, info = env.step(action)
+for _ in range(1000):
+    # this is where you would insert your policy
+    action = env.action_space.sample()
+
+    # step (transition) through the environment with the action
+    # receiving the next observation, reward and if the episode has terminated or truncated
+    obs, reward, terminated, truncated, info = env.step(action)
+
+    # If the episode has ended then we can reset to start a new episode
+    if terminated or truncated:
+        obs, info = env.reset()
+
 env.close()
 ```
 

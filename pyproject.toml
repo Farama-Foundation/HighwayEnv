@@ -8,6 +8,7 @@ description = "An environment for simulated highway driving tasks."
 readme = "README.md"
 requires-python = ">= 3.10"
 authors = [{ name = "Edouard Leurent", email = "eleurent@gmail.com" }]
+maintainers = [{ name = "Jin Huang", email = "hugo@hugohuang.com" }]
 license = { text = "MIT License" }
 keywords = ["Reinforcement Learning", "car simulation", "RL", "AI"]
 classifiers = [

@@ -15,7 +15,7 @@ docs-install:
 docs-serve: docs-install
     {{venv}}/bin/sphinx-autobuild docs docs/_build/html --open-browser
 
-docs-build: docs-install
+docs-build: docs-install docs-clean
     {{venv}}/bin/sphinx-build -b html docs docs/_build/html
 
 docs-clean:
