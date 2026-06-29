@@ -10,7 +10,7 @@ import numpy as np
 
 # Useful types
 Vector = Union[np.ndarray, Sequence[float]]
-Matrix = Union[np.ndarray, Sequence[Sequence[float]]]
+ColumnVector = Matrix = Union[np.ndarray, Sequence[Sequence[float]]]
 Interval = Union[
     np.ndarray,
     Tuple[Vector, Vector],
