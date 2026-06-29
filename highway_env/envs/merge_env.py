@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from itertools import repeat
+
 import numpy as np
 
 from highway_env import utils
@@ -207,6 +209,10 @@ class MergeGenericEnv(MergeEnv):
      (before)
     """
 
+    def __init__(self, config: dict = None, render_mode: str | None = None) -> None:
+        self.end_position = 0
+        super().__init__(config=config, render_mode=render_mode)
+
     @classmethod
     def default_config(cls) -> dict:
         cfg = super().default_config()
@@ -234,6 +240,7 @@ class MergeGenericEnv(MergeEnv):
         converge = self.config["converge_merge_length"]
         parallel = self.config["parallel_merge_length"]
         after = self.config["after_merge_length"]
+        self.end_position = pre_merge + converge + parallel + after - 100
 
         net = RoadNetwork.straight_road_network(
             lanes,
@@ -327,8 +334,8 @@ class MergeGenericEnv(MergeEnv):
         spawned_positions[lanes - 1].append(ego_longitudinal)
         safe_distance = 15.0  # safe distance to spawn vehicles from each other
         tries = 10  # number of times it tries to spawn a vehicle
-        for _ in range(vehicles_count):
-            for _ in range(tries):
+        for _ in repeat(None, vehicles_count):
+            for _ in repeat(None, tries):
                 random_lane_index = self.np_random.integers(lanes)
                 longitudinal = self.np_random.uniform(0, max_pos)
 
@@ -353,14 +360,7 @@ class MergeGenericEnv(MergeEnv):
 
     def _is_terminated(self) -> bool:
         """The episode is over when a collision occurs or when the access ramp has been passed."""
-        end_position = (
-            self.config["before_merge_length"]
-            + self.config["converge_merge_length"]
-            + self.config["parallel_merge_length"]
-            + self.config["after_merge_length"]
-            - 100
-        )
-        return self.vehicle.crashed or self.vehicle.position[0] > end_position
+        return self.vehicle.crashed or self.vehicle.position[0] > self.end_position
 
     def _is_truncated(self) -> bool:
         return False
