@@ -100,6 +100,14 @@ def _register_highway_envs():
         id="merge-v1",
         entry_point="highway_env.envs.merge_env:ConnectedLaneMergeEnv",
     )
+    register(
+        id="merge-generic-v0",
+        entry_point="highway_env.envs.merge_env:MergeGenericEnv",
+    )
+    register(
+        id="merge-generic-v1",
+        entry_point="highway_env.envs.merge_env:ConnectedLaneMergeGenericEnv",
+    )
 
     # parking_env.py
     register(
