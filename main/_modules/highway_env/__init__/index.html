@@ -402,6 +402,14 @@
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;merge-v1&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.merge_env:ConnectedLaneMergeEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;merge-generic-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.merge_env:MergeGenericEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;merge-generic-v1&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.merge_env:ConnectedLaneMergeGenericEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="c1"># parking_env.py</span>
     <span class="n">register</span><span class="p">(</span>
