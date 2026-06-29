@@ -185,3 +185,186 @@ class MergeEnv(AbstractEnv):
 
 class ConnectedLaneMergeEnv(ConnectedLaneNeighboursMixin, MergeEnv):
     pass
+
+
+class MergeGenericEnv(MergeEnv):
+    """
+    A generic version of the merge environment.
+    Additionally supports changing:
+    - the number of lanes
+    - the number of vehicles
+    - the size of each section of the merging road
+
+    Visual representation of each configurable merging road segment:
+    ======================================
+    --------------------------------------
+    ======================================
+               /  __________/  (after)
+              /  / (parallel)
+             /  /
+    ________/  /(converge)
+    __________/
+     (before)
+    """
+
+    @classmethod
+    def default_config(cls) -> dict:
+        cfg = super().default_config()
+        cfg.update(
+            {
+                "lanes_count": 2,
+                "vehicles_count": 10,
+                # Parameters that define the size of each component of the merging road:
+                # Section before the merge segment (must be >= 60)
+                "before_merge_length": 150,
+                # Section converging closer to the highway
+                "converge_merge_length": 80,
+                # Section where the vehicle can merge into the highway
+                "parallel_merge_length": 80,
+                # Section after the merge segment (must be >= 100)
+                "after_merge_length": 300,
+            }
+        )
+        return cfg
+
+    def _make_road(self) -> None:
+        net = RoadNetwork()
+        lanes = self.config["lanes_count"]
+        pre_merge = self.config["before_merge_length"]
+        converge = self.config["converge_merge_length"]
+        parallel = self.config["parallel_merge_length"]
+        after = self.config["after_merge_length"]
+
+        net = RoadNetwork.straight_road_network(
+            lanes,
+            start=0,
+            length=pre_merge + converge,
+            nodes_str=("a", "b"),
+            speed_limit=30,
+            net=net,
+        )
+        net = RoadNetwork.straight_road_network(
+            lanes,
+            start=pre_merge + converge,
+            length=parallel,
+            nodes_str=("b", "c"),
+            speed_limit=30,
+            net=net,
+        )
+        net = RoadNetwork.straight_road_network(
+            lanes,
+            start=pre_merge + converge + parallel,
+            length=after,
+            nodes_str=("c", "d"),
+            speed_limit=30,
+            net=net,
+        )
+
+        amplitude = 3.25
+        y_parallel = lanes * StraightLane.DEFAULT_WIDTH
+        y_approach = y_parallel + 2 * amplitude
+
+        ljk = StraightLane(
+            [0, y_approach],
+            [pre_merge, y_approach],
+            line_types=[LineType.CONTINUOUS_LINE, LineType.CONTINUOUS_LINE],
+            forbidden=True,
+            speed_limit=30,
+        )
+        lkb = SineLane(
+            [pre_merge, y_parallel + amplitude],
+            [pre_merge + converge, y_parallel + amplitude],
+            amplitude,
+            2 * np.pi / (2 * converge),
+            np.pi / 2,
+            line_types=[LineType.CONTINUOUS_LINE, LineType.CONTINUOUS_LINE],
+            forbidden=True,
+            speed_limit=30,
+        )
+        lbc = StraightLane(
+            [pre_merge + converge, y_parallel],
+            [pre_merge + converge + parallel, y_parallel],
+            line_types=[LineType.STRIPED, LineType.CONTINUOUS_LINE],
+            forbidden=True,
+            speed_limit=30,
+        )
+
+        net.add_lane("j", "k", ljk)
+        net.add_lane("k", "b", lkb)
+        net.add_lane("b", "c", lbc)
+
+        road = Road(
+            network=net,
+            np_random=self.np_random,
+            record_history=self.config.get("show_trajectories", False),
+        )
+        road.objects.append(Obstacle(road, lbc.position(parallel, 0)))
+        self.road = road
+
+    def _make_vehicles(self) -> None:
+        road = self.road
+        lanes = self.config["lanes_count"]
+
+        pre_merge = self.config["before_merge_length"]
+        converge = self.config["converge_merge_length"]
+        parallel = self.config["parallel_merge_length"]
+
+        ego_lane = road.network.get_lane(("a", "b", lanes - 1))
+        ego_longitudinal = 30.0
+        ego_vehicle = self.action_type.vehicle_class(
+            road,
+            ego_lane.position(ego_longitudinal, 0.0),
+            speed=30.0,
+        )
+        road.vehicles.append(ego_vehicle)
+        self.vehicle = ego_vehicle
+
+        other_vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
+        vehicles_count = self.config["vehicles_count"]
+        max_pos = pre_merge + converge + parallel
+
+        spawned_positions = {i: [] for i in range(lanes)}
+        spawned_positions[lanes - 1].append(ego_longitudinal)
+        safe_distance = 15.0  # safe distance to spawn vehicles from each other
+        tries = 10  # number of times it tries to spawn a vehicle
+        for _ in range(vehicles_count):
+            for _ in range(tries):
+                random_lane_index = self.np_random.integers(lanes)
+                longitudinal = self.np_random.uniform(0, max_pos)
+
+                if all(
+                    abs(longitudinal - p) > safe_distance
+                    for p in spawned_positions[random_lane_index]
+                ):
+                    lane = road.network.get_lane(("a", "b", random_lane_index))
+                    pos = lane.position(longitudinal, 0.0)
+                    spd = 30.0 + self.np_random.uniform(-2.0, 2.0)
+
+                    road.vehicles.append(other_vehicles_type(road, pos, speed=spd))
+                    spawned_positions[random_lane_index].append(longitudinal)
+                    break
+
+        merge_lane = road.network.get_lane(("j", "k", 0))
+        merging_v = other_vehicles_type(
+            road, merge_lane.position(ego_longitudinal + 30, 0.0), speed=20.0
+        )
+        merging_v.target_speed = 30.0
+        road.vehicles.append(merging_v)
+
+    def _is_terminated(self) -> bool:
+        """The episode is over when a collision occurs or when the access ramp has been passed."""
+        end_position = (
+            self.config["before_merge_length"]
+            + self.config["converge_merge_length"]
+            + self.config["parallel_merge_length"]
+            + self.config["after_merge_length"]
+            - 100
+        )
+        return self.vehicle.crashed or self.vehicle.position[0] > end_position
+
+    def _is_truncated(self) -> bool:
+        return False
+
+
+class ConnectedLaneMergeGenericEnv(ConnectedLaneNeighboursMixin, MergeGenericEnv):
+    pass
