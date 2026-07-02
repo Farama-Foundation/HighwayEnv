@@ -11,12 +11,13 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     id: environment-id
     attributes:
       label: Environment ID
       description: The Gymnasium environment ID (e.g. `highway-v0`, `racetrack-v0`).
       placeholder: highway-v0
+      render: python
     validations:
       required: true
 
