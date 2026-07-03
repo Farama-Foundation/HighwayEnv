@@ -324,39 +324,7 @@
             
             <section class="tex2jax_ignore mathjax_ignore" id="installation">
 <span id="install"></span><h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
-<section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h2>
-<section id="optional-tools">
-<h3>Optional tools<a class="headerlink" href="#optional-tools" title="Link to this heading">¶</a></h3>
-<ul class="simple">
-<li><p><a class="reference external" href="https://docs.astral.sh/uv/">uv</a> — fast Python package manager with lockfile support (recommended for contributors), install with <a class="reference external" href="https://docs.astral.sh/uv/getting-started/installation/#standalone-installer">standalone installer</a> or simply <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">uv</span></code>.</p></li>
-<li><p><a class="reference external" href="https://github.com/casey/just">just</a> — command runner used for common development tasks (see the <code class="docutils literal notranslate"><span class="pre">Justfile</span></code>), install <a class="reference external" href="https://github.com/casey/just#packages">with your package manager of choice</a>.</p></li>
-</ul>
-</section>
-<section id="ubuntu">
-<h3>Ubuntu<a class="headerlink" href="#ubuntu" title="Link to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span>-y
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python-dev<span class="w"> </span>libsdl-image1.2-dev<span class="w"> </span>libsdl-mixer1.2-dev<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>libsdl-ttf2.0-dev<span class="w"> </span>libsdl1.2-dev<span class="w"> </span>libsmpeg-dev<span class="w"> </span>python-numpy<span class="w"> </span>subversion<span class="w"> </span>libportmidi-dev<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>ffmpeg<span class="w"> </span>libswscale-dev<span class="w"> </span>libavformat-dev<span class="w"> </span>libavcodec-dev<span class="w"> </span>libfreetype6-dev<span class="w"> </span>gcc
-</pre></div>
-</div>
-</section>
-<section id="macos">
-<h3>macOS<a class="headerlink" href="#macos" title="Link to this heading">¶</a></h3>
-<p>We recommend using <a class="reference external" href="https://brew.sh">Homebrew</a>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>uv<span class="w">    </span><span class="c1"># optional</span>
-brew<span class="w"> </span>install<span class="w"> </span>just<span class="w">  </span><span class="c1"># optional</span>
-</pre></div>
-</div>
-</section>
-<section id="windows-10">
-<h3>Windows 10<a class="headerlink" href="#windows-10" title="Link to this heading">¶</a></h3>
-</section>
-</section>
-<section id="stable-release">
-<h2>Stable release<a class="headerlink" href="#stable-release" title="Link to this heading">¶</a></h2>
-<p>To install the latest stable version:</p>
+<p>To install the latest stable version, simply install with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>highway-env
 </pre></div>
 </div>
@@ -364,11 +332,22 @@ brew<span class="w"> </span>install<span class="w"> </span>just<span class="w"> 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>highway-env
 </pre></div>
 </div>
+<section id="special-cases">
+<h2>Special cases<a class="headerlink" href="#special-cases" title="Link to this heading">¶</a></h2>
+<section id="ubuntu">
+<h3>Ubuntu<a class="headerlink" href="#ubuntu" title="Link to this heading">¶</a></h3>
+<p>If you are on Linux, you may need additional dependencies for <a class="reference external" href="https://pyga.me">pygame-ce</a>, which provides the graphics:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span>-y
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python-dev<span class="w"> </span>libsdl-image1.2-dev<span class="w"> </span>libsdl-mixer1.2-dev<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>libsdl-ttf2.0-dev<span class="w"> </span>libsdl1.2-dev<span class="w"> </span>libsmpeg-dev<span class="w"> </span>python-numpy<span class="w"> </span>subversion<span class="w"> </span>libportmidi-dev<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>ffmpeg<span class="w"> </span>libswscale-dev<span class="w"> </span>libavformat-dev<span class="w"> </span>libavcodec-dev<span class="w"> </span>libfreetype6-dev<span class="w"> </span>gcc
+</pre></div>
+</div>
 </section>
 <section id="development-version">
-<h2>Development version<a class="headerlink" href="#development-version" title="Link to this heading">¶</a></h2>
-<p>To install the current development version:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>git+https://github.com/Farama-Foundation/HighwayEnv
+<h3>Development version<a class="headerlink" href="#development-version" title="Link to this heading">¶</a></h3>
+<p>If you want to install the current development version (unstable!):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/Farama-Foundation/HighwayEnv
 </pre></div>
 </div>
 <p>or with <a class="reference external" href="https://docs.astral.sh/uv/">uv</a>:</p>
@@ -377,8 +356,14 @@ brew<span class="w"> </span>install<span class="w"> </span>just<span class="w"> 
 </div>
 </section>
 <section id="contributing-development-setup">
-<h2>Contributing / Development setup<a class="headerlink" href="#contributing-development-setup" title="Link to this heading">¶</a></h2>
-<p>If you want to contribute or need reproducible dependency versions, see <a class="reference internal" href="../faq/#faq-uv-frozen"><span class="std std-ref">How do I set up a development environment with pinned dependency versions?</span></a> for how to set up a development environment using uv with the pinned lockfile.</p>
+<h3>Contributing / Development setup<a class="headerlink" href="#contributing-development-setup" title="Link to this heading">¶</a></h3>
+<p>If you want to contribute to HighwayEnv (insert smiley face here), these tools would be helpful to developers:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.astral.sh/uv/">uv</a> — fast Python package manager with lockfile support (recommended for contributors), install with <a class="reference external" href="https://docs.astral.sh/uv/getting-started/installation/#standalone-installer">standalone installer</a> or simply <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">uv</span></code>.</p></li>
+<li><p><a class="reference external" href="https://github.com/casey/just">just</a> — command runner used for common development tasks (see the <code class="docutils literal notranslate"><span class="pre">Justfile</span></code>), install <a class="reference external" href="https://github.com/casey/just/blob/master/README.md#packages">with your package manager of choice</a>.</p></li>
+</ul>
+<p>Check <a class="reference internal" href="../faq/#faq-uv-frozen"><span class="std std-ref">How do I set up a development environment with pinned dependency versions?</span></a> for how to set up a development environment using uv with the pinned lockfile.</p>
+</section>
 </section>
 </section>
 
@@ -452,16 +437,12 @@ brew<span class="w"> </span>install<span class="w"> </span>just<span class="w"> 
             <div class="toc-tree">
               <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
-<li><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
-<li><a class="reference internal" href="#optional-tools">Optional tools</a></li>
+<li><a class="reference internal" href="#special-cases">Special cases</a><ul>
 <li><a class="reference internal" href="#ubuntu">Ubuntu</a></li>
-<li><a class="reference internal" href="#macos">macOS</a></li>
-<li><a class="reference internal" href="#windows-10">Windows 10</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#stable-release">Stable release</a></li>
 <li><a class="reference internal" href="#development-version">Development version</a></li>
 <li><a class="reference internal" href="#contributing-development-setup">Contributing / Development setup</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
