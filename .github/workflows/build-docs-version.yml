@@ -14,35 +14,33 @@ jobs:
     env:
       SPHINX_GITHUB_CHANGELOG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install OS dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libfreetype6-dev libportmidi-dev
 
-      - uses: actions/setup-python@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
-            python-version: '3.14'
+          python-version: '3.14'
 
       - name: Get tag
         id: tag
         uses: dawidd6/action-get-tag@v1
 
       - name: Install dependencies
-        run: pip install -r docs/requirements.txt
-
-      - name: Register Envs
-        run: pip install -e .
+        run: uv sync --group docs
 
       - name: Build
-        run: sphinx-build -b dirhtml -v docs _build
+        run: uv run sphinx-build -b dirhtml -v docs _build
 
       - name: Move 404
         run: mv _build/404/index.html _build/404.html
 
       - name: Update 404 links
-        run: python docs/scripts/move_404.py _build/404.html
+        run: uv run python docs/scripts/move_404.py _build/404.html
 
       - name: Remove .doctrees
         run: rm -r _build/.doctrees
