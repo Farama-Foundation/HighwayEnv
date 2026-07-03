@@ -7,11 +7,11 @@
     <meta property="og:title" content="HighwayEnv Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/envs/highway_env.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
-        <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/envs/highway_env.html" />
+    <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/envs/u_turn_env.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
+        <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/envs/u_turn_env.html" />
 
     <link rel="shortcut icon" href="../../../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>highway_env.envs.highway_env - HighwayEnv Documentation</title>
+        <title>highway_env.envs.u_turn_env - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
@@ -312,58 +312,42 @@
           </div>
           <article role="main">
             
-            <h1>Source code for highway_env.envs.highway_env</h1><div class="highlight"><pre>
+            <h1>Source code for highway_env.envs.u_turn_env</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">Action</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">ConnectedLaneNeighboursMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularLane</span><span class="p">,</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">StraightLane</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">Road</span><span class="p">,</span> <span class="n">RoadNetwork</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">near_split</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlledVehicle</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.kinematics</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vehicle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">MDPVehicle</span>
 
 
-<span class="n">Observation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-
-
-<div class="viewcode-block" id="HighwayEnv">
-<a class="viewcode-back" href="../../../../environments/highway/#highway_env.envs.highway_env.HighwayEnv">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">HighwayEnv</span><span class="p">(</span><span class="n">AbstractEnv</span><span class="p">):</span>
+<div class="viewcode-block" id="UTurnEnv">
+<a class="viewcode-back" href="../../../../environments/u_turn/#highway_env.envs.u_turn_env.UTurnEnv">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UTurnEnv</span><span class="p">(</span><span class="n">AbstractEnv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A highway driving environment.</span>
-
-<span class="sd">    The vehicle is driving on a straight highway with several lanes, and is rewarded for reaching a high speed,</span>
-<span class="sd">    staying on the rightmost lanes and avoiding collisions.</span>
+<span class="sd">    U-Turn risk analysis task: the agent overtakes vehicles that are blocking the</span>
+<span class="sd">    traffic. High speed overtaking must be balanced with ensuring safety.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="HighwayEnv.default_config">
-<a class="viewcode-back" href="../../../../environments/highway/#highway_env.envs.highway_env.HighwayEnv.default_config">[docs]</a>
+<div class="viewcode-block" id="UTurnEnv.default_config">
+<a class="viewcode-back" href="../../../../environments/u_turn/#highway_env.envs.u_turn_env.UTurnEnv.default_config">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">},</span>
-                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-                <span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;initial_lane_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>  <span class="c1"># [s]</span>
-                <span class="s2">&quot;ego_spacing&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;vehicles_density&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># The reward received when colliding with a vehicle.</span>
-                <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># The reward received when driving on the right-most lanes, linearly mapped to</span>
-                <span class="c1"># zero for other lanes.</span>
-                <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>  <span class="c1"># The reward received when driving at full speed, linearly mapped to zero for</span>
-                <span class="c1"># lower speeds according to config[&quot;reward_speed_range&quot;].</span>
-                <span class="s2">&quot;lane_change_reward&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># The reward received at each lane change action.</span>
-                <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+                <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;TimeToCollision&quot;</span><span class="p">,</span> <span class="s2">&quot;horizon&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">},</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span> <span class="s2">&quot;target_speeds&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">]},</span>
+                <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">789</span><span class="p">,</span>
+                <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">289</span><span class="p">,</span>
+                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># Penalization received for vehicle collision.</span>
+                <span class="s2">&quot;left_lane_reward&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># Reward received for maintaining left most lane.</span>
+                <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>  <span class="c1"># Reward received for maintaining cruising speed.</span>
+                <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span>
                 <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;offroad_terminal&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="p">}</span>
@@ -371,56 +355,11 @@
         <span class="k">return</span> <span class="n">config</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_create_road</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_create_vehicles</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a road composed of straight adjacent lanes.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span>
-            <span class="n">network</span><span class="o">=</span><span class="n">RoadNetwork</span><span class="o">.</span><span class="n">straight_road_network</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;lanes_count&quot;</span><span class="p">],</span> <span class="n">speed_limit</span><span class="o">=</span><span class="mi">30</span>
-            <span class="p">),</span>
-            <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span>
-            <span class="n">record_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_trajectories&quot;</span><span class="p">],</span>
-            <span class="n">neighbour_vehicles_connected_lanes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span>
-                <span class="s2">&quot;neighbour_vehicles_connected_lanes&quot;</span>
-            <span class="p">],</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create some new random vehicles of a given type, and add them on the road.&quot;&quot;&quot;</span>
-        <span class="n">other_vehicles_type</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">])</span>
-        <span class="n">other_per_controlled</span> <span class="o">=</span> <span class="n">near_split</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicles_count&quot;</span><span class="p">],</span> <span class="n">num_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicles</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">others</span> <span class="ow">in</span> <span class="n">other_per_controlled</span><span class="p">:</span>
-            <span class="n">vehicle</span> <span class="o">=</span> <span class="n">Vehicle</span><span class="o">.</span><span class="n">create_random</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
-                <span class="n">speed</span><span class="o">=</span><span class="mf">25.0</span><span class="p">,</span>
-                <span class="n">lane_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;initial_lane_id&quot;</span><span class="p">],</span>
-                <span class="n">spacing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;ego_spacing&quot;</span><span class="p">],</span>
-            <span class="p">)</span>
-            <span class="n">vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">vehicle_class</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">others</span><span class="p">):</span>
-                <span class="n">vehicle</span> <span class="o">=</span> <span class="n">other_vehicles_type</span><span class="o">.</span><span class="n">create_random</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicles_density&quot;</span><span class="p">]</span>
-                <span class="p">)</span>
-                <span class="n">vehicle</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.</span>
-<span class="sd">        :param action: the last action performed</span>
-<span class="sd">        :return: the corresponding reward</span>
+<span class="sd">        The vehicle is rewarded for driving with high speed and collision avoidance.</span>
+<span class="sd">        :param action: the action performed</span>
+<span class="sd">        :return: the reward of the state-action transition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rewards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewards</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
         <span class="n">reward</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
@@ -431,74 +370,232 @@
                 <span class="n">reward</span><span class="p">,</span>
                 <span class="p">[</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;collision_reward&quot;</span><span class="p">],</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;high_speed_reward&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;right_lane_reward&quot;</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;high_speed_reward&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;left_lane_reward&quot;</span><span class="p">],</span>
                 <span class="p">],</span>
                 <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
             <span class="p">)</span>
         <span class="n">reward</span> <span class="o">*=</span> <span class="n">rewards</span><span class="p">[</span><span class="s2">&quot;on_road_reward&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">reward</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="n">neighbours</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">all_side_lanes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">)</span>
-        <span class="n">lane</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">target_lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">ControlledVehicle</span><span class="p">)</span>
-            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="c1"># Use forward speed rather than speed, see https://github.com/Farama-Foundation/HighwayEnv/issues/268</span>
-        <span class="n">forward_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span>
+        <span class="n">lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">scaled_speed</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">lmap</span><span class="p">(</span>
-            <span class="n">forward_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reward_speed_range&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;reward_speed_range&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span><span class="p">),</span>
-            <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="n">lane</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">neighbours</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span><span class="p">,</span>
+            <span class="s2">&quot;left_lane_reward&quot;</span><span class="p">:</span> <span class="n">lane</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">neighbours</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
             <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">scaled_speed</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="s2">&quot;on_road_reward&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">on_road</span><span class="p">),</span>
+            <span class="s2">&quot;on_road_reward&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">on_road</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The episode is over if the ego vehicle crashed.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span>
-            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;offroad_terminal&quot;</span><span class="p">]</span>
-            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">on_road</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">crashed</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_is_truncated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The episode is truncated if the time limit is reached.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">]</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_make_road</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_make_vehicles</span><span class="p">()</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_road</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">128</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Making double lane road with counter-clockwise U-Turn.</span>
+<span class="sd">        :return: the road</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">RoadNetwork</span><span class="p">()</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">HighwayEnvFast</span><span class="p">(</span><span class="n">HighwayEnv</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A variant of highway-v0 with faster execution:</span>
-<span class="sd">        - lower simulation frequency</span>
-<span class="sd">        - fewer vehicles in the scene (and fewer lanes, shorter episode duration)</span>
-<span class="sd">        - only check collision of controlled vehicles with others</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="n">cfg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-                <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>  <span class="c1"># [s]</span>
-                <span class="s2">&quot;ego_spacing&quot;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
-            <span class="p">}</span>
+        <span class="c1"># Defining upper starting lanes after the U-Turn.</span>
+        <span class="c1"># These Lanes are defined from x-coordinate &#39;length&#39; to 0.</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">length</span><span class="p">,</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+            <span class="p">),</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">cfg</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_create_vehicles</span><span class="p">()</span>
-        <span class="c1"># Disable collision check for uncontrolled vehicles</span>
-        <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">vehicle</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlled_vehicles</span><span class="p">:</span>
-                <span class="n">vehicle</span><span class="o">.</span><span class="n">check_collisions</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Defining counter-clockwise circular U-Turn lanes.</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">length</span><span class="p">,</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span> <span class="o">+</span> <span class="mi">20</span><span class="p">]</span>  <span class="c1"># [m]</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># [m]</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># [deg]</span>
+
+        <span class="n">radii</span> <span class="o">=</span> <span class="p">[</span><span class="n">radius</span><span class="p">,</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span><span class="p">]</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="p">[[</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">],</span> <span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+                <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+                <span class="n">CircularLane</span><span class="p">(</span>
+                    <span class="n">center</span><span class="p">,</span>
+                    <span class="n">radii</span><span class="p">[</span><span class="n">lane</span><span class="p">],</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">),</span>
+                    <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">line_types</span><span class="o">=</span><span class="n">line</span><span class="p">[</span><span class="n">lane</span><span class="p">],</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">radius</span>
+
+        <span class="c1"># Defining lower starting lanes before the U-Turn.</span>
+        <span class="c1"># These Lanes are defined from x-coordinate 0 to &#39;length&#39;.</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="mi">0</span><span class="p">,</span>
+                    <span class="p">(</span>
+                        <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+                        <span class="o">-</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span>
+                    <span class="p">),</span>
+                <span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="n">length</span><span class="p">,</span>
+                    <span class="p">(</span>
+                        <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+                        <span class="o">-</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span>
+                    <span class="p">),</span>
+                <span class="p">],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">STRIPED</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+            <span class="n">StraightLane</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)],</span>
+                <span class="p">[</span><span class="n">length</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">StraightLane</span><span class="o">.</span><span class="n">DEFAULT_WIDTH</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)],</span>
+                <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS_LINE</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span>
+            <span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span>
+            <span class="n">np_random</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="p">,</span>
+            <span class="n">record_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_trajectories&quot;</span><span class="p">],</span>
+            <span class="n">neighbour_vehicles_connected_lanes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span>
+                <span class="s2">&quot;neighbour_vehicles_connected_lanes&quot;</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">road</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Strategic addition of vehicles for testing safety behavior limits</span>
+<span class="sd">        while performing U-Turn manoeuvre at given cruising interval.</span>
+
+<span class="sd">        :return: the ego-vehicle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># These variables add small variations to the driving behavior.</span>
+        <span class="n">position_deviation</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="n">speed_deviation</span> <span class="o">=</span> <span class="mf">2.0</span>
+
+        <span class="n">ego_lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">((</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">ego_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">vehicle_class</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="n">ego_lane</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">speed</span><span class="o">=</span><span class="mf">16.0</span>
+        <span class="p">)</span>
+        <span class="c1"># Stronger anticipation for the turn</span>
+        <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">PURSUIT_TAU</span> <span class="o">=</span> <span class="n">MDPVehicle</span><span class="o">.</span><span class="n">TAU_HEADING</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ego_vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ego_vehicle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle</span> <span class="o">=</span> <span class="n">ego_vehicle</span>
+
+        <span class="n">vehicles_type</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">class_from_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Note: randomize_behavior() can be commented out if more randomized</span>
+        <span class="c1"># vehicle interactions are deemed necessary for the experimentation.</span>
+
+        <span class="c1"># Vehicle 1: Blocking the ego vehicle</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="n">vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="mf">25.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">13.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">randomize_behavior</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+
+        <span class="c1"># Vehicle 2: Forcing risky overtake</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="n">vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="mf">56.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">14.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+        <span class="c1"># vehicle.randomize_behavior()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+
+        <span class="c1"># Vehicle 3: Blocking the ego vehicle</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="n">vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">4.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+        <span class="c1"># vehicle.randomize_behavior()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+
+        <span class="c1"># Vehicle 4: Forcing risky overtake</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="n">vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="mf">17.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">5.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+        <span class="c1"># vehicle.randomize_behavior()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+
+        <span class="c1"># Vehicle 5: Blocking the ego vehicle</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="n">vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">3.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+        <span class="c1"># vehicle.randomize_behavior()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+
+        <span class="c1"># Vehicle 6: Forcing risky overtake</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="n">vehicles_type</span><span class="o">.</span><span class="n">make_on_lane</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">longitudinal</span><span class="o">=</span><span class="mf">30.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">position_deviation</span><span class="p">,</span>
+            <span class="n">speed</span><span class="o">=</span><span class="mf">5.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="o">*</span> <span class="n">speed_deviation</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">plan_route_to</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+        <span class="c1"># vehicle.randomize_behavior()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span></div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConnectedLaneUTurnEnv</span><span class="p">(</span><span class="n">ConnectedLaneNeighboursMixin</span><span class="p">,</span> <span class="n">UTurnEnv</span><span class="p">):</span>
+    <span class="k">pass</span>
 </pre></div>
           </article>
         </div>

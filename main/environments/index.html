@@ -226,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="racetrack/">Racetrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exit/">Exit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lane_keeping/">Lane Keeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two_way/">Two Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="u_turn/">U-Turn</a></li>
 </ul>
 </li>
 </ul>
@@ -322,7 +326,7 @@
 <span id="id1"></span><h1>Environments<a class="headerlink" href="#environments" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<p>HighwayEnv includes the following six environments for autonomous driving decision-making. Each environment features configurable observations, actions, dynamics, and rewards — see <a class="reference internal" href="../quickstart/#configuration"><span class="std std-ref">Configuring an environment</span></a> for details.</p>
+<p>HighwayEnv includes the following ten environments for autonomous driving decision-making. Each environment features configurable observations, actions, dynamics, and rewards — see <a class="reference internal" href="../quickstart/#configuration"><span class="std std-ref">Configuring an environment</span></a> for details.</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -355,6 +359,22 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="racetrack/#environments-racetrack"><span class="std std-ref">Racetrack</span></a></p></td>
 <td><p>Follow a racetrack as fast as possible while staying on the road.</p></td>
 <td><p>Continuous</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="exit/#environments-exit"><span class="std std-ref">Exit</span></a></p></td>
+<td><p>Navigate across lanes to reach a highway exit ramp.</p></td>
+<td><p>Discrete</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="lane_keeping/#environments-lane-keeping"><span class="std std-ref">Lane Keeping</span></a></p></td>
+<td><p>Steer to follow a sine-wave lane using bicycle dynamics.</p></td>
+<td><p>Continuous</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="two_way/#environments-two-way"><span class="std std-ref">Two Way</span></a></p></td>
+<td><p>Overtake on a two-way road with oncoming traffic (risk management).</p></td>
+<td><p>Discrete</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="u_turn/#environments-u-turn"><span class="std std-ref">U-Turn</span></a></p></td>
+<td><p>Overtake blocking vehicles through a double-lane U-turn.</p></td>
+<td><p>Discrete</p></td>
 </tr>
 </tbody>
 </table>
