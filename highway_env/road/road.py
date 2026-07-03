@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -14,8 +14,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-LaneIndex = Tuple[str, str, int]
-Route = List[LaneIndex]
+LaneIndex = tuple[str, str, int]
+Route = list[LaneIndex]
 
 
 class RoadNetwork:
