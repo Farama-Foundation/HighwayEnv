@@ -7,13 +7,16 @@ suggest new entries!
 
 ## When I try to make an environment, I get an error `gymnasium.error.NameNotFound: Environment highway doesn't exist.`
 
-This is probably because you do not have HighwayEnv installed, but are instead working with a local copy of the
-repository. In that case, you need to run the following code first to register the environments.
+This is probably because you have not imported HighwayEnv yet. Importing HighwayEnv would automatically registers the environments.
 
-```python
-import highway_env
-highway_env.register_highway_envs()
 ```
+import gymnasium as gym
+import highway_env
+
+gym.register_envs(highway_env)  # this is a no-op to satisfy linters & IDE
+```
+
+The last line has no effect, it's simply telling your IDE and/or linter that `highway_env` is actually being used!
 
 ## I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?
 
@@ -32,6 +35,43 @@ This example is implemented [here (DQN)](https://colab.research.google.com/githu
 - Change the *observation*. For example, the {ref}`Grayscale Image <grayscale-image>` does not depend on an ordering. In this case, a CNN model is more suitable than an MLP model.
 
 This example is implemented [here (SB3's DQN)](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_dqn_cnn.py).
+
+(faq-uv-frozen)=
+## How do I set up a development environment with pinned dependency versions?
+
+We use [uv](https://docs.astral.sh/uv/) to manage development dependencies. The repository includes a `uv.lock` lockfile that pins exact dependency versions known to work together.
+
+To install uv (if you don't have it already):
+
+Install with [standalone installer](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer).
+
+or
+
+```bash
+pip install uv
+```
+
+Then clone the repository and sync with frozen (lockfile-pinned) versions:
+
+```bash
+git clone https://github.com/Farama-Foundation/HighwayEnv
+cd HighwayEnv
+uv sync --frozen
+```
+
+This creates a virtual environment and installs the project with all its dependencies at the exact versions recorded in the lockfile. To also install test or docs dependencies:
+
+```bash
+uv sync --frozen --group test
+uv sync --frozen --group docs
+uv sync --frozen --group dev   # both test and docs
+```
+
+Then run commands through the managed environment with `uv run`:
+
+```bash
+uv run pytest
+```
 
 ## My videos are too fast / have a low framerate.
 

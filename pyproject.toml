@@ -49,6 +49,27 @@ Documentation = "https://highway-env.farama.org/"
 [project.entry-points."gymnasium.envs.__root__"]
 highway-env = "highway_env:_register_highway_envs"
 
+[dependency-groups]
+test = [
+    "pytest",
+    "pytest-cov",
+    "scipy",
+]
+docs = [
+    "sphinx",
+    "sphinx-autobuild",
+    "myst-parser",
+    "furo @ git+https://github.com/Farama-Foundation/Celshast.git",
+    "sphinx_github_changelog",
+    "sphinxcontrib-bibtex",
+    "ipykernel",
+    "jupyter-sphinx",
+]
+dev = [
+    { include-group = "test" },
+    { include-group = "docs" },
+]
+
 [tool.setuptools]
 include-package-data = true
 

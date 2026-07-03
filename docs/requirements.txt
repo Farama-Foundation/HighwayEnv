@@ -1,8 +1,0 @@
-sphinx
-sphinx-autobuild
-myst-parser
-furo @ git+https://github.com/Farama-Foundation/Celshast.git
-sphinx_github_changelog
-sphinxcontrib-bibtex
-ipykernel
-jupyter-sphinx

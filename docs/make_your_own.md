@@ -10,6 +10,8 @@ Pull requests are welcome!
 
 ## Set up files
 
+See {ref}`faq-uv-frozen` for instructions on setting up a development environment with pinned dependency versions.
+
 1. Create a new `your_env.py` file in `highway_env/envs/`
 2. Define a class YourEnv, that must inherit from {py:class}`~highway_env.envs.common.abstract.AbstractEnv`
 
@@ -51,29 +53,23 @@ environment implementation with `self.unwrapped.config["config_key"]`, and once 
 In `highway_env/envs/__init__.py`, add the following import:
 
 ```python
-from highway_env.envs.your_env import *
+from highway_env.envs.your_env import YourEnv
 ```
 
-so you can register your env in the `register_highway_envs()` method of `highway_env/__init__.py`
+Then add `"YourEnv"` to the `__all__` list.
+
+After all that, in `highway_env/__init__.py`, add your env in the `_register_highway_envs()` function:
 
 ```python
-# your_env.py
 register(
-    id='your-env-v0',
-    entry_point='highway_env.envs:YourEnv'
+    id="your-env-v0",
+    entry_point="highway_env.envs:YourEnv"
 )
 ```
 
-This registration will be performed automatically as a hook if you reinstall the highway_env module with
+Lastly, since we modified the source, reinstall `highway-env` so your new code gets picked up:
 ```shell
-python setup.py install
-```
-
-Alternatively, you can call it manually with
-
-```python
-import highway_env
-highway_env.register_highway_envs()
+uv pip install .
 ```
 
 ## Profit
@@ -83,12 +79,12 @@ You should now be able to run the environment.
 
 
 ```python
-# Only required if you did not reinstall highway_env
-import highway_env
-highway_env.register_highway_envs()
-
 import gymnasium as gym
-env = gym.make('your-env-v0')
+import highway_env
+
+gym.register_envs(highway_env)  # this is a no-op to satisfy linters & IDE
+
+env = gym.make("your-env-v0")
 obs, info = env.reset()
 obs, reward, terminated, truncated, info = env.step(env.action_space.sample())
 env.render()

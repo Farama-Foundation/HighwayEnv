@@ -1,7 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
-name: build
+name: build & test
 
 on:
   push:
@@ -30,11 +27,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y pkg-config libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libfreetype6-dev libportmidi-dev
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: pip install .[testing]
+      run: uv sync --group test
     - name: Test with pytest
-      run: pytest --cov=./ --cov-report=xml
+      run: uv run pytest --cov=./ --cov-report=xml
