@@ -7,13 +7,16 @@ suggest new entries!
 
 ## When I try to make an environment, I get an error `gymnasium.error.NameNotFound: Environment highway doesn't exist.`
 
-This is probably because you do not have HighwayEnv installed, but are instead working with a local copy of the
-repository. In that case, you need to run the following code first to register the environments.
+This is probably because you have not imported HighwayEnv yet. Importing HighwayEnv would automatically registers the environments.
 
-```python
-import highway_env
-highway_env.register_highway_envs()
 ```
+import gymnasium as gym
+import highway_env
+
+gym.register_envs(highway_env)  # this is a no-op to satisfy linters & IDE
+```
+
+The last line has no effect, it's simply telling your IDE and/or linter that `highway_env` is actually being used!
 
 ## I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?
 
