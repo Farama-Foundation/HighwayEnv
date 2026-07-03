@@ -1,22 +1,19 @@
 set shell := ["bash", "-cu"]
 
-venv := ".venv-docs"
-python := venv + "/bin/python"
-
 default:
     @just --list
 
-docs-install:
-    python3 -m venv {{venv}}
-    {{python}} -m pip install --upgrade pip
-    {{python}} -m pip install -e .
-    {{python}} -m pip install -r docs/requirements.txt
+install:
+    uv sync --group dev --frozen
 
-docs-serve: docs-install
-    {{venv}}/bin/sphinx-autobuild docs docs/_build/html --open-browser
+docs-serve: install
+    uv run --frozen sphinx-autobuild docs docs/_build/html --open-browser
 
-docs-build: docs-install docs-clean
-    {{venv}}/bin/sphinx-build -b html docs docs/_build/html
+docs-build: install docs-clean
+    uv run --frozen sphinx-build -b html docs docs/_build/html
 
 docs-clean:
     rm -rf docs/_build docs/jupyter_execute
+
+test:
+    uv run --frozen pytest --cov=./ --cov-report=xml

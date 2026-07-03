@@ -27,6 +27,12 @@ To install HighwayEnv, use:
 pip install highway-env
 ```
 
+or with [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv pip install highway-env
+```
+
 We support Python 3.10+ on Linux and macOS.
 
 ## Environments

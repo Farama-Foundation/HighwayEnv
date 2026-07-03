@@ -33,6 +33,43 @@ This example is implemented [here (DQN)](https://colab.research.google.com/githu
 
 This example is implemented [here (SB3's DQN)](https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_dqn_cnn.py).
 
+(faq-uv-frozen)=
+## How do I set up a development environment with pinned dependency versions?
+
+We use [uv](https://docs.astral.sh/uv/) to manage development dependencies. The repository includes a `uv.lock` lockfile that pins exact dependency versions known to work together.
+
+To install uv (if you don't have it already):
+
+Install with [standalone installer](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer).
+
+or
+
+```bash
+pip install uv
+```
+
+Then clone the repository and sync with frozen (lockfile-pinned) versions:
+
+```bash
+git clone https://github.com/Farama-Foundation/HighwayEnv
+cd HighwayEnv
+uv sync --frozen
+```
+
+This creates a virtual environment and installs the project with all its dependencies at the exact versions recorded in the lockfile. To also install test or docs dependencies:
+
+```bash
+uv sync --frozen --group test
+uv sync --frozen --group docs
+uv sync --frozen --group dev   # both test and docs
+```
+
+Then run commands through the managed environment with `uv run`:
+
+```bash
+uv run pytest
+```
+
 ## My videos are too fast / have a low framerate.
 
 This is because in gymnasium, a single video frame is generated at each call of `env.step(action)`. However, in HighwayEnv, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (*e.g.* change lane) actually corresponds to several (typically, 15) simulation frames.

@@ -66,8 +66,10 @@ register(
 
 This registration will be performed automatically as a hook if you reinstall the highway_env module with
 ```shell
-python setup.py install
+pip install uv && uv sync
 ```
+
+See {ref}`faq-uv-frozen` for full instructions on setting up a development environment with pinned dependency versions.
 
 Alternatively, you can call it manually with
 
