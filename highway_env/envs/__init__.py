@@ -38,11 +38,11 @@ __all__ = [
 
 # PettingZoo environments — requires highway-env[multi-agent]
 try:
+    from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv  # noqa: F401
     from highway_env.envs.intersection_pz_env import (  # noqa: F401
         ConnectedLaneIntersectionParallelEnv,
         IntersectionParallelEnv,
     )
-    from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv  # noqa: F401
 
     __all__ += [
         "HighwayParallelEnv",

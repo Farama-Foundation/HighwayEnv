@@ -7,7 +7,6 @@ from typing import TypeVar
 
 import gymnasium as gym
 import numpy as np
-import warnings
 from gymnasium import Wrapper
 from gymnasium.utils import RecordConstructorArgs
 from gymnasium.wrappers import RecordVideo
@@ -473,6 +472,7 @@ class MultiAgentWrapper(Wrapper, RecordConstructorArgs):
         Use the PettingZoo ``ParallelEnv`` interface instead::
             from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv
     """
+
     def __init__(self, env):
         warnings.warn(
             "MultiAgentWrapper is deprecated and will be removed in a future release. "
@@ -484,6 +484,7 @@ class MultiAgentWrapper(Wrapper, RecordConstructorArgs):
         )
         Wrapper.__init__(self, env)
         RecordConstructorArgs.__init__(self)
+
     def step(self, action):  # unchanged
         obs, _, _, truncated, info = super().step(action)
         reward = info["agents_rewards"]

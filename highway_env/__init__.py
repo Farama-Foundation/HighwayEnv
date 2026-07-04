@@ -185,6 +185,7 @@ def _register_highway_envs():
 
     _register_pettingzoo_envs()
 
+
 def _register_pettingzoo_envs() -> None:
     """Register PettingZoo ParallelEnv IDs (skipped silently if pettingzoo not installed).
     IDs continue the ``intersection-multi-agent-vN`` series from v2:
@@ -212,5 +213,6 @@ def _register_pettingzoo_envs() -> None:
                 ":ConnectedLaneIntersectionParallelEnv"
             ),
         )
+
 
 _register_highway_envs()

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv
 from highway_env.envs.intersection_env import (
     ConnectedLaneMultiAgentIntersectionEnv,
     MultiAgentIntersectionEnv,
 )
-from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv
 
 
 class IntersectionParallelEnv(HighwayParallelEnv):
@@ -29,7 +29,9 @@ class IntersectionParallelEnv(HighwayParallelEnv):
         "name": "intersection_parallel_v3",
     }
 
-    def __init__(self, config: dict | None = None, render_mode: str | None = None) -> None:
+    def __init__(
+        self, config: dict | None = None, render_mode: str | None = None
+    ) -> None:
         base = MultiAgentIntersectionEnv(config=config, render_mode=render_mode)
         super().__init__(base)
 
@@ -48,7 +50,9 @@ class ConnectedLaneIntersectionParallelEnv(HighwayParallelEnv):
         "name": "intersection_parallel_v4",
     }
 
-    def __init__(self, config: dict | None = None, render_mode: str | None = None) -> None:
+    def __init__(
+        self, config: dict | None = None, render_mode: str | None = None
+    ) -> None:
         base = ConnectedLaneMultiAgentIntersectionEnv(
             config=config, render_mode=render_mode
         )
