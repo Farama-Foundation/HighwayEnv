@@ -65,9 +65,15 @@ docs = [
     "ipykernel",
     "jupyter-sphinx",
 ]
+style = [
+    "pre-commit",
+    "ruff",
+    "ty",
+]
 dev = [
     { include-group = "test" },
     { include-group = "docs" },
+    { include-group = "style" },
 ]
 
 [tool.setuptools]
