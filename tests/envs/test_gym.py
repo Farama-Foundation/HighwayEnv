@@ -16,7 +16,9 @@ gym.register_envs(highway_env)
 highway_env_ids = [
     env_id
     for env_id, env_spec in gym.registry.items()
-    if isinstance(env_spec.entry_point, str) and "highway_env" in env_spec.entry_point
+    if isinstance(env_spec.entry_point, str)
+    and "highway_env" in env_spec.entry_point
+    and "intersection_pz_env" not in env_spec.entry_point
 ]
 
 
