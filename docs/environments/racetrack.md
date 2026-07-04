@@ -69,7 +69,7 @@ See {ref}`road-neighbour-vehicles` for details.
     "centering_position": [0.5, 0.5],
     "show_trajectories": False,
     "render_agent": True,
-    "offscreen_rendering": False
+    "offscreen_rendering": None
 }
 ```
 

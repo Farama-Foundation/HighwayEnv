@@ -53,7 +53,7 @@ env = gym.make("highway-v0")
     "scaling": 5.5,
     "show_trajectories": False,
     "render_agent": True,
-    "offscreen_rendering": False
+    "offscreen_rendering": None
 }
 ```
 

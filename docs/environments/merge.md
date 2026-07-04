@@ -56,7 +56,7 @@ See {ref}`road-neighbour-vehicles` for details.
     "scaling": 5.5,
     "show_trajectories": False,
     "render_agent": True,
-    "offscreen_rendering": False
+    "offscreen_rendering": None
 }
 ```
 

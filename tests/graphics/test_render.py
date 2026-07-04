@@ -11,7 +11,6 @@ gym.register_envs(highway_env)
 @pytest.mark.parametrize("env_spec", ["highway-v0", "merge-v0"])
 def test_render(env_spec):
     env = gym.make(env_spec, render_mode="rgb_array").unwrapped
-    env.config.update({"offscreen_rendering": True})
     env.reset()
     img = env.render()
     env.close()

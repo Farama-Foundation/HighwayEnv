@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import os
+import warnings
 from typing import TypeVar
 
 import gymnasium as gym
@@ -58,6 +59,13 @@ class AbstractEnv(gym.Env):
     def __init__(self, config: dict = None, render_mode: str | None = None) -> None:
         super().__init__()
 
+        # Rendering
+        assert render_mode is None or render_mode in self.metadata["render_modes"]
+        self.render_mode = render_mode
+        self.viewer = None
+        self._record_video_wrapper = None
+        self.enable_auto_render = False
+
         # Configuration
         self.config = self.default_config()
         self.configure(config)
@@ -77,13 +85,6 @@ class AbstractEnv(gym.Env):
         self.time = 0  # Simulation time
         self.steps = 0  # Actions performed
         self.done = False
-
-        # Rendering
-        self.viewer = None
-        self._record_video_wrapper = None
-        assert render_mode is None or render_mode in self.metadata["render_modes"]
-        self.render_mode = render_mode
-        self.enable_auto_render = False
 
         self.reset()
 
@@ -117,7 +118,7 @@ class AbstractEnv(gym.Env):
             "scaling": 5.5,
             "show_trajectories": False,
             "render_agent": True,
-            "offscreen_rendering": os.environ.get("OFFSCREEN_RENDERING", "0") == "1",
+            "offscreen_rendering": None,
             "manual_control": False,
             "real_time_rendering": False,
             "neighbour_vehicles_connected_lanes": False,
@@ -126,6 +127,21 @@ class AbstractEnv(gym.Env):
     def configure(self, config: dict) -> None:
         if config:
             self.config.update(config)
+
+        if "OFFSCREEN_RENDERING" in os.environ:
+            suggestion = (
+                "rgb_array" if os.getenv("OFFSCREEN_RENDERING") == "1" else "human"
+            )
+            warnings.warn(
+                f"\033[31mhighway_env.{self.__class__.__name__}:\033[0m "
+                "The OFFSCREEN_RENDERING environment variable is deprecated "
+                f'and ignored. Use render_mode="{suggestion}" instead.',
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
+        if self.config["offscreen_rendering"] is None:
+            self.config["offscreen_rendering"] = self.render_mode != "human"
 
     def update_metadata(self, video_real_time_ratio=2):
         frames_freq = (
@@ -313,7 +329,7 @@ class AbstractEnv(gym.Env):
                 "You can specify the render_mode at initialization, "
                 f'e.g. gym.make("{self.spec.id}", render_mode="rgb_array")'
             )
-            return
+            return None
         if self.viewer is None:
             self.viewer = EnvViewer(self)
 
@@ -324,8 +340,8 @@ class AbstractEnv(gym.Env):
         if not self.viewer.offscreen:
             self.viewer.handle_events()
         if self.render_mode == "rgb_array":
-            image = self.viewer.get_image()
-            return image
+            return self.viewer.get_image()
+        return None
 
     def close(self) -> None:
         """
