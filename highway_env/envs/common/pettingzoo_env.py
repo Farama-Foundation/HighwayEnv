@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 import gymnasium as gym
 from pettingzoo.utils.env import ParallelEnv
 
+
 if TYPE_CHECKING:
     from highway_env.envs.common.abstract import AbstractEnv
 
@@ -41,7 +42,10 @@ class HighwayParallelEnv(ParallelEnv):
         and ``MultiAgentAction`` configured.
     """
 
-    metadata: dict = {"render_modes": ["human", "rgb_array"], "name": "highway_parallel_v0"}
+    metadata: dict = {
+        "render_modes": ["human", "rgb_array"],
+        "name": "highway_parallel_v0",
+    }
 
     def __init__(self, env: AbstractEnv) -> None:
         super().__init__()
@@ -182,4 +186,5 @@ class HighwayParallelEnv(ParallelEnv):
             return min(1, space.n - 1)
         # Continuous: return zeros
         import numpy as np
+
         return np.zeros(space.shape, dtype=space.dtype)
