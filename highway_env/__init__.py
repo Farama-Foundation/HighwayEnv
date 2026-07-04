@@ -189,5 +189,4 @@ def _register_highway_envs():
         entry_point="highway_env.envs.random_road_env:RandomRoadEnv",
     )
 
-
 _register_highway_envs()
