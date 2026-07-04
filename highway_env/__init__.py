@@ -183,5 +183,34 @@ def _register_highway_envs():
         entry_point="highway_env.envs.u_turn_env:ConnectedLaneUTurnEnv",
     )
 
+    _register_pettingzoo_envs()
+
+def _register_pettingzoo_envs() -> None:
+    """Register PettingZoo ParallelEnv IDs (skipped silently if pettingzoo not installed).
+    IDs continue the ``intersection-multi-agent-vN`` series from v2:
+      - v3: IntersectionParallelEnv (standard)
+      - v4: ConnectedLaneIntersectionParallelEnv
+    Note: These are PettingZoo ParallelEnv instances, NOT gymnasium.Env subclasses.
+    ``gymnasium.make("intersection-multi-agent-v3")`` will NOT work; use direct import::
+        from highway_env.envs.intersection_pz_env import IntersectionParallelEnv
+        env = IntersectionParallelEnv()
+    """
+    try:
+        from pettingzoo.utils.env import ParallelEnv  # noqa: F401
+    except ImportError:
+        return  # pettingzoo not installed; skip silently
+    if "intersection-multi-agent-v3" not in registry:
+        register(
+            id="intersection-multi-agent-v3",
+            entry_point="highway_env.envs.intersection_pz_env:IntersectionParallelEnv",
+        )
+    if "intersection-multi-agent-v4" not in registry:
+        register(
+            id="intersection-multi-agent-v4",
+            entry_point=(
+                "highway_env.envs.intersection_pz_env"
+                ":ConnectedLaneIntersectionParallelEnv"
+            ),
+        )
 
 _register_highway_envs()
