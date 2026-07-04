@@ -57,7 +57,7 @@ env = gym.make("parking-v0")
     "scaling": 7,
     "show_trajectories": False,
     "render_agent": True,
-    "offscreen_rendering": False
+    "offscreen_rendering": None
 }
 ```
 

@@ -14,8 +14,6 @@ on:
 
 permissions:
   contents: write
-env:
-  OFFSCREEN_RENDERING: 1
 jobs:
   docs:
     name: Generate Website for new version
