@@ -5,6 +5,7 @@ default:
 
 install:
     uv sync --group dev --frozen
+		uv run --frozen pre-commit install
 
 docs-serve: install
     uv run --frozen sphinx-autobuild docs docs/_build/html --open-browser
