@@ -73,6 +73,28 @@ Then run commands through the managed environment with `uv run`:
 uv run pytest
 ```
 
+(faq-coverage)=
+## What are the unit test coverage requirements for contributions?
+
+Our CI runs two coverage checks on pull requests and pushes to `main` and `test/**` branches:
+
+- **Total coverage** — the `highway_env` package must stay at **≥ 85%** line coverage.
+- **Diff coverage** — lines you add or change in `highway_env/` must be **≥ 80%** covered by tests.
+
+Diff coverage only applies to lines you add or modify in `highway_env/`; it does not require every legacy gap in the package to be filled in one PR. Total coverage guards the overall baseline.
+
+Run the same checks locally before opening a PR:
+
+```bash
+just coverage                              # both checks (diff vs origin/main)
+just coverage-total                        # ≥ 85% on highway_env
+just coverage-diff                         # ≥ 80% on changed highway_env lines
+just coverage-diff upstream                # diff vs upstream/main
+just coverage-diff upstream my-feature     # diff vs upstream/my-feature
+```
+
+Pass `remote` and `branch` as positional arguments (`just coverage-diff upstream my-feature`). See [CONTRIBUTING.md](https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md#test-coverage) for the full contributor guide.
+
 ## My videos are too fast / have a low framerate.
 
 This is because in gymnasium, a single video frame is generated at each call of `env.step(action)`. However, in HighwayEnv, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (*e.g.* change lane) actually corresponds to several (typically, 15) simulation frames.
