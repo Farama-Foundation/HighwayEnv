@@ -35,6 +35,7 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 testing = [
+    "diff-cover",
     "pytest",
     "pytest-cov",
     "scipy",
@@ -51,6 +52,7 @@ highway-env = "highway_env:_register_highway_envs"
 
 [dependency-groups]
 test = [
+    "diff-cover",
     "pytest",
     "pytest-cov",
     "scipy",
