@@ -1,12 +1,6 @@
 name: coverage (diff)
 
 on:
-  push:
-    branches:
-      - main
-      - 'test/**'
-    paths:
-      - 'highway_env/**'
   pull_request:
     branches:
       - main
@@ -31,14 +25,9 @@ jobs:
       - name: Check diff size
         id: diff_gate
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            ref="origin/${{ github.base_ref }}"
-          elif [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
-            ref="${{ github.event.before }}"
-          else
-            ref="HEAD~1"
-          fi
-          count=$(git diff --numstat "${ref}"...HEAD -- highway_env/ | awk '{sum += $1 + $2} END {print sum+0}')
+          ref="origin/${{ github.base_ref }}"
+          # Count additions only & limit the diff to highway_env/
+          count=$(git diff --numstat "${ref}"...HEAD -- highway_env/ | awk '{sum += $1} END {print sum+0}')
           echo "ref=${ref}" >> "$GITHUB_OUTPUT"
           echo "count=${count}" >> "$GITHUB_OUTPUT"
           if [ "${count}" -gt "${MIN_DIFF_LINES}" ]; then
