@@ -380,6 +380,24 @@ uv<span class="w"> </span>sync<span class="w"> </span>--frozen<span class="w"> <
 </pre></div>
 </div>
 </section>
+<section id="what-are-the-unit-test-coverage-requirements-for-contributions">
+<span id="faq-coverage"></span><h2>What are the unit test coverage requirements for contributions?<a class="headerlink" href="#what-are-the-unit-test-coverage-requirements-for-contributions" title="Link to this heading">¶</a></h2>
+<p>Our CI runs two coverage checks on pull requests and pushes to <code class="docutils literal notranslate"><span class="pre">main</span></code> and <code class="docutils literal notranslate"><span class="pre">test/**</span></code> branches:</p>
+<ul class="simple">
+<li><p><strong>Total coverage</strong> — the <code class="docutils literal notranslate"><span class="pre">highway_env</span></code> package must stay at <strong>≥ 85%</strong> line coverage.</p></li>
+<li><p><strong>Diff coverage</strong> — lines you add or change in <code class="docutils literal notranslate"><span class="pre">highway_env/</span></code> must be <strong>≥ 80%</strong> covered by tests.</p></li>
+</ul>
+<p>Diff coverage only applies to lines you add or modify in <code class="docutils literal notranslate"><span class="pre">highway_env/</span></code>; it does not require every legacy gap in the package to be filled in one PR. Total coverage guards the overall baseline.</p>
+<p>Run the same checks locally before opening a PR:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>just<span class="w"> </span>coverage<span class="w">                              </span><span class="c1"># both checks (diff vs origin/main)</span>
+just<span class="w"> </span>coverage-total<span class="w">                        </span><span class="c1"># ≥ 85% on highway_env</span>
+just<span class="w"> </span>coverage-diff<span class="w">                         </span><span class="c1"># ≥ 80% on changed highway_env lines</span>
+just<span class="w"> </span>coverage-diff<span class="w"> </span>upstream<span class="w">                </span><span class="c1"># diff vs upstream/main</span>
+just<span class="w"> </span>coverage-diff<span class="w"> </span>upstream<span class="w"> </span>my-feature<span class="w">     </span><span class="c1"># diff vs upstream/my-feature</span>
+</pre></div>
+</div>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">remote</span></code> and <code class="docutils literal notranslate"><span class="pre">branch</span></code> as positional arguments (<code class="docutils literal notranslate"><span class="pre">just</span> <span class="pre">coverage-diff</span> <span class="pre">upstream</span> <span class="pre">my-feature</span></code>). See <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md#test-coverage">CONTRIBUTING.md</a> for the full contributor guide.</p>
+</section>
 <section id="my-videos-are-too-fast-have-a-low-framerate">
 <h2>My videos are too fast / have a low framerate.<a class="headerlink" href="#my-videos-are-too-fast-have-a-low-framerate" title="Link to this heading">¶</a></h2>
 <p>This is because in gymnasium, a single video frame is generated at each call of <code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code>. However, in HighwayEnv, the policy typically runs at a low-level frequency (e.g. 1 Hz) so that a long action (<em>e.g.</em> change lane) actually corresponds to several (typically, 15) simulation frames.
@@ -481,6 +499,7 @@ In order to also render these intermediate simulation frames, the following shou
 <li><a class="reference internal" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist">When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code></a></li>
 <li><a class="reference internal" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why">I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?</a></li>
 <li><a class="reference internal" href="#how-do-i-set-up-a-development-environment-with-pinned-dependency-versions">How do I set up a development environment with pinned dependency versions?</a></li>
+<li><a class="reference internal" href="#what-are-the-unit-test-coverage-requirements-for-contributions">What are the unit test coverage requirements for contributions?</a></li>
 <li><a class="reference internal" href="#my-videos-are-too-fast-have-a-low-framerate">My videos are too fast / have a low framerate.</a></li>
 </ul>
 </li>
