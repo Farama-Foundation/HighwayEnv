@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
     <meta property="og:url" content="https://highway-env.farama.org/environments/two_way.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="U-Turn" href="../u_turn/" /><link rel="prev" title="Lane Keeping" href="../lane_keeping/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Exit" href="../exit/" /><link rel="prev" title="Lane Keeping" href="../lane_keeping/" />
         <link rel="canonical" href="https://highway-env.farama.org/environments/two_way.html" />
 
     <link rel="shortcut icon" href="../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -226,9 +226,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../racetrack/">Racetrack</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../lane_keeping/">Lane Keeping</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Two Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../u_turn/">U-Turn</a></li>
 </ul>
 </li>
@@ -265,6 +265,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes/">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md">Contribute to the Docs</a></li>
 </ul>
 
@@ -325,6 +326,10 @@
             <section class="tex2jax_ignore mathjax_ignore" id="two-way">
 <span id="environments-two-way"></span><h1>Two Way<a class="headerlink" href="#two-way" title="Link to this heading">¶</a></h1>
 <p>A risk management task: the agent is driving on a two-way road with oncoming traffic. It must balance making progress by overtaking slower vehicles and ensuring safety. These conflicting objectives are implemented by a reward signal and a constraint signal, in the CMDP/BMDP framework.</p>
+<figure class="align-center" id="fig-two-way-env">
+<a class="reference internal image-reference" href="../../_images/two-way-env.gif"><img alt="../../_images/two-way-env.gif" src="../../_images/two-way-env.gif" style="width: 80%;" />
+</a>
+</figure>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;two-way-v0&quot;</span><span class="p">)</span>
@@ -385,12 +390,12 @@ in the CMDP/BMDP framework.</p>
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../u_turn/">
+            <a class="next-page" href="../exit/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">U-Turn</div>
+                <div class="title">Exit</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>

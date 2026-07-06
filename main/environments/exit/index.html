@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
     <meta property="og:url" content="https://highway-env.farama.org/environments/exit.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Lane Keeping" href="../lane_keeping/" /><link rel="prev" title="Racetrack" href="../racetrack/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="U-Turn" href="../u_turn/" /><link rel="prev" title="Two Way" href="../two_way/" />
         <link rel="canonical" href="https://highway-env.farama.org/environments/exit.html" />
 
     <link rel="shortcut icon" href="../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -226,9 +226,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../racetrack/">Racetrack</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../lane_keeping/">Lane Keeping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../two_way/">Two Way</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../u_turn/">U-Turn</a></li>
 </ul>
 </li>
@@ -265,6 +265,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes/">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md">Contribute to the Docs</a></li>
 </ul>
 
@@ -325,6 +326,10 @@
             <section class="tex2jax_ignore mathjax_ignore" id="exit">
 <span id="environments-exit"></span><h1>Exit<a class="headerlink" href="#exit" title="Link to this heading">¶</a></h1>
 <p>In this task, the ego-vehicle is driving on a multilane highway and must navigate across lanes to reach an exit ramp. The agent’s objective is to successfully take the exit while maintaining speed and avoiding collisions with surrounding traffic.</p>
+<figure class="align-center" id="fig-exit-env">
+<a class="reference internal image-reference" href="../../_images/exit-env.gif"><img alt="../../_images/exit-env.gif" src="../../_images/exit-env.gif" style="width: 80%;" />
+</a>
+</figure>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;exit-v0&quot;</span><span class="p">)</span>
@@ -429,18 +434,18 @@ for several simulation timesteps until the next decision making step.</p>
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../lane_keeping/">
+            <a class="next-page" href="../u_turn/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Lane Keeping</div>
+                <div class="title">U-Turn</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
             </a>
-            <a class="prev-page" href="../racetrack/">
+            <a class="prev-page" href="../two_way/">
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
@@ -449,7 +454,7 @@ for several simulation timesteps until the next decision making step.</p>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Racetrack</div>
+                <div class="title">Two Way</div>
                 
               </div>
             </a>
