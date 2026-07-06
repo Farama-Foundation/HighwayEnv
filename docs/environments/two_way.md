@@ -8,6 +8,12 @@
 
 A risk management task: the agent is driving on a two-way road with oncoming traffic. It must balance making progress by overtaking slower vehicles and ensuring safety. These conflicting objectives are implemented by a reward signal and a constraint signal, in the CMDP/BMDP framework.
 
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/two-way-env.gif
+:align: center
+:name: fig:two_way_env
+:width: 80%
+```
+
 ## Usage
 
 ```python

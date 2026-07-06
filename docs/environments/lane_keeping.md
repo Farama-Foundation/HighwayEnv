@@ -8,6 +8,12 @@
 
 A pure lateral control task using a bicycle dynamics model. The agent must steer to follow a sine-wave lane with no other traffic. The reward is maximised when the vehicle stays centred on the lane.
 
+```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/lane-keeping-env.gif
+:align: center
+:name: fig:lane_keeping_env
+:width: 80%
+```
+
 ## Usage
 
 ```python
