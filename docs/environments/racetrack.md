@@ -10,7 +10,7 @@ A continuous control environment, where the agent has to follow the tracks while
 
 Credits and many thanks to [@supperted825](https://github.com/supperted825) for the [idea and initial implementation](https://github.com/Farama-Foundation/HighwayEnv/issues/231).
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/racetrack-env.gif
+```{figure} ../_static/animations/environments/racetrack-env.gif
 :align: center
 :name: fig:racetrack_env
 :width: 80%

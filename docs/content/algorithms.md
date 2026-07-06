@@ -8,7 +8,7 @@ See the [quickstart guide](../quickstart.md) for training examples and notebooks
 
 ## Deep Q-Network
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/dqn.gif
+```{figure} ../_static/animations/algorithms/dqn.gif
 :alt: DQN agent solving highway-v0
 The DQN agent solving highway-v0.
 ```
@@ -19,7 +19,7 @@ This model-free value-based reinforcement learning agent performs Q-learning wit
 
 ## Deep Deterministic Policy Gradient
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/ddpg.gif
+```{figure} ../_static/animations/algorithms/ddpg.gif
 :alt: DDPG agent solving parking-v0
 The DDPG agent solving parking-v0.
 ```
@@ -30,7 +30,7 @@ This model-free policy-based reinforcement learning agent is optimized directly 
 
 ## Value Iteration
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/ttcvi.gif
+```{figure} ../_static/animations/algorithms/ttcvi.gif
 :alt: Value Iteration agent solving highway-v0
 The Value Iteration agent solving highway-v0.
 ```
@@ -43,7 +43,7 @@ The agent then performs a Value Iteration to compute the corresponding optimal s
 
 ## Monte-Carlo Tree Search
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/mcts.gif
+```{figure} ../_static/animations/algorithms/mcts.gif
 :alt: MCTS agent solving highway-v0
 The MCTS agent solving highway-v0.
 ```

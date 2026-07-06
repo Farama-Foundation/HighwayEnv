@@ -8,6 +8,12 @@
 
 A U-turn risk analysis task: the agent overtakes vehicles that are blocking the traffic while navigating a double-lane U-turn. Six strategically placed vehicles force the agent to balance high-speed overtaking with ensuring safety.
 
+```{figure} ../_static/animations/environments/u-turn-env.gif
+:align: center
+:name: fig:u_turn_env
+:width: 80%
+```
+
 ## Usage
 
 ```python

@@ -8,7 +8,7 @@
 
 In this task, the ego-vehicle is driving on a multilane highway populated with other vehicles. The agent's objective is to reach a high speed while avoiding collisions with neighbouring vehicles. Driving on the right side of the road is also rewarded.
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway.gif
+```{figure} ../_static/animations/environments/highway.gif
 :align: center
 :name: fig:highway_env
 :width: 80%

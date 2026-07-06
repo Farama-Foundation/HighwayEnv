@@ -8,7 +8,7 @@
 
 An intersection negotiation task with dense traffic.
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/intersection-env.gif
+```{figure} ../_static/animations/environments/intersection-env.gif
 :align: center
 :name: fig:intersection_env
 :width: 80%

@@ -46,6 +46,7 @@ Homepage = "https://farama.org"
 Repository = "https://github.com/Farama-Foundation/HighwayEnv"
 Documentation = "https://highway-env.farama.org/"
 "Bug Report" = "https://github.com/Farama-Foundation/HighwayEnv/issues"
+Changelog = "https://highway-env.farama.org/main/release_notes"
 
 [project.entry-points."gymnasium.envs.__root__"]
 highway-env = "highway_env:_register_highway_envs"
