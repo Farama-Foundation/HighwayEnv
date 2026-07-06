@@ -100,7 +100,7 @@ html_theme_options = {
     "description": "A collection of environments for autonomous driving and tactical decision-making tasks",
     "versioning": True,
     "source_repository": "https://github.com/Farama-Foundation/HighwayEnv/",
-    "source_branch": "master",
+    "source_branch": "main",
     "source_directory": "docs/",
 }
 html_context: Dict[str, Any] = {}
