@@ -6,12 +6,12 @@
 
 <p align="center">
     <a href="https://highway-env.farama.org/" target="_blank">
-        <img src="docs/_static/img/highway-text.png" width="500px" />
+        <img src="https://highway-env.farama.org/main/_static/img/highway-text.png" width="500px" />
     </a>
 </p>
 
 <p align="center">
-    <img src="docs/_static/animations/highway-env.gif"><br/>
+    <img src="https://highway-env.farama.org/main/_static/animations/highway-env.gif"><br/>
     <em>An episode of one of the environments available in HighwayEnv.</em>
 </p>
 
@@ -45,16 +45,16 @@ HighwayEnv includes 10 driving scenario families: `highway`, `intersection`, `ex
 
 | | |
 |:---|:---:|
-| `highway` | ![highway](docs/_static/animations/environments/highway.gif) |
-| `merge` | ![merge](docs/_static/animations/environments/merge-env.gif) |
-| `roundabout` | ![roundabout](docs/_static/animations/environments/roundabout-env.gif) |
-| `parking` | ![parking](docs/_static/animations/environments/parking-env.gif) |
-| `intersection` | ![intersection](docs/_static/animations/environments/intersection-env.gif) |
-| `racetrack` | ![racetrack](docs/_static/animations/environments/racetrack-env.gif) |
-| `lane-keeping` | ![lane-keeping](docs/_static/animations/environments/lane-keeping-env.gif) |
-| `two-way` | ![two-way](docs/_static/animations/environments/two-way-env.gif) |
-| `exit` | ![exit](docs/_static/animations/environments/exit-env.gif) |
-| `u-turn` | ![u-turn](docs/_static/animations/environments/u-turn-env.gif) |
+| `highway` | ![highway](https://highway-env.farama.org/main/_static/animations/environments/highway.gif) |
+| `merge` | ![merge](https://highway-env.farama.org/main/_static/animations/environments/merge-env.gif) |
+| `roundabout` | ![roundabout](https://highway-env.farama.org/main/_static/animations/environments/roundabout-env.gif) |
+| `parking` | ![parking](https://highway-env.farama.org/main/_static/animations/environments/parking-env.gif) |
+| `intersection` | ![intersection](https://highway-env.farama.org/main/_static/animations/environments/intersection-env.gif) |
+| `racetrack` | ![racetrack](https://highway-env.farama.org/main/_static/animations/environments/racetrack-env.gif) |
+| `lane-keeping` | ![lane-keeping](https://highway-env.farama.org/main/_static/animations/environments/lane-keeping-env.gif) |
+| `two-way` | ![two-way](https://highway-env.farama.org/main/_static/animations/environments/two-way-env.gif) |
+| `exit` | ![exit](https://highway-env.farama.org/main/_static/animations/environments/exit-env.gif) |
+| `u-turn` | ![u-turn](https://highway-env.farama.org/main/_static/animations/environments/u-turn-env.gif) |
 
 </details>
 
