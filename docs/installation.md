@@ -47,6 +47,6 @@ If you want to contribute to HighwayEnv (insert smiley face here), these tools w
 - [uv](https://docs.astral.sh/uv/) — fast Python package manager with lockfile support (recommended for contributors), install with [standalone installer](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) or simply `pip install uv`.
 - [just](https://github.com/casey/just) — command runner used for common development tasks (see the `Justfile`), install [with your package manager of choice](https://github.com/casey/just/blob/master/README.md#packages).
 
-Check {ref}`faq-uv-frozen` for how to set up a development environment using uv with the pinned lockfile.
+Check {ref}`faq-uv-frozen` for how to set up a development environment using uv with the pinned lockfile, and {ref}`faq-coverage` for the unit test coverage requirements enforced in CI.
 
-Also please check the contribution guideline on [GitHub](https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md).
+See the full [contribution guidelines](https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md) on GitHub.

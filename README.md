@@ -30,10 +30,11 @@ pip install highway-env
 or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv pip install highway-env
+uv add highway-env          # adds to project dependencies and installs (preferred)
+uv pip install highway-env  # or install without adding to a project (pip install)
 ```
 
-We support Python 3.10+ on Linux and macOS.
+We support **Linux** and **macOS** primarily, with **Windows** support maintained on a best-effort basis.
 
 ## Environments
 

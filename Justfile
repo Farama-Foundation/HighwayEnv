@@ -18,3 +18,15 @@ docs-clean:
 
 test:
     uv run --frozen pytest --cov=./ --cov-report=xml
+
+coverage-xml:
+    uv run --frozen pytest --cov=highway_env --cov-report=xml
+
+coverage-total:
+    uv run --frozen pytest --cov=highway_env --cov-report=term --cov-fail-under=85
+
+# Diff coverage: default origin/main; pass remote and branch positionally.
+coverage-diff remote="origin" branch="main": coverage-xml
+    uv run --frozen diff-cover coverage.xml --compare-branch={{remote}}/{{branch}} --fail-under=80
+
+coverage: coverage-total coverage-diff

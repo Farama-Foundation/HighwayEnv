@@ -1,0 +1,41 @@
+name: coverage (total)
+
+on:
+  push:
+    branches:
+      - main
+      - 'test/**'
+    paths:
+      - '.github/workflows/**'
+      - 'highway_env/**'
+      - 'tests/**'
+  pull_request:
+    branches:
+      - main
+      - 'test/**'
+    paths:
+      - '.github/workflows/**'
+      - 'highway_env/**'
+      - 'tests/**'
+
+permissions:
+  contents: read
+
+jobs:
+  coverage-total:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install OS dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libfreetype6-dev libportmidi-dev
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: uv sync --group test
+      - name: Test with minimum total coverage
+        run: uv run pytest --cov=highway_env --cov-report=term --cov-fail-under=85
