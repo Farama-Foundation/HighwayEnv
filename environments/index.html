@@ -8,14 +8,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
     <meta property="og:url" content="https://highway-env.farama.org/environments/index.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Highway" href="highway/" /><link rel="prev" title="Getting Started" href="../quickstart/" />
         <link rel="canonical" href="https://highway-env.farama.org/environments/index.html" />
 
     <link rel="shortcut icon" href="../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>The environments - HighwayEnv Documentation</title>
+        <title>Environments - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
-    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css?v=1c205c3a" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
@@ -212,23 +212,37 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="roundabout/">Roundabout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="racetrack/">Racetrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lane_keeping/">Lane Keeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two_way/">Two Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exit/">Exit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="u_turn/">U-Turn</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../actions/">Actions</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
@@ -242,12 +256,17 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -304,18 +323,64 @@
           </div>
           <article role="main">
             
-            <section class="tex2jax_ignore mathjax_ignore" id="the-environments">
-<span id="environments"></span><h1>The environments<a class="headerlink" href="#the-environments" title="Link to this heading">¶</a></h1>
+            <section class="tex2jax_ignore mathjax_ignore" id="environments">
+<span id="id1"></span><h1>Environments<a class="headerlink" href="#environments" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="highway/">Highway</a></li>
-<li class="toctree-l1"><a class="reference internal" href="merge/">Merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="roundabout/">Roundabout</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parking/">Parking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intersection/">Intersection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="racetrack/">Racetrack</a></li>
-</ul>
 </div>
+<p>HighwayEnv includes the following ten environments for autonomous driving decision-making. Each environment features configurable observations, actions, dynamics, and rewards — see <a class="reference internal" href="../quickstart/#configuration"><span class="std std-ref">Configuring an environment</span></a> for details.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Environment</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Action type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="highway/#environments-highway"><span class="std std-ref">Highway</span></a></p></td>
+<td><p>Drive fast on a multilane highway while avoiding collisions.</p></td>
+<td><p>Discrete</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="merge/#environments-merge"><span class="std std-ref">Merge</span></a></p></td>
+<td><p>Merge onto a highway from an on-ramp through dense traffic.</p></td>
+<td><p>Discrete</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="roundabout/#environments-roundabout"><span class="std std-ref">Roundabout</span></a></p></td>
+<td><p>Navigate a roundabout with merging and exiting traffic.</p></td>
+<td><p>Discrete</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="parking/#environments-parking"><span class="std std-ref">Parking</span></a></p></td>
+<td><p>Park in a given space with the correct heading (goal-conditioned).</p></td>
+<td><p>Continuous</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="intersection/#environments-intersection"><span class="std std-ref">Intersection</span></a></p></td>
+<td><p>Cross an unsignalized intersection among other vehicles.</p></td>
+<td><p>Discrete</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="racetrack/#environments-racetrack"><span class="std std-ref">Racetrack</span></a></p></td>
+<td><p>Follow a racetrack as fast as possible while staying on the road.</p></td>
+<td><p>Continuous</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="lane_keeping/#environments-lane-keeping"><span class="std std-ref">Lane Keeping</span></a></p></td>
+<td><p>Steer to follow a sine-wave lane using bicycle dynamics.</p></td>
+<td><p>Continuous</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="two_way/#environments-two-way"><span class="std std-ref">Two Way</span></a></p></td>
+<td><p>Overtake on a two-way road with oncoming traffic (risk management).</p></td>
+<td><p>Discrete</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="exit/#environments-exit"><span class="std std-ref">Exit</span></a></p></td>
+<td><p>Navigate across lanes to reach a highway exit ramp.</p></td>
+<td><p>Discrete</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="u_turn/#environments-u-turn"><span class="std std-ref">U-Turn</span></a></p></td>
+<td><p>Overtake blocking vehicles through a double-lane U-turn.</p></td>
+<td><p>Discrete</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>All environments follow the <a class="reference external" href="https://gymnasium.farama.org/">Gymnasium</a> API and are highly configurable via arguments specified in each environment’s documentation.</p>
 </section>
 
           </article>
@@ -323,8 +388,30 @@
         <footer>
           
           <div class="related-pages">
-            
-            
+            <a class="next-page" href="highway/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Highway</div>
+              </div>
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+            </a>
+            <a class="prev-page" href="../quickstart/">
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Getting Started</div>
+                
+              </div>
+            </a>
           </div>
           <div class="bottom-of-page">
             <div class="left-details">

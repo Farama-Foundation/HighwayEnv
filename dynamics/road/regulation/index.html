@@ -8,14 +8,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
     <meta property="og:url" content="https://highway-env.farama.org/dynamics/road/regulation.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Kinematics" href="../../vehicle/kinematics/" /><link rel="prev" title="Road" href="../road/" />
+<link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Kinematics" href="../../vehicle/kinematics/" /><link rel="prev" title="Neighbour vehicles" href="../neighbour_vehicles/" />
         <link rel="canonical" href="https://highway-env.farama.org/dynamics/road/regulation.html" />
 
     <link rel="shortcut icon" href="../../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Road regulation - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=5b1a364e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css?v=1c205c3a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
@@ -212,23 +212,37 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/roundabout/">Roundabout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/racetrack/">Racetrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/lane_keeping/">Lane Keeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/two_way/">Two Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/exit/">Exit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/u_turn/">U-Turn</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../../../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../actions/">Actions</a></li>
 <li class="toctree-l2 current has-children"><a class="reference internal" href="../../">Dynamics</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../vehicle/controller/">Control</a></li>
@@ -242,12 +256,17 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release_notes/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -317,7 +336,7 @@
 <span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.road.regulation" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.road.regulation.RegulatedRoad">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.road.regulation.</span></span><span class="sig-name descname"><span class="pre">RegulatedRoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RoadNetwork</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vehicles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><span class="pre">Vehicle</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obstacles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Obstacle</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np_random</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RandomState</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/highway_env/road/regulation/#RegulatedRoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.road.regulation.</span></span><span class="sig-name descname"><span class="pre">RegulatedRoad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RoadNetwork</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vehicles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle" title="highway_env.vehicle.kinematics.Vehicle"><span class="pre">Vehicle</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obstacles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Obstacle</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np_random</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RandomState</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbour_vehicles_connected_lanes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/highway_env/road/regulation/#RegulatedRoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.road.regulation.RegulatedRoad" title="Link to this definition">¶</a></dt>
 <dd><p>New road.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -327,6 +346,7 @@
 <li><p><strong>road_objects</strong> – the objects on the road including obstacles and landmarks</p></li>
 <li><p><strong>np_random</strong> (<em>np.random.RandomState</em>) – a random number generator for vehicle behaviour</p></li>
 <li><p><strong>record_history</strong> – whether the recent trajectories of vehicles should be recorded for display</p></li>
+<li><p><strong>neighbour_vehicles_connected_lanes</strong> – whether to search connected lane segments for neighbours</p></li>
 </ul>
 </dd>
 </dl>
@@ -385,7 +405,7 @@
                 <use href="#svg-arrow-right"></use>
               </svg>
             </a>
-            <a class="prev-page" href="../road/">
+            <a class="prev-page" href="../neighbour_vehicles/">
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
@@ -394,7 +414,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Road</div>
+                <div class="title">Neighbour vehicles</div>
                 
               </div>
             </a>

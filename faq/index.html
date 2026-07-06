@@ -8,14 +8,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
     <meta property="og:url" content="https://highway-env.farama.org/faq.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Bibliography" href="../bibliography/" /><link rel="prev" title="Make your own environment" href="../make_your_own/" />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Publications" href="../content/publications/" /><link rel="prev" title="Make your own environment" href="../make_your_own/" />
         <link rel="canonical" href="https://highway-env.farama.org/faq.html" />
 
     <link rel="shortcut icon" href="../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Frequently Asked Questions - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
-    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css?v=1c205c3a" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
@@ -212,23 +212,37 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/lane_keeping/">Lane Keeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/two_way/">Two Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/exit/">Exit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/u_turn/">U-Turn</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../actions/">Actions</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
@@ -242,12 +256,17 @@
 </ul>
 </li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -310,12 +329,14 @@
 suggest new entries!</p>
 <section id="when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist">
 <h2>When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code><a class="headerlink" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist" title="Link to this heading">¶</a></h2>
-<p>This is probably because you do not have HighwayEnv installed, but are instead working with a local copy of the
-repository. In that case, you need to run the following code first to register the environments.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
-<span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
+<p>This is probably because you have not imported HighwayEnv yet. Importing HighwayEnv would automatically registers the environments.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
+
+<span class="n">gym</span><span class="o">.</span><span class="n">register_envs</span><span class="p">(</span><span class="n">highway_env</span><span class="p">)</span>  <span class="c1"># this is a no-op to satisfy linters &amp; IDE</span>
 </pre></div>
 </div>
+<p>The last line has no effect, it’s simply telling your IDE and/or linter that <code class="docutils literal notranslate"><span class="pre">highway_env</span></code> is actually being used!</p>
 </section>
 <section id="i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why">
 <h2>I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?<a class="headerlink" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why" title="Link to this heading">¶</a></h2>
@@ -326,19 +347,57 @@ order, it will see it as a novel state and will not be able to reuse past inform
 make use of its observation.</p>
 <p>This can be addressed in two ways:</p>
 <ul class="simple">
-<li><ul>
 <li><p>Change the <em>model</em>, to use a permutation-invariant architecture which will not be sensitive to the vehicles order, such as <em>e.g.</em> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../bibliography/#id9" title="Charles R. Qi, Hao Su, Kaichun Mo, and Leonidas J. Guibas. Pointnet: deep learning on point sets for 3d classification and segmentation. 2017. arXiv:1612.00593.">QSMG17</a>]</span> or <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../bibliography/#id8" title="Edouard Leurent and Jean Mercat. Social attention for autonomous decision-making in dense traffic. In Machine Learning for Autonomous Driving Workshop at the Thirty-third Conference on Neural Information Processing Systems (NeurIPS 2019). Montreal, Canada, December 2019. arXiv:1911.12250.">LM19</a>]</span>.</p></li>
 </ul>
-</li>
-</ul>
-<p>This example is implemented <a class="reference external" href="https://colab.research.google.com/github/eleurent/highway-env/blob/master/scripts/intersection_social_dqn.ipynb">here (DQN)</a> or <a class="reference external" href="https://github.com/eleurent/highway-env/blob/master/scripts/sb3_highway_ppo_transformer.py">here (SB3’s PPO)</a>.</p>
+<p>This example is implemented <a class="reference external" href="https://colab.research.google.com/github/Farama-Foundation/HighwayEnv/blob/main/scripts/intersection_social_dqn.ipynb">here (DQN)</a> or <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_ppo_transformer.py">here (SB3’s PPO)</a>.</p>
 <ul class="simple">
-<li><ul>
 <li><p>Change the <em>observation</em>. For example, the <a class="reference internal" href="../observations/#grayscale-image"><span class="std std-ref">Grayscale Image</span></a> does not depend on an ordering. In this case, a CNN model is more suitable than an MLP model.</p></li>
 </ul>
-</li>
+<p>This example is implemented <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/scripts/sb3_highway_dqn_cnn.py">here (SB3’s DQN)</a>.</p>
+</section>
+<section id="how-do-i-set-up-a-development-environment-with-pinned-dependency-versions">
+<span id="faq-uv-frozen"></span><h2>How do I set up a development environment with pinned dependency versions?<a class="headerlink" href="#how-do-i-set-up-a-development-environment-with-pinned-dependency-versions" title="Link to this heading">¶</a></h2>
+<p>We use <a class="reference external" href="https://docs.astral.sh/uv/">uv</a> to manage development dependencies. The repository includes a <code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> lockfile that pins exact dependency versions known to work together.</p>
+<p>To install uv (if you don’t have it already):</p>
+<p>Install with <a class="reference external" href="https://docs.astral.sh/uv/getting-started/installation/#standalone-installer">standalone installer</a>.</p>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>uv
+</pre></div>
+</div>
+<p>Then clone the repository and sync with frozen (lockfile-pinned) versions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Farama-Foundation/HighwayEnv
+<span class="nb">cd</span><span class="w"> </span>HighwayEnv
+uv<span class="w"> </span>sync<span class="w"> </span>--frozen
+</pre></div>
+</div>
+<p>This creates a virtual environment and installs the project with all its dependencies at the exact versions recorded in the lockfile. To also install test or docs dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>sync<span class="w"> </span>--frozen<span class="w"> </span>--group<span class="w"> </span><span class="nb">test</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--frozen<span class="w"> </span>--group<span class="w"> </span>docs
+uv<span class="w"> </span>sync<span class="w"> </span>--frozen<span class="w"> </span>--group<span class="w"> </span>dev<span class="w">   </span><span class="c1"># both test and docs</span>
+</pre></div>
+</div>
+<p>Then run commands through the managed environment with <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>pytest
+</pre></div>
+</div>
+</section>
+<section id="what-are-the-unit-test-coverage-requirements-for-contributions">
+<span id="faq-coverage"></span><h2>What are the unit test coverage requirements for contributions?<a class="headerlink" href="#what-are-the-unit-test-coverage-requirements-for-contributions" title="Link to this heading">¶</a></h2>
+<p>Our CI runs two coverage checks on pull requests and pushes to <code class="docutils literal notranslate"><span class="pre">main</span></code> and <code class="docutils literal notranslate"><span class="pre">test/**</span></code> branches:</p>
+<ul class="simple">
+<li><p><strong>Total coverage</strong> — the <code class="docutils literal notranslate"><span class="pre">highway_env</span></code> package must stay at <strong>≥ 85%</strong> line coverage.</p></li>
+<li><p><strong>Diff coverage</strong> — lines you add or change in <code class="docutils literal notranslate"><span class="pre">highway_env/</span></code> must be <strong>≥ 80%</strong> covered by tests.</p></li>
 </ul>
-<p>This example is implemented <a class="reference external" href="https://github.com/eleurent/highway-env/blob/master/scripts/sb3_highway_dqn_cnn.py">here (SB3’s DQN)</a>.</p>
+<p>Diff coverage only applies to lines you add or modify in <code class="docutils literal notranslate"><span class="pre">highway_env/</span></code>; it does not require every legacy gap in the package to be filled in one PR. Total coverage guards the overall baseline.</p>
+<p>Run the same checks locally before opening a PR:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>just<span class="w"> </span>coverage<span class="w">                              </span><span class="c1"># both checks (diff vs origin/main)</span>
+just<span class="w"> </span>coverage-total<span class="w">                        </span><span class="c1"># ≥ 85% on highway_env</span>
+just<span class="w"> </span>coverage-diff<span class="w">                         </span><span class="c1"># ≥ 80% on changed highway_env lines</span>
+just<span class="w"> </span>coverage-diff<span class="w"> </span>upstream<span class="w">                </span><span class="c1"># diff vs upstream/main</span>
+just<span class="w"> </span>coverage-diff<span class="w"> </span>upstream<span class="w"> </span>my-feature<span class="w">     </span><span class="c1"># diff vs upstream/my-feature</span>
+</pre></div>
+</div>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">remote</span></code> and <code class="docutils literal notranslate"><span class="pre">branch</span></code> as positional arguments (<code class="docutils literal notranslate"><span class="pre">just</span> <span class="pre">coverage-diff</span> <span class="pre">upstream</span> <span class="pre">my-feature</span></code>). See <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md#test-coverage">CONTRIBUTING.md</a> for the full contributor guide.</p>
 </section>
 <section id="my-videos-are-too-fast-have-a-low-framerate">
 <h2>My videos are too fast / have a low framerate.<a class="headerlink" href="#my-videos-are-too-fast-have-a-low-framerate" title="Link to this heading">¶</a></h2>
@@ -373,12 +432,12 @@ In order to also render these intermediate simulation frames, the following shou
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../bibliography/">
+            <a class="next-page" href="../content/publications/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Bibliography</div>
+                <div class="title">Publications</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
@@ -440,6 +499,8 @@ In order to also render these intermediate simulation frames, the following shou
 <li><a class="reference internal" href="#">Frequently Asked Questions</a><ul>
 <li><a class="reference internal" href="#when-i-try-to-make-an-environment-i-get-an-error-gymnasium-error-namenotfound-environment-highway-doesn-t-exist">When I try to make an environment, I get an error <code class="docutils literal notranslate"><span class="pre">gymnasium.error.NameNotFound:</span> <span class="pre">Environment</span> <span class="pre">highway</span> <span class="pre">doesn't</span> <span class="pre">exist.</span></code></a></li>
 <li><a class="reference internal" href="#i-try-to-train-an-agent-using-the-kinematics-observation-and-an-mlp-model-but-the-resulting-policy-is-not-optimal-why">I try to train an agent using the Kinematics Observation and an MLP model, but the resulting policy is not optimal. Why?</a></li>
+<li><a class="reference internal" href="#how-do-i-set-up-a-development-environment-with-pinned-dependency-versions">How do I set up a development environment with pinned dependency versions?</a></li>
+<li><a class="reference internal" href="#what-are-the-unit-test-coverage-requirements-for-contributions">What are the unit test coverage requirements for contributions?</a></li>
 <li><a class="reference internal" href="#my-videos-are-too-fast-have-a-low-framerate">My videos are too fast / have a low framerate.</a></li>
 </ul>
 </li>

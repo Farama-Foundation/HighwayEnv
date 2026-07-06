@@ -15,7 +15,7 @@
         <title>Make your own environment - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
-    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css?v=1c205c3a" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
@@ -212,23 +212,37 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/lane_keeping/">Lane Keeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/two_way/">Two Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/exit/">Exit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/u_turn/">U-Turn</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../actions/">Actions</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
@@ -242,12 +256,17 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -313,6 +332,7 @@
 </div>
 <section id="set-up-files">
 <h2>Set up files<a class="headerlink" href="#set-up-files" title="Link to this heading">¶</a></h2>
+<p>See <a class="reference internal" href="../faq/#faq-uv-frozen"><span class="std std-ref">How do I set up a development environment with pinned dependency versions?</span></a> for instructions on setting up a development environment with pinned dependency versions.</p>
 <ol class="arabic simple">
 <li><p>Create a new <code class="docutils literal notranslate"><span class="pre">your_env.py</span></code> file in <code class="docutils literal notranslate"><span class="pre">highway_env/envs/</span></code></p></li>
 <li><p>Define a class YourEnv, that must inherit from <a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractEnv</span></code></a></p></li>
@@ -330,7 +350,7 @@
 <p>The first step is to create a <code class="xref py py-class docutils literal notranslate"><span class="pre">RoadNetwork</span></code> that describes the geometry and topology of
 roads and lanes in the scene.
 This should be achieved in a <code class="docutils literal notranslate"><span class="pre">YourEnv._make_road()</span></code> method, called from <code class="docutils literal notranslate"><span class="pre">YourEnv.reset()</span></code> to set the <code class="docutils literal notranslate"><span class="pre">self.road</span></code> field.</p>
-<p>See <span class="xref std std-ref">Roads</span> for reference, and existing environments as examples.</p>
+<p>See <a class="reference internal" href="../dynamics/road/road/#road-road"><span class="std std-ref">Roads</span></a> for reference, and existing environments as examples.</p>
 </section>
 <section id="create-the-vehicles">
 <h2>Create the vehicles<a class="headerlink" href="#create-the-vehicles" title="Link to this heading">¶</a></h2>
@@ -339,7 +359,7 @@ method, called from <code class="docutils literal notranslate"><span class="pre"
 <p>First, define the controlled ego-vehicle by setting <code class="docutils literal notranslate"><span class="pre">self.vehicle</span></code>. The class of controlled vehicle depends on the
 choice of action type, and can be accessed as <code class="docutils literal notranslate"><span class="pre">self.action_type.vehicle_class</span></code>.
 Other vehicles can be created more freely, and added to the <code class="docutils literal notranslate"><span class="pre">self.road.vehicles</span></code> list.</p>
-<p>See <span class="xref std std-ref">vehicle behaviors</span> for reference, and existing environments as examples.</p>
+<p>See <a class="reference internal" href="../dynamics/vehicle/behavior/#vehicle-behavior"><span class="std std-ref">vehicle behaviors</span></a> for reference, and existing environments as examples.</p>
 </section>
 <section id="make-the-environment-configurable">
 <h2>Make the environment configurable<a class="headerlink" href="#make-the-environment-configurable" title="Link to this heading">¶</a></h2>
@@ -351,24 +371,19 @@ environment implementation with <code class="docutils literal notranslate"><span
 <section id="register-the-environment">
 <h2>Register the environment<a class="headerlink" href="#register-the-environment" title="Link to this heading">¶</a></h2>
 <p>In <code class="docutils literal notranslate"><span class="pre">highway_env/envs/__init__.py</span></code>, add the following import:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.your_env</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.your_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">YourEnv</span>
 </pre></div>
 </div>
-<p>so you can register your env in the <code class="docutils literal notranslate"><span class="pre">register_highway_envs()</span></code> method of <code class="docutils literal notranslate"><span class="pre">highway_env/__init__.py</span></code></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your_env.py</span>
-<span class="n">register</span><span class="p">(</span>
-    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;your-env-v0&#39;</span><span class="p">,</span>
-    <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;highway_env.envs:YourEnv&#39;</span>
+<p>Then add <code class="docutils literal notranslate"><span class="pre">&quot;YourEnv&quot;</span></code> to the <code class="docutils literal notranslate"><span class="pre">__all__</span></code> list.</p>
+<p>After all that, in <code class="docutils literal notranslate"><span class="pre">highway_env/__init__.py</span></code>, add your env in the <code class="docutils literal notranslate"><span class="pre">_register_highway_envs()</span></code> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">register</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;your-env-v0&quot;</span><span class="p">,</span>
+    <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs:YourEnv&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>This registration will be performed automatically as a hook if you reinstall the highway_env module with</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup.py<span class="w"> </span>install
-</pre></div>
-</div>
-<p>Alternatively, you can call it manually with</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
-<span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
+<p>Lastly, since we modified the source, reinstall <code class="docutils literal notranslate"><span class="pre">highway-env</span></code> so your new code gets picked up:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>.
 </pre></div>
 </div>
 </section>
@@ -376,12 +391,12 @@ environment implementation with <code class="docutils literal notranslate"><span
 <h2>Profit<a class="headerlink" href="#profit" title="Link to this heading">¶</a></h2>
 <p>That’s it!
 You should now be able to run the environment.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only required if you did not reinstall highway_env</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">highway_env</span>
-<span class="n">highway_env</span><span class="o">.</span><span class="n">register_highway_envs</span><span class="p">()</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;your-env-v0&#39;</span><span class="p">)</span>
+<span class="n">gym</span><span class="o">.</span><span class="n">register_envs</span><span class="p">(</span><span class="n">highway_env</span><span class="p">)</span>  <span class="c1"># this is a no-op to satisfy linters &amp; IDE</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;your-env-v0&quot;</span><span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
 <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
@@ -400,6 +415,13 @@ will not raise duplicate-registration errors.</p>
 </dd></dl>
 
 <dl class="py class" id="module-highway_env.envs.common.abstract">
+<dt class="sig sig-object py" id="highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">ConnectedLaneNeighboursMixin</span></span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#ConnectedLaneNeighboursMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin" title="Link to this definition">¶</a></dt>
+<dd><p>A mixin class introduced in v1.12 to enable new behaviour for neighbour vehicles detection.</p>
+<p>See <a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/pull/667">https://github.com/Farama-Foundation/HighwayEnv/pull/667</a></p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.abstract.AbstractEnv">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.abstract.</span></span><span class="sig-name descname"><span class="pre">AbstractEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/abstract/#AbstractEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.abstract.AbstractEnv" title="Link to this definition">¶</a></dt>
 <dd><p>A generic environment for various tasks involving a vehicle driving on a road.</p>
@@ -692,6 +714,7 @@ Example: “highway_env.vehicle.behavior.IDMVehicle”</p>
 <li><a class="reference internal" href="#profit">Profit</a></li>
 <li><a class="reference internal" href="#module-highway_env.__init__">API</a><ul>
 <li><a class="reference internal" href="#highway_env.__init__._register_highway_envs"><code class="docutils literal notranslate"><span class="pre">_register_highway_envs()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin"><code class="docutils literal notranslate"><span class="pre">ConnectedLaneNeighboursMixin</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv"><code class="docutils literal notranslate"><span class="pre">AbstractEnv</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.PERCEPTION_DISTANCE"><code class="docutils literal notranslate"><span class="pre">AbstractEnv.PERCEPTION_DISTANCE</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.abstract.AbstractEnv.vehicle"><code class="docutils literal notranslate"><span class="pre">AbstractEnv.vehicle</span></code></a></li>

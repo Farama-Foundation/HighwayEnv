@@ -15,7 +15,7 @@
         <title>The Multi-Agent setting - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
-    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css?v=1c205c3a" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
@@ -212,23 +212,37 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../environments/highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/merge/">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/roundabout/">Roundabout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/racetrack/">Racetrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/lane_keeping/">Lane Keeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/two_way/">Two Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/exit/">Exit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/u_turn/">U-Turn</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../content/algorithms/">Agent Examples</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../observations/">Observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../actions/">Actions</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/lane/">Lane</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
@@ -242,12 +256,17 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq/">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/master/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -309,7 +328,7 @@
 <p>Most environments can be configured to a multi-agent version. Here is how:</p>
 <section id="increase-the-number-of-controlled-vehicles">
 <h2>Increase the number of controlled vehicles<a class="headerlink" href="#increase-the-number-of-controlled-vehicles" title="Link to this heading">¶</a></h2>
-<p>To that end, update the <a class="reference internal" href="../quickstart/#configuring-an-environment"><span class="std std-ref">environment configuration</span></a> to increase <code class="docutils literal notranslate"><span class="pre">controlled_vehicles</span></code></p>
+<p>To that end, update the <a class="reference internal" href="../quickstart/#configuration"><span class="std std-ref">environment configuration</span></a> to increase <code class="docutils literal notranslate"><span class="pre">controlled_vehicles</span></code></p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
@@ -334,7 +353,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/multi_agent_0_2.png" src="../_images/multi_agent_0_2.png" />
+<img alt="../_images/multi_agent_0_0.png" src="../_images/multi_agent_0_0.png" />
 </div>
 </div>
 </section>
@@ -379,7 +398,7 @@ The type of actions contained in the tuple must be described by a standard <a cl
 <p>In order to actually decide what <code class="docutils literal notranslate"><span class="pre">action_1</span></code> and <code class="docutils literal notranslate"><span class="pre">action_2</span></code> should be, both vehicles must generate their own observations.
 As before, since the observation space has not been changed no far, the observation only includes that of the first vehicle.</p>
 <p>In order for the environment to return a tuple of observations – one for each agent –, its observation type must be set to <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiAgentObservation</span></code>
-The type of observations contained in the tuple must be described by a standard <a class="reference internal" href="../observations/#id1"><span class="std std-ref">observation configuration</span></a> in the <code class="docutils literal notranslate"><span class="pre">observation_config</span></code> field.</p>
+The type of observations contained in the tuple must be described by a standard <a class="reference internal" href="../observations/#observations"><span class="std std-ref">observation configuration</span></a> in the <code class="docutils literal notranslate"><span class="pre">observation_config</span></code> field.</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
@@ -402,11 +421,11 @@ The type of observations contained in the tuple must be described by a standard 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.8759514 ,  0.        ,  0.3125    ,  0.        ],
-       [ 1.        ,  0.11385319,  0.5       , -0.01676934,  0.        ],
-       [ 1.        ,  0.21781895,  0.25      , -0.04931818,  0.        ],
-       [ 1.        ,  0.32941186,  0.25      , -0.03740524,  0.        ],
-       [ 1.        ,  0.44101855,  0.        , -0.02790959,  0.        ]],
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[ 1.        ,  0.8813924 ,  0.25      ,  0.3125    ,  0.        ],
+       [ 1.        ,  0.1089391 , -0.25      , -0.03481663,  0.        ],
+       [ 1.        ,  0.22321533,  0.        , -0.01286823,  0.        ],
+       [ 1.        ,  0.31487158,  0.        , -0.04865129,  0.        ],
+       [ 1.        ,  0.4121801 , -0.25      , -0.02613964,  0.        ]],
       dtype=float32),)
 </pre></div>
 </div>
@@ -473,7 +492,7 @@ python<span class="w"> </span>experiments.py<span class="w"> </span>evaluate<spa
 </pre></div>
 </div>
 <figure class="align-default" id="id1">
-<img alt="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection_multi_agent.gif" src="https://raw.githubusercontent.com/eleurent/highway-env/gh-media/docs/media/intersection_multi_agent.gif" />
+<img alt="../_images/intersection_multi_agent.gif" src="../_images/intersection_multi_agent.gif" />
 <figcaption>
 <p><span class="caption-text">Video of a multi-agent episode with the trained policy.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
