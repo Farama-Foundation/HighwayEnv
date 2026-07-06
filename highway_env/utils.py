@@ -379,7 +379,7 @@ def distance_to_circle(center, radius, direction):
     elif root_sup and root_sup > 0:
         distance = 0
     else:
-        distance = np.infty
+        distance = np.inf
     return distance
 
 
