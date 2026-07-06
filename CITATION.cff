@@ -4,6 +4,6 @@ authors:
 - family-names: "Leurent"
   given-names: "Edouard"
 title: "An Environment for Autonomous Driving Decision-Making"
-version: 1.4
+version: 1.12
 date-released: 2018-05-01
 url: "https://github.com/Farama-Foundation/HighwayEnv"

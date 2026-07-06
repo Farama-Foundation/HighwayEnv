@@ -26,7 +26,7 @@ import highway_env
 gym.register_envs(highway_env)
 
 # Initialise the environment
-env = gym.make("highway-v1", config={"lanes_count": 3}, render_mode="human")
+env = gym.make("highway-v0", config={"lanes_count": 3}, render_mode="human")
 
 # Reset the environment to generate the first observation
 obs, info = env.reset()
@@ -106,5 +106,5 @@ bibliography/index
 :caption: Development
 
 GitHub <https://github.com/Farama-Foundation/HighwayEnv>
-Contribute to the Docs <https://github.com/Farama-Foundation/HighwayEnv/blob/main/README.md>
+Contribute to the Docs <https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md>
 ```

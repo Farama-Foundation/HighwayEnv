@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/highway-env.gif?raw=true"><br/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/master/../gh-media/docs/media/highway-env.gif?raw=true"><br/>
     <em>An episode of one of the environments available in HighwayEnv.</em>
 </p>
 
@@ -42,9 +42,14 @@ HighwayEnv includes 10 driving scenario families: `highway`, `intersection`, `ex
 <details>
 <summary>Previews</summary>
 
-| `highway` | `merge` | `roundabout` | `parking` | `intersection` | `racetrack` |
-|:---------:|:-------:|:------------:|:---------:|:--------------:|:-----------:|
-| <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/highway.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/merge-env.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/roundabout-env.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/parking-env.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/intersection-env.gif?raw=true"/> | <img src="https://raw.githubusercontent.com/eleurent/highway-env/master/../gh-media/docs/media/racetrack-env.gif?raw=true"/> |
+| | |
+|:---|:---:|
+| `highway` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/master/../gh-media/docs/media/highway.gif?raw=true"/> |
+| `merge` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/master/../gh-media/docs/media/merge-env.gif?raw=true"/> |
+| `roundabout` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/master/../gh-media/docs/media/roundabout-env.gif?raw=true"/> |
+| `parking` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/master/../gh-media/docs/media/parking-env.gif?raw=true"/> |
+| `intersection` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/master/../gh-media/docs/media/intersection-env.gif?raw=true"/> |
+| `racetrack` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/master/../gh-media/docs/media/racetrack-env.gif?raw=true"/> |
 
 </details>
 
@@ -57,7 +62,7 @@ import highway_env
 gym.register_envs(highway_env)
 
 # Initialise the environment
-env = gym.make("highway-v1", config={"lanes_count": 3}, render_mode="human")
+env = gym.make("highway-v0", config={"lanes_count": 3}, render_mode="human")
 
 # Reset the environment to generate the first observation
 obs, info = env.reset()
