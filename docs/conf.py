@@ -45,6 +45,7 @@ extensions = [
     "sphinxcontrib.bibtex",
     "jupyter_sphinx",
     "myst_parser",
+    "sphinx_github_changelog",
 ]
 
 autodoc_default_flags = [

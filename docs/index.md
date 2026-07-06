@@ -106,5 +106,6 @@ bibliography/index
 :caption: Development
 
 GitHub <https://github.com/Farama-Foundation/HighwayEnv>
+release_notes/index
 Contribute to the Docs <https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md>
 ```
