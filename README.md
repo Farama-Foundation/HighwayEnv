@@ -6,12 +6,12 @@
 
 <p align="center">
     <a href="https://highway-env.farama.org/" target="_blank">
-        <img src="https://github.com/Farama-Foundation/HighwayEnv/blob/main/docs/_static/img/highway-text.png?raw=true" width="500px" />
+        <img src="docs/_static/img/highway-text.png" width="500px" />
     </a>
 </p>
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/master/../gh-media/docs/media/highway-env.gif?raw=true"><br/>
+    <img src="docs/_static/animations/highway-env.gif"><br/>
     <em>An episode of one of the environments available in HighwayEnv.</em>
 </p>
 
@@ -45,16 +45,16 @@ HighwayEnv includes 10 driving scenario families: `highway`, `intersection`, `ex
 
 | | |
 |:---|:---:|
-| `highway` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway.gif?raw=true"/> |
-| `merge` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/merge-env.gif?raw=true"/> |
-| `roundabout` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/roundabout-env.gif?raw=true"/> |
-| `parking` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/parking-env.gif?raw=true"/> |
-| `intersection` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/intersection-env.gif?raw=true"/> |
-| `racetrack` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/racetrack-env.gif?raw=true"/> |
-| `exit` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/exit-env.gif?raw=true"/> |
-| `lane-keeping` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/lane-keeping-env.gif?raw=true"/> |
-| `two-way` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/two-way-env.gif?raw=true"/> |
-| `u-turn` | <img src="https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/u-turn-env.gif?raw=true"/> |
+| `highway` | ![highway](docs/_static/animations/environments/highway.gif) |
+| `merge` | ![merge](docs/_static/animations/environments/merge-env.gif) |
+| `roundabout` | ![roundabout](docs/_static/animations/environments/roundabout-env.gif) |
+| `parking` | ![parking](docs/_static/animations/environments/parking-env.gif) |
+| `intersection` | ![intersection](docs/_static/animations/environments/intersection-env.gif) |
+| `racetrack` | ![racetrack](docs/_static/animations/environments/racetrack-env.gif) |
+| `lane-keeping` | ![lane-keeping](docs/_static/animations/environments/lane-keeping-env.gif) |
+| `two-way` | ![two-way](docs/_static/animations/environments/two-way-env.gif) |
+| `exit` | ![exit](docs/_static/animations/environments/exit-env.gif) |
+| `u-turn` | ![u-turn](docs/_static/animations/environments/u-turn-env.gif) |
 
 </details>
 

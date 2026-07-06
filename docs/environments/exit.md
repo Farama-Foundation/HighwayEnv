@@ -8,7 +8,7 @@
 
 In this task, the ego-vehicle is driving on a multilane highway and must navigate across lanes to reach an exit ramp. The agent's objective is to successfully take the exit while maintaining speed and avoiding collisions with surrounding traffic.
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/exit-env.gif
+```{figure} ../_static/animations/environments/exit-env.gif
 :align: center
 :name: fig:exit_env
 :width: 80%

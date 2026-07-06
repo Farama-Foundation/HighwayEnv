@@ -120,11 +120,11 @@ while True:
 
 A full run takes about 25mn on my laptop (fps=14). The following results are obtained:
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway_fast_dqn.png
+```{figure} _static/animations/highway_fast_dqn.png
 Training curves, for 5 random seeds.
 ```
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway_fast_dqn.gif
+```{figure} _static/animations/highway_fast_dqn.gif
 Video of an episode run with the trained policy.
 ```
 

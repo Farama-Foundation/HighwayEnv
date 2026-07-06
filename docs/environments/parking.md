@@ -8,7 +8,7 @@
 
 A goal-conditioned continuous control task in which the ego-vehicle must park in a given space with the appropriate heading.
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/parking-env.gif
+```{figure} ../_static/animations/environments/parking-env.gif
 :align: center
 :name: fig:parking_env
 :width: 80%

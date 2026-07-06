@@ -12,7 +12,7 @@ lastpage:
 A collection of environments for autonomous driving and tactical decision-making tasks.
 ```
 
-```{figure} https://raw.githubusercontent.com/Farama-Foundation/HighwayEnv/gh-media/docs/media/highway-env.gif
+```{figure} _static/animations/highway-env.gif
 :alt: Highway
 :width: 500
 ```
