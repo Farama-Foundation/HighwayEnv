@@ -12,7 +12,7 @@ repos:
       - id: check-toml
       - id: check-ast
       - id: check-added-large-files
-        exclude: uv\.lock
+        exclude: uv\.lock|\.(gif|mp4)$
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
