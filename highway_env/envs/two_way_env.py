@@ -1,15 +1,14 @@
+from __future__ import annotations
+
 import numpy as np
-from gym.envs.registration import register
 
 from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import LineType, StraightLane
 from highway_env.road.road import Road, RoadNetwork
-from highway_env.vehicle.controller import MDPVehicle
 
 
 class TwoWayEnv(AbstractEnv):
-
     """
     A risk management task: the agent is driving on a two-way lane with icoming traffic.
 
@@ -19,23 +18,21 @@ class TwoWayEnv(AbstractEnv):
     in the CMDP/BMDP framework.
     """
 
-    COLLISION_REWARD: float = 0
-    LEFT_LANE_CONSTRAINT: float = 1
-    LEFT_LANE_REWARD: float = 0.2
-    HIGH_SPEED_REWARD: float = 0.8
-
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update({
-            "observation": {
-                "type": "TimeToCollision",
-                "horizon": 5
-            },
-            "action": {
-                "type": "DiscreteMetaAction",
-            },
-        })
+        config.update(
+            {
+                "observation": {"type": "TimeToCollision", "horizon": 5},
+                "action": {
+                    "type": "DiscreteMetaAction",
+                },
+                "collision_reward": 0,
+                "left_lane_constraint": 1,
+                "left_lane_reward": 0.2,
+                "high_speed_reward": 0.8,
+            }
+        )
         return config
 
     def _reward(self, action: int) -> float:
@@ -44,19 +41,28 @@ class TwoWayEnv(AbstractEnv):
         :param action: the action performed
         :return: the reward of the state-action transition
         """
+        return sum(
+            self.config.get(name, 0) * reward
+            for name, reward in self._rewards(action).items()
+        )
+
+    def _rewards(self, action: int) -> dict[str, float]:
         neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
+        return {
+            "high_speed_reward": self.vehicle.speed_index
+            / (self.vehicle.target_speeds.size - 1),
+            "left_lane_reward": (
+                len(neighbours) - 1 - self.vehicle.target_lane_index[2]
+            )
+            / (len(neighbours) - 1),
+        }
 
-        reward = self.HIGH_SPEED_REWARD * self.vehicle.speed_index / (self.vehicle.SPEED_COUNT - 1) \
-                 + self.LEFT_LANE_REWARD * (len(neighbours) - 1 - self.vehicle.target_lane_index[2]) / (len(neighbours) - 1)
-        return reward
-
-    def _is_terminal(self) -> bool:
+    def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed or the time is out."""
         return self.vehicle.crashed
 
-    def _cost(self, action: int) -> float:
-        """The constraint signal is the time spent driving on the opposite lane, and occurrence of collisions."""
-        return float(self.vehicle.crashed) + float(self.vehicle.lane_index[2] == 0)/15
+    def _is_truncated(self) -> bool:
+        return False
 
     def _reset(self) -> np.ndarray:
         self._make_road()
@@ -71,14 +77,40 @@ class TwoWayEnv(AbstractEnv):
         net = RoadNetwork()
 
         # Lanes
-        net.add_lane("a", "b", StraightLane([0, 0], [length, 0],
-                                            line_types=(LineType.CONTINUOUS_LINE, LineType.STRIPED)))
-        net.add_lane("a", "b", StraightLane([0, StraightLane.DEFAULT_WIDTH], [length, StraightLane.DEFAULT_WIDTH],
-                                            line_types=(LineType.NONE, LineType.CONTINUOUS_LINE)))
-        net.add_lane("b", "a", StraightLane([length, 0], [0, 0],
-                                            line_types=(LineType.NONE, LineType.NONE)))
+        net.add_lane(
+            "a",
+            "b",
+            StraightLane(
+                [0, 0],
+                [length, 0],
+                line_types=(LineType.CONTINUOUS_LINE, LineType.STRIPED),
+            ),
+        )
+        net.add_lane(
+            "a",
+            "b",
+            StraightLane(
+                [0, StraightLane.DEFAULT_WIDTH],
+                [length, StraightLane.DEFAULT_WIDTH],
+                line_types=(LineType.NONE, LineType.CONTINUOUS_LINE),
+            ),
+        )
+        net.add_lane(
+            "b",
+            "a",
+            StraightLane(
+                [length, 0], [0, 0], line_types=(LineType.NONE, LineType.NONE)
+            ),
+        )
 
-        road = Road(network=net, np_random=self.np_random, record_history=self.config["show_trajectories"])
+        road = Road(
+            network=net,
+            np_random=self.np_random,
+            record_history=self.config["show_trajectories"],
+            neighbour_vehicles_connected_lanes=self.config[
+                "neighbour_vehicles_connected_lanes"
+            ],
+        )
         self.road = road
 
     def _make_vehicles(self) -> None:
@@ -88,35 +120,38 @@ class TwoWayEnv(AbstractEnv):
         :return: the ego-vehicle
         """
         road = self.road
-        ego_vehicle = self.action_type.vehicle_class(road,
-                                                     road.network.get_lane(("a", "b", 1)).position(30, 0),
-                                                     speed=30)
+        ego_vehicle = self.action_type.vehicle_class(
+            road, road.network.get_lane(("a", "b", 1)).position(30.0, 0.0), speed=30.0
+        )
         road.vehicles.append(ego_vehicle)
         self.vehicle = ego_vehicle
 
         vehicles_type = utils.class_from_path(self.config["other_vehicles_type"])
         for i in range(3):
             self.road.vehicles.append(
-                vehicles_type(road,
-                              position=road.network.get_lane(("a", "b", 1))
-                              .position(70+40*i + 10*self.np_random.randn(), 0),
-                              heading=road.network.get_lane(("a", "b", 1)).heading_at(70+40*i),
-                              speed=24 + 2*self.np_random.randn(),
-                              enable_lane_change=False)
+                vehicles_type(
+                    road,
+                    position=road.network.get_lane(("a", "b", 1)).position(
+                        70.0 + 40.0 * float(i) + 10.0 * self.np_random.normal(), 0.00
+                    ),
+                    heading=road.network.get_lane(("a", "b", 1)).heading_at(
+                        70.0 + 40.0 * float(i)
+                    ),
+                    speed=24.0 + 2.0 * self.np_random.normal(),
+                    enable_lane_change=False,
+                )
             )
         for i in range(2):
-            v = vehicles_type(road,
-                              position=road.network.get_lane(("b", "a", 0))
-                              .position(200+100*i + 10*self.np_random.randn(), 0),
-                              heading=road.network.get_lane(("b", "a", 0)).heading_at(200+100*i),
-                              speed=20 + 5*self.np_random.randn(),
-                              enable_lane_change=False)
+            v = vehicles_type(
+                road,
+                position=road.network.get_lane(("b", "a", 0)).position(
+                    200.0 + 100.0 * float(i) + 10.0 * self.np_random.normal(), 0
+                ),
+                heading=road.network.get_lane(("b", "a", 0)).heading_at(
+                    200.0 + 100.0 * float(i)
+                ),
+                speed=20.0 + 5.0 * self.np_random.normal(),
+                enable_lane_change=False,
+            )
             v.target_lane_index = ("b", "a", 0)
             self.road.vehicles.append(v)
-
-
-register(
-    id='two-way-v0',
-    entry_point='highway_env.envs:TwoWayEnv',
-    max_episode_steps=15
-)

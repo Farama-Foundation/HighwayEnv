@@ -1,0 +1,55 @@
+# This workflow will build and (if release) publish Python distributions to PyPI
+# For more information see:
+#   - https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+#   - https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+#
+# derived from https://github.com/Farama-Foundation/PettingZoo/blob/e230f4d80a5df3baf9bd905149f6d4e8ce22be31/.github/workflows/build-publish.yml
+name: Build Wheel and Publish to PyPI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  release:
+    types: [published]
+
+jobs:
+  build-wheels:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        python-version: '3.14'
+
+    - name: Build sdist and wheels
+      run: uv build
+
+    - name: Store wheels
+      uses: actions/upload-artifact@v4
+      with:
+        path: dist
+
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/highway-env
+    needs:
+    - build-wheels
+    if: github.event_name == 'release' && github.event.action == 'published'
+    permissions:
+      id-token: write
+    steps:
+    - name: Download dists
+      uses: actions/download-artifact@v4
+      with:
+        name: artifact
+        path: dist
+
+    - name: Publish
+      uses: pypa/gh-action-pypi-publish@release/v1

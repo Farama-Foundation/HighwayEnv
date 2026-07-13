@@ -1,0 +1,58 @@
+name: coverage (diff)
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'test/**'
+    paths:
+      - 'highway_env/**'
+
+permissions:
+  contents: read
+
+env:
+  MIN_DIFF_LINES: 5
+
+jobs:
+  coverage-diff:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check diff size
+        id: diff_gate
+        run: |
+          ref="origin/${{ github.base_ref }}"
+          # Count additions only & limit the diff to highway_env/
+          count=$(git diff --numstat "${ref}"...HEAD -- highway_env/ | awk '{sum += $1} END {print sum+0}')
+          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
+          echo "count=${count}" >> "$GITHUB_OUTPUT"
+          if [ "${count}" -gt "${MIN_DIFF_LINES}" ]; then
+            echo "should_test=true" >> "$GITHUB_OUTPUT"
+            echo "Changed lines in highway_env/: ${count} (threshold: ${MIN_DIFF_LINES}) — running diff coverage."
+          else
+            echo "should_test=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping diff coverage: only ${count} line(s) changed in highway_env/ (≤ ${MIN_DIFF_LINES})."
+          fi
+      - name: Install OS dependencies
+        if: steps.diff_gate.outputs.should_test == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libfreetype6-dev libportmidi-dev
+      - name: Install uv
+        if: steps.diff_gate.outputs.should_test == 'true'
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        if: steps.diff_gate.outputs.should_test == 'true'
+        run: uv sync --group test
+      - name: Run tests with coverage
+        if: steps.diff_gate.outputs.should_test == 'true'
+        run: uv run pytest --cov=highway_env --cov-report=xml
+      - name: Check diff coverage
+        if: steps.diff_gate.outputs.should_test == 'true'
+        run: uv run diff-cover coverage.xml --compare-branch=${{ steps.diff_gate.outputs.ref }} --fail-under=80

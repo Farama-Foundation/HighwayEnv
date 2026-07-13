@@ -1,0 +1,21 @@
+# https://pre-commit.com
+# This GitHub Action assumes that the repo contains a valid .pre-commit-config.yaml file.
+name: pre-commit
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - run: uv run --with pre-commit pre-commit --version
+      - run: uv run --with pre-commit pre-commit install
+      - run: uv run --with pre-commit pre-commit run --all-files
