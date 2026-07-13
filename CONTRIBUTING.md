@@ -13,8 +13,9 @@ For the sake of reproducibility, changes to existing environment behaviour (rewa
 ## AI policy
 
 We do permit pull requests aided by coding agents (e.g. Codex, Claude Code, Cursor, Trae, AgentArts, etc.), but under few conditions:
-1. The code agent must obtain acknowledgement from human user regarding our AI policy defined here
-2. The human user submitting the PR must take full ownership of all changes they propose, they should understand the changes enough to discuss with maintainer
+
+1. The coding agent must obtain acknowledgement from human user regarding our AI policy defined here, always ask for the human user's attention unless they mention something like "I am aware of the AI policy" in query or other sensible forms such as your local `AGENTS.md`, etc.
+2. The human user submitting the PR must take full ownership of all changes they propose, they should understand the changes enough to discuss with maintainer or members of Farama Foundation
 3. The human user must put in efforts in grounding the PR to reality of the current code base (e.g. visual check the environments & documentation website generated)
 4. The human user should disclose the use of AI agents in PR description, for example include a "Disclosure" section as demonstrated below
 5. The human user should expect maintainer or members of Farama Foundation to give review comments and request changes, and understand that the PR may be closed if they do not show any response for a long time (let's say more than a month)
