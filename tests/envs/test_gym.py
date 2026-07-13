@@ -101,6 +101,34 @@ def test_env_reset_options(env_spec: str = "highway-v0"):
     assert env.config["duration"] == update_duration
 
 
+def test_parking_default_episode_length():
+    # Regression test for https://github.com/Farama-Foundation/HighwayEnv/issues/674
+    # `duration` is expressed in simulated seconds, so an episode lasts
+    # ~`duration * policy_frequency` policy steps. The default parking-v0
+    # config must yield ~100-step episodes (not the previous 500) to stay
+    # consistent with the canonical RL-Zoo / SB3 hyperparameters
+    # (learning_starts=100, HER max_episode_length=100).
+    env = gym.make("parking-v0").unwrapped
+    config = env.config
+    assert config["duration"] == 20
+    expected_steps = config["duration"] * config["policy_frequency"]
+    assert expected_steps == 100
+
+    env.reset(seed=0)
+    steps = 0
+    terminated = truncated = False
+    while not (terminated or truncated):
+        # A zero action keeps the vehicle at rest, so the episode ends by
+        # truncation at the time horizon rather than by crashing or success.
+        _, _, terminated, truncated, _ = env.step(np.zeros(env.action_space.shape))
+        steps += 1
+    assert truncated and not terminated
+    # The horizon is `duration * policy_frequency` steps, give or take a single
+    # step from floating-point accumulation of `time += 1 / policy_frequency`.
+    assert abs(steps - expected_steps) <= 1
+    env.close()
+
+
 @pytest.mark.parametrize(
     ("old_env_spec", "new_env_spec"),
     [

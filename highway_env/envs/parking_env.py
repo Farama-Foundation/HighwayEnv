@@ -100,7 +100,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
                 "steering_range": np.deg2rad(45),
                 "simulation_frequency": 15,
                 "policy_frequency": 5,
-                "duration": 100,
+                "duration": 20,
                 "screen_width": 600,
                 "screen_height": 300,
                 "centering_position": [0.5, 0.5],

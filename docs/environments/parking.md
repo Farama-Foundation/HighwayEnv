@@ -47,7 +47,7 @@ env = gym.make("parking-v0")
     "steering_range": np.deg2rad(45),
     "simulation_frequency": 15,
     "policy_frequency": 5,
-    "duration": 100,
+    "duration": 20,
     "controlled_vehicles": 1,
     "vehicles_count": 0,
     "add_walls": True,
