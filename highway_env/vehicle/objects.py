@@ -196,6 +196,20 @@ class RoadObject(ABC):
             - lane.local_coordinates(self.position)[0]
         )
 
+    def intersects_with_line(self, p0: np.ndarray, p1: np.ndarray) -> bool:
+        """
+        Determines if intersecting with a line segment.
+        """
+        line_polygon = np.array([p0, p1])
+
+        rect_polygon = self.polygon()
+
+        intersecting, _, _ = utils.are_polygons_intersecting(
+            rect_polygon, line_polygon, np.zeros(2), np.zeros(2)
+        )
+
+        return intersecting
+
     @property
     def on_road(self) -> bool:
         """Is the object on its current lane, or off-road?"""

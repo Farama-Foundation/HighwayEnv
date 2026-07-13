@@ -23,8 +23,11 @@ class RoadNetwork:
 
     def __init__(self):
         self.graph = {}
+        self.reversed_lane_indices = []
 
-    def add_lane(self, _from: str, _to: str, lane: AbstractLane) -> None:
+    def add_lane(
+        self, _from: str, _to: str, lane: AbstractLane, bidirectional=False
+    ) -> LaneIndex:
         """
         A lane is encoded as an edge in the road network.
 
@@ -37,6 +40,18 @@ class RoadNetwork:
         if _to not in self.graph[_from]:
             self.graph[_from][_to] = []
         self.graph[_from][_to].append(lane)
+
+        if bidirectional:  # We add an extra reference to the same lane
+            if _to not in self.graph:
+                self.graph[_to] = {}
+            if _from not in self.graph[_to]:
+                self.graph[_to][_from] = []
+            self.graph[_to][_from].append(lane)
+            self.reversed_lane_indices.append(
+                (_to, _from, len(self.graph[_to][_from]) - 1)
+            )
+
+        return (_from, _to, len(self.graph[_from][_to]) - 1)
 
     def get_lane(self, index: LaneIndex) -> AbstractLane:
         """
