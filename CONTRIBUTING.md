@@ -10,6 +10,23 @@ We welcome:
 
 For the sake of reproducibility, changes to existing environment behaviour (reward shaping, observation/action spaces, dynamics) should be avoided where possible. RL results are quite sensitive to environment variations, so any behaviour change may require a version bump and brief explanation in documentation, these should be flagged clearly in the PR description.
 
+## AI policy
+
+We do permit pull requests aided by coding agents (e.g. Codex, Claude Code, Cursor, Trae, AgentArts, etc.), but under few conditions:
+1. The code agent must obtain acknowledgement from human user regarding our AI policy defined here
+2. The human user submitting the PR must take full ownership of all changes they propose, they should understand the changes enough to discuss with maintainer
+3. The human user must put in efforts in grounding the PR to reality of the current code base (e.g. visual check the environments & documentation website generated)
+4. The human user should disclose the use of AI agents in PR description, for example include a "Disclosure" section as demonstrated below
+5. The human user should expect maintainer or members of Farama Foundation to give review comments and request changes, and understand that the PR may be closed if they do not show any response for a long time (let's say more than a month)
+6. PR template should be respected, you may add additional sections into it, but please don't discard its content entirely
+
+```markdown
+## Disclosure
+xxx, an agentic tool/IDE has aided me with:
+1. code exploration and understanding of xxx feature
+2. drafting plan to restructure xxx and yyy into a unified zzz
+```
+
 ## Contributing to the codebase
 
 ### Developer tools
