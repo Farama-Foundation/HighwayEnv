@@ -7,10 +7,7 @@ from highway_env.envs.random_road_env import RandomRoadEnv
 from highway_env.road.generation.generator import (
     default_params,
     load_lanes_from_disk,
-    print_lanes,
     save_lanes_to_disk,
-    serialize_lanes,
-    unserialize_lanes,
 )
 
 
@@ -27,7 +24,8 @@ env = RandomRoadEnv(render_mode="human", lanes=lanes, generation_params=params)
 if len(sys.argv) <= 1:
     save_lanes_to_disk("lanes_saved/lanes_saved.npz", env.lanes)
 
-env.config['route_following_reward_scalar'] = 0
+env.config["route_following_reward_scalar"] = 0
+
 # Car constants #
 throttle_speed = 0.01
 steer_speed = 0.5

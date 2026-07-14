@@ -58,7 +58,7 @@ def generate_lane_boundaries(lanes: list[Lane], lane_width: int) -> None:
 def correct_junction_boundaries(lanes: list[Lane], node: str) -> None:
     """
     Aligns the corner between angularly-adjacent lanes of a junction
-    so that their boundary edges meet at one shared pont.
+    so that their boundary edges meet at one shared point.
 
     :param lanes: list of lanes
     :param node: string identifier of junction/intersection

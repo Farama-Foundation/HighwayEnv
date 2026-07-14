@@ -250,4 +250,3 @@ def test_generator():
             print_lanes(lanes)
             lane_to_grid, grid_to_lanes = lanes_spatial_hash(lanes, 100)
             get_all_intersection_points(lanes, lane_to_grid, grid_to_lanes)
-

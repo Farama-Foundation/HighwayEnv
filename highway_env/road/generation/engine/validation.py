@@ -116,13 +116,15 @@ def determine_lane_validity(
     if np.array_equal(pathway[-1], pathway[-2]):
         pathway.pop()
 
-    # FORCES:
-    # - Pulling force: leads ball along pathway to end_pt
-    # - Wall repelling force: pushes ball from proximal line barriers
-    # - Ball repelling force: pushes ball from other balls to encourage
-    # - exploration
-    # - Inelastic line barrier collisions
-    # - Friction / drag
+    """
+    FORCES:
+    - Pulling force: leads ball along pathway to end_pt
+    - Wall repelling force: pushes ball from proximal line barriers
+    - Ball repelling force: pushes ball from other balls to encourage
+        exploration
+    - Inelastic line barrier collisions
+    - Friction / drag
+    """
 
     ball_radius = 2  # CONSTRAINT: 2*ball_radius > vehicle width
     pull_force = 0.3 / 4  # CONSTRAINT: pull_force/friction <= ball_radius
@@ -138,12 +140,6 @@ def determine_lane_validity(
     # if a particle is in the same spot (within repel_radius distance away)
     # after this much time, it is considered 'dead'
     death_timestep_threshold = 20
-
-    @dataclass
-    class BallParticle:
-        pos: np.ndarray
-        vel: np.ndarray
-        hist: list[np.ndarray] = field(default_factory=list)
 
     particles = []
     max_timesteps_cap = int(5 * lane_length / average_speed)
@@ -171,101 +167,24 @@ def determine_lane_validity(
                 start_pt.copy(),
                 (np.zeros(2) if len(particles) == 0 else rng.uniform(-0.5, 0.5, 2)),
             )
-            occupied = False
-            for par in particles:
-                if np.linalg.norm(par.pos - proposed_particle.pos) < ball_radius:
-                    occupied = True
 
-            if not occupied:
+            if not proposed_particle.intersects_with_any(particles, ball_radius):
                 particles.append(proposed_particle)
 
         for par in particles:
-            # Pull force
-            closest_i = 0
-            closest_dist = np.linalg.norm(par.pos - pathway[closest_i])
-            for i, pt in enumerate(pathway):
-                if i == 0 or i == len(pathway) - 1:
-                    continue
+            par.pull_force(pathway, pull_force)
 
-                dist = np.linalg.norm(par.pos - pt)
-                if dist < closest_dist:
-                    closest_i = i
-                    closest_dist = dist
-
-            if closest_i == len(pathway) - 2:
-                pull_vector = pathway[closest_i + 1] - par.pos
-            else:
-                pull_vector = pathway[closest_i + 1] - pathway[closest_i]
-
-            pull_vector *= pull_force / np.linalg.norm(pull_vector)
-            par.vel += pull_vector
-
-            # Computing lane segment collisions + repell force
-            repel_vector = np.zeros(2)
             gridpoint = point_to_gridpoint(par.pos, gridsize)
             proximal_lanes = get_proximal_lanes_wrt_gridpoint(
                 grid_to_lanes, gridpoint, extended=True
             )
+            par.border_force(
+                lanes, proximal_lanes, repel_radius, repel_force, ball_radius
+            )
 
-            for other_laneID in proximal_lanes:
-                other_lane = lanes[other_laneID]
+            par.neighbor_force(particles, cross_particle_repel_force, ball_radius)
 
-                left_pairs = zip(other_lane.left_points, other_lane.left_points[1:])
-                right_pairs = zip(other_lane.right_points, other_lane.right_points[1:])
-                for a, b in chain(left_pairs, right_pairs):
-                    ab = b - a
-                    ap = par.pos - a
-                    ab_sq_len = np.sum(ab**2)
-                    if ab_sq_len == 0:
-                        to_ball = ap
-                        distance = np.linalg.norm(ap)
-                    else:
-                        t = np.dot(ap, ab) / ab_sq_len
-                        t_clamped = np.clip(t, 0.0, 1.0)
-                        closest_point = a + t_clamped * ab
-                        to_ball = par.pos - closest_point
-                        distance = np.linalg.norm(to_ball)
-
-                    if distance < repel_radius:
-                        repel_vector += (
-                            to_ball * repel_force / max(distance, ball_radius) ** 2
-                        )
-
-                    if distance < ball_radius:
-                        if distance == 0:
-                            if ab_sq_len == 0:  # should really never happen
-                                if np.sum(par.vel**2) > 0:
-                                    normal = -par.vel
-                                else:
-                                    normal = np.ones(2)
-                            else:
-                                normal = np.array([-ab[1], ab[0]])
-
-                            normal /= np.linalg.norm(normal)
-                        else:
-                            normal = to_ball / distance
-
-                        # Adjust position
-                        par.pos += normal * (ball_radius - distance)
-
-                        # Cancel velocity
-                        vel_normal_magnitude = np.dot(par.vel, normal)
-                        if vel_normal_magnitude < 0:
-                            par.vel -= vel_normal_magnitude * normal
-
-            # Ball-ball repell force
-            for other_par in particles:
-                if par is not other_par:
-                    vec = par.pos - other_par.pos
-                    vec *= (
-                        cross_particle_repel_force
-                        / max(np.linalg.norm(vec), ball_radius) ** 2
-                    )
-                    repel_vector += vec
-
-            par.vel += repel_vector
             par.vel *= 1 - friction
-
             par.pos += par.vel
 
             if timestep % timesteps_per_history_update == 0:
@@ -280,24 +199,128 @@ def determine_lane_validity(
 
         # Check for particle death
         if len(particles) == max_population:
-            someones_still_alive = False
-
+            all_dead = True
             indices_past = int(death_timestep_threshold / timesteps_per_history_update)
-
             for par in particles:
-                if len(par.hist) < indices_past:
-                    someones_still_alive = True
+                if par.is_alive(indices_past, repel_radius):
+                    all_dead = False
                     break
-
-                displacement = np.linalg.norm(par.pos - par.hist[-indices_past])
-                if displacement >= repel_radius:
-                    someones_still_alive = True
-                    break
-
-            if not someones_still_alive:
+            if all_dead:
                 break
 
     return reached_goal
+
+
+@dataclass
+class BallParticle:
+    """
+    Used by determine_lane_validity
+    """
+
+    pos: np.ndarray
+    vel: np.ndarray
+    hist: list[np.ndarray] = field(default_factory=list)
+
+    def pull_force(self, pathway, pull_force):
+        closest_i = 0
+        closest_dist = np.linalg.norm(self.pos - pathway[closest_i])
+        for i, pt in enumerate(pathway):
+            if i == 0 or i == len(pathway) - 1:
+                continue
+
+            dist = np.linalg.norm(self.pos - pt)
+            if dist < closest_dist:
+                closest_i = i
+                closest_dist = dist
+
+        if closest_i == len(pathway) - 2:
+            pull_vector = pathway[closest_i + 1] - self.pos
+        else:
+            pull_vector = pathway[closest_i + 1] - pathway[closest_i]
+
+        pull_vector *= pull_force / np.linalg.norm(pull_vector)
+        self.vel += pull_vector
+
+    # Border repel force + collisions
+    def border_force(
+        self, lanes, proximal_lanes, repel_radius, repel_force, ball_radius
+    ):
+        repel_vector = np.zeros(2)
+
+        for other_laneID in proximal_lanes:
+            other_lane = lanes[other_laneID]
+
+            left_pairs = zip(other_lane.left_points, other_lane.left_points[1:])
+            right_pairs = zip(other_lane.right_points, other_lane.right_points[1:])
+            for a, b in chain(left_pairs, right_pairs):
+                ab = b - a
+                ap = self.pos - a
+                ab_sq_len = np.sum(ab**2)
+                if ab_sq_len == 0:
+                    to_ball = ap
+                    distance = np.linalg.norm(ap)
+                else:
+                    t = np.dot(ap, ab) / ab_sq_len
+                    t_clamped = np.clip(t, 0.0, 1.0)
+                    closest_point = a + t_clamped * ab
+                    to_ball = self.pos - closest_point
+                    distance = np.linalg.norm(to_ball)
+
+                if distance < repel_radius:
+                    repel_vector += (
+                        to_ball * repel_force / max(distance, ball_radius) ** 2
+                    )
+
+                if distance < ball_radius:
+                    if distance == 0:
+                        if ab_sq_len == 0:  # should really never happen
+                            if np.sum(self.vel**2) > 0:
+                                normal = -self.vel
+                            else:
+                                normal = np.ones(2)
+                        else:
+                            normal = np.array([-ab[1], ab[0]])
+
+                        normal /= np.linalg.norm(normal)
+                    else:
+                        normal = to_ball / distance
+
+                    # Adjust position
+                    self.pos += normal * (ball_radius - distance)
+
+                    # Cancel velocity
+                    vel_normal_magnitude = np.dot(self.vel, normal)
+                    if vel_normal_magnitude < 0:
+                        self.vel -= vel_normal_magnitude * normal
+
+        self.vel += repel_vector
+
+    # Ball-ball repel force
+    def neighbor_force(self, particles, cross_particle_repel_force, ball_radius):
+        repel_vector = np.zeros(2)
+        for other_par in particles:
+            if self is not other_par:
+                vec = self.pos - other_par.pos
+                vec *= (
+                    cross_particle_repel_force
+                    / max(np.linalg.norm(vec), ball_radius) ** 2
+                )
+                repel_vector += vec
+        self.vel += repel_vector
+
+    def is_alive(self, indices_past, repel_radius):
+        if len(self.hist) < indices_past:
+            return True
+        displacement = np.linalg.norm(self.pos - self.hist[-indices_past])
+        if displacement >= repel_radius:
+            return True
+        return False
+
+    def intersects_with_any(self, particles, ball_radius):
+        for par in particles:
+            if np.linalg.norm(par.pos - self.pos) < ball_radius:
+                return True
+        return False
 
 
 def kill_lanes(lanes: list[Lane], lanes_to_kil: list[Lane]) -> None:

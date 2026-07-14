@@ -28,7 +28,7 @@ def default_params() -> dict:
     **jitteriness** (erraticity of how agents turn left/right),
     **max_turn_speed** (approximate angular velocity of an agent),
     **replication_chance** (the tendency of forks in the road to occur), and
-    **spontaneous_death_chance** (the tendency of dead-ends ot occur)
+    **spontaneous_death_chance** (the tendency of dead-ends to occur)
     - **disable_prints** - Determines whether to include printed progress
     indicators
     - **seed** - Integer seed for the internal random number generator.

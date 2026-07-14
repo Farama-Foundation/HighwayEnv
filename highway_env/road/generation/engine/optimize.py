@@ -191,7 +191,7 @@ def i_to_index(lanes: list[Lane], ep: Endpoint, n: int, i: int) -> int:
         * for 'end' endpoints, index becomes len(points)-1
 
     :param lanes: list of lanes
-    :param ep: endoint
+    :param ep: endpoint
     :param n: number of actuators
     :param i: index for recursive functions x(i) & y(i)
     """

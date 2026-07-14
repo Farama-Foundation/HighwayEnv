@@ -2,11 +2,31 @@ import json
 import math
 import sys
 
+import numpy as np
 import pygame
 
-from highway_env.road.generation.engine import *
-from highway_env.road.generation.generator import *
-from highway_env.road.generation.spatial_hash import *
+from highway_env.road.generation.engine import (  # agents; rectify; optimize; boundaries; validation; gen_utils
+    check_lanes_type_validity,
+    combine_nodes,
+    correct_junction_boundaries,
+    generate_lane_boundaries,
+    generate_road_network_skeleton,
+    get_all_intersection_points,
+    get_invalid_lanes,
+    get_junction_pos,
+    get_nodeset,
+    get_radially_sorted_endpoints,
+    kill_lanes,
+    prune_intersecting_lanes,
+    rectify_short_lanes,
+    remove_disjoint_clusters,
+    remove_identical_reference_lanes,
+    seal_dead_end,
+    split_lanes,
+    twist_optimize,
+)
+from highway_env.road.generation.generator import serialize_lanes, unserialize_lanes
+from highway_env.road.generation.spatial_hash import lanes_spatial_hash
 
 
 """
@@ -15,19 +35,19 @@ Visualizes the step-by-step process of procedural road network generation for de
 
 
 # Generation Parameters -------------------------------------
-params = {
-    "target_num_endpoints": 50,
-    "forward_speed": 10,
+params = {  # big + chaotic
+    "target_num_endpoints": 1000,
+    "forward_speed": 5,
     "age_of_maturity": 4,
     "lane_width": 10,
     "perlin_variation_params": {
-        "jitteriness": {"upper": 0.25, "lower": 0.0},
-        "max_turn_speed": {"upper": 4.0, "lower": 0.01},
-        "replication_chance": {"upper": 0.7, "lower": 0.0},
+        "jitteriness": {"upper": 0.2, "lower": 0.0},
+        "max_turn_speed": {"upper": 5.0, "lower": 0.01},
+        "replication_chance": {"upper": 0.7, "lower": 0.2},
         "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
     },
     "disable_prints": False,
-    "seed": 2,
+    "seed": 1,
 }
 
 merge_radius = params["forward_speed"] * 2
@@ -248,7 +268,6 @@ def main():
     screen = pygame.display.set_mode((SCREEN_W, SCREEN_H), pygame.RESIZABLE)
     pygame.display.set_caption("Road network generation visualizer")
 
-    clock = pygame.time.Clock()
     hud_font = pygame.font.SysFont("monospace", 14)
     node_font = pygame.font.SysFont("monospace", 12)
 
@@ -300,8 +319,6 @@ def main():
     print("WASD + QE to move/zoom the camera")
     print("Press t to progress through the generation process")
     while running:
-        dt = clock.tick(60)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False

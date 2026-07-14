@@ -253,20 +253,19 @@ class EventHandler:
         action_type.act(action)
 
 
-from highway_env.envs.common.observation import (
-    LaneLidarObservation,
-    LidarObservation,
-    NavigationObservation,
-    TupleObservation,
-)
-
-
 class ObservationGraphics:
     LIDAR_COLOR = (0, 0, 0)  # applies to display_grid and display_rays
     NAV_COLOR = (200, 200, 0)  # display_navigation_arrow
 
     @classmethod
     def display(cls, obs, sim_surface):
+        from highway_env.envs.common.observation import (
+            LaneLidarObservation,
+            LidarObservation,
+            NavigationObservation,
+            TupleObservation,
+        )
+
         if isinstance(obs, NavigationObservation):
             cls.display_navigation_arrow(obs, sim_surface)
         elif isinstance(obs, LaneLidarObservation):

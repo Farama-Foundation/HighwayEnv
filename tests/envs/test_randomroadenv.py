@@ -1,4 +1,3 @@
-import numpy as np
 import pygame
 
 from highway_env.envs.random_road_env import RandomRoadEnv

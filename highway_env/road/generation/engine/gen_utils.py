@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import ClassVar
 
 import numpy as np
+from tqdm import tqdm as _tqdm
 
 
 # Lane Graph Helpers ----------------------------------------
@@ -241,8 +242,6 @@ def find_line_intersection(
 
 
 # Misc ----------------------------------------
-
-from tqdm import tqdm as _tqdm
 
 
 def tqdm(iterable=None, disabled=False, *args, **kwargs):

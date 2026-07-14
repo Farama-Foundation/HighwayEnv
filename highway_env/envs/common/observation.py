@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import math
 from collections import OrderedDict
-from itertools import product
+from itertools import chain, product
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -11,7 +12,14 @@ from gymnasium import spaces
 from highway_env import utils
 from highway_env.envs.common.finite_mdp import compute_ttc_grid
 from highway_env.envs.common.graphics import EnvViewer
+from highway_env.road.generation.engine.gen_utils import line_intersection_t
+from highway_env.road.generation.spatial_hash import (
+    get_proximal_lanes_wrt_gridpoint,
+    point_to_gridpoint,
+)
 from highway_env.road.lane import AbstractLane, PolyLane
+from highway_env.road.partitioned_road import PartitionedRoadNetwork
+from highway_env.road.road import LaneIndex
 from highway_env.utils import Vector
 from highway_env.vehicle.kinematics import Vehicle
 
@@ -769,18 +777,6 @@ class LidarObservation(ObservationType):
         return np.array([np.cos(index * self.angle), np.sin(index * self.angle)])
 
 
-import math
-from itertools import chain
-
-from highway_env.road.generation.engine.gen_utils import line_intersection_t
-from highway_env.road.generation.spatial_hash import (
-    get_proximal_lanes_wrt_gridpoint,
-    point_to_gridpoint,
-)
-from highway_env.road.partitioned_road import PartitionedRoadNetwork
-from highway_env.road.road import LaneIndex
-
-
 class LaneLidarObservation(LidarObservation):
     """
     Allows the agent to directly observe the surrounding lane borders
@@ -921,7 +917,9 @@ class NavigationObservation(ObservationType):
         high = np.array([np.inf, 1.0, 1.0], dtype=np.float32)
         return spaces.Box(shape=(3,), low=low, high=high, dtype=np.float32)
 
-    def __init__(self, env: AbstractEnv, max_distance=100, **kwargs) -> None:
+    def __init__(
+        self, env: AbstractEnv, normalize=True, distance_scale=100, **kwargs
+    ) -> None:
         super().__init__(env, **kwargs)
 
         if (
@@ -941,7 +939,8 @@ class NavigationObservation(ObservationType):
         self.cached_paths = []
         self.waypoint = self.get_waypoint()
 
-        self.max_distance = max_distance
+        self.distance_scale = distance_scale
+        self.normalize = normalize
 
     def observe(self) -> np.ndarray:
         if (
@@ -964,14 +963,13 @@ class NavigationObservation(ObservationType):
         sin_dh = np.sin(delta_h)
 
         distance = np.linalg.norm(waypt_offset)
+        if self.normalize:
+            distance /= self.distance_scale
 
         return np.array(
-            [self.normalize_distance(distance), cos_dh, sin_dh],
+            [distance, cos_dh, sin_dh],
             dtype=np.float32,
         )
-
-    def normalize_distance(self, distance: float) -> float:
-        return np.clip(distance / self.max_distance, 0.0, 1.0)
 
     def create_new_path(self) -> None:
         """
@@ -1102,19 +1100,19 @@ class RelativeGoalObservation(ObservationType):
     Observes the position and heading of a goal parking spot
     relative to the agent's own position and heading.
 
-    [dx_body, dy_body, cos(delta_heading), sin(delta_heading)]
+    [longitudinal offset, lateral offset, cos(delta_heading), sin(delta_heading)]
 
     observer_vehicle must have a .goal attribute
     (a RoadObject with .position and .heading)
     """
 
-    OBS_SIZE = 4  # [dx_body, dy_body, cos_dh, sin_dh]
+    OBS_SIZE = 4  # [longitudinal offset, lateral offset, cos_dh, sin_dh]
 
     def __init__(
         self,
         env: AbstractEnv,
         normalize: bool = True,
-        position_scale: float = 100.0,
+        distance_scale: float = 100.0,
         **kwargs,
     ) -> None:
         """
@@ -1123,7 +1121,7 @@ class RelativeGoalObservation(ObservationType):
         """
         super().__init__(env)
         self.normalize = normalize
-        self.position_scale = position_scale
+        self.distance_scale = distance_scale
 
     def space(self) -> spaces.Space:
         return spaces.Box(
@@ -1141,14 +1139,14 @@ class RelativeGoalObservation(ObservationType):
 
         goal = ego.goal
 
-        world_offset = goal.position - ego.position  # shape (2,)
+        world_offset = goal.position - ego.position
 
         c, s = np.cos(ego.heading), np.sin(ego.heading)
         R = np.array([[c, s], [-s, c]])
-        body_offset = R @ world_offset  # [dx_body (forward), dy_body (left)]
+        body_offset = R @ world_offset
 
         if self.normalize:
-            body_offset = body_offset / self.position_scale
+            body_offset /= self.distance_scale
 
         delta_h = goal.heading - ego.heading
         cos_dh = np.cos(delta_h)
