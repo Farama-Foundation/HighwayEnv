@@ -3,7 +3,8 @@ import sys
 import numpy as np
 import pygame
 
-from highway_env.envs.random_road_env import RandomRoadEnv
+import gymnasium as gym
+import highway_env
 from highway_env.road.generation.generator import (
     default_params,
     load_lanes_from_disk,
@@ -20,7 +21,10 @@ if len(sys.argv) > 1:
     print("Loading road network...")
     lanes = load_lanes_from_disk(sys.argv[1])
 
-env = RandomRoadEnv(render_mode="human", lanes=lanes, generation_params=params)
+gym.register_envs(highway_env)
+env = gym.make("random-road-v0", render_mode="human", lanes=lanes, generation_params=params)
+env = env.unwrapped
+
 if len(sys.argv) <= 1:
     save_lanes_to_disk("lanes_saved/lanes_saved.npz", env.lanes)
 
@@ -31,7 +35,6 @@ throttle_speed = 0.01
 steer_speed = 0.5
 rolling_friction = 0.001  # rolling friction + air resistance + engine braking
 break_multiplier = 3
-
 
 # Render loop #
 env.viewer.sim_surface.scaling = 8
