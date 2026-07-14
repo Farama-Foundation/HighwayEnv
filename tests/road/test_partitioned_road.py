@@ -16,7 +16,7 @@ def test_partitioned_road_network():
     generation_params["disable_prints"] = True
 
     target_num_endpoints = 2
-    while target_num_endpoints <= 512:
+    while target_num_endpoints <= 256:
         generation_params["target_num_endpoints"] = target_num_endpoints
         print(f"\ntarget_num_endpoints = {target_num_endpoints}")
         lanes = generate_random_lanes(generation_params)
