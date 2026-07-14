@@ -6,24 +6,20 @@ Generates arbitrary road networks of any size defined by the raw geometry of var
 ## Use
 
 ```python
-from highway_env.road.generation.generator import
-generate_random_lanes, default_params
-
+from highway_env.road.generation.generator import (
+    generate_random_lanes, default_params
+)
 from highway_env.road.lane import PolyLane
 from highway_env.road.partitioned_road import PartitionedRoadNetwork
 from highway_env.road.road import LineType, Road
 
+
+## inside env._make_road():
+
 generation_params = default_params()
 generation_params['seed'] = 12345
 
-try:
-    lanes = generate_random_lanes(generation_params)
-except Exception as e:
-    raise RuntimeError(
-        "Fatal error encountered when generating road network."
-        "If this issue persists, try a different seed."
-        f"\n\tOriginal error: {e}"
-    ) from e
+lanes = generate_random_lanes(generation_params)
 
 # We now have a list of Lane that contains the raw geometrical boundary points
 # of our road network + the nodes each lane connects to.
