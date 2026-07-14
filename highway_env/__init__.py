@@ -183,5 +183,11 @@ def _register_highway_envs():
         entry_point="highway_env.envs.u_turn_env:ConnectedLaneUTurnEnv",
     )
 
+    # random_road_env.py
+    register(
+        id="random-road-v0",
+        entry_point="highway_env.envs.random_road_env:RandomRoadEnv"
+    )
+
 
 _register_highway_envs()
