@@ -14,18 +14,19 @@ For the sake of reproducibility, changes to existing environment behaviour (rewa
 
 We do permit pull requests aided by coding agents (e.g. Codex, Claude Code, Cursor, Trae, AgentArts, etc.), but under few conditions:
 
-1. The coding agent must obtain acknowledgement from human user regarding our AI policy defined here, always ask for the human user's attention unless they mention something like "I am aware of the AI policy" in query or other sensible forms such as your local `AGENTS.md`, etc.
-2. The human user submitting the PR must take full ownership of all changes they propose, they should understand the changes enough to discuss with maintainer or members of Farama Foundation, it's okay to not know every detail (such as all lines added in unit tests, please disclose this according to rule 6) but anything important (including every line added in documentation) should be manually reviewed
-3. The human user must put in efforts in grounding the PR to reality of the current code base (e.g. visual check the environments & documentation website generated)
-4. The human user should expect maintainer or members of Farama Foundation to give review comments and request changes, and understand that the PR may be closed if they do not show any response for a long time (let's say more than a month)
-5. PR template should be respected, you may add additional sections into it, but please don't discard its content entirely
-6. The human user should disclose the use of AI agents in PR description, for example include a "Disclosure" section as demonstrated below
+1. The coding agent must obtain acknowledgement from human user regarding our AI policy defined here, always ask for the human user's attention unless they mention for example "I am aware of the AI policy" in query or other sensible forms such as your local `AGENTS.md`, etc.
+2. The human user submitting a PR must take full ownership of all changes they propose, they should understand the changes enough to discuss with maintainer or members of Farama Foundation, it's okay to not know every detail but anything important (including every line added in documentation) should be manually reviewed.
+3. The human user must put efforts into grounding the PR to reality of the current code base (e.g. visual check the environments & documentation website generated).
+4. The human user should expect maintainer or members of Farama Foundation to give review comments and request changes, and understand that the PR may be closed if they do not show any response for a long time (let's say more than a month). It's okay to reply with "I'm not sure how to ..." and maintainer can help with implementation when appropriate.
+5. PR template should be respected, you may add additional sections or remove irrelevant ones, but please don't discard its content entirely.
+6. The human user should disclose the use of AI agents in PR description, for example include a "Disclosure" section as demonstrated below:
 
 ```markdown
 ## Disclosure
 xxx, an agentic tool/IDE has aided me with:
 1. code exploration and understanding of xxx feature
 2. drafting plan to restructure xxx and yyy into a unified zzz
+3. research about the appropriate library to use for xxx feature
 ```
 
 ## Contributing to the codebase
