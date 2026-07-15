@@ -317,7 +317,7 @@ class OccupancyGridObservation(ObservationType):
         )
         grid_shape = np.asarray(
             np.floor((self.grid_size[:, 1] - self.grid_size[:, 0]) / self.grid_step),
-            dtype=np.uint8,
+            dtype=np.intp,
         )
         self.grid = np.zeros((len(self.features), *grid_shape))
         self.features_range = features_range
