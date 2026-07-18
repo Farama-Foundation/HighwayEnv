@@ -13,6 +13,12 @@ repos:
       - id: check-ast
       - id: check-added-large-files
         exclude: uv\.lock|\.(gif|mp4)$
+      - id: mixed-line-ending
+        args: [--fix=lf]
+        files: '\.(pyi?|ipynb|toml|ya?ml|lock|json|md|rst|css|html|cff|bib|sh)$'
+      - id: mixed-line-ending
+        args: [--fix=crlf]
+        files: '\.bat$'
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
