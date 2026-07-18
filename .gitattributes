@@ -1,0 +1,46 @@
+* text=auto  eol=lf
+*.py    text eol=lf
+*.pyi   text eol=lf
+*.pyc   binary
+*.ipynb text eol=lf
+
+# Config & Data
+*.toml  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.lock  text eol=lf
+*.json  text eol=lf
+
+# Documentation
+*.md    text eol=lf
+*.rst   text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+
+# Citation
+*.cff   text eol=lf
+*.bib   text eol=lf
+
+# Scripts
+*.bat   text eol=crlf
+*.sh    text eol=lf
+
+# Image & Video Files
+*.svg   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.jfif  binary
+*.gif   binary
+*.mp4   binary
+
+# Data & Model Storage Formats
+*.npz   binary
+*.npy   binary
+*.pkl   binary
+*.zip   binary
+*.bin   binary
+*.pt    binary
+*.pth   binary
+*.ckpt  binary
+*.safetensors binary
