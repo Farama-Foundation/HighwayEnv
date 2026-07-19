@@ -87,7 +87,7 @@ myst_enable_extensions = [
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "furo"
+html_theme = "celshast"
 html_title = "HighwayEnv Documentation"
 html_baseurl = "https://highway-env.farama.org"
 html_copy_source = False
