@@ -6,10 +6,12 @@ from highway_env import utils
 from highway_env.envs.common.abstract import ConnectedLaneNeighboursMixin
 from highway_env.envs.common.action import Action
 from highway_env.envs.highway_env import HighwayEnv
+from highway_env.envs.parking_env import GoalEnv
 from highway_env.road.lane import CircularLane
 from highway_env.road.road import Road, RoadNetwork
 from highway_env.vehicle.controller import ControlledVehicle
 from highway_env.vehicle.kinematics import Vehicle
+from highway_env.vehicle.objects import Landmark
 
 
 class ExitEnv(HighwayEnv):
@@ -200,6 +202,100 @@ class ExitEnv(HighwayEnv):
 
 class ConnectedLaneExitEnv(ConnectedLaneNeighboursMixin, ExitEnv):
     pass
+
+
+class GoalConditionedExitEnv(ConnectedLaneNeighboursMixin, ExitEnv, GoalEnv):
+    """A goal-conditioned exit task compatible with HER-style replay buffers."""
+
+    @classmethod
+    def default_config(cls) -> dict:
+        config = super().default_config()
+        config.update(
+            {
+                "observation": {
+                    "type": "KinematicsGoal",
+                    "features": ["x", "y", "vx", "vy", "cos_h", "sin_h"],
+                    "scales": [1000, 100, 30, 30, 1, 1],
+                    "normalize": False,
+                },
+                "reward_weights": [1, 1, 0, 0, 0, 0],
+                "success_goal_reward": 0.05,
+            }
+        )
+        return config
+
+    def _create_vehicles(self) -> None:
+        super()._create_vehicles()
+
+        goal_lane = self.road.network.get_lane(
+            (
+                "1",
+                "2",
+                self.config["lanes_count"],
+            )
+        )
+        goal_longitudinal = goal_lane.length / 2
+        goal = Landmark(
+            self.road,
+            goal_lane.position(goal_longitudinal, 0),
+            heading=goal_lane.heading_at(goal_longitudinal),
+        )
+        self.road.objects.append(goal)
+
+        for vehicle in self.controlled_vehicles:
+            vehicle.goal = goal
+
+    def compute_reward(
+        self,
+        achieved_goal: np.ndarray,
+        desired_goal: np.ndarray,
+        info: dict,
+    ) -> float:
+        """Proximity to the exit goal is rewarded."""
+        return -np.dot(
+            np.abs(achieved_goal - desired_goal),
+            np.array(self.config["reward_weights"]),
+        )
+
+    def _reward(self, action: Action) -> float:
+        obs = self.observation_type.observe()
+        return self.compute_reward(obs["achieved_goal"], obs["desired_goal"], {})
+
+    def _is_success(
+        self,
+        achieved_goal: np.ndarray | None = None,
+        desired_goal: np.ndarray | None = None,
+    ):
+        if achieved_goal is None or desired_goal is None:
+            obs = self.observation_type.observe()
+            achieved_goal = obs["achieved_goal"]
+            desired_goal = obs["desired_goal"]
+        return (
+            self.compute_reward(achieved_goal, desired_goal, {})
+            > -self.config["success_goal_reward"]
+        )
+
+    def _is_terminated(self) -> bool:
+        """The episode is over if the ego vehicle crashed or reached the goal."""
+        return bool(self.vehicle.crashed or self._is_success())
+
+
+class ContinuousGoalConditionedExitEnv(GoalConditionedExitEnv):
+    """A continuous-control, goal-conditioned variant of the exit task."""
+
+    @classmethod
+    def default_config(cls) -> dict:
+        config = super().default_config()
+        config.update(
+            {
+                "action": {
+                    "type": "ContinuousAction",
+                    "longitudinal": True,
+                    "lateral": True,
+                }
+            }
+        )
+        return config
 
 
 # class DenseLidarExitEnv(DenseExitEnv):
