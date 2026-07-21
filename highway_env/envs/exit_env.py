@@ -220,6 +220,8 @@ class GoalConditionedExitEnv(ConnectedLaneNeighboursMixin, ExitEnv, GoalEnv):
                 },
                 "reward_weights": [1, 1, 0, 0, 0, 0],
                 "success_goal_reward": 0.05,
+                "collision_reward": -5,
+                "success_reward": 1.0,
             }
         )
         return config
@@ -245,21 +247,64 @@ class GoalConditionedExitEnv(ConnectedLaneNeighboursMixin, ExitEnv, GoalEnv):
         for vehicle in self.controlled_vehicles:
             vehicle.goal = goal
 
-    def compute_reward(
-        self,
-        achieved_goal: np.ndarray,
-        desired_goal: np.ndarray,
-        info: dict,
-    ) -> float:
-        """Proximity to the exit goal is rewarded."""
+    def _goal_proximity_reward(
+        self, achieved_goal: np.ndarray, desired_goal: np.ndarray
+    ) -> np.ndarray:
+        """Negative L1 distance in weighted goal features (x, y by default).
+
+        Supports a single goal vector or a batch of goals (HER relabeling).
+        """
         return -np.dot(
             np.abs(achieved_goal - desired_goal),
             np.array(self.config["reward_weights"]),
         )
 
+    def compute_reward(
+        self,
+        achieved_goal: np.ndarray,
+        desired_goal: np.ndarray,
+        info: dict | list[dict],
+    ) -> float | np.ndarray:
+        """Proximity reward with success bonus and crash penalty (HER-safe).
+
+        HER calls this with batched goals and a list of ``info`` dicts, so this
+        must stay vectorized (do not cast the proximity term with ``float()``).
+        """
+        reward = np.asarray(
+            self._goal_proximity_reward(achieved_goal, desired_goal), dtype=float
+        ).copy()
+        batch = reward.ndim > 0
+
+        success_thr = self.config["success_goal_reward"]
+        success_bonus = self.config["success_reward"]
+        collision_reward = self.config["collision_reward"]
+
+        if not batch:
+            if reward > -success_thr:
+                reward += success_bonus
+            crashed = (
+                bool(info.get("crashed", False)) if isinstance(info, dict) else False
+            )
+            if crashed:
+                reward += collision_reward
+            return float(reward)
+
+        reward[reward > -success_thr] += success_bonus
+        if isinstance(info, (list, tuple)):
+            crashed = np.fromiter(
+                (bool(i.get("crashed", False)) for i in info),
+                dtype=bool,
+                count=len(info),
+            )
+            reward[crashed] += collision_reward
+        return reward
+
     def _reward(self, action: Action) -> float:
         obs = self.observation_type.observe()
-        return self.compute_reward(obs["achieved_goal"], obs["desired_goal"], {})
+        info = {"crashed": bool(self.vehicle.crashed)}
+        return float(
+            self.compute_reward(obs["achieved_goal"], obs["desired_goal"], info)
+        )
 
     def _is_success(
         self,
@@ -270,8 +315,9 @@ class GoalConditionedExitEnv(ConnectedLaneNeighboursMixin, ExitEnv, GoalEnv):
             obs = self.observation_type.observe()
             achieved_goal = obs["achieved_goal"]
             desired_goal = obs["desired_goal"]
-        return (
-            self.compute_reward(achieved_goal, desired_goal, {})
+        # Proximity only — do not treat crash near the landmark as success.
+        return bool(
+            self._goal_proximity_reward(achieved_goal, desired_goal)
             > -self.config["success_goal_reward"]
         )
 
