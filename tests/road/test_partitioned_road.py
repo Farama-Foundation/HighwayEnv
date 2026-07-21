@@ -19,7 +19,7 @@ def test_partitioned_road_network():
     while target_num_endpoints <= 256:
         generation_params["target_num_endpoints"] = target_num_endpoints
         print(f"\ntarget_num_endpoints = {target_num_endpoints}")
-        lanes = generate_random_lanes(generation_params)
+        lanes = generate_random_lanes(np.random.default_rng(), generation_params)
 
         avg_elapsed_regular, avg_elapsed_partitioned = assess_get_closest_index(lanes)
         print("RoadNetwork v. PartitionedRoadNetwork: get_closest_lane_index")

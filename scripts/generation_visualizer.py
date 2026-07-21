@@ -1,11 +1,9 @@
-import json
 import math
-import sys
 
 import numpy as np
 import pygame
 
-from highway_env.road.generation.engine import (  # agents; rectify; optimize; boundaries; validation; gen_utils
+from highway_env.road.generation.engine import (
     check_lanes_type_validity,
     combine_nodes,
     correct_junction_boundaries,
@@ -25,7 +23,6 @@ from highway_env.road.generation.engine import (  # agents; rectify; optimize; b
     split_lanes,
     twist_optimize,
 )
-from highway_env.road.generation.generator import serialize_lanes, unserialize_lanes
 from highway_env.road.generation.spatial_hash import lanes_spatial_hash
 
 
@@ -35,20 +32,23 @@ Visualizes the step-by-step process of procedural road network generation for de
 
 
 # Generation Parameters -------------------------------------
-params = {  # big + chaotic
-    "target_num_endpoints": 1000,
-    "forward_speed": 5,
+params = {
+    "target_num_endpoints": 300,
+    "forward_speed": 30,
     "age_of_maturity": 4,
-    "lane_width": 10,
+    "lane_width": 20,
     "perlin_variation_params": {
-        "jitteriness": {"upper": 0.2, "lower": 0.0},
-        "max_turn_speed": {"upper": 5.0, "lower": 0.01},
-        "replication_chance": {"upper": 0.7, "lower": 0.2},
+        "jitteriness": {"upper": 0.1, "lower": 0.0},
+        "max_turn_speed": {"upper": 4.0, "lower": 0.01},
+        "replication_chance": {"upper": 0.7, "lower": 0.0},
         "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
     },
     "disable_prints": False,
-    "seed": 1,
 }
+
+seed = 2
+
+rng = np.random.default_rng(seed)
 
 merge_radius = params["forward_speed"] * 2
 prevent_replication_radius = params["age_of_maturity"] * params["forward_speed"]
@@ -58,7 +58,6 @@ twist_step = 0.0002 / params["forward_speed"]
 
 disable_prints = params["disable_prints"]
 
-rng = np.random.default_rng(params["seed"])
 
 # Drawing -------------------------------------
 
@@ -247,12 +246,9 @@ def draw_interest_points(lanes, points, junction_to_pos, surface, camera):
 
 def draw_hud(surface, font, camera):
     lines = [
-        f"Camera: ({camera.x:.1f}, {camera.y:.1f})",
-        f"Zoom:   {camera.zoom:.2f}x",
-        "",
-        "WASD  pan",
-        "Q / E  zoom in / out",
-        "R      reset",
+        "WASD: pan",
+        "Q/E: zoom in/out",
+        "T: progress generator",
     ]
     y = 10
     for line in lines:
@@ -271,35 +267,22 @@ def main():
     hud_font = pygame.font.SysFont("monospace", 14)
     node_font = pygame.font.SysFont("monospace", 12)
 
-    if len(sys.argv) > 1:
-        print("Loading road network")
-        with open(sys.argv[1]) as f:
-            lanes = unserialize_lanes(json.load(f))
-
-    else:
-        print("Generating road network...")
-
-        lanes = generate_road_network_skeleton(
-            target_num_endpoints=max(2, params["target_num_endpoints"]),
-            forward_speed=params["forward_speed"],
-            merge_radius=merge_radius,
-            prevent_replication_radius=prevent_replication_radius,
-            age_of_maturity=params["age_of_maturity"],
-            perlin_variation_params=params["perlin_variation_params"],
-            disable_prints=disable_prints,
-            rng=rng,
-        )
-
-        with open("lanes_saved/pregen/data.json", "w") as f:
-            json.dump(serialize_lanes(lanes), f)
-
+    print("Generating road network...")
+    lanes = generate_road_network_skeleton(
+        target_num_endpoints=max(2, params["target_num_endpoints"]),
+        forward_speed=params["forward_speed"],
+        merge_radius=merge_radius,
+        prevent_replication_radius=prevent_replication_radius,
+        age_of_maturity=params["age_of_maturity"],
+        perlin_variation_params=params["perlin_variation_params"],
+        disable_prints=disable_prints,
+        rng=rng,
+    )
     print(f"Number of lanes: {len(lanes)}")
+
     camera = Camera(SCREEN_W, SCREEN_H)
-
     running = True
-
     stage = 1
-
     stage_names = {
         1: "Removing short lanes",
         2: "Splitting lanes",
@@ -316,8 +299,6 @@ def main():
         13: "GENERATION FINISHED",
     }
 
-    print("WASD + QE to move/zoom the camera")
-    print("Press t to progress through the generation process")
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -325,9 +306,6 @@ def main():
             if event.type == pygame.VIDEORESIZE:
                 camera.screen_w, camera.screen_h = event.w, event.h
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
-                    camera.x, camera.y, camera.zoom = 0.0, 0.0, 1.0
-
                 if event.key == pygame.K_t:
                     print(f"Executing stage {stage}: {stage_names[stage]}")
                     match stage:
@@ -413,7 +391,7 @@ def main():
                                 )
                         case _:
                             continue
-
+                    print(f"Finished executing stage {stage}.")
                     stage += 1
 
         # --- Camera movement ---

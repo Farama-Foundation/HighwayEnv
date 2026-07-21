@@ -35,7 +35,7 @@ def default_params() -> dict:
     ``None`` for a random seed
     """
     return {
-        "target_num_endpoints": 100,
+        "target_num_endpoints": 2,
         "forward_speed": 10,
         "age_of_maturity": 4,
         "lane_width": 10,
@@ -45,22 +45,23 @@ def default_params() -> dict:
             "replication_chance": {"upper": 0.7, "lower": 0.0},
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
-        "disable_prints": False,
-        "seed": None,
+        "disable_prints": True,
     }
 
 
-def generate_random_lanes(params: dict | None = None) -> list[Lane]:
+def generate_random_lanes(
+    rng: np.random.Generator, provided_params: dict | None = None
+) -> list[Lane]:
     """
     Generates a procedurally generated lane network.
 
-    :param params: Generation parameters dict (optional)
+    :param provided_params: Generation parameters dict (optional)
+    :param rng: Random number generator
     :return: list of lanes
     """
-    if params is None:
-        params = default_params()
-
-    rng = np.random.default_rng(params["seed"])
+    params = default_params()
+    if provided_params is not None:
+        params.update(provided_params)
 
     merge_radius = params["forward_speed"] * 2
     prevent_replication_radius = params["age_of_maturity"] * params["forward_speed"]
@@ -78,8 +79,8 @@ def generate_random_lanes(params: dict | None = None) -> list[Lane]:
         prevent_replication_radius=prevent_replication_radius,
         age_of_maturity=params["age_of_maturity"],
         perlin_variation_params=params["perlin_variation_params"],
-        disable_prints=disable_prints,
         rng=rng,
+        disable_prints=disable_prints,
     )
 
     # Phase 2: Rectification
@@ -107,7 +108,7 @@ def generate_random_lanes(params: dict | None = None) -> list[Lane]:
 
     # Phase 5: Validation
     invalids = get_invalid_lanes(
-        lanes, params["forward_speed"], disable_prints=disable_prints, rng=rng
+        lanes, params["forward_speed"], rng=rng, disable_prints=disable_prints
     )
     if not disable_prints:
         print(f"Removing {len(invalids)} obstructed lanes")

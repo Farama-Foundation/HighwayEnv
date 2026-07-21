@@ -783,10 +783,7 @@ class LaneLidarObservation(LidarObservation):
     as if they were walls.
 
     Requires a PartitionedRoadNetwork.
-
-    Todo:
-        * allow the observation of non-PolyLanes instead of ignoring them
-        * be compatible with a regular RoadNetwork
+    Ignores non-PolyLanes.
     """
 
     def __init__(

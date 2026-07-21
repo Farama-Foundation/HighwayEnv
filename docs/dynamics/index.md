@@ -17,6 +17,7 @@ road/lane
 road/road
 road/neighbour_vehicles
 road/regulation
+road/procedural_generation
 ```
 
 ## Vehicles

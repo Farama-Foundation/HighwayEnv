@@ -14,8 +14,8 @@ def generate_road_network_skeleton(
     prevent_replication_radius: int,
     age_of_maturity: int,
     perlin_variation_params: dict,
+    rng: np.random.Generator,
     disable_prints: bool = False,
-    rng: np.random.Generator | None = None,
 ) -> list[Lane]:
     """
     Uses a swarm of moving, replicating agents to sketch out a rough draft of
@@ -31,12 +31,10 @@ def generate_road_network_skeleton(
     replicate
     :param perlin_variation_params: determines the rates of turning and
     replication and how they vary over physical space
-    :param disable_prints: disables progress and status printing
     :param rng: random number generator
+    :param disable_prints: disables progress and status printing
     :return: list of lanes
     """
-    if rng is None:
-        rng = np.random.default_rng()
 
     param_getter = PerlinVariation(perlin_variation_params, rng)
 

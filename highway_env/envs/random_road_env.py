@@ -4,7 +4,11 @@ import numpy as np
 
 from highway_env.envs.common.abstract import AbstractEnv, Observation
 from highway_env.envs.common.action import Action, action_factory
-from highway_env.envs.common.observation import observation_factory
+from highway_env.envs.common.observation import (
+    NavigationObservation,
+    TupleObservation,
+    observation_factory,
+)
 from highway_env.road.generation.engine.gen_utils import Lane
 from highway_env.road.generation.generator import generate_random_lanes
 from highway_env.road.generation.spatial_hash import (
@@ -30,59 +34,55 @@ class RandomRoadEnv(AbstractEnv):
     The goal of an agent is to get to a parking spot
     as soon as possible without crashing into a curb or
     other vehicle.
-
-    Todo:
-    - add multi-agent support
     """
-
-    def __init__(
-        self,
-        config: dict = None,
-        render_mode: str | None = None,
-        generation_params=None,
-        lanes=None,
-    ) -> None:
-        """
-        :param generation_params: Parameter dict for road generation
-        :param lanes: Optional list of Lane to load previously generated
-        road networks
-        """
-        self.generation_params = generation_params
-        self.lanes = lanes
-        super().__init__(config, render_mode)
 
     @classmethod
     def default_config(cls) -> dict:
+        """
+        - **max_timesteps**: number of policy timesteps before truncation
+        - **curb_collision_reward**: one-time penalty after hitting lane border
+        - **car_collision_reward**: one-time penalty after hitting another vehicle or object
+        - **parking_reward**: one-time reward after parking in the goal parking spot
+        - **parking_score_threshold**: determines the threshold of proximity to be parked
+        - **parking_score_weights**: specifies how much position, velocity, and alignment matter
+        - **route_following_reward_scalar**: determines the reward/penalty gained by traveling
+          towards/away from the next waypoint
+        - **timestep_reward**: step/living penalty
+        - **parking_seed**: pseudorandom seed for determining the
+          placement of parking spots within a generated road network
+        - **generation_params**: custom parameters to be passed for generation
+        - **preloaded_lanes**: prevents generation of a new road network by providing
+          an already existing one
+        - **lane_partition_gridsize**: the size of the grids when partitioning lanes
+          for proximal checks. A lower value can reduce the number of unnecessary checks
+          in dense networks.
+        """
         config = super().default_config()
         config.update(
             {
-                "screen_width": 1200,
-                "screen_height": 700,
                 "observation": {
                     "type": "TupleObservation",
                     "observation_configs": [
-                        {"type": "NavigationObservation"},  # must be first
-                        # {"type": "LidarObservation"}, # used for detecting other agents
                         {"type": "LaneLidarObservation"},
+                        {"type": "NavigationObservation"},
                         {"type": "RelativeGoalObservation"},
+                        {"type": "LidarObservation"},
                     ],
                 },
                 "action": {"type": "ContinuousAction"},
-                "parking_seed": None,
-                "curb_collision_penalty": -10,
-                "car_collision_penalty": -20,
-                "parking_score_weights": [
-                    0.5,
-                    0.5,
-                    1,
-                    1,
-                    3,
-                ],  # "x", "y", "vx", "vy", "alignment"
-                "parking_score_threshold": 0.7,
-                "parking_reward": 10,
-                "route_following_reward_scalar": 0.1,
-                "timestep_penalty": -0.01,
+                "screen_width": 1200,
+                "screen_height": 700,
                 "max_timesteps": 1000,
+                "curb_collision_reward": -10,
+                "car_collision_reward": -20,
+                "parking_reward": 10,
+                "parking_score_threshold": 0.7,
+                "parking_score_weights": [0.5, 1, 3],
+                "route_following_reward_scalar": 0.1,
+                "timestep_reward": -0.01,
+                "parking_seed": 0,
+                "generation_params": None,
+                "preloaded_lanes": None,
                 "lane_partition_gridsize": 100,
             }
         )
@@ -95,11 +95,12 @@ class RandomRoadEnv(AbstractEnv):
         self.action_space = self.action_type.space()
 
     def _reset(self) -> None:
-        self.lanes = self._make_road(self.lanes)
+        self.lanes = self._make_road()
 
-        rng = np.random.default_rng(self.config["parking_seed"])
-
-        self.create_parking_spots(num_spots=2, spot_width=3, spot_height=6, rng=rng)
+        parking_rng = np.random.default_rng(self.config["parking_seed"])
+        self.create_parking_spots(
+            num_spots=2, spot_width=3, spot_height=6, rng=parking_rng
+        )
         spawn_spot = self.road.objects[0]
 
         self.vehicle = self.action_type.vehicle_class(
@@ -128,19 +129,18 @@ class RandomRoadEnv(AbstractEnv):
             self.vehicle.crashed = True
             total_timestep_punishment_left = min(
                 (self.config["max_timesteps"] + 1 - self.time)
-                * self.config["timestep_penalty"],
+                * self.config["timestep_reward"],
                 0,
             )
 
             if collided_with_curb:
                 return (
-                    self.config["curb_collision_penalty"]
+                    self.config["curb_collision_reward"]
                     + total_timestep_punishment_left
                 )
             if collided_with_car:
                 return (
-                    self.config["car_collision_penalty"]
-                    + total_timestep_punishment_left
+                    self.config["car_collision_reward"] + total_timestep_punishment_left
                 )
 
         # Parking
@@ -150,13 +150,21 @@ class RandomRoadEnv(AbstractEnv):
             return self.config["parking_reward"]
 
         # Route-following
-        reward_earned = self.config["timestep_penalty"]
+        reward_earned = self.config["timestep_reward"]
 
         if self.config["route_following_reward_scalar"] != 0:
-            waypoint_vector = (
-                self.observation_type.observation_types[0].waypoint
-                - self.vehicle.position
-            )
+            navigation_observation = None
+            if isinstance(self.observation_type, TupleObservation):
+                for obs in self.observation_type.observation_types:
+                    if isinstance(obs, NavigationObservation):
+                        navigation_observation = obs
+            elif isinstance(self.observation_type, NavigationObservation):
+                navigation_observation = self.observation_type
+            assert (
+                navigation_observation is not None
+            ), "NavigationObservation must be included as an observation if route_following_reward_scalar is nonzero"
+
+            waypoint_vector = navigation_observation.waypoint - self.vehicle.position
             route_following_score = (
                 self.config["route_following_reward_scalar"]
                 * np.dot(waypoint_vector, self.vehicle.velocity)
@@ -186,34 +194,38 @@ class RandomRoadEnv(AbstractEnv):
         # Instead we use something similar to compute_reward in ParkingEnv
         # Lower parking score = better
 
-        position_diff = self.vehicle.position - self.vehicle.goal.position
-        velocity_diff = self.vehicle.velocity
+        position_diff = np.linalg.norm(
+            self.vehicle.position - self.vehicle.goal.position
+        )
+        velocity_diff = np.linalg.norm(self.vehicle.velocity)
         alignment_penalty = 1 - abs(
             np.cos(self.vehicle.heading - self.vehicle.goal.heading)
         )  # 0 when perfectly aligned (forward or backward), 1 when sideways
 
         components = np.array(
             [
-                position_diff[0],  # x
-                position_diff[1],  # y
-                velocity_diff[0],  # vx
-                velocity_diff[1],  # vy
-                alignment_penalty,  # alignment
+                position_diff,
+                velocity_diff,
+                alignment_penalty,
             ]
         )
         weights = np.array(self.config["parking_score_weights"])
         return np.power(np.dot(np.abs(components), weights), p)
 
-    def _make_road(self, lanes: list[Lane] | None = None) -> list[Lane]:
-        if lanes is None:
+    def _make_road(self) -> list[Lane]:
+        if self.config["preloaded_lanes"] is None:
             try:
-                lanes = generate_random_lanes(self.generation_params)
+                lanes = generate_random_lanes(
+                    self.np_random, self.config["generation_params"]
+                )
             except Exception as e:
                 raise RuntimeError(
                     "Fatal error encountered when generating road network."
                     "If this issue persists, try a different seed."
                     f"\n\tOriginal error: {e}"
                 ) from e
+        else:
+            lanes = self.config["preloaded_lanes"]
 
         net = PartitionedRoadNetwork(
             partition_gridsize=self.config["lane_partition_gridsize"]
@@ -241,12 +253,12 @@ class RandomRoadEnv(AbstractEnv):
         """
         :param num_spots: number of parking spots to generate
         :param spot_width: width of parking spot
-        [must be less than the lane_width]
+            [must be less than the lane_width]
         :param spot_height: length of parking spot
-        [must be less than forward_speed]
+            [must be less than forward_speed]
         :param rng: random number generator
-        :return: whether or not there was space to generate
-        the specified number of spots
+        :return: whether or not there was enough space to generate
+            the specified number of spots
         """
         curb_spot_offset = 0.1
         # segment_index: {laneID, side, pt_id (1-(len-2))}

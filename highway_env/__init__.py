@@ -186,7 +186,7 @@ def _register_highway_envs():
     # random_road_env.py
     register(
         id="random-road-v0",
-        entry_point="highway_env.envs.random_road_env:RandomRoadEnv"
+        entry_point="highway_env.envs.random_road_env:RandomRoadEnv",
     )
 
 

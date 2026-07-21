@@ -25,8 +25,8 @@ from .gen_utils import (
 def get_invalid_lanes(
     lanes: list[Lane],
     forward_speed: int,
+    rng: np.random.Generator,
     disable_prints: bool = False,
-    rng: np.random.Generator = None,
 ) -> list[Lane]:
     """
     Determines which lanes are blocked/not traversible.
@@ -37,8 +37,6 @@ def get_invalid_lanes(
     :param rng: random number generator
     :return: list of lanes that are invalid
     """
-    if rng is None:
-        rng = np.random.default_rng()
 
     gridsize = 20
     _, grid_to_lanes = lanes_spatial_hash(lanes, gridsize)

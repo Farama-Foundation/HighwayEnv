@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 
 from highway_env.road.generation.engine.gen_utils import Lane
@@ -234,7 +236,8 @@ file_path = "data.npz"
 
 def test_generator():
     for i, params in enumerate(params_list):
-        lanes = generate_random_lanes(params)
+        rng = np.random.default_rng(None if params is None else params["seed"])
+        lanes = generate_random_lanes(rng, params)
 
         lanes_serialized = serialize_lanes(lanes)
         lanes_unserialized = unserialize_lanes(lanes_serialized)
@@ -250,3 +253,5 @@ def test_generator():
             print_lanes(lanes)
             lane_to_grid, grid_to_lanes = lanes_spatial_hash(lanes, 100)
             get_all_intersection_points(lanes, lane_to_grid, grid_to_lanes)
+
+    os.remove(file_path)

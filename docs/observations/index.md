@@ -349,13 +349,35 @@ You can configure the number of cells in the angular grid with the `cells` param
 ```
 
 ## LaneLidar
-{py:class}`~highway_env.envs.common.observation.LaneLidarObservation` allows the agent to observe the distances to surrounding PolyLane borders as if they were walls. Instead using angular sector areas to detect nearby objects, singular rays are cast at regular intervals to detect the surrounding lane geometry.
+{py:class}`~highway_env.envs.common.observation.LaneLidarObservation`, a subclass of `LidarObservation`,  allows the agent to observe the distances to surrounding PolyLane borders as if they are walls. Instead using angular sector areas to detect nearby objects, singular rays are cast at regular intervals to detect the surrounding lane geometry.
 
-Returns an array with one row per ray:
+Returns an array with one row per ray and two columns:
   - distance to the lane border along this ray
   - component of the relative velocity of the static lane border (negative of the ego-vehicle's velocity) along the direction of the ray
 
-### Example configuratsion (LaneLidar)
+
+Here is an example of what the rays may look like in the random-road env:
+
+```{eval-rst}
+.. jupyter-execute::
+    :stderr:
+
+    env = gym.make(
+        'random-road-v0',
+        render_mode='rgb_array',
+        config={
+            "observation": {
+                "type": "LaneLidarObservation",
+            },
+            "generation_params": {"target_num_endpoints": 10,}
+        })
+    env.reset()
+
+    plt.imshow(env.render())
+    plt.show()
+```
+
+### Example configuration (LaneLidar)
 
 ```python
 "observation": {
@@ -366,14 +388,10 @@ Returns an array with one row per ray:
 }
 ```
 
-### Notes
-- Requires that the env uses a PartitionedRoadNetwork instead of a regular RoadNetwork.
-- Ignores non-Polylanes
-
-### Todo
-- Be able to observe non-Polylanes
-- Be compatible with a non-partitioned RoadNetwork
-- Allow the ray-angles to be more concentrated at the head for higher forward resolution
+```{note}
+- LaneLidarObservation requires that the env uses a `PartitionedRoadNetwork` instead of a regular `RoadNetwork`.
+- Lanes that are not PolyLanes are currently ignored by the rays.
+```
 
 
 ## Navigation
@@ -386,7 +404,7 @@ Returns a 3-element array:
 
 If you enable `normalize`, then the distance to the next waypoint is divided by `distance_scale`.
 
-### Example
+### Example configuration (Navigation)
 ```python
 "observation": {
     "type": "NavigationObservation",
@@ -394,9 +412,9 @@ If you enable `normalize`, then the distance to the next waypoint is divided by 
     "distance_scale": 200
 }
 ```
-
+```{note}
 Requires that the ego-vehicle has a goal attribute
-
+```
 
 ## RelativeGoal
 {py:class}`~highway_env.envs.common.observation.RelativeGoalObservation` observes the position and heading of a goal parking spot relative to the ego-vehicle.
@@ -409,7 +427,7 @@ Returns a 4-element array:
 
 If you enable `normalize`, the body offsets are divided by `distance_scale`.
 
-### Example
+### Example configuration (RelativeGoal)
 ```python
 "observation": {
     "type": "RelativeGoalObservation",
@@ -418,8 +436,9 @@ If you enable `normalize`, the body offsets are divided by `distance_scale`.
 }
 ```
 
+```{note}
 Requires that the ego-vehicle has a goal attribute
-
+```
 
 
 ## API

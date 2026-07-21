@@ -299,7 +299,7 @@ class ObservationGraphics:
             )
             for i in range(np.size(psi))
         ]
-        pygame.draw.lines(surface, ObservationGraphics.COLOR, True, points, 1)
+        pygame.draw.lines(surface, ObservationGraphics.LIDAR_COLOR, True, points, 1)
 
     @classmethod
     def display_navigation_arrow(cls, nav_observation, surface):
