@@ -83,7 +83,7 @@ class RandomRoadEnv(AbstractEnv):
                 "parking_seed": 0,
                 "generation_params": None,
                 "preloaded_lanes": None,
-                "lane_partition_gridsize": 100,
+                "lane_partition_gridsize": 30,
             }
         )
         return config
@@ -237,7 +237,7 @@ class RandomRoadEnv(AbstractEnv):
                 right_boundary_points=lane.right_points,
                 line_types=(LineType.CONTINUOUS, LineType.CONTINUOUS),
             )
-            net.add_lane(lane.start, lane.end, real_lane, bidirectional=True)
+            net.add_lane_bidirectional(lane.start, lane.end, real_lane)
 
         self.road = Road(net)
 

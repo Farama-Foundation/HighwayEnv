@@ -6,7 +6,7 @@ import highway_env
 
 
 generation_params = {
-    "target_num_endpoints": 50,
+    "target_num_endpoints": 200,
     "disable_prints": False,
 }
 

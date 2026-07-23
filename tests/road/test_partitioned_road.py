@@ -71,7 +71,7 @@ def create_partitioned_network(lanes) -> PartitionedRoadNetwork:
             right_boundary_points=lane.right_points,
             line_types=(LineType.CONTINUOUS, LineType.CONTINUOUS),
         )
-        net.add_lane(lane.start, lane.end, real_lane, bidirectional=True)
+        net.add_lane_bidirectional(lane.start, lane.end, real_lane)
 
     return net
 
@@ -86,6 +86,6 @@ def create_regular_network(lanes) -> RoadNetwork:
             right_boundary_points=lane.right_points,
             line_types=(LineType.CONTINUOUS, LineType.CONTINUOUS),
         )
-        net.add_lane(lane.start, lane.end, real_lane, bidirectional=True)
+        net.add_lane_bidirectional(lane.start, lane.end, real_lane)
 
     return net

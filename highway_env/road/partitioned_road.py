@@ -20,10 +20,9 @@ class PartitionedRoadNetwork(RoadNetwork):
         self.grid_to_lanes = defaultdict(set)
         self.partition_gridsize = partition_gridsize
 
-    def add_lane(
-        self, _from: str, _to: str, lane: AbstractLane, bidirectional=False
-    ) -> LaneIndex:
-        lane_index = super().add_lane(_from, _to, lane, bidirectional)
+    def add_lane(self, _from: str, _to: str, lane: AbstractLane) -> None:
+        super().add_lane(_from, _to, lane)
+        lane_index = (_from, _to, len(self.graph[_from][_to]) - 1)
 
         if isinstance(lane, PolyLane):
             left_pts = lane.left_boundary_points
@@ -52,24 +51,28 @@ class PartitionedRoadNetwork(RoadNetwork):
                 self.grid_to_lanes[(gridpoint[0], last_gridpoint[1])].add(lane_index)
                 self.grid_to_lanes[(last_gridpoint[0], gridpoint[1])].add(lane_index)
 
-        return lane_index
+    def add_lane_bidirectional(self, _from: str, _to: str, lane: AbstractLane) -> None:
+        self.add_lane(_from, _to, lane)
+        super().add_lane(_to, _from, lane)
+        self.reversed_lane_indices.append((_to, _from, len(self.graph[_to][_from]) - 1))
 
     def get_closest_lane_index(
         self, position: np.ndarray, heading: float | None = None
     ) -> LaneIndex:
-        indexes = list(
+        indices = list(
             get_proximal_lanes_wrt_gridpoint(
                 self.grid_to_lanes,
                 point_to_gridpoint(position, self.partition_gridsize),
                 extended=True,
             )
         )
+
         distances = [
             self.get_lane(l_i).distance_with_heading(position, heading)
-            for l_i in indexes
+            for l_i in indices
         ]
 
-        if len(indexes) == 0:
+        if len(indices) == 0:
             return super().get_closest_lane_index(position, heading)
 
-        return indexes[int(np.argmin(distances))]
+        return indices[int(np.argmin(distances))]
