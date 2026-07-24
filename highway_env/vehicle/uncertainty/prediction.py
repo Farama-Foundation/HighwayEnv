@@ -354,8 +354,9 @@ class IntervalVehicle(LinearVehicle):
                 # Use interval from the observer estimate of the front vehicle
                 front_interval = front_vehicle.interval
             else:
-                # The front vehicle trajectory interval is not being estimated, so it should be considered as certain.
-                # We use a new observer created from that current vehicle state, which will have full certainty.
+                # The front vehicle trajectory interval is not being estimated, so it
+                # should be considered as certain. We use a new observer created from
+                # that current vehicle state, which will have full certainty.
                 front_interval = IntervalVehicle.create_from(front_vehicle).interval
         else:
             front_interval = None
@@ -367,9 +368,11 @@ class IntervalVehicle(LinearVehicle):
         """
         Get the list of lanes that could be followed by this vehicle.
 
-        :param lane_change_model: - model: assume that the vehicle will follow the lane of its model behaviour.
-                                  - all: assume that any lane change decision is possible at any timestep
-                                  - right: assume that a right lane change decision is possible at any timestep
+        :param lane_change_model:
+          - model: assume that the vehicle will follow the lane of its model behaviour.
+          - all: assume that any lane change decision is possible at any timestep
+          - right: assume that a right lane change decision is possible at any timestep
+
         :param squeeze: if True, remove duplicate lanes (at boundaries of the road)
         :return: the list of followed lane indexes
         """
@@ -457,8 +460,8 @@ class IntervalVehicle(LinearVehicle):
         """
         Worst-case collision check.
 
-        For robust planning, we assume that MDPVehicles collide with the uncertainty set of an IntervalVehicle,
-        which corresponds to worst-case outcome.
+        For robust planning, we assume that MDPVehicles collide with the uncertainty
+        set of an IntervalVehicle, which corresponds to worst-case outcome.
 
         :param other: the other vehicle
         :param dt: a timestep
@@ -478,8 +481,8 @@ class IntervalVehicle(LinearVehicle):
         ):
             return
 
-        # Projection of other vehicle to uncertainty rectangle. This is the possible position of this vehicle which is
-        # the most likely to collide with other vehicle
+        # Projection of other vehicle to uncertainty rectangle. This is the possible
+        # position of this vehicle which is the most likely to collide with others
         projection = np.minimum(
             np.maximum(other.position, self.interval.position[0]),
             self.interval.position[1],

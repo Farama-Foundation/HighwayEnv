@@ -209,7 +209,7 @@ def are_polygons_intersecting(
     min_distance = np.inf
     translation, translation_axis = None, None
     for polygon in [a, b]:
-        for p1, p2 in zip(polygon, polygon[1:]):
+        for p1, p2 in zip(polygon, polygon[1:], strict=False):
             normal = np.array([-p2[1] + p1[1], p2[0] - p1[0]])
             normal /= np.linalg.norm(normal)
             min_a, max_a = project_polygon(a, normal)
