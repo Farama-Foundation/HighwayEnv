@@ -6,6 +6,7 @@ on:
       branches: [ main ]
       paths:
         - 'docs/**'
+        - 'highway_env/**'
         - '.github/workflows/build-docs*.yml'
 permissions:
   contents: write

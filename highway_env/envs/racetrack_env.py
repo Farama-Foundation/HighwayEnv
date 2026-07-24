@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from itertools import repeat
+
 import numpy as np
 
 from highway_env import utils
@@ -403,7 +405,7 @@ class RacetrackEnv(AbstractEnv):
             self.road.vehicles.append(vehicle)
 
             # Other vehicles
-            for i in range(rng.integers(self.config["other_vehicles"])):
+            for _ in repeat(None, rng.integers(self.config["other_vehicles"])):
                 rand_lane_index = self.road.network.random_lane_index(rng)
 
                 vehicle = IDMVehicle.make_on_lane(
@@ -1370,7 +1372,7 @@ class RacetrackEnvOval(RacetrackEnv):
             self.road.vehicles.append(vehicle)
 
             # Other vehicles
-            for i in range(rng.integers(self.config["other_vehicles"])):
+            for _ in repeat(None, rng.integers(self.config["other_vehicles"])):
                 rand_lane_index = self.road.network.random_lane_index(rng)
                 vehicle = IDMVehicle.make_on_lane(
                     self.road,

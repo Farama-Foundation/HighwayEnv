@@ -131,7 +131,9 @@ class LinearSpline2D:
 
         poses = [
             CurvePose(x, y, dx, dy)
-            for x, y, dx, dy in zip(x_values, y_values, dx_values, dy_values)
+            for x, y, dx, dy in zip(
+                x_values, y_values, dx_values, dy_values, strict=False
+            )
         ]
 
         return s_values, poses

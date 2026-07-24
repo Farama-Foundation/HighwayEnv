@@ -101,3 +101,24 @@ extra_standard_library = ["typing_extensions"]
 indent = 4
 lines_after_imports = 2
 multi_line_output = 3
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    # "E",  # pycodestyle errors
+    # "F",  # pyflakes
+    # "UP", # pyupgrade
+    # "I",  # isort
+    # "D",  # pydocstyle
+    "B",  # bugbear
+]
+ignore = []
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = ["I", "E"]

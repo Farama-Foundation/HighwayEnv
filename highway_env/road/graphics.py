@@ -282,7 +282,7 @@ class LaneGraphics:
             lats = [2 * (side - 0.5) * width for _ in longis]
             new_dots = [
                 surface.vec2pix(lane.position(longi, lat))
-                for longi, lat in zip(longis, lats)
+                for longi, lat in zip(longis, lats, strict=False)
             ]
             new_dots = reversed(new_dots) if side else new_dots
             dots.extend(new_dots)
