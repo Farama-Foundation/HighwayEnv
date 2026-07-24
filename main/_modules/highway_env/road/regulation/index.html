@@ -424,7 +424,7 @@
         <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">predict_trajectory_constant_speed</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">position_1</span><span class="p">,</span> <span class="n">heading_1</span><span class="p">,</span> <span class="n">position_2</span><span class="p">,</span> <span class="n">heading_2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-            <span class="n">positions_1</span><span class="p">,</span> <span class="n">headings_1</span><span class="p">,</span> <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span>
+            <span class="n">positions_1</span><span class="p">,</span> <span class="n">headings_1</span><span class="p">,</span> <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">):</span>
             <span class="c1"># Fast spherical pre-check</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">position_2</span> <span class="o">-</span> <span class="n">position_1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">v1</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">:</span>
