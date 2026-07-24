@@ -33,6 +33,8 @@ dependencies = [
     "pygame-ce>=2.1.3",
     "matplotlib",
     "pandas",
+    "noise>=1.2.2",
+    "tqdm>=4.68.4",
 ]
 dynamic = ["version"]
 

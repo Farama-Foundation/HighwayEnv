@@ -23,6 +23,7 @@ class RoadNetwork:
 
     def __init__(self):
         self.graph = {}
+        self.reversed_lane_indices = []
 
     def add_lane(self, _from: str, _to: str, lane: AbstractLane) -> None:
         """
@@ -37,6 +38,15 @@ class RoadNetwork:
         if _to not in self.graph[_from]:
             self.graph[_from][_to] = []
         self.graph[_from][_to].append(lane)
+
+    def add_lane_bidirectional(self, _from: str, _to: str, lane: AbstractLane) -> None:
+        """
+        Add lane that allows for travel both ways.
+        (from _from to _to and from _to to _from)
+        """
+        self.add_lane(_from, _to, lane)
+        self.add_lane(_to, _from, lane)
+        self.reversed_lane_indices.append((_to, _from, len(self.graph[_to][_from]) - 1))
 
     def get_lane(self, index: LaneIndex) -> AbstractLane:
         """
