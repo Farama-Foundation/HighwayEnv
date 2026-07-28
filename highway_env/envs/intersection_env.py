@@ -382,15 +382,53 @@ class MultiAgentIntersectionEnv(IntersectionEnv):
             {
                 "action": {
                     "type": "MultiAgentAction",
+                    # Parent DiscreteMetaAction keys (unused by MultiAgentAction; check-only).
+                    "longitudinal": True,
+                    "lateral": False,
+                    "target_speeds": [0, 4.5, 9],
                     "action_config": {
                         "type": "DiscreteMetaAction",
                         "lateral": False,
                         "longitudinal": True,
+                        "target_speeds": [0, 4.5, 9],
                     },
                 },
                 "observation": {
                     "type": "MultiAgentObservation",
-                    "observation_config": {"type": "Kinematics"},
+                    # Parent Kinematics keys (unused by MultiAgentObservation; check-only).
+                    "vehicles_count": 15,
+                    "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
+                    "features_range": {
+                        "x": [-100, 100],
+                        "y": [-100, 100],
+                        "vx": [-20, 20],
+                        "vy": [-20, 20],
+                    },
+                    "absolute": True,
+                    "flatten": False,
+                    "observe_intentions": False,
+                    "observation_config": {
+                        "type": "Kinematics",
+                        "vehicles_count": 15,
+                        "features": [
+                            "presence",
+                            "x",
+                            "y",
+                            "vx",
+                            "vy",
+                            "cos_h",
+                            "sin_h",
+                        ],
+                        "features_range": {
+                            "x": [-100, 100],
+                            "y": [-100, 100],
+                            "vx": [-20, 20],
+                            "vy": [-20, 20],
+                        },
+                        "absolute": True,
+                        "flatten": False,
+                        "observe_intentions": False,
+                    },
                 },
                 "controlled_vehicles": 2,
             },
@@ -428,6 +466,15 @@ class ContinuousIntersectionEnv(IntersectionEnv):
                         "lat_off",
                         "ang_off",
                     ],
+                    "features_range": {
+                        "x": [-100, 100],
+                        "y": [-100, 100],
+                        "vx": [-20, 20],
+                        "vy": [-20, 20],
+                    },
+                    "absolute": True,
+                    "flatten": False,
+                    "observe_intentions": False,
                 },
                 "action": {
                     "type": "ContinuousAction",
@@ -435,6 +482,8 @@ class ContinuousIntersectionEnv(IntersectionEnv):
                     "longitudinal": True,
                     "lateral": True,
                     "dynamical": True,
+                    # Parent DiscreteMetaAction key (unused by ContinuousAction; check-only).
+                    "target_speeds": [0, 4.5, 9],
                 },
             },
         )
