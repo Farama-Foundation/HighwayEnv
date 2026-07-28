@@ -13,7 +13,8 @@ class RoundaboutEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {
                     "type": "Kinematics",
@@ -36,7 +37,7 @@ class RoundaboutEnv(AbstractEnv):
                 "centering_position": [0.5, 0.6],
                 "duration": 11,
                 "normalize_reward": True,
-            }
+            },
         )
         return config
 
@@ -406,13 +407,14 @@ class RoundaboutGenericEnv(RoundaboutEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "roundabout_radius": 20,
                 "roundabout_lanes": 2,
                 "vehicles_count": 5,
                 "duration": 17,
-            }
+            },
         )
         return config
 

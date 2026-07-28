@@ -24,7 +24,8 @@ class MergeEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         cfg = super().default_config()
-        cfg.update(
+        utils.update_config(
+            cfg,
             {
                 "collision_reward": -1,
                 "right_lane_reward": 0.1,
@@ -32,7 +33,7 @@ class MergeEnv(AbstractEnv):
                 "reward_speed_range": [20, 30],
                 "merging_speed_reward": -0.5,
                 "lane_change_reward": -0.05,
-            }
+            },
         )
         return cfg
 
@@ -216,7 +217,8 @@ class MergeGenericEnv(MergeEnv):
     @classmethod
     def default_config(cls) -> dict:
         cfg = super().default_config()
-        cfg.update(
+        utils.update_config(
+            cfg,
             {
                 "lanes_count": 2,
                 "vehicles_count": 3,
@@ -229,7 +231,7 @@ class MergeGenericEnv(MergeEnv):
                 "parallel_merge_length": 80,
                 # Section after the merge segment (must be >= 90)
                 "after_merge_length": 150,
-            }
+            },
         )
         return cfg
 

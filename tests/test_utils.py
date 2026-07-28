@@ -11,6 +11,8 @@ from highway_env.utils import (
     near_split,
     rotated_rectangles_intersect,
     solve_trinom,
+    update_config,
+    update_config_check,
 )
 
 
@@ -126,3 +128,86 @@ def test_distance_to_rect_no_intersection():
 def test_solve_trinom():
     assert solve_trinom(1.0, -3.0, 2.0) == pytest.approx((1.0, 2.0))
     assert solve_trinom(1.0, 0.0, 1.0) == (None, None)
+
+
+def test_update_config_allows_complete_nested_override():
+    config = {
+        "observation": {
+            "type": "Kinematics",
+            "vehicles_count": 15,
+            "absolute": True,
+        },
+        "duration": 13,
+    }
+    delta = {
+        "observation": {
+            "type": "Kinematics",
+            "vehicles_count": 5,
+            "absolute": False,
+        },
+        "lanes_count": 4,
+    }
+    result = update_config(config, delta)
+    assert result is config
+    assert config["observation"]["vehicles_count"] == 5
+    assert config["lanes_count"] == 4
+
+
+def test_update_config_check_missing_keys_message():
+    config = {
+        "observation": {
+            "type": "Kinematics",
+            "absolute": True,
+            "flatten": False,
+            "observe_intentions": False,
+            "features_range": {"x": [-100, 100], "y": [-100, 100]},
+        }
+    }
+    delta = {
+        "observation": {
+            "type": "Kinematics",
+            "absolute": True,
+        }
+    }
+    with pytest.raises(AssertionError, match=r"^config\.observation invalid:") as exc:
+        update_config_check(config, delta)
+    message = str(exc.value)
+    assert "missing_keys=" in message
+    assert "flatten" in message
+    assert "observe_intentions" in message
+    assert "features_range" in message
+
+
+def test_update_config_check_nested_path_message():
+    config = {
+        "observation": {
+            "type": "Kinematics",
+            "features_range": {"x": [-100, 100], "y": [-100, 100]},
+        }
+    }
+    delta = {
+        "observation": {
+            "type": "Kinematics",
+            "features_range": {"x": [-50, 50]},
+        }
+    }
+    with pytest.raises(
+        AssertionError,
+        match=r"^config\.observation\.features_range invalid: missing_keys=\{'y'\}$",
+    ):
+        update_config_check(config, delta)
+
+
+def test_update_config_check_non_mapping_message():
+    config = {"action": {"type": "DiscreteMetaAction", "lateral": False}}
+    with pytest.raises(
+        AssertionError,
+        match=r"^config\.action must be a mapping, got str$",
+    ):
+        update_config_check(config, {"action": "bad"})
+
+
+def test_update_config_propagates_check_error():
+    config = {"observation": {"type": "Kinematics", "absolute": True}}
+    with pytest.raises(AssertionError, match=r"^config\.observation invalid:"):
+        update_config(config, {"observation": {"type": "Kinematics"}})

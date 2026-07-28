@@ -25,7 +25,8 @@ class HighwayEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {"type": "Kinematics"},
                 "action": {
@@ -47,7 +48,7 @@ class HighwayEnv(AbstractEnv):
                 "reward_speed_range": [20, 30],
                 "normalize_reward": True,
                 "offroad_terminal": False,
-            }
+            },
         )
         return config
 
@@ -161,14 +162,15 @@ class HighwayEnvFast(HighwayEnv):
     @classmethod
     def default_config(cls) -> dict:
         cfg = super().default_config()
-        cfg.update(
+        utils.update_config(
+            cfg,
             {
                 "simulation_frequency": 5,
                 "lanes_count": 3,
                 "vehicles_count": 20,
                 "duration": 30,  # [s]
                 "ego_spacing": 1.5,
-            }
+            },
         )
         return cfg
 
