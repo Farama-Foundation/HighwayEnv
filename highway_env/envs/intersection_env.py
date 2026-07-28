@@ -382,7 +382,6 @@ class MultiAgentIntersectionEnv(IntersectionEnv):
             {
                 "action": {
                     "type": "MultiAgentAction",
-                    # Parent DiscreteMetaAction keys (unused by MultiAgentAction; check-only).
                     "longitudinal": True,
                     "lateral": False,
                     "target_speeds": [0, 4.5, 9],
@@ -395,7 +394,6 @@ class MultiAgentIntersectionEnv(IntersectionEnv):
                 },
                 "observation": {
                     "type": "MultiAgentObservation",
-                    # Parent Kinematics keys (unused by MultiAgentObservation; check-only).
                     "vehicles_count": 15,
                     "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
                     "features_range": {
@@ -482,7 +480,6 @@ class ContinuousIntersectionEnv(IntersectionEnv):
                     "longitudinal": True,
                     "lateral": True,
                     "dynamical": True,
-                    # Parent DiscreteMetaAction key (unused by ContinuousAction; check-only).
                     "target_speeds": [0, 4.5, 9],
                 },
             },
