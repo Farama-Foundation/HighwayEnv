@@ -98,7 +98,7 @@ def finite_mdp(
     except ModuleNotFoundError as e:
         raise ModuleNotFoundError(
             f"The finite_mdp module is required for conversion. {e}"
-        )
+        ) from e
 
 
 def compute_ttc_grid(

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from itertools import repeat
 
 import numpy as np
 from gymnasium import Env
@@ -203,7 +204,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
             empty_spots.remove(lane_index)
 
         # Other vehicles
-        for i in range(self.config["vehicles_count"]):
+        for _ in repeat(None, self.config["vehicles_count"]):
             if not empty_spots:
                 continue
             lane_index = empty_spots[self.np_random.choice(np.arange(len(empty_spots)))]

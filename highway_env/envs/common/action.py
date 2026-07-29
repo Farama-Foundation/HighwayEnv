@@ -319,7 +319,9 @@ class MultiAgentAction(ActionType):
 
     def act(self, action: Action) -> None:
         assert isinstance(action, tuple)
-        for agent_action, action_type in zip(action, self.agents_action_types):
+        for agent_action, action_type in zip(
+            action, self.agents_action_types, strict=False
+        ):
             action_type.act(agent_action)
 
     def get_available_actions(self):

@@ -313,9 +313,9 @@ class IntersectionEnv(AbstractEnv):
 
             self.road.vehicles.append(ego_vehicle)
             self.controlled_vehicles.append(ego_vehicle)
-            for v in self.road.vehicles:  # Prevent early collisions
+            for v in self.road.vehicles.copy():  # Prevent early collisions
                 if (
-                    v is not ego_vehicle
+                    v not in self.controlled_vehicles
                     and np.linalg.norm(v.position - ego_vehicle.position) < 20
                 ):
                     self.road.vehicles.remove(v)

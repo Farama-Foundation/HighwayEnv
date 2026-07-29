@@ -250,7 +250,7 @@ class ControlledVehicle(Vehicle):
             )
             for t in times
         ]
-        return tuple(zip(*pos_heads))
+        return tuple(zip(*pos_heads, strict=False))
 
 
 class MDPVehicle(ControlledVehicle):

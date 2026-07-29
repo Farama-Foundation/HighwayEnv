@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Sequence, Tuple
 
 import numpy as np
@@ -25,6 +25,7 @@ class RoadObject(ABC):
     LENGTH: float = 2  # Object length [m]
     WIDTH: float = 2  # Object width [m]
 
+    @abstractmethod
     def __init__(
         self,
         road: Road,

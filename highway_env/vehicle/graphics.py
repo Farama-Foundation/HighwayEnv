@@ -108,7 +108,9 @@ class VehicleGraphics:
                 ],
             ]
             tire_angles = [0, 0, v.action["steering"], v.action["steering"]]
-            for tire_position, tire_angle in zip(tire_positions, tire_angles):
+            for tire_position, tire_angle in zip(
+                tire_positions, tire_angles, strict=False
+            ):
                 tire_surface = pygame.Surface(
                     (surface.pix(tire_length), surface.pix(tire_length)),
                     pygame.SRCALPHA,

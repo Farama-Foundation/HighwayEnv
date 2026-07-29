@@ -97,7 +97,7 @@ class RegulatedRoad(Road):
         positions_2, headings_2 = v2.predict_trajectory_constant_speed(times)
 
         for position_1, heading_1, position_2, heading_2 in zip(
-            positions_1, headings_1, positions_2, headings_2
+            positions_1, headings_1, positions_2, headings_2, strict=False
         ):
             # Fast spherical pre-check
             if np.linalg.norm(position_2 - position_1) > v1.LENGTH:
