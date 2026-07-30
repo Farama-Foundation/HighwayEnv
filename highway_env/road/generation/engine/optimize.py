@@ -35,7 +35,9 @@ def twist_optimize(
     r = 3
     nodeset = get_nodeset(lanes)
 
-    for node in tqdm(nodeset, disabled=disable_prints, desc="Twisting Endpoints..."):
+    for node in tqdm(
+        sorted(nodeset), disabled=disable_prints, desc="Twisting Endpoints..."
+    ):
         junction = get_radially_sorted_endpoints(lanes, node)
 
         for _ in range(iterations):

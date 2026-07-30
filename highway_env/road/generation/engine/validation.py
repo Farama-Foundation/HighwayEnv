@@ -245,7 +245,7 @@ class BallParticle:
     ):
         repel_vector = np.zeros(2)
 
-        for other_laneID in proximal_lanes:
+        for other_laneID in sorted(proximal_lanes):
             other_lane = lanes[other_laneID]
 
             left_pairs = zip(other_lane.left_points, other_lane.left_points[1:])
@@ -395,7 +395,7 @@ def remove_disjoint_clusters(lanes: list[Lane]) -> None:
 
     partition = []
     while len(nodeset) > 0:
-        traversed = traverse_lane_graph(lanes, next(iter(nodeset)))
+        traversed = traverse_lane_graph(lanes, sorted(nodeset)[0])
         partition.append(traversed)
         nodeset -= traversed
 

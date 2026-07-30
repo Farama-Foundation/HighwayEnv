@@ -172,7 +172,6 @@ def get_nodeset(lanes: list[Lane]):
     for lane in lanes:
         nodeset.add(lane.start)
         nodeset.add(lane.end)
-
     return nodeset
 
 

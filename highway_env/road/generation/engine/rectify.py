@@ -101,7 +101,7 @@ def combine_nodes(
         proximal_lanes = get_proximal_lanes_wrt_lane(
             laneID, lane_to_grid, grid_to_lanes, extended=True
         )
-        for other_id in proximal_lanes:
+        for other_id in sorted(proximal_lanes):
             other_lane = lanes[other_id]
             for loc in ["start", "end"]:
                 for other_loc in ["start", "end"]:
@@ -115,7 +115,7 @@ def combine_nodes(
                             # We need to first ensure that no lane
                             # runs in between these two nodes
                             obstruction_found = False
-                            for foreign_id in proximal_lanes:
+                            for foreign_id in sorted(proximal_lanes):
                                 foreign_lane = lanes[foreign_id]
                                 pos_pairs = zip(
                                     foreign_lane.points,
@@ -258,7 +258,7 @@ def prune_intersecting_lanes(lanes: list[Lane], disable_prints: bool = False) ->
             laneID, lane_to_grid, grid_to_lanes
         )
         collision_detected = False
-        for other_id in proximal_lanes:
+        for other_id in sorted(proximal_lanes):
             if laneID < other_id:
                 other_lane = lanes[other_id]
                 pairs = zip(lane.points, lane.points[1:])

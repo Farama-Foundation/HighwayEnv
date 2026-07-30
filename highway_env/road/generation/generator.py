@@ -102,7 +102,7 @@ def generate_random_lanes(
 
     # Phase 4: Boundary creation
     generate_lane_boundaries(lanes, params["lane_width"])
-    for node in get_nodeset(lanes):
+    for node in sorted(get_nodeset(lanes)):
         correct_junction_boundaries(lanes, node)
         seal_dead_end(lanes, node)
 
