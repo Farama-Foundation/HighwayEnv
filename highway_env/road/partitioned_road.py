@@ -54,7 +54,7 @@ class PartitionedRoadNetwork(RoadNetwork):
     def add_lane_bidirectional(self, _from: str, _to: str, lane: AbstractLane) -> None:
         self.add_lane(_from, _to, lane)
         super().add_lane(_to, _from, lane)
-        self.reversed_lane_indices.append((_to, _from, len(self.graph[_to][_from]) - 1))
+        self.reversed_lane_indices.add((_to, _from, len(self.graph[_to][_from]) - 1))
 
     def get_closest_lane_index(
         self, position: np.ndarray, heading: float | None = None

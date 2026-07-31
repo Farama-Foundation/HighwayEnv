@@ -23,7 +23,7 @@ class RoadNetwork:
 
     def __init__(self):
         self.graph = {}
-        self.reversed_lane_indices = []
+        self.reversed_lane_indices = set()
 
     def add_lane(self, _from: str, _to: str, lane: AbstractLane) -> None:
         """
@@ -46,7 +46,7 @@ class RoadNetwork:
         """
         self.add_lane(_from, _to, lane)
         self.add_lane(_to, _from, lane)
-        self.reversed_lane_indices.append((_to, _from, len(self.graph[_to][_from]) - 1))
+        self.reversed_lane_indices.add((_to, _from, len(self.graph[_to][_from]) - 1))
 
     def get_lane(self, index: LaneIndex) -> AbstractLane:
         """

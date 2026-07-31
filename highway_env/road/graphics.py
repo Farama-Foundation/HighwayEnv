@@ -317,16 +317,12 @@ class RoadGraphics:
         :param road: the road to be displayed
         :param surface: the pygame surface
         """
-        lanes_displayed = []
         surface.fill(surface.GREY)
         for _from in road.network.graph.keys():
             for _to in road.network.graph[_from].keys():
-                for l in road.network.graph[_from][_to]:
-                    if (
-                        l not in lanes_displayed
-                    ):  # to avoid repeat drawing of bidirectional lanes
+                for i, l in enumerate(road.network.graph[_from][_to]):
+                    if (_from, _to, i) not in road.network.reversed_lane_indices:
                         LaneGraphics.display(l, surface)
-                        lanes_displayed.append(l)
 
     @staticmethod
     def display_traffic(
