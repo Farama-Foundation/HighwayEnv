@@ -12,6 +12,9 @@ on:
       - 'highway_env/**'
       - 'tests/**'
 
+permissions:
+  contents: read
+
 jobs:
   build:
 
