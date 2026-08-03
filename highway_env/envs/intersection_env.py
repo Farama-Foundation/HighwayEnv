@@ -382,9 +382,6 @@ class MultiAgentIntersectionEnv(IntersectionEnv):
             {
                 "action": {
                     "type": "MultiAgentAction",
-                    "longitudinal": True,
-                    "lateral": False,
-                    "target_speeds": [0, 4.5, 9],
                     "action_config": {
                         "type": "DiscreteMetaAction",
                         "lateral": False,
@@ -394,17 +391,6 @@ class MultiAgentIntersectionEnv(IntersectionEnv):
                 },
                 "observation": {
                     "type": "MultiAgentObservation",
-                    "vehicles_count": 15,
-                    "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
-                    "features_range": {
-                        "x": [-100, 100],
-                        "y": [-100, 100],
-                        "vx": [-20, 20],
-                        "vy": [-20, 20],
-                    },
-                    "absolute": True,
-                    "flatten": False,
-                    "observe_intentions": False,
                     "observation_config": {
                         "type": "Kinematics",
                         "vehicles_count": 15,

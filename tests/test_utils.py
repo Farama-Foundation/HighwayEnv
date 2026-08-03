@@ -211,3 +211,80 @@ def test_update_config_propagates_check_error():
     config = {"observation": {"type": "Kinematics", "absolute": True}}
     with pytest.raises(AssertionError, match=r"^config\.observation invalid:"):
         update_config(config, {"observation": {"type": "Kinematics"}})
+
+
+def test_update_config_check_multiagent_nested_configs():
+    config = {
+        "action": {
+            "type": "DiscreteMetaAction",
+            "longitudinal": True,
+            "lateral": False,
+            "target_speeds": [0, 4.5, 9],
+        },
+        "observation": {
+            "type": "Kinematics",
+            "vehicles_count": 15,
+            "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
+            "features_range": {
+                "x": [-100, 100],
+                "y": [-100, 100],
+                "vx": [-20, 20],
+                "vy": [-20, 20],
+            },
+            "absolute": True,
+            "flatten": False,
+            "observe_intentions": False,
+        },
+    }
+    delta = {
+        "action": {
+            "type": "MultiAgentAction",
+            "action_config": {
+                "type": "DiscreteMetaAction",
+                "longitudinal": True,
+                "lateral": False,
+                "target_speeds": [0, 4.5, 9],
+            },
+        },
+        "observation": {
+            "type": "MultiAgentObservation",
+            "observation_config": {
+                "type": "Kinematics",
+                "vehicles_count": 15,
+                "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
+                "features_range": {
+                    "x": [-100, 100],
+                    "y": [-100, 100],
+                    "vx": [-20, 20],
+                    "vy": [-20, 20],
+                },
+                "absolute": True,
+                "flatten": False,
+                "observe_intentions": False,
+            },
+        },
+    }
+    update_config_check(config, delta)
+
+
+def test_update_config_check_multiagent_nested_features_range_message():
+    config = {
+        "observation": {
+            "type": "Kinematics",
+            "features_range": {"x": [-100, 100], "y": [-100, 100]},
+        }
+    }
+    delta = {
+        "observation": {
+            "type": "MultiAgentObservation",
+            "observation_config": {
+                "type": "Kinematics",
+                "features_range": {"x": [-50, 50]},
+            },
+        }
+    }
+    with pytest.raises(
+        AssertionError,
+        match=r"^config\.observation\.features_range invalid: missing_keys=\{'y'\}$",
+    ):
+        update_config_check(config, delta)

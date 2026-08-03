@@ -439,7 +439,7 @@ def track_config_path(key: str):
 
 def update_config_check(config: dict[str, Any], delta: Mapping[str, Any]) -> None:
     """
-    Assert that nested mapping values in ``delta`` redefine all keys from ``config``.
+    Check that nested mapping values in ``delta`` redefine all keys from ``config``.
 
     :param config: Existing configuration mapping
     :param delta: Configuration update mapping
@@ -453,6 +453,14 @@ def update_config_check(config: dict[str, Any], delta: Mapping[str, Any]) -> Non
             assert isinstance(
                 new_val, Mapping
             ), f"{path} must be a mapping, got {type(new_val).__name__}"
+
+            # Handle multi-agent environments where keys are not defined in outer dict
+            if key in ("action", "observation"):
+                new_val = dict(new_val)
+                nested = new_val.get(key + "_config")
+                if isinstance(nested, Mapping):
+                    new_val.update(nested)
+
             missing_keys = val.keys() - new_val.keys()
             assert not missing_keys, f"{path} invalid: {missing_keys=}"
             update_config_check(val, new_val)
