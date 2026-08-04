@@ -441,8 +441,8 @@ def update_config_check(config: dict[str, Any], delta: Mapping[str, Any]) -> Non
     """
     Check that nested mapping values in ``delta`` redefine all keys from ``config``.
 
-    :param config: Existing configuration mapping
-    :param delta: Configuration update mapping
+    :param config: Configuration dict to update
+    :param delta: Values to apply on top of ``config``
     """
     for key, val in config.items():
         if key not in delta or not isinstance(val, Mapping):
