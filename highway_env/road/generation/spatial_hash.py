@@ -3,6 +3,8 @@ from itertools import chain
 
 import numpy as np
 
+from .engine.gen_utils import Lane
+
 
 def point_to_gridpoint(point: np.ndarray, gridsize: int) -> tuple[int, int]:
     """
@@ -17,15 +19,15 @@ def point_to_gridpoint(point: np.ndarray, gridsize: int) -> tuple[int, int]:
 
 
 def lanes_spatial_hash(
-    lanes: list, gridsize: int = 100, use_boundaries: bool = True
+    lanes: list[Lane], gridsize: int = 100, use_boundaries: bool = True
 ) -> tuple[defaultdict[set], defaultdict[set]]:
     """
     Partitions lanes into separate grids for significantly
-    faster proximal checks
+    faster proximal checks.
 
     :param lanes: list of lanes
     :param gridsize: length of a grid box
-    :param use_boundaries: refer to boundary instead of centerline points
+    :param use_boundaries: if true, will use boundary points instead of centerline points
     (defaults to True)
     :return: **lane_to_grid** (maps lane indices to the gridpoints they occupy)
     and **grid_to_lane** (maps gridpoints to the indices of lanes that inhabit
@@ -60,6 +62,7 @@ def lanes_spatial_hash(
                 grid_to_lanes[gp1].add(laneID)
                 grid_to_lanes[gp2].add(laneID)
             last_gridpoint = gridpoint
+
     return lane_to_grid, grid_to_lanes
 
 
@@ -80,15 +83,15 @@ def get_proximal_lanes_wrt_gridpoint(
     grid_to_lanes: defaultdict[set], gridpoint: int, extended: bool = False
 ) -> set:
     """
-    :param grid_to_lanes: map from gridpoints to the lanes that inhabit them
+    :param grid_to_lanes: map from gridpoints to the indices of lanes that inhabit them
     :param gridpoint: grid tuple coordinate
     :param extended: whether or not to count lanes in neighboring grids
     :return: set of proximal lane indices
     """
     proximal_lanes = set()
     for offset in gridhash_offsets if extended else [(0, 0)]:
-        new_point = (gridpoint[0] + offset[0], gridpoint[1] + offset[1])
-        proximal_lanes.update(grid_to_lanes[new_point])
+        offset_gridpoint = (gridpoint[0] + offset[0], gridpoint[1] + offset[1])
+        proximal_lanes.update(grid_to_lanes[offset_gridpoint])
 
     return proximal_lanes
 

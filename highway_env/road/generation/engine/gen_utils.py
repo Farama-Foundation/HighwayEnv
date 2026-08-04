@@ -244,6 +244,9 @@ def find_line_intersection(
 
 
 def tqdm(iterable=None, disabled=False, *args, **kwargs):
+    """
+    Wrapper to optionally disable the display of tqdm in the console
+    """
     if not disabled:
         return _tqdm(iterable, *args, **kwargs)
     elif iterable is not None:

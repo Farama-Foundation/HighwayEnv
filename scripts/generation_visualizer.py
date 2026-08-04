@@ -30,11 +30,10 @@ from highway_env.road.generation.spatial_hash import lanes_spatial_hash
 Visualizes the step-by-step process of procedural road network generation for debugging.
 """
 
-
 # Generation Parameters -------------------------------------
 params = {
-    "target_num_endpoints": 300,
-    "forward_speed": 30,
+    "target_num_endpoints": 200,
+    "forward_speed": 10,
     "age_of_maturity": 4,
     "lane_width": 20,
     "perlin_variation_params": {
@@ -46,7 +45,7 @@ params = {
     "disable_prints": False,
 }
 
-seed = 2
+seed = 0
 
 rng = np.random.default_rng(seed)
 
@@ -66,14 +65,15 @@ ORIGIN_COLOR = (80, 80, 80)
 BG_COLOR = (10, 10, 10)
 LABEL_COLOR = (150, 150, 150)
 
-LANE_COLOR = (180, 180, 180)  # road polyline
+LANE_COLOR = (180, 180, 180)
 LANE_COLORS = {"left_points": (180, 180, 180), "right_points": (180, 180, 180)}
 NODE_COLOR = (255, 200, 60)  # node label text
 NODE_BG_COLOR = (30, 30, 30)  # small background pill behind label
-NODE_RADIUS_COLOR = (60, 120, 180)  # thin merge-radius circle
-CENTER_POINTS_COLOR = (255, 0, 0)
-JUNCTION_POINT_COLOR = (0, 255, 0)
-MERGE_RADIUS = merge_radius  # must match generator value
+NODE_RADIUS_COLOR = (60, 120, 180)  # merge-radius circle
+CENTER_POINTS_COLOR = (0, 255, 0)
+INTERSECTION_POINT_COLOR = (255, 0, 0)
+JUNCTION_POINT_COLOR = (0, 0, 255)
+MERGE_RADIUS = merge_radius
 DRAW_MERGE_RADII = False
 DRAW_ENDPOINTS = True
 
@@ -99,13 +99,11 @@ class Camera:
         return (int(sx), int(sy))
 
     def world_to_screen_f(self, wx, wy):
-        """Float version, useful for distance calculations."""
         sx = (wx - self.x) * self.zoom + self.screen_w / 2
         sy = (wy - self.y) * self.zoom + self.screen_h / 2
         return (sx, sy)
 
     def scale(self, world_length):
-        """Convert a world-unit length to pixels."""
         return world_length * self.zoom
 
 
@@ -139,7 +137,6 @@ def draw_line(surface, camera, color, wx1, wy1, wx2, wy2, width=1):
 
 
 def draw_grid(surface, camera, spacing=50):
-    """Draw a light world-space grid."""
     w, h = surface.get_size()
 
     # world bounds visible on screen
@@ -169,7 +166,7 @@ def draw_lanes(surface, camera, lanes, node_font, stage):
     Draw all lanes as polylines, then overlay node ID labels.
     """
 
-    # --- Pass 1: road polylanes ---
+    # --- Drawing road polylanes ---
     sides = ["left_points", "right_points"]
     for lane in lanes:
         if stage <= 8:
@@ -187,8 +184,8 @@ def draw_lanes(surface, camera, lanes, node_font, stage):
                 width = max(1, int(1 * camera.zoom))
                 pygame.draw.lines(surface, LANE_COLORS[side], False, screen_pts, width)
 
+    # --- Draw merge-radius circles at every node ---
     if DRAW_MERGE_RADII:
-        # --- Pass 2: merge-radius circles at every node ---
         for lane in lanes:
             pts = lane.points
             if not pts:
@@ -197,9 +194,8 @@ def draw_lanes(surface, camera, lanes, node_font, stage):
                 sx, sy = camera.world_to_screen(wx, wy)
                 r = max(1, int(camera.scale(MERGE_RADIUS)))
                 pygame.draw.circle(surface, NODE_RADIUS_COLOR, (sx, sy), r, 1)
-        # """
 
-    # --- Pass 2: node labels ---
+    # --- Draw node labels ---
     if DRAW_ENDPOINTS:
         node_labels = []
         for lane in lanes:
@@ -231,8 +227,7 @@ def draw_interest_points(lanes, points, junction_to_pos, surface, camera):
     r = 2
     for point in points:
         sx, sy = camera.world_to_screen(point[0], point[1])
-
-        pygame.draw.circle(surface, (255, 0, 0), (sx, sy), r, 0)
+        pygame.draw.circle(surface, INTERSECTION_POINT_COLOR, (sx, sy), r, 0)
 
     for lane in lanes:
         for point in lane.points:
@@ -258,173 +253,170 @@ def draw_hud(surface, font, camera):
 
 
 # Main -------------------------------------
-def main():
-    pygame.init()
-    SCREEN_W, SCREEN_H = 1280, 720
-    screen = pygame.display.set_mode((SCREEN_W, SCREEN_H), pygame.RESIZABLE)
-    pygame.display.set_caption("Road network generation visualizer")
+pygame.init()
+SCREEN_W, SCREEN_H = 1280, 720
+screen = pygame.display.set_mode((SCREEN_W, SCREEN_H), pygame.RESIZABLE)
+pygame.display.set_caption("Road network generation visualizer")
+clock = pygame.time.Clock()
+FPS = 60
 
-    hud_font = pygame.font.SysFont("monospace", 14)
-    node_font = pygame.font.SysFont("monospace", 12)
+hud_font = pygame.font.SysFont("monospace", 14)
+node_font = pygame.font.SysFont("monospace", 12)
 
-    print("Generating road network...")
-    lanes = generate_road_network_skeleton(
-        target_num_endpoints=max(2, params["target_num_endpoints"]),
-        forward_speed=params["forward_speed"],
-        merge_radius=merge_radius,
-        prevent_replication_radius=prevent_replication_radius,
-        age_of_maturity=params["age_of_maturity"],
-        perlin_variation_params=params["perlin_variation_params"],
-        disable_prints=disable_prints,
-        rng=rng,
-    )
-    print(f"Number of lanes: {len(lanes)}")
+print("Generating road network...")
+lanes = generate_road_network_skeleton(
+    target_num_endpoints=max(2, params["target_num_endpoints"]),
+    forward_speed=params["forward_speed"],
+    merge_radius=merge_radius,
+    prevent_replication_radius=prevent_replication_radius,
+    age_of_maturity=params["age_of_maturity"],
+    perlin_variation_params=params["perlin_variation_params"],
+    disable_prints=disable_prints,
+    rng=rng,
+)
+print(f"Number of lanes: {len(lanes)}")
 
-    camera = Camera(SCREEN_W, SCREEN_H)
-    running = True
-    stage = 1
-    stage_names = {
-        1: "Removing short lanes",
-        2: "Splitting lanes",
-        3: "Removing short lanes (again)",
-        4: "Combining nodes",
-        5: "Removing identical reference frames",
-        6: "Removing crossing lanes",
-        7: "Twist optimization",
-        8: "Generate lane boundaries",
-        9: "Correcting junction boundaries",
-        10: "Labeling interest points",
-        11: "Detecting and removing blocked lanes",
-        12: "Removing disjoint clusters",
-        13: "GENERATION FINISHED",
-    }
+camera = Camera(SCREEN_W, SCREEN_H)
+running = True
+stage = 1
+stage_names = {
+    1: "Removing short lanes",
+    2: "Splitting lanes",
+    3: "Removing short lanes (again)",
+    4: "Combining nodes",
+    5: "Removing identical reference frames",
+    6: "Removing crossing lanes",
+    7: "Twist optimization",
+    8: "Generate lane boundaries",
+    9: "Correcting junction boundaries",
+    10: "Labeling interest points",
+    11: "Detecting and removing blocked lanes",
+    12: "Removing disjoint clusters",
+    13: "GENERATION FINISHED",
+}
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.VIDEORESIZE:
-                camera.screen_w, camera.screen_h = event.w, event.h
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_t:
-                    print(f"Executing stage {stage}: {stage_names[stage]}")
-                    match stage:
-                        case 1:
-                            rectify_short_lanes(lanes)
-                        case 2:
-                            conjoined_nodes = combine_nodes(
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.VIDEORESIZE:
+            camera.screen_w, camera.screen_h = event.w, event.h
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_t:
+                print(f"Executing stage {stage}: {stage_names[stage]}")
+                match stage:
+                    case 1:
+                        rectify_short_lanes(lanes)
+                    case 2:
+                        merge_radius += params["forward_speed"]
+                        conjoined_nodes = combine_nodes(
+                            lanes,
+                            merge_radius,
+                            mark=True,
+                            disable_prints=disable_prints,
+                        )
+                        split_lanes(
+                            lanes,
+                            conjoined_nodes,
+                            merge_radius=merge_radius,
+                            forward_speed=params["forward_speed"],
+                            disable_prints=disable_prints,
+                        )
+                    case 3:
+                        rectify_short_lanes(lanes)
+                    case 4:
+                        combine_nodes(
+                            lanes,
+                            merge_radius,
+                            disable_prints=disable_prints,
+                        )
+                    case 5:
+                        remove_identical_reference_lanes(lanes)
+                    case 6:
+                        prune_intersecting_lanes(lanes, disable_prints=disable_prints)
+                    case 7:
+                        twist_optimize(
+                            lanes,
+                            iterations=twist_iterations,
+                            step=twist_step,
+                            lane_width=params["lane_width"],
+                            disable_prints=disable_prints,
+                        )
+                        nodeset = get_nodeset(lanes)
+                    case 8:
+                        generate_lane_boundaries(lanes, params["lane_width"])
+                    case 9:
+                        for node in get_nodeset(lanes):
+                            correct_junction_boundaries(lanes, node)
+                            seal_dead_end(lanes, node)
+                    case 10:
+                        lane_to_grid, grid_to_lanes = lanes_spatial_hash(
+                            lanes, gridsize=params["lane_width"] * 2
+                        )
+                        intersecting_points = get_all_intersection_points(
+                            lanes, lane_to_grid, grid_to_lanes
+                        )
+
+                        junction_to_pos = dict()
+                        for node in nodeset:
+                            junction_to_pos[node] = get_junction_pos(
                                 lanes,
-                                merge_radius,
-                                mark=True,
-                                disable_prints=disable_prints,
+                                get_radially_sorted_endpoints(lanes, node),
                             )
-                            split_lanes(
+
+                    case 11:
+                        invalids = get_invalid_lanes(
+                            lanes,
+                            params["forward_speed"],
+                            disable_prints=disable_prints,
+                            rng=rng,
+                        )
+                        if not disable_prints:
+                            print(f"Removing {len(invalids)} obstructed lanes")
+                        kill_lanes(lanes, invalids)
+
+                    case 12:
+                        remove_disjoint_clusters(lanes)
+                        assert check_lanes_type_validity(lanes)
+                        junction_to_pos = dict()
+                        for node in get_nodeset(lanes):
+                            junction_to_pos[node] = get_junction_pos(
                                 lanes,
-                                conjoined_nodes,
-                                merge_radius=merge_radius,
-                                forward_speed=params["forward_speed"],
-                                disable_prints=disable_prints,
+                                get_radially_sorted_endpoints(lanes, node),
                             )
-                        case 3:
-                            rectify_short_lanes(lanes)
-                        case 4:
-                            combine_nodes(
-                                lanes,
-                                merge_radius,
-                                disable_prints=disable_prints,
-                            )
-                        case 5:
-                            remove_identical_reference_lanes(lanes)
-                        case 6:
-                            prune_intersecting_lanes(
-                                lanes, disable_prints=disable_prints
-                            )
-                        case 7:
-                            twist_optimize(
-                                lanes,
-                                iterations=twist_iterations,
-                                step=twist_step,
-                                lane_width=params["lane_width"],
-                                disable_prints=disable_prints,
-                            )
-                            nodeset = get_nodeset(lanes)
-                        case 8:
-                            generate_lane_boundaries(lanes, params["lane_width"])
-                        case 9:
-                            for node in get_nodeset(lanes):
-                                correct_junction_boundaries(lanes, node)
-                                seal_dead_end(lanes, node)
-                        case 10:
-                            lane_to_grid, grid_to_lanes = lanes_spatial_hash(
-                                lanes, gridsize=params["lane_width"] * 2
-                            )
-                            intersecting_points = get_all_intersection_points(
-                                lanes, lane_to_grid, grid_to_lanes
-                            )
+                    case _:
+                        continue
+                print(f"Finished executing stage {stage}.")
+                stage += 1
 
-                            junction_to_pos = dict()
-                            for node in nodeset:
-                                junction_to_pos[node] = get_junction_pos(
-                                    lanes,
-                                    get_radially_sorted_endpoints(lanes, node),
-                                )
+    # --- Camera movement ---
+    keys = pygame.key.get_pressed()
+    pan = PAN_SPEED / camera.zoom
 
-                        case 11:
-                            invalids = get_invalid_lanes(
-                                lanes,
-                                params["forward_speed"],
-                                disable_prints=disable_prints,
-                                rng=rng,
-                            )
-                            if not disable_prints:
-                                print(f"Removing {len(invalids)} obstructed lanes")
-                            kill_lanes(lanes, invalids)
+    if keys[pygame.K_w]:
+        camera.y -= pan
+    if keys[pygame.K_s]:
+        camera.y += pan
+    if keys[pygame.K_a]:
+        camera.x -= pan
+    if keys[pygame.K_d]:
+        camera.x += pan
 
-                        case 12:
-                            remove_disjoint_clusters(lanes)
-                            assert check_lanes_type_validity(lanes)
-                            junction_to_pos = dict()
-                            for node in get_nodeset(lanes):
-                                junction_to_pos[node] = get_junction_pos(
-                                    lanes,
-                                    get_radially_sorted_endpoints(lanes, node),
-                                )
-                        case _:
-                            continue
-                    print(f"Finished executing stage {stage}.")
-                    stage += 1
+    if keys[pygame.K_q]:
+        camera.zoom = min(MAX_ZOOM, camera.zoom * (1 + ZOOM_SPEED))
+    if keys[pygame.K_e]:
+        camera.zoom = max(MIN_ZOOM, camera.zoom * (1 - ZOOM_SPEED))
 
-        # --- Camera movement ---
-        keys = pygame.key.get_pressed()
-        pan = PAN_SPEED / camera.zoom
+    # --- Rendering ---
+    screen.fill(BG_COLOR)
+    draw_grid(screen, camera, spacing=50)
+    draw_lanes(screen, camera, lanes, node_font, stage)
+    draw_hud(screen, hud_font, camera)
+    if stage >= 11:
+        draw_interest_points(
+            lanes, intersecting_points, junction_to_pos, screen, camera
+        )
+    pygame.display.flip()
+    clock.tick(FPS)
 
-        if keys[pygame.K_w]:
-            camera.y -= pan
-        if keys[pygame.K_s]:
-            camera.y += pan
-        if keys[pygame.K_a]:
-            camera.x -= pan
-        if keys[pygame.K_d]:
-            camera.x += pan
-
-        if keys[pygame.K_q]:
-            camera.zoom = min(MAX_ZOOM, camera.zoom * (1 + ZOOM_SPEED))
-        if keys[pygame.K_e]:
-            camera.zoom = max(MIN_ZOOM, camera.zoom * (1 - ZOOM_SPEED))
-
-        # --- Rendering ---
-        screen.fill(BG_COLOR)
-        draw_grid(screen, camera, spacing=50)
-        draw_lanes(screen, camera, lanes, node_font, stage)
-        draw_hud(screen, hud_font, camera)
-        if stage >= 11:
-            draw_interest_points(
-                lanes, intersecting_points, junction_to_pos, screen, camera
-            )
-        pygame.display.flip()
-
-    pygame.quit()
-
-
-if __name__ == "__main__":
-    main()
+pygame.quit()

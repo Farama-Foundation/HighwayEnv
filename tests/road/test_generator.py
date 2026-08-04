@@ -7,7 +7,6 @@ from highway_env.road.generation.engine.validation import get_all_intersection_p
 from highway_env.road.generation.generator import (
     generate_random_lanes,
     load_lanes_from_disk,
-    print_lanes,
     save_lanes_to_disk,
     serialize_lanes,
     unserialize_lanes,
@@ -29,7 +28,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # big + chaotic
         "target_num_endpoints": 1000,
@@ -43,7 +41,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": 1,
     },
     {  # fast
         "target_num_endpoints": 100,
@@ -57,7 +54,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # slow
         "target_num_endpoints": 100,
@@ -71,7 +67,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # wide
         "target_num_endpoints": 100,
@@ -85,7 +80,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # skinny
         "target_num_endpoints": 100,
@@ -99,7 +93,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # jittery
         "target_num_endpoints": 100,
@@ -113,7 +106,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # smooth
         "target_num_endpoints": 100,
@@ -127,7 +119,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # twisty
         "target_num_endpoints": 100,
@@ -141,7 +132,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # straight
         "target_num_endpoints": 100,
@@ -155,7 +145,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # hyperdense
         "target_num_endpoints": 100,
@@ -169,7 +158,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # sparse
         "target_num_endpoints": 100,
@@ -183,7 +171,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 0.0, "lower": 0.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
     {  # deadly
         "target_num_endpoints": 100,
@@ -197,7 +184,6 @@ params_list = [
             "spontaneous_death_chance": {"upper": 1.0, "lower": 1.0},
         },
         "disable_prints": False,
-        "seed": None,
     },
 ]
 
@@ -236,7 +222,7 @@ file_path = "data.npz"
 
 def test_generator():
     for i, params in enumerate(params_list):
-        rng = np.random.default_rng(None if params is None else params["seed"])
+        rng = np.random.default_rng(0)
         lanes = generate_random_lanes(rng, params)
 
         lanes_serialized = serialize_lanes(lanes)
@@ -250,7 +236,6 @@ def test_generator():
         assert lanelist_equality(lanes, lanes_copy)
 
         if i == 1:
-            print_lanes(lanes)
             lane_to_grid, grid_to_lanes = lanes_spatial_hash(lanes, 100)
             get_all_intersection_points(lanes, lane_to_grid, grid_to_lanes)
 

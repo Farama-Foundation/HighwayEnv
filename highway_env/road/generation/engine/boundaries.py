@@ -15,39 +15,39 @@ def generate_lane_boundaries(lanes: list[Lane], lane_width: int) -> None:
         lane.right_points = []
 
         for i, point in enumerate(lane.points):
-            d = []
+            longitudal_offsets = []
             if i != 0:
-                d.append(lane.points[i - 1] - point)
+                longitudal_offsets.append(lane.points[i - 1] - point)
             if i != len(lane.points) - 1:
-                d.append(lane.points[i + 1] - point)
+                longitudal_offsets.append(lane.points[i + 1] - point)
+            # lane.points cannot be of length 1
 
-            v = d[0].copy()
+            backwards_offset = longitudal_offsets[0].copy()
             if i != 0:
-                v *= -1
+                backwards_offset *= -1
 
             lat = np.zeros(2)
             for _ in range(2):
-                if len(d) == 1:
-                    lat = np.array([-d[0][1], d[0][0]])
+                if len(longitudal_offsets) == 1:
+                    lat = np.array(
+                        [-longitudal_offsets[0][1], longitudal_offsets[0][0]]
+                    )
                     break
-                elif len(d) == 2:
-                    d[0] /= np.linalg.norm(d[0])
-                    d[1] /= np.linalg.norm(d[1])
+                elif len(longitudal_offsets) == 2:
+                    longitudal_offsets[0] /= np.linalg.norm(longitudal_offsets[0])
+                    longitudal_offsets[1] /= np.linalg.norm(longitudal_offsets[1])
 
-                    lat = (d[0] + d[1]) / 2.0
+                    lat = (longitudal_offsets[0] + longitudal_offsets[1]) / 2.0
 
                     if np.linalg.norm(lat) == 0:
-                        d.pop()
+                        longitudal_offsets.pop()
                         continue
-
                     break
-                else:
-                    assert False
 
             mag = np.linalg.norm(lat)
             lat *= (lane_width / 2) / mag
 
-            if (lat[0] * v[1] - lat[1] * v[0]) < 0:
+            if (lat[0] * backwards_offset[1] - lat[1] * backwards_offset[0]) < 0:
                 lane.right_points.append(point + lat)
                 lane.left_points.append(point - lat)
             else:
@@ -94,11 +94,9 @@ def correct_junction_boundaries(lanes: list[Lane], node: str) -> None:
             other_dir = other_ep.vector(lanes)
 
             vecToOther = other_pos - pos
-            dot1 = vecToOther @ dir
-            dot2 = -(vecToOther @ other_dir)
             if (
-                dot1 > 0
-                or dot2 > 0
+                vecToOther @ dir > 0
+                or -(vecToOther @ other_dir) > 0
                 or len(self_side_list) <= 3
                 or len(other_side_list) <= 3
             ):
@@ -107,6 +105,7 @@ def correct_junction_boundaries(lanes: list[Lane], node: str) -> None:
             self_side_list.pop(ep.point_index())
             other_side_list.pop(other_ep.point_index())
 
+        # Computing new shared point
         new_pos = find_line_intersection(pos, dir, other_pos, other_dir)
 
         # If the new point does not sit in between the two original points,
@@ -116,7 +115,6 @@ def correct_junction_boundaries(lanes: list[Lane], node: str) -> None:
 
         if b @ b != 0:
             a1 = (a @ b) / (b @ b)
-
             if a1 <= 0 or a1 >= 1:
                 new_pos = (pos + other_pos) / 2
 

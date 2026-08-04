@@ -21,7 +21,7 @@ def rectify_map(
     """
     Ensures proximal endpoints have the same string identifier
     and that intersecting lane paths are properly merged.
-    Also removes any defective lanes.
+    Also removes defective lanes.
 
     :param lanes: list of lanes
     :param merge_radius: distance at which an endpoint will join with another
@@ -78,12 +78,15 @@ def combine_nodes(
     :param lanes: list of lanes
     :param merge_radius: distance at which an endpoint will join with
     another endpoint
-    :param mark: if set to True, does not alter any existing nodes,
-    but instead keeps track of which nodes would be combined
+    :param mark: if set to true, this will not alter any existing nodes,
+    but instead keeps track of which nodes _would_ be combined. This
+    information (conducted with mark=True) is needed by split_lanes,
+    while the actual merging of nodes (conducted with mark=False) must be performed
+    after split_lanes.
     :param disable_prints: disables progress and status printing
 
-    :return: returns list of nodes that are proximal to other nodes
-    [if mark is True; otherwise returns None]
+    :return: if mark is True, returns set of nodes that are proximal to other nodes.
+    if mark is False, returns None
     """
 
     lane_to_grid, grid_to_lanes = lanes_spatial_hash(
@@ -91,8 +94,11 @@ def combine_nodes(
     )
 
     if mark:
-        conjoined_nodes = []
+        conjoined_nodes = set()
     else:
+        # node_power is used to keep track of
+        # how many times a string identifier
+        # has propagated itself to other proximal nodes
         node_power = defaultdict(int)
 
     for laneID, lane in enumerate(
@@ -103,17 +109,21 @@ def combine_nodes(
         )
         for other_id in sorted(proximal_lanes):
             other_lane = lanes[other_id]
+            # loc = which end of the lane this represents; short for 'location'
             for loc in ["start", "end"]:
                 for other_loc in ["start", "end"]:
                     p0 = lane.points[Endpoint.l_to_i[loc]]
                     p1 = other_lane.points[Endpoint.l_to_i[other_loc]]
-                    dist = np.linalg.norm(p0 - p1)
-                    if dist < merge_radius:
-                        lane_loc = getattr(lane, loc)
-                        other_lane_loc = getattr(other_lane, other_loc)
-                        if mark:
+                    if np.linalg.norm(p0 - p1) < merge_radius:
+                        lane_loc_id = getattr(lane, loc)
+                        other_lane_loc_id = getattr(other_lane, other_loc)
+                        if mark and lane_loc_id not in conjoined_nodes:
                             # We need to first ensure that no lane
-                            # runs in between these two nodes
+                            # runs in between these two proximal nodes
+                            # This can be done by checking if any
+                            # line segment of a lane intersects
+                            # with the line formed by the two proximal
+                            # node positions
                             obstruction_found = False
                             for foreign_id in sorted(proximal_lanes):
                                 foreign_lane = lanes[foreign_id]
@@ -133,15 +143,27 @@ def combine_nodes(
                                     ):
                                         obstruction_found = True
                                         break
+
+                            # If a segment which intersects is found, these
+                            # two nodes would not represent a shared
+                            # junction as they are separated by a road
                             if not obstruction_found:
-                                conjoined_nodes.append(lane_loc)
-                        else:
-                            if node_power[other_lane_loc] > node_power[lane_loc]:
-                                setattr(lane, loc, other_lane_loc)
-                                node_power[other_lane_loc] += 1
+                                conjoined_nodes.add(lane_loc_id)
+                                conjoined_nodes.add(other_lane_loc_id)
+
+                        elif not mark:
+                            # A string identifier with a higher node_power will
+                            # dominate over a node with a lower node_power. this
+                            # 'rich get richer' mechanism prevents situations
+                            # where two conflicting string IDs emerge at the same
+                            # junction
+
+                            if node_power[other_lane_loc_id] > node_power[lane_loc_id]:
+                                setattr(lane, loc, other_lane_loc_id)
+                                node_power[other_lane_loc_id] += 1
                             else:
-                                setattr(other_lane, other_loc, lane_loc)
-                                node_power[lane_loc] += 1
+                                setattr(other_lane, other_loc, lane_loc_id)
+                                node_power[lane_loc_id] += 1
 
     if mark:
         return conjoined_nodes
@@ -149,25 +171,23 @@ def combine_nodes(
 
 def split_lanes(
     lanes: list[Lane],
-    conjoined_nodes: list[str],
+    conjoined_nodes: set[str],
     merge_radius: int,
     forward_speed: int,
     disable_prints: bool = False,
 ) -> None:
     """
-    Creates new intersections for lanes that ram into the middle
-    of other lanes.
+    Where there is a lane that 'rams' into another
+    lane, an intersection is made between them.
 
     :param lanes: list of lanes
-    :param conjoined_nodes: list of nodes that are proximal to other nodes
+    :param conjoined_nodes: set of nodes that are proximal to other nodes
     :param merge_radius: distance at which an endpoint will join with another
     lane
     :param forward_speed: agent speed from the swarm generation process
     :param disable_prints: disables progress and status printing
     """
     cutoff_length = np.ceil(merge_radius * 2.0 / forward_speed)
-
-    child_parent_relationships = {}
 
     for lane in tqdm(
         lanes,
@@ -182,11 +202,6 @@ def split_lanes(
             loc_pos = lane.points[Endpoint.l_to_i[loc]]
 
             for other_lane in lanes:
-                if (
-                    child_parent_relationships.get(lane) is other_lane
-                    or child_parent_relationships.get(other_lane) is lane
-                ):
-                    continue
                 found_index = -1
                 closest_dist = None
                 for i, pos in enumerate(other_lane.points):
@@ -204,19 +219,18 @@ def split_lanes(
                     if found_index > len(other_lane.points) - 2:
                         found_index = len(other_lane.points) - 2
 
-                    lane_loc = getattr(lane, loc)
+                    lane_loc_id = getattr(lane, loc)
                     # 'old' means the earlier part of agent history
                     # / the bottom half of points
                     older_half = other_lane.points[:found_index]
-                    other_lane.points = other_lane.points[found_index:]
                     old_start = other_lane.start
-                    other_lane.start = lane_loc
+                    other_lane.points = other_lane.points[found_index:]
+                    other_lane.start = lane_loc_id
 
-                    new_lane = Lane(start=old_start, end=lane_loc, points=older_half)
+                    new_lane = Lane(start=old_start, end=lane_loc_id, points=older_half)
                     lanes.append(new_lane)
-                    child_parent_relationships[new_lane] = other_lane
+                    conjoined_nodes.add(lane_loc_id)
 
-                    conjoined_nodes.append(lane_loc)
                     break
 
 

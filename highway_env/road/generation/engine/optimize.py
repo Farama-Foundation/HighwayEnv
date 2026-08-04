@@ -25,7 +25,7 @@ def twist_optimize(
     :param lanes: list of lanes
     :param iterations: number of gradient-descent steps
     :param step: gradient-descent step size. highly sensitive
-    :param n: number of actuators/joints to twist
+    :param n: number of actuators/joints to twist at each endpoint
     :param lane_width: intended lane width
     :param disable_prints: disables progress and status printing
     """
@@ -60,9 +60,9 @@ def step_twist_gradient(
     Twists an endpoint to minimize the loss:
     (x(a) + r * cos(theta(a)) - x_t)^2 + (y(a) + r * sin(theta(a)) - y_t)^2
     [with respect to a, the angle of twist applied], where:
-    - x_t and y_t is the center of the junction
-    - x(a) and y(a) are the coordinates of the endpoint after applying twist
-    with angle a and are expressed as recursive functions:
+    - (x_t, y_t) is the centerpoint of the junction
+    - (x(a), y(a)) is the position of our endpoint after applying twist
+    with angle a and is expressed as recursive functions:
         - x(i, a) = x(i-1, a) + r_i * cos(theta_i + a)
             - x(0, a) = anchor point
             - x(n, a) = endpoint
@@ -75,7 +75,7 @@ def step_twist_gradient(
         as possible
     At a loss of near zero, the endpoint would naturally 'point'
     towards the center of our junction. The twisting motion
-    ensures the curve remains smooth.
+    ensures the curve of the lane remains smooth.
 
     :param lanes: list of lanes
     :param junction: list of all the endpoints that make up the junction
@@ -87,13 +87,13 @@ def step_twist_gradient(
     if len(junction) <= 1:
         return 0
 
-    # Computing x_t and y_t, x(a), and y(a)
+    # Computing (x(a), y(a)) and theta(a)
     x_a, y_a = ep.position(lanes)
     vx_a, vy_a = ep.vector(lanes)
     theta_a = np.atan2(vy_a, vx_a)
 
+    # Computing (x_t, y_t)
     x_t, y_t = get_junction_pos(lanes, junction, excluded_endpoint=ep)
-
     for endpoint in junction:
         if endpoint is not ep:
             vec = endpoint.vector(lanes)
@@ -104,17 +104,17 @@ def step_twist_gradient(
     #   x'(i) = -r_i * sin(theta_i) + x'(i-1)
     #   y'(i) = r_i * cos(theta_i) + y'(i-1)
     #   x'(0) = y'(0) = 0
-    polar_sequence = get_polar_sequence(lanes, ep, n)
-
     x_a_derivative = 0
     y_a_derivative = 0
+    polar_sequence = get_polar_sequence(lanes, ep, n)
     for i in range(1, n + 1):
         c = polar_sequence[i]
         x_a_derivative += -c[1] * np.sin(c[0])
         y_a_derivative += c[1] * np.cos(c[0])
 
-    # Change in the heading of the endpoint's tip would be
-    # equal to number of actuators * angle twist applied
+    # Computing theta'(a)
+    # (change in the heading of the endpoint's tip would be
+    # equal to number of actuators times the applied twist angle)
     theta_a_derivative = n
 
     # Computing the loss gradient
@@ -177,7 +177,7 @@ def get_polar_sequence(lanes: list[Lane], ep: Endpoint, n: int) -> list[tuple]:
         r = np.linalg.norm(vec)
         theta = np.atan2(vec[1], vec[0])
 
-        polar_coord_sequence.append((theta, r))  # turning a constant amount
+        polar_coord_sequence.append((theta, r))
 
     return polar_coord_sequence
 
@@ -213,6 +213,8 @@ def rotate_optimize(lanes: list[Lane], n: int = 3) -> None:
     """
     for laneID, lane in enumerate(lanes):
         if len(lane.points) <= n:
+            # Computing the desired start and end points of our lane
+
             start_junction = get_radially_sorted_endpoints(lanes, lane.start)
             if len(start_junction) > 1:
                 start = get_junction_pos(
@@ -233,6 +235,7 @@ def rotate_optimize(lanes: list[Lane], n: int = 3) -> None:
             else:
                 end = end_junction[0].position(lanes)
 
+            # Making each lane point a direct interpolation between the desired start and end
             for i in range(len(lane.points)):
                 num_pts = len(lane.points)
                 lane.points[i] = (end - start) * ((i + 1) / (num_pts + 1)) + start
@@ -253,7 +256,6 @@ def squish_optimize(lanes: list[Lane], junction: list[Endpoint], r: int) -> None
 
     for ep in junction:
         mid = get_junction_pos(lanes, junction, excluded_endpoint=ep)
-
         b = ep.vector_raw(lanes)
 
         for _ in range(
@@ -262,7 +264,6 @@ def squish_optimize(lanes: list[Lane], junction: list[Endpoint], r: int) -> None
             # before we get aligned properly
             pos = ep.position(lanes)
             second_pos = lanes[ep.id].points[ep.second_point_index()]
-
             c = mid - second_pos
 
             if c @ c != 0:
@@ -273,14 +274,13 @@ def squish_optimize(lanes: list[Lane], junction: list[Endpoint], r: int) -> None
             a = mid - offset - pos
             a1 = a @ b / (b @ b)
 
-            if a1 < -1:
+            if a1 < -1:  # Remove the last point entirely
                 if len(lanes[ep.id].points) > 2:
                     lanes[ep.id].points.pop(ep.point_index())
                     continue
-            elif a1 < 0:
+            elif a1 < 0:  # Just adjust the last point's position
                 new = (lanes[ep.id].points[ep.second_point_index()] + mid) * 0.5
                 lanes[ep.id].points[ep.point_index()] = new
-
             break
 
 

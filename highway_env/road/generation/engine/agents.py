@@ -38,7 +38,7 @@ def generate_road_network_skeleton(
 
     param_getter = PerlinVariation(perlin_variation_params, rng)
 
-    spatial_hash_gridsize = max(50, prevent_replication_radius)
+    spatial_hash_gridsize = max(prevent_replication_radius, 50)
 
     successful_generation = False
     MAX_GENERATION_ATTEMPTS = 10
@@ -163,7 +163,7 @@ class ConstructionAgent:
         [1, 0, 1],
         [1, 1, 0],
         [1, 1, 1],
-    ]
+    ]  # possible subsets of {left, straight, right}
 
     @classmethod
     def random_fork_config(cls, rng):
@@ -223,7 +223,9 @@ class ConstructionAgent:
         grid_to_lanes,
         spatial_hash_gridsize,
     ):
-
+        """
+        :return: prevent_replication, die
+        """
         # Death due to spontaneous death chance
         spontaneous_death_chance = param_getter.paramAt(
             "spontaneous_death_chance", self.position
@@ -234,21 +236,25 @@ class ConstructionAgent:
 
         # Death due to merging
         prevent_replication = False
-        merge_enacted = False
+        kill = False
 
+        # checking the path history of other agents (including ourselves)
         for other_agent in agents:
             for i, position in enumerate(other_agent.history):
                 if self is other_agent and i >= len(self.history) - age_of_maturity:
+                    # being in proximity to places we were just a few timesteps ago should not count
+                    # what matters is if we loop around and hit ourselves, which would require much more timesteps
                     break
 
                 dist = np.linalg.norm(position - self.position)
                 if self is not other_agent and dist < prevent_replication_radius:
                     prevent_replication = True
                 if dist < merge_radius:
-                    merge_enacted = True
+                    kill = True
                     break
 
-        if not merge_enacted:
+        # checking already laid down lanes
+        if not kill:
             gridpoint = point_to_gridpoint(self.position, spatial_hash_gridsize)
             proximal_lanes = get_proximal_lanes_wrt_gridpoint(
                 grid_to_lanes, gridpoint, extended=True
@@ -260,10 +266,10 @@ class ConstructionAgent:
                     if dist < prevent_replication_radius:
                         prevent_replication = True
                     if dist < merge_radius:
-                        merge_enacted = True
+                        kill = True
                         break
 
-        return prevent_replication, merge_enacted
+        return prevent_replication, kill
 
     def replicate(self, param_getter, rng, true_population, num_locations):
         new_agents = []
@@ -274,12 +280,13 @@ class ConstructionAgent:
             fork_config = ConstructionAgent.random_fork_config(rng)
             for i, angle in enumerate(ConstructionAgent.fork_angles):
                 if fork_config[i] == 1 or true_population < 3:
+                    # if we are underpopulated, reproduce the maximum number of offspring (3)
+                    # to guard against extinction
                     new_agent = ConstructionAgent(
                         start_location=num_locations,
                         position=self.position.copy(),
                         orientation=self.orientation + angle,
                     )
-
                     new_agents.append(new_agent)
 
         return new_agents
@@ -309,4 +316,5 @@ class PerlinVariation:
             persistence=PerlinVariation.persistence,
             lacunarity=PerlinVariation.lacunarity,
         )
+        # Squared perlin noise
         return (((upper - lower) * noise_val * abs(noise_val)) + upper + lower) / 2.0

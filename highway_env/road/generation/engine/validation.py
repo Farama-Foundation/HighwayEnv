@@ -42,10 +42,12 @@ def get_invalid_lanes(
     _, grid_to_lanes = lanes_spatial_hash(lanes, gridsize)
 
     invalids = []
-
     for lane in tqdm(
         lanes, disabled=disable_prints, desc="Checking lanes for blockages"
     ):
+        # Computing the start and end points of our lane
+        # If a car can traverse from start to end point
+        # the lane is considered traversible (valid)
         start_junction = get_radially_sorted_endpoints(lanes, lane.start)
         if len(start_junction) == 1:
             start_junction_pos = start_junction[0].position(lanes)
@@ -124,12 +126,12 @@ def determine_lane_validity(
     - Friction / drag
     """
 
-    ball_radius = 2  # CONSTRAINT: 2*ball_radius > vehicle width
-    pull_force = 0.3 / 4  # CONSTRAINT: pull_force/friction <= ball_radius
+    ball_radius = 2  # CONSTRAINT: 2*ball_radius >= vehicle width
+    pull_force = 0.3 / 4  # CONSTRAINT: pull_force <= ball_radius * friction
     friction = 0.2 / 4
     repel_force = (
         ball_radius * pull_force
-    )  # CONSTRAINT: repel_force/ball_radius <= pull_force
+    )  # CONSTRAINT: repel_force <= pull_force * ball_radius
     repel_radius = 5  # distance at which the wall-repelling force takes effect
     cross_particle_repel_force = repel_force
 
@@ -173,11 +175,11 @@ def determine_lane_validity(
             par.pull_force(pathway, pull_force)
 
             gridpoint = point_to_gridpoint(par.pos, gridsize)
-            proximal_lanes = get_proximal_lanes_wrt_gridpoint(
+            proximal_lane_ids = get_proximal_lanes_wrt_gridpoint(
                 grid_to_lanes, gridpoint, extended=True
             )
             par.border_force(
-                lanes, proximal_lanes, repel_radius, repel_force, ball_radius
+                lanes, proximal_lane_ids, repel_radius, repel_force, ball_radius
             )
 
             par.neighbor_force(particles, cross_particle_repel_force, ball_radius)
@@ -220,6 +222,9 @@ class BallParticle:
     hist: list[np.ndarray] = field(default_factory=list)
 
     def pull_force(self, pathway, pull_force):
+        """
+        Force to pull ball along the direction of the tunnel
+        """
         closest_i = 0
         closest_dist = np.linalg.norm(self.pos - pathway[closest_i])
         for i, pt in enumerate(pathway):
@@ -239,10 +244,12 @@ class BallParticle:
         pull_vector *= pull_force / np.linalg.norm(pull_vector)
         self.vel += pull_vector
 
-    # Border repel force + collisions
     def border_force(
         self, lanes, proximal_lanes, repel_radius, repel_force, ball_radius
     ):
+        """
+        Handles border repelling force and inelastic collisions
+        """
         repel_vector = np.zeros(2)
 
         for other_laneID in sorted(proximal_lanes):
@@ -251,6 +258,7 @@ class BallParticle:
             left_pairs = zip(other_lane.left_points, other_lane.left_points[1:])
             right_pairs = zip(other_lane.right_points, other_lane.right_points[1:])
             for a, b in chain(left_pairs, right_pairs):
+                # Computing distance to line segment
                 ab = b - a
                 ap = self.pos - a
                 ab_sq_len = np.sum(ab**2)
@@ -264,11 +272,13 @@ class BallParticle:
                     to_ball = self.pos - closest_point
                     distance = np.linalg.norm(to_ball)
 
+                # Repel
                 if distance < repel_radius:
                     repel_vector += (
                         to_ball * repel_force / max(distance, ball_radius) ** 2
                     )
 
+                # Collision
                 if distance < ball_radius:
                     if distance == 0:
                         if ab_sq_len == 0:  # should really never happen
@@ -293,8 +303,10 @@ class BallParticle:
 
         self.vel += repel_vector
 
-    # Ball-ball repel force
     def neighbor_force(self, particles, cross_particle_repel_force, ball_radius):
+        """
+        Ball-ball repel force
+        """
         repel_vector = np.zeros(2)
         for other_par in particles:
             if self is not other_par:
@@ -323,7 +335,7 @@ class BallParticle:
 
 def kill_lanes(lanes: list[Lane], lanes_to_kil: list[Lane]) -> None:
     """
-    Removes selected lanes and surgically repairs the holes in the
+    Removes selected lanes and repairs the holes in the
     lane borders left behind
 
     :param lanes: list of lanes
@@ -334,6 +346,8 @@ def kill_lanes(lanes: list[Lane], lanes_to_kil: list[Lane]) -> None:
     ]
     lane_ids_to_kil.sort(reverse=True)
 
+    # Accounting for which intersections are getting affected by lane removal
+    # and the line sgements of the holes being left behind
     affected_nodes = defaultdict(list)
     for laneID in lane_ids_to_kil:
         for loc in ["start", "end"]:
@@ -349,37 +363,50 @@ def kill_lanes(lanes: list[Lane], lanes_to_kil: list[Lane]) -> None:
     for laneID in lane_ids_to_kil:
         del lanes[laneID]
 
+    # Repairing left behind holes
     for node, segments in affected_nodes.items():
         junction = get_radially_sorted_endpoints(lanes, node)
-        if len(junction) != 0:
-            for segment in segments:
-                closest_ep = None
-                closest_side = None
-                closest_dist = None
-                first_point_is_p0 = False  # True -> p1 is first point
-                for ep in junction:
-                    for side in ["left_points", "right_points"]:
-                        point = getattr(lanes[ep.id], side)[ep.point_index()]
-                        dist0 = np.linalg.norm(segment[0] - point)
-                        dist1 = np.linalg.norm(segment[1] - point)
-                        if (
-                            closest_dist is None
-                            or dist0 < closest_dist
-                            or dist1 < closest_dist
-                        ):
-                            closest_ep = ep
-                            closest_side = side
-                            closest_dist = min(dist0, dist1)
-                            first_point_is_p0 = dist0 < dist1
+        if len(junction) == 0:
+            continue
 
-                if closest_ep.loc == "start":
-                    getattr(lanes[closest_ep.id], closest_side).insert(
-                        0, segment[1] if first_point_is_p0 else segment[0]
-                    )
-                else:
-                    getattr(lanes[closest_ep.id], closest_side).append(
-                        segment[1] if first_point_is_p0 else segment[0]
-                    )
+        # Each segment represents a hole that was left behind
+        # by lane removal
+        # We need to adjust the boundary points of the remaining neighbor
+        # lanes to cover up this hole
+        # For each segment, we find the closest lane boundary endpoint
+        # (to either endpoint of the segment)
+        # We extend this lane boundary to cover the segment's other endpoint
+        # This method was built on the assumption that the neighboring lane segment
+        # would not also be removed. But even in that case, the method
+        # remains robust in repairing the missing edges.
+        for segment in segments:
+            closest_ep = None
+            closest_side = None
+            closest_dist = None
+            first_point_is_s0 = False  # True -> segment[1] is first point
+            for ep in junction:
+                for side in ["left_points", "right_points"]:
+                    point = getattr(lanes[ep.id], side)[ep.point_index()]
+                    dist0 = np.linalg.norm(segment[0] - point)
+                    dist1 = np.linalg.norm(segment[1] - point)
+                    if (
+                        closest_dist is None
+                        or dist0 < closest_dist
+                        or dist1 < closest_dist
+                    ):
+                        closest_ep = ep
+                        closest_side = side
+                        closest_dist = min(dist0, dist1)
+                        first_point_is_s0 = dist0 < dist1
+
+            if closest_ep.loc == "start":
+                getattr(lanes[closest_ep.id], closest_side).insert(
+                    0, segment[1] if first_point_is_s0 else segment[0]
+                )
+            else:
+                getattr(lanes[closest_ep.id], closest_side).append(
+                    segment[1] if first_point_is_s0 else segment[0]
+                )
 
     return affected_nodes
 
@@ -404,7 +431,8 @@ def remove_disjoint_clusters(lanes: list[Lane]) -> None:
             nodeset = partition_element
 
     # nodeset now contains the largest partition-element.
-    # We must remove all lanes who does not connect to these nodes
+    # We must remove all lanes who does not connect to
+    # a node in this nodeset.
     lane_ids_to_remove = []
     for laneID, lane in enumerate(lanes):
         if lane.start not in nodeset:
@@ -430,7 +458,6 @@ def traverse_lane_graph(lanes: list[Lane], node: str) -> set[str]:
             if lane.start in nodeset or lane.end in nodeset:
                 nodeset.add(lane.start)
                 nodeset.add(lane.end)
-
                 laneset.add(laneID)
 
     return nodeset
@@ -460,23 +487,24 @@ def get_all_intersection_points(
             laneID, lane_to_grid, grid_to_lanes
         )
         for other_id in proximal_lanes:
-            if laneID < other_id:
-                other_lane = lanes[other_id]
-                left_pairs = zip(lane.left_points, lane.left_points[1:])
-                right_pairs = zip(lane.right_points, lane.right_points[1:])
-                for p0, p1 in chain(left_pairs, right_pairs):
-                    other_left_pairs = zip(
-                        other_lane.left_points, other_lane.left_points[1:]
-                    )
-                    other_right_pairs = zip(
-                        other_lane.right_points, other_lane.right_points[1:]
-                    )
-                    for op0, op1 in chain(other_left_pairs, other_right_pairs):
-                        t_a, t_b = line_intersection_t(p0, p1 - p0, op0, op1 - op0)
-                        if t_a > 0.01 and t_a < 0.99 and t_b > 0.01 and t_b < 0.99:
-                            intersecting_points.append(
-                                find_line_intersection(p0, p1 - p0, op0, op1 - op0)
-                            )
+            if laneID >= other_id:
+                continue
+            other_lane = lanes[other_id]
+            left_pairs = zip(lane.left_points, lane.left_points[1:])
+            right_pairs = zip(lane.right_points, lane.right_points[1:])
+            for p0, p1 in chain(left_pairs, right_pairs):
+                other_left_pairs = zip(
+                    other_lane.left_points, other_lane.left_points[1:]
+                )
+                other_right_pairs = zip(
+                    other_lane.right_points, other_lane.right_points[1:]
+                )
+                for op0, op1 in chain(other_left_pairs, other_right_pairs):
+                    t_a, t_b = line_intersection_t(p0, p1 - p0, op0, op1 - op0)
+                    if t_a > 0.01 and t_a < 0.99 and t_b > 0.01 and t_b < 0.99:
+                        intersecting_points.append(
+                            find_line_intersection(p0, p1 - p0, op0, op1 - op0)
+                        )
 
     return intersecting_points
 

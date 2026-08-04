@@ -55,8 +55,8 @@ def generate_random_lanes(
     """
     Generates a procedurally generated lane network.
 
-    :param provided_params: Generation parameters dict (optional)
     :param rng: Random number generator
+    :param provided_params: Generation parameters dict (optional)
     :return: list of lanes
     """
     params = default_params()
@@ -64,12 +64,10 @@ def generate_random_lanes(
         params.update(provided_params)
 
     merge_radius = params["forward_speed"] * 2
-    prevent_replication_radius = params["age_of_maturity"] * params["forward_speed"]
+    prevent_replication_radius = params["forward_speed"] * params["age_of_maturity"]
 
-    twist_iterations = 2 * params["forward_speed"]
+    twist_iterations = params["forward_speed"] * 2
     twist_step = 0.0002 / params["forward_speed"]
-
-    disable_prints = params["disable_prints"]
 
     # Phase 1: Random swarm generation
     lanes = generate_road_network_skeleton(
@@ -80,15 +78,15 @@ def generate_random_lanes(
         age_of_maturity=params["age_of_maturity"],
         perlin_variation_params=params["perlin_variation_params"],
         rng=rng,
-        disable_prints=disable_prints,
+        disable_prints=params["disable_prints"],
     )
 
     # Phase 2: Rectification
     rectify_map(
         lanes,
-        merge_radius=merge_radius,
+        merge_radius=merge_radius + params["forward_speed"],
         forward_speed=params["forward_speed"],
-        disable_prints=disable_prints,
+        disable_prints=params["disable_prints"],
     )
 
     # Phase 3: Optimization
@@ -97,7 +95,7 @@ def generate_random_lanes(
         iterations=twist_iterations,
         step=twist_step,
         lane_width=params["lane_width"],
-        disable_prints=disable_prints,
+        disable_prints=params["disable_prints"],
     )
 
     # Phase 4: Boundary creation
@@ -108,9 +106,9 @@ def generate_random_lanes(
 
     # Phase 5: Validation
     invalids = get_invalid_lanes(
-        lanes, params["forward_speed"], rng=rng, disable_prints=disable_prints
+        lanes, params["forward_speed"], rng=rng, disable_prints=params["disable_prints"]
     )
-    if not disable_prints:
+    if not params["disable_prints"]:
         print(f"Removing {len(invalids)} obstructed lanes")
     kill_lanes(lanes, invalids)
     remove_disjoint_clusters(lanes)
@@ -120,57 +118,48 @@ def generate_random_lanes(
     return lanes
 
 
-def print_lanes(lanes: list[Lane]) -> None:
-    """
-    Prints a list of lanes.
-    """
-    for _, lane in enumerate(lanes):
-        print(lane)
-
-
 def serialize_lanes(lanes: list[Lane]) -> list[dict]:
     """
     Converts a Lane to a json-ready list of dicts.
     """
-    lanes_s = []
+    lanes_serialized = []
 
     for lane in lanes:
-        lane_s = {}
-        lane_s["start"] = lane.start
-        lane_s["end"] = lane.end
+        lane_serialized = {
+            "start": lane.start,
+            "end": lane.end,
+            "points": [],
+            "left_points": [],
+            "right_points": [],
+        }
+        for pt in lane.points:
+            lane_serialized["points"].append((pt[0], pt[1]))
+        for pt in lane.left_points:
+            lane_serialized["left_points"].append((pt[0], pt[1]))
+        for pt in lane.right_points:
+            lane_serialized["right_points"].append((pt[0], pt[1]))
 
-        lane_s["points"] = []
-        lane_s["left_points"] = []
-        lane_s["right_points"] = []
+        lanes_serialized.append(lane_serialized)
 
-        for i, pt in enumerate(lane.points):
-            lane_s["points"].append((pt[0], pt[1]))
-        for i, pt in enumerate(lane.left_points):
-            lane_s["left_points"].append((pt[0], pt[1]))
-        for i, pt in enumerate(lane.right_points):
-            lane_s["right_points"].append((pt[0], pt[1]))
-
-        lanes_s.append(lane_s)
-
-    return lanes_s
+    return lanes_serialized
 
 
-def unserialize_lanes(lanes_s: list[dict]) -> list[Lane]:
+def unserialize_lanes(lanes_serialized: list[dict]) -> list[Lane]:
     """
     Converts a list of Lane-dicts to a list of Lane.
     """
     lanes = []
 
-    for lane_s in lanes_s:
-        new_lane = Lane(start=lane_s["start"], end=lane_s["end"])
+    for lane_serialized in lanes_serialized:
+        new_lane = Lane(start=lane_serialized["start"], end=lane_serialized["end"])
 
-        for pt in lane_s["points"]:
+        for pt in lane_serialized["points"]:
             new_lane.points.append(np.array([pt[0], pt[1]]))
 
-        if "left_points" in lane_s:
-            for pt in lane_s["left_points"]:
+        if "left_points" in lane_serialized:
+            for pt in lane_serialized["left_points"]:
                 new_lane.left_points.append(np.array([pt[0], pt[1]]))
-            for pt in lane_s["right_points"]:
+            for pt in lane_serialized["right_points"]:
                 new_lane.right_points.append(np.array([pt[0], pt[1]]))
 
         lanes.append(new_lane)
@@ -182,15 +171,15 @@ def save_lanes_to_disk(filename: str, lanes: list[Lane]):
     """
     Saves a list of lanes directly to a binary .npz file.
     """
-    data_to_save = {}
+    data = {}
 
     for i, lane in enumerate(lanes):
-        data_to_save[f"lane_{i}_metadata"] = np.array([lane.start, lane.end])
-        data_to_save[f"lane_{i}_points"] = np.asarray(lane.points)
-        data_to_save[f"lane_{i}_left"] = np.asarray(lane.left_points)
-        data_to_save[f"lane_{i}_right"] = np.asarray(lane.right_points)
+        data[f"lane_{i}_nodes"] = np.array([lane.start, lane.end])
+        data[f"lane_{i}_points"] = np.asarray(lane.points)
+        data[f"lane_{i}_left"] = np.asarray(lane.left_points)
+        data[f"lane_{i}_right"] = np.asarray(lane.right_points)
 
-    np.savez_compressed(filename, **data_to_save)
+    np.savez_compressed(filename, **data)
 
 
 def load_lanes_from_disk(filename: str) -> list[Lane]:
@@ -198,13 +187,13 @@ def load_lanes_from_disk(filename: str) -> list[Lane]:
     Loads npz file and reconstructs the list of Lane objects.
     """
     with np.load(filename) as data:
+        assert len(data.keys()) % 4 == 0
+        num_lanes = int(len(data.keys()) / 4)
         lanes = []
-        num_lanes = sum(1 for key in data.keys() if key.endswith("_metadata"))
 
         for i in range(num_lanes):
-            metadata = data[f"lane_{i}_metadata"]
-
-            new_lane = Lane(start=metadata[0], end=metadata[1])
+            start, end = data[f"lane_{i}_nodes"]
+            new_lane = Lane(start=start, end=end)
             new_lane.points = data[f"lane_{i}_points"]
             new_lane.left_points = data[f"lane_{i}_left"]
             new_lane.right_points = data[f"lane_{i}_right"]
