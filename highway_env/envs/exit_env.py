@@ -18,7 +18,8 @@ class ExitEnv(HighwayEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {
                     "type": "ExitObservation",
@@ -39,7 +40,7 @@ class ExitEnv(HighwayEnv):
                 "duration": 18,  # [s],
                 "simulation_frequency": 5,
                 "scaling": 5,
-            }
+            },
         )
         return config
 

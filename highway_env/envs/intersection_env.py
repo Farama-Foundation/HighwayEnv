@@ -17,7 +17,8 @@ class IntersectionEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {
                     "type": "Kinematics",
@@ -54,7 +55,7 @@ class IntersectionEnv(AbstractEnv):
                 "reward_speed_range": [7.0, 9.0],
                 "normalize_reward": False,
                 "offroad_terminal": False,
-            }
+            },
         )
         return config
 
@@ -376,7 +377,8 @@ class MultiAgentIntersectionEnv(IntersectionEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "action": {
                     "type": "MultiAgentAction",
@@ -384,14 +386,36 @@ class MultiAgentIntersectionEnv(IntersectionEnv):
                         "type": "DiscreteMetaAction",
                         "lateral": False,
                         "longitudinal": True,
+                        "target_speeds": [0, 4.5, 9],
                     },
                 },
                 "observation": {
                     "type": "MultiAgentObservation",
-                    "observation_config": {"type": "Kinematics"},
+                    "observation_config": {
+                        "type": "Kinematics",
+                        "vehicles_count": 15,
+                        "features": [
+                            "presence",
+                            "x",
+                            "y",
+                            "vx",
+                            "vy",
+                            "cos_h",
+                            "sin_h",
+                        ],
+                        "features_range": {
+                            "x": [-100, 100],
+                            "y": [-100, 100],
+                            "vx": [-20, 20],
+                            "vy": [-20, 20],
+                        },
+                        "absolute": True,
+                        "flatten": False,
+                        "observe_intentions": False,
+                    },
                 },
                 "controlled_vehicles": 2,
-            }
+            },
         )
         return config
 
@@ -410,7 +434,8 @@ class ContinuousIntersectionEnv(IntersectionEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {
                     "type": "Kinematics",
@@ -425,6 +450,15 @@ class ContinuousIntersectionEnv(IntersectionEnv):
                         "lat_off",
                         "ang_off",
                     ],
+                    "features_range": {
+                        "x": [-100, 100],
+                        "y": [-100, 100],
+                        "vx": [-20, 20],
+                        "vy": [-20, 20],
+                    },
+                    "absolute": True,
+                    "flatten": False,
+                    "observe_intentions": False,
                 },
                 "action": {
                     "type": "ContinuousAction",
@@ -432,7 +466,8 @@ class ContinuousIntersectionEnv(IntersectionEnv):
                     "longitudinal": True,
                     "lateral": True,
                     "dynamical": True,
+                    "target_speeds": [0, 4.5, 9],
                 },
-            }
+            },
         )
         return config

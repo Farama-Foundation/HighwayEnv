@@ -6,6 +6,7 @@ from itertools import repeat
 import numpy as np
 from gymnasium import Env
 
+from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.envs.common.observation import (
     MultiAgentObservation,
@@ -86,7 +87,8 @@ class ParkingEnv(AbstractEnv, GoalEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {
                     "type": "KinematicsGoal",
@@ -109,7 +111,7 @@ class ParkingEnv(AbstractEnv, GoalEnv):
                 "controlled_vehicles": 1,
                 "vehicles_count": 0,
                 "add_walls": True,
-            }
+            },
         )
         return config
 

@@ -33,7 +33,7 @@ class ConnectedLaneNeighboursMixin:
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update({"neighbour_vehicles_connected_lanes": True})
+        utils.update_config(config, {"neighbour_vehicles_connected_lanes": True})
         return config
 
 

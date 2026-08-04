@@ -3,7 +3,9 @@ from __future__ import annotations
 import copy
 import importlib
 import itertools
-from typing import Callable, List, Sequence, Tuple, Union
+from contextlib import contextmanager
+from contextvars import ContextVar
+from typing import Any, Callable, List, Mapping, Sequence, Tuple, Union
 
 import numpy as np
 
@@ -420,3 +422,57 @@ def solve_trinom(a, b, c):
         return (-b - np.sqrt(delta)) / (2 * a), (-b + np.sqrt(delta)) / (2 * a)
     else:
         return None, None
+
+
+_config_path: ContextVar[str] = ContextVar("_config_path", default="config")
+
+
+@contextmanager
+def track_config_path(key: str):
+    """A context manager to trace config path for meaningful error message."""
+    token = _config_path.set(f"{_config_path.get()}.{key}")
+    try:
+        yield
+    finally:
+        _config_path.reset(token)
+
+
+def update_config_check(config: dict[str, Any], delta: Mapping[str, Any]) -> None:
+    """
+    Check that nested mapping values in ``delta`` redefine all keys from ``config``.
+
+    :param config: Configuration dict to update
+    :param delta: Values to apply on top of ``config``
+    """
+    for key, val in config.items():
+        if key not in delta or not isinstance(val, Mapping):
+            continue
+        with track_config_path(key):
+            path = _config_path.get()
+            new_val = delta[key]
+            assert isinstance(
+                new_val, Mapping
+            ), f"{path} must be a mapping, got {type(new_val).__name__}"
+
+            # Handle multi-agent environments where keys are not defined in outer dict
+            if key in ("action", "observation"):
+                nested = new_val.get(key + "_config")
+                if isinstance(nested, Mapping):
+                    new_val = new_val | nested
+
+            missing_keys = val.keys() - new_val.keys()
+            assert not missing_keys, f"{path} invalid: {missing_keys=}"
+            update_config_check(val, new_val)
+
+
+def update_config(config: dict[str, Any], delta: Mapping[str, Any]) -> dict[str, Any]:
+    """
+    Update ``config`` in place with ``delta`` after validating nested mappings.
+
+    :param config: Configuration dict to update
+    :param delta: Values to apply on top of ``config``
+    :return: The updated ``config`` dict
+    """
+    update_config_check(config, delta)
+    config.update(delta)
+    return config

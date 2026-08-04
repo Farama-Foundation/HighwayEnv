@@ -18,7 +18,8 @@ class UTurnEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {"type": "TimeToCollision", "horizon": 16},
                 "action": {"type": "DiscreteMetaAction", "target_speeds": [8, 16, 24]},
@@ -31,7 +32,7 @@ class UTurnEnv(AbstractEnv):
                 "reward_speed_range": [8, 24],
                 "normalize_reward": True,
                 "offroad_terminal": False,
-            }
+            },
         )
         return config
 
