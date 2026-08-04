@@ -456,10 +456,9 @@ def update_config_check(config: dict[str, Any], delta: Mapping[str, Any]) -> Non
 
             # Handle multi-agent environments where keys are not defined in outer dict
             if key in ("action", "observation"):
-                new_val = dict(new_val)
                 nested = new_val.get(key + "_config")
                 if isinstance(nested, Mapping):
-                    new_val.update(nested)
+                    new_val = new_val | nested
 
             missing_keys = val.keys() - new_val.keys()
             assert not missing_keys, f"{path} invalid: {missing_keys=}"
