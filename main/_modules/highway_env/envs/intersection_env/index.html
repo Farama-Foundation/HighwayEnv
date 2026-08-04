@@ -337,7 +337,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span>
             <span class="p">{</span>
                 <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
@@ -374,7 +375,7 @@
                 <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">],</span>
                 <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;offroad_terminal&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
 
@@ -701,7 +702,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span>
             <span class="p">{</span>
                 <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;MultiAgentAction&quot;</span><span class="p">,</span>
@@ -709,14 +711,36 @@
                         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;lateral&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                         <span class="s2">&quot;longitudinal&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s2">&quot;target_speeds&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
                     <span class="p">},</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;MultiAgentObservation&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;observation_config&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">},</span>
+                    <span class="s2">&quot;observation_config&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+                        <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="s2">&quot;presence&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;vx&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;vy&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;cos_h&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;sin_h&quot;</span><span class="p">,</span>
+                        <span class="p">],</span>
+                        <span class="s2">&quot;features_range&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+                            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+                            <span class="s2">&quot;vx&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+                            <span class="s2">&quot;vy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+                        <span class="p">},</span>
+                        <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s2">&quot;flatten&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                        <span class="s2">&quot;observe_intentions&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="p">},</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;controlled_vehicles&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span>
 
@@ -735,7 +759,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span>
             <span class="p">{</span>
                 <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
@@ -750,6 +775,15 @@
                         <span class="s2">&quot;lat_off&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;ang_off&quot;</span><span class="p">,</span>
                     <span class="p">],</span>
+                    <span class="s2">&quot;features_range&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+                        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+                        <span class="s2">&quot;vx&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+                        <span class="s2">&quot;vy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;flatten&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;observe_intentions&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ContinuousAction&quot;</span><span class="p">,</span>
@@ -757,8 +791,9 @@
                     <span class="s2">&quot;longitudinal&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                     <span class="s2">&quot;lateral&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                     <span class="s2">&quot;dynamical&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;target_speeds&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
                 <span class="p">},</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span>
 </pre></div>

@@ -338,7 +338,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span>
             <span class="p">{</span>
                 <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ExitObservation&quot;</span><span class="p">,</span>
@@ -359,7 +360,7 @@
                 <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>  <span class="c1"># [s],</span>
                 <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
                 <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
 

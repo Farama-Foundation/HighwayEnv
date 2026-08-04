@@ -344,7 +344,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
+            <span class="n">cfg</span><span class="p">,</span>
             <span class="p">{</span>
                 <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
                 <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
@@ -352,7 +353,7 @@
                 <span class="s2">&quot;reward_speed_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
                 <span class="s2">&quot;merging_speed_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>
                 <span class="s2">&quot;lane_change_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">cfg</span></div>
 
@@ -538,7 +539,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
+            <span class="n">cfg</span><span class="p">,</span>
             <span class="p">{</span>
                 <span class="s2">&quot;lanes_count&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
                 <span class="s2">&quot;vehicles_count&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
@@ -551,7 +553,7 @@
                 <span class="s2">&quot;parallel_merge_length&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
                 <span class="c1"># Section after the merge segment (must be &gt;= 90)</span>
                 <span class="s2">&quot;after_merge_length&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">cfg</span>
 

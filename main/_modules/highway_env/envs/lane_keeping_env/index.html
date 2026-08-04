@@ -320,6 +320,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">SineLane</span><span class="p">,</span> <span class="n">StraightLane</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">Road</span><span class="p">,</span> <span class="n">RoadNetwork</span>
@@ -344,7 +345,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span>
             <span class="p">{</span>
                 <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;AttributesObservation&quot;</span><span class="p">,</span>
@@ -365,7 +367,7 @@
                 <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">250</span><span class="p">,</span>
                 <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
                 <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
 
