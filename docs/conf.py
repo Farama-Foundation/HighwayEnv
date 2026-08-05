@@ -81,6 +81,9 @@ autosectionlabel_prefix_document = True
 myst_enable_extensions = [
     "dollarmath",
 ]
+suppress_warnings = [
+    "myst.directive_unknown",
+]
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -95,10 +98,6 @@ html_favicon = "_static/img/highway-favicon.png"
 html_theme_options = {
     "light_logo": "img/highway.svg",
     "dark_logo": "img/highway-white.svg",
-    "image": "img/highway-github.png",
-    "gtag": "G-6H9C8TWXZ8",
-    "description": "A collection of environments for autonomous driving and tactical decision-making tasks",
-    "versioning": True,
     "source_repository": "https://github.com/Farama-Foundation/HighwayEnv/",
     "source_branch": "main",
     "source_directory": "docs/",
