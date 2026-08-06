@@ -30,6 +30,14 @@ on a lane. By default, the search is limited to the current lane segment; when
 and previous segments are included. See {ref}`road-neighbour-vehicles` for the full description,
 environment version mapping, and a visual comparison.
 
+
+## PartitionedRoadNetwork
+A {py:class}`~highway_env.road.partitioned_road.PartitionedRoadNetwork` is a type of RoadNetwork which supports the partitioning of lanes into grids for significantly faster proximal checks.
+
+Partitioning is done as lanes are added to update a mapping from grid cells to the indices of lanes who pass through them.
+
+The class assumes that lanes will not be removed or be changed in any way after being added.
+
 ## API
 
 ```{eval-rst}

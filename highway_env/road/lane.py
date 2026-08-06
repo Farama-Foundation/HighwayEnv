@@ -464,6 +464,8 @@ class PolyLane(PolyLaneFixedWidth):
             speed_limit=speed_limit,
             priority=priority,
         )
+        self.right_boundary_points = right_boundary_points
+        self.left_boundary_points = left_boundary_points
         self.right_boundary = LinearSpline2D(right_boundary_points)
         self.left_boundary = LinearSpline2D(left_boundary_points)
         self._init_width()

@@ -344,9 +344,102 @@ You can configure the number of cells in the angular grid with the `cells` param
     "type": "LidarObservation",
     "cells": 128,
     "maximum_range": 64,
-    "normalise": True,
+    "normalize": True,
 }
 ```
+
+## LaneLidar
+{py:class}`~highway_env.envs.common.observation.LaneLidarObservation`, a subclass of `LidarObservation`,  allows the agent to observe the distances to surrounding PolyLane borders as if they are walls. Instead using angular sector areas to detect nearby objects, singular rays are cast at regular intervals to detect the surrounding lane geometry.
+
+Returns an array with one row per ray and two columns:
+  - distance to the lane border along this ray
+  - component of the relative velocity of the static lane border (negative of the ego-vehicle's velocity) along the direction of the ray
+
+
+Here is an example of what the rays may look like in the random-road env:
+
+```{eval-rst}
+.. jupyter-execute::
+    :stderr:
+
+    env = gym.make(
+        'random-road-v0',
+        render_mode='rgb_array',
+        config={
+            "observation": {
+                "type": "LaneLidarObservation",
+            },
+            "generation_params": {"target_num_endpoints": 10,}
+        })
+    env.reset()
+
+    plt.imshow(env.render())
+    plt.show()
+```
+
+### Example configuration (LaneLidar)
+
+```python
+"observation": {
+    "type": "LaneLidarObservation",
+    "cells": 128,
+    "maximum_range": 64,
+    "normalize": True,
+}
+```
+
+```{note}
+- LaneLidarObservation requires that the env uses a `PartitionedRoadNetwork` instead of a regular `RoadNetwork`.
+- Lanes that are not PolyLanes are currently ignored by the rays.
+```
+
+
+## Navigation
+{py:class}`~highway_env.envs.common.observation.NavigationObservation` directs the agent to the goal by providing the distance and relative heading to the next waypoint along the shortest path to the goal. If the agent strays off the calculated path, a new path is computed.
+
+Returns a 3-element array:
+- distance to the next waypoint
+- cosine of the relative heading to the waypoint
+- sine of the relative heading to the waypoint
+
+If you enable `normalize`, then the distance to the next waypoint is divided by `distance_scale`.
+
+### Example configuration (Navigation)
+```python
+"observation": {
+    "type": "NavigationObservation",
+    "normalize": True,
+    "distance_scale": 200
+}
+```
+```{note}
+Requires that the ego-vehicle has a goal attribute
+```
+
+## RelativeGoal
+{py:class}`~highway_env.envs.common.observation.RelativeGoalObservation` observes the position and heading of a goal parking spot relative to the ego-vehicle.
+
+Returns a 4-element array:
+- Longitudal body offset to the goal
+- Lateral body offset to the goal
+- Cosine of the heading offset between the parking spot and the ego-vehicle
+- Sine of the heading offset between the parking spot and the ego-vehicle
+
+If you enable `normalize`, the body offsets are divided by `distance_scale`.
+
+### Example configuration (RelativeGoal)
+```python
+"observation": {
+    "type": "RelativeGoalObservation",
+    "normalize": True,
+    "distance_scale": 200
+}
+```
+
+```{note}
+Requires that the ego-vehicle has a goal attribute
+```
+
 
 ## API
 

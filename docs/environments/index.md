@@ -15,6 +15,7 @@ lane_keeping
 two_way
 exit
 u_turn
+random_road
 ```
 
 HighwayEnv includes the following ten environments for autonomous driving decision-making. Each environment features configurable observations, actions, dynamics, and rewards — see {ref}`Configuring an environment <configuration>` for details.
@@ -31,5 +32,6 @@ HighwayEnv includes the following ten environments for autonomous driving decisi
 | {ref}`Two Way <environments-two-way>` | Overtake on a two-way road with oncoming traffic (risk management). | Discrete |
 | {ref}`Exit <environments-exit>` | Navigate across lanes to reach a highway exit ramp. | Discrete |
 | {ref}`U-Turn <environments-u-turn>` | Overtake blocking vehicles through a double-lane U-turn. | Discrete |
+| {ref}`Random Road <environments-random-road>` | Navigate a procedurally generated road network to a goal parking spot. | Continuous |
 
 All environments follow the [Gymnasium](https://gymnasium.farama.org/) API and are highly configurable via arguments specified in each environment's documentation.

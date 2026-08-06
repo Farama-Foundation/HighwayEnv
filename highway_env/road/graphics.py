@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Tuple, Union
 import numpy as np
 import pygame
 
-from highway_env.road.lane import AbstractLane, LineType
+from highway_env.road.lane import AbstractLane, LineType, PolyLane
 from highway_env.road.road import Road
 from highway_env.utils import Vector
 from highway_env.vehicle.graphics import VehicleGraphics
@@ -131,6 +131,23 @@ class LaneGraphics:
         :param lane: the lane to be displayed
         :param surface: the pygame surface
         """
+
+        # Optimized path for PolyLane with continuous borders
+        if (
+            isinstance(lane, PolyLane)
+            and lane.line_types[0] == LineType.CONTINUOUS
+            and lane.line_types[1] == LineType.CONTINUOUS
+        ):
+            thickness = max(surface.pix(cls.STRIPE_WIDTH), 1)
+
+            left_pixels = [surface.vec2pix(pt) for pt in lane.left_boundary_points]
+            right_pixels = [surface.vec2pix(pt) for pt in lane.right_boundary_points]
+
+            pygame.draw.lines(surface, surface.WHITE, False, left_pixels, thickness)
+            pygame.draw.lines(surface, surface.WHITE, False, right_pixels, thickness)
+
+            return
+
         stripes_count = int(
             2
             * (surface.get_height() + surface.get_width())
@@ -303,8 +320,9 @@ class RoadGraphics:
         surface.fill(surface.GREY)
         for _from in road.network.graph.keys():
             for _to in road.network.graph[_from].keys():
-                for l in road.network.graph[_from][_to]:
-                    LaneGraphics.display(l, surface)
+                for i, l in enumerate(road.network.graph[_from][_to]):
+                    if (_from, _to, i) not in road.network.reversed_lane_indices:
+                        LaneGraphics.display(l, surface)
 
     @staticmethod
     def display_traffic(
