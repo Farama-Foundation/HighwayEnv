@@ -21,7 +21,8 @@ class TwoWayEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {"type": "TimeToCollision", "horizon": 5},
                 "action": {
@@ -31,7 +32,7 @@ class TwoWayEnv(AbstractEnv):
                 "left_lane_constraint": 1,
                 "left_lane_reward": 0.2,
                 "high_speed_reward": 0.8,
-            }
+            },
         )
         return config
 

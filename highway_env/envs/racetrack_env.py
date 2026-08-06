@@ -28,7 +28,8 @@ class RacetrackEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {
                     "type": "OccupancyGrid",
@@ -58,7 +59,7 @@ class RacetrackEnv(AbstractEnv):
                 "centering_position": [0.5, 0.5],
                 "speed_limit": 10.0,
                 "terminate_off_road": True,
-            }
+            },
         )
         return config
 
@@ -893,7 +894,8 @@ class RacetrackEnvOval(RacetrackEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {
                     "type": "OccupancyGrid",
@@ -927,7 +929,7 @@ class RacetrackEnvOval(RacetrackEnv):
                 "no_lanes": 3,  # 0: random number from [2,7]
                 "block_lane": False,  # block middle lane
                 "force_decision": False,  # block 1st and 3rd lane
-            }
+            },
         )
         return config
 

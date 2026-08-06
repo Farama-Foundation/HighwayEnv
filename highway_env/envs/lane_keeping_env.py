@@ -4,6 +4,7 @@ import copy
 
 import numpy as np
 
+from highway_env import utils
 from highway_env.envs.common.abstract import AbstractEnv
 from highway_env.road.lane import LineType, SineLane, StraightLane
 from highway_env.road.road import Road, RoadNetwork
@@ -24,7 +25,8 @@ class LaneKeepingEnv(AbstractEnv):
     @classmethod
     def default_config(cls) -> dict:
         config = super().default_config()
-        config.update(
+        utils.update_config(
+            config,
             {
                 "observation": {
                     "type": "AttributesObservation",
@@ -45,7 +47,7 @@ class LaneKeepingEnv(AbstractEnv):
                 "screen_height": 250,
                 "scaling": 7,
                 "centering_position": [0.4, 0.5],
-            }
+            },
         )
         return config
 
