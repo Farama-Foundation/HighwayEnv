@@ -10,13 +10,13 @@
     <meta property="og:url" content="https://highway-env.farama.org/_modules/highway_env/road/regulation.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
         <link rel="canonical" href="https://highway-env.farama.org/_modules/highway_env/road/regulation.html" />
 
-    <link rel="shortcut icon" href="../../../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Celshast 0.0.1 -->
         <title>highway_env.road.regulation - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=5b1a364e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/celshast.css?v=9fbfb63d" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css?v=1c205c3a" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=82c8b628" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/celshast-extensions.css?v=42bfddca" />
     
     
 
@@ -424,7 +424,7 @@
         <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">predict_trajectory_constant_speed</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">position_1</span><span class="p">,</span> <span class="n">heading_1</span><span class="p">,</span> <span class="n">position_2</span><span class="p">,</span> <span class="n">heading_2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-            <span class="n">positions_1</span><span class="p">,</span> <span class="n">headings_1</span><span class="p">,</span> <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span>
+            <span class="n">positions_1</span><span class="p">,</span> <span class="n">headings_1</span><span class="p">,</span> <span class="n">positions_2</span><span class="p">,</span> <span class="n">headings_2</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">):</span>
             <span class="c1"># Fast spherical pre-check</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">position_2</span> <span class="o">-</span> <span class="n">position_1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">v1</span><span class="o">.</span><span class="n">LENGTH</span><span class="p">:</span>
@@ -557,7 +557,7 @@
     <script src="../../../../_static/documentation_options.js?v=a5603611"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../../../_static/scripts/furo.js?v=7660844c"></script>
+    <script src="../../../../_static/scripts/celshast.js?v=a788a8c6"></script>
     <script src="../../../../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
