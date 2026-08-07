@@ -1,0 +1,11 @@
+.jupyter_container {
+    background-color: var(--color-background-primary);
+}
+
+.jupyter_container .cell_output .output {
+    background-color: var(--color-background-secondary);
+}
+
+.jupyter_container .stderr {
+    background-color: var(--color-problematic);
+}
