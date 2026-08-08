@@ -35,3 +35,19 @@ __all__ = [
     "TwoWayEnv",
     "UTurnEnv",
 ]
+
+# PettingZoo environments — requires highway-env[multi-agent]
+try:
+    from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv  # noqa: F401
+    from highway_env.envs.intersection_pz_env import (  # noqa: F401
+        ConnectedLaneIntersectionParallelEnv,
+        IntersectionParallelEnv,
+    )
+
+    __all__ += [
+        "HighwayParallelEnv",
+        "IntersectionParallelEnv",
+        "ConnectedLaneIntersectionParallelEnv",
+    ]
+except ImportError:
+    pass  # pettingzoo not installed
