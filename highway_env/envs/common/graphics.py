@@ -264,12 +264,12 @@ class ObservationGraphics:
 
     @classmethod
     def display_grid(cls, lidar_observation, surface):
+        # One angle per cell, counted out rather than reached by accumulating a
+        # float step: `np.arange` with a float step returned 62 angles for 61
+        # cells, and the loop below then indexed `r` past its end.
+        cells = lidar_observation.grid.shape[0]
         psi = np.repeat(
-            np.arange(
-                -lidar_observation.angle / 2,
-                2 * np.pi - lidar_observation.angle / 2,
-                2 * np.pi / lidar_observation.grid.shape[0],
-            ),
+            -lidar_observation.angle / 2 + lidar_observation.angle * np.arange(cells),
             2,
         )
         psi = np.hstack((psi[1:], [psi[0]]))
