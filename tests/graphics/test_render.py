@@ -53,9 +53,9 @@ def test_obs_grayscale(env_spec, stack_size=4):
 def test_render_lidar_observation(cells):
     """Rendering a lidar observation draws one sector per cell.
 
-    The angles were reached by accumulating a float step, which for some cell
-    counts produced one angle too many — 62 for 61 cells — and the drawing loop
-    then indexed the ranges array past its end with an IndexError.
+    Before v1.12.2, the angles were calculated by accumulating a float step,
+    which for some cell counts would produced one angle too many and the drawing
+    logic then result in an IndexError.
     """
     env = gym.make(
         "highway-v0",
