@@ -604,12 +604,9 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">display_grid</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lidar_observation</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="n">lidar_observation</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                <span class="o">-</span><span class="n">lidar_observation</span><span class="o">.</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">lidar_observation</span><span class="o">.</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">lidar_observation</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="p">),</span>
+            <span class="o">-</span><span class="n">lidar_observation</span><span class="o">.</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">lidar_observation</span><span class="o">.</span><span class="n">angle</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cells</span><span class="p">),</span>
             <span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">psi</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="p">[</span><span class="n">psi</span><span class="p">[</span><span class="mi">0</span><span class="p">]]))</span>
