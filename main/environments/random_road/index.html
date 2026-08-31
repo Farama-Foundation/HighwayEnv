@@ -7,12 +7,12 @@
     <meta property="og:title" content="HighwayEnv Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/environments/roundabout.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Parking" href="../parking/" /><link rel="prev" title="Merge" href="../merge/" />
-        <link rel="canonical" href="https://highway-env.farama.org/environments/roundabout.html" />
+    <meta property="og:url" content="https://highway-env.farama.org/environments/random_road.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Agent Examples" href="../../content/algorithms/" /><link rel="prev" title="U-Turn" href="../u_turn/" />
+        <link rel="canonical" href="https://highway-env.farama.org/environments/random_road.html" />
 
     <link rel="shortcut icon" href="../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Celshast 0.0.1 -->
-        <title>Roundabout - HighwayEnv Documentation</title>
+        <title>Random Road - HighwayEnv Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast.css?v=9fbfb63d" />
     <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css?v=1c205c3a" />
@@ -222,7 +222,7 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../">Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../highway/">Highway</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../merge/">Merge</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Roundabout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../roundabout/">Roundabout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../parking/">Parking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../intersection/">Intersection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../racetrack/">Racetrack</a></li>
@@ -230,7 +230,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../u_turn/">U-Turn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../random_road/">Random Road</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -294,7 +294,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/main/docs/environments/roundabout.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/main/docs/environments/random_road.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -325,16 +325,64 @@
           </div>
           <article role="main">
             
-            <section class="tex2jax_ignore mathjax_ignore" id="roundabout">
-<span id="environments-roundabout"></span><h1>Roundabout<a class="headerlink" href="#roundabout" title="Link to this heading">¶</a></h1>
-<p>In this task, the ego-vehicle is approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.</p>
-<figure class="align-center" id="fig-roundabout-env">
-<a class="reference internal image-reference" href="../../_images/roundabout-env.gif"><img alt="../../_images/roundabout-env.gif" src="../../_images/roundabout-env.gif" style="width: 80%;" />
+            <section class="tex2jax_ignore mathjax_ignore" id="random-road">
+<span id="environments-random-road"></span><h1>Random Road<a class="headerlink" href="#random-road" title="Link to this heading">¶</a></h1>
+<p>Agent has low-level controls of a car and needs to navigate a procedurally generated road network to a goal (parking spot).</p>
+<p>The rules are minimal:</p>
+<ol class="arabic simple">
+<li><p>Get to your destination in as little time as possible</p></li>
+<li><p>Don’t crash</p></li>
+</ol>
+<figure class="align-center" id="fig-random-road-env">
+<a class="reference internal image-reference" href="../../_images/random-road.gif"><img alt="../../_images/random-road.gif" src="../../_images/random-road.gif" style="width: 80%;" />
 </a>
 </figure>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;roundabout-v0&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;random-road-v0&quot;</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Custom generation parameters are passed via <code class="docutils literal notranslate"><span class="pre">config</span></code>. A deterministic seed can also be specified with env.reset:
+<br></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">generation_params</span> <span class="o">=</span>  <span class="p">{</span>
+    <span class="s2">&quot;target_num_endpoints&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="s2">&quot;forward_speed&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;age_of_maturity&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;lane_width&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="s2">&quot;perlin_variation_params&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;jitteriness&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;upper&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+        <span class="s2">&quot;max_turn_speed&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;upper&quot;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">},</span>
+        <span class="s2">&quot;replication_chance&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;upper&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+        <span class="s2">&quot;spontaneous_death_chance&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;upper&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;disable_prints&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;random-road-v0&quot;</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;generation_params&quot;</span><span class="p">:</span> <span class="n">generation_params</span><span class="p">}</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is recommended to pass the generation parameters via <code class="docutils literal notranslate"><span class="pre">options['config']</span></code> on calling reset and not at initialization. This is because, during initialization, <code class="docutils literal notranslate"><span class="pre">env.reset</span></code> is internally called and generates a road network (before being undone by the first external <code class="docutils literal notranslate"><span class="pre">env.reset</span></code> call). If you decide to provide your own generation parameters under config in <code class="docutils literal notranslate"><span class="pre">gym.make</span></code>, the vestigal generation call will take an unnecessarily longer amount of time compared to the automatically provided default parameters, which has a <code class="docutils literal notranslate"><span class="pre">target_num_endpoints</span></code> of only 5 and should finish instantly without significant overhead.</p>
+</div>
+<p>Additionally, pre-existing lanes may be saved for reuse to prevent the unnecessary overhead of generating the same road network from scratch every round.
+To do this, use <code class="docutils literal notranslate"><span class="pre">config['preloaded_lanes']</span></code> This will overrule your choice of seed and generation parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.generation.generator</span><span class="w"> </span><span class="kn">import</span> <span class="p">{</span>
+    <span class="n">save_lanes_to_disk</span><span class="p">,</span>
+    <span class="n">load_lanes_from_disk</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;random-road-v0&quot;</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">save_lanes_to_disk</span><span class="p">(</span><span class="s2">&quot;lanes.npz&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">lanes</span><span class="p">)</span>
+
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+
+<span class="n">preloaded_lanes</span> <span class="o">=</span> <span class="n">load_lanes_from_disk</span><span class="p">(</span><span class="s2">&quot;lanes.npz&quot;</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;preloaded_lanes&quot;</span><span class="p">:</span> <span class="n">preloaded_lanes</span><span class="p">}</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">})</span>
 </pre></div>
 </div>
 </section>
@@ -348,81 +396,143 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">roundabout-v0</span></code></p></td>
-<td><p>Initial version. Same-segment neighbour search only. Preserved for reproducibility.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">roundabout-v1</span></code></p></td>
-<td><p>Connected-lane neighbour search enabled by default. Recommended for new experiments.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">roundabout-generic-v0</span></code></p></td>
-<td><p>Initial generic roundabout map. Same-segment neighbour search only.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">roundabout-generic-v1</span></code></p></td>
-<td><p>Generic roundabout map with connected-lane neighbour search enabled.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">random-road-v0</span></code></p></td>
+<td><p>Initial version. Single-agent only.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>See <a class="reference internal" href="../../dynamics/road/neighbour_vehicles/#road-neighbour-vehicles"><span class="std std-ref">Neighbour vehicles</span></a> for details.</p>
 </section>
 <section id="default-configuration">
 <h2>Default configuration<a class="headerlink" href="#default-configuration" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;features_range&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
-            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
-            <span class="s2">&quot;vx&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
-            <span class="s2">&quot;vy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DictObservation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;observation_configs&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;lane_lidar&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LaneLidarObservation&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;navigation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;NavigationObservation&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;relative_goal&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;RelativeGoalObservation&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;lidar&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LidarObservation&quot;</span><span class="p">},</span>
         <span class="p">},</span>
     <span class="p">},</span>
-    <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;target_speeds&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;incoming_vehicle_destination&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-    <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s2">&quot;lane_change_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span>
-    <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>  <span class="c1"># [s]</span>
-    <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
-    <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
-    <span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">:</span> <span class="s2">&quot;highway_env.vehicle.behavior.IDMVehicle&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px]</span>
-    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px]</span>
-    <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
-    <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mf">5.5</span><span class="p">,</span>
-    <span class="s2">&quot;show_trajectories&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s2">&quot;render_agent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;offscreen_rendering&quot;</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ContinuousAction&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">1200</span><span class="p">,</span>
+    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">700</span><span class="p">,</span>
+    <span class="s2">&quot;max_timesteps&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="s2">&quot;curb_collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;car_collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span>
+    <span class="s2">&quot;parking_reward&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;parking_score_threshold&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+    <span class="s2">&quot;parking_score_weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="s2">&quot;route_following_reward_scalar&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s2">&quot;timestep_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="s2">&quot;parking_seed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;generation_params&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;preloaded_lanes&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;lane_partition_gridsize&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>More specifically, it is defined in:</p>
 <dl class="py method">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RoundaboutEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/roundabout_env/#RoundaboutEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Default environment configuration.</p>
-<p>Can be overloaded in environment implementations, or by calling configure().
-:return: a configuration dict</p>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RandomRoadEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/random_road_env/#RandomRoadEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><ul class="simple">
+<li><p><strong>max_timesteps</strong>: number of policy timesteps before truncation</p></li>
+<li><p><strong>curb_collision_reward</strong>: one-time penalty after hitting lane border</p></li>
+<li><p><strong>car_collision_reward</strong>: one-time penalty after hitting another vehicle or object</p></li>
+<li><p><strong>parking_reward</strong>: one-time reward after parking in the goal parking spot</p></li>
+<li><p><strong>parking_score_threshold</strong>: determines the threshold of proximity to be parked</p></li>
+<li><p><strong>parking_score_weights</strong>: specifies how much position, velocity, and alignment matter</p></li>
+<li><p><strong>route_following_reward_scalar</strong>: determines the reward/penalty gained by traveling
+towards/away from the next waypoint</p></li>
+<li><p><strong>timestep_reward</strong>: step/living penalty</p></li>
+<li><p><strong>parking_seed</strong>: pseudorandom seed for determining the
+placement of parking spots within a generated road network</p></li>
+<li><p><strong>generation_params</strong>: custom parameters to be passed for generation</p></li>
+<li><p><strong>preloaded_lanes</strong>: prevents generation of a new road network by providing
+an already existing one</p></li>
+<li><p><strong>lane_partition_gridsize</strong>: the size of the grids when partitioning lanes
+for proximal checks. A lower value can reduce the number of unnecessary checks
+in dense networks.</p></li>
+</ul>
 </dd></dl>
 
+</section>
+<section id="rewards">
+<h2>Rewards<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Curb collision penalty</p></li>
+<li><p>Vehicle-Vehicle collision penalty</p></li>
+<li><p>Parking reward</p></li>
+<li><p>Timestep punishment (incentivizes speed)</p></li>
+<li><p>Route-following reward (scalar projection of velocity onto navigation arrow)</p></li>
+</ul>
+</section>
+<section id="termination-truncation">
+<h2>Termination &amp; Truncation<a class="headerlink" href="#termination-truncation" title="Link to this heading">¶</a></h2>
+<p>Termination occurs when an agent either crashes or parks successfully.
+Truncation will occur after a fixed number of timesteps.</p>
 </section>
 <section id="api">
 <h2>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="highway_env.envs.roundabout_env.RoundaboutEnv">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.roundabout_env.</span></span><span class="sig-name descname"><span class="pre">RoundaboutEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/envs/roundabout_env/#RoundaboutEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.roundabout_env.RoundaboutEnv" title="Link to this definition">¶</a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="highway_env.envs.roundabout_env.RoundaboutEnv.default_config">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/roundabout_env/#RoundaboutEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.roundabout_env.RoundaboutEnv.default_config" title="Link to this definition">¶</a></dt>
-<dd><p>Default environment configuration.</p>
-<p>Can be overloaded in environment implementations, or by calling configure().
-:return: a configuration dict</p>
+<dt class="sig sig-object py" id="highway_env.envs.random_road_env.RandomRoadEnv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.random_road_env.</span></span><span class="sig-name descname"><span class="pre">RandomRoadEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/envs/random_road_env/#RandomRoadEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.random_road_env.RandomRoadEnv" title="Link to this definition">¶</a></dt>
+<dd><p>A navigation, negotiation, and parking environment
+set on a procedurally generated road network.</p>
+<p>The goal of an agent is to get to a parking spot
+as soon as possible without crashing into a curb or
+other vehicle.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.random_road_env.RandomRoadEnv.default_config">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/random_road_env/#RandomRoadEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.random_road_env.RandomRoadEnv.default_config" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p><strong>max_timesteps</strong>: number of policy timesteps before truncation</p></li>
+<li><p><strong>curb_collision_reward</strong>: one-time penalty after hitting lane border</p></li>
+<li><p><strong>car_collision_reward</strong>: one-time penalty after hitting another vehicle or object</p></li>
+<li><p><strong>parking_reward</strong>: one-time reward after parking in the goal parking spot</p></li>
+<li><p><strong>parking_score_threshold</strong>: determines the threshold of proximity to be parked</p></li>
+<li><p><strong>parking_score_weights</strong>: specifies how much position, velocity, and alignment matter</p></li>
+<li><p><strong>route_following_reward_scalar</strong>: determines the reward/penalty gained by traveling
+towards/away from the next waypoint</p></li>
+<li><p><strong>timestep_reward</strong>: step/living penalty</p></li>
+<li><p><strong>parking_seed</strong>: pseudorandom seed for determining the
+placement of parking spots within a generated road network</p></li>
+<li><p><strong>generation_params</strong>: custom parameters to be passed for generation</p></li>
+<li><p><strong>preloaded_lanes</strong>: prevents generation of a new road network by providing
+an already existing one</p></li>
+<li><p><strong>lane_partition_gridsize</strong>: the size of the grids when partitioning lanes
+for proximal checks. A lower value can reduce the number of unnecessary checks
+in dense networks.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.random_road_env.RandomRoadEnv.define_spaces">
+<span class="sig-name descname"><span class="pre">define_spaces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/random_road_env/#RandomRoadEnv.define_spaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.random_road_env.RandomRoadEnv.define_spaces" title="Link to this definition">¶</a></dt>
+<dd><p>Set the types and spaces of observation and action from config.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.random_road_env.RandomRoadEnv.create_parking_spots">
+<span class="sig-name descname"><span class="pre">create_parking_spots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_spots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spot_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spot_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Generator</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/random_road_env/#RandomRoadEnv.create_parking_spots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.random_road_env.RandomRoadEnv.create_parking_spots" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_spots</strong> – number of parking spots to generate</p></li>
+<li><p><strong>spot_width</strong> – width of parking spot
+[must be less than the lane_width]</p></li>
+<li><p><strong>spot_height</strong> – length of parking spot
+[must be less than forward_speed]</p></li>
+<li><p><strong>rng</strong> – random number generator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>whether or not there was enough space to generate
+the specified number of spots</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -435,18 +545,18 @@
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../parking/">
+            <a class="next-page" href="../../content/algorithms/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Parking</div>
+                <div class="title">Agent Examples</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
             </a>
-            <a class="prev-page" href="../merge/">
+            <a class="prev-page" href="../u_turn/">
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
@@ -455,7 +565,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Merge</div>
+                <div class="title">U-Turn</div>
                 
               </div>
             </a>
@@ -499,13 +609,17 @@
           <div class="toc-tree-container">
             <div class="toc-tree">
               <ul>
-<li><a class="reference internal" href="#">Roundabout</a><ul>
+<li><a class="reference internal" href="#">Random Road</a><ul>
 <li><a class="reference internal" href="#usage">Usage</a></li>
 <li><a class="reference internal" href="#versions">Versions</a></li>
 <li><a class="reference internal" href="#default-configuration">Default configuration</a></li>
+<li><a class="reference internal" href="#rewards">Rewards</a></li>
+<li><a class="reference internal" href="#termination-truncation">Termination &amp; Truncation</a></li>
 <li><a class="reference internal" href="#api">API</a><ul>
-<li><a class="reference internal" href="#highway_env.envs.roundabout_env.RoundaboutEnv"><code class="docutils literal notranslate"><span class="pre">RoundaboutEnv</span></code></a><ul>
-<li><a class="reference internal" href="#highway_env.envs.roundabout_env.RoundaboutEnv.default_config"><code class="docutils literal notranslate"><span class="pre">RoundaboutEnv.default_config()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.random_road_env.RandomRoadEnv"><code class="docutils literal notranslate"><span class="pre">RandomRoadEnv</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.envs.random_road_env.RandomRoadEnv.default_config"><code class="docutils literal notranslate"><span class="pre">RandomRoadEnv.default_config()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.random_road_env.RandomRoadEnv.define_spaces"><code class="docutils literal notranslate"><span class="pre">RandomRoadEnv.define_spaces()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.random_road_env.RandomRoadEnv.create_parking_spots"><code class="docutils literal notranslate"><span class="pre">RandomRoadEnv.create_parking_spots()</span></code></a></li>
 </ul>
 </li>
 </ul>

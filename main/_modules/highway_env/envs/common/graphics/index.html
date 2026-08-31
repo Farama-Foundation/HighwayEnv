@@ -229,6 +229,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +244,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -316,11 +318,13 @@
             <h1>Source code for highway_env.envs.common.graphics</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pygame</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.action</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ActionType</span><span class="p">,</span>
@@ -332,8 +336,13 @@
 
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">Action</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.abstract</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">Action</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.observation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="n">LaneLidarObservation</span><span class="p">,</span>
+        <span class="n">LidarObservation</span><span class="p">,</span>
+        <span class="n">NavigationObservation</span><span class="p">,</span>
+        <span class="n">ObservationType</span><span class="p">,</span>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="EnvViewer">
@@ -419,12 +428,19 @@
 <span class="sd">        :param actions: list of action, following the env&#39;s action space specification</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="p">,</span> <span class="n">DiscreteMetaAction</span><span class="p">):</span>
-            <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">actions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">mapped_actions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">actions</span><span class="p">)</span>
+            <span class="p">]</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="p">,</span> <span class="n">ContinuousAction</span><span class="p">):</span>
-            <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">get_action</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">mapped_actions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">get_action</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">],</span> <span class="n">actions</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mapped_actions</span> <span class="o">=</span> <span class="n">actions</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapped_actions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">vehicle</span><span class="o">.</span><span class="n">predict_trajectory</span><span class="p">(</span>
-                <span class="n">actions</span><span class="p">,</span>
+                <span class="n">mapped_actions</span><span class="p">,</span>
                 <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">],</span>
                 <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;policy_frequency&quot;</span><span class="p">],</span>
                 <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;simulation_frequency&quot;</span><span class="p">],</span>
@@ -450,6 +466,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
             <span class="k">return</span>
 
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sim_surface</span><span class="o">.</span><span class="n">move_display_window_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window_position</span><span class="p">())</span>
         <span class="n">RoadGraphics</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_surface</span><span class="p">)</span>
 
@@ -465,6 +482,7 @@
         <span class="k">if</span> <span class="n">EnvViewer</span><span class="o">.</span><span class="n">agent_display</span><span class="p">:</span>
             <span class="n">EnvViewer</span><span class="o">.</span><span class="n">agent_display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_surface</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_surface</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">offscreen</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_surface</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;screen_width&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;screen_height&quot;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">agent_surface</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;screen_height&quot;</span><span class="p">])</span>
@@ -474,6 +492,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">agent_surface</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;screen_width&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
                     <span class="p">)</span>
 
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="n">RoadGraphics</span><span class="o">.</span><span class="n">display_traffic</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sim_surface</span><span class="p">,</span>
@@ -537,9 +556,7 @@
 
 <span class="k">class</span><span class="w"> </span><span class="nc">EventHandler</span><span class="p">:</span>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">action_type</span><span class="p">:</span> <span class="n">ActionType</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventType</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">action_type</span><span class="p">:</span> <span class="n">ActionType</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Map the pygame keyboard events to control decisions</span>
 
@@ -548,12 +565,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action_type</span><span class="p">,</span> <span class="n">DiscreteMetaAction</span><span class="p">):</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">handle_discrete_action_event</span><span class="p">(</span><span class="n">action_type</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">action_type</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">ContinuousAction</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">action_type</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ContinuousAction</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">handle_continuous_action_event</span><span class="p">(</span><span class="n">action_type</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">handle_discrete_action_event</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">action_type</span><span class="p">:</span> <span class="n">DiscreteMetaAction</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventType</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">action_type</span><span class="p">:</span> <span class="n">DiscreteMetaAction</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Event</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_RIGHT</span> <span class="ow">and</span> <span class="n">action_type</span><span class="o">.</span><span class="n">longitudinal</span><span class="p">:</span>
@@ -567,7 +584,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">handle_continuous_action_event</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">action_type</span><span class="p">:</span> <span class="n">ContinuousAction</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventType</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">action_type</span><span class="p">:</span> <span class="n">ContinuousAction</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Event</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">action</span> <span class="o">=</span> <span class="n">action_type</span><span class="o">.</span><span class="n">last_action</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">steering_index</span> <span class="o">=</span> <span class="n">action_type</span><span class="o">.</span><span class="n">space</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
@@ -593,17 +610,31 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ObservationGraphics</span><span class="p">:</span>
-    <span class="n">COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">LIDAR_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># applies to display_grid and display_rays</span>
+    <span class="n">NAV_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># display_navigation_arrow</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">sim_surface</span><span class="p">):</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.observation</span><span class="w"> </span><span class="kn">import</span> <span class="n">LidarObservation</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obs</span><span class="p">:</span> <span class="n">ObservationType</span><span class="p">,</span> <span class="n">sim_surface</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.observation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">DictObservation</span><span class="p">,</span>
+            <span class="n">LaneLidarObservation</span><span class="p">,</span>
+            <span class="n">LidarObservation</span><span class="p">,</span>
+            <span class="n">NavigationObservation</span><span class="p">,</span>
+        <span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">LidarObservation</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">NavigationObservation</span><span class="p">):</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">display_navigation_arrow</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">sim_surface</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">LaneLidarObservation</span><span class="p">):</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">display_rays</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">sim_surface</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">LidarObservation</span><span class="p">):</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">display_grid</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">sim_surface</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">DictObservation</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="n">obs</span><span class="o">.</span><span class="n">observation_types</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">obs_type</span><span class="p">,</span> <span class="n">sim_surface</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">display_grid</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lidar_observation</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_grid</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lidar_observation</span><span class="p">:</span> <span class="n">LidarObservation</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+        <span class="n">obs_origin</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">lidar_observation</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
         <span class="n">cells</span> <span class="o">=</span> <span class="n">lidar_observation</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span>
             <span class="o">-</span><span class="n">lidar_observation</span><span class="o">.</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">lidar_observation</span><span class="o">.</span><span class="n">angle</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cells</span><span class="p">),</span>
@@ -616,13 +647,47 @@
         <span class="n">points</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span>
                 <span class="n">surface</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span>
-                    <span class="n">lidar_observation</span><span class="o">.</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
-                    <span class="n">lidar_observation</span><span class="o">.</span><span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                    <span class="n">obs_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                    <span class="n">obs_origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
                 <span class="p">)</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span>
         <span class="p">]</span>
-        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">ObservationGraphics</span><span class="o">.</span><span class="n">COLOR</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">ObservationGraphics</span><span class="o">.</span><span class="n">LIDAR_COLOR</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_navigation_arrow</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">nav_observation</span><span class="p">:</span> <span class="n">NavigationObservation</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws a line that shows the next waypoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">nav_observation</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">position</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+            <span class="n">surface</span><span class="p">,</span>
+            <span class="n">ObservationGraphics</span><span class="o">.</span><span class="n">NAV_COLOR</span><span class="p">,</span>
+            <span class="n">surface</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="n">surface</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span><span class="n">nav_observation</span><span class="o">.</span><span class="n">waypoint</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nav_observation</span><span class="o">.</span><span class="n">waypoint</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_rays</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lanelidar_observation</span><span class="p">:</span> <span class="n">LaneLidarObservation</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+        <span class="n">obs_origin</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">lanelidar_observation</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lanelidar_observation</span><span class="o">.</span><span class="n">cells</span><span class="p">):</span>  <span class="c1"># [0]:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">index</span> <span class="o">*</span> <span class="n">lanelidar_observation</span><span class="o">.</span><span class="n">angle</span>
+                <span class="o">+</span> <span class="n">lanelidar_observation</span><span class="o">.</span><span class="n">vehicle_heading</span>
+            <span class="p">)</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">lanelidar_observation</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">world_x</span> <span class="o">=</span> <span class="n">obs_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">dist</span>
+            <span class="n">world_y</span> <span class="o">=</span> <span class="n">obs_origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">dist</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span>
+                <span class="n">obs_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">obs_origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">pos2pix</span><span class="p">(</span><span class="n">world_x</span><span class="p">,</span> <span class="n">world_y</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">ObservationGraphics</span><span class="o">.</span><span class="n">LIDAR_COLOR</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
           </article>
         </div>

@@ -229,6 +229,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +244,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -316,9 +318,10 @@
             <h1>Source code for highway_env.envs.common.observation</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -327,7 +330,14 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.finite_mdp</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_ttc_grid</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.envs.common.graphics</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnvViewer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractLane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.generation.engine.gen_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">line_intersection_t</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.generation.spatial_hash</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_proximal_lanes_wrt_gridpoint</span><span class="p">,</span>
+    <span class="n">point_to_gridpoint</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">PolyLane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.partitioned_road</span><span class="w"> </span><span class="kn">import</span> <span class="n">PartitionedRoadNetwork</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaneIndex</span><span class="p">,</span> <span class="n">Road</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.kinematics</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vehicle</span>
 
@@ -415,7 +425,7 @@
 
 <div class="viewcode-block" id="GrayscaleObservation.space">
 <a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.GrayscaleObservation.space">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span></div>
 
 
@@ -438,7 +448,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">TimeToCollisionObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">horizon</span> <span class="o">=</span> <span class="n">horizon</span>
 
@@ -487,9 +497,9 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span>
-        <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">vehicles_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="n">features_range</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">features_range</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">absolute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sorted&quot;</span><span class="p">,</span>
         <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -497,7 +507,7 @@
         <span class="n">see_behind</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">observe_intentions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">include_obstacles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param env: The environment to observe</span>
@@ -525,7 +535,7 @@
 
 <div class="viewcode-block" id="KinematicObservation.space">
 <a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.KinematicObservation.space">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
             <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">)),</span>
             <span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
@@ -544,6 +554,7 @@
 <span class="sd">        :param Dataframe df: observation data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">features_range</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="n">side_lanes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">all_side_lanes</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">lane_index</span>
             <span class="p">)</span>
@@ -628,12 +639,12 @@
         <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">grid_size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">grid_step</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">features_range</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">features_range</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">absolute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">align_to_vehicle_axes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">as_image</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param env: The environment to observe</span>
@@ -667,7 +678,7 @@
 
 <div class="viewcode-block" id="OccupancyGridObservation.space">
 <a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.OccupancyGridObservation.space">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_image</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -714,6 +725,7 @@
             <span class="p">)</span>
             <span class="c1"># Normalize</span>
             <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">features_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="c1"># Fill-in features</span>
             <span class="k">for</span> <span class="n">layer</span><span class="p">,</span> <span class="n">feature</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>  <span class="c1"># A vehicle feature</span>
@@ -817,7 +829,7 @@
 <span class="sd">        :param lane_perception_distance: lanes are rendered +/- this distance from vehicle location</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">lane_waypoints_spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_step</span><span class="p">)</span>
-        <span class="n">road</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span>
+        <span class="n">road</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Road</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">_from</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">_to</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -846,7 +858,7 @@
 <span class="sd">        In this implementation, we iterate the grid cells and check whether the corresponding world position</span>
 <span class="sd">        at the center of the cell is onroad/offroad. This approach is faster if the grid is small and the road network large.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">road</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span>
+        <span class="n">road</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Road</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
             <span class="k">for</span> <span class="n">_from</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="k">for</span> <span class="n">_to</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -860,13 +872,13 @@
 <div class="viewcode-block" id="KinematicsGoalObservation">
 <a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.KinematicsGoalObservation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KinematicsGoalObservation</span><span class="p">(</span><span class="n">KinematicObservation</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">scales</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">scales</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scales</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="KinematicsGoalObservation.space">
 <a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.KinematicsGoalObservation.space">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
@@ -897,7 +909,7 @@
 
 <div class="viewcode-block" id="KinematicsGoalObservation.observe">
 <a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.KinematicsGoalObservation.observe">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>  <span class="c1"># ty: ignore[invalid-method-override]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">(</span>
                 <span class="p">[</span>
@@ -928,7 +940,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">AttributesObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributes</span>
 
@@ -962,7 +974,7 @@
             <span class="n">obs_type</span><span class="o">.</span><span class="n">observer_vehicle</span> <span class="o">=</span> <span class="n">vehicle</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">agents_observation_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs_type</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">(</span>
             <span class="p">[</span><span class="n">obs_type</span><span class="o">.</span><span class="n">space</span><span class="p">()</span> <span class="k">for</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_observation_types</span><span class="p">]</span>
         <span class="p">)</span>
@@ -971,21 +983,40 @@
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">obs_type</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span> <span class="k">for</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_observation_types</span><span class="p">)</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">TupleObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
+<div class="viewcode-block" id="DictObservation">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.DictObservation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DictObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compose several named observation types into a Gymnasium Dict space.&quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">observation_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">observation_configs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">observation_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">obs_config</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">obs_config</span> <span class="ow">in</span> <span class="n">observation_configs</span>
-        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">observation_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">obs_config</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obs_config</span> <span class="ow">in</span> <span class="n">observation_configs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">([</span><span class="n">obs_type</span><span class="o">.</span><span class="n">space</span><span class="p">()</span> <span class="k">for</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span><span class="p">])</span>
+<div class="viewcode-block" id="DictObservation.space">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.DictObservation.space">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="n">name</span><span class="p">:</span> <span class="n">obs_type</span><span class="o">.</span><span class="n">space</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">obs_type</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span> <span class="k">for</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DictObservation.observe">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.DictObservation.observe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">obs_type</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="ExitObservation">
@@ -1048,7 +1079,21 @@
 
 
 
+<div class="viewcode-block" id="LidarObservation">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.LidarObservation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LidarObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Observe nearby vehicles and solid objects by simulating a LiDAR sensor array.</span>
+
+<span class="sd">    This observation type divides the space around the vehicle into angular sectors,</span>
+<span class="sd">    and returns an array with one row per angular sector and two columns:</span>
+<span class="sd">    - distance to the nearest collidable object (vehicles or obstacles)</span>
+<span class="sd">    - component of the objects&#39;s relative velocity along that direction</span>
+
+<span class="sd">    The angular sector of index 0 corresponds to an angle 0 (east), and then each</span>
+<span class="sd">    index/sector increases the angle (east, south, west, north).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">DISTANCE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">SPEED</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -1060,6 +1105,12 @@
         <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param env: The environment to observe</span>
+<span class="sd">        :param cells: Number of angular sectors</span>
+<span class="sd">        :param maximum_range: Maximum sensor range</span>
+<span class="sd">        :param normalize: Divide distance and relative speed by ``maximum_range``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cells</span> <span class="o">=</span> <span class="n">cells</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span> <span class="o">=</span> <span class="n">maximum_range</span>
@@ -1068,22 +1119,29 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+<div class="viewcode-block" id="LidarObservation.space">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.LidarObservation.space">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
         <span class="n">high</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span>
-        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">low</span><span class="o">=-</span><span class="n">high</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">low</span><span class="o">=-</span><span class="n">high</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="LidarObservation.observe">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.LidarObservation.observe">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">velocity</span>
         <span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
             <span class="n">obs</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span>
-        <span class="k">return</span> <span class="n">obs</span>
+        <span class="k">return</span> <span class="n">obs</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="nf">trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">origin_velocity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span>
 
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">obstacle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">vehicles</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">obstacle</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">solid</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -1119,7 +1177,7 @@
             <span class="c1"># Actual distance computation for these sections</span>
             <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">:</span>
                 <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_to_direction</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-                <span class="n">ray</span> <span class="o">=</span> <span class="p">[</span><span class="n">origin</span><span class="p">,</span> <span class="n">origin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span> <span class="o">*</span> <span class="n">direction</span><span class="p">]</span>
+                <span class="n">ray</span> <span class="o">=</span> <span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">origin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span> <span class="o">*</span> <span class="n">direction</span><span class="p">)</span>
                 <span class="n">distance</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">distance_to_rect</span><span class="p">(</span><span class="n">ray</span><span class="p">,</span> <span class="n">corners</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DISTANCE</span><span class="p">]:</span>
                     <span class="n">velocity</span> <span class="o">=</span> <span class="p">(</span><span class="n">obstacle</span><span class="o">.</span><span class="n">velocity</span> <span class="o">-</span> <span class="n">origin_velocity</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
@@ -1139,7 +1197,425 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">))</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">cells</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">index_to_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">index</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">index</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">index</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">index</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)])</span></div>
+
+
+
+<div class="viewcode-block" id="LaneLidarObservation">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.LaneLidarObservation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LaneLidarObservation</span><span class="p">(</span><span class="n">LidarObservation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Allows the agent to directly observe the surrounding lane borders</span>
+<span class="sd">    as if they were walls.</span>
+
+<span class="sd">    Requires a PartitionedRoadNetwork.</span>
+<span class="sd">    Ignores non-PolyLanes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
+        <span class="n">cells</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="n">maximum_range</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">maximum_range</span><span class="p">,</span> <span class="n">normalize</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_heading</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="LaneLidarObservation.trace">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.LaneLidarObservation.trace">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">origin_velocity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Casts rays to observe distances to lanes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">heading</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="n">PartitionedRoadNetwork</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PartitionedRoadNetwork required for LaneLidarObservation&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span>
+
+        <span class="n">gridsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">partition_gridsize</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">):</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">index</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_heading</span>  <span class="c1"># offset by vehicle dir</span>
+            <span class="n">vx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+            <span class="n">vy</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+
+            <span class="c1"># Tracing the path of the ray through the partition-grids</span>
+            <span class="n">gx</span><span class="p">,</span> <span class="n">gy</span> <span class="o">=</span> <span class="n">point_to_gridpoint</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">gridsize</span><span class="p">)</span>
+
+            <span class="n">lanes_checked</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="c1"># Checking for intersections</span>
+                <span class="n">proximal_lanes</span> <span class="o">=</span> <span class="n">get_proximal_lanes_wrt_gridpoint</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">grid_to_lanes</span><span class="p">,</span> <span class="p">(</span><span class="n">gx</span><span class="p">,</span> <span class="n">gy</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">lanes_to_check</span> <span class="o">=</span> <span class="n">proximal_lanes</span> <span class="o">-</span> <span class="n">lanes_checked</span>
+
+                <span class="n">closest_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_ray_intersection_lanes</span><span class="p">(</span>
+                    <span class="n">lanes_to_check</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">closest_distance</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">LidarObservation</span><span class="o">.</span><span class="n">DISTANCE</span><span class="p">]</span> <span class="o">=</span> <span class="n">closest_distance</span>
+                    <span class="k">break</span>
+                <span class="n">lanes_checked</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">lanes_to_check</span><span class="p">)</span>
+
+                <span class="c1"># Calculating next grid sector to continue our search</span>
+                <span class="n">next_gx</span> <span class="o">=</span> <span class="n">gx</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">vx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">next_gy</span> <span class="o">=</span> <span class="n">gy</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">vy</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">next_gx_t</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span>
+                    <span class="k">if</span> <span class="n">vx</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="k">else</span> <span class="p">((</span><span class="n">gridsize</span> <span class="o">*</span> <span class="n">next_gx</span><span class="p">)</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">vx</span>
+                <span class="p">)</span>
+                <span class="n">next_gy_t</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span>
+                    <span class="k">if</span> <span class="n">vy</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="k">else</span> <span class="p">((</span><span class="n">gridsize</span> <span class="o">*</span> <span class="n">next_gy</span><span class="p">)</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">vy</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">next_gx_t</span><span class="p">,</span> <span class="n">next_gy_t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">next_gx_t</span> <span class="o">&lt;=</span> <span class="n">next_gy_t</span><span class="p">:</span>
+                    <span class="n">gx</span> <span class="o">=</span> <span class="n">next_gx</span> <span class="k">if</span> <span class="n">vx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">next_gx</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">next_gy_t</span> <span class="o">&lt;=</span> <span class="n">next_gx_t</span><span class="p">:</span>
+                    <span class="n">gy</span> <span class="o">=</span> <span class="n">next_gy</span> <span class="k">if</span> <span class="n">vy</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">next_gy</span> <span class="o">-</span> <span class="mi">1</span>
+
+            <span class="c1"># All lanes are stationary, so the SPEED values only</span>
+            <span class="c1"># depend on the ego-vehicle&#39;s own velocity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">LidarObservation</span><span class="o">.</span><span class="n">SPEED</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="o">-</span><span class="n">origin_velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">vx</span> <span class="o">-</span> <span class="n">origin_velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">vy</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_ray_intersection_lanes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">lanes_to_check</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">LaneIndex</span><span class="p">],</span>
+        <span class="n">origin</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">vx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">vy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">closest_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span>
+        <span class="k">for</span> <span class="n">lane_index</span> <span class="ow">in</span> <span class="n">lanes_to_check</span><span class="p">:</span>
+            <span class="n">lane</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Road</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="p">)</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">lane_index</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">PolyLane</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">left_pairs</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">left_boundary_points</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">left_boundary_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">right_pairs</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">lane</span><span class="o">.</span><span class="n">right_boundary_points</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">right_boundary_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="n">left_pairs</span><span class="p">,</span> <span class="n">right_pairs</span><span class="p">):</span>
+                <span class="n">t_ray</span><span class="p">,</span> <span class="n">t_segment</span> <span class="o">=</span> <span class="n">line_intersection_t</span><span class="p">(</span>
+                    <span class="n">origin</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">]),</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span> <span class="o">-</span> <span class="n">p0</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">t_segment</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+                    <span class="ow">and</span> <span class="n">t_segment</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+                    <span class="ow">and</span> <span class="n">t_ray</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+                    <span class="ow">and</span> <span class="n">t_ray</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_range</span>
+                <span class="p">):</span>
+                    <span class="k">if</span> <span class="n">t_ray</span> <span class="o">&lt;</span> <span class="n">closest_distance</span><span class="p">:</span>
+                        <span class="n">closest_distance</span> <span class="o">=</span> <span class="n">t_ray</span>
+
+        <span class="k">return</span> <span class="n">closest_distance</span></div>
+
+
+
+<div class="viewcode-block" id="NavigationObservation">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.NavigationObservation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NavigationObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Directs the agent to the next waypoint along the shortest path to the goal.</span>
+
+<span class="sd">    [distance_to_waypoint, cos(delta_heading), sin(delta_heading)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">waypoint_offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="NavigationObservation.space">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.NavigationObservation.space">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,),</span> <span class="n">low</span><span class="o">=</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">distance_scale</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="p">,</span> <span class="s2">&quot;goal&quot;</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">goal</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">goal</span><span class="o">.</span><span class="n">position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal_lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_closest_lane_index</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">goal_pos</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_new_path</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cached_paths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_scale</span> <span class="o">=</span> <span class="n">distance_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span> <span class="o">=</span> <span class="n">normalize</span>
+
+<div class="viewcode-block" id="NavigationObservation.observe">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.NavigationObservation.observe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="p">,</span> <span class="s2">&quot;goal&quot;</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">goal</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_next_node</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">()</span>
+
+        <span class="n">waypt_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">waypoint</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">absolute_heading_to_waypt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">waypt_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">waypt_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># Completely different from delta_h, cos_dh, sin_dh in</span>
+        <span class="c1"># RelativeGoalObservation</span>
+        <span class="n">delta_h</span> <span class="o">=</span> <span class="n">absolute_heading_to_waypt</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">heading</span>
+        <span class="n">cos_dh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">delta_h</span><span class="p">)</span>
+        <span class="n">sin_dh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">delta_h</span><span class="p">)</span>
+
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">waypt_offset</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
+            <span class="n">distance</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_scale</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">distance</span><span class="p">,</span> <span class="n">cos_dh</span><span class="p">,</span> <span class="n">sin_dh</span><span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NavigationObservation.create_new_path">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.NavigationObservation.create_new_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_new_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the shortest path from our start lane to the goal lane</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">start_lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">lane_index</span>
+        <span class="n">start_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_node</span><span class="p">(</span><span class="n">start_lane_index</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span>
+            <span class="n">start_node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># If we pass through the other endpoint of the goal lane</span>
+        <span class="c1"># anyway, we should not need to traverse across this lane</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span>
+                <span class="n">start_node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># If, despite our initial start node preference,</span>
+        <span class="c1"># the path takes us through the other node, we just start from this other node</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">start_lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">start_lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">):</span>  <span class="c1"># This may happen if the start happens to be equal to the goal</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">start_node</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_next_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lane_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lane_index</span>
+        <span class="n">lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">lane_index</span><span class="p">)</span>
+
+        <span class="c1"># We have two potential &#39;nodes&#39; to choose from.</span>
+        <span class="c1"># We prefer the one in the direction we are already aligned in</span>
+        <span class="n">lane_heading</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">heading_at</span><span class="p">(</span>
+            <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">raw_diff</span> <span class="o">=</span> <span class="n">lane_heading</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">heading</span>
+        <span class="n">shortest_diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw_diff</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">heading_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">shortest_diff</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">heading_offset</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span>
+            <span class="n">lane_index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">reversed_lane_indices</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">_to</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_from</span>
+
+<div class="viewcode-block" id="NavigationObservation.get_waypoint">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.NavigationObservation.get_waypoint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_waypoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the waypoint that denotes which path</span>
+<span class="sd">        to take at an intersection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_pos</span>
+
+        <span class="c1"># Find the lane that goes from self.node to the next</span>
+        <span class="c1"># node in the path sequence</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">)</span>  <span class="c1"># node is guaranteed to be in path</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_lane_index</span>
+            <span class="k">if</span> <span class="n">lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">:</span>
+                <span class="n">lane_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lane_index</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">next_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">lane_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">,</span> <span class="n">next_node</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">lane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">get_lane</span><span class="p">(</span><span class="n">lane_index</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">lane_index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">reversed_lane_indices</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">lane</span><span class="o">.</span><span class="n">curve</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">NavigationObservation</span><span class="o">.</span><span class="n">waypoint_offset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">lane</span><span class="o">.</span><span class="n">curve</span><span class="p">(</span><span class="n">NavigationObservation</span><span class="o">.</span><span class="n">waypoint_offset</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NavigationObservation.update_next_node">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.NavigationObservation.update_next_node">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_next_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes which intersection to drive towards next.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_lane_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span><span class="o">.</span><span class="n">lane_index</span>
+        <span class="k">if</span> <span class="n">current_lane_index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_lane_index</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Node will be the intersection we are facing in</span>
+        <span class="c1"># Other_node will be the intersection towards our rear</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_node</span><span class="p">(</span><span class="n">current_lane_index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="n">current_lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">other_node</span> <span class="o">=</span> <span class="n">current_lane_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other_node</span> <span class="o">=</span> <span class="n">current_lane_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="ow">and</span> <span class="n">other_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">other_node</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">other_node</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">other_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">other_node</span>
+            <span class="k">return</span>
+
+        <span class="c1"># We must have deviated off-course; Finding new path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cached_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Checking already generated paths</span>
+        <span class="k">for</span> <span class="n">cached_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_paths</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">cached_path</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">cached_path</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span>
+                <span class="k">return</span>
+
+        <span class="c1"># Computing new path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_new_path</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RelativeGoalObservation">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.RelativeGoalObservation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RelativeGoalObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Observes the position and heading of a goal parking spot</span>
+<span class="sd">    relative to the agent&#39;s own position and heading.</span>
+
+<span class="sd">    [longitudinal offset, lateral offset, cos(delta_heading), sin(delta_heading)]</span>
+
+<span class="sd">    observer_vehicle must have a .goal attribute</span>
+<span class="sd">    (a RoadObject with .position and .heading)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">OBS_SIZE</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># [longitudinal offset, lateral offset, cos_dh, sin_dh]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span>
+        <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">distance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param normalize: if True, divide positional offsets by position_scale</span>
+<span class="sd">        :param position_scale: normalization divisor for dx_body and dy_body</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span> <span class="o">=</span> <span class="n">normalize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_scale</span> <span class="o">=</span> <span class="n">distance_scale</span>
+
+<div class="viewcode-block" id="RelativeGoalObservation.space">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.RelativeGoalObservation.space">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+            <span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+            <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OBS_SIZE</span><span class="p">,),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RelativeGoalObservation.observe">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.RelativeGoalObservation.observe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">ego</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_vehicle</span>
+
+        <span class="k">if</span> <span class="n">ego</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ego</span><span class="p">,</span> <span class="s2">&quot;goal&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ego</span><span class="o">.</span><span class="n">goal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OBS_SIZE</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">goal</span> <span class="o">=</span> <span class="n">ego</span><span class="o">.</span><span class="n">goal</span>
+
+        <span class="n">world_offset</span> <span class="o">=</span> <span class="n">goal</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">ego</span><span class="o">.</span><span class="n">position</span>
+
+        <span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ego</span><span class="o">.</span><span class="n">heading</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ego</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">]])</span>
+        <span class="n">body_offset</span> <span class="o">=</span> <span class="n">R</span> <span class="o">@</span> <span class="n">world_offset</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
+            <span class="n">body_offset</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_scale</span>
+
+        <span class="n">delta_h</span> <span class="o">=</span> <span class="n">goal</span><span class="o">.</span><span class="n">heading</span> <span class="o">-</span> <span class="n">ego</span><span class="o">.</span><span class="n">heading</span>
+        <span class="n">cos_dh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">delta_h</span><span class="p">)</span>
+        <span class="n">sin_dh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">delta_h</span><span class="p">)</span>
+
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">body_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">body_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cos_dh</span><span class="p">,</span> <span class="n">sin_dh</span><span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">obs</span></div>
+</div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">observation_factory</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObservationType</span><span class="p">:</span>
@@ -1157,12 +1633,19 @@
         <span class="k">return</span> <span class="n">AttributesObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MultiAgentObservation&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">MultiAgentObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TupleObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TupleObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DictObservation&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DictObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;LidarObservation&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">LidarObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ExitObservation&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ExitObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;LaneLidarObservation&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">LaneLidarObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;NavigationObservation&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">NavigationObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RelativeGoalObservation&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RelativeGoalObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown observation type&quot;</span><span class="p">)</span>
 </pre></div>

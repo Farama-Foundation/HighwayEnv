@@ -229,6 +229,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +244,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -318,6 +320,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -364,6 +367,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">impact</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">HISTORY_SIZE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Vehicle.create_random">
 <a class="viewcode-back" href="../../../../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.create_random">[docs]</a>

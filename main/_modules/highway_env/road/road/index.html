@@ -229,6 +229,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +244,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -339,6 +341,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reversed_lane_indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_from</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -353,6 +356,15 @@
         <span class="k">if</span> <span class="n">_to</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lane</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_lane_bidirectional</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_from</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lane</span><span class="p">:</span> <span class="n">AbstractLane</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add lane that allows for travel both ways.</span>
+<span class="sd">        (from _from to _to and from _to to _from)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span><span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">lane</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_lane</span><span class="p">(</span><span class="n">_to</span><span class="p">,</span> <span class="n">_from</span><span class="p">,</span> <span class="n">lane</span><span class="p">)</span>  <span class="c1"># pylint: disable=arguments-out-of-order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reversed_lane_indices</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">_to</span><span class="p">,</span> <span class="n">_from</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_to</span><span class="p">][</span><span class="n">_from</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_lane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractLane</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -389,7 +401,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">next_lane</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">current_index</span><span class="p">:</span> <span class="n">LaneIndex</span><span class="p">,</span>
-        <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Route</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">position</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">np_random</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LaneIndex</span><span class="p">:</span>

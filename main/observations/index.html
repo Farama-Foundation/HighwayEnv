@@ -230,6 +230,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -244,6 +245,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -590,27 +592,27 @@ vehicle and 0 for placeholders.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.          1.          0.          1.
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.12        1.          0.          1.
    0.        ]
- [ 1.          0.21754807  0.08       -0.18242683  0.          1.
+ [ 1.          0.21492836 -0.12       -0.12441245  0.          1.
    0.        ]
- [ 1.          0.45235667  0.08       -0.05561035  0.          1.
+ [ 1.          0.4135172  -0.12       -0.09500351  0.          1.
    0.        ]
- [ 1.          0.6398137   0.12       -0.17295267  0.          1.
+ [ 1.          0.60194975  0.         -0.18601096  0.          1.
    0.        ]
- [ 1.          0.8420974   0.         -0.11332203  0.          1.
+ [ 1.          0.80227244 -0.08       -0.12346496  0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.10758943  0.          1.
+ [ 1.          0.9972226  -0.04       -0.08170561  0.          1.
    0.        ]
- [ 1.          1.          0.12       -0.07482244  0.          1.
+ [ 1.          1.         -0.04       -0.11142831  0.          1.
    0.        ]
- [ 1.          1.          0.12       -0.1448538   0.          1.
+ [ 1.          1.          0.         -0.18585047  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.09482674  0.          1.
+ [ 1.          1.         -0.12       -0.14606684  0.          1.
    0.        ]
- [ 1.          1.          0.04       -0.17855255  0.          1.
+ [ 1.          1.         -0.12       -0.18390292  0.          1.
    0.        ]
- [ 0.          0.          0.          0.          0.          0.
+ [ 1.          1.         -0.04       -0.13149628  0.          1.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -924,7 +926,7 @@ These predictions are performed for <span class="math notranslate nohighlight">\
 </section>
 <section id="lidar">
 <h2>Lidar<a class="headerlink" href="#lidar" title="Link to this heading">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">LidarObservation</span></code> divides the space around the vehicle into angular sectors, and returns an array with one row per angular sector and two columns:</p>
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.LidarObservation" title="highway_env.envs.common.observation.LidarObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">LidarObservation</span></code></a> divides the space around the vehicle into angular sectors, and returns an array with one row per angular sector and two columns:</p>
 <ul class="simple">
 <li><p>distance to the nearest collidable object (vehicles or obstacles)</p></li>
 <li><p>component of the objects’s relative velocity along that direction</p></li>
@@ -993,7 +995,132 @@ These predictions are performed for <span class="math notranslate nohighlight">\
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LidarObservation&quot;</span><span class="p">,</span>
     <span class="s2">&quot;cells&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
     <span class="s2">&quot;maximum_range&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="s2">&quot;normalise&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;normalize&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="lanelidar">
+<h2>LaneLidar<a class="headerlink" href="#lanelidar" title="Link to this heading">¶</a></h2>
+<p><a class="reference internal" href="#highway_env.envs.common.observation.LaneLidarObservation" title="highway_env.envs.common.observation.LaneLidarObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">LaneLidarObservation</span></code></a>, a subclass of <code class="docutils literal notranslate"><span class="pre">LidarObservation</span></code>,  allows the agent to observe the distances to surrounding PolyLane borders as if they are walls. Instead using angular sector areas to detect nearby objects, singular rays are cast at regular intervals to detect the surrounding lane geometry.</p>
+<p>Returns an array with one row per ray and two columns:</p>
+<ul class="simple">
+<li><p>distance to the lane border along this ray</p></li>
+<li><p>component of the relative velocity of the static lane border (negative of the ego-vehicle’s velocity) along the direction of the ray</p></li>
+</ul>
+<p>Here is an example of what the rays may look like in the random-road env:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+    <span class="s1">&#39;random-road-v0&#39;</span><span class="p">,</span>
+    <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LaneLidarObservation&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;generation_params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;target_num_endpoints&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,}</span>
+    <span class="p">})</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="stderr docutils container">
+<pre class="stderr literal-block">/home/runner/work/HighwayEnv/HighwayEnv/.venv/lib/python3.14/site-packages/gymnasium/envs/registration.py:735: HighwayEnvExperimentalWarning: [31mhighway_env.envs:[0m The environment [&lt;class 'highway_env.envs.random_road_env.RandomRoadEnv'&gt;] is not yet stable in current version of HighwayEnv (1.12.2.dev0), expect breaking change in behaviour or API design.
+  env = env_creator(**env_spec_kwargs)
+</pre>
+</div>
+<img alt="../_images/index_4_1.png" src="../_images/index_4_1.png" />
+</div>
+</div>
+<section id="example-configuration-lanelidar">
+<h3>Example configuration (LaneLidar)<a class="headerlink" href="#example-configuration-lanelidar" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LaneLidarObservation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cells&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
+    <span class="s2">&quot;maximum_range&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="s2">&quot;normalize&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>LaneLidarObservation requires that the env uses a <code class="docutils literal notranslate"><span class="pre">PartitionedRoadNetwork</span></code> instead of a regular <code class="docutils literal notranslate"><span class="pre">RoadNetwork</span></code>.</p></li>
+<li><p>Lanes that are not PolyLanes are currently ignored by the rays.</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="navigation">
+<h2>Navigation<a class="headerlink" href="#navigation" title="Link to this heading">¶</a></h2>
+<p><a class="reference internal" href="#highway_env.envs.common.observation.NavigationObservation" title="highway_env.envs.common.observation.NavigationObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">NavigationObservation</span></code></a> directs the agent to the goal by providing the distance and relative heading to the next waypoint along the shortest path to the goal. If the agent strays off the calculated path, a new path is computed.</p>
+<p>Returns a 3-element array:</p>
+<ul class="simple">
+<li><p>distance to the next waypoint</p></li>
+<li><p>cosine of the relative heading to the waypoint</p></li>
+<li><p>sine of the relative heading to the waypoint</p></li>
+</ul>
+<p>If you enable <code class="docutils literal notranslate"><span class="pre">normalize</span></code>, then the distance to the next waypoint is divided by <code class="docutils literal notranslate"><span class="pre">distance_scale</span></code>.</p>
+<section id="example-configuration-navigation">
+<h3>Example configuration (Navigation)<a class="headerlink" href="#example-configuration-navigation" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;NavigationObservation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;normalize&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;distance_scale&quot;</span><span class="p">:</span> <span class="mi">200</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires that the ego-vehicle has a goal attribute</p>
+</div>
+</section>
+</section>
+<section id="relativegoal">
+<h2>RelativeGoal<a class="headerlink" href="#relativegoal" title="Link to this heading">¶</a></h2>
+<p><a class="reference internal" href="#highway_env.envs.common.observation.RelativeGoalObservation" title="highway_env.envs.common.observation.RelativeGoalObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">RelativeGoalObservation</span></code></a> observes the position and heading of a goal parking spot relative to the ego-vehicle.</p>
+<p>Returns a 4-element array:</p>
+<ul class="simple">
+<li><p>Longitudal body offset to the goal</p></li>
+<li><p>Lateral body offset to the goal</p></li>
+<li><p>Cosine of the heading offset between the parking spot and the ego-vehicle</p></li>
+<li><p>Sine of the heading offset between the parking spot and the ego-vehicle</p></li>
+</ul>
+<p>If you enable <code class="docutils literal notranslate"><span class="pre">normalize</span></code>, the body offsets are divided by <code class="docutils literal notranslate"><span class="pre">distance_scale</span></code>.</p>
+<section id="example-configuration-relativegoal">
+<h3>Example configuration (RelativeGoal)<a class="headerlink" href="#example-configuration-relativegoal" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;RelativeGoalObservation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;normalize&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;distance_scale&quot;</span><span class="p">:</span> <span class="mi">200</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires that the ego-vehicle has a goal attribute</p>
+</div>
+</section>
+</section>
+<section id="dict">
+<h2>Dict<a class="headerlink" href="#dict" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="#highway_env.envs.common.observation.DictObservation" title="highway_env.envs.common.observation.DictObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">DictObservation</span></code></a> composes several named observation types into a Gymnasium <code class="docutils literal notranslate"><span class="pre">Dict</span></code> space.</p>
+<p>The environment then returns a dict of observations with those keys, which is the recommended way to combine heterogeneous sensors (for example lidar plus navigation).</p>
+<section id="example-configuration-dict">
+<h3>Example configuration (Dict)<a class="headerlink" href="#example-configuration-dict" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DictObservation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;observation_configs&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;lane_lidar&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LaneLidarObservation&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;navigation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;NavigationObservation&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;relative_goal&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;RelativeGoalObservation&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;lidar&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LidarObservation&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1019,7 +1146,7 @@ Example of observation dictionary in the environment config:</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.GrayscaleObservation.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#GrayscaleObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.space" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#GrayscaleObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.GrayscaleObservation.space" title="Link to this definition">¶</a></dt>
 <dd><p>Get the observation space.</p>
 </dd></dl>
 
@@ -1033,7 +1160,7 @@ Example of observation dictionary in the environment config:</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.KinematicObservation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">KinematicObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vehicles_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sorted'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">see_behind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observe_intentions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_obstacles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#KinematicObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">KinematicObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vehicles_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sorted'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">see_behind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observe_intentions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_obstacles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#KinematicObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation" title="Link to this definition">¶</a></dt>
 <dd><p>Observe the kinematics of nearby vehicles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1053,7 +1180,7 @@ Example of observation dictionary in the environment config:</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.KinematicObservation.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#KinematicObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.space" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#KinematicObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicObservation.space" title="Link to this definition">¶</a></dt>
 <dd><p>Get the observation space.</p>
 </dd></dl>
 
@@ -1075,7 +1202,7 @@ Example of observation dictionary in the environment config:</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.OccupancyGridObservation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">OccupancyGridObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_to_vehicle_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#OccupancyGridObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">OccupancyGridObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_to_vehicle_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#OccupancyGridObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation" title="Link to this definition">¶</a></dt>
 <dd><p>Observe an occupancy grid of nearby vehicles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1094,7 +1221,7 @@ with world axes.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.OccupancyGridObservation.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#OccupancyGridObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.space" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#OccupancyGridObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.OccupancyGridObservation.space" title="Link to this definition">¶</a></dt>
 <dd><p>Get the observation space.</p>
 </dd></dl>
 
@@ -1158,7 +1285,7 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 
 <dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.KinematicsGoalObservation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">KinematicsGoalObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scales</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#KinematicsGoalObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">KinematicsGoalObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scales</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#KinematicsGoalObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1177,7 +1304,7 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.KinematicsGoalObservation.space">
-<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Space</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#KinematicsGoalObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.space" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">spaces.Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">spaces.Box</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#KinematicsGoalObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.KinematicsGoalObservation.space" title="Link to this definition">¶</a></dt>
 <dd><p>Get the observation space.</p>
 </dd></dl>
 
@@ -1190,8 +1317,26 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.DictObservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">DictObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#DictObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.DictObservation" title="Link to this definition">¶</a></dt>
+<dd><p>Compose several named observation types into a Gymnasium Dict space.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.DictObservation.space">
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#DictObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.DictObservation.space" title="Link to this definition">¶</a></dt>
+<dd><p>Get the observation space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.DictObservation.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#DictObservation.observe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.DictObservation.observe" title="Link to this definition">¶</a></dt>
+<dd><p>Get an observation of the environment state.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.ExitObservation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">ExitObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vehicles_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sorted'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">see_behind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observe_intentions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_obstacles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#ExitObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.ExitObservation" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">ExitObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vehicles_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sorted'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">see_behind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observe_intentions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_obstacles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#ExitObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.ExitObservation" title="Link to this definition">¶</a></dt>
 <dd><p>Specific to exit_env, observe the distance to the next exit lane as part of a KinematicObservation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1212,6 +1357,133 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.ExitObservation.observe">
 <span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#ExitObservation.observe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.ExitObservation.observe" title="Link to this definition">¶</a></dt>
+<dd><p>Get an observation of the environment state.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.LidarObservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">LidarObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#LidarObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.LidarObservation" title="Link to this definition">¶</a></dt>
+<dd><p>Observe nearby vehicles and solid objects by simulating a LiDAR sensor array.</p>
+<p>This observation type divides the space around the vehicle into angular sectors,
+and returns an array with one row per angular sector and two columns:
+- distance to the nearest collidable object (vehicles or obstacles)
+- component of the objects’s relative velocity along that direction</p>
+<p>The angular sector of index 0 corresponds to an angle 0 (east), and then each
+index/sector increases the angle (east, south, west, north).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> – The environment to observe</p></li>
+<li><p><strong>cells</strong> – Number of angular sectors</p></li>
+<li><p><strong>maximum_range</strong> – Maximum sensor range</p></li>
+<li><p><strong>normalize</strong> – Divide distance and relative speed by <code class="docutils literal notranslate"><span class="pre">maximum_range</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.LidarObservation.space">
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#LidarObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.LidarObservation.space" title="Link to this definition">¶</a></dt>
+<dd><p>Get the observation space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.LidarObservation.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#LidarObservation.observe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.LidarObservation.observe" title="Link to this definition">¶</a></dt>
+<dd><p>Get an observation of the environment state.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.LaneLidarObservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">LaneLidarObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#LaneLidarObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.LaneLidarObservation" title="Link to this definition">¶</a></dt>
+<dd><p>Allows the agent to directly observe the surrounding lane borders
+as if they were walls.</p>
+<p>Requires a PartitionedRoadNetwork.
+Ignores non-PolyLanes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> – The environment to observe</p></li>
+<li><p><strong>cells</strong> – Number of angular sectors</p></li>
+<li><p><strong>maximum_range</strong> – Maximum sensor range</p></li>
+<li><p><strong>normalize</strong> – Divide distance and relative speed by <code class="docutils literal notranslate"><span class="pre">maximum_range</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.LaneLidarObservation.trace">
+<span class="sig-name descname"><span class="pre">trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_velocity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#LaneLidarObservation.trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.LaneLidarObservation.trace" title="Link to this definition">¶</a></dt>
+<dd><p>Casts rays to observe distances to lanes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.NavigationObservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">NavigationObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#NavigationObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.NavigationObservation" title="Link to this definition">¶</a></dt>
+<dd><p>Directs the agent to the next waypoint along the shortest path to the goal.</p>
+<p>[distance_to_waypoint, cos(delta_heading), sin(delta_heading)]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.NavigationObservation.space">
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#NavigationObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.NavigationObservation.space" title="Link to this definition">¶</a></dt>
+<dd><p>Get the observation space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.NavigationObservation.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#NavigationObservation.observe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.NavigationObservation.observe" title="Link to this definition">¶</a></dt>
+<dd><p>Get an observation of the environment state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.NavigationObservation.create_new_path">
+<span class="sig-name descname"><span class="pre">create_new_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#NavigationObservation.create_new_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.NavigationObservation.create_new_path" title="Link to this definition">¶</a></dt>
+<dd><p>Computes the shortest path from our start lane to the goal lane</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.NavigationObservation.get_waypoint">
+<span class="sig-name descname"><span class="pre">get_waypoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#NavigationObservation.get_waypoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.NavigationObservation.get_waypoint" title="Link to this definition">¶</a></dt>
+<dd><p>Computes the waypoint that denotes which path
+to take at an intersection</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.NavigationObservation.update_next_node">
+<span class="sig-name descname"><span class="pre">update_next_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#NavigationObservation.update_next_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.NavigationObservation.update_next_node" title="Link to this definition">¶</a></dt>
+<dd><p>Computes which intersection to drive towards next.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.RelativeGoalObservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">RelativeGoalObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#RelativeGoalObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.RelativeGoalObservation" title="Link to this definition">¶</a></dt>
+<dd><p>Observes the position and heading of a goal parking spot
+relative to the agent’s own position and heading.</p>
+<p>[longitudinal offset, lateral offset, cos(delta_heading), sin(delta_heading)]</p>
+<p>observer_vehicle must have a .goal attribute
+(a RoadObject with .position and .heading)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normalize</strong> – if True, divide positional offsets by position_scale</p></li>
+<li><p><strong>position_scale</strong> – normalization divisor for dx_body and dy_body</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.RelativeGoalObservation.space">
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Box</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#RelativeGoalObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.RelativeGoalObservation.space" title="Link to this definition">¶</a></dt>
+<dd><p>Get the observation space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.RelativeGoalObservation.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#RelativeGoalObservation.observe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.RelativeGoalObservation.observe" title="Link to this definition">¶</a></dt>
 <dd><p>Get an observation of the environment state.</p>
 </dd></dl>
 
@@ -1311,6 +1583,22 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 <li><a class="reference internal" href="#example-configuration-lidar">Example configuration (lidar)</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#lanelidar">LaneLidar</a><ul>
+<li><a class="reference internal" href="#example-configuration-lanelidar">Example configuration (LaneLidar)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#navigation">Navigation</a><ul>
+<li><a class="reference internal" href="#example-configuration-navigation">Example configuration (Navigation)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#relativegoal">RelativeGoal</a><ul>
+<li><a class="reference internal" href="#example-configuration-relativegoal">Example configuration (RelativeGoal)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dict">Dict</a><ul>
+<li><a class="reference internal" href="#example-configuration-dict">Example configuration (Dict)</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-highway_env.envs.common.observation">API</a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.GrayscaleObservation"><code class="docutils literal notranslate"><span class="pre">GrayscaleObservation</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.GrayscaleObservation.space"><code class="docutils literal notranslate"><span class="pre">GrayscaleObservation.space()</span></code></a></li>
@@ -1337,8 +1625,35 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 <li><a class="reference internal" href="#highway_env.envs.common.observation.KinematicsGoalObservation.observe"><code class="docutils literal notranslate"><span class="pre">KinematicsGoalObservation.observe()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.DictObservation"><code class="docutils literal notranslate"><span class="pre">DictObservation</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.DictObservation.space"><code class="docutils literal notranslate"><span class="pre">DictObservation.space()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.DictObservation.observe"><code class="docutils literal notranslate"><span class="pre">DictObservation.observe()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.ExitObservation"><code class="docutils literal notranslate"><span class="pre">ExitObservation</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.ExitObservation.observe"><code class="docutils literal notranslate"><span class="pre">ExitObservation.observe()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.LidarObservation"><code class="docutils literal notranslate"><span class="pre">LidarObservation</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.LidarObservation.space"><code class="docutils literal notranslate"><span class="pre">LidarObservation.space()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.LidarObservation.observe"><code class="docutils literal notranslate"><span class="pre">LidarObservation.observe()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.LaneLidarObservation"><code class="docutils literal notranslate"><span class="pre">LaneLidarObservation</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.LaneLidarObservation.trace"><code class="docutils literal notranslate"><span class="pre">LaneLidarObservation.trace()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.NavigationObservation"><code class="docutils literal notranslate"><span class="pre">NavigationObservation</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.NavigationObservation.space"><code class="docutils literal notranslate"><span class="pre">NavigationObservation.space()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.NavigationObservation.observe"><code class="docutils literal notranslate"><span class="pre">NavigationObservation.observe()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.NavigationObservation.create_new_path"><code class="docutils literal notranslate"><span class="pre">NavigationObservation.create_new_path()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.NavigationObservation.get_waypoint"><code class="docutils literal notranslate"><span class="pre">NavigationObservation.get_waypoint()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.NavigationObservation.update_next_node"><code class="docutils literal notranslate"><span class="pre">NavigationObservation.update_next_node()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.RelativeGoalObservation"><code class="docutils literal notranslate"><span class="pre">RelativeGoalObservation</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.RelativeGoalObservation.space"><code class="docutils literal notranslate"><span class="pre">RelativeGoalObservation.space()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.RelativeGoalObservation.observe"><code class="docutils literal notranslate"><span class="pre">RelativeGoalObservation.observe()</span></code></a></li>
 </ul>
 </li>
 </ul>

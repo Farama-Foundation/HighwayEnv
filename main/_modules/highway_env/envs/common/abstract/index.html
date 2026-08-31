@@ -229,6 +229,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +244,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -377,7 +379,9 @@
     <span class="n">PERCEPTION_DISTANCE</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">Vehicle</span><span class="o">.</span><span class="n">MAX_SPEED</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum distance of any vehicle present in the observation [m]&quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">render_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">render_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="c1"># Rendering</span>

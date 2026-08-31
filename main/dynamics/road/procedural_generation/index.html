@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="../../">
+<html class="no-js" lang="en" data-content_root="../../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -7,17 +7,17 @@
     <meta property="og:title" content="HighwayEnv Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="A collection of environments for autonomous driving and tactical decision-making tasks" />
-    <meta property="og:url" content="https://highway-env.farama.org/environments/roundabout.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Parking" href="../parking/" /><link rel="prev" title="Merge" href="../merge/" />
-        <link rel="canonical" href="https://highway-env.farama.org/environments/roundabout.html" />
+    <meta property="og:url" content="https://highway-env.farama.org/dynamics/road/procedural_generation.html" /><meta property="og:image" content="https://highway-env.farama.org/_static/img/highway-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Kinematics" href="../../vehicle/kinematics/" /><link rel="prev" title="Road regulation" href="../regulation/" />
+        <link rel="canonical" href="https://highway-env.farama.org/dynamics/road/procedural_generation.html" />
 
-    <link rel="shortcut icon" href="../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Celshast 0.0.1 -->
-        <title>Roundabout - HighwayEnv Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast.css?v=9fbfb63d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css?v=1c205c3a" />
-    <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast-extensions.css?v=42bfddca" />
+    <link rel="shortcut icon" href="../../../_static/highway-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Celshast 0.0.1 -->
+        <title>Procedural Generation - HighwayEnv Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/celshast.css?v=9fbfb63d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css?v=1c205c3a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/celshast-extensions.css?v=42bfddca" />
     
     
 
@@ -58,16 +58,16 @@
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
-          <a href="../../">
-              <img class="farama-header__logo only-light" src="../../_static/img/highway.svg" alt="Light Logo"/>
-              <img class="farama-header__logo only-dark" src="../../_static/img/highway-white.svg" alt="Dark Logo"/>
+          <a href="../../../">
+              <img class="farama-header__logo only-light" src="../../../_static/img/highway.svg" alt="Light Logo"/>
+              <img class="farama-header__logo only-dark" src="../../../_static/img/highway-white.svg" alt="Dark Logo"/>
             <span class="farama-header__title">HighwayEnv Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
           <div class="farama-header-menu">
             <button class="farama-header-menu__btn" aria-label="Open Farama Menu" aria-expanded="false" aria-haspopup="true" aria-controls="farama-menu">
-              <img class="farama-black-logo-invert" src="../../_static/img/farama-logo-header.svg">
+              <img class="farama-black-logo-invert" src="../../../_static/img/farama-logo-header.svg">
               <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <polyline style="stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-width: 2px;" points="1 7 12 18 23 7"></polyline>
               </svg>
@@ -75,7 +75,7 @@
             <div class="farama-header-menu-container farama-hidden" aria-hidden="true" id="farama-menu">
               <div class="farama-header-menu__header">
                 <a href="https://farama.org">
-                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
+                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../../../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
                   <span>Farama Foundation</span>
                 </a>
                 <div class="farama-header-menu-header__right">
@@ -182,7 +182,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../"><div class="brand">HighwayEnv Documentation</div></a>
+      <a href="../../../"><div class="brand">HighwayEnv Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -202,11 +202,11 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../">
-      <img class="farama-header__logo only-light" src="../../_static/img/highway.svg" alt="Light Logo"/>
-      <img class="farama-header__logo only-dark" src="../../_static/img/highway-white.svg" alt="Dark Logo"/>
+      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../../">
+      <img class="farama-header__logo only-light" src="../../../_static/img/highway.svg" alt="Light Logo"/>
+      <img class="farama-header__logo only-dark" src="../../../_static/img/highway-white.svg" alt="Dark Logo"/>
     <span class="farama-header__title">HighwayEnv Documentation</span>
-  </a><form class="sidebar-search-container" method="get" action="../../search/" role="search">
+  </a><form class="sidebar-search-container" method="get" action="../../../search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
@@ -214,60 +214,60 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/">Getting Started</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../">Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../highway/">Highway</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../merge/">Merge</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Roundabout</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../parking/">Parking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../intersection/">Intersection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../racetrack/">Racetrack</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../lane_keeping/">Lane Keeping</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../two_way/">Two Way</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../exit/">Exit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../u_turn/">U-Turn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../random_road/">Random Road</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/highway/">Highway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/merge/">Merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/roundabout/">Roundabout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/parking/">Parking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/intersection/">Intersection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/racetrack/">Racetrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/lane_keeping/">Lane Keeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/two_way/">Two Way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/exit/">Exit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../content/algorithms/">Agent Examples</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../user_guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../observations/">Observations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../actions/">Actions</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../dynamics/">Dynamics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../dynamics/road/lane/">Lane</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../dynamics/road/road/">Road</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../dynamics/road/regulation/">Road regulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../dynamics/vehicle/kinematics/">Kinematics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../dynamics/vehicle/controller/">Control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../dynamics/vehicle/behavior/">Behavior</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../content/algorithms/">Agent Examples</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../../user_guide/">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../observations/">Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../actions/">Actions</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="../../">Dynamics</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dynamics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../lane/">Lane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../road/">Road</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../neighbour_vehicles/">Neighbour vehicles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../regulation/">Road regulation</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Procedural Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../vehicle/kinematics/">Kinematics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../vehicle/controller/">Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../vehicle/behavior/">Behavior</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../rewards/">Rewards</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../graphics/">Graphics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../multi_agent/">The Multi-Agent setting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../make_your_own/">Make your own environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../rewards/">Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../graphics/">Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../multi_agent/">The Multi-Agent setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../make_your_own/">Make your own environment</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../faq/">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/">Frequently Asked Questions</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../bibliography/">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../content/publications/">List of Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bibliography/">Bibliography</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv">GitHub</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../release_notes/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release_notes/">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/HighwayEnv/blob/main/CONTRIBUTING.md">Contribute to the Docs</a></li>
 </ul>
 
@@ -294,7 +294,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/main/docs/environments/roundabout.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/HighwayEnv/edit/main/docs/dynamics/road/procedural_generation.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -325,108 +325,128 @@
           </div>
           <article role="main">
             
-            <section class="tex2jax_ignore mathjax_ignore" id="roundabout">
-<span id="environments-roundabout"></span><h1>Roundabout<a class="headerlink" href="#roundabout" title="Link to this heading">¶</a></h1>
-<p>In this task, the ego-vehicle is approaching a roundabout with flowing traffic. It will follow its planned route automatically, but has to handle lane changes and longitudinal control to pass the roundabout as fast as possible while avoiding collisions.</p>
-<figure class="align-center" id="fig-roundabout-env">
-<a class="reference internal image-reference" href="../../_images/roundabout-env.gif"><img alt="../../_images/roundabout-env.gif" src="../../_images/roundabout-env.gif" style="width: 80%;" />
+            <section class="tex2jax_ignore mathjax_ignore" id="procedural-generation">
+<h1>Procedural Generation<a class="headerlink" href="#procedural-generation" title="Link to this heading">¶</a></h1>
+<p>Generates arbitrary road networks of any size defined by the raw boundary points of various lanes.</p>
+<figure class="align-center" id="fig-generated-lanes">
+<a class="reference internal image-reference" href="../../../_images/procedural-generation.png"><img alt="../../../_images/procedural-generation.png" src="../../../_images/procedural-generation.png" style="width: 80%;" />
 </a>
 </figure>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;roundabout-v0&quot;</span><span class="p">)</span>
+<section id="use">
+<h2>Use<a class="headerlink" href="#use" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.generation.generator</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">generate_random_lanes</span><span class="p">,</span> <span class="n">default_params</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolyLane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.partitioned_road</span><span class="w"> </span><span class="kn">import</span> <span class="n">PartitionedRoadNetwork</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">Road</span>
+
+<span class="n">generation_params</span> <span class="o">=</span> <span class="n">default_params</span><span class="p">()</span>
+<span class="n">lanes</span> <span class="o">=</span> <span class="n">generate_random_lanes</span><span class="p">(</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(),</span> <span class="n">provided_params</span> <span class="o">=</span> <span class="n">generation_params</span><span class="p">)</span>
+
+<span class="c1">## inside env._make_road():</span>
+
+<span class="c1"># We now have a list of Lane that contains the raw geometrical boundary points</span>
+<span class="c1"># of our road network + the nodes each lane connects to.</span>
+<span class="c1"># We must now construct our RoadNetwork from this</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">PartitionedRoadNetwork</span><span class="p">(</span><span class="n">partition_gridsize</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="n">lanes</span><span class="p">:</span>
+    <span class="n">real_lane</span> <span class="o">=</span> <span class="n">PolyLane</span><span class="p">(</span>
+        <span class="n">lane_points</span><span class="o">=</span><span class="n">lane</span><span class="o">.</span><span class="n">points</span><span class="p">,</span>
+        <span class="n">left_boundary_points</span><span class="o">=</span><span class="n">lane</span><span class="o">.</span><span class="n">left_points</span><span class="p">,</span>
+        <span class="n">right_boundary_points</span><span class="o">=</span><span class="n">lane</span><span class="o">.</span><span class="n">right_points</span><span class="p">,</span>
+        <span class="n">line_types</span><span class="o">=</span><span class="p">(</span><span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add_lane_bidirectional</span><span class="p">(</span><span class="n">lane</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">lane</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">real_lane</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="versions">
-<h2>Versions<a class="headerlink" href="#versions" title="Link to this heading">¶</a></h2>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>ID</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">roundabout-v0</span></code></p></td>
-<td><p>Initial version. Same-segment neighbour search only. Preserved for reproducibility.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">roundabout-v1</span></code></p></td>
-<td><p>Connected-lane neighbour search enabled by default. Recommended for new experiments.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">roundabout-generic-v0</span></code></p></td>
-<td><p>Initial generic roundabout map. Same-segment neighbour search only.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">roundabout-generic-v1</span></code></p></td>
-<td><p>Generic roundabout map with connected-lane neighbour search enabled.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>See <a class="reference internal" href="../../dynamics/road/neighbour_vehicles/#road-neighbour-vehicles"><span class="std std-ref">Neighbour vehicles</span></a> for details.</p>
+<section id="the-generation-process">
+<h2>The Generation Process<a class="headerlink" href="#the-generation-process" title="Link to this heading">¶</a></h2>
+<p>The generation process occurs in 5 distinct phases:</p>
+<ol class="arabic simple">
+<li><p>Random Swarm Generation</p></li>
+<li><p>Rectification</p></li>
+<li><p>Twist Optimization</p></li>
+<li><p>Boundary Creation</p></li>
+<li><p>Validation</p></li>
+</ol>
+<section id="phase-1-random-swarm-generation">
+<h3>Phase 1: Random Swarm Generation<a class="headerlink" href="#phase-1-random-swarm-generation" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>A single ‘agent’ starts at the origin</p></li>
+<li><p>This agent moves forward and randomly turns left/right</p></li>
+<li><p>The path the agent takes broadly dictates the positioning of a lane</p></li>
+<li><p>An agent may spontaneously reproduce, which creates a fork with multiple new agents to be created. Agents will die if they ram into another lane</p></li>
+</ul>
 </section>
-<section id="default-configuration">
-<h2>Default configuration<a class="headerlink" href="#default-configuration" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;absolute&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;features_range&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
-            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
-            <span class="s2">&quot;vx&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
-            <span class="s2">&quot;vy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
-        <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DiscreteMetaAction&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;target_speeds&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;incoming_vehicle_destination&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">&quot;collision_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;high_speed_reward&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-    <span class="s2">&quot;right_lane_reward&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s2">&quot;lane_change_reward&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span>
-    <span class="s2">&quot;normalize_reward&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>  <span class="c1"># [s]</span>
-    <span class="s2">&quot;simulation_frequency&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
-    <span class="s2">&quot;policy_frequency&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># [Hz]</span>
-    <span class="s2">&quot;other_vehicles_type&quot;</span><span class="p">:</span> <span class="s2">&quot;highway_env.vehicle.behavior.IDMVehicle&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;screen_width&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px]</span>
-    <span class="s2">&quot;screen_height&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>  <span class="c1"># [px]</span>
-    <span class="s2">&quot;centering_position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
-    <span class="s2">&quot;scaling&quot;</span><span class="p">:</span> <span class="mf">5.5</span><span class="p">,</span>
-    <span class="s2">&quot;show_trajectories&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s2">&quot;render_agent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;offscreen_rendering&quot;</span><span class="p">:</span> <span class="kc">None</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>More specifically, it is defined in:</p>
-<dl class="py method">
-<dt class="sig sig-object py">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RoundaboutEnv.</span></span><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/roundabout_env/#RoundaboutEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Default environment configuration.</p>
-<p>Can be overloaded in environment implementations, or by calling configure().
-:return: a configuration dict</p>
-</dd></dl>
-
+<section id="phase-2-rectification">
+<h3>Phase 2: Rectification<a class="headerlink" href="#phase-2-rectification" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Lanes that consist of less than 3 points are destroyed</p></li>
+<li><p>Endpoints that ram into other lanes must make a junction with the other lane. This means dividing the rammed lane into two halves at the new junction point</p></li>
+<li><p>Neighboring endpoints that form a common junction must be made to have the same string location identifier</p></li>
+<li><p>Looping lanes whose start and end location are the same are considered useless and are removed</p></li>
+</ol>
 </section>
-<section id="api">
-<h2>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="highway_env.envs.roundabout_env.RoundaboutEnv">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.roundabout_env.</span></span><span class="sig-name descname"><span class="pre">RoundaboutEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/highway_env/envs/roundabout_env/#RoundaboutEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.roundabout_env.RoundaboutEnv" title="Link to this definition">¶</a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="highway_env.envs.roundabout_env.RoundaboutEnv.default_config">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/highway_env/envs/roundabout_env/#RoundaboutEnv.default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.roundabout_env.RoundaboutEnv.default_config" title="Link to this definition">¶</a></dt>
-<dd><p>Default environment configuration.</p>
-<p>Can be overloaded in environment implementations, or by calling configure().
-:return: a configuration dict</p>
-</dd></dl>
-
-</dd></dl>
-
+<section id="phase-3-twist-optimization">
+<h3>Phase 3: Twist Optimization<a class="headerlink" href="#phase-3-twist-optimization" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The endpoints of multiple lanes at an intersection must properly point into each other. To ensure this happens, we twist the endpoints into an optimal configuration via gradient-descent. To twist means to make each line segment of a lane a ‘servo actuator’ that is attached to the preceding line segment, and then rotating them a fixed amount in unison</p></li>
+<li><p>If the lane is too short to be twisted, we rotate the whole lane</p></li>
+<li><p>Endpoints are also trimmed and squished to ensure they don’t overshoot the intersection point of other endpoints in the junction</p></li>
+<li><p>Additionally, where there are two lanes that have the same start + end location and trace a similar path after twisting, one is removed</p></li>
+</ul>
+</section>
+<section id="phase-4-boundary-creation">
+<h3>Phase 4: Boundary Creation<a class="headerlink" href="#phase-4-boundary-creation" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Borders are defined by a left and right sequence of points</p></li>
+<li><p>At junctions, these borders are made to intersect at common points properly with the borders of other lanes</p></li>
+<li><p>Dead-ends (junctions with only one endpoint) are sealed off as well by letting the right boundary point extend over to the left side</p></li>
+</ul>
+</section>
+<section id="phase-5-validation">
+<h3>Phase 5: Validation<a class="headerlink" href="#phase-5-validation" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Mistakes in the generation process, although rare, can still occur, such as
+lanes that jutt into other lanes, overly narrow intersection bottlenecks, or even disjoint, unreachable clusters of road network</p></li>
+<li><p>To combat this, every lane is checked for its traversibility. This is done by simulating small physics-based balls that are drawn to the end of the lane and are repelled by its borders. If no ball reaches the end of the lane, the lane is considered blocked. All blocked lanes are then removed from the network</p></li>
+<li><p>The network is also checked for any separate, disjoint clusters. If there are multiple such unreachable clusters, only the largest one is retained and the rest are deleted entirely</p></li>
+</ul>
+</section>
+</section>
+<section id="parameters-guide">
+<h2>Parameters Guide<a class="headerlink" href="#parameters-guide" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>target_num_endpoints</strong>: determines the size of the road network</p></li>
+<li><p><strong>forward_speed</strong>: step speed of an agent; determines how long each individual lane segment is</p></li>
+<li><p><strong>age_of_maturity</strong>: timesteps before an agent can replicate or die; provides a hard limit on the interval between two consecutive forks.</p></li>
+<li><p><strong>lane_width</strong>:	lateral width of all lanes.</p></li>
+<li><p><strong>perlin_variation_params</strong> - Certain parameters are allowed to be continually varied across space so as to create differing regions or ‘biomes’ with differing road properties. For each of these parameters, a lower and upper bound on their value is specified. Here are these such parameters:</p>
+<ul>
+<li><p><strong>jitteriness</strong> - erraticity of how agents turn left/right (lower value = smoother paths)</p></li>
+<li><p><strong>max_turn_speed</strong> - maximum angular velocity of an agent (lower = straighter roads)</p></li>
+<li><p><strong>replication_chance</strong> - the tendency of forks in the road to occur (higher = denser road networks). A value of 0 will cause a generation fault. A very low value (on the order of 0.01) may also cause generation faults if the max_turn_speed is not also low (&lt; 1.0).</p></li>
+<li><p><strong>spontaneous_death_chance</strong> - the tendency of spontaneous dead-ends to occur.</p></li>
+</ul>
+</li>
+</ul>
+<p>In addition to generation parameters, a seeded random number generator must be provided as well.</p>
+</section>
+<section id="spatial-hashing">
+<h2>Spatial Hashing<a class="headerlink" href="#spatial-hashing" title="Link to this heading">¶</a></h2>
+<p>Grid partitioning is used to reduce the computational cost of running proximity checks on large numbers of lanes.
+It is used throughout the generation process and is also used outside of it (specifically in <code class="docutils literal notranslate"><span class="pre">LaneLidarObservation</span></code>, <code class="docutils literal notranslate"><span class="pre">PartitionedRoadNetwork</span></code>, and <code class="docutils literal notranslate"><span class="pre">RandomRoadEnv</span></code>)</p>
+<p>A set of functions that support grid partitioning is available under <code class="docutils literal notranslate"><span class="pre">generation/spatial_hash.py</span></code></p>
+</section>
+<section id="visualizer">
+<h2>Visualizer<a class="headerlink" href="#visualizer" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">scripts/generation_visualizer.py</span></code> allows each intermediate step of the generation process to be seen directly for debugging/understanding purposes.</p>
 </section>
 </section>
 
@@ -435,18 +455,18 @@
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../parking/">
+            <a class="next-page" href="../../vehicle/kinematics/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Parking</div>
+                <div class="title">Kinematics</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
             </a>
-            <a class="prev-page" href="../merge/">
+            <a class="prev-page" href="../regulation/">
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
@@ -455,7 +475,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Merge</div>
+                <div class="title">Road regulation</div>
                 
               </div>
             </a>
@@ -499,17 +519,19 @@
           <div class="toc-tree-container">
             <div class="toc-tree">
               <ul>
-<li><a class="reference internal" href="#">Roundabout</a><ul>
-<li><a class="reference internal" href="#usage">Usage</a></li>
-<li><a class="reference internal" href="#versions">Versions</a></li>
-<li><a class="reference internal" href="#default-configuration">Default configuration</a></li>
-<li><a class="reference internal" href="#api">API</a><ul>
-<li><a class="reference internal" href="#highway_env.envs.roundabout_env.RoundaboutEnv"><code class="docutils literal notranslate"><span class="pre">RoundaboutEnv</span></code></a><ul>
-<li><a class="reference internal" href="#highway_env.envs.roundabout_env.RoundaboutEnv.default_config"><code class="docutils literal notranslate"><span class="pre">RoundaboutEnv.default_config()</span></code></a></li>
+<li><a class="reference internal" href="#">Procedural Generation</a><ul>
+<li><a class="reference internal" href="#use">Use</a></li>
+<li><a class="reference internal" href="#the-generation-process">The Generation Process</a><ul>
+<li><a class="reference internal" href="#phase-1-random-swarm-generation">Phase 1: Random Swarm Generation</a></li>
+<li><a class="reference internal" href="#phase-2-rectification">Phase 2: Rectification</a></li>
+<li><a class="reference internal" href="#phase-3-twist-optimization">Phase 3: Twist Optimization</a></li>
+<li><a class="reference internal" href="#phase-4-boundary-creation">Phase 4: Boundary Creation</a></li>
+<li><a class="reference internal" href="#phase-5-validation">Phase 5: Validation</a></li>
 </ul>
 </li>
-</ul>
-</li>
+<li><a class="reference internal" href="#parameters-guide">Parameters Guide</a></li>
+<li><a class="reference internal" href="#spatial-hashing">Spatial Hashing</a></li>
+<li><a class="reference internal" href="#visualizer">Visualizer</a></li>
 </ul>
 </li>
 </ul>
@@ -596,11 +618,11 @@
         })()
       </script>
 
-    <script src="../../_static/documentation_options.js?v=a5603611"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/scripts/celshast.js?v=a788a8c6"></script>
-    <script src="../../_static/thebelab-helper.js"></script>
+    <script src="../../../_static/documentation_options.js?v=a5603611"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/celshast.js?v=a788a8c6"></script>
+    <script src="../../../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     

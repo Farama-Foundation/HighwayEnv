@@ -230,6 +230,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -244,6 +245,7 @@
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../vehicle/behavior/">Behavior</a></li>
@@ -348,6 +350,12 @@ on a lane. By default, the search is limited to the current lane segment; when
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">neighbour_vehicles_connected_lanes</span></code> is enabled, connected next
 and previous segments are included. See <a class="reference internal" href="../neighbour_vehicles/#road-neighbour-vehicles"><span class="std std-ref">Neighbour vehicles</span></a> for the full description,
 environment version mapping, and a visual comparison.</p>
+</section>
+<section id="partitionedroadnetwork">
+<h2>PartitionedRoadNetwork<a class="headerlink" href="#partitionedroadnetwork" title="Link to this heading">¶</a></h2>
+<p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">PartitionedRoadNetwork</span></code> is a type of RoadNetwork which supports the partitioning of lanes into grids for significantly faster proximal checks.</p>
+<p>Partitioning is done as lanes are added to update a mapping from grid cells to the indices of lanes who pass through them.</p>
+<p>The class assumes that lanes will not be removed or be changed in any way after being added.</p>
 </section>
 <section id="module-highway_env.road.road">
 <span id="api"></span><h2>API<a class="headerlink" href="#module-highway_env.road.road" title="Link to this heading">¶</a></h2>
@@ -483,6 +491,7 @@ vehicle is projected on it considering its local coordinates in the lane.</p></l
               <ul>
 <li><a class="reference internal" href="#">Road</a><ul>
 <li><a class="reference internal" href="#neighbour-vehicles">Neighbour vehicles</a></li>
+<li><a class="reference internal" href="#partitionedroadnetwork">PartitionedRoadNetwork</a></li>
 <li><a class="reference internal" href="#module-highway_env.road.road">API</a><ul>
 <li><a class="reference internal" href="#highway_env.road.road.Road"><code class="docutils literal notranslate"><span class="pre">Road</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.road.road.Road.act"><code class="docutils literal notranslate"><span class="pre">Road.act()</span></code></a></li>

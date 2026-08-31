@@ -229,6 +229,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +244,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -317,6 +319,7 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -335,6 +338,7 @@
     <span class="n">VEHICLE_LENGTH</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">length</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">line_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">LineType</span><span class="p">]</span>
+    <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span>
 
 <div class="viewcode-block" id="AbstractLane.position">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.AbstractLane.position">[docs]</a>
@@ -501,7 +505,7 @@
 
 <div class="viewcode-block" id="LineType">
 <a class="viewcode-back" href="../../../../dynamics/road/lane/#highway_env.road.lane.LineType">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LineType</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LineType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A lane side line type.&quot;&quot;&quot;</span>
 
     <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
@@ -887,9 +891,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">lane_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
-        <span class="n">left_boundary_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
-        <span class="n">right_boundary_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+        <span class="n">lane_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
+        <span class="n">left_boundary_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
+        <span class="n">right_boundary_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span>
         <span class="n">line_types</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">LineType</span><span class="p">,</span> <span class="n">LineType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">forbidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">speed_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
@@ -902,6 +906,8 @@
             <span class="n">speed_limit</span><span class="o">=</span><span class="n">speed_limit</span><span class="p">,</span>
             <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_boundary_points</span> <span class="o">=</span> <span class="n">right_boundary_points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_boundary_points</span> <span class="o">=</span> <span class="n">left_boundary_points</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">right_boundary</span> <span class="o">=</span> <span class="n">LinearSpline2D</span><span class="p">(</span><span class="n">right_boundary_points</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left_boundary</span> <span class="o">=</span> <span class="n">LinearSpline2D</span><span class="p">(</span><span class="n">left_boundary_points</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_width</span><span class="p">()</span>

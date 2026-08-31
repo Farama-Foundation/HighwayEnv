@@ -229,6 +229,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +244,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -320,7 +322,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.envs.registration</span><span class="w"> </span><span class="kn">import</span> <span class="n">register</span><span class="p">,</span> <span class="n">registry</span>
 
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.12.1&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.12.2.dev0&quot;</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">farama_notifications</span><span class="w"> </span><span class="kn">import</span> <span class="n">notifications</span>
@@ -499,6 +501,12 @@
     <span class="n">register</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;u-turn-v1&quot;</span><span class="p">,</span>
         <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.u_turn_env:ConnectedLaneUTurnEnv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># random_road_env.py</span>
+    <span class="n">register</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;random-road-v0&quot;</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;highway_env.envs.random_road_env:RandomRoadEnv&quot;</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 

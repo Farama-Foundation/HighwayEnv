@@ -229,6 +229,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -243,6 +244,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -321,7 +323,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pygame</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">LineType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.lane</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractLane</span><span class="p">,</span> <span class="n">LineType</span><span class="p">,</span> <span class="n">PolyLane</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.road.road</span><span class="w"> </span><span class="kn">import</span> <span class="n">Road</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">highway_env.vehicle.graphics</span><span class="w"> </span><span class="kn">import</span> <span class="n">VehicleGraphics</span>
@@ -350,7 +352,7 @@
     <span class="n">MOVING_FACTOR</span> <span class="o">=</span> <span class="mf">0.1</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">surf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
@@ -428,7 +430,7 @@
 
 <div class="viewcode-block" id="WorldSurface.handle_event">
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.WorldSurface.handle_event">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle pygame events for moving and zooming in the displayed area.</span>
 
@@ -472,6 +474,23 @@
 <span class="sd">        :param lane: the lane to be displayed</span>
 <span class="sd">        :param surface: the pygame surface</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Optimized path for PolyLane with continuous borders</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="n">PolyLane</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">lane</span><span class="o">.</span><span class="n">line_types</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span>
+            <span class="ow">and</span> <span class="n">lane</span><span class="o">.</span><span class="n">line_types</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">LineType</span><span class="o">.</span><span class="n">CONTINUOUS</span>
+        <span class="p">):</span>
+            <span class="n">thickness</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">pix</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">STRIPE_WIDTH</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">left_pixels</span> <span class="o">=</span> <span class="p">[</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">lane</span><span class="o">.</span><span class="n">left_boundary_points</span><span class="p">]</span>
+            <span class="n">right_pixels</span> <span class="o">=</span> <span class="p">[</span><span class="n">surface</span><span class="o">.</span><span class="n">vec2pix</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">lane</span><span class="o">.</span><span class="n">right_boundary_points</span><span class="p">]</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">left_pixels</span><span class="p">,</span> <span class="n">thickness</span><span class="p">)</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">right_pixels</span><span class="p">,</span> <span class="n">thickness</span><span class="p">)</span>
+
+            <span class="k">return</span>
+
         <span class="n">stripes_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
             <span class="mi">2</span>
             <span class="o">*</span> <span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">())</span>
@@ -662,8 +681,9 @@
         <span class="n">surface</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">GREY</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">_from</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">_to</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]:</span>
-                    <span class="n">LaneGraphics</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span></div>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">_from</span><span class="p">][</span><span class="n">_to</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">_from</span><span class="p">,</span> <span class="n">_to</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">road</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">reversed_lane_indices</span><span class="p">:</span>
+                        <span class="n">LaneGraphics</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RoadGraphics.display_traffic">
@@ -769,8 +789,8 @@
 <a class="viewcode-back" href="../../../../graphics/#highway_env.road.graphics.RoadObjectGraphics.blit_rotate">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">blit_rotate</span><span class="p">(</span>
-        <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span>
-        <span class="n">image</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SurfaceType</span><span class="p">,</span>
+        <span class="n">surf</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">,</span>
+        <span class="n">image</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">,</span>
         <span class="n">pos</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span>
         <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">origin_pos</span><span class="p">:</span> <span class="n">Vector</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

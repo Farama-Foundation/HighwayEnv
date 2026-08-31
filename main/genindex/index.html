@@ -228,6 +228,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../environments/two_way/">Two Way</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/exit/">Exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../environments/u_turn/">U-Turn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/random_road/">Random Road</a></li>
 </ul>
 </li>
 </ul>
@@ -242,6 +243,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/road/">Road</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/neighbour_vehicles/">Neighbour vehicles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/road/regulation/">Road regulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamics/road/procedural_generation/">Procedural Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/kinematics/">Kinematics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/controller/">Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dynamics/vehicle/behavior/">Behavior</a></li>
@@ -441,10 +443,10 @@
 </li>
         <li><a href="../environments/parking/#highway_env.envs.parking_env.ParkingEnv.compute_reward">compute_reward() (highway_env.envs.parking_env.ParkingEnv method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="../make_your_own/#highway_env.envs.common.abstract.ConnectedLaneNeighboursMixin">ConnectedLaneNeighboursMixin (class in highway_env.envs.common.abstract)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="../graphics/#highway_env.road.graphics.LaneGraphics.continuous_curve">continuous_curve() (highway_env.road.graphics.LaneGraphics class method)</a>
 </li>
         <li><a href="../graphics/#highway_env.road.graphics.LaneGraphics.continuous_line">continuous_line() (highway_env.road.graphics.LaneGraphics class method)</a>
@@ -463,6 +465,10 @@
           <li><a href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.create_from">(highway_env.vehicle.kinematics.Vehicle class method)</a>
 </li>
         </ul></li>
+        <li><a href="../observations/#highway_env.envs.common.observation.NavigationObservation.create_new_path">create_new_path() (highway_env.envs.common.observation.NavigationObservation method)</a>
+</li>
+        <li><a href="../environments/random_road/#highway_env.envs.random_road_env.RandomRoadEnv.create_parking_spots">create_parking_spots() (highway_env.envs.random_road_env.RandomRoadEnv method)</a>
+</li>
         <li><a href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.create_random">create_random() (highway_env.vehicle.kinematics.Vehicle class method)</a>
 </li>
     </ul></td>
@@ -490,6 +496,8 @@
 </li>
           <li><a href="../environments/racetrack/#highway_env.envs.racetrack_env.RacetrackEnv.default_config">(highway_env.envs.racetrack_env.RacetrackEnv class method)</a>
 </li>
+          <li><a href="../environments/random_road/#highway_env.envs.random_road_env.RandomRoadEnv.default_config">(highway_env.envs.random_road_env.RandomRoadEnv class method)</a>
+</li>
           <li><a href="../environments/roundabout/#highway_env.envs.roundabout_env.RoundaboutEnv.default_config">(highway_env.envs.roundabout_env.RoundaboutEnv class method)</a>
 </li>
           <li><a href="../environments/two_way/#highway_env.envs.two_way_env.TwoWayEnv.default_config">(highway_env.envs.two_way_env.TwoWayEnv class method)</a>
@@ -508,6 +516,8 @@
         <ul>
           <li><a href="../environments/parking/#highway_env.envs.parking_env.ParkingEnv.define_spaces">(highway_env.envs.parking_env.ParkingEnv method)</a>
 </li>
+          <li><a href="../environments/random_road/#highway_env.envs.random_road_env.RandomRoadEnv.define_spaces">(highway_env.envs.random_road_env.RandomRoadEnv method)</a>
+</li>
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
@@ -516,6 +526,8 @@
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.DELTA_RANGE">DELTA_RANGE (highway_env.vehicle.behavior.IDMVehicle attribute)</a>
 </li>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.desired_gap">desired_gap() (highway_env.vehicle.behavior.IDMVehicle method)</a>
+</li>
+        <li><a href="../observations/#highway_env.envs.common.observation.DictObservation">DictObservation (class in highway_env.envs.common.observation)</a>
 </li>
         <li><a href="../actions/#highway_env.envs.common.action.DiscreteAction">DiscreteAction (class in highway_env.envs.common.action)</a>
 </li>
@@ -608,6 +620,8 @@
         <li><a href="../graphics/#highway_env.envs.common.graphics.EnvViewer.get_image">get_image() (highway_env.envs.common.graphics.EnvViewer method)</a>
 </li>
         <li><a href="../dynamics/vehicle/controller/#highway_env.vehicle.controller.ControlledVehicle.get_routes_at_intersection">get_routes_at_intersection() (highway_env.vehicle.controller.ControlledVehicle method)</a>
+</li>
+        <li><a href="../observations/#highway_env.envs.common.observation.NavigationObservation.get_waypoint">get_waypoint() (highway_env.envs.common.observation.NavigationObservation method)</a>
 </li>
         <li><a href="../observations/#highway_env.envs.common.observation.GrayscaleObservation">GrayscaleObservation (class in highway_env.envs.common.observation)</a>
 </li>
@@ -778,14 +792,18 @@
 </li>
         <li><a href="../environments/lane_keeping/#highway_env.envs.lane_keeping_env.LaneKeepingEnv">LaneKeepingEnv (class in highway_env.envs.lane_keeping_env)</a>
 </li>
+        <li><a href="../observations/#highway_env.envs.common.observation.LaneLidarObservation">LaneLidarObservation (class in highway_env.envs.common.observation)</a>
+</li>
         <li><a href="../dynamics/vehicle/kinematics/#highway_env.vehicle.kinematics.Vehicle.LENGTH">LENGTH (highway_env.vehicle.kinematics.Vehicle attribute)</a>
+</li>
+        <li><a href="../observations/#highway_env.envs.common.observation.LidarObservation">LidarObservation (class in highway_env.envs.common.observation)</a>
 </li>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle">LinearVehicle (class in highway_env.vehicle.behavior)</a>
 </li>
-        <li><a href="../dynamics/road/lane/#highway_env.road.lane.LineType">LineType (class in highway_env.road.lane)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="../dynamics/road/lane/#highway_env.road.lane.LineType">LineType (class in highway_env.road.lane)</a>
+</li>
         <li><a href="../dynamics/road/lane/#highway_env.road.lane.AbstractLane.local_angle">local_angle() (highway_env.road.lane.AbstractLane method)</a>
 </li>
         <li><a href="../dynamics/road/lane/#highway_env.road.lane.AbstractLane.local_coordinates">local_coordinates() (highway_env.road.lane.AbstractLane method)</a>
@@ -867,6 +885,8 @@
   <h2>N</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="../observations/#highway_env.envs.common.observation.NavigationObservation">NavigationObservation (class in highway_env.envs.common.observation)</a>
+</li>
         <li><a href="../dynamics/road/road/#highway_env.road.road.Road.neighbour_vehicles">neighbour_vehicles() (highway_env.road.road.Road method)</a>
 </li>
     </ul></td>
@@ -883,16 +903,24 @@
   <h2>O</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="../observations/#highway_env.envs.common.observation.ExitObservation.observe">observe() (highway_env.envs.common.observation.ExitObservation method)</a>
+        <li><a href="../observations/#highway_env.envs.common.observation.DictObservation.observe">observe() (highway_env.envs.common.observation.DictObservation method)</a>
 
         <ul>
+          <li><a href="../observations/#highway_env.envs.common.observation.ExitObservation.observe">(highway_env.envs.common.observation.ExitObservation method)</a>
+</li>
           <li><a href="../observations/#highway_env.envs.common.observation.GrayscaleObservation.observe">(highway_env.envs.common.observation.GrayscaleObservation method)</a>
 </li>
           <li><a href="../observations/#highway_env.envs.common.observation.KinematicObservation.observe">(highway_env.envs.common.observation.KinematicObservation method)</a>
 </li>
           <li><a href="../observations/#highway_env.envs.common.observation.KinematicsGoalObservation.observe">(highway_env.envs.common.observation.KinematicsGoalObservation method)</a>
 </li>
+          <li><a href="../observations/#highway_env.envs.common.observation.LidarObservation.observe">(highway_env.envs.common.observation.LidarObservation method)</a>
+</li>
+          <li><a href="../observations/#highway_env.envs.common.observation.NavigationObservation.observe">(highway_env.envs.common.observation.NavigationObservation method)</a>
+</li>
           <li><a href="../observations/#highway_env.envs.common.observation.OccupancyGridObservation.observe">(highway_env.envs.common.observation.OccupancyGridObservation method)</a>
+</li>
+          <li><a href="../observations/#highway_env.envs.common.observation.RelativeGoalObservation.observe">(highway_env.envs.common.observation.RelativeGoalObservation method)</a>
 </li>
         </ul></li>
     </ul></td>
@@ -957,16 +985,20 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="../environments/racetrack/#highway_env.envs.racetrack_env.RacetrackEnv">RacetrackEnv (class in highway_env.envs.racetrack_env)</a>
 </li>
+        <li><a href="../environments/random_road/#highway_env.envs.random_road_env.RandomRoadEnv">RandomRoadEnv (class in highway_env.envs.random_road_env)</a>
+</li>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.IDMVehicle.recover_from_stop">recover_from_stop() (highway_env.vehicle.behavior.IDMVehicle method)</a>
 </li>
         <li><a href="../dynamics/road/regulation/#highway_env.road.regulation.RegulatedRoad">RegulatedRoad (class in highway_env.road.regulation)</a>
 </li>
-        <li><a href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.render">render() (highway_env.envs.common.abstract.AbstractEnv method)</a>
+        <li><a href="../observations/#highway_env.envs.common.observation.RelativeGoalObservation">RelativeGoalObservation (class in highway_env.envs.common.observation)</a>
 </li>
-        <li><a href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.reset">reset() (highway_env.envs.common.abstract.AbstractEnv method)</a>
+        <li><a href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.render">render() (highway_env.envs.common.abstract.AbstractEnv method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv.reset">reset() (highway_env.envs.common.abstract.AbstractEnv method)</a>
+</li>
         <li><a href="../dynamics/road/regulation/#highway_env.road.regulation.RegulatedRoad.respect_priorities">respect_priorities() (highway_env.road.regulation.RegulatedRoad static method)</a>
 </li>
         <li><a href="../dynamics/road/road/#highway_env.road.road.Road">Road (class in highway_env.road.road)</a>
@@ -1006,19 +1038,29 @@
 </li>
           <li><a href="../actions/#highway_env.envs.common.action.MultiAgentAction.space">(highway_env.envs.common.action.MultiAgentAction method)</a>
 </li>
+          <li><a href="../observations/#highway_env.envs.common.observation.DictObservation.space">(highway_env.envs.common.observation.DictObservation method)</a>
+</li>
           <li><a href="../observations/#highway_env.envs.common.observation.GrayscaleObservation.space">(highway_env.envs.common.observation.GrayscaleObservation method)</a>
 </li>
           <li><a href="../observations/#highway_env.envs.common.observation.KinematicObservation.space">(highway_env.envs.common.observation.KinematicObservation method)</a>
 </li>
           <li><a href="../observations/#highway_env.envs.common.observation.KinematicsGoalObservation.space">(highway_env.envs.common.observation.KinematicsGoalObservation method)</a>
 </li>
+          <li><a href="../observations/#highway_env.envs.common.observation.LidarObservation.space">(highway_env.envs.common.observation.LidarObservation method)</a>
+</li>
+          <li><a href="../observations/#highway_env.envs.common.observation.NavigationObservation.space">(highway_env.envs.common.observation.NavigationObservation method)</a>
+</li>
           <li><a href="../observations/#highway_env.envs.common.observation.OccupancyGridObservation.space">(highway_env.envs.common.observation.OccupancyGridObservation method)</a>
+</li>
+          <li><a href="../observations/#highway_env.envs.common.observation.RelativeGoalObservation.space">(highway_env.envs.common.observation.RelativeGoalObservation method)</a>
 </li>
         </ul></li>
         <li><a href="../dynamics/vehicle/controller/#highway_env.vehicle.controller.ControlledVehicle.speed_control">speed_control() (highway_env.vehicle.controller.ControlledVehicle method)</a>
 </li>
         <li><a href="../dynamics/vehicle/controller/#highway_env.vehicle.controller.MDPVehicle.speed_to_index">speed_to_index() (highway_env.vehicle.controller.MDPVehicle method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="../dynamics/vehicle/controller/#highway_env.vehicle.controller.MDPVehicle.speed_to_index_default">speed_to_index_default() (highway_env.vehicle.controller.MDPVehicle class method)</a>
 </li>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.steering_control">steering_control() (highway_env.vehicle.behavior.LinearVehicle method)</a>
@@ -1027,8 +1069,6 @@
           <li><a href="../dynamics/vehicle/controller/#highway_env.vehicle.controller.ControlledVehicle.steering_control">(highway_env.vehicle.controller.ControlledVehicle method)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="../dynamics/vehicle/behavior/#highway_env.vehicle.behavior.LinearVehicle.steering_features">steering_features() (highway_env.vehicle.behavior.LinearVehicle method)</a>
 </li>
         <li><a href="../actions/#highway_env.envs.common.action.ContinuousAction.STEERING_RANGE">STEERING_RANGE (highway_env.envs.common.action.ContinuousAction attribute)</a>
@@ -1099,6 +1139,8 @@
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="../observations/#highway_env.envs.common.observation.LaneLidarObservation.trace">trace() (highway_env.envs.common.observation.LaneLidarObservation method)</a>
+</li>
         <li><a href="../environments/two_way/#highway_env.envs.two_way_env.TwoWayEnv">TwoWayEnv (class in highway_env.envs.two_way_env)</a>
 </li>
     </ul></td>
@@ -1108,6 +1150,10 @@
 <section id="U" class="genindex-section">
   <h2>U</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="../observations/#highway_env.envs.common.observation.NavigationObservation.update_next_node">update_next_node() (highway_env.envs.common.observation.NavigationObservation method)</a>
+</li>
+    </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="../environments/u_turn/#highway_env.envs.u_turn_env.UTurnEnv">UTurnEnv (class in highway_env.envs.u_turn_env)</a>
 </li>
