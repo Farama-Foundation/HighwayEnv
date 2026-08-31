@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Sequence, Tuple
 
 import numpy as np
+from numpy.typing import NDArray
 
 from highway_env import utils
 
@@ -29,7 +30,7 @@ class RoadObject(ABC):
     def __init__(
         self,
         road: Road,
-        position: Sequence[float],
+        position: Sequence[float] | NDArray[np.floating],
         heading: float = 0,
         speed: float = 0,
     ):
@@ -48,7 +49,9 @@ class RoadObject(ABC):
             if self.road
             else None
         )
-        self.lane = self.road.network.get_lane(self.lane_index) if self.road else None
+        self.lane = (
+            self.road.network.get_lane(self.lane_index) if self.lane_index else None
+        )
 
         # Enable collision with other collidables
         self.collidable = True
@@ -180,7 +183,9 @@ class RoadObject(ABC):
         points = (rotation @ points).T + np.tile(self.position, (4, 1))
         return np.vstack([points, points[0:1]])
 
-    def lane_distance_to(self, other: RoadObject, lane: AbstractLane = None) -> float:
+    def lane_distance_to(
+        self, other: RoadObject, lane: AbstractLane | None = None
+    ) -> float:
         """
         Compute the signed distance to another object along a lane.
 
@@ -191,15 +196,29 @@ class RoadObject(ABC):
         if not other:
             return np.nan
         if not lane:
+            assert self.lane is not None
             lane = self.lane
         return (
             lane.local_coordinates(other.position)[0]
             - lane.local_coordinates(self.position)[0]
         )
 
+    def intersects_with_line(self, p0: np.ndarray, p1: np.ndarray) -> bool:
+        """
+        Determines if intersecting with a line segment.
+        """
+        line_polygon = np.stack([p0, p1])
+        rect_polygon = self.polygon()
+        displacement = np.zeros_like(line_polygon, shape=2)
+
+        return utils.are_polygons_intersecting(
+            rect_polygon, line_polygon, displacement, displacement
+        )[0]
+
     @property
     def on_road(self) -> bool:
         """Is the object on its current lane, or off-road?"""
+        assert self.lane
         return self.lane.on_lane(self.position)
 
     def front_distance_to(self, other: RoadObject) -> float:

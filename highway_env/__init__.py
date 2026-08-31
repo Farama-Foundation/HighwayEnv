@@ -4,7 +4,7 @@ import sys
 from gymnasium.envs.registration import register, registry
 
 
-__version__ = "1.12.1"
+__version__ = "1.12.2.dev0"
 
 try:
     from farama_notifications import notifications
@@ -181,6 +181,12 @@ def _register_highway_envs():
     register(
         id="u-turn-v1",
         entry_point="highway_env.envs.u_turn_env:ConnectedLaneUTurnEnv",
+    )
+
+    # random_road_env.py
+    register(
+        id="random-road-v0",
+        entry_point="highway_env.envs.random_road_env:RandomRoadEnv",
     )
 
 

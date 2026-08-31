@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import math
 import os
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, cast
 
 import numpy as np
 import pygame
+from numpy.typing import NDArray
 
 from highway_env.envs.common.action import (
     ActionType,
@@ -16,8 +18,13 @@ from highway_env.vehicle.graphics import VehicleGraphics
 
 
 if TYPE_CHECKING:
-    from highway_env.envs import AbstractEnv
-    from highway_env.envs.common.abstract import Action
+    from highway_env.envs.common.abstract import AbstractEnv, Action
+    from highway_env.envs.common.observation import (
+        LaneLidarObservation,
+        LidarObservation,
+        NavigationObservation,
+        ObservationType,
+    )
 
 
 class EnvViewer:
@@ -96,12 +103,19 @@ class EnvViewer:
         :param actions: list of action, following the env's action space specification
         """
         if isinstance(self.env.action_type, DiscreteMetaAction):
-            actions = [self.env.action_type.actions[a] for a in actions]
+            assert self.env.action_type.actions is not None
+            mapped_actions = [
+                self.env.action_type.actions[a] for a in cast(list[int], actions)
+            ]
         elif isinstance(self.env.action_type, ContinuousAction):
-            actions = [self.env.action_type.get_action(a) for a in actions]
-        if len(actions) > 1:
+            mapped_actions = [
+                self.env.action_type.get_action(a) for a in cast(list[NDArray], actions)
+            ]
+        else:
+            mapped_actions = actions
+        if len(mapped_actions) > 1:
             self.vehicle_trajectory = self.env.vehicle.predict_trajectory(
-                actions,
+                mapped_actions,
                 1 / self.env.config["policy_frequency"],
                 1 / 3 / self.env.config["policy_frequency"],
                 1 / self.env.config["simulation_frequency"],
@@ -121,6 +135,7 @@ class EnvViewer:
         if not self.enabled:
             return
 
+        assert self.env.road is not None
         self.sim_surface.move_display_window_to(self.window_position())
         RoadGraphics.display(self.env.road, self.sim_surface)
 
@@ -136,6 +151,7 @@ class EnvViewer:
         if EnvViewer.agent_display:
             EnvViewer.agent_display(self.agent_surface, self.sim_surface)
             if not self.offscreen:
+                assert self.agent_surface is not None
                 if self.config["screen_width"] > self.config["screen_height"]:
                     self.screen.blit(
                         self.agent_surface, (0, self.config["screen_height"])
@@ -145,6 +161,7 @@ class EnvViewer:
                         self.agent_surface, (self.config["screen_width"], 0)
                     )
 
+        assert self.env.road is not None
         RoadGraphics.display_traffic(
             self.env.road,
             self.sim_surface,
@@ -197,9 +214,7 @@ class EnvViewer:
 
 class EventHandler:
     @classmethod
-    def handle_event(
-        cls, action_type: ActionType, event: pygame.event.EventType
-    ) -> None:
+    def handle_event(cls, action_type: ActionType, event: pygame.event.Event) -> None:
         """
         Map the pygame keyboard events to control decisions
 
@@ -208,12 +223,12 @@ class EventHandler:
         """
         if isinstance(action_type, DiscreteMetaAction):
             cls.handle_discrete_action_event(action_type, event)
-        elif action_type.__class__ == ContinuousAction:
+        elif type(action_type) is ContinuousAction:
             cls.handle_continuous_action_event(action_type, event)
 
     @classmethod
     def handle_discrete_action_event(
-        cls, action_type: DiscreteMetaAction, event: pygame.event.EventType
+        cls, action_type: DiscreteMetaAction, event: pygame.event.Event
     ) -> None:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT and action_type.longitudinal:
@@ -227,7 +242,7 @@ class EventHandler:
 
     @classmethod
     def handle_continuous_action_event(
-        cls, action_type: ContinuousAction, event: pygame.event.EventType
+        cls, action_type: ContinuousAction, event: pygame.event.Event
     ) -> None:
         action = action_type.last_action.copy()
         steering_index = action_type.space().shape[0] - 1
@@ -253,17 +268,31 @@ class EventHandler:
 
 
 class ObservationGraphics:
-    COLOR = (0, 0, 0)
+    LIDAR_COLOR = (0, 0, 0)  # applies to display_grid and display_rays
+    NAV_COLOR = (200, 200, 0)  # display_navigation_arrow
 
     @classmethod
-    def display(cls, obs, sim_surface):
-        from highway_env.envs.common.observation import LidarObservation
+    def display(cls, obs: ObservationType, sim_surface):
+        from highway_env.envs.common.observation import (
+            DictObservation,
+            LaneLidarObservation,
+            LidarObservation,
+            NavigationObservation,
+        )
 
-        if isinstance(obs, LidarObservation):
+        if isinstance(obs, NavigationObservation):
+            cls.display_navigation_arrow(obs, sim_surface)
+        elif isinstance(obs, LaneLidarObservation):
+            cls.display_rays(obs, sim_surface)
+        elif isinstance(obs, LidarObservation):
             cls.display_grid(obs, sim_surface)
+        elif isinstance(obs, DictObservation):
+            for obs_type in obs.observation_types.values():
+                cls.display(obs_type, sim_surface)
 
     @classmethod
-    def display_grid(cls, lidar_observation, surface):
+    def display_grid(cls, lidar_observation: LidarObservation, surface):
+        obs_origin = cast(NDArray, lidar_observation.origin)
         cells = lidar_observation.grid.shape[0]
         psi = np.repeat(
             -lidar_observation.angle / 2 + lidar_observation.angle * np.arange(cells),
@@ -276,10 +305,44 @@ class ObservationGraphics:
         points = [
             (
                 surface.pos2pix(
-                    lidar_observation.origin[0] + r[i] * np.cos(psi[i]),
-                    lidar_observation.origin[1] + r[i] * np.sin(psi[i]),
+                    obs_origin[0] + r[i] * np.cos(psi[i]),
+                    obs_origin[1] + r[i] * np.sin(psi[i]),
                 )
             )
             for i in range(np.size(psi))
         ]
-        pygame.draw.lines(surface, ObservationGraphics.COLOR, True, points, 1)
+        pygame.draw.lines(surface, ObservationGraphics.LIDAR_COLOR, True, points, 1)
+
+    @classmethod
+    def display_navigation_arrow(cls, nav_observation: NavigationObservation, surface):
+        """
+        Draws a line that shows the next waypoint
+        """
+        origin = nav_observation.observer_vehicle.position
+
+        pygame.draw.line(
+            surface,
+            ObservationGraphics.NAV_COLOR,
+            surface.pos2pix(origin[0], origin[1]),
+            surface.pos2pix(nav_observation.waypoint[0], nav_observation.waypoint[1]),
+            1,
+        )
+
+    @classmethod
+    def display_rays(cls, lanelidar_observation: LaneLidarObservation, surface):
+        obs_origin = cast(NDArray, lanelidar_observation.origin)
+        for index in range(lanelidar_observation.cells):  # [0]:
+            angle = (
+                index * lanelidar_observation.angle
+                + lanelidar_observation.vehicle_heading
+            )
+            dist = lanelidar_observation.grid[index][0]
+
+            world_x = obs_origin[0] + math.cos(angle) * dist
+            world_y = obs_origin[1] + math.sin(angle) * dist
+            origin = surface.pos2pix(
+                obs_origin[0],
+                obs_origin[1],
+            )
+            point = surface.pos2pix(world_x, world_y)
+            pygame.draw.line(surface, ObservationGraphics.LIDAR_COLOR, origin, point, 1)

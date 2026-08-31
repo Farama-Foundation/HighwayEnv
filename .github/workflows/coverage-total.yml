@@ -38,4 +38,4 @@ jobs:
       - name: Install dependencies
         run: uv sync --group test
       - name: Test with minimum total coverage
-        run: uv run pytest --cov=highway_env --cov-report=term --cov-fail-under=85
+        run: uv run pytest -n logical --cov=highway_env --cov-report=term --cov-fail-under=85

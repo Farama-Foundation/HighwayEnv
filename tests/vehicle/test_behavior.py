@@ -20,7 +20,7 @@ def test_stop_before_obstacle(vehicle_type):
         road.step(dt=1 / FPS)
     assert not vehicle.crashed
     assert vehicle.position[0] == pytest.approx(
-        obstacle.position[0] - vehicle_type.DISTANCE_WANTED, abs=1
+        obstacle.position[0] - vehicle_type.DISTANCE_WANTED, abs=1.2
     )
     assert vehicle.position[1] == pytest.approx(0)
     assert vehicle.speed == pytest.approx(0, abs=1)

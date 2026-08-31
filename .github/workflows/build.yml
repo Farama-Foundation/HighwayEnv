@@ -48,4 +48,4 @@ jobs:
     - name: Install dependencies
       run: uv sync --group test
     - name: Test with pytest
-      run: uv run pytest --cov=./ --cov-report=xml
+      run: uv run pytest -n logical --cov=./ --cov-report=xml

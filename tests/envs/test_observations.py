@@ -11,6 +11,13 @@ gym.register_envs(highway_env)
     "observation_config",
     [
         {"type": "LidarObservation"},
+        {
+            "type": "DictObservation",
+            "observation_configs": {
+                "lidar": {"type": "LidarObservation"},
+                "kinematics": {"type": "Kinematics"},
+            },
+        },
     ],
 )
 def test_observation_type(observation_config):
@@ -21,6 +28,9 @@ def test_observation_type(observation_config):
         obs, _, _, _, _ = env.step(action)
         assert env.action_space.contains(action)
         assert env.observation_space.contains(obs)
+        if observation_config["type"] == "DictObservation":
+            assert isinstance(obs, dict)
+            assert set(obs.keys()) == set(observation_config["observation_configs"])
     env.close()
 
 

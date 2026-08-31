@@ -147,8 +147,8 @@ class VehicleGraphics:
 
     @staticmethod
     def blit_rotate(
-        surf: pygame.SurfaceType,
-        image: pygame.SurfaceType,
+        surf: pygame.Surface,
+        image: pygame.Surface,
         pos: Vector,
         angle: float,
         origin_pos: Vector = None,

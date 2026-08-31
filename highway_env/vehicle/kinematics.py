@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 from collections import deque
+from typing import Any
 
 import numpy as np
 
@@ -46,6 +47,7 @@ class Vehicle(RoadObject):
         self.impact = None
         self.log = []
         self.history = deque(maxlen=self.HISTORY_SIZE)
+        self.goal: Any = None
 
     @classmethod
     def create_random(

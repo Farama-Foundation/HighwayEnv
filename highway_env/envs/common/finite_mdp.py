@@ -11,7 +11,7 @@ from highway_env.vehicle.kinematics import Vehicle
 
 
 if TYPE_CHECKING:
-    from highway_env.envs import AbstractEnv
+    from highway_env.envs.common.abstract import AbstractEnv
 
 
 def finite_mdp(

@@ -56,7 +56,9 @@ class AbstractEnv(gym.Env):
     PERCEPTION_DISTANCE = 5.0 * Vehicle.MAX_SPEED
     """The maximum distance of any vehicle present in the observation [m]"""
 
-    def __init__(self, config: dict = None, render_mode: str | None = None) -> None:
+    def __init__(
+        self, config: dict | None = None, render_mode: str | None = None
+    ) -> None:
         super().__init__()
 
         # Rendering

@@ -52,7 +52,7 @@ jobs:
         run: uv sync --group test
       - name: Run tests with coverage
         if: steps.diff_gate.outputs.should_test == 'true'
-        run: uv run pytest --cov=highway_env --cov-report=xml
+        run: uv run pytest -n logical --cov=highway_env --cov-report=xml
       - name: Check diff coverage
         if: steps.diff_gate.outputs.should_test == 'true'
         run: uv run diff-cover coverage.xml --compare-branch=${{ steps.diff_gate.outputs.ref }} --fail-under=80

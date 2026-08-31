@@ -7,6 +7,7 @@ from gymnasium.utils.env_checker import check_env
 
 import highway_env
 from highway_env.envs.common.abstract import MultiAgentWrapper
+from highway_env.envs.common.warnings import HighwayEnvExperimentalWarning
 from highway_env.envs.highway_env import HighwayEnv
 
 
@@ -40,6 +41,9 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "The environment intersection-multi-agent-v0 is out of date. You should consider upgrading to version `v2`.",
         "The environment intersection-multi-agent-v1 is out of date. You should consider upgrading to version `v2`.",
     ]
+] + [
+    HighwayEnvExperimentalWarning.template
+    % ("<class 'highway_env.envs.random_road_env.RandomRoadEnv'>")
 ]
 
 
