@@ -614,8 +614,27 @@ class MultiAgentObservation(ObservationType):
         return tuple(obs_type.observe() for obs_type in self.agents_observation_types)
 
 
+class TupleObservation(ObservationType):
+    """Compose several unnamed observation types into a tuple."""
+
+    def __init__(
+        self, env: AbstractEnv, observation_configs: list[dict], **kwargs
+    ) -> None:
+        super().__init__(env)
+        self.observation_types = [
+            observation_factory(self.env, obs_config)
+            for obs_config in observation_configs
+        ]
+
+    def space(self) -> spaces.Tuple:
+        return spaces.Tuple([obs_type.space() for obs_type in self.observation_types])
+
+    def observe(self) -> tuple:
+        return tuple(obs_type.observe() for obs_type in self.observation_types)
+
+
 class DictObservation(ObservationType):
-    """Compose several named observation types into a Gymnasium Dict space."""
+    """Compose several named observation types into a dict."""
 
     def __init__(
         self, env: AbstractEnv, observation_configs: dict[str, dict], **kwargs
