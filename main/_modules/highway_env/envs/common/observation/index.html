@@ -983,10 +983,38 @@
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">obs_type</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span> <span class="k">for</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_observation_types</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="TupleObservation">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.TupleObservation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TupleObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compose several unnamed observation types into a tuple.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">observation_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">observation_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">obs_config</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">obs_config</span> <span class="ow">in</span> <span class="n">observation_configs</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="TupleObservation.space">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.TupleObservation.space">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">([</span><span class="n">obs_type</span><span class="o">.</span><span class="n">space</span><span class="p">()</span> <span class="k">for</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="TupleObservation.observe">
+<a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.TupleObservation.observe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">obs_type</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span> <span class="k">for</span> <span class="n">obs_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_types</span><span class="p">)</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="DictObservation">
 <a class="viewcode-back" href="../../../../../observations/#highway_env.envs.common.observation.DictObservation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DictObservation</span><span class="p">(</span><span class="n">ObservationType</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compose several named observation types into a Gymnasium Dict space.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compose several named observation types into a dict.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">observation_configs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
@@ -1619,35 +1647,37 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">observation_factory</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n">AbstractEnv</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObservationType</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TimeToCollision&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TimeToCollisionObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">KinematicObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;OccupancyGrid&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">OccupancyGridObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;KinematicsGoal&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">KinematicsGoalObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GrayscaleObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">GrayscaleObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AttributesObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">AttributesObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MultiAgentObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">MultiAgentObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DictObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">DictObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;LidarObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">LidarObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ExitObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ExitObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;LaneLidarObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">LaneLidarObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;NavigationObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">NavigationObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RelativeGoalObservation&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">RelativeGoalObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown observation type&quot;</span><span class="p">)</span>
+    <span class="k">match</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]:</span>
+        <span class="k">case</span> <span class="s2">&quot;TimeToCollision&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TimeToCollisionObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;Kinematics&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">KinematicObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;OccupancyGrid&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">OccupancyGridObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;KinematicsGoal&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">KinematicsGoalObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;GrayscaleObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">GrayscaleObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;AttributesObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AttributesObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;MultiAgentObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MultiAgentObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;TupleObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TupleObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;DictObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DictObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;LidarObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LidarObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;ExitObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;LaneLidarObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LaneLidarObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;NavigationObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NavigationObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;RelativeGoalObservation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RelativeGoalObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown observation type&quot;</span><span class="p">)</span>
 </pre></div>
           </article>
         </div>

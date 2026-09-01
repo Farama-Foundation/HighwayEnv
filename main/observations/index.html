@@ -592,27 +592,27 @@ vehicle and 0 for placeholders.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.12        1.          0.          1.
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1.          1.          0.04        1.          0.          1.
    0.        ]
- [ 1.          0.21492836 -0.12       -0.12441245  0.          1.
+ [ 1.          0.1970384   0.08       -0.12041093  0.          1.
    0.        ]
- [ 1.          0.4135172  -0.12       -0.09500351  0.          1.
+ [ 1.          0.41853184  0.         -0.15978755  0.          1.
    0.        ]
- [ 1.          0.60194975  0.         -0.18601096  0.          1.
+ [ 1.          0.64525914 -0.04       -0.05757942  0.          1.
    0.        ]
- [ 1.          0.80227244 -0.08       -0.12346496  0.          1.
+ [ 1.          0.8454404  -0.04       -0.14171338  0.          1.
    0.        ]
- [ 1.          0.9972226  -0.04       -0.08170561  0.          1.
+ [ 1.          1.          0.04       -0.19825329  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.11142831  0.          1.
+ [ 1.          1.          0.04       -0.09979803  0.          1.
    0.        ]
- [ 1.          1.          0.         -0.18585047  0.          1.
+ [ 1.          1.          0.         -0.17602253  0.          1.
    0.        ]
- [ 1.          1.         -0.12       -0.14606684  0.          1.
+ [ 1.          1.          0.         -0.16323823  0.          1.
    0.        ]
- [ 1.          1.         -0.12       -0.18390292  0.          1.
+ [ 1.          1.          0.08       -0.19154775  0.          1.
    0.        ]
- [ 1.          1.         -0.04       -0.13149628  0.          1.
+ [ 0.          0.          0.          0.          0.          0.
    0.        ]
  [ 0.          0.          0.          0.          0.          0.
    0.        ]
@@ -1317,9 +1317,27 @@ at the center of the cell is onroad/offroad. This approach is faster if the grid
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.TupleObservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">TupleObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#TupleObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.TupleObservation" title="Link to this definition">¶</a></dt>
+<dd><p>Compose several unnamed observation types into a tuple.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.TupleObservation.space">
+<span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#TupleObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.TupleObservation.space" title="Link to this definition">¶</a></dt>
+<dd><p>Get the observation space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="highway_env.envs.common.observation.TupleObservation.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#TupleObservation.observe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.TupleObservation.observe" title="Link to this definition">¶</a></dt>
+<dd><p>Get an observation of the environment state.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.DictObservation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">highway_env.envs.common.observation.</span></span><span class="sig-name descname"><span class="pre">DictObservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../make_your_own/#highway_env.envs.common.abstract.AbstractEnv" title="highway_env.envs.common.abstract.AbstractEnv"><span class="pre">AbstractEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#DictObservation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.DictObservation" title="Link to this definition">¶</a></dt>
-<dd><p>Compose several named observation types into a Gymnasium Dict space.</p>
+<dd><p>Compose several named observation types into a dict.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="highway_env.envs.common.observation.DictObservation.space">
 <span class="sig-name descname"><span class="pre">space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/highway_env/envs/common/observation/#DictObservation.space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#highway_env.envs.common.observation.DictObservation.space" title="Link to this definition">¶</a></dt>
@@ -1623,6 +1641,11 @@ relative to the agent’s own position and heading.</p>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.KinematicsGoalObservation"><code class="docutils literal notranslate"><span class="pre">KinematicsGoalObservation</span></code></a><ul>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.KinematicsGoalObservation.space"><code class="docutils literal notranslate"><span class="pre">KinematicsGoalObservation.space()</span></code></a></li>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.KinematicsGoalObservation.observe"><code class="docutils literal notranslate"><span class="pre">KinematicsGoalObservation.observe()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.TupleObservation"><code class="docutils literal notranslate"><span class="pre">TupleObservation</span></code></a><ul>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.TupleObservation.space"><code class="docutils literal notranslate"><span class="pre">TupleObservation.space()</span></code></a></li>
+<li><a class="reference internal" href="#highway_env.envs.common.observation.TupleObservation.observe"><code class="docutils literal notranslate"><span class="pre">TupleObservation.observe()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#highway_env.envs.common.observation.DictObservation"><code class="docutils literal notranslate"><span class="pre">DictObservation</span></code></a><ul>
