@@ -614,8 +614,27 @@ class MultiAgentObservation(ObservationType):
         return tuple(obs_type.observe() for obs_type in self.agents_observation_types)
 
 
+class TupleObservation(ObservationType):
+    """Compose several unnamed observation types into a tuple."""
+
+    def __init__(
+        self, env: AbstractEnv, observation_configs: list[dict], **kwargs
+    ) -> None:
+        super().__init__(env)
+        self.observation_types = [
+            observation_factory(self.env, obs_config)
+            for obs_config in observation_configs
+        ]
+
+    def space(self) -> spaces.Tuple:
+        return spaces.Tuple([obs_type.space() for obs_type in self.observation_types])
+
+    def observe(self) -> tuple:
+        return tuple(obs_type.observe() for obs_type in self.observation_types)
+
+
 class DictObservation(ObservationType):
-    """Compose several named observation types into a Gymnasium Dict space."""
+    """Compose several named observation types into a dict."""
 
     def __init__(
         self, env: AbstractEnv, observation_configs: dict[str, dict], **kwargs
@@ -1193,32 +1212,34 @@ class RelativeGoalObservation(ObservationType):
 
 
 def observation_factory(env: AbstractEnv, config: dict) -> ObservationType:
-    if config["type"] == "TimeToCollision":
-        return TimeToCollisionObservation(env, **config)
-    elif config["type"] == "Kinematics":
-        return KinematicObservation(env, **config)
-    elif config["type"] == "OccupancyGrid":
-        return OccupancyGridObservation(env, **config)
-    elif config["type"] == "KinematicsGoal":
-        return KinematicsGoalObservation(env, **config)
-    elif config["type"] == "GrayscaleObservation":
-        return GrayscaleObservation(env, **config)
-    elif config["type"] == "AttributesObservation":
-        return AttributesObservation(env, **config)
-    elif config["type"] == "MultiAgentObservation":
-        return MultiAgentObservation(env, **config)
-    elif config["type"] == "DictObservation":
-        return DictObservation(env, **config)
-    elif config["type"] == "LidarObservation":
-        return LidarObservation(env, **config)
-    elif config["type"] == "ExitObservation":
-        return ExitObservation(env, **config)
-    elif config["type"] == "LaneLidarObservation":
-        return LaneLidarObservation(env, **config)
-    elif config["type"] == "NavigationObservation":
-        return NavigationObservation(env, **config)
-    elif config["type"] == "RelativeGoalObservation":
-        return RelativeGoalObservation(env, **config)
-
-    else:
-        raise ValueError("Unknown observation type")
+    match config["type"]:
+        case "TimeToCollision":
+            return TimeToCollisionObservation(env, **config)
+        case "Kinematics":
+            return KinematicObservation(env, **config)
+        case "OccupancyGrid":
+            return OccupancyGridObservation(env, **config)
+        case "KinematicsGoal":
+            return KinematicsGoalObservation(env, **config)
+        case "GrayscaleObservation":
+            return GrayscaleObservation(env, **config)
+        case "AttributesObservation":
+            return AttributesObservation(env, **config)
+        case "MultiAgentObservation":
+            return MultiAgentObservation(env, **config)
+        case "TupleObservation":
+            return TupleObservation(env, **config)
+        case "DictObservation":
+            return DictObservation(env, **config)
+        case "LidarObservation":
+            return LidarObservation(env, **config)
+        case "ExitObservation":
+            return ExitObservation(env, **config)
+        case "LaneLidarObservation":
+            return LaneLidarObservation(env, **config)
+        case "NavigationObservation":
+            return NavigationObservation(env, **config)
+        case "RelativeGoalObservation":
+            return RelativeGoalObservation(env, **config)
+        case _:
+            raise ValueError("Unknown observation type")
