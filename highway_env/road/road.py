@@ -455,7 +455,7 @@ class Road:
 
         if sort:
             objects_ = sorted(objects_, key=lambda o: abs(vehicle.lane_distance_to(o)))
-        if count:
+        if count is not None:
             objects_ = objects_[:count]
         return objects_
 

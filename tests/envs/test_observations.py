@@ -52,5 +52,17 @@ def test_occupancy_grid_shape_no_uint8_overflow():
     env.close()
 
 
+def test_kinematics_vehicles_count_one():
+    # Regression: vehicles_count=1 requests zero neighbours, but a count of
+    # zero was treated as "no limit" and every nearby vehicle was returned.
+    config = {"observation": {"type": "Kinematics", "vehicles_count": 1}}
+    env = gym.make("highway-v0", config=config)
+    obs, _ = env.reset(seed=0)
+    assert env.observation_space.shape == (1, 5)
+    assert obs.shape == (1, 5)
+    assert env.observation_space.contains(obs)
+    env.close()
+
+
 if __name__ == "__main__":
     pytest.main([__file__])
