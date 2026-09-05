@@ -487,7 +487,7 @@ class MultiAgentWrapper(Wrapper, RecordConstructorArgs):
         Wrapper.__init__(self, env)
         RecordConstructorArgs.__init__(self)
 
-    def step(self, action):  # unchanged
+    def step(self, action):
         obs, _, _, truncated, info = super().step(action)
         reward = info["agents_rewards"]
         terminated = info["agents_terminated"]

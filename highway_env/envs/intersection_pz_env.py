@@ -11,8 +11,8 @@ class IntersectionParallelEnv(HighwayParallelEnv):
     """
     PettingZoo ``ParallelEnv`` for the 4-way intersection multi-agent scenario.
 
-    Corresponds to ``intersection-multi-agent-v3`` in the Gymnasium registry
-    (requires ``highway-env[multi-agent]``).
+    Corresponds to the standard 4-way intersection multi-agent scenario.
+    Requires ``highway-env[multi-agent]``.
 
     Example::
 
@@ -41,8 +41,8 @@ class ConnectedLaneIntersectionParallelEnv(HighwayParallelEnv):
     PettingZoo ``ParallelEnv`` for the connected-lane intersection multi-agent
     scenario.
 
-    Corresponds to ``intersection-multi-agent-v4`` in the Gymnasium registry
-    (requires ``highway-env[multi-agent]``).
+    Corresponds to the connected-lane intersection multi-agent scenario.
+    Requires ``highway-env[multi-agent]``.
     """
 
     metadata: dict = {

@@ -4,6 +4,7 @@ import functools
 from typing import TYPE_CHECKING
 
 import gymnasium as gym
+import numpy as np
 from pettingzoo.utils.env import ParallelEnv
 
 
@@ -12,34 +13,19 @@ if TYPE_CHECKING:
 
 
 class HighwayParallelEnv(ParallelEnv):
-    """
-    PettingZoo ``ParallelEnv`` wrapper around any :class:`AbstractEnv` that is
-    configured for multi-agent control (i.e. ``controlled_vehicles > 1`` with
-    ``MultiAgentObservation`` / ``MultiAgentAction``).
+    """PettingZoo ``ParallelEnv`` wrapper for multi-agent :class:`AbstractEnv`.
 
-    Implements **per-agent termination**: when a vehicle crashes or arrives at
-    its destination, that agent is removed from :attr:`agents` while the
-    remaining agents continue to act.
+    Implements **per-agent termination**: crashed/arrived agents are removed
+    from :attr:`agents` while the rest continue.
 
     Usage::
 
-        from highway_env.envs.intersection_env import MultiAgentIntersectionEnv
-        from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv
-
-        base = MultiAgentIntersectionEnv(config={"controlled_vehicles": 2})
-        env = HighwayParallelEnv(base)
-        obs, infos = env.reset(seed=42)
-
-    Or via the concrete subclass::
-
         from highway_env.envs.intersection_pz_env import IntersectionParallelEnv
         env = IntersectionParallelEnv(config={"controlled_vehicles": 2})
+        obs, infos = env.reset(seed=42)
 
-    Parameters
-    ----------
-    env:
-        A fully-initialised :class:`AbstractEnv` with ``MultiAgentObservation``
-        and ``MultiAgentAction`` configured.
+    :param env: A fully-initialised :class:`AbstractEnv` with
+        ``MultiAgentObservation`` and ``MultiAgentAction`` configured.
     """
 
     metadata: dict = {
@@ -53,7 +39,6 @@ class HighwayParallelEnv(ParallelEnv):
         n = len(env.controlled_vehicles)
         self.possible_agents: list[str] = [f"agent_{i}" for i in range(n)]
         self.agents: list[str] = self.possible_agents[:]
-        # Stable index lookup: agent name → index in possible_agents / controlled_vehicles
         self._agent_to_idx: dict[str, int] = {
             name: idx for idx, name in enumerate(self.possible_agents)
         }
@@ -85,12 +70,10 @@ class HighwayParallelEnv(ParallelEnv):
     ) -> tuple[dict, dict]:
         """Reset the environment.
 
-        Returns
-        -------
-        observations:
-            ``{agent_name: obs_array}`` for all agents in :attr:`possible_agents`.
-        infos:
-            ``{agent_name: info_dict}`` (shared info dict for now).
+        :param seed: Optional RNG seed for reproducibility.
+        :param options: Optional dict forwarded to the base env's ``reset()``.
+        :returns: A tuple ``(observations, infos)`` where each is a dict
+            keyed by agent name.
         """
         obs_tuple, info = self._env.reset(seed=seed, options=options)
         self.agents = self.possible_agents[:]
@@ -109,12 +92,10 @@ class HighwayParallelEnv(ParallelEnv):
         :attr:`agents`. Agents that have already terminated must NOT be
         included (PettingZoo contract).
 
-        Returns
-        -------
-        observations, rewards, terminations, truncations, infos:
-            All keyed by agent name, covering only the agents that were
-            *active at the start of this step* (i.e. the pre-step
-            :attr:`agents` list).
+        :param actions: A dict mapping each active agent name to its action.
+        :returns: A tuple ``(observations, rewards, terminations, truncations, infos)``
+            all keyed by agent name, covering only agents active at the start
+            of this step.
         """
         # Build the full action tuple the base env expects.
         # Agents no longer in self.agents have already been removed in a
@@ -127,13 +108,8 @@ class HighwayParallelEnv(ParallelEnv):
 
         obs_tuple, _reward, _terminated, truncated, info = self._env.step(action_tuple)
 
-        # Prefer per-agent breakdown from info (set by IntersectionEnv._info)
-        agents_rewards: tuple = info.get(
-            "agents_rewards", (_reward,) * len(self.possible_agents)
-        )
-        agents_terminated: tuple = info.get(
-            "agents_terminated", (_terminated,) * len(self.possible_agents)
-        )
+        agents_rewards: tuple = info["agents_rewards"]
+        agents_terminated: tuple = info["agents_terminated"]
 
         # Build per-agent dicts for agents that were active this step
         active_agents = list(self.agents)  # snapshot before mutation
@@ -177,14 +153,8 @@ class HighwayParallelEnv(ParallelEnv):
 
         For ``DiscreteMetaAction`` this is index 1 (IDLE).
         For continuous actions this is a zero vector.
-        The underlying vehicle is already inert (crashed), so the exact
-        value does not affect physics.
         """
         space = self.action_space(agent)
-        # Discrete: return IDLE (index 1 in DiscreteMetaAction)
         if hasattr(space, "n"):
             return min(1, space.n - 1)
-        # Continuous: return zeros
-        import numpy as np
-
         return np.zeros(space.shape, dtype=space.dtype)
