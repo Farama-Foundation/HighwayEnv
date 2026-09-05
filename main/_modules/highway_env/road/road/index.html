@@ -775,7 +775,7 @@
 
         <span class="k">if</span> <span class="n">sort</span><span class="p">:</span>
             <span class="n">objects_</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">objects_</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">lane_distance_to</span><span class="p">(</span><span class="n">o</span><span class="p">)))</span>
-        <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">objects_</span> <span class="o">=</span> <span class="n">objects_</span><span class="p">[:</span><span class="n">count</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">objects_</span>
 
