@@ -46,6 +46,41 @@ def test_network_to_from_config(net):
     assert len(net.graph) == len(net_2.graph)
 
 
+def test_polylane_network_to_from_config():
+    # Regression: PolyLane.to_config stored class_name, but lane_from_config
+    # reads class_path, so RoadNetwork.from_config crashed with KeyError.
+    lane = CircularLane(
+        center=[0, 0],
+        radius=10,
+        start_phase=0,
+        end_phase=3.14,
+    )
+    num_samples = int(lane.length / 5)
+    sampled_centreline = [
+        lane.position(longitudinal=lon, lateral=0)
+        for lon in np.linspace(0, lane.length, num_samples)
+    ]
+    sampled_left_boundary = [
+        lane.position(longitudinal=lon, lateral=0.5 * lane.width_at(longitudinal=lon))
+        for lon in np.linspace(0, lane.length, num_samples)
+    ]
+    sampled_right_boundary = [
+        lane.position(longitudinal=lon, lateral=-0.5 * lane.width_at(longitudinal=lon))
+        for lon in np.linspace(0, lane.length, num_samples)
+    ]
+    polylane = PolyLane(
+        lane_points=sampled_centreline,
+        left_boundary_points=sampled_left_boundary,
+        right_boundary_points=sampled_right_boundary,
+    )
+    net = RoadNetwork()
+    net.add_lane("a", "b", polylane)
+    net_2 = RoadNetwork.from_config(net.to_config())
+    restored = net_2.get_lane(("a", "b", 0))
+    assert isinstance(restored, PolyLane)
+    assert restored.length == pytest.approx(polylane.length)
+
+
 def test_polylane():
     lane = CircularLane(
         center=[0, 0],
