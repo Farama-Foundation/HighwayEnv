@@ -52,7 +52,7 @@ env = gym.make("merge-v0", config={..., "neighbour_vehicles_connected_lanes": Tr
 
 | Environment | Initial (legacy search) | Connected-lane search |
 |---|---|---|
-| exit | `exit-v0` | `exit-v1` |
+| exit | `exit-v0` | `exit-v1`, `exit-v2` |
 | merge | `merge-v0` | `merge-v1` |
 | roundabout | `roundabout-v0`, `roundabout-generic-v0` | `roundabout-v1`, `roundabout-generic-v1` |
 | racetrack | `racetrack-v0`, `racetrack-large-v0`, `racetrack-oval-v0` | `racetrack-v1`, `racetrack-large-v1`, `racetrack-oval-v1` |

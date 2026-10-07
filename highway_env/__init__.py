@@ -41,6 +41,10 @@ def _register_highway_envs():
         id="exit-v1",
         entry_point="highway_env.envs.exit_env:ConnectedLaneExitEnv",
     )
+    register(
+        id="exit-v2",
+        entry_point="highway_env.envs.exit_env:ExitEnvV2",
+    )
 
     # highway_env.py
     register(
