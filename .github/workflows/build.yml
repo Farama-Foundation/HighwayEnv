@@ -46,6 +46,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: uv sync --group test
+      run: uv sync --group test --all-extras
     - name: Test with pytest
       run: uv run pytest -n logical --cov=./ --cov-report=xml
