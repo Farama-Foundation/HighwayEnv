@@ -173,12 +173,14 @@ class DiscreteAction(ContinuousAction):
         dynamical: bool = False,
         clip: bool = True,
         actions_per_axis: int = 3,
+        speed_range: tuple[float, float] | None = None,
         **kwargs,
     ) -> None:
         super().__init__(
             env,
             acceleration_range=acceleration_range,
             steering_range=steering_range,
+            speed_range=speed_range,
             longitudinal=longitudinal,
             lateral=lateral,
             dynamical=dynamical,
