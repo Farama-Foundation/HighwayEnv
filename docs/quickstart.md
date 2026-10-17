@@ -35,6 +35,11 @@ Here is the list of all the environments available and their descriptions:
 - {ref}`Parking <environments-parking>`
 - {ref}`Intersection <environments-intersection>`
 - {ref}`Racetrack <environments-racetrack>`
+- {ref}`Lane Keeping <environments-lane-keeping>`
+- {ref}`Two Way <environments-two-way>`
+- {ref}`Exit <environments-exit>`
+- {ref}`U-Turn <environments-u-turn>`
+- {ref}`Random Road <environments-random-road>`
 
 (configuration)=
 

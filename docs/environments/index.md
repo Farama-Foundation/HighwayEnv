@@ -18,7 +18,7 @@ u_turn
 random_road
 ```
 
-HighwayEnv includes the following ten environments for autonomous driving decision-making. Each environment features configurable observations, actions, dynamics, and rewards — see {ref}`Configuring an environment <configuration>` for details.
+HighwayEnv includes the following eleven environments for autonomous driving decision-making. Each environment features configurable observations, actions, dynamics, and rewards — see {ref}`Configuring an environment <configuration>` for details.
 
 | Environment | Description | Action type |
 |---|---|---|
