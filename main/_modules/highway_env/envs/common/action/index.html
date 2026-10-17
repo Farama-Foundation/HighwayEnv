@@ -514,12 +514,14 @@
         <span class="n">dynamical</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">actions_per_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">speed_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">env</span><span class="p">,</span>
             <span class="n">acceleration_range</span><span class="o">=</span><span class="n">acceleration_range</span><span class="p">,</span>
             <span class="n">steering_range</span><span class="o">=</span><span class="n">steering_range</span><span class="p">,</span>
+            <span class="n">speed_range</span><span class="o">=</span><span class="n">speed_range</span><span class="p">,</span>
             <span class="n">longitudinal</span><span class="o">=</span><span class="n">longitudinal</span><span class="p">,</span>
             <span class="n">lateral</span><span class="o">=</span><span class="n">lateral</span><span class="p">,</span>
             <span class="n">dynamical</span><span class="o">=</span><span class="n">dynamical</span><span class="p">,</span>
