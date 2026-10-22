@@ -468,7 +468,22 @@ class AbstractEnv(gym.Env):
 
 
 class MultiAgentWrapper(Wrapper, RecordConstructorArgs):
+    """
+    .. deprecated::
+        ``MultiAgentWrapper`` is deprecated and will be removed in a future release.
+        Use the PettingZoo ``ParallelEnv`` interface instead::
+            from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv
+    """
+
     def __init__(self, env):
+        warnings.warn(
+            "MultiAgentWrapper is deprecated and will be removed in a future release. "
+            "Use the PettingZoo ParallelEnv interface instead:\n"
+            "  from highway_env.envs.common.pettingzoo_env import HighwayParallelEnv\n"
+            "See: https://highway-env.farama.org/",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         Wrapper.__init__(self, env)
         RecordConstructorArgs.__init__(self)
 
