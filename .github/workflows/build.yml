@@ -23,14 +23,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
         include:
           - os: windows-latest
-            python-version: "3.10"
+            python-version: "3.11"
           - os: windows-latest
             python-version: "3.14"
           - os: macos-latest
-            python-version: "3.10"
+            python-version: "3.11"
           - os: macos-latest
             python-version: "3.14"
 

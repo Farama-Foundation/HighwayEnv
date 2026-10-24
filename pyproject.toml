@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "highway-env"
 description = "An environment for simulated highway driving tasks."
 readme = "README.md"
-requires-python = ">= 3.10"
+requires-python = ">= 3.11"
 authors = [{ name = "Edouard Leurent", email = "eleurent@gmail.com" }]
 maintainers = [{ name = "Jin Huang", email = "hugo@hugohuang.com" }]
 license = "MIT"
@@ -18,7 +18,6 @@ keywords = [
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -108,7 +107,7 @@ multi_line_output = 3
 
 [tool.ruff]
 line-length = 88
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = [
