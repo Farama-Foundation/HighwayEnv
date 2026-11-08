@@ -179,3 +179,59 @@ def test_env_vectorization__info_dtype_is_float(env_spec):
             break
 
     envs.close()
+
+
+def _make_multi_agent_highway(**config):
+    return gym.make(
+        "highway-v0",
+        config={
+            "controlled_vehicles": 2,
+            "vehicles_count": 5,
+            "action": {
+                "type": "MultiAgentAction",
+                "action_config": {"type": "DiscreteMetaAction"},
+            },
+            "observation": {
+                "type": "MultiAgentObservation",
+                "observation_config": {"type": "Kinematics"},
+            },
+            **config,
+        },
+    )
+
+
+def test_highway_multi_agent_rewards_and_terminations():
+    """Every controlled vehicle is considered in highway-v0, not only the first one."""
+    env = MultiAgentWrapper(_make_multi_agent_highway())
+    env.reset(seed=0)
+    base_env = env.unwrapped
+    first, second = base_env.controlled_vehicles
+
+    idle = base_env.action_type.agents_action_types[0].actions_indexes["IDLE"]
+    _obs, rewards, terminated, truncated, info = env.step((idle, idle))
+    assert len(rewards) == len(terminated) == 2
+    assert rewards[0] == pytest.approx(base_env._reward((idle, idle)))
+    assert terminated == (False, False)
+
+    # A crash of the second controlled vehicle ends the episode
+    second.crashed = True
+    assert not first.crashed
+    assert base_env._is_terminated()
+    info = base_env._info(None, (idle, idle))
+    assert info["agents_terminated"] == (False, True)
+    assert info["agents_rewards"][1] < info["agents_rewards"][0]
+    env.close()
+
+
+def test_highway_multi_agent_offroad_terminal():
+    env = _make_multi_agent_highway(offroad_terminal=True)
+    env.reset(seed=0)
+    base_env = env.unwrapped
+    second = base_env.controlled_vehicles[1]
+    second.position = second.position + np.array([0.0, 100.0])
+    second.lane_index = base_env.road.network.get_closest_lane_index(
+        second.position, second.heading
+    )
+    assert not second.on_road
+    assert base_env._is_terminated()
+    env.close()

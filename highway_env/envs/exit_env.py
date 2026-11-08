@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from highway_env import utils
-from highway_env.envs.common.abstract import ConnectedLaneNeighboursMixin
+from highway_env.envs.common.abstract import AbstractEnv, ConnectedLaneNeighboursMixin
 from highway_env.envs.common.action import Action
 from highway_env.envs.highway_env import HighwayEnv
 from highway_env.road.lane import CircularLane
@@ -193,6 +193,10 @@ class ExitEnv(HighwayEnv):
     def _is_terminated(self) -> bool:
         """The episode is over if the ego vehicle crashed."""
         return self.vehicle.crashed
+
+    def _info(self, obs: np.ndarray, action: Action | None = None) -> dict:
+        # The per-agent rewards and terminations of HighwayEnv do not apply to this environment
+        return AbstractEnv._info(self, obs, action)
 
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
