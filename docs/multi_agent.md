@@ -96,6 +96,20 @@ The type of observations contained in the tuple must be described by a standard 
   pprint.pprint(obs)
 ```
 
+## Rewards and terminations
+
+The scalar reward returned by `env.step()` is that of the first controlled vehicle in `highway-v0`, and the average over controlled vehicles in `intersection-v*`. In both environments, the rewards and termination flags of every controlled vehicle are available in `info["agents_rewards"]` and `info["agents_terminated"]`.
+In `highway-v0`, the episode terminates as soon as any controlled vehicle crashes (or leaves the road, when `offroad_terminal` is enabled).
+
+To get a tuple of rewards and a tuple of termination flags directly from `env.step()`, wrap the environment in a {py:class}`~highway_env.envs.common.abstract.MultiAgentWrapper`:
+
+```python
+from highway_env.envs.common.abstract import MultiAgentWrapper
+
+env = MultiAgentWrapper(env)
+obs, rewards, terminated, truncated, info = env.step((action_1, action_2))
+```
+
 ## Wrapping it up
 
 Here is a pseudo-code example of how a centralized multi-agent policy could be trained:

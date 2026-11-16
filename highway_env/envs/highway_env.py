@@ -100,10 +100,24 @@ class HighwayEnv(AbstractEnv):
     def _reward(self, action: Action) -> float:
         """
         The reward is defined to foster driving at high speed, on the rightmost lanes, and to avoid collisions.
+
+        In multi-agent settings, this is the reward of the first controlled vehicle (``self.vehicle``). The
+        rewards of all controlled vehicles are available in ``info["agents_rewards"]``.
+
         :param action: the last action performed
         :return: the corresponding reward
         """
-        rewards = self._rewards(action)
+        return self._agent_reward(action, self.vehicle)
+
+    def _agent_reward(self, action: Action, vehicle: Vehicle) -> float:
+        """
+        The reward of a given controlled vehicle.
+
+        :param action: the last action performed
+        :param vehicle: the controlled vehicle
+        :return: the corresponding reward
+        """
+        rewards = self._agent_rewards(action, vehicle)
         reward = sum(
             self.config.get(name, 0) * reward for name, reward in rewards.items()
         )
@@ -120,31 +134,49 @@ class HighwayEnv(AbstractEnv):
         return reward
 
     def _rewards(self, action: Action) -> dict[str, float]:
-        neighbours = self.road.network.all_side_lanes(self.vehicle.lane_index)
+        return self._agent_rewards(action, self.vehicle)
+
+    def _agent_rewards(self, action: Action, vehicle: Vehicle) -> dict[str, float]:
+        """Multi-objective rewards of a given controlled vehicle."""
+        neighbours = self.road.network.all_side_lanes(vehicle.lane_index)
         lane = (
-            self.vehicle.target_lane_index[2]
-            if isinstance(self.vehicle, ControlledVehicle)
-            else self.vehicle.lane_index[2]
+            vehicle.target_lane_index[2]
+            if isinstance(vehicle, ControlledVehicle)
+            else vehicle.lane_index[2]
         )
         # Use forward speed rather than speed, see https://github.com/Farama-Foundation/HighwayEnv/issues/268
-        forward_speed = self.vehicle.speed * np.cos(self.vehicle.heading)
+        forward_speed = vehicle.speed * np.cos(vehicle.heading)
         scaled_speed = utils.lmap(
             forward_speed, self.config["reward_speed_range"], [0, 1]
         )
         return {
-            "collision_reward": float(self.vehicle.crashed),
+            "collision_reward": float(vehicle.crashed),
             "right_lane_reward": lane / max(len(neighbours) - 1, 1),
             "high_speed_reward": np.clip(scaled_speed, 0, 1),
-            "on_road_reward": float(self.vehicle.on_road),
+            "on_road_reward": float(vehicle.on_road),
         }
 
     def _is_terminated(self) -> bool:
-        """The episode is over if the ego vehicle crashed."""
-        return (
-            self.vehicle.crashed
-            or self.config["offroad_terminal"]
-            and not self.vehicle.on_road
+        """The episode is over if any controlled vehicle crashed (or left the road, with offroad_terminal)."""
+        return any(
+            self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles
         )
+
+    def _agent_is_terminal(self, vehicle: Vehicle) -> bool:
+        """A controlled vehicle is done if it crashed, or left the road when offroad_terminal is enabled."""
+        return vehicle.crashed or (
+            self.config["offroad_terminal"] and not vehicle.on_road
+        )
+
+    def _info(self, obs: Observation, action: Action | None = None) -> dict:
+        info = super()._info(obs, action)
+        info["agents_rewards"] = tuple(
+            self._agent_reward(action, vehicle) for vehicle in self.controlled_vehicles
+        )
+        info["agents_terminated"] = tuple(
+            self._agent_is_terminal(vehicle) for vehicle in self.controlled_vehicles
+        )
+        return info
 
     def _is_truncated(self) -> bool:
         """The episode is truncated if the time limit is reached."""
