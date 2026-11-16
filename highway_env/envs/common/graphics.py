@@ -199,7 +199,15 @@ class EnvViewer:
         return np.moveaxis(data, 0, 1)
 
     def window_position(self) -> np.ndarray:
-        """the world position of the center of the displayed window."""
+        """
+        The world position of the center of the displayed window.
+
+        If the ``"view_center"`` configuration is set to a world position ``[x, y]``, the view stays fixed on that
+        position. Otherwise, it follows the observer vehicle, or else the ego-vehicle.
+        """
+        view_center = self.config.get("view_center")
+        if view_center is not None:
+            return np.asarray(view_center, dtype=float)
         if self.observer_vehicle:
             return self.observer_vehicle.position
         elif self.env.vehicle:

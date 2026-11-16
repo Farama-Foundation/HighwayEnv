@@ -117,6 +117,7 @@ class AbstractEnv(gym.Env):
             "screen_width": 600,  # [px]
             "screen_height": 150,  # [px]
             "centering_position": [0.3, 0.5],
+            "view_center": None,  # [m] fixed world position to render around
             "scaling": 5.5,
             "show_trajectories": False,
             "render_agent": True,

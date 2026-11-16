@@ -72,3 +72,44 @@ def test_render_lidar_observation(cells):
         env.config["screen_width"],
         3,
     )
+
+
+def test_render_fixed_view_center():
+    """The "view_center" configuration keeps the view on a fixed world position."""
+    view_center = [100.0, 4.0]
+    env = gym.make(
+        "highway-v0",
+        render_mode="rgb_array",
+        config={"view_center": view_center, "centering_position": [0.5, 0.5]},
+    ).unwrapped
+    env.reset(seed=0)
+    first_frame = env.render()
+    assert np.allclose(env.viewer.window_position(), view_center)
+    surface = env.viewer.sim_surface
+    assert np.allclose(
+        surface.origin,
+        np.array(view_center)
+        - np.array([surface.get_width(), surface.get_height()]) / 2 / surface.scaling,
+    )
+
+    # The view does not follow the ego-vehicle as it drives along the road
+    for _ in range(3):
+        env.step(env.action_type.actions_indexes["IDLE"])
+    env.render()
+    assert np.allclose(env.viewer.window_position(), view_center)
+    assert not np.allclose(env.vehicle.position, view_center)
+    env.close()
+    assert first_frame.shape == (
+        env.config["screen_height"],
+        env.config["screen_width"],
+        3,
+    )
+
+
+def test_render_default_view_follows_ego_vehicle():
+    env = gym.make("highway-v0", render_mode="rgb_array").unwrapped
+    env.reset(seed=0)
+    env.render()
+    assert env.config["view_center"] is None
+    assert np.allclose(env.viewer.window_position(), env.vehicle.position)
+    env.close()
