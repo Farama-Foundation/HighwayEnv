@@ -102,6 +102,7 @@ In order to also render these intermediate simulation frames, the following shou
 
 ```python
 import gymnasium as gym
+from gymnasium.wrappers import RecordVideo
 
 # Wrap the env by a RecordVideo wrapper
 env = gym.make("highway-v0")
@@ -114,10 +115,17 @@ env.unwrapped.set_record_video_wrapper(env)
 
 # Record a video as usual
 obs, info = env.reset()
-done = truncated = False:
+done = truncated = False
 while not (done or truncated):
     action = env.action_space.sample()
     obs, reward, done, truncated, info = env.step(action)
     env.render()
 env.close()
+```
+
+Note that recorded videos are played twice faster than real time by default, so that a 30 s episode results in a 15 s video.
+This playback speed can be changed with the `"video_real_time_ratio"` configuration, e.g. `1` for videos that play at real-time speed:
+
+```python
+env = gym.make("highway-v0", render_mode="rgb_array", config={"video_real_time_ratio": 1})
 ```

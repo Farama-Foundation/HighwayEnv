@@ -46,9 +46,11 @@ The following config keys control rendering behavior. When `offscreen_rendering`
 |------------------------|-----------------------------------------|--------|
 | `offscreen_rendering`  | `False` for `"human"`, `True` otherwise | No when `True`, Yes when `False` |
 | `real_time_rendering`  | `False`                                 | N/A    |
+| `video_real_time_ratio` | `2`                                   | N/A    |
 
 - **`offscreen_rendering`**: When `True`, no pygame display window is created. Drawing is done to an off-screen surface only. Useful for headless servers or when you only need pixel arrays.
 - **`real_time_rendering`**: When `True`, the display is synced to render at `simulation_frequency` frames per second so that simulations play at real-time speed. Only has an effect when a window is shown (i.e. `render_mode="human"` or `offscreen_rendering=False`).
+- **`video_real_time_ratio`**: Playback speed of recorded videos, relative to real time. With the default value of `2`, videos play twice faster than the simulation; set it to `1` for real-time videos. It sets the `render_fps` metadata, and the frame rate of the video recorder provided with `env.unwrapped.set_record_video_wrapper()` (see the [FAQ](../faq.md)).
 
 These can be explicitly overridden in config when needed:
 
