@@ -123,6 +123,7 @@ class AbstractEnv(gym.Env):
             "offscreen_rendering": None,
             "manual_control": False,
             "real_time_rendering": False,
+            "video_real_time_ratio": 2,  # playback speed of recorded videos, relative to real time
             "neighbour_vehicles_connected_lanes": False,
         }
 
@@ -145,13 +146,28 @@ class AbstractEnv(gym.Env):
         if self.config["offscreen_rendering"] is None:
             self.config["offscreen_rendering"] = self.render_mode != "human"
 
-    def update_metadata(self, video_real_time_ratio=2):
+    def update_metadata(self, video_real_time_ratio: float | None = None) -> None:
+        """
+        Update the rendering frame rate of the environment, and of its video recorder if one is set.
+
+        When a video recorder is set, a frame is recorded at every simulation step, otherwise at every policy step.
+        Videos are played ``video_real_time_ratio`` times faster than real time.
+
+        :param video_real_time_ratio: the playback speed relative to real time. Defaults to
+            ``config["video_real_time_ratio"]``.
+        """
+        if video_real_time_ratio is None:
+            video_real_time_ratio = self.config["video_real_time_ratio"]
         frames_freq = (
             self.config["simulation_frequency"]
             if self._record_video_wrapper
             else self.config["policy_frequency"]
         )
         self.metadata["render_fps"] = video_real_time_ratio * frames_freq
+        if self._record_video_wrapper:
+            # The video recorder reads the frame rate once at creation, so keep it in sync with the
+            # configuration (e.g. after simulation_frequency is changed with configure()).
+            self._record_video_wrapper.frames_per_sec = self.metadata["render_fps"]
 
     def define_spaces(self) -> None:
         """
@@ -362,7 +378,6 @@ class AbstractEnv(gym.Env):
     def set_record_video_wrapper(self, wrapper: RecordVideo):
         self._record_video_wrapper = wrapper
         self.update_metadata()
-        self._record_video_wrapper.frames_per_sec = self.metadata["render_fps"]
 
     def _automatic_rendering(self) -> None:
         """
