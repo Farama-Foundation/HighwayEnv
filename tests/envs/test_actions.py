@@ -66,3 +66,30 @@ def test_discrete_action_speed_range(lateral, speed_range, acceleration):
     finally:
         continuous_env.close()
         discrete_env.close()
+
+
+@pytest.mark.parametrize("invalid_value", [np.nan, np.inf, -np.inf])
+@pytest.mark.parametrize(
+    "env_name, action_config",
+    [
+        (
+            "racetrack-v0",
+            {"type": "ContinuousAction", "lateral": True, "longitudinal": False},
+        ),
+        ("highway-v0", {"type": "ContinuousAction"}),
+    ],
+)
+def test_continuous_action_rejects_non_finite_values(
+    env_name, action_config, invalid_value
+):
+    """Non-finite actions raise a clear error instead of corrupting the vehicle state (#564)."""
+    env = gym.make(env_name, config={"action": action_config})
+    env.reset(seed=0)
+    action = np.zeros(env.action_space.shape)
+    action[0] = invalid_value
+    with pytest.raises(ValueError, match="finite"):
+        env.step(action)
+    # The vehicle state is left untouched
+    assert np.all(np.isfinite(env.unwrapped.vehicle.position))
+    assert np.all(np.isfinite(env.unwrapped.vehicle.polygon()))
+    env.close()
