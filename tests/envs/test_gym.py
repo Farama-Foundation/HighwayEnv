@@ -105,6 +105,24 @@ def test_env_reset_options(env_spec: str = "highway-v0"):
     assert env.config["duration"] == update_duration
 
 
+def test_highway_speed_reward_uses_forward_speed(env_spec: str = "highway-v0"):
+    env = gym.make(env_spec).unwrapped
+    try:
+        env.reset(seed=0)
+        env.vehicle.speed = 30
+
+        env.vehicle.heading = 0
+        assert env._rewards(None)["high_speed_reward"] == pytest.approx(1)
+
+        env.vehicle.heading = np.pi / 2
+        assert env._rewards(None)["high_speed_reward"] == pytest.approx(0)
+
+        env.vehicle.heading = np.pi
+        assert env._rewards(None)["high_speed_reward"] == pytest.approx(0)
+    finally:
+        env.close()
+
+
 @pytest.mark.parametrize(
     ("old_env_spec", "new_env_spec"),
     [
