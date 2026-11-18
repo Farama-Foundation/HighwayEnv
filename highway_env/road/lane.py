@@ -400,6 +400,7 @@ class PolyLaneFixedWidth(AbstractLane):
         speed_limit: float = 20,
         priority: int = 0,
     ) -> None:
+        self.lane_points = lane_points
         self.curve = LinearSpline2D(lane_points)
         self.length = self.curve.length
         self.width = width
@@ -430,11 +431,9 @@ class PolyLaneFixedWidth(AbstractLane):
 
     def to_config(self) -> dict:
         return {
-            "class_name": self.__class__.__name__,
+            "class_path": get_class_path(self.__class__),
             "config": {
-                "lane_points": _to_serializable(
-                    [_to_serializable(p.position) for p in self.curve.poses]
-                ),
+                "lane_points": _to_serializable(self.lane_points),
                 "width": self.width,
                 "line_types": self.line_types,
                 "forbidden": self.forbidden,
@@ -518,18 +517,13 @@ class PolyLane(PolyLaneFixedWidth):
 
     def to_config(self) -> dict:
         config = super().to_config()
-
-        ordered_boundary_points = _to_serializable(
-            [_to_serializable(p.position) for p in reversed(self.left_boundary.poses)]
+        config["config"]["left_boundary_points"] = _to_serializable(
+            [_to_serializable(p) for p in self.left_boundary_points]
         )
-        ordered_boundary_points += _to_serializable(
-            [_to_serializable(p.position) for p in self.right_boundary.poses]
+        config["config"]["right_boundary_points"] = _to_serializable(
+            [_to_serializable(p) for p in self.right_boundary_points]
         )
-
-        config["class_name"] = self.__class__.__name__
-        config["config"]["ordered_boundary_points"] = ordered_boundary_points
         del config["config"]["width"]
-
         return config
 
 
