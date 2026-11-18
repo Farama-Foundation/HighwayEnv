@@ -49,7 +49,7 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         if: steps.diff_gate.outputs.should_test == 'true'
-        run: uv sync --group test
+        run: uv sync --group test --all-extras
       - name: Run tests with coverage
         if: steps.diff_gate.outputs.should_test == 'true'
         run: uv run pytest -n logical --cov=highway_env --cov-report=xml
