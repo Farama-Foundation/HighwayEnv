@@ -91,7 +91,7 @@ html_theme = "celshast"
 html_title = "HighwayEnv Documentation"
 html_baseurl = "https://highway-env.farama.org"
 html_copy_source = False
-html_favicon = "_static/img/highway-favicon.png"
+html_favicon = "_static/img/highway-favicon.svg"
 html_theme_options = {
     "light_logo": "img/highway.svg",
     "dark_logo": "img/highway-white.svg",
