@@ -6,6 +6,7 @@ lastpage:
 
 ```{project-logo} _static/img/highway-text.png
 :alt: HighwayEnv Logo
+:class: farama-black-logo-invert
 ```
 
 ```{project-heading}
