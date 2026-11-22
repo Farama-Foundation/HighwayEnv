@@ -203,6 +203,75 @@ class ConnectedLaneExitEnv(ConnectedLaneNeighboursMixin, ExitEnv):
     pass
 
 
+class ExitEnvV2(ConnectedLaneExitEnv):
+    """
+    Exit environment with a reward that depends on actually taking the exit.
+
+    The episode ends when the ego-vehicle takes the exit ramp, crashes, or drives past the exit.
+    Taking the exit is rewarded, crashing and missing the exit are penalised, and a small shaping
+    term rewards lane changes towards the exit lane (and takes it back for lane changes away from it).
+    """
+
+    @classmethod
+    def default_config(cls) -> dict:
+        config = super().default_config()
+        utils.update_config(
+            config,
+            {
+                "collision_reward": -1,
+                "goal_reward": 1,
+                "missed_exit_reward": -1,
+                "high_speed_reward": 0.02,
+                "lane_progress_reward": 0.5,
+                "normalize_reward": False,
+            },
+        )
+        return config
+
+    def _reset(self) -> None:
+        super()._reset()
+        self._previous_lane_progress = self._lane_progress()
+
+    def step(self, action) -> tuple[np.ndarray, float, bool, bool, dict]:
+        self._previous_lane_progress = self._lane_progress()
+        return super().step(action)
+
+    def _lane_progress(self) -> float:
+        """Position of the ego-vehicle's lane between the leftmost lane (0) and the exit lane (1)."""
+        _from, _to, lane_id = self.vehicle.lane_index
+        if (_from, _to) == ("2", "exit"):
+            return 1.0
+        return lane_id / self.config["lanes_count"]
+
+    def _rewards(self, action: Action) -> dict[str, float]:
+        scaled_speed = utils.lmap(
+            self.vehicle.speed, self.config["reward_speed_range"], [0, 1]
+        )
+        missed_exit = not self.vehicle.crashed and (
+            self._has_passed_exit() or (self._is_truncated() and not self._is_success())
+        )
+        return {
+            "collision_reward": float(self.vehicle.crashed),
+            "goal_reward": float(self._is_success()),
+            "missed_exit_reward": float(missed_exit),
+            "high_speed_reward": float(np.clip(scaled_speed, 0, 1)),
+            "lane_progress_reward": self._lane_progress()
+            - self._previous_lane_progress,
+        }
+
+    def _is_success(self) -> bool:
+        """The ego-vehicle has left the highway on the exit ramp."""
+        return self.vehicle.lane_index[:2] == ("2", "exit")
+
+    def _has_passed_exit(self) -> bool:
+        """The ego-vehicle has driven past the exit on the highway."""
+        return self.vehicle.lane_index[:2] == ("2", "3")
+
+    def _is_terminated(self) -> bool:
+        """The episode is over if the ego vehicle crashed, took the exit, or drove past it."""
+        return self.vehicle.crashed or self._is_success() or self._has_passed_exit()
+
+
 # class DenseLidarExitEnv(DenseExitEnv):
 #     @classmethod
 #     def default_config(cls) -> dict:

@@ -17,7 +17,7 @@ In this task, the ego-vehicle is driving on a multilane highway and must navigat
 ## Usage
 
 ```python
-env = gym.make("exit-v0")
+env = gym.make("exit-v2")
 ```
 
 ## Versions
@@ -25,7 +25,8 @@ env = gym.make("exit-v0")
 | ID | Description |
 |---|---|
 | `exit-v0` | Initial version. Same-segment neighbour search only. Preserved for reproducibility. |
-| `exit-v1` | Connected-lane neighbour search enabled by default. Recommended for new experiments. |
+| `exit-v1` | Connected-lane neighbour search enabled by default. |
+| `exit-v2` | Same as `exit-v1`, but the reward depends on actually taking the exit. Recommended for new experiments. |
 
 See {ref}`road-neighbour-vehicles` for details.
 
@@ -58,6 +59,19 @@ See {ref}`road-neighbour-vehicles` for details.
 }
 ```
 
+In `exit-v2`, the episode ends when the ego-vehicle takes the exit, crashes, or drives past the exit, and the following keys are changed:
+
+```python
+{
+    "collision_reward": -1,
+    "goal_reward": 1,  # Given once, when the ego-vehicle is on the exit ramp.
+    "missed_exit_reward": -1,  # Driving past the exit, or running out of time before taking it.
+    "high_speed_reward": 0.02,
+    "lane_progress_reward": 0.5,  # Split over the lane changes towards the exit lane, taken back when moving away from it.
+    "normalize_reward": False,
+}
+```
+
 More specifically, it is defined in:
 
 ```{eval-rst}
@@ -69,5 +83,8 @@ More specifically, it is defined in:
 
 ```{eval-rst}
 .. autoclass:: ExitEnv
+    :members:
+
+.. autoclass:: ExitEnvV2
     :members:
 ```
