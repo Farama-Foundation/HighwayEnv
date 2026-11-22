@@ -81,6 +81,22 @@ By default, the rendered area is always centered on the ego-vehicle.
 Its initial scale and offset can be set with the `"scaling"` and `"centering_position"` configurations, and can also be
 updated during simulation using the O,L keys and K,M keys, respectively.
 
+To render a fixed area of the road instead of following the ego-vehicle, set the `"view_center"` configuration to a world position `[x, y]` (in meters).
+The `"centering_position"` configuration then defines where this position is placed on the screen, e.g. `[0.5, 0.5]` for the middle of the window:
+
+```python
+env = gym.make(
+    "highway-v0",
+    render_mode="rgb_array",
+    config={
+        "view_center": [200, 6],  # [m] world position to render around
+        "centering_position": [0.5, 0.5],
+    }
+)
+```
+
+When `"view_center"` is `None` (the default), the view follows the ego-vehicle.
+
 ## Scene graphics
 
 - Roads are rendered in the {py:class}`~highway_env.road.graphics.RoadGraphics` class.
