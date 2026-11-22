@@ -134,6 +134,11 @@ class ContinuousAction(ActionType):
         return Vehicle if not self.dynamical else BicycleVehicle
 
     def get_action(self, action: np.ndarray):
+        if not np.all(np.isfinite(action)):
+            raise ValueError(
+                f"Invalid action {action!r}: continuous actions must only contain finite values "
+                "(got NaN or infinity)."
+            )
         if self.clip:
             action = np.clip(action, -1, 1)
         if self.speed_range:
