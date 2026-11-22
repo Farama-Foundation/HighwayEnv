@@ -242,9 +242,13 @@ The corresponding $v_x$ feature may look like this:
 ## Time to collision
 
 The {py:class}`~highway_env.envs.common.observation.TimeToCollisionObservation` is a $V\times L\times H$ array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
-These predictions are performed for $V$ different values of the ego-vehicle speed, $L$ lanes on the road around the current lane, and represented as one-hot encodings over $H$ discretised time values (bins), with 1s steps.
+These predictions are performed for $V$ different values of the ego-vehicle speed, $L$ lanes on the road around the current lane, and represented as one-hot encodings over $H$ discretised time values (bins).
 
-For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using $V=3,\, L = 3\,H = 10$, with ego-speed of {$15$ m/s, $20$ m/s and $25$ m/s}, the predicted time-to-collisions are $\infty,\,5s,\,2.5s$ and the corresponding observation is
+The $V$ speeds are the discrete target speeds `target_speeds` of the ego-vehicle, i.e. the speeds it can track through its longitudinal actions. They default to `[20, 25, 30]` m/s for an `MDPVehicle`, and each environment may override them in its `action` configuration (for instance `[0, 4.5, 9]` m/s in `intersection-v0`). The observation always keeps $V=3$ consecutive speed bins, centred on the bin closest to the ego-vehicle's current speed: the lowest (resp. highest) bin is repeated when the ego-vehicle is already at the lower (resp. upper) edge of its speed range. Likewise, $L=3$: the ego-vehicle's lane and its two neighbouring lanes are returned, and the outer lane is repeated at the edge of the road.
+
+Each time bin lasts `1 / policy_frequency` seconds, so `H = horizon * policy_frequency`. With the default `policy_frequency` of 1 Hz, bins are 1 s wide.
+
+For instance, consider a vehicle at 25 m ahead on the right lane, driving at 15 m/s. With $V=3$, $L=3$, $H=10$ (a `horizon` of 10 s with 1 s bins), and ego-vehicle target speeds of {$15$ m/s, $20$ m/s and $25$ m/s}, the predicted time-to-collisions are $\infty$, $5$ s and $2.5$ s, and the corresponding observation is
 
 ```{eval-rst}
 .. table:: $15$ m/s
@@ -281,10 +285,16 @@ The top row corresponds to the left-lane, the middle row corresponds to the lane
 ### Example configuration (time to collision)
 
 ```python
-"observation": {
-    "type": "TimeToCollision"
-    "horizon": 10
-},
+config = {
+    "observation": {
+        "type": "TimeToCollision",
+        "horizon": 10,  # [s]
+    },
+    "action": {
+        "type": "DiscreteMetaAction",
+        "target_speeds": [20, 25, 30],  # [m/s], the bins along the V axis
+    },
+}
 ```
 
 ## Lidar
