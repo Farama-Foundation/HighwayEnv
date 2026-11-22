@@ -32,7 +32,9 @@ Normalizing rewards has also been observed to be practically beneficial in deep 
 Note that we forbid negative rewards, since they may encourage the agent to prefer terminating an episode early (by causing a collision) rather than risking suffering a negative return if no satisfying trajectory can be found.
 ```
 
-In some environments, the weight of the collision penalty can be configured through the `collision_penalty` parameter.
+In most environments, the weight of the collision term can be configured through the `collision_reward` parameter.
+
+Other weighted terms are available through the environment `config`, such as `high_speed_reward`, `right_lane_reward` and `lane_change_reward`; goal-based environments also use `goal_reward` (Exit) or `arrived_reward` (Intersection). When `normalize_reward` is enabled, the weighted sum is rescaled to the \[0, 1\] range.
 
 ## Goal environments
 
