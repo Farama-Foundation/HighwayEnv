@@ -121,7 +121,26 @@ class GrayscaleObservation(ObservationType):
 
 
 class TimeToCollisionObservation(ObservationType):
+    """
+    Observe the predicted time-to-collision with other vehicles.
+
+    The observation is an array of shape (3, 3, horizon * policy_frequency) with axes SPEED x LANES x TIME:
+
+    - SPEED: three of the observer vehicle's discrete ``target_speeds`` (see
+      :py:class:`~highway_env.vehicle.controller.MDPVehicle`), centred on its current ``speed_index``.
+      The edge bin is repeated when the vehicle is at its lowest or highest target speed.
+    - LANES: the left, current and right lanes of the observer vehicle. Lanes outside of the road are
+      filled with ones.
+    - TIME: time bins of duration 1 / policy_frequency seconds.
+
+    Since it relies on ``target_speeds``, this observation requires the ``DiscreteMetaAction`` action type.
+    """
+
     def __init__(self, env: AbstractEnv, horizon: int = 10, **kwargs) -> None:
+        """
+        :param env: the environment to observe
+        :param horizon: the time horizon of the predictions, in seconds
+        """
         super().__init__(env)
         self.horizon = horizon
 

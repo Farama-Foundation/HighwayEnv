@@ -242,7 +242,15 @@ The corresponding $v_x$ feature may look like this:
 ## Time to collision
 
 The {py:class}`~highway_env.envs.common.observation.TimeToCollisionObservation` is a $V\times L\times H$ array, that represents the predicted time-to-collision of observed vehicles on the same road as the ego-vehicle.
-These predictions are performed for $V$ different values of the ego-vehicle speed, $L$ lanes on the road around the current lane, and represented as one-hot encodings over $H$ discretised time values (bins), with 1s steps.
+These predictions are performed for $V$ different values of the ego-vehicle speed, $L$ lanes on the road around the current lane, and represented as one-hot encodings over $H$ discretised time values (bins).
+
+The three dimensions are defined as follows:
+
+- **Speeds ($V = 3$).** The speed values are not hardcoded: they are taken from the discrete `target_speeds` of the ego-vehicle, which is an {py:class}`~highway_env.vehicle.controller.MDPVehicle`. These are the speed levels reachable with the `FASTER` and `SLOWER` meta-actions, set through the `target_speeds` parameter of the {py:class}`~highway_env.envs.common.action.DiscreteMetaAction` action type (by default $20$, $25$ and $30$ m/s). A time-to-collision grid is computed for every target speed, then cropped to the 3 bins centred on the ego-vehicle's current `speed_index`: the middle bin is the target speed the ego-vehicle is currently tracking, and the other two are the next slower and faster target speeds. When the ego-vehicle is already at the lowest (or highest) target speed, the edge bin is repeated. Note that the ego-vehicle's actual `speed` may differ from its target speed while it is accelerating or braking.
+- **Lanes ($L = 3$).** The left lane, the current lane and the right lane of the ego-vehicle. Lanes that do not exist (e.g. the left lane when driving on the leftmost lane) are filled with ones, i.e. treated as an imminent collision.
+- **Time ($H$).** $H = \text{horizon} \times \text{policy\_frequency}$ bins, each one lasting $1 / \text{policy\_frequency}$ seconds. With the default `policy_frequency` of 1 Hz, each bin is 1s long.
+
+Since the speed axis relies on the `target_speeds` of the ego-vehicle, this observation must be used with the {py:class}`~highway_env.envs.common.action.DiscreteMetaAction` action type.
 
 For instance, consider a vehicle at 25m on the right-lane of the ego-vehicle and driving at 15 m/s. Using $V=3,\, L = 3\,H = 10$, with ego-speed of {$15$ m/s, $20$ m/s and $25$ m/s}, the predicted time-to-collisions are $\infty,\,5s,\,2.5s$ and the corresponding observation is
 
@@ -282,8 +290,12 @@ The top row corresponds to the left-lane, the middle row corresponds to the lane
 
 ```python
 "observation": {
-    "type": "TimeToCollision"
+    "type": "TimeToCollision",
     "horizon": 10
+},
+"action": {
+    "type": "DiscreteMetaAction",
+    "target_speeds": [20, 25, 30]  # speed levels of the TTC grid, in m/s
 },
 ```
 
