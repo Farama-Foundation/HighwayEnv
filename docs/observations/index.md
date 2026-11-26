@@ -441,6 +441,35 @@ Requires that the ego-vehicle has a goal attribute
 ```
 
 
+## KinematicsGoal
+The {py:class}`~highway_env.envs.common.observation.KinematicsGoalObservation` is a goal-conditioned observation, used in the {ref}`parking <environments-parking>` environment.
+It follows the format of goal-based environments, which is required by goal-conditioned algorithms such as Hindsight Experience Replay (HER).
+
+Its observation space is a Gymnasium `Dict` space with three keys, each holding an array of the observed `features` of a single vehicle, divided by `scales`:
+- `observation`: the features of the ego-vehicle;
+- `achieved_goal`: the features of the ego-vehicle, i.e. the goal it has currently achieved;
+- `desired_goal`: the features of the goal the ego-vehicle must reach.
+
+```{note}
+A `Dict` space has no `shape` attribute: `env.observation_space.shape` is `None`.
+The shape of each component can be read with e.g. `env.observation_space["observation"].shape`.
+To use an agent that expects a flat array instead, wrap the environment with Gymnasium's `FlattenObservation` wrapper, which concatenates the three components into a single `Box` space.
+```
+
+### Example configuration (KinematicsGoal)
+```python
+"observation": {
+    "type": "KinematicsGoal",
+    "features": ['x', 'y', 'vx', 'vy', 'cos_h', 'sin_h'],
+    "scales": [100, 100, 5, 5, 1, 1],
+    "normalize": False
+}
+```
+
+```{note}
+Requires that the ego-vehicle has a goal attribute
+```
+
 ## Dict
 The {py:class}`~highway_env.envs.common.observation.DictObservation` composes several named observation types into a Gymnasium `Dict` space.
 
